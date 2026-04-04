@@ -438,7 +438,7 @@ function PublicSite({ onLoginClick }) {
           alignItems:"center",gap:28,borderBottom:`1px solid ${PUB.lijn}`,overflowX:"auto"}}>
           <span style={{fontSize:9.5,fontWeight:600,letterSpacing:"0.15em",textTransform:"uppercase",
             color:PUB.sub,whiteSpace:"nowrap",flexShrink:0,opacity:0.65}}>Actief in</span>
-          {["💼 Zakelijke dienstverlening","🏛 Gemeenten","🎓 Onderwijs","⚡ Energie","🏭 Industrie","💼 Financiën"].map(i=>(
+          {["Zakelijke dienstverlening","Gemeenten","Onderwijs","Energie","Industrie","Financiën"].map(i=>(
             <span key={i} style={{fontSize:13,color:PUB.sub,opacity:0.62,whiteSpace:"nowrap"}}>{i}</span>
           ))}
         </div>
@@ -516,10 +516,10 @@ function PublicSite({ onLoginClick }) {
             </p>
           </Fade>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)",gap:isMobile?12:16,alignItems:"stretch"}}>
-            {[["💼","Zakelijke dienstverlening","Groeiende organisaties en scale-ups die structuur en cultuur willen versterken."],
-              ["🏛","Gemeenten","Verandering in een politieke omgeving vraagt extra aandacht voor psychologische veiligheid."],
-              ["🎓","Onderwijs","Van schoolteams tot hogescholen — het gesprek over gedrag concreet en constructief maken."],
-              ["🏭","Industrie","Veiligheidscultuur, lean-transformaties en teamontwikkeling op de werkvloer."],
+            {[["Zakelijke dienstverlening","Groeiende organisaties en scale-ups die structuur en cultuur willen versterken."],
+              ["Gemeenten","Verandering in een politieke omgeving vraagt extra aandacht voor psychologische veiligheid."],
+              ["Onderwijs","Van schoolteams tot hogescholen — het gesprek over gedrag concreet en constructief maken."],
+              ["Industrie","Veiligheidscultuur, lean-transformaties en teamontwikkeling op de werkvloer."],
             ].map(([ic,t,b],i)=>(
               <Fade key={i} delay={i*0.1} style={{height:"100%"}}>
                 <div style={{height:"100%",background:PUB.wit,border:`1px solid ${PUB.lijn}`,borderRadius:8,padding:"22px 18px",boxSizing:"border-box"}}>
