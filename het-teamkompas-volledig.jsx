@@ -205,7 +205,7 @@ function KompasAnim() {
   const isMobile = useIsMobile();
   const [r, setR] = useState(0);
   const isMobile = useIsMobile();
-  const size = isMobile ? 300 : 400;
+  const size = isMobile ? 360 : 480;
   useEffect(() => {
     let f;
     const t = () => { setR(v => v + 0.014); f = requestAnimationFrame(t); };
@@ -231,19 +231,19 @@ function KompasAnim() {
           <div key={i} style={{ background:c,display:"flex",flexDirection:"column",
             alignItems:"center",justifyContent:"center",gap:4,padding:8 }}>
             <span style={{fontSize:18}}>{ic}</span>
-            <span style={{fontSize:8.5,fontWeight:600,color:"rgba(255,255,255,0.92)",
+            <span style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.92)",
               textAlign:"center",lineHeight:1.3,whiteSpace:"pre-line"}}>{l}</span>
           </div>
         ))}
       </div>
       <div style={{ position:"absolute",top:"50%",left:"50%",
-        transform:"translate(-50%,-50%)",width:92,height:92,borderRadius:"50%",
+        transform:"translate(-50%,-50%)",width:110,height:110,borderRadius:"50%",
         background:PUB.donker,border:"2px solid rgba(0,168,150,0.4)",
         display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
         zIndex:10,boxShadow:"0 0 28px rgba(0,0,0,0.65)" }}>
-        <span style={{fontSize:15,fontWeight:700,color:PUB.teal}}>Gedrag</span>
-        <span style={{fontSize:7,color:"rgba(255,255,255,0.42)",textAlign:"center",
-          padding:"0 6px",lineHeight:1.3}}>Inzicht in voorkeursgedrag & samenwerking</span>
+        <span style={{fontSize:19,fontWeight:700,color:PUB.teal}}>Gedrag</span>
+        <span style={{fontSize:10,color:"rgba(255,255,255,0.42)",textAlign:"center",
+          padding:"0 8px",lineHeight:1.3}}>Inzicht in voorkeursgedrag & samenwerking</span>
       </div>
     </div>
   );
@@ -500,7 +500,7 @@ function PublicSite({ onLoginClick }) {
               color:PUB.wit,maxWidth:700,position:"relative",zIndex:1,marginBottom:20}}>
               "Ik ben niet verantwoordelijk voor het resultaat. Ik ben verantwoordelijk voor de mensen die verantwoordelijk zijn voor het resultaat."
             </p>
-            <p style={{fontSize:13,color:PUB.teal}}>— Edmond Lam, Co-founder Mijn Teamkompas</p>
+            <p style={{fontSize:13,color:PUB.teal}}>— Co-founder, Mijn Teamkompas</p>
           </Fade>
         </div>
 
@@ -509,7 +509,7 @@ function PublicSite({ onLoginClick }) {
           <Fade>
             <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Voor wie werken wij</div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-              Van gemeente tot <em style={{fontStyle:"italic",color:PUB.teal}}>zorg</em>
+              Van overheid tot <em style={{fontStyle:"italic",color:PUB.teal}}>zakelijke dienstverlening</em>
             </h2>
             <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,maxWidth:460,marginBottom:40}}>
               Onze methodiek is sectoronafhankelijk — want mensen zijn overal mensen.
@@ -520,10 +520,9 @@ function PublicSite({ onLoginClick }) {
               ["Gemeenten","Verandering in een politieke omgeving vraagt extra aandacht voor psychologische veiligheid."],
               ["Onderwijs","Van schoolteams tot hogescholen — het gesprek over gedrag concreet en constructief maken."],
               ["Industrie","Veiligheidscultuur, lean-transformaties en teamontwikkeling op de werkvloer."],
-            ].map(([ic,t,b],i)=>(
+            ].map(([t,b],i)=>(
               <Fade key={i} delay={i*0.1} style={{height:"100%"}}>
                 <div style={{height:"100%",background:PUB.wit,border:`1px solid ${PUB.lijn}`,borderRadius:8,padding:"22px 18px",boxSizing:"border-box"}}>
-                  <div style={{fontSize:22,marginBottom:11}}>{ic}</div>
                   <div style={{fontSize:17,fontWeight:700,color:PUB.donker,marginBottom:7}}>{t}</div>
                   <div style={{fontSize:13,color:PUB.sub,lineHeight:1.65}}>{b}</div>
                 </div>
