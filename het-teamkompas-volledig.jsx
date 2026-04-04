@@ -203,6 +203,8 @@ function KompasDot({ size = 26 }) {
 
 function KompasAnim() {
   const [r, setR] = useState(0);
+  const isMobile = useIsMobile();
+  const size = isMobile ? 300 : 400;
   useEffect(() => {
     let f;
     const t = () => { setR(v => v + 0.014); f = requestAnimationFrame(t); };
@@ -216,7 +218,7 @@ function KompasAnim() {
     [PUB.paars,"⚙","Verbeteren\n& Leren"],
   ];
   return (
-    <div style={{ width:340,height:340,position:"relative",flexShrink:0 }}>
+    <div style={{ width:size,height:size,position:"relative",flexShrink:0 }}>
       {[0,14,28].map((ins,i) => (
         <div key={i} style={{ position:"absolute",inset:ins,borderRadius:"50%",
           border:`1px solid rgba(255,255,255,${0.07-i*0.02})`,
@@ -261,7 +263,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
         padding:isMobile?"0 20px":"0 40px"}}>
         <div style={{display:"flex",alignItems:"center",gap:9}}>
           <KompasDot size={22}/>
-          <span style={{fontSize:15,fontWeight:600,color:"#ffffff"}}>Het Teamkompas</span>
+          <span style={{fontSize:15,fontWeight:600,color:"#ffffff"}}>Mijn Teamkompas</span>
         </div>
         {isMobile ? (
           <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -364,7 +366,7 @@ function PublicSite({ onLoginClick }) {
             from_email: form.email,
             from_telefoon: form.telefoon,
             bericht: form.bericht,
-            to_email: "info@hetteamkompas.nl",
+            to_email: "info@mijnteamkompas.nl",
           },
         }),
       });
@@ -396,7 +398,7 @@ function PublicSite({ onLoginClick }) {
           <Strepen/>
           <div style={{padding:isMobile?"60px 24px 40px 32px":"60px 48px 60px 60px",position:"relative",zIndex:2}}>
             <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,
-              textTransform:"uppercase",marginBottom:16}}>Het Teamkompas</div>
+              textTransform:"uppercase",marginBottom:16}}>Mijn Teamkompas</div>
             <h1 style={{fontSize:isMobile?30:44,fontWeight:700,lineHeight:1.2,color:PUB.wit,marginBottom:16}}>
               Waarom zouden uw mensen morgen{" "}
               <em style={{fontStyle:"italic",color:PUB.teal}}>anders doen</em>{" "}dan vandaag?
@@ -435,7 +437,7 @@ function PublicSite({ onLoginClick }) {
           alignItems:"center",gap:28,borderBottom:`1px solid ${PUB.lijn}`,overflowX:"auto"}}>
           <span style={{fontSize:9.5,fontWeight:600,letterSpacing:"0.15em",textTransform:"uppercase",
             color:PUB.sub,whiteSpace:"nowrap",flexShrink:0,opacity:0.65}}>Actief in</span>
-          {["🏥 Zorg","🏛 Gemeenten","🎓 Onderwijs","⚡ Energie","🏭 Industrie","💼 Financiën"].map(i=>(
+          {["💼 Zakelijke dienstverlening","🏛 Gemeenten","🎓 Onderwijs","⚡ Energie","🏭 Industrie","💼 Financiën"].map(i=>(
             <span key={i} style={{fontSize:13,color:PUB.sub,opacity:0.62,whiteSpace:"nowrap"}}>{i}</span>
           ))}
         </div>
@@ -446,7 +448,7 @@ function PublicSite({ onLoginClick }) {
             <Fade>
               <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Onze methodiek</div>
               <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-                Vijf modellen<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Één kompas</em>
+                Vier modellen<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Één kompas</em>
               </h2>
               <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,marginBottom:28}}>
                 Gedrag staat centraal. Vier domeinen bepalen samen of mensen kunnen, willen en durven veranderen.
@@ -497,7 +499,7 @@ function PublicSite({ onLoginClick }) {
               color:PUB.wit,maxWidth:700,position:"relative",zIndex:1,marginBottom:20}}>
               "Ik ben niet verantwoordelijk voor het resultaat. Ik ben verantwoordelijk voor de mensen die verantwoordelijk zijn voor het resultaat."
             </p>
-            <p style={{fontSize:13,color:PUB.teal}}>— Edmond Lam, Co-founder Het Teamkompas</p>
+            <p style={{fontSize:13,color:PUB.teal}}>— Edmond Lam, Co-founder Mijn Teamkompas</p>
           </Fade>
         </div>
 
@@ -513,7 +515,7 @@ function PublicSite({ onLoginClick }) {
             </p>
           </Fade>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)",gap:isMobile?12:16,alignItems:"stretch"}}>
-            {[["🏥","Zorg","Hoge werkdruk, complexe teams. Wij helpen zorgprofessionals hun energie te bewaken."],
+            {[["💼","Zakelijke dienstverlening","Groeiende organisaties en scale-ups die structuur en cultuur willen versterken."],
               ["🏛","Gemeenten","Verandering in een politieke omgeving vraagt extra aandacht voor psychologische veiligheid."],
               ["🎓","Onderwijs","Van schoolteams tot hogescholen — het gesprek over gedrag concreet en constructief maken."],
               ["🏭","Industrie","Veiligheidscultuur, lean-transformaties en teamontwikkeling op de werkvloer."],
@@ -546,17 +548,16 @@ function PublicSite({ onLoginClick }) {
               </blockquote>
             </Fade>
             <div style={{display:"flex",flexDirection:"column",gap:14}}>
-              {[[PUB.teal,"B","Bozidar Vukovic","Co-founder & Change Consultant","Specialist in mensgerichte organisatieverandering."],
-                [PUB.blauw,"E","Edmond Lam","Co-founder & Leadership Expert","Gelooft dat leiders verantwoordelijk zijn voor de mensen, niet voor het resultaat."],
-              ].map(([c,init,naam,rol,bio],i)=>(
+              {[[PUB.teal,"🧭","Change Consultant","Specialist in mensgerichte organisatieverandering en gedragsverandering."],
+                [PUB.blauw,"🏆","Leadership Expert","Gelooft dat leiders verantwoordelijk zijn voor de mensen, niet voor het resultaat."],
+              ].map(([c,icon,rol,bio],i)=>(
                 <Fade key={i} delay={i*0.15}>
                   <div style={{display:"flex",gap:14,alignItems:"flex-start",padding:18,
                     borderRadius:8,border:`1px solid ${PUB.lijn}`,background:PUB.licht}}>
                     <div style={{width:50,height:50,borderRadius:"50%",background:c,flexShrink:0,
                       display:"flex",alignItems:"center",justifyContent:"center",
-                      fontSize:19,fontWeight:700,color:PUB.wit}}>{init}</div>
+                      fontSize:22,color:PUB.wit}}>{icon}</div>
                     <div>
-                      <div style={{fontSize:14,fontWeight:600,color:PUB.donker,marginBottom:2}}>{naam}</div>
                       <div style={{fontSize:11,color:PUB.teal,fontWeight:500,marginBottom:4}}>{rol}</div>
                       <div style={{fontSize:12,color:PUB.sub,lineHeight:1.55}}>{bio}</div>
                     </div>
@@ -634,13 +635,13 @@ function PublicSite({ onLoginClick }) {
             <div>
               <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:11}}>
                 <KompasDot size={20}/>
-                <span style={{fontSize:13,fontWeight:600,color:PUB.wit}}>Het Teamkompas</span>
+                <span style={{fontSize:13,fontWeight:600,color:PUB.wit}}>Mijn Teamkompas</span>
               </div>
               <p style={{fontSize:14,fontStyle:"italic",color:PUB.teal,marginBottom:9}}>Mensen maken het verschil.</p>
             </div>
             {[["Aanpak",["Teamkompas Scan","De vier domeinen","Werkwijze"]],
-              ["Voor wie",["Zorg","Gemeenten","Onderwijs","Industrie"]],
-              ["Contact",["Afspraak maken","info@hetteamkompas.nl","LinkedIn"]],
+              ["Voor wie",["Zakelijke dienstverlening","Gemeenten","Onderwijs","Industrie"]],
+              ["Contact",["Afspraak maken","info@mijnteamkompas.nl","LinkedIn"]],
             ].map(([t,ls],i)=>(
               <div key={i}>
                 <div style={{fontSize:9,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:"rgba(255,255,255,0.28)",marginBottom:12}}>{t}</div>
@@ -652,7 +653,7 @@ function PublicSite({ onLoginClick }) {
             {[PUB.groen,PUB.blauw,PUB.oranje,PUB.paars].map((c,i)=><div key={i} style={{flex:1,background:c}}/>)}
           </div>
           <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
-            <span style={{fontSize:11,color:"rgba(255,255,255,0.22)"}}>© 2025 Het Teamkompas · Bozidar Vukovic & Edmond Lam</span>
+            <span style={{fontSize:11,color:"rgba(255,255,255,0.22)"}}>© 2026 Mijn Teamkompas</span>
             <span style={{fontSize:11,color:"rgba(255,255,255,0.22)"}}>Privacybeleid · Algemene voorwaarden</span>
           </div>
         </div>
@@ -835,7 +836,7 @@ function LoginScreen({ onLogin, onBack }) {
             🧭
           </div>
           <div style={{ fontSize: 20, fontWeight: 700, color: ADM.white, marginBottom: 4 }}>
-            Het Teamkompas
+            Mijn Teamkompas
           </div>
           <div style={{ fontSize: 12, color: ADM.muted }}>
             Beheeromgeving, alleen voor beheerders
@@ -849,7 +850,7 @@ function LoginScreen({ onLogin, onBack }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-            placeholder="info@hetteamkompas.nl"
+            placeholder="bozidar@mijnteamkompas.nl"
             style={{
               width: "100%",
               background: "rgba(255,255,255,0.05)",
@@ -923,7 +924,7 @@ function LoginScreen({ onLogin, onBack }) {
 // ─────────────────────────────────────────────
 // SCAN INVULLEN — resultaten naar Firestore
 // ─────────────────────────────────────────────
-function ScanInvullen({ scanId, onKlaar }) {
+function ScanInvullen({ scanId }) {
   const [lijst, setLijst] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -1011,11 +1012,11 @@ function ScanInvullen({ scanId, onKlaar }) {
         <div style={{fontSize:48,marginBottom:20}}>✅</div>
         <div style={{fontSize:24,fontWeight:700,color:ADM.white,marginBottom:12}}>Bedankt!</div>
         <div style={{fontSize:15,color:ADM.muted,lineHeight:1.7,marginBottom:28}}>
-          Jouw antwoorden zijn ontvangen. Het Teamkompas verwerkt de resultaten en bespreekt deze met het team.
+          Jouw antwoorden zijn ontvangen. Mijn Teamkompas verwerkt de resultaten en bespreekt deze met het team.
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8,justifyContent:"center"}}>
           <KompasDot size={28}/>
-          <span style={{fontSize:13,color:ADM.muted}}>Het Teamkompas</span>
+          <span style={{fontSize:13,color:ADM.muted}}>Mijn Teamkompas</span>
         </div>
       </div>
     </div>
@@ -1028,7 +1029,7 @@ function ScanInvullen({ scanId, onKlaar }) {
           <div style={{width:56,height:56,borderRadius:"50%",background:ADM.teal,
             display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,
             margin:"0 auto 16px",boxShadow:"0 0 24px rgba(0,168,150,0.4)"}}>🧭</div>
-          <div style={{fontSize:11,color:ADM.teal,fontWeight:600,textTransform:"uppercase",letterSpacing:"1.5px",marginBottom:8}}>Het Teamkompas</div>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:600,textTransform:"uppercase",letterSpacing:"1.5px",marginBottom:8}}>Mijn Teamkompas</div>
           <div style={{fontSize:22,fontWeight:700,color:ADM.white,marginBottom:10}}>{lijst.naam}</div>
           <div style={{fontSize:14,color:ADM.muted,lineHeight:1.7}}>
             Deze scan bestaat uit {totaal} vragen en duurt ongeveer 5–8 minuten. Je antwoorden zijn anoniem.
@@ -1923,9 +1924,25 @@ function AdminDashboard({ onLogout }) {
   const [activeNav, setActiveNav] = useState("Dashboard");
   const isMobile = useIsMobile();
 
+  const [nieuwAanvragenCount, setNieuwAanvragenCount] = useState(0);
+
+  useEffect(() => {
+    const laadNieuwAantal = async () => {
+      try {
+        const snap = await getDocs(collection(db, "contactaanvragen"));
+        const count = snap.docs.filter(d => (d.data().status || "Nieuw") === "Nieuw").length;
+        setNieuwAanvragenCount(count);
+      } catch (err) {
+        console.error("Fout bij laden aantal contactaanvragen:", err);
+      }
+    };
+
+    laadNieuwAantal();
+  }, []);
+
   const navItems = [
     { label:"Dashboard",        icon:"📊", section:"Overzicht" },
-    { label:"Contactaanvragen", icon:"📬", badge:"1", section:null },
+    { label:"Contactaanvragen", icon:"📬", badge: nieuwAanvragenCount > 0 ? String(nieuwAanvragenCount) : null, section:null },
     { label:"Klanten",          icon:"🏢", section:null },
     { label:"Scans",            icon:"📝", section:"Trajecten" },
     { label:"Metingen",         icon:"📋", section:null },
@@ -1958,7 +1975,7 @@ function AdminDashboard({ onLogout }) {
               display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,
               boxShadow:"0 0 20px rgba(0,168,150,0.4)",flexShrink:0}}>🧭</div>
             <div>
-              <div style={{fontSize:14,color:ADM.white,fontWeight:600}}>Het Teamkompas</div>
+              <div style={{fontSize:14,color:ADM.white,fontWeight:600}}>Mijn Teamkompas</div>
               <div style={{fontSize:10,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1.5px"}}>Beheeromgeving</div>
             </div>
           </div>
@@ -1985,8 +2002,8 @@ function AdminDashboard({ onLogout }) {
             background:`linear-gradient(135deg, ${ADM.teal}, ${ADM.navyLight})`,
             display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700,color:"white"}}>BV</div>
           <div style={{flex:1,minWidth:0}}>
-            <div style={{fontSize:13,fontWeight:600,color:ADM.white}}>Bozidar Vukovic</div>
-            <div style={{fontSize:11,color:ADM.muted}}>Co-founder · Admin</div>
+            <div style={{fontSize:13,fontWeight:600,color:ADM.white}}>Beheerder</div>
+            <div style={{fontSize:11,color:ADM.muted}}>Admin</div>
           </div>
           <div onClick={handleLogout} title="Uitloggen" style={{cursor:"pointer",color:ADM.muted,fontSize:16,padding:"4px"}}>↩</div>
         </div>
@@ -2115,7 +2132,7 @@ export default function App() {
   }
 
   if (view === "scan") {
-    return <ScanInvullen scanId={scanId} onKlaar={() => setView("public")} />;
+    return <ScanInvullen scanId={scanId} />;
   }
 
   if (view === "login") {
