@@ -1,4 +1,3 @@
-
 // ─────────────────────────────────────────────
 // HET TEAMKOMPAS — Productie-klare versie
 // Vul de credentials in bij "STAP 1 / 2 / 3"
@@ -39,9 +38,9 @@ const firebaseConfig = {
 // ─────────────────────────────────────────────
 // STAP 2 — EMAILJS CREDENTIALS
 // ─────────────────────────────────────────────
-const EMAILJS_SERVICE_ID = "JOUW_SERVICE_ID";
-const EMAILJS_TEMPLATE_ID = "JOUW_TEMPLATE_ID";
-const EMAILJS_PUBLIC_KEY = "JOUW_PUBLIC_KEY";
+const EMAILJS_SERVICE_ID = "service_eytet3a";
+const EMAILJS_TEMPLATE_ID = "pysvu9a";
+const EMAILJS_PUBLIC_KEY = "aXtk48FJxZBI-fBNQ";
 
 // ─────────────────────────────────────────────
 // STAP 3 — ADMIN EMAILADRESSEN
