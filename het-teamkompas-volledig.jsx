@@ -202,6 +202,7 @@ function KompasDot({ size = 26 }) {
 }
 
 function KompasAnim() {
+  const isMobile = useIsMobile();
   const [r, setR] = useState(0);
   const isMobile = useIsMobile();
   const size = isMobile ? 300 : 400;
