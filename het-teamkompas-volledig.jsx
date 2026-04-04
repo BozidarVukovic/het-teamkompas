@@ -1,3 +1,4 @@
+
 // ─────────────────────────────────────────────
 // HET TEAMKOMPAS — Productie-klare versie
 // Vul de credentials in bij "STAP 1 / 2 / 3"
@@ -980,6 +981,8 @@ function ScanInvullen({ scanId, onKlaar }) {
       setOpslaan(false);
     }
   };
+
+  if (loading) return (
     <div style={{minHeight:"100vh",background:ADM.navyDeep,display:"flex",alignItems:"center",justifyContent:"center"}}>
       <div style={{textAlign:"center",color:ADM.muted}}>
         <div style={{fontSize:32,marginBottom:12}}>🧭</div>
