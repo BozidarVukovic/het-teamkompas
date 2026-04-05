@@ -331,7 +331,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
         padding:isMobile?"0 20px":"0 40px",backdropFilter:"blur(10px)"}}>
         <div style={{display:"flex",alignItems:"center",gap:9}}>
           <KompasDot size={22}/>
-          <span style={{fontSize:15,fontWeight:600,color:"#ffffff"}}>Mijn Teamkompas</span>
+          <span style={{fontSize:18,fontWeight:600,color:"#ffffff"}}>Mijn Teamkompas</span>
         </div>
 
         {isMobile ? (
@@ -523,7 +523,7 @@ function PublicSite({ onLoginClick }) {
             backgroundSize:"30px 30px",pointerEvents:"none"}}/>
           <Strepen/>
           <div style={{padding:isMobile?"60px 24px 40px 32px":"60px 48px 60px 60px",position:"relative",zIndex:2}}>
-            <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,
+            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,
               textTransform:"uppercase",marginBottom:16}}>Voor teams en leidinggevenden</div>
             <h1 style={{fontSize:isMobile?30:44,fontWeight:700,lineHeight:1.2,color:PUB.wit,marginBottom:16}}>
               Goede teams worden niet beter door harder te werken. Ze worden beter door anders te kijken.
@@ -601,7 +601,7 @@ function PublicSite({ onLoginClick }) {
         <div id="aanpak" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
             <Fade>
-              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Onze aanpak</div>
+              <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Onze aanpak</div>
               <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
                 Wat maakt samenwerking <br/><em style={{fontStyle:"italic",color:PUB.teal}}>sterk of kwetsbaar?</em>
               </h2>
@@ -650,7 +650,7 @@ function PublicSite({ onLoginClick }) {
         <div style={{background:PUB.donker,padding:isMobile?"48px 24px":"72px 96px",position:"relative",overflow:"hidden"}}>
           <Strepen/>
           <Fade>
-            <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>
+            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>
               Wat organisaties van ons mogen verwachten
             </div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.15,color:PUB.wit,marginBottom:16,maxWidth:760}}>
@@ -683,7 +683,7 @@ function PublicSite({ onLoginClick }) {
         {/* SECTOREN */}
         <div id="voor-wie" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.licht}}>
           <Fade>
-            <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Voor wie werken wij</div>
+            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Voor wie werken wij</div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
               Herkenbaar in elke sector.<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Toepasbaar in jouw team.</em>
             </h2>
@@ -711,7 +711,7 @@ function PublicSite({ onLoginClick }) {
         <div id="over-ons" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
             <Fade>
-              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Wie wij zijn</div>
+              <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Wie wij zijn</div>
               <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
                 Ervaring die je herkent.<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Aanpak die werkt.</em>
               </h2>
@@ -768,7 +768,7 @@ function PublicSite({ onLoginClick }) {
         {/* WERKWIJZE */}
         <div id="werkwijze" style={{padding:"72px 60px",background:PUB.donker,position:"relative",overflow:"hidden"}}>
           <Fade>
-            <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:"rgba(255,255,255,0.38)",textTransform:"uppercase",marginBottom:12}}>Hoe we werken</div>
+            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:"rgba(255,255,255,0.38)",textTransform:"uppercase",marginBottom:12}}>Hoe we werken</div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.wit,marginBottom:14}}>
               <em style={{fontStyle:"italic",color:PUB.teal}}>Drie stappen</em> naar beweging
             </h2>
@@ -859,7 +859,7 @@ function PublicSite({ onLoginClick }) {
             <div style={{padding:"28px 32px 20px",borderBottom:"1px solid rgba(255,255,255,0.07)",
               display:"flex",alignItems:"flex-start",justifyContent:"space-between"}}>
               <div>
-                <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:"#00A896",textTransform:"uppercase",marginBottom:6}}>Vrijblijvend kennismakingsgesprek</div>
+                <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:"#00A896",textTransform:"uppercase",marginBottom:6}}>Vrijblijvend kennismakingsgesprek</div>
                 <div style={{fontSize:22,fontWeight:700,color:"#ffffff"}}>Plan een kennismakingsgesprek</div>
                 <div style={{fontSize:13,color:"#8fa3bb",marginTop:4}}>We nemen binnen één werkdag contact op.</div>
               </div>
