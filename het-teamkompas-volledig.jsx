@@ -726,6 +726,15 @@ function PublicSite({ onLoginClick }) {
               </p>
             </Fade>
             <div style={{display:"flex",flexDirection:"column",gap:14}}>
+              <Fade>
+                <div style={{borderRadius:10,overflow:"hidden",marginBottom:6,boxShadow:"0 8px 32px rgba(0,0,0,0.10)"}}>
+                  <img
+                    src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=900&q=80&fit=crop&crop=faces,center"
+                    alt="Één-op-één gesprek tussen begeleider en leidinggevende"
+                    style={{width:"100%",height:220,objectFit:"cover",objectPosition:"center 20%",display:"block"}}
+                  />
+                </div>
+              </Fade>
               {[
                 ["Mensgericht én praktisch","Geen abstracte verandertaal, maar begeleiding die aansluit op de dagelijkse praktijk van teams en leidinggevenden."],
                 ["Onderstroom zichtbaar maken","We helpen organisaties begrijpen wat niet wordt uitgesproken maar wel bepalend is voor samenwerking en beweging."],
