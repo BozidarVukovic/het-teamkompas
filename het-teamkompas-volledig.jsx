@@ -573,16 +573,17 @@ function PublicSite({ onLoginClick }) {
         <div id="aanpak" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
             <Fade>
-              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Onze methodiek</div>
+              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Onze aanpak</div>
               <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-                Vier modellen<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Één kompas</em>
+                Wat maakt samenwerking <br/><em style={{fontStyle:"italic",color:PUB.teal}}>sterk of kwetsbaar?</em>
               </h2>
               <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,marginBottom:28}}>
-                Gedrag staat centraal. Vier domeinen bepalen samen of mensen kunnen, willen en durven veranderen.
+                Wij helpen teams en leidinggevenden zichtbaar te maken wat samenwerking belemmert en wat juist beweging geeft.
+                Niet met losse inzichten, maar met een scherp beeld van wat er speelt in gedrag, vertrouwen, energie, verandering en dagelijks leiderschap.
               </p>
-              {[["1","Meten wat telt","De Teamkompas-scan meet op vijf domeinen tegelijk."],
-                ["2","Begrijpen wat speelt","We vertalen vage signalen naar heldere taal die leidinggevenden herkennen."],
-                ["3","Bewegen wat vastloopt","Gerichte interventies op veiligheid, motivatie en lerend vermogen."],
+              {[["1","We maken zichtbaar wat er speelt","We brengen in kaart waar samenwerking vastloopt, waar onduidelijkheid ontstaat en waar energie of vertrouwen wegvalt."],
+                ["2","We vertalen signalen naar richting","We maken patronen begrijpelijk voor team en leidinggevende, zodat duidelijk wordt waar de grootste kans op verbetering ligt."],
+                ["3","We zetten inzicht om in beweging","We vertalen de uitkomsten naar concrete gesprekken, interventies en vervolgstappen die in de praktijk uitvoerbaar zijn."],
               ].map(([nr,t,b],i)=>(
                 <Fade key={i} delay={i*0.1}>
                   <div style={{display:"flex",gap:14,alignItems:"flex-start",marginBottom:16}}>
@@ -600,16 +601,16 @@ function PublicSite({ onLoginClick }) {
             <Fade delay={isMobile?0:0.2}>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:3,
                 borderRadius:10,overflow:"hidden",boxShadow:"0 14px 44px rgba(0,0,0,0.13)"}}>
-                {[[PUB.groen,"01","Veiligheid & Leiderschap","Leiders als veilige basis.","Secure Base Leadership"],
-                  [PUB.blauw,"02","Beleving van Verandering","Weerstand is een neurologische reactie.","Neuromanagement"],
-                  [PUB.oranje,"03","Energie & Motivatie","Balans tussen belasting en energiebronnen.","JD-R Model"],
-                  [PUB.paars,"04","Verbeteren & Leren","Kleine verbeteringen, samen, elke dag.","Lean / Agile"],
+                {[[PUB.groen,"01","Vertrouwen & veiligheid","Kunnen mensen zich uitspreken, fouten bespreken en elkaar echt aanspreken?","Gebaseerd op Secure Base Leadership"],
+                  [PUB.blauw,"02","Verandering & duidelijkheid","Begrijpen mensen wat er verandert, waarom dat nodig is en wat er van hen wordt gevraagd?","Gebaseerd op neuromanagement"],
+                  [PUB.oranje,"03","Energie & motivatie","Waar geven werk en samenwerking energie, en waar ontstaan juist belasting, frustratie of uitputting?","Gebaseerd op het JD-R model"],
+                  [PUB.paars,"04","Leren & verbeteren","Hoe leert een team van ervaringen en hoe worden verbeteringen ook echt vastgehouden?","Gebaseerd op lean en agile"],
                 ].map(([c,nr,t,b,m],i)=>(
                   <div key={i} style={{background:c,padding:isMobile?"16px 12px":"24px 18px",display:"flex",flexDirection:"column",gap:5}}>
                     <div style={{fontSize:isMobile?20:30,fontWeight:700,color:"rgba(255,255,255,0.16)",lineHeight:1}}>{nr}</div>
                     <div style={{fontSize:isMobile?13:15,fontWeight:700,color:PUB.wit,lineHeight:1.2}}>{t}</div>
-                    <div style={{fontSize:isMobile?11:12,color:"rgba(255,255,255,0.71)",lineHeight:1.5}}>{b}</div>
-                    <div style={{fontSize:9,fontWeight:600,letterSpacing:"0.1em",color:"rgba(255,255,255,0.38)",textTransform:"uppercase",marginTop:"auto",paddingTop:6}}>{m}</div>
+                    <div style={{fontSize:isMobile?11:12,color:"rgba(255,255,255,0.76)",lineHeight:1.55}}>{b}</div>
+                    <div style={{fontSize:9,fontWeight:600,letterSpacing:"0.08em",color:"rgba(255,255,255,0.42)",textTransform:"uppercase",marginTop:"auto",paddingTop:8}}>{m}</div>
                   </div>
                 ))}
               </div>
