@@ -569,6 +569,35 @@ function PublicSite({ onLoginClick }) {
           ))}
         </div>
 
+
+        {/* WAT WIJ BIEDEN */}
+        <div style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit,borderBottom:`1px solid ${PUB.lijn}`}}>
+          <Fade>
+            <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Wat wij bieden</div>
+            <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
+              Gericht op <em style={{fontStyle:"italic",color:PUB.teal}}>inzicht, beweging en resultaat</em>
+            </h2>
+            <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,maxWidth:720,marginBottom:34}}>
+              Mijn Teamkompas helpt organisaties om samenwerking, leiderschap en teamdynamiek concreet te versterken.
+              Niet met algemene trajecten, maar met gerichte interventies die zichtbaar maken wat er speelt en beweging brengen waar het vastloopt.
+            </p>
+          </Fade>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)",gap:isMobile?12:16,alignItems:"stretch"}}>
+            {[
+              ["Teamkompas Scan","Voor teams die willen begrijpen waar samenwerking stokt, waar vertrouwen onder druk staat en waar de grootste kans op verbetering ligt."],
+              ["Teamsessies en begeleiding","Voor teams die willen werken aan openheid, aanspreekbaarheid en betere samenwerking in de dagelijkse praktijk."],
+              ["Leiderschapsbegeleiding","Voor leidinggevenden die sterker willen sturen op vertrouwen, eigenaarschap en beweging binnen hun team."],
+            ].map(([t,b],i)=>(
+              <Fade key={i} delay={i*0.08} style={{height:"100%"}}>
+                <div style={{height:"100%",background:PUB.licht,border:`1px solid ${PUB.lijn}`,borderRadius:10,padding:isMobile?"20px 16px":"24px 20px",boxSizing:"border-box"}}>
+                  <div style={{fontSize:18,fontWeight:700,color:PUB.donker,marginBottom:10,lineHeight:1.25}}>{t}</div>
+                  <div style={{fontSize:13,color:PUB.sub,lineHeight:1.7}}>{b}</div>
+                </div>
+              </Fade>
+            ))}
+          </div>
+        </div>
+
         {/* AANPAK */}
         <div id="aanpak" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
@@ -618,16 +647,38 @@ function PublicSite({ onLoginClick }) {
           </div>
         </div>
 
-        {/* CITAAT */}
+
+        {/* WAT ORGANISATIES MOGEN VERWACHTEN */}
         <div style={{background:PUB.donker,padding:isMobile?"48px 24px":"72px 96px",position:"relative",overflow:"hidden"}}>
           <Strepen/>
-          <div style={{position:"absolute",top:-24,left:44,fontSize:170,color:"rgba(0,168,150,0.08)",lineHeight:1,userSelect:"none"}}>"</div>
           <Fade>
-            <p style={{fontSize:isMobile?18:28,fontStyle:"italic",lineHeight:1.5,
-              color:PUB.wit,maxWidth:700,position:"relative",zIndex:1,marginBottom:20}}>
-              "Ik ben niet verantwoordelijk voor het resultaat. Ik ben verantwoordelijk voor de mensen die verantwoordelijk zijn voor het resultaat."
+            <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>
+              Wat organisaties van ons mogen verwachten
+            </div>
+            <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.15,color:PUB.wit,marginBottom:16,maxWidth:760}}>
+              Van inzicht naar <em style={{fontStyle:"italic",color:PUB.teal}}>concrete beweging</em>
+            </h2>
+            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.62)",maxWidth:760,marginBottom:28}}>
+              Mijn Teamkompas helpt organisaties om niet alleen te begrijpen wat er speelt, maar ook om daar gericht op te handelen.
             </p>
-            <p style={{fontSize:13,color:PUB.teal}}>— Co-founder, Mijn Teamkompas</p>
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(2,1fr)",gap:isMobile?10:12,maxWidth:900}}>
+              {[
+                "sneller zicht op wat samenwerking belemmert",
+                "meer openheid en duidelijkheid binnen teams",
+                "concrete handvatten voor leidinggevenden",
+                "interventies die uitvoerbaar zijn in de praktijk",
+                "een aanpak die mensgericht is en tegelijk gericht blijft op resultaat",
+                "beweging die merkbaar wordt in gedrag, samenwerking en eigenaarschap",
+              ].map((item,i)=>(
+                <Fade key={i} delay={i*0.05}>
+                  <div style={{display:"flex",gap:10,alignItems:"flex-start",padding:"14px 16px",
+                    background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10}}>
+                    <div style={{width:8,height:8,borderRadius:"50%",background:PUB.teal,marginTop:7,flexShrink:0}} />
+                    <div style={{fontSize:14,color:"rgba(255,255,255,0.84)",lineHeight:1.6}}>{item}</div>
+                  </div>
+                </Fade>
+              ))}
+            </div>
           </Fade>
         </div>
 
@@ -658,47 +709,54 @@ function PublicSite({ onLoginClick }) {
           </div>
         </div>
 
-        {/* FOUNDERS */}
+
+        {/* WAAROM MIJN TEAMKOMPAS */}
         <div id="over-ons" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
-          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1.1fr 0.9fr",gap:isMobile?32:52,alignItems:"start"}}>
             <Fade>
-              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Wie zijn wij</div>
+              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Waarom Mijn Teamkompas</div>
               <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-                Gebouwd vanuit <em style={{fontStyle:"italic",color:PUB.teal}}>praktijk</em>
+                Samenwerking vraagt meer dan <em style={{fontStyle:"italic",color:PUB.teal}}>goede bedoelingen</em>
               </h2>
-              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:20}}>
-                Opgericht door twee mensen die weten hoe verandering écht werkt — en waarom het zo vaak niet werkt.
+              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:18,maxWidth:620}}>
+                Veel organisaties werken hard, maar benutten hun potentieel niet volledig. Niet omdat mensen niet willen,
+                maar omdat belangrijke signalen in samenwerking onzichtbaar blijven of niet worden uitgesproken.
               </p>
-              <blockquote style={{borderLeft:`3px solid ${PUB.teal}`,paddingLeft:16,margin:"20px 0",
-                fontSize:isMobile?14:17,fontStyle:"italic",color:PUB.donker,lineHeight:1.6}}>
-                "Kwaliteit van leven is de som van de kwaliteit van relaties. Dat geldt op het voetbalveld. Het geldt ook in uw organisatie."
-              </blockquote>
+              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:18,maxWidth:620}}>
+                Mijn Teamkompas helpt organisaties om zichtbaar te maken wat onder de oppervlakte speelt in gedrag,
+                vertrouwen, motivatie, verandering en leiderschap. Door die patronen begrijpelijk te maken en te vertalen
+                naar concrete stappen, ontstaat meer richting, meer openheid en meer beweging in de praktijk.
+              </p>
+              <div style={{fontSize:16,fontStyle:"italic",color:PUB.donker,lineHeight:1.6,maxWidth:620}}>
+                Niet zwaarder dan nodig, wel scherper dan gebruikelijk.
+              </div>
             </Fade>
+
             <div style={{display:"flex",flexDirection:"column",gap:14}}>
-              {[[PUB.teal,"🧭","Change Consultant","Specialist in mensgerichte organisatieverandering en gedragsverandering."],
-                [PUB.blauw,"🏆","Leadership Expert","Gelooft dat leiders verantwoordelijk zijn voor de mensen, niet voor het resultaat."],
-              ].map(([c,icon,rol,bio],i)=>(
-                <Fade key={i} delay={i*0.15}>
+              {[
+                ["Mensgericht én praktisch","Geen abstracte verandertaak, maar gerichte begeleiding die aansluit op de dagelijkse praktijk van teams en leidinggevenden."],
+                ["Onderstroom zichtbaar maken","We helpen organisaties begrijpen wat niet wordt uitgesproken, maar wel bepalend is voor samenwerking en beweging."],
+                ["Richting geven aan vervolg","Inzichten worden vertaald naar gesprekken, interventies en vervolgstappen die uitvoerbaar en relevant zijn."],
+              ].map(([titel,tekst],i)=>(
+                <Fade key={i} delay={i*0.12}>
                   <div style={{display:"flex",gap:14,alignItems:"flex-start",padding:18,
-                    borderRadius:8,border:`1px solid ${PUB.lijn}`,background:PUB.licht}}>
-                    <div style={{width:50,height:50,borderRadius:"50%",background:c,flexShrink:0,
-                      display:"flex",alignItems:"center",justifyContent:"center",
-                      fontSize:22,color:PUB.wit}}>{icon}</div>
+                    borderRadius:10,border:`1px solid ${PUB.lijn}`,background:PUB.licht}}>
+                    <div style={{width:12,height:12,borderRadius:"50%",background:PUB.teal,marginTop:4,flexShrink:0}} />
                     <div>
-                      <div style={{fontSize:11,color:PUB.teal,fontWeight:500,marginBottom:4}}>{rol}</div>
-                      <div style={{fontSize:12,color:PUB.sub,lineHeight:1.55}}>{bio}</div>
+                      <div style={{fontSize:15,fontWeight:700,color:PUB.donker,marginBottom:6}}>{titel}</div>
+                      <div style={{fontSize:13,color:PUB.sub,lineHeight:1.65}}>{tekst}</div>
                     </div>
                   </div>
                 </Fade>
               ))}
-              <Fade delay={0.3}>
-                <div style={{padding:18,borderRadius:8,background:PUB.navy,border:`1px solid ${PUB.tealGlow}`}}>
-                  <p style={{fontSize:13,color:"rgba(255,255,255,0.52)",marginBottom:11,lineHeight:1.6}}>
-                    Benieuwd of onze aanpak past bij uw organisatie? Plan een vrijblijvend gesprek van 30 minuten.
+              <Fade delay={0.35}>
+                <div style={{padding:18,borderRadius:10,background:PUB.navy,border:`1px solid ${PUB.tealGlow}`}}>
+                  <p style={{fontSize:13,color:"rgba(255,255,255,0.62)",marginBottom:11,lineHeight:1.6}}>
+                    Verkennen wat deze aanpak voor jouw team of organisatie kan betekenen?
                   </p>
                   <span style={{background:PUB.teal,color:PUB.donker,padding:"10px 18px",borderRadius:4,
                     fontWeight:600,fontSize:13,cursor:"pointer",display:"block",textAlign:"center"}}
-                    onClick={openModal}>Plan een gesprek →</span>
+                    onClick={openModal}>Plan een vrijblijvend kennismakingsgesprek</span>
                 </div>
               </Fade>
             </div>
