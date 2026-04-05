@@ -569,6 +569,37 @@ function PublicSite({ onLoginClick }) {
           ))}
         </div>
 
+        {/* FOTOSECTIE */}
+        <div style={{position:"relative",width:"100%",height:isMobile?280:480,overflow:"hidden"}}>
+          <img
+            src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600&q=80&fit=crop&crop=faces,center"
+            alt="Samenwerkende mensen in een team"
+            style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 30%",display:"block"}}
+          />
+          <div style={{
+            position:"absolute",inset:0,
+            background:"linear-gradient(to right, rgba(13,27,42,0.72) 0%, rgba(13,27,42,0.35) 50%, rgba(13,27,42,0.15) 100%)"
+          }}/>
+          <div style={{
+            position:"absolute",inset:0,
+            display:"flex",flexDirection:"column",justifyContent:"center",
+            padding:isMobile?"28px 24px":"0 80px"
+          }}>
+            <Fade>
+              <p style={{
+                fontSize:isMobile?20:34,fontWeight:700,color:PUB.wit,
+                lineHeight:1.3,maxWidth:620,marginBottom:16
+              }}>
+                Mensen maken het verschil.<br/>
+                <em style={{fontStyle:"italic",color:PUB.teal}}>Wij helpen dat zichtbaar maken.</em>
+              </p>
+              <p style={{fontSize:isMobile?13:15,color:"rgba(255,255,255,0.72)",maxWidth:480,lineHeight:1.7}}>
+                Niet met modellen en matrices, maar door te begrijpen wat er werkelijk speelt in het team.
+              </p>
+            </Fade>
+          </div>
+        </div>
+
         {/* AANPAK */}
         <div id="aanpak" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
