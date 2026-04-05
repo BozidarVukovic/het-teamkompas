@@ -230,8 +230,8 @@ function KompasAnim() {
         {kw.map(([c,ic,l],i) => (
           <div key={i} style={{ background:c,display:"flex",flexDirection:"column",
             alignItems:"center",justifyContent:"center",gap:4,padding:8 }}>
-            <span style={{fontSize:isMobile?18:20}}>{ic}</span>
-            <span style={{fontSize:isMobile?12:14,fontWeight:600,color:"rgba(255,255,255,0.92)",
+            <span style={{fontSize:18}}>{ic}</span>
+            <span style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.92)",
               textAlign:"center",lineHeight:1.3,whiteSpace:"pre-line"}}>{l}</span>
           </div>
         ))}
@@ -569,35 +569,6 @@ function PublicSite({ onLoginClick }) {
           ))}
         </div>
 
-
-        {/* WAT WIJ BIEDEN */}
-        <div style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit,borderBottom:`1px solid ${PUB.lijn}`}}>
-          <Fade>
-            <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Wat wij bieden</div>
-            <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-              Gericht op <em style={{fontStyle:"italic",color:PUB.teal}}>inzicht, beweging en resultaat</em>
-            </h2>
-            <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,maxWidth:720,marginBottom:34}}>
-              Mijn Teamkompas helpt organisaties om samenwerking, leiderschap en teamdynamiek concreet te versterken.
-              Niet met algemene trajecten, maar met gerichte interventies die zichtbaar maken wat er speelt en beweging brengen waar het vastloopt.
-            </p>
-          </Fade>
-          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)",gap:isMobile?12:16,alignItems:"stretch"}}>
-            {[
-              ["Teamkompas Scan","Voor teams die willen begrijpen waar samenwerking stokt, waar vertrouwen onder druk staat en waar de grootste kans op verbetering ligt."],
-              ["Teamsessies en begeleiding","Voor teams die willen werken aan openheid, aanspreekbaarheid en betere samenwerking in de dagelijkse praktijk."],
-              ["Leiderschapsbegeleiding","Voor leidinggevenden die sterker willen sturen op vertrouwen, eigenaarschap en beweging binnen hun team."],
-            ].map(([t,b],i)=>(
-              <Fade key={i} delay={i*0.08} style={{height:"100%"}}>
-                <div style={{height:"100%",background:PUB.licht,border:`1px solid ${PUB.lijn}`,borderRadius:10,padding:isMobile?"20px 16px":"24px 20px",boxSizing:"border-box"}}>
-                  <div style={{fontSize:18,fontWeight:700,color:PUB.donker,marginBottom:10,lineHeight:1.25}}>{t}</div>
-                  <div style={{fontSize:13,color:PUB.sub,lineHeight:1.7}}>{b}</div>
-                </div>
-              </Fade>
-            ))}
-          </div>
-        </div>
-
         {/* AANPAK */}
         <div id="aanpak" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
@@ -647,7 +618,6 @@ function PublicSite({ onLoginClick }) {
           </div>
         </div>
 
-
         {/* WAT ORGANISATIES MOGEN VERWACHTEN */}
         <div style={{background:PUB.donker,padding:isMobile?"48px 24px":"72px 96px",position:"relative",overflow:"hidden"}}>
           <Strepen/>
@@ -656,24 +626,24 @@ function PublicSite({ onLoginClick }) {
               Wat organisaties van ons mogen verwachten
             </div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.15,color:PUB.wit,marginBottom:16,maxWidth:760}}>
-              Van inzicht naar <em style={{fontStyle:"italic",color:PUB.teal}}>concrete beweging</em>
+              Wat jouw organisatie <em style={{fontStyle:"italic",color:PUB.teal}}>eraan heeft</em>
             </h2>
-            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.62)",maxWidth:760,marginBottom:28}}>
-              Mijn Teamkompas helpt organisaties om niet alleen te begrijpen wat er speelt, maar ook om daar gericht op te handelen.
+            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.62)",maxWidth:760,marginBottom:36}}>
+              Geen stapel aanbevelingen die in een la verdwijnen. Wat we doen wordt zichtbaar in hoe mensen samenwerken, communiceren en eigenaarschap nemen.
             </p>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(2,1fr)",gap:isMobile?10:12,maxWidth:900}}>
               {[
-                "sneller zicht op wat samenwerking belemmert",
-                "meer openheid en duidelijkheid binnen teams",
-                "concrete handvatten voor leidinggevenden",
-                "interventies die uitvoerbaar zijn in de praktijk",
-                "een aanpak die mensgericht is en tegelijk gericht blijft op resultaat",
-                "beweging die merkbaar wordt in gedrag, samenwerking en eigenaarschap",
+                "Je weet sneller wat samenwerking belemmert en waar de echte ruimte zit",
+                "Teams spreken zich opener uit omdat ze begrijpen wat er speelt",
+                "Leidinggevenden krijgen concrete handvatten om anders te sturen",
+                "Interventies zijn direct uitvoerbaar in de dagelijkse praktijk",
+                "De aanpak is mensgericht én gericht op zichtbaar resultaat",
+                "Gedrag, samenwerking en eigenaarschap veranderen merkbaar",
               ].map((item,i)=>(
                 <Fade key={i} delay={i*0.05}>
-                  <div style={{display:"flex",gap:10,alignItems:"flex-start",padding:"14px 16px",
+                  <div style={{display:"flex",gap:12,alignItems:"flex-start",padding:"16px 18px",
                     background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10}}>
-                    <div style={{width:8,height:8,borderRadius:"50%",background:PUB.teal,marginTop:7,flexShrink:0}} />
+                    <div style={{width:8,height:8,borderRadius:"50%",background:PUB.teal,marginTop:7,flexShrink:0}}/>
                     <div style={{fontSize:14,color:"rgba(255,255,255,0.84)",lineHeight:1.6}}>{item}</div>
                   </div>
                 </Fade>
@@ -683,21 +653,21 @@ function PublicSite({ onLoginClick }) {
         </div>
 
         {/* SECTOREN */}
-        <div id="voor-wie" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.licht}}>
+        <div id="voor-wie" style={{padding:"72px 60px",background:PUB.licht}}>
           <Fade>
             <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Voor wie werken wij</div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-              Herkenbaar in elke sector.<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Toepasbaar in jouw team.</em>
+              Van overheid tot <em style={{fontStyle:"italic",color:PUB.teal}}>zakelijke dienstverlening</em>
             </h2>
-            <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,maxWidth:520,marginBottom:40}}>
-              Wij werken met teams waar samenwerking onder druk staat. Dat speelt in onderwijs, overheid en bedrijfsleven — in verschillende vormen, maar met dezelfde menselijke dynamiek.
+            <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,maxWidth:460,marginBottom:40}}>
+              Onze methodiek is sectoronafhankelijk — want mensen zijn overal mensen.
             </p>
           </Fade>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)",gap:isMobile?12:16,alignItems:"stretch"}}>
-            {[["Zakelijke dienstverlening","Groeiende organisaties waar cultuur en structuur achterlopen op de ambities en teams meer eigenaarschap nodig hebben."],
-              ["Gemeenten","Verandering in een politieke omgeving waar draagvlak, psychologische veiligheid en duidelijkheid voortdurend onder druk staan."],
-              ["Onderwijs","Schoolteams en hogescholen waar de werkdruk hoog is en het gesprek over samenwerking zelden gevoerd wordt."],
-              ["Industrie","Teams op de werkvloer waar veiligheidscultuur en continu verbeteren hand in hand moeten gaan."],
+            {[["Zakelijke dienstverlening","Groeiende organisaties en scale-ups die structuur en cultuur willen versterken."],
+              ["Gemeenten","Verandering in een politieke omgeving vraagt extra aandacht voor psychologische veiligheid."],
+              ["Onderwijs","Van schoolteams tot hogescholen — het gesprek over gedrag concreet en constructief maken."],
+              ["Industrie","Veiligheidscultuur, lean-transformaties en teamontwikkeling op de werkvloer."],
             ].map(([t,b],i)=>(
               <Fade key={i} delay={i*0.1} style={{height:"100%"}}>
                 <div style={{height:"100%",background:PUB.wit,border:`1px solid ${PUB.lijn}`,borderRadius:8,padding:"22px 18px",boxSizing:"border-box"}}>
@@ -709,54 +679,47 @@ function PublicSite({ onLoginClick }) {
           </div>
         </div>
 
-
-        {/* WAAROM MIJN TEAMKOMPAS */}
+        {/* FOUNDERS */}
         <div id="over-ons" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
-          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1.1fr 0.9fr",gap:isMobile?32:52,alignItems:"start"}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
             <Fade>
-              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Waarom Mijn Teamkompas</div>
+              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Wie zijn wij</div>
               <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-                Samenwerking vraagt meer dan <em style={{fontStyle:"italic",color:PUB.teal}}>goede bedoelingen</em>
+                Gebouwd vanuit <em style={{fontStyle:"italic",color:PUB.teal}}>praktijk</em>
               </h2>
-              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:18,maxWidth:620}}>
-                Veel organisaties werken hard, maar benutten hun potentieel niet volledig. Niet omdat mensen niet willen,
-                maar omdat belangrijke signalen in samenwerking onzichtbaar blijven of niet worden uitgesproken.
+              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:20}}>
+                Opgericht door twee mensen die weten hoe verandering écht werkt — en waarom het zo vaak niet werkt.
               </p>
-              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:18,maxWidth:620}}>
-                Mijn Teamkompas helpt organisaties om zichtbaar te maken wat onder de oppervlakte speelt in gedrag,
-                vertrouwen, motivatie, verandering en leiderschap. Door die patronen begrijpelijk te maken en te vertalen
-                naar concrete stappen, ontstaat meer richting, meer openheid en meer beweging in de praktijk.
-              </p>
-              <div style={{fontSize:16,fontStyle:"italic",color:PUB.donker,lineHeight:1.6,maxWidth:620}}>
-                Niet zwaarder dan nodig, wel scherper dan gebruikelijk.
-              </div>
+              <blockquote style={{borderLeft:`3px solid ${PUB.teal}`,paddingLeft:16,margin:"20px 0",
+                fontSize:isMobile?14:17,fontStyle:"italic",color:PUB.donker,lineHeight:1.6}}>
+                "Kwaliteit van leven is de som van de kwaliteit van relaties. Dat geldt op het voetbalveld. Het geldt ook in uw organisatie."
+              </blockquote>
             </Fade>
-
             <div style={{display:"flex",flexDirection:"column",gap:14}}>
-              {[
-                ["Mensgericht én praktisch","Geen abstracte verandertaak, maar gerichte begeleiding die aansluit op de dagelijkse praktijk van teams en leidinggevenden."],
-                ["Onderstroom zichtbaar maken","We helpen organisaties begrijpen wat niet wordt uitgesproken, maar wel bepalend is voor samenwerking en beweging."],
-                ["Richting geven aan vervolg","Inzichten worden vertaald naar gesprekken, interventies en vervolgstappen die uitvoerbaar en relevant zijn."],
-              ].map(([titel,tekst],i)=>(
-                <Fade key={i} delay={i*0.12}>
+              {[[PUB.teal,"🧭","Change Consultant","Specialist in mensgerichte organisatieverandering en gedragsverandering."],
+                [PUB.blauw,"🏆","Leadership Expert","Gelooft dat leiders verantwoordelijk zijn voor de mensen, niet voor het resultaat."],
+              ].map(([c,icon,rol,bio],i)=>(
+                <Fade key={i} delay={i*0.15}>
                   <div style={{display:"flex",gap:14,alignItems:"flex-start",padding:18,
-                    borderRadius:10,border:`1px solid ${PUB.lijn}`,background:PUB.licht}}>
-                    <div style={{width:12,height:12,borderRadius:"50%",background:PUB.teal,marginTop:4,flexShrink:0}} />
+                    borderRadius:8,border:`1px solid ${PUB.lijn}`,background:PUB.licht}}>
+                    <div style={{width:50,height:50,borderRadius:"50%",background:c,flexShrink:0,
+                      display:"flex",alignItems:"center",justifyContent:"center",
+                      fontSize:22,color:PUB.wit}}>{icon}</div>
                     <div>
-                      <div style={{fontSize:15,fontWeight:700,color:PUB.donker,marginBottom:6}}>{titel}</div>
-                      <div style={{fontSize:13,color:PUB.sub,lineHeight:1.65}}>{tekst}</div>
+                      <div style={{fontSize:11,color:PUB.teal,fontWeight:500,marginBottom:4}}>{rol}</div>
+                      <div style={{fontSize:12,color:PUB.sub,lineHeight:1.55}}>{bio}</div>
                     </div>
                   </div>
                 </Fade>
               ))}
-              <Fade delay={0.35}>
-                <div style={{padding:18,borderRadius:10,background:PUB.navy,border:`1px solid ${PUB.tealGlow}`}}>
-                  <p style={{fontSize:13,color:"rgba(255,255,255,0.62)",marginBottom:11,lineHeight:1.6}}>
-                    Verkennen wat deze aanpak voor jouw team of organisatie kan betekenen?
+              <Fade delay={0.3}>
+                <div style={{padding:18,borderRadius:8,background:PUB.navy,border:`1px solid ${PUB.tealGlow}`}}>
+                  <p style={{fontSize:13,color:"rgba(255,255,255,0.52)",marginBottom:11,lineHeight:1.6}}>
+                    Benieuwd of onze aanpak past bij uw organisatie? Plan een vrijblijvend gesprek van 30 minuten.
                   </p>
                   <span style={{background:PUB.teal,color:PUB.donker,padding:"10px 18px",borderRadius:4,
                     fontWeight:600,fontSize:13,cursor:"pointer",display:"block",textAlign:"center"}}
-                    onClick={openModal}>Plan een vrijblijvend kennismakingsgesprek</span>
+                    onClick={openModal}>Plan een gesprek →</span>
                 </div>
               </Fade>
             </div>
@@ -824,34 +787,13 @@ function PublicSite({ onLoginClick }) {
               </div>
               <p style={{fontSize:14,fontStyle:"italic",color:PUB.teal,marginBottom:9}}>Mensen maken het verschil.</p>
             </div>
-            {[
-              ["Aanpak",[
-                ["Teamkompas Scan",    ()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["De vier domeinen",   ()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["Werkwijze",          ()=>document.getElementById("werkwijze")?.scrollIntoView({behavior:"smooth",block:"start"})],
-              ]],
-              ["Voor wie",[
-                ["Zakelijke dienstverlening", ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["Gemeenten",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["Onderwijs",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["Industrie",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
-              ]],
-              ["Contact",[
-                ["Afspraak maken",         ()=>openModal()],
-                ["info@mijnteamkompas.nl", ()=>window.location.href="mailto:info@mijnteamkompas.nl"],
-                ["LinkedIn",               ()=>window.open("https://www.linkedin.com/company/het-teamkompas","_blank")],
-              ]],
+            {[["Aanpak",["Teamkompas Scan","De vier domeinen","Werkwijze"]],
+              ["Voor wie",["Zakelijke dienstverlening","Gemeenten","Onderwijs","Industrie"]],
+              ["Contact",["Afspraak maken","info@mijnteamkompas.nl","LinkedIn"]],
             ].map(([t,ls],i)=>(
               <div key={i}>
                 <div style={{fontSize:9,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:"rgba(255,255,255,0.28)",marginBottom:12}}>{t}</div>
-                {ls.map(([l,fn])=>(
-                  <div key={l} onClick={fn}
-                    style={{fontSize:12,color:"rgba(255,255,255,0.52)",marginBottom:8,cursor:"pointer",transition:"color 0.2s"}}
-                    onMouseEnter={e=>e.target.style.color="rgba(0,168,150,0.9)"}
-                    onMouseLeave={e=>e.target.style.color="rgba(255,255,255,0.52)"}>
-                    {l}
-                  </div>
-                ))}
+                {ls.map(l=><div key={l} style={{fontSize:12,color:"rgba(255,255,255,0.52)",marginBottom:8,cursor:"pointer"}}>{l}</div>)}
               </div>
             ))}
           </div>
