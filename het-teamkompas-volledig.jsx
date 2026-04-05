@@ -230,8 +230,8 @@ function KompasAnim() {
         {kw.map(([c,ic,l],i) => (
           <div key={i} style={{ background:c,display:"flex",flexDirection:"column",
             alignItems:"center",justifyContent:"center",gap:4,padding:8 }}>
-            <span style={{fontSize:18}}>{ic}</span>
-            <span style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.92)",
+            <span style={{fontSize:isMobile?18:20}}>{ic}</span>
+            <span style={{fontSize:isMobile?12:14,fontWeight:600,color:"rgba(255,255,255,0.92)",
               textAlign:"center",lineHeight:1.3,whiteSpace:"pre-line"}}>{l}</span>
           </div>
         ))}
