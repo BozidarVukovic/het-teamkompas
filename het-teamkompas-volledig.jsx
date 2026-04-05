@@ -398,15 +398,16 @@ function PublicSite({ onLoginClick }) {
           <Strepen/>
           <div style={{padding:isMobile?"60px 24px 40px 32px":"60px 48px 60px 60px",position:"relative",zIndex:2}}>
             <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,
-              textTransform:"uppercase",marginBottom:16}}>Mijn Teamkompas</div>
+              textTransform:"uppercase",marginBottom:16}}>MIJN TEAMKOMPAS</div>
             <h1 style={{fontSize:isMobile?30:44,fontWeight:700,lineHeight:1.2,color:PUB.wit,marginBottom:16}}>
-              Waarom zouden uw mensen morgen{" "}
-              <em style={{fontStyle:"italic",color:PUB.teal}}>anders doen</em>{" "}dan vandaag?
+              Goede teams worden niet beter door harder te werken. Ze worden beter door anders te kijken.
             </h1>
-            <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:"rgba(255,255,255,0.57)",maxWidth:400,marginBottom:32}}>
-              Duurzame verandering begint niet bij een nieuw proces. Het begint bij de mens.
+            <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:"rgba(255,255,255,0.57)",maxWidth:520,marginBottom:14}}>
               Wij meten wat er speelt, begrijpen wat het betekent en bewegen wat vastloopt.
             </p>
+            <div style={{fontSize:12,fontWeight:400,color:"rgba(255,255,255,0.42)",marginBottom:32}}>
+              Voor teams en organisaties in beweging.
+            </div>
             <div style={{display:"flex",flexDirection:isMobile?"column":"row",gap:12}}>
               <span style={{background:PUB.teal,color:PUB.donker,padding:"13px 22px",borderRadius:4,
                 fontWeight:600,fontSize:14,cursor:"pointer",textAlign:"center"}} onClick={openModal}>
