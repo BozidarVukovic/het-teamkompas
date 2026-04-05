@@ -4,6 +4,7 @@
 // ─────────────────────────────────────────────
 
 import { useState, useEffect, useRef } from "react";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -250,25 +251,95 @@ function KompasAnim() {
 
 function NavBar({ isMobile, onLoginClick, openModal }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const navLinks = [["Aanpak","aanpak"],["Voor wie","voor-wie"],["Over ons","over-ons"],["Werkwijze","werkwijze"]];
+  const [activeSection, setActiveSection] = useState("home");
+
+  const navLinks = [
+    ["Aanpak","aanpak"],
+    ["Voor wie","voor-wie"],
+    ["Over ons","over-ons"],
+    ["Werkwijze","werkwijze"]
+  ];
+
+  useEffect(() => {
+    const ids = ["aanpak", "voor-wie", "over-ons", "werkwijze"];
+    const observers = [];
+
+    const updateActive = () => {
+      const hero = document.getElementById("home");
+      if (hero) {
+        const rect = hero.getBoundingClientRect();
+        if (rect.top <= 120 && rect.bottom > 120) {
+          setActiveSection("home");
+          return;
+        }
+      }
+
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= 120 && rect.bottom > 120) {
+          setActiveSection(id);
+          return;
+        }
+      }
+    };
+
+    updateActive();
+    window.addEventListener("scroll", updateActive, { passive: true });
+    window.addEventListener("resize", updateActive);
+
+    return () => {
+      window.removeEventListener("scroll", updateActive);
+      window.removeEventListener("resize", updateActive);
+      observers.forEach(obs => obs.disconnect());
+    };
+  }, []);
+
   const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});
+    const targetId = id === "home" ? "home" : id;
+    document.getElementById(targetId)?.scrollIntoView({behavior:"smooth",block:"start"});
     setMenuOpen(false);
   };
+
+  const navLinkStyle = (id) => ({
+    position:"relative",
+    color: activeSection===id ? "#ffffff" : "rgba(255,255,255,0.62)",
+    fontSize:13,
+    cursor:"pointer",
+    transition:"color 0.2s",
+    paddingBottom:12,
+    display:"inline-flex",
+    alignItems:"center",
+  });
+
+  const activeIndicator = {
+    position:"absolute",
+    left:0,
+    right:0,
+    bottom:0,
+    height:3,
+    background:PUB.teal,
+    borderRadius:999,
+  };
+
   return (
     <>
       <div style={{position:"sticky",top:0,zIndex:200,background:"rgba(13,27,42,0.97)",
-        borderBottom:"1px solid rgba(0,168,150,0.2)",height:58,
+        borderBottom:"1px solid rgba(0,168,150,0.2)",height:64,
         display:"flex",alignItems:"center",justifyContent:"space-between",
-        padding:isMobile?"0 20px":"0 40px"}}>
+        padding:isMobile?"0 20px":"0 40px",backdropFilter:"blur(10px)"}}>
         <div style={{display:"flex",alignItems:"center",gap:9}}>
           <KompasDot size={22}/>
           <span style={{fontSize:15,fontWeight:600,color:"#ffffff"}}>Mijn Teamkompas</span>
         </div>
+
         {isMobile ? (
           <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <span onClick={openModal} style={{background:"#00A896",color:"#0D1B2A",padding:"7px 12px",
-              borderRadius:4,fontWeight:700,fontSize:12,cursor:"pointer"}}>Afspraak</span>
+            <span onClick={openModal} style={{background:"#F4F7F9",color:"#0D1B2A",padding:"8px 12px",
+              borderRadius:999,fontWeight:700,fontSize:12,cursor:"pointer",border:"1px solid rgba(0,168,150,0.18)"}}>
+              Neem contact op
+            </span>
             <div onClick={()=>setMenuOpen(!menuOpen)}
               style={{cursor:"pointer",color:"rgba(255,255,255,0.7)",fontSize:22,lineHeight:1,padding:"4px"}}>
               {menuOpen ? "✕" : "☰"}
@@ -276,31 +347,72 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
           </div>
         ) : (
           <div style={{display:"flex",alignItems:"center",gap:22}}>
+            <span
+              onClick={()=>scrollTo("home")}
+              aria-current={activeSection==="home" ? "page" : undefined}
+              style={navLinkStyle("home")}
+            >
+              Home
+              {activeSection==="home" && <span style={activeIndicator} />}
+            </span>
+
             {navLinks.map(([l,id])=>(
-              <span key={l} onClick={()=>scrollTo(id)}
-                style={{color:"rgba(255,255,255,0.62)",fontSize:13,cursor:"pointer",transition:"color 0.2s"}}
-                onMouseEnter={e=>e.target.style.color="#00A896"}
-                onMouseLeave={e=>e.target.style.color="rgba(255,255,255,0.62)"}>{l}</span>
+              <span
+                key={l}
+                onClick={()=>scrollTo(id)}
+                aria-current={activeSection===id ? "page" : undefined}
+                style={navLinkStyle(id)}
+                onMouseEnter={e=>{ if (activeSection!==id) e.target.style.color="#00A896"; }}
+                onMouseLeave={e=>{ if (activeSection!==id) e.target.style.color="rgba(255,255,255,0.62)"; }}
+              >
+                {l}
+                {activeSection===id && <span style={activeIndicator} />}
+              </span>
             ))}
-            <span style={{background:"#00A896",color:"#0D1B2A",fontWeight:700,padding:"7px 16px",
-              borderRadius:4,fontSize:12,cursor:"pointer"}} onClick={openModal}>Afspraak maken</span>
+
+            <span
+              onClick={openModal}
+              style={{background:"#F4F7F9",color:"#0D1B2A",fontWeight:700,padding:"10px 18px",
+                borderRadius:999,fontSize:12,cursor:"pointer",boxShadow:"0 8px 22px rgba(0,0,0,0.18)"}}
+            >
+              Neem contact op
+            </span>
+
             <span onClick={onLoginClick} style={{background:"transparent",color:"rgba(255,255,255,0.55)",
               padding:"7px 14px",borderRadius:4,fontWeight:500,fontSize:12,cursor:"pointer",
               border:"1px solid rgba(255,255,255,0.15)"}}>Inloggen →</span>
           </div>
         )}
       </div>
+
       {isMobile && menuOpen && (
-        <div style={{position:"fixed",top:58,left:0,right:0,zIndex:199,
+        <div style={{position:"fixed",top:64,left:0,right:0,zIndex:199,
           background:"rgba(13,27,42,0.98)",borderBottom:"1px solid rgba(0,168,150,0.2)",
           padding:"12px 0"}}>
+          <div
+            onClick={()=>scrollTo("home")}
+            aria-current={activeSection==="home" ? "page" : undefined}
+            style={{padding:"14px 24px",color:activeSection==="home" ? "#00A896" : "rgba(255,255,255,0.75)",
+              fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
+          >
+            Home
+          </div>
           {navLinks.map(([l,id])=>(
-            <div key={l} onClick={()=>scrollTo(id)}
-              style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",
-                borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
+            <div
+              key={l}
+              onClick={()=>scrollTo(id)}
+              aria-current={activeSection===id ? "page" : undefined}
+              style={{padding:"14px 24px",color:activeSection===id ? "#00A896" : "rgba(255,255,255,0.75)",
+                fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
+            >
               {l}
             </div>
           ))}
+          <div onClick={()=>{openModal();setMenuOpen(false);}}
+            style={{padding:"14px 24px",color:"#ffffff",fontSize:15,cursor:"pointer",fontWeight:700,
+              borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
+            Neem contact op
+          </div>
           <div onClick={()=>{onLoginClick();setMenuOpen(false);}}
             style={{padding:"14px 24px",color:"#00A896",fontSize:15,cursor:"pointer",fontWeight:600}}>
             Inloggen →
@@ -384,11 +496,25 @@ function PublicSite({ onLoginClick }) {
 
   return (
     <>
+      <Helmet>
+        <title>Mijn Teamkompas | Teamscan, teamcoaching en leiderschapsbegeleiding</title>
+        <meta
+          name="description"
+          content="Mijn Teamkompas helpt teams te groeien met teamscan, teamcoaching en leiderschapsbegeleiding."
+        />
+        <meta property="og:title" content="Mijn Teamkompas | Teamscan, teamcoaching en leiderschapsbegeleiding" />
+        <meta
+          property="og:description"
+          content="Mijn Teamkompas helpt teams te groeien met teamscan, teamcoaching en leiderschapsbegeleiding."
+        />
+        <meta property="og:type" content="website" />
+      </Helmet>
+
       <div style={{fontFamily:"'Roboto', sans-serif",color:"#2D3748",overflowX:"hidden"}}>
         <NavBar isMobile={isMobile} onLoginClick={onLoginClick} openModal={openModal} />
 
         {/* HERO */}
-        <div style={{background:PUB.donker,display:"grid",
+        <div id="home" style={{background:PUB.donker,display:"grid",
           gridTemplateColumns:isMobile?"1fr":"1fr 1fr",
           alignItems:"center",minHeight:isMobile?"auto":"86vh",
           position:"relative",overflow:"hidden"}}>
@@ -2112,8 +2238,11 @@ export default function App() {
     };
   }, []);
 
+  return (
+    <HelmetProvider>
+      {(() => {
   if (!authReady) {
-    return (
+        return (
       <div
         style={{
           minHeight: "100vh",
@@ -2132,16 +2261,19 @@ export default function App() {
   }
 
   if (view === "scan") {
-    return <ScanInvullen scanId={scanId} />;
+        return <ScanInvullen scanId={scanId} />;
   }
 
   if (view === "login") {
-    return <LoginScreen onLogin={() => setView("admin")} onBack={() => setView("public")} />;
+        return <LoginScreen onLogin={() => setView("admin")} onBack={() => setView("public")} />;
   }
 
   if (view === "admin") {
-    return <AdminDashboard onLogout={() => setView("public")} />;
+        return <AdminDashboard onLogout={() => setView("public")} />;
   }
 
-  return <PublicSite onLoginClick={() => setView("login")} />;
+        return <PublicSite onLoginClick={() => setView("login")} />;
+      })()}
+    </HelmetProvider>
+  );
 }
