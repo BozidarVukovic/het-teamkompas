@@ -708,20 +708,21 @@ function PublicSite({ onLoginClick }) {
         </div>
 
         {/* WERKWIJZE */}
-        <div id="werkwijze" style={{padding:"72px 60px",background:PUB.donker,position:"relative",overflow:"hidden"}}>
+        <div id="werkwijze" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.donker,position:"relative",overflow:"hidden"}}>
           <Fade>
             <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:"rgba(255,255,255,0.38)",textTransform:"uppercase",marginBottom:12}}>Hoe we werken</div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.wit,marginBottom:14}}>
               <em style={{fontStyle:"italic",color:PUB.teal}}>Drie stappen</em> naar beweging
             </h2>
-            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.48)",maxWidth:440,marginBottom:44}}>
-              Elk traject begint met luisteren. Dan meten. Dan bewegen.
+            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.48)",maxWidth:520,marginBottom:44}}>
+              We beginnen altijd met begrijpen wat er speelt. Pas daarna meten we gericht en vertalen we inzichten naar gedrag dat in de praktijk ook echt verandert.
             </p>
           </Fade>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)",gap:isMobile?12:3,position:"relative",zIndex:1,alignItems:"stretch"}}>
-            {[["01","Teamkompas Scan","We meten op alle vijf domeinen tegelijk.","4–6 weken"],
-              ["02","Inzicht & Dialoog","We presenteren de resultaten en faciliteren het gesprek.","Workshop & sessies"],
-              ["03","Gerichte Interventies","Concrete stappen op maat voor uw organisatie.","Op maat"],
+            {[
+              ["01","Meten wat er speelt","We zetten de Teamkompas Scan uit in het team. Iedereen vult anoniem in hoe het er echt voor staat op het vlak van veiligheid, energie, verandering en leren. Zo krijg je in één meting een volledig en eerlijk beeld van wat er onder de oppervlakte speelt.","Circa 2 weken"],
+              ["02","Inzicht en gesprek","We presenteren de uitkomsten aan team en leidinggevende en faciliteren het gesprek dat nodig is. Niet alleen wat de scores zeggen, maar wat ze betekenen. Welke patronen herkennen mensen? Waar zit de echte bewegingsruimte?","Sessie van 1 dag"],
+              ["03","Bewegen en verankeren","Op basis van de inzichten werken we aan concreet en veranderbaar gedrag. Geen losse actielijsten, maar begeleiding die aansluit bij wat het team écht nodig heeft om verder te komen.","Traject op maat"],
             ].map(([nr,t,b,tag],i)=>(
               <Fade key={i} delay={i*0.12} style={{height:"100%"}}>
                 <div style={{height:"100%",boxSizing:"border-box",display:"flex",flexDirection:"column",
