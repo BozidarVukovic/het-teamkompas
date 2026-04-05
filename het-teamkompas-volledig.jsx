@@ -631,7 +631,7 @@ function PublicSite({ onLoginClick }) {
             <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.62)",maxWidth:760,marginBottom:36}}>
               Geen stapel aanbevelingen die in een la verdwijnen. Wat we doen wordt zichtbaar in hoe mensen samenwerken, communiceren en eigenaarschap nemen.
             </p>
-            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(2,1fr)",gap:isMobile?10:12,maxWidth:900}}>
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(2,1fr)",gap:isMobile?10:12,maxWidth:900,gridAutoRows:"1fr"}}>
               {[
                 "Je weet sneller wat samenwerking belemmert en waar de echte ruimte zit",
                 "Teams spreken zich opener uit omdat ze begrijpen wat er speelt",
@@ -640,10 +640,10 @@ function PublicSite({ onLoginClick }) {
                 "De aanpak is mensgericht én gericht op zichtbaar resultaat",
                 "Gedrag, samenwerking en eigenaarschap veranderen merkbaar",
               ].map((item,i)=>(
-                <Fade key={i} delay={i*0.05}>
-                  <div style={{display:"flex",gap:12,alignItems:"flex-start",padding:"16px 18px",
+                <Fade key={i} delay={i*0.05} style={{height:"100%"}}>
+                  <div style={{height:"100%",boxSizing:"border-box",display:"flex",gap:12,alignItems:"center",padding:"16px 18px",
                     background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10}}>
-                    <div style={{width:8,height:8,borderRadius:"50%",background:PUB.teal,marginTop:7,flexShrink:0}}/>
+                    <div style={{width:8,height:8,borderRadius:"50%",background:PUB.teal,flexShrink:0}}/>
                     <div style={{fontSize:14,color:"rgba(255,255,255,0.84)",lineHeight:1.6}}>{item}</div>
                   </div>
                 </Fade>
