@@ -662,23 +662,21 @@ function PublicSite({ onLoginClick }) {
         <div id="over-ons" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
             <Fade>
-              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Wie wij zijn</div>
+              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Wie zijn wij</div>
               <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-                Ervaring die je herkent.<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Aanpak die werkt.</em>
+                Gebouwd vanuit <em style={{fontStyle:"italic",color:PUB.teal}}>praktijk</em>
               </h2>
-              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:16}}>
-                Wij begeleiden teams en leidinggevenden in organisaties waar samenwerking onder druk staat. Door groei, verandering, of simpelweg doordat er nooit écht over het samenwerken zelf is gesproken.
+              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:20}}>
+                Opgericht door twee mensen die weten hoe verandering écht werkt — en waarom het zo vaak niet werkt.
               </p>
-              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:16}}>
-                We combineren jarenlange praktijkervaring in leiderschap en organisatieverandering met een aanpak die direct toepasbaar is. Geen theorie die blijft hangen in een presentatie maar inzichten die mensen de volgende dag al anders laten handelen.
-              </p>
-              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:0}}>
-                We helpen niet alleen begrijpen wat er speelt. We helpen het gesprek en het gedrag ook echt veranderen.
-              </p>
+              <blockquote style={{borderLeft:`3px solid ${PUB.teal}`,paddingLeft:16,margin:"20px 0",
+                fontSize:isMobile?14:17,fontStyle:"italic",color:PUB.donker,lineHeight:1.6}}>
+                "Kwaliteit van leven is de som van de kwaliteit van relaties. Dat geldt op het voetbalveld. Het geldt ook in uw organisatie."
+              </blockquote>
             </Fade>
             <div style={{display:"flex",flexDirection:"column",gap:14}}>
-              {[[PUB.teal,"🧭","Change Consultant","Ik heb gezien hoe organisaties vastlopen op gedrag dat niemand bespreekt. Mijn werk is dat zichtbaar maken en mensen helpen er iets mee te doen."],
-                [PUB.blauw,"🏆","Leadership Expert","Leiders dragen verantwoordelijkheid voor mensen, niet voor resultaten. Dat klinkt simpel. Het vraagt een fundamenteel andere manier van kijken."],
+              {[[PUB.teal,"🧭","Change Consultant","Specialist in mensgerichte organisatieverandering en gedragsverandering."],
+                [PUB.blauw,"🏆","Leadership Expert","Gelooft dat leiders verantwoordelijk zijn voor de mensen, niet voor het resultaat."],
               ].map(([c,icon,rol,bio],i)=>(
                 <Fade key={i} delay={i*0.15}>
                   <div style={{display:"flex",gap:14,alignItems:"flex-start",padding:18,
@@ -688,7 +686,7 @@ function PublicSite({ onLoginClick }) {
                       fontSize:22,color:PUB.wit}}>{icon}</div>
                     <div>
                       <div style={{fontSize:11,color:PUB.teal,fontWeight:500,marginBottom:4}}>{rol}</div>
-                      <div style={{fontSize:12,color:PUB.sub,lineHeight:1.55,fontStyle:"italic"}}>{bio}</div>
+                      <div style={{fontSize:12,color:PUB.sub,lineHeight:1.55}}>{bio}</div>
                     </div>
                   </div>
                 </Fade>
@@ -696,7 +694,7 @@ function PublicSite({ onLoginClick }) {
               <Fade delay={0.3}>
                 <div style={{padding:18,borderRadius:8,background:PUB.navy,border:`1px solid ${PUB.tealGlow}`}}>
                   <p style={{fontSize:13,color:"rgba(255,255,255,0.52)",marginBottom:11,lineHeight:1.6}}>
-                    Benieuwd of onze aanpak past bij wat er in jouw organisatie speelt? Plan een vrijblijvend gesprek van 30 minuten. We luisteren eerst.
+                    Benieuwd of onze aanpak past bij uw organisatie? Plan een vrijblijvend gesprek van 30 minuten.
                   </p>
                   <span style={{background:PUB.teal,color:PUB.donker,padding:"10px 18px",borderRadius:4,
                     fontWeight:600,fontSize:13,cursor:"pointer",display:"block",textAlign:"center"}}
@@ -708,21 +706,20 @@ function PublicSite({ onLoginClick }) {
         </div>
 
         {/* WERKWIJZE */}
-        <div id="werkwijze" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.donker,position:"relative",overflow:"hidden"}}>
+        <div id="werkwijze" style={{padding:"72px 60px",background:PUB.donker,position:"relative",overflow:"hidden"}}>
           <Fade>
             <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:"rgba(255,255,255,0.38)",textTransform:"uppercase",marginBottom:12}}>Hoe we werken</div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.wit,marginBottom:14}}>
               <em style={{fontStyle:"italic",color:PUB.teal}}>Drie stappen</em> naar beweging
             </h2>
-            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.48)",maxWidth:520,marginBottom:44}}>
-              We beginnen altijd met begrijpen wat er speelt. Pas daarna meten we gericht en vertalen we inzichten naar gedrag dat in de praktijk ook echt verandert.
+            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.48)",maxWidth:440,marginBottom:44}}>
+              Elk traject begint met luisteren. Dan meten. Dan bewegen.
             </p>
           </Fade>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)",gap:isMobile?12:3,position:"relative",zIndex:1,alignItems:"stretch"}}>
-            {[
-              ["01","Meten wat er speelt","We zetten de Teamkompas Scan uit in het team. Iedereen vult anoniem in hoe het er echt voor staat op het vlak van veiligheid, energie, verandering en leren. Zo krijg je in één meting een volledig en eerlijk beeld van wat er onder de oppervlakte speelt.","Circa 2 weken"],
-              ["02","Inzicht en gesprek","We presenteren de uitkomsten aan team en leidinggevende en faciliteren het gesprek dat nodig is. Niet alleen wat de scores zeggen, maar wat ze betekenen. Welke patronen herkennen mensen? Waar zit de echte bewegingsruimte?","Sessie van 1 dag"],
-              ["03","Bewegen en verankeren","Op basis van de inzichten werken we aan concreet en veranderbaar gedrag. Geen losse actielijsten, maar begeleiding die aansluit bij wat het team écht nodig heeft om verder te komen.","Traject op maat"],
+            {[["01","Teamkompas Scan","We meten op alle vijf domeinen tegelijk.","4–6 weken"],
+              ["02","Inzicht & Dialoog","We presenteren de resultaten en faciliteren het gesprek.","Workshop & sessies"],
+              ["03","Gerichte Interventies","Concrete stappen op maat voor uw organisatie.","Op maat"],
             ].map(([nr,t,b,tag],i)=>(
               <Fade key={i} delay={i*0.12} style={{height:"100%"}}>
                 <div style={{height:"100%",boxSizing:"border-box",display:"flex",flexDirection:"column",
@@ -769,13 +766,34 @@ function PublicSite({ onLoginClick }) {
               </div>
               <p style={{fontSize:14,fontStyle:"italic",color:PUB.teal,marginBottom:9}}>Mensen maken het verschil.</p>
             </div>
-            {[["Aanpak",["Teamkompas Scan","De vier domeinen","Werkwijze"]],
-              ["Voor wie",["Zakelijke dienstverlening","Gemeenten","Onderwijs","Industrie"]],
-              ["Contact",["Afspraak maken","info@mijnteamkompas.nl","LinkedIn"]],
+            {[
+              ["Aanpak",[
+                ["Teamkompas Scan",    ()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["De vier domeinen",   ()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["Werkwijze",          ()=>document.getElementById("werkwijze")?.scrollIntoView({behavior:"smooth",block:"start"})],
+              ]],
+              ["Voor wie",[
+                ["Zakelijke dienstverlening", ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["Gemeenten",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["Onderwijs",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["Industrie",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
+              ]],
+              ["Contact",[
+                ["Afspraak maken",         ()=>openModal()],
+                ["info@mijnteamkompas.nl", ()=>window.location.href="mailto:info@mijnteamkompas.nl"],
+                ["LinkedIn",               ()=>window.open("https://www.linkedin.com/company/het-teamkompas","_blank")],
+              ]],
             ].map(([t,ls],i)=>(
               <div key={i}>
                 <div style={{fontSize:9,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:"rgba(255,255,255,0.28)",marginBottom:12}}>{t}</div>
-                {ls.map(l=><div key={l} style={{fontSize:12,color:"rgba(255,255,255,0.52)",marginBottom:8,cursor:"pointer"}}>{l}</div>)}
+                {ls.map(([l,fn])=>(
+                  <div key={l} onClick={fn}
+                    style={{fontSize:12,color:"rgba(255,255,255,0.52)",marginBottom:8,cursor:"pointer",transition:"color 0.2s"}}
+                    onMouseEnter={e=>e.target.style.color="rgba(0,168,150,0.9)"}
+                    onMouseLeave={e=>e.target.style.color="rgba(255,255,255,0.52)"}>
+                    {l}
+                  </div>
+                ))}
               </div>
             ))}
           </div>
