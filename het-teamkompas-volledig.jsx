@@ -572,13 +572,13 @@ function PublicSite({ onLoginClick }) {
         {/* FOTOSECTIE */}
         <div style={{position:"relative",width:"100%",height:isMobile?280:480,overflow:"hidden"}}>
           <img
-            src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600&q=80&fit=crop&crop=faces,center"
-            alt="Samenwerkende mensen in een team"
-            style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 30%",display:"block"}}
+            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600&q=80&fit=crop&crop=center"
+            alt="Mensen in serieus overleg aan tafel"
+            style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 40%",display:"block"}}
           />
           <div style={{
             position:"absolute",inset:0,
-            background:"linear-gradient(to right, rgba(13,27,42,0.72) 0%, rgba(13,27,42,0.35) 50%, rgba(13,27,42,0.15) 100%)"
+            background:"linear-gradient(to right, rgba(13,27,42,0.78) 0%, rgba(13,27,42,0.45) 55%, rgba(13,27,42,0.18) 100%)"
           }}/>
           <div style={{
             position:"absolute",inset:0,
@@ -590,11 +590,8 @@ function PublicSite({ onLoginClick }) {
                 fontSize:isMobile?20:34,fontWeight:700,color:PUB.wit,
                 lineHeight:1.3,maxWidth:620,marginBottom:16
               }}>
-                Mensen maken het verschil.<br/>
-                <em style={{fontStyle:"italic",color:PUB.teal}}>Wij helpen dat zichtbaar maken.</em>
-              </p>
-              <p style={{fontSize:isMobile?13:15,color:"rgba(255,255,255,0.72)",maxWidth:480,lineHeight:1.7}}>
-                Niet met modellen en matrices, maar door te begrijpen wat er werkelijk speelt in het team.
+                Samenwerking verbeteren begint niet met een nieuw proces.<br/>
+                <em style={{fontStyle:"italic",color:PUB.teal}}>Het begint met begrijpen wat er werkelijk tussen mensen speelt.</em>
               </p>
             </Fade>
           </div>
@@ -710,47 +707,49 @@ function PublicSite({ onLoginClick }) {
           </div>
         </div>
 
-        {/* FOUNDERS */}
+        {/* OVER ONS */}
         <div id="over-ons" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
             <Fade>
-              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Wie zijn wij</div>
+              <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Wie wij zijn</div>
               <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-                Gebouwd vanuit <em style={{fontStyle:"italic",color:PUB.teal}}>praktijk</em>
+                Ervaring die je herkent.<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Aanpak die werkt.</em>
               </h2>
-              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:20}}>
-                Opgericht door twee mensen die weten hoe verandering écht werkt — en waarom het zo vaak niet werkt.
+              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:16}}>
+                Wij begeleiden teams en leidinggevenden in organisaties waar samenwerking onder druk staat. Door groei, verandering, of simpelweg doordat er nooit écht over het samenwerken zelf is gesproken.
               </p>
-              <blockquote style={{borderLeft:`3px solid ${PUB.teal}`,paddingLeft:16,margin:"20px 0",
-                fontSize:isMobile?14:17,fontStyle:"italic",color:PUB.donker,lineHeight:1.6}}>
-                "Kwaliteit van leven is de som van de kwaliteit van relaties. Dat geldt op het voetbalveld. Het geldt ook in uw organisatie."
-              </blockquote>
+              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:16}}>
+                We combineren jarenlange praktijkervaring in leiderschap en organisatieverandering met een aanpak die direct toepasbaar is. Geen theorie die blijft hangen in een presentatie maar inzichten die mensen de volgende dag al anders laten handelen.
+              </p>
+              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:0}}>
+                We helpen niet alleen begrijpen wat er speelt. We helpen het gesprek en het gedrag ook echt veranderen.
+              </p>
             </Fade>
             <div style={{display:"flex",flexDirection:"column",gap:14}}>
-              {[[PUB.teal,"🧭","Change Consultant","Specialist in mensgerichte organisatieverandering en gedragsverandering."],
-                [PUB.blauw,"🏆","Leadership Expert","Gelooft dat leiders verantwoordelijk zijn voor de mensen, niet voor het resultaat."],
-              ].map(([c,icon,rol,bio],i)=>(
-                <Fade key={i} delay={i*0.15}>
+              {[
+                ["Mensgericht én praktisch","Geen abstracte verandertaal, maar begeleiding die aansluit op de dagelijkse praktijk van teams en leidinggevenden."],
+                ["Onderstroom zichtbaar maken","We helpen organisaties begrijpen wat niet wordt uitgesproken maar wel bepalend is voor samenwerking en beweging."],
+                ["Richting geven aan vervolg","Inzichten worden vertaald naar gesprekken, interventies en vervolgstappen die uitvoerbaar en relevant zijn."],
+              ].map(([titel,tekst],i)=>(
+                <Fade key={i} delay={i*0.12}>
                   <div style={{display:"flex",gap:14,alignItems:"flex-start",padding:18,
                     borderRadius:8,border:`1px solid ${PUB.lijn}`,background:PUB.licht}}>
-                    <div style={{width:50,height:50,borderRadius:"50%",background:c,flexShrink:0,
-                      display:"flex",alignItems:"center",justifyContent:"center",
-                      fontSize:22,color:PUB.wit}}>{icon}</div>
+                    <div style={{width:10,height:10,borderRadius:"50%",background:PUB.teal,marginTop:5,flexShrink:0}}/>
                     <div>
-                      <div style={{fontSize:11,color:PUB.teal,fontWeight:500,marginBottom:4}}>{rol}</div>
-                      <div style={{fontSize:12,color:PUB.sub,lineHeight:1.55}}>{bio}</div>
+                      <div style={{fontSize:14,fontWeight:700,color:PUB.donker,marginBottom:5}}>{titel}</div>
+                      <div style={{fontSize:13,color:PUB.sub,lineHeight:1.65}}>{tekst}</div>
                     </div>
                   </div>
                 </Fade>
               ))}
-              <Fade delay={0.3}>
+              <Fade delay={0.35}>
                 <div style={{padding:18,borderRadius:8,background:PUB.navy,border:`1px solid ${PUB.tealGlow}`}}>
-                  <p style={{fontSize:13,color:"rgba(255,255,255,0.52)",marginBottom:11,lineHeight:1.6}}>
-                    Benieuwd of onze aanpak past bij uw organisatie? Plan een vrijblijvend gesprek van 30 minuten.
+                  <p style={{fontSize:13,color:"rgba(255,255,255,0.62)",marginBottom:11,lineHeight:1.6}}>
+                    Benieuwd of onze aanpak past bij wat er in jouw organisatie speelt? Plan een vrijblijvend gesprek van 30 minuten. We luisteren eerst.
                   </p>
                   <span style={{background:PUB.teal,color:PUB.donker,padding:"10px 18px",borderRadius:4,
                     fontWeight:600,fontSize:13,cursor:"pointer",display:"block",textAlign:"center"}}
-                    onClick={openModal}>Plan een gesprek →</span>
+                    onClick={openModal}>Plan een vrijblijvend kennismakingsgesprek →</span>
                 </div>
               </Fade>
             </div>
