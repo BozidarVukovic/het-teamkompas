@@ -398,7 +398,7 @@ function PublicSite({ onLoginClick }) {
           <Strepen/>
           <div style={{padding:isMobile?"60px 24px 40px 32px":"60px 48px 60px 60px",position:"relative",zIndex:2}}>
             <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,
-              textTransform:"uppercase",marginBottom:16}}>MIJN TEAMKOMPAS</div>
+              textTransform:"uppercase",marginBottom:16}}>Voor teams en leidinggevenden</div>
             <h1 style={{fontSize:isMobile?30:44,fontWeight:700,lineHeight:1.2,color:PUB.wit,marginBottom:16}}>
               Goede teams worden niet beter door harder te werken. Ze worden beter door anders te kijken.
             </h1>
