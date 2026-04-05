@@ -632,21 +632,21 @@ function PublicSite({ onLoginClick }) {
         </div>
 
         {/* SECTOREN */}
-        <div id="voor-wie" style={{padding:"72px 60px",background:PUB.licht}}>
+        <div id="voor-wie" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.licht}}>
           <Fade>
             <div style={{fontSize:10,fontWeight:600,letterSpacing:"0.18em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Voor wie werken wij</div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-              Van overheid tot <em style={{fontStyle:"italic",color:PUB.teal}}>zakelijke dienstverlening</em>
+              Herkenbaar in elke sector.<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Toepasbaar in jouw team.</em>
             </h2>
-            <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,maxWidth:460,marginBottom:40}}>
-              Onze methodiek is sectoronafhankelijk — want mensen zijn overal mensen.
+            <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,maxWidth:520,marginBottom:40}}>
+              Wij werken met teams waar samenwerking onder druk staat. Dat speelt in onderwijs, overheid en bedrijfsleven — in verschillende vormen, maar met dezelfde menselijke dynamiek.
             </p>
           </Fade>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)",gap:isMobile?12:16,alignItems:"stretch"}}>
-            {[["Zakelijke dienstverlening","Groeiende organisaties en scale-ups die structuur en cultuur willen versterken."],
-              ["Gemeenten","Verandering in een politieke omgeving vraagt extra aandacht voor psychologische veiligheid."],
-              ["Onderwijs","Van schoolteams tot hogescholen — het gesprek over gedrag concreet en constructief maken."],
-              ["Industrie","Veiligheidscultuur, lean-transformaties en teamontwikkeling op de werkvloer."],
+            {[["Zakelijke dienstverlening","Groeiende organisaties waar cultuur en structuur achterlopen op de ambities en teams meer eigenaarschap nodig hebben."],
+              ["Gemeenten","Verandering in een politieke omgeving waar draagvlak, psychologische veiligheid en duidelijkheid voortdurend onder druk staan."],
+              ["Onderwijs","Schoolteams en hogescholen waar de werkdruk hoog is en het gesprek over samenwerking zelden gevoerd wordt."],
+              ["Industrie","Teams op de werkvloer waar veiligheidscultuur en continu verbeteren hand in hand moeten gaan."],
             ].map(([t,b],i)=>(
               <Fade key={i} delay={i*0.1} style={{height:"100%"}}>
                 <div style={{height:"100%",background:PUB.wit,border:`1px solid ${PUB.lijn}`,borderRadius:8,padding:"22px 18px",boxSizing:"border-box"}}>
