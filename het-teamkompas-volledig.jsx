@@ -865,7 +865,11 @@ function PublicSite({ onLoginClick }) {
           </div>
           <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
             <span style={{fontSize:11,color:"rgba(255,255,255,0.22)"}}>© 2026 Mijn Teamkompas</span>
-            <div style={{display:"flex",gap:16}}>
+            <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
+              <span style={{fontSize:11,color:"rgba(255,255,255,0.22)",cursor:"pointer"}}
+                onClick={()=>window.open("/privacyverklaring_mijnteamkompas.pdf","_blank")}>
+                Privacyverklaring
+              </span>
               <span style={{fontSize:11,color:"rgba(255,255,255,0.22)",cursor:"pointer"}}
                 onClick={()=>window.open("/algemene_voorwaarden_mijnteamkompas.pdf","_blank")}>
                 Algemene voorwaarden
