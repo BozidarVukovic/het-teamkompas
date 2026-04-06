@@ -325,7 +325,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
 
   return (
     <>
-      <div style={{position:"sticky",top:0,zIndex:200,background:"rgba(13,27,42,0.97)",
+      <div style={{position:"fixed",top:0,left:0,right:0,zIndex:200,background:"rgba(13,27,42,0.97)",
         borderBottom:"1px solid rgba(0,168,150,0.2)",height:64,
         display:"flex",alignItems:"center",justifyContent:"space-between",
         padding:isMobile?"0 20px":"0 40px",backdropFilter:"blur(10px)"}}>
@@ -510,7 +510,7 @@ function PublicSite({ onLoginClick }) {
         <meta property="og:type" content="website" />
       </Helmet>
 
-      <div style={{fontFamily:"'Roboto', sans-serif",color:"#2D3748",overflowX:"hidden"}}>
+      <div style={{fontFamily:"'Roboto', sans-serif",color:"#2D3748",overflowX:"hidden",paddingTop:64}}>
         <NavBar isMobile={isMobile} onLoginClick={onLoginClick} openModal={openModal} />
 
         {/* HERO */}
@@ -557,16 +557,6 @@ function PublicSite({ onLoginClick }) {
               <KompasAnim/>
             </div>
           )}
-        </div>
-
-        {/* SECTORBALK */}
-        <div style={{background:PUB.licht,padding:isMobile?"17px 20px":"17px 60px",display:"flex",
-          alignItems:"center",gap:28,borderBottom:`1px solid ${PUB.lijn}`,overflowX:"auto"}}>
-          <span style={{fontSize:9.5,fontWeight:600,letterSpacing:"0.15em",textTransform:"uppercase",
-            color:PUB.sub,whiteSpace:"nowrap",flexShrink:0,opacity:0.65}}>Actief in</span>
-          {["Zakelijke dienstverlening","Gemeenten","Onderwijs","Energie","Industrie","Financiën"].map(i=>(
-            <span key={i} style={{fontSize:13,color:PUB.sub,opacity:0.62,whiteSpace:"nowrap"}}>{i}</span>
-          ))}
         </div>
 
         {/* FOTOSECTIE */}
@@ -843,7 +833,6 @@ function PublicSite({ onLoginClick }) {
               ["Contact",[
                 ["Afspraak maken",         ()=>openModal()],
                 ["info@mijnteamkompas.nl", ()=>window.location.href="mailto:info@mijnteamkompas.nl"],
-                ["LinkedIn",               ()=>window.open("https://www.linkedin.com/company/het-teamkompas","_blank")],
               ]],
             ].map(([t,ls],i)=>(
               <div key={i}>
