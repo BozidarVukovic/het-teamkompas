@@ -706,7 +706,7 @@ function PublicSite({ onLoginClick }) {
                 Ervaring die je herkent.<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Aanpak die werkt.</em>
               </h2>
               <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:16}}>
-                Wij begeleiden teams en leidinggevenden in organisaties waar samenwerking onder druk staat. Door groei, verandering, of simpelweg doordat er nooit écht over het samenwerken zelf is gesproken.
+                Wij helpen organisaties zichtbaar te maken wat in samenwerking vaak onbesproken blijft, maar wel bepalend is voor vertrouwen, duidelijkheid en beweging.
               </p>
               <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:16}}>
                 We combineren jarenlange praktijkervaring in leiderschap en organisatieverandering met een aanpak die direct toepasbaar is. Geen theorie die blijft hangen in een presentatie maar inzichten die mensen de volgende dag al anders laten handelen.
