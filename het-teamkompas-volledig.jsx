@@ -819,8 +819,8 @@ function PublicSite({ onLoginClick }) {
         </div>
 
         {/* FOOTER */}
-        <div style={{background:PUB.donker,padding:"44px 60px 22px",borderTop:"1px solid rgba(0,168,150,0.12)"}}>
-          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"2fr 1fr 1fr 1fr",gap:30,marginBottom:30}}>
+        <div style={{background:PUB.donker,padding:isMobile?"44px 24px 22px":"44px 60px 22px",borderTop:"1px solid rgba(0,168,150,0.12)"}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"2fr 1fr 1fr 1fr",gap:isMobile?24:30,marginBottom:30}}>
             <div>
               <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:11}}>
                 <KompasDot size={20}/>
@@ -828,13 +828,35 @@ function PublicSite({ onLoginClick }) {
               </div>
               <p style={{fontSize:14,fontStyle:"italic",color:PUB.teal,marginBottom:9}}>Mensen maken het verschil.</p>
             </div>
-            {[["Aanpak",["Teamkompas Scan","De vier domeinen","Werkwijze"]],
-              ["Voor wie",["Zakelijke dienstverlening","Gemeenten","Onderwijs","Industrie"]],
-              ["Contact",["Afspraak maken","info@mijnteamkompas.nl","LinkedIn"]],
+            {[
+              ["Aanpak",[
+                ["Teamkompas Scan",    ()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["De vier domeinen",   ()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["Werkwijze",          ()=>document.getElementById("werkwijze")?.scrollIntoView({behavior:"smooth",block:"start"})],
+              ]],
+              ["Voor wie",[
+                ["Zakelijke dienstverlening", ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["Gemeenten",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["Onderwijs",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["Industrie",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
+              ]],
+              ["Contact",[
+                ["Afspraak maken",         ()=>openModal()],
+                ["info@mijnteamkompas.nl", ()=>window.location.href="mailto:info@mijnteamkompas.nl"],
+                ["LinkedIn",               ()=>window.open("https://www.linkedin.com/company/het-teamkompas","_blank")],
+              ]],
             ].map(([t,ls],i)=>(
               <div key={i}>
                 <div style={{fontSize:9,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:"rgba(255,255,255,0.28)",marginBottom:12}}>{t}</div>
-                {ls.map(l=><div key={l} style={{fontSize:12,color:"rgba(255,255,255,0.52)",marginBottom:8,cursor:"pointer"}}>{l}</div>)}
+                {ls.map(([l,fn])=>(
+                  <div key={l} onClick={fn}
+                    style={{fontSize:12,color:"rgba(255,255,255,0.52)",marginBottom:8,cursor:"pointer",
+                      WebkitTapHighlightColor:"transparent",padding:"4px 0"}}
+                    onMouseEnter={e=>e.currentTarget.style.color="rgba(0,168,150,0.9)"}
+                    onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.52)"}>
+                    {l}
+                  </div>
+                ))}
               </div>
             ))}
           </div>
@@ -843,7 +865,12 @@ function PublicSite({ onLoginClick }) {
           </div>
           <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
             <span style={{fontSize:11,color:"rgba(255,255,255,0.22)"}}>© 2026 Mijn Teamkompas</span>
-            <span style={{fontSize:11,color:"rgba(255,255,255,0.22)"}}>Privacybeleid · Algemene voorwaarden</span>
+            <div style={{display:"flex",gap:16}}>
+              <span style={{fontSize:11,color:"rgba(255,255,255,0.22)",cursor:"pointer"}}
+                onClick={()=>window.open("/algemene_voorwaarden_mijnteamkompas.pdf","_blank")}>
+                Algemene voorwaarden
+              </span>
+            </div>
           </div>
         </div>
       </div>
