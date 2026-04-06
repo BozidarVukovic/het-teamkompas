@@ -204,46 +204,88 @@ function KompasDot({ size = 26 }) {
 
 function KompasAnim() {
   const isMobile = useIsMobile();
-  const [r, setR] = useState(0);
   const size = isMobile ? 360 : 480;
-  useEffect(() => {
-    let f;
-    const t = () => { setR(v => v + 0.014); f = requestAnimationFrame(t); };
-    f = requestAnimationFrame(t);
-    return () => cancelAnimationFrame(f);
-  }, []);
+
   const kw = [
-    [PUB.groen,"🛡","Veiligheid &\nLeiderschap"],
-    [PUB.blauw,"🧠","Beleving van\nVerandering"],
-    [PUB.oranje,"⚡","Energie &\nMotivatie"],
-    [PUB.paars,"⚙","Verbeteren\n& Leren"],
+    [PUB.groen, "Veiligheid"],
+    [PUB.blauw, "Verandering"],
+    [PUB.oranje, "Energie"],
+    [PUB.paars, "Leren"],
   ];
+
   return (
-    <div style={{ width:size,height:size,position:"relative",flexShrink:0 }}>
-      {[0,14,28].map((ins,i) => (
-        <div key={i} style={{ position:"absolute",inset:ins,borderRadius:"50%",
-          border:`1px solid rgba(255,255,255,${0.07-i*0.02})`,
-          transform:`rotate(${r*(i%2?-1:1)}deg)` }} />
+    <div style={{ width:size, height:size, position:"relative", flexShrink:0 }}>
+      {[0,16,32].map((ins,i) => (
+        <div
+          key={i}
+          style={{
+            position:"absolute",
+            inset:ins,
+            borderRadius:"50%",
+            border:`1px solid rgba(255,255,255,${0.08 - i*0.02})`,
+          }}
+        />
       ))}
-      <div style={{ position:"absolute",inset:46,borderRadius:"50%",overflow:"hidden",
-        display:"grid",gridTemplateColumns:"1fr 1fr",boxShadow:"0 0 48px rgba(0,0,0,0.55)" }}>
-        {kw.map(([c,ic,l],i) => (
-          <div key={i} style={{ background:c,display:"flex",flexDirection:"column",
-            alignItems:"center",justifyContent:"center",gap:4,padding:8 }}>
-            <span style={{fontSize:18}}>{ic}</span>
-            <span style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.92)",
-              textAlign:"center",lineHeight:1.3,whiteSpace:"pre-line"}}>{l}</span>
+
+      <div
+        style={{
+          position:"absolute",
+          inset:46,
+          borderRadius:"50%",
+          overflow:"hidden",
+          display:"grid",
+          gridTemplateColumns:"1fr 1fr",
+          boxShadow:"0 0 48px rgba(0,0,0,0.42)",
+        }}
+      >
+        {kw.map(([c,l],i) => (
+          <div
+            key={i}
+            style={{
+              background:c,
+              display:"flex",
+              alignItems:"center",
+              justifyContent:"center",
+              padding:12,
+            }}
+          >
+            <span
+              style={{
+                fontSize:isMobile ? 14 : 16,
+                fontWeight:700,
+                color:"rgba(255,255,255,0.95)",
+                textAlign:"center",
+                lineHeight:1.2,
+                letterSpacing:"0.01em",
+              }}
+            >
+              {l}
+            </span>
           </div>
         ))}
       </div>
-      <div style={{ position:"absolute",top:"50%",left:"50%",
-        transform:"translate(-50%,-50%)",width:110,height:110,borderRadius:"50%",
-        background:PUB.donker,border:"2px solid rgba(0,168,150,0.4)",
-        display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-        zIndex:10,boxShadow:"0 0 28px rgba(0,0,0,0.65)" }}>
-        <span style={{fontSize:19,fontWeight:700,color:PUB.teal}}>Gedrag</span>
-        <span style={{fontSize:10,color:"rgba(255,255,255,0.42)",textAlign:"center",
-          padding:"0 8px",lineHeight:1.3}}>Inzicht in voorkeursgedrag & samenwerking</span>
+
+      <div
+        style={{
+          position:"absolute",
+          top:"50%",
+          left:"50%",
+          transform:"translate(-50%,-50%)",
+          width:isMobile ? 116 : 130,
+          height:isMobile ? 116 : 130,
+          borderRadius:"50%",
+          background:PUB.donker,
+          border:"2px solid rgba(15,118,110,0.38)",
+          display:"flex",
+          alignItems:"center",
+          justifyContent:"center",
+          zIndex:10,
+          boxShadow:"0 0 28px rgba(0,0,0,0.38)",
+        }}
+      >
+        <span style={{fontSize:isMobile ? 22 : 24, fontWeight:700, color:PUB.teal}}>
+          Gedrag
+        </span>
       </div>
     </div>
   );
