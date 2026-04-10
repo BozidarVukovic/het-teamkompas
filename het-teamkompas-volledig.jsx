@@ -3312,6 +3312,488 @@ function PageMetingen() {
   );
 }
 
+
+
+function downloadHtmlRapport(filename, html) {
+  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function standaardRapportHeader({ titel, klant, instrument, respondenten, datum }) {
+  return `
+  <div class="header">
+    <div class="header-bar">
+      <div style="background:#5A8C3C;"></div>
+      <div style="background:#3A7DBF;"></div>
+      <div style="background:#E8821A;"></div>
+      <div style="background:#6B4E9E;"></div>
+    </div>
+    <div style="font-size:11px;color:#0F766E;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Mijn Teamkompas — Rapportage</div>
+    <h1>${titel}</h1>
+    <p>${klant}</p>
+    <div style="display:flex;gap:32px;margin-top:20px;flex-wrap:wrap;">
+      <div><div class="label" style="color:rgba(255,255,255,0.5)">Datum</div><div style="font-size:15px;font-weight:600">${datum}</div></div>
+      <div><div class="label" style="color:rgba(255,255,255,0.5)">Respondenten</div><div style="font-size:15px;font-weight:600">${respondenten}</div></div>
+      <div><div class="label" style="color:rgba(255,255,255,0.5)">Instrument</div><div style="font-size:15px;font-weight:600">${instrument}</div></div>
+    </div>
+  </div>`;
+}
+
+function standaardRapportCss() {
+  return `
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f7f9fc;color:#1a1a2e}
+.header{background:#0D1B2A;color:white;padding:40px 60px}
+.header-bar{display:flex;height:6px;margin-bottom:28px}
+.header-bar div{flex:1}
+.header h1{font-size:28px;font-weight:700;margin-bottom:6px}
+.header p{font-size:14px;color:rgba(255,255,255,0.6)}
+.content{max-width:920px;margin:0 auto;padding:40px}
+.section{background:white;border-radius:12px;padding:28px;margin-bottom:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#0F766E;margin-bottom:18px}
+.card{border:1px solid #e8edf3;border-radius:10px;padding:18px 20px;margin-bottom:12px}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.kpi{border-radius:10px;padding:18px;text-align:center}
+.kpi .value{font-size:34px;font-weight:700;line-height:1;margin-top:8px}
+.label{font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.75}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+.footer{text-align:center;padding:32px;color:#aaa;font-size:12px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media print { body{background:white} .content{padding:20px} }
+</style>`;
+}
+
+function scoreGemiddeldeVoorIds(antwoorden, ids) {
+  const vals = antwoorden.flatMap(a => ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null));
+  return vals.length ? (vals.reduce((x,y)=>x+parseFloat(y),0) / vals.length) : null;
+}
+
+function kleurVoorSecureBase(label) {
+  if (label === "Excellentie") return "#2ecc71";
+  if (label === "Kracht") return "#86efac";
+  if (label === "Ontwikkelpunt") return "#f39c12";
+  if (label === "Aandachtspunt") return "#e74c3c";
+  return "#6B7A8D";
+}
+
+function kleurVoorVerbeterenLeren(label) {
+  if (label === "Volwassen") return "#2ecc71";
+  if (label === "Ontwikkelend") return "#86efac";
+  if (label === "Lerend") return "#f39c12";
+  if (label === "Beginner") return "#e74c3c";
+  return "#6B7A8D";
+}
+
+function kleurVoorBeleving(label) {
+  if (label?.startsWith("Blauw")) return "#3A7DBF";
+  if (label?.startsWith("Groen")) return "#2ecc71";
+  if (label?.startsWith("Oranje")) return "#f39c12";
+  if (label?.startsWith("Rood")) return "#e74c3c";
+  return "#6B7A8D";
+}
+
+function genereerRapportVeiligheidLeiderschap(lijst, antwoorden) {
+  const stellingen = lijst.stellingen || VEILIGHEID_LEIDERSCHAP_STELLINGEN;
+  const dimensies = getVeiligheidLeiderschapDimensies(stellingen).map((d) => {
+    const totaalGem = scoreGemiddeldeVoorIds(antwoorden, d.vragen.map(v => v.id));
+    const totaal = totaalGem !== null ? Math.round(totaalGem * 3) : null;
+    const interpretatie = totaal !== null ? interpretVeiligheidLeiderschapScore(totaal) : null;
+    return { ...d, totaal, interpretatie };
+  });
+
+  const now = new Date();
+  const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+  const gemiddelde = dimensies.filter(d=>d.totaal!==null).reduce((s,d)=>s+d.totaal,0) / Math.max(1, dimensies.filter(d=>d.totaal!==null).length);
+
+  const html = `<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Rapportage — ${lijst.naam}</title>${standaardRapportCss()}</head><body>
+  ${standaardRapportHeader({ titel: lijst.naam, klant: lijst.klant, instrument: "Veiligheid en leiderschap", respondenten: antwoorden.length, datum })}
+  <div class="content">
+    <div class="section">
+      <div class="section-title">Samenvatting</div>
+      <div class="kpi-grid">
+        <div class="kpi" style="background:rgba(15,118,110,0.10);border:1px solid rgba(15,118,110,0.22)">
+          <div class="label">Dimensies</div><div class="value" style="color:#0F766E">${dimensies.length}</div>
+        </div>
+        <div class="kpi" style="background:rgba(58,125,191,0.10);border:1px solid rgba(58,125,191,0.22)">
+          <div class="label">Gem. dimensiescore</div><div class="value" style="color:#3A7DBF">${isFinite(gemiddelde)?gemiddelde.toFixed(1):"—"}</div>
+        </div>
+        <div class="kpi" style="background:rgba(46,204,113,0.10);border:1px solid rgba(46,204,113,0.22)">
+          <div class="label">Respondenten</div><div class="value" style="color:#2ecc71">${antwoorden.length}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Dimensiescores</div>
+      ${dimensies.map((d) => {
+        const kleur = kleurVoorSecureBase(d.interpretatie?.label);
+        return `<div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+            <div><div class="label" style="margin-bottom:4px">${d.code}</div><div style="font-size:16px;font-weight:700;color:#0D1B2A">${d.naam}</div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="font-size:26px;font-weight:700;color:${kleur}">${d.totaal ?? "—"}</div>${d.interpretatie ? `<span class="badge" style="background:${kleur}18;color:${kleur}">${d.interpretatie.label}</span>` : ""}</div>
+          </div>
+          <div style="font-size:12px;line-height:1.65;color:#5b6775;background:#f7f9fc;padding:10px 12px;border-radius:8px;"><strong style="color:#1a1a2e">Aanbeveling:</strong> ${d.interpretatie?.advies || "Nog onvoldoende data voor interpretatie."}</div>
+        </div>`;
+      }).join("")}
+    </div>
+
+    <div class="section">
+      <div class="section-title">Reflectievragen</div>
+      ${VEILIGHEID_LEIDERSCHAP_REFLECTIEVRAGEN.map((q, i) => `<div style="background:#f7f9fc;border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:13px;line-height:1.65;color:#394150;">${i+1}. ${q}</div>`).join("")}
+    </div>
+  </div>
+  <div class="footer">© ${now.getFullYear()} Mijn Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik</div></body></html>`;
+
+  downloadHtmlRapport(`rapportage-veiligheid-en-leiderschap-${lijst.klant.toLowerCase().replace(/\s+/g, "-")}.html`, html);
+}
+
+function genereerRapportVerbeterenLeren(lijst, antwoorden) {
+  const stellingen = lijst.stellingen || VERBETEREN_LEREN_STELLINGEN;
+  const leidinggevendeAntwoorden = antwoorden.filter(a => a.rol === "Leidinggevende");
+  const teamAntwoorden = antwoorden.filter(a => a.rol === "Teamlid");
+  const dimensies = getVerbeterenLerenDimensies(stellingen);
+
+  const codes = ["L1","L2","L3","L4","A1","A2","A3","A4"];
+  const groepen = codes.map((code) => {
+    const lDim = dimensies.find(d => d.code === code && d.doelgroep === "Leidinggevende");
+    const tDim = dimensies.find(d => d.code === code && d.doelgroep === "Teamlid");
+    const lTotaal = lDim ? Math.round((scoreGemiddeldeVoorIds(leidinggevendeAntwoorden, lDim.vragen.map(v=>v.id)) || 0) * 3) : null
+    const tTotaal = tDim ? Math.round((scoreGemiddeldeVoorIds(teamAntwoorden, tDim.vragen.map(v=>v.id)) || 0) * 3) : null
+    return {
+      code,
+      naam: lDim?.naam || tDim?.naam || code,
+      leidinggevende: lTotaal,
+      team: tTotaal,
+      interpretLeiding: lTotaal ? interpretVerbeterenLerenScore(lTotaal) : null,
+      interpretTeam: tTotaal ? interpretVerbeterenLerenScore(tTotaal) : null,
+      verschil: lTotaal !== null && tTotaal !== null ? lTotaal - tTotaal : null,
+    };
+  });
+
+  const now = new Date();
+  const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+
+  const html = `<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Rapportage — ${lijst.naam}</title>${standaardRapportCss()}</head><body>
+  ${standaardRapportHeader({ titel: lijst.naam, klant: lijst.klant, instrument: "Verbeteren en leren", respondenten: antwoorden.length, datum })}
+  <div class="content">
+    <div class="section">
+      <div class="section-title">Vergelijking leidinggevende en team</div>
+      ${groepen.map((g) => {
+        const kleurL = kleurVoorVerbeterenLeren(g.interpretLeiding?.label);
+        const kleurT = kleurVoorVerbeterenLeren(g.interpretTeam?.label);
+        const verschilKleur = g.verschil !== null && Math.abs(g.verschil) > 3 ? "#f39c12" : "#86efac";
+        return `<div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+            <div><div class="label" style="margin-bottom:4px">${g.code}</div><div style="font-size:16px;font-weight:700;color:#0D1B2A">${g.naam}</div></div>
+            ${g.verschil !== null ? `<span class="badge" style="background:${verschilKleur}18;color:${verschilKleur}">Verschil ${g.verschil>0?"+":""}${g.verschil}</span>` : ""}
+          </div>
+          <div class="split">
+            <div style="background:#f7f9fc;border-radius:10px;padding:12px 14px;">
+              <div class="label" style="margin-bottom:6px">Leidinggevende</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div style="font-size:24px;font-weight:700;color:${kleurL}">${g.leidinggevende ?? "—"}</div>${g.interpretLeiding ? `<span class="badge" style="background:${kleurL}18;color:${kleurL}">${g.interpretLeiding.label}</span>` : ""}</div>
+              <div style="font-size:12px;line-height:1.6;color:#5b6775">${g.interpretLeiding?.advies || "Nog onvoldoende data."}</div>
+            </div>
+            <div style="background:#f7f9fc;border-radius:10px;padding:12px 14px;">
+              <div class="label" style="margin-bottom:6px">Teamspiegel</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div style="font-size:24px;font-weight:700;color:${kleurT}">${g.team ?? "—"}</div>${g.interpretTeam ? `<span class="badge" style="background:${kleurT}18;color:${kleurT}">${g.interpretTeam.label}</span>` : ""}</div>
+              <div style="font-size:12px;line-height:1.6;color:#5b6775">${g.interpretTeam?.advies || "Nog onvoldoende data."}</div>
+            </div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>
+
+    <div class="section">
+      <div class="section-title">Reflectievragen</div>
+      ${VERBETEREN_LEREN_REFLECTIEVRAGEN.map((q, i) => `<div style="background:#f7f9fc;border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:13px;line-height:1.65;color:#394150;">${i+1}. ${q}</div>`).join("")}
+    </div>
+  </div>
+  <div class="footer">© ${now.getFullYear()} Mijn Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik</div></body></html>`;
+
+  downloadHtmlRapport(`rapportage-verbeteren-en-leren-${lijst.klant.toLowerCase().replace(/\s+/g, "-")}.html`, html);
+}
+
+function genereerRapportBelevingVerandering(lijst, antwoorden) {
+  const stellingen = lijst.stellingen || BELEVING_VERANDERING_STELLINGEN;
+  const dimensies = getBelevingVeranderingDimensies(stellingen).map((d) => {
+    const totaal = Math.round((scoreGemiddeldeVoorIds(antwoorden, d.vragen.map(v=>v.id)) || 0) * 3);
+    const interpretatie = interpretBelevingVeranderingScore(totaal);
+    return { ...d, totaal, interpretatie };
+  });
+
+  const now = new Date();
+  const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+
+  const html = `<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Rapportage — ${lijst.naam}</title>${standaardRapportCss()}</head><body>
+  ${standaardRapportHeader({ titel: lijst.naam, klant: lijst.klant, instrument: "Beleving van verandering", respondenten: antwoorden.length, datum })}
+  <div class="content">
+    <div class="section">
+      <div class="section-title">Dimensies van breinvriendelijk leiderschap</div>
+      ${dimensies.map((d) => {
+        const kleur = kleurVoorBeleving(d.interpretatie?.label);
+        return `<div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+            <div><div class="label" style="margin-bottom:4px">${d.code}</div><div style="font-size:16px;font-weight:700;color:#0D1B2A">${d.naam}</div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="font-size:26px;font-weight:700;color:${kleur}">${d.totaal}</div><span class="badge" style="background:${kleur}18;color:${kleur}">${d.interpretatie?.label || ""}</span></div>
+          </div>
+          <div style="font-size:12px;line-height:1.65;color:#5b6775;background:#f7f9fc;padding:10px 12px;border-radius:8px;"><strong style="color:#1a1a2e">Betekenis & aanbeveling:</strong> ${d.interpretatie?.advies || "Nog onvoldoende data voor interpretatie."}</div>
+        </div>`;
+      }).join("")}
+    </div>
+
+    <div class="section">
+      <div class="section-title">Reflectievragen</div>
+      ${BELEVING_VERANDERING_REFLECTIEVRAGEN.map((q, i) => `<div style="background:#f7f9fc;border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:13px;line-height:1.65;color:#394150;">${i+1}. ${q}</div>`).join("")}
+    </div>
+  </div>
+  <div class="footer">© ${now.getFullYear()} Mijn Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik</div></body></html>`;
+
+  downloadHtmlRapport(`rapportage-beleving-van-verandering-${lijst.klant.toLowerCase().replace(/\s+/g, "-")}.html`, html);
+}
+
+function genereerRapportGecombineerdeVerdieping(lijst, antwoorden) {
+  const onderdelen = getGecombineerdeOnderdelen(lijst);
+  const mapping = {
+    veiligheid_leiderschap: "Veiligheid en leiderschap",
+    verbeteren_leren: "Verbeteren en leren",
+    energie_motivatie: "Energie en motivatie",
+    beleving_verandering: "Beleving van verandering",
+  };
+  const now = new Date();
+  const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+
+  const sectionVeiligheid = () => {
+    if (!onderdelen.includes("veiligheid_leiderschap")) return "";
+    const dimensies = getVeiligheidLeiderschapDimensies(VEILIGHEID_LEIDERSCHAP_STELLINGEN).map((d) => {
+      const totaalGem = scoreGemiddeldeVoorIds(antwoorden, d.vragen.map(v => v.id));
+      const totaal = totaalGem !== null ? Math.round(totaalGem * 3) : null;
+      const interpretatie = totaal !== null ? interpretVeiligheidLeiderschapScore(totaal) : null;
+      return { ...d, totaal, interpretatie };
+    });
+
+    return `
+    <div class="section">
+      <div class="section-title">Veiligheid en leiderschap</div>
+      ${dimensies.map((d) => {
+        const kleur = kleurVoorSecureBase(d.interpretatie?.label);
+        return `<div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+            <div><div class="label" style="margin-bottom:4px">${d.code}</div><div style="font-size:16px;font-weight:700;color:#0D1B2A">${d.naam}</div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="font-size:26px;font-weight:700;color:${kleur}">${d.totaal ?? "—"}</div>${d.interpretatie ? `<span class="badge" style="background:${kleur}18;color:${kleur}">${d.interpretatie.label}</span>` : ""}</div>
+          </div>
+          <div style="font-size:12px;line-height:1.65;color:#5b6775;background:#f7f9fc;padding:10px 12px;border-radius:8px;"><strong style="color:#1a1a2e">Aanbeveling:</strong> ${d.interpretatie?.advies || "Nog onvoldoende data voor interpretatie."}</div>
+        </div>`;
+      }).join("")}
+    </div>`;
+  };
+
+  const sectionVerbeterenLeren = () => {
+    if (!onderdelen.includes("verbeteren_leren")) return "";
+    const dimensies = getVerbeterenLerenDimensies(VERBETEREN_LEREN_STELLINGEN);
+    const leidinggevendeAntwoorden = antwoorden.filter(a => a.rol === "Leidinggevende");
+    const teamAntwoorden = antwoorden.filter(a => a.rol === "Teamlid");
+    const codes = ["L1","L2","L3","L4","A1","A2","A3","A4"];
+
+    const groepen = codes.map((code) => {
+      const lDim = dimensies.find(d => d.code === code && d.doelgroep === "Leidinggevende");
+      const tDim = dimensies.find(d => d.code === code && d.doelgroep === "Teamlid");
+      const lGem = lDim ? scoreGemiddeldeVoorIds(leidinggevendeAntwoorden, lDim.vragen.map(v=>v.id)) : null;
+      const tGem = tDim ? scoreGemiddeldeVoorIds(teamAntwoorden, tDim.vragen.map(v=>v.id)) : null;
+      const leidinggevende = lGem !== null ? Math.round(lGem * 3) : null;
+      const team = tGem !== null ? Math.round(tGem * 3) : null;
+      return {
+        code,
+        naam: lDim?.naam || tDim?.naam || code,
+        leidinggevende,
+        team,
+        interpretLeiding: leidinggevende !== null ? interpretVerbeterenLerenScore(leidinggevende) : null,
+        interpretTeam: team !== null ? interpretVerbeterenLerenScore(team) : null,
+        verschil: leidinggevende !== null && team !== null ? leidinggevende - team : null,
+      };
+    });
+
+    return `
+    <div class="section">
+      <div class="section-title">Verbeteren en leren</div>
+      ${groepen.map((g) => {
+        const kleurL = kleurVoorVerbeterenLeren(g.interpretLeiding?.label);
+        const kleurT = kleurVoorVerbeterenLeren(g.interpretTeam?.label);
+        const verschilKleur = g.verschil !== null && Math.abs(g.verschil) > 3 ? "#f39c12" : "#86efac";
+        return `<div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+            <div><div class="label" style="margin-bottom:4px">${g.code}</div><div style="font-size:16px;font-weight:700;color:#0D1B2A">${g.naam}</div></div>
+            ${g.verschil !== null ? `<span class="badge" style="background:${verschilKleur}18;color:${verschilKleur}">Verschil ${g.verschil>0?"+":""}${g.verschil}</span>` : ""}
+          </div>
+          <div class="split">
+            <div style="background:#f7f9fc;border-radius:10px;padding:12px 14px;">
+              <div class="label" style="margin-bottom:6px">Leidinggevende</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div style="font-size:24px;font-weight:700;color:${kleurL}">${g.leidinggevende ?? "—"}</div>${g.interpretLeiding ? `<span class="badge" style="background:${kleurL}18;color:${kleurL}">${g.interpretLeiding.label}</span>` : ""}</div>
+              <div style="font-size:12px;line-height:1.6;color:#5b6775">${g.interpretLeiding?.advies || "Nog onvoldoende data."}</div>
+            </div>
+            <div style="background:#f7f9fc;border-radius:10px;padding:12px 14px;">
+              <div class="label" style="margin-bottom:6px">Teamspiegel</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div style="font-size:24px;font-weight:700;color:${kleurT}">${g.team ?? "—"}</div>${g.interpretTeam ? `<span class="badge" style="background:${kleurT}18;color:${kleurT}">${g.interpretTeam.label}</span>` : ""}</div>
+              <div style="font-size:12px;line-height:1.6;color:#5b6775">${g.interpretTeam?.advies || "Nog onvoldoende data."}</div>
+            </div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`;
+  };
+
+  const scoreDataEnergie = (() => {
+    if (!onderdelen.includes("energie_motivatie")) return [];
+    const dimensiesMap = new Map();
+    ENERGIE_MOTIVATIE_STELLINGEN.forEach((s) => {
+      if (!dimensiesMap.has(s.dimensieCode)) {
+        dimensiesMap.set(s.dimensieCode, { code: s.dimensieCode, naam: s.dimensie, deel: s.deel, ids: [] });
+      }
+      dimensiesMap.get(s.dimensieCode).ids.push(s.id);
+    });
+    return Array.from(dimensiesMap.values()).map((d) => {
+      const gem = scoreGemiddeldeVoorIds(antwoorden, d.ids);
+      const totaal = gem !== null ? Math.round(gem * 3) : null;
+      const interpretatie = totaal !== null ? interpretEnergieMotivatieScore(d.code, totaal) : null;
+      return { ...d, totaal, interpretatie };
+    });
+  })();
+
+  const sectionEnergie = () => {
+    if (!onderdelen.includes("energie_motivatie")) return "";
+    const somDeel = (prefix) => scoreDataEnergie.filter(d => d.code.startsWith(prefix)).reduce((sum, d) => sum + (d.totaal || 0), 0);
+    const totaalTaakeisen = somDeel("A");
+    const totaalHulpbronnen = somDeel("B");
+    const balans = totaalTaakeisen - totaalHulpbronnen;
+
+    let balansTitel = "In balans";
+    let balansTekst = "Gezonde situatie: eisen en hulpbronnen zijn in evenwicht. Bewaken en onderhouden.";
+    let balansKleur = "#2ecc71";
+    if (balans < -20) {
+      balansTitel = "Sterk negatief";
+      balansTekst = "Hulpbronnen domineren. Zeer gunstig: medewerkers hebben ruime buffers om eisen op te vangen. Kans op bevlogenheid is hoog.";
+      balansKleur = "#2ecc71";
+    } else if (balans >= -20 && balans <= 0) {
+      balansTitel = "In balans";
+      balansTekst = "Gezonde situatie: eisen en hulpbronnen zijn in evenwicht. Bewaken en onderhouden.";
+      balansKleur = "#86efac";
+    } else if (balans > 0 && balans <= 20) {
+      balansTitel = "Lichte onbalans";
+      balansTekst = "Eisen beginnen hulpbronnen te overtreffen. Tijdig ingrijpen is raadzaam.";
+      balansKleur = "#f39c12";
+    } else if (balans > 20) {
+      balansTitel = "Taakeisen domineren";
+      balansTekst = "Risicosituatie: hoog risico op uitputting en uitval. Direct aandacht vereist.";
+      balansKleur = "#e74c3c";
+    }
+
+    const kleurVoorDimensie = (d) => {
+      const score = d.totaal || 0;
+      const negatiefGedraaid = d.code.startsWith("A") || d.code === "C2";
+      if (negatiefGedraaid) {
+        if (score >= 14) return "#e74c3c";
+        if (score >= 11) return "#f39c12";
+        return "#2ecc71";
+      }
+      if (score >= 14) return "#2ecc71";
+      if (score >= 11) return "#86efac";
+      if (score >= 7) return "#f39c12";
+      return "#e74c3c";
+    };
+
+    const groepen = [
+      { titel: "Deel A — Taakeisen", key: "Taakeisen" },
+      { titel: "Deel B — Hulpbronnen", key: "Hulpbronnen" },
+      { titel: "Deel C — Uitkomstmaten", key: "Uitkomstmaten" },
+    ];
+
+    return `
+    <div class="section">
+      <div class="section-title">Energie en motivatie</div>
+      <div class="kpi-grid" style="margin-bottom:18px">
+        <div class="kpi" style="background:rgba(243,156,18,0.10);border:1px solid rgba(243,156,18,0.22)">
+          <div class="label">Totaal taakeisen</div><div class="value" style="color:#f39c12">${totaalTaakeisen}</div>
+        </div>
+        <div class="kpi" style="background:rgba(46,204,113,0.10);border:1px solid rgba(46,204,113,0.22)">
+          <div class="label">Totaal hulpbronnen</div><div class="value" style="color:#2ecc71">${totaalHulpbronnen}</div>
+        </div>
+        <div class="kpi" style="background:${balansKleur}18;border:1px solid ${balansKleur}33">
+          <div class="label">Balans A − B</div><div class="value" style="color:${balansKleur}">${balans > 0 ? "+" + balans : balans}</div>
+        </div>
+      </div>
+      <div style="margin-bottom:18px;padding:14px 16px;border-radius:10px;background:${balansKleur}14;border-left:4px solid ${balansKleur}">
+        <div style="font-size:14px;font-weight:700;color:${balansKleur};margin-bottom:6px">${balansTitel}</div>
+        <div style="font-size:13px;line-height:1.7;color:#4a5568">${balansTekst}</div>
+      </div>
+      ${groepen.map((groep) => {
+        const dims = scoreDataEnergie.filter(d => d.deel === groep.key);
+        return `
+        <div style="margin-top:14px">
+          <div class="label" style="margin-bottom:10px;color:#0F766E">${groep.titel}</div>
+          ${dims.map((d) => {
+            const kleur = kleurVoorDimensie(d);
+            return `<div class="card">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+                <div><div class="label" style="margin-bottom:4px">${d.code}</div><div style="font-size:16px;font-weight:700;color:#0D1B2A">${d.naam}</div></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="font-size:26px;font-weight:700;color:${kleur}">${d.totaal ?? "—"}</div>${d.interpretatie ? `<span class="badge" style="background:${kleur}18;color:${kleur}">${d.interpretatie.label}</span>` : ""}</div>
+              </div>
+              <div style="font-size:12px;line-height:1.65;color:#5b6775;background:#f7f9fc;padding:10px 12px;border-radius:8px;"><strong style="color:#1a1a2e">Betekenis:</strong> ${d.interpretatie?.advies || "Nog onvoldoende data voor interpretatie."}</div>
+            </div>`;
+          }).join("")}
+        </div>`;
+      }).join("")}
+    </div>`;
+  };
+
+  const sectionBeleving = () => {
+    if (!onderdelen.includes("beleving_verandering")) return "";
+    const dimensies = getBelevingVeranderingDimensies(BELEVING_VERANDERING_STELLINGEN).map((d) => {
+      const gem = scoreGemiddeldeVoorIds(antwoorden, d.vragen.map(v=>v.id));
+      const totaal = gem !== null ? Math.round(gem * 3) : null;
+      const interpretatie = totaal !== null ? interpretBelevingVeranderingScore(totaal) : null;
+      return { ...d, totaal, interpretatie };
+    });
+
+    return `
+    <div class="section">
+      <div class="section-title">Beleving van verandering</div>
+      ${dimensies.map((d) => {
+        const kleur = kleurVoorBeleving(d.interpretatie?.label);
+        return `<div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+            <div><div class="label" style="margin-bottom:4px">${d.code}</div><div style="font-size:16px;font-weight:700;color:#0D1B2A">${d.naam}</div></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div style="font-size:26px;font-weight:700;color:${kleur}">${d.totaal ?? "—"}</div>${d.interpretatie ? `<span class="badge" style="background:${kleur}18;color:${kleur}">${d.interpretatie.label}</span>` : ""}</div>
+          </div>
+          <div style="font-size:12px;line-height:1.65;color:#5b6775;background:#f7f9fc;padding:10px 12px;border-radius:8px;"><strong style="color:#1a1a2e">Betekenis & aanbeveling:</strong> ${d.interpretatie?.advies || "Nog onvoldoende data voor interpretatie."}</div>
+        </div>`;
+      }).join("")}
+    </div>`;
+  };
+
+  const html = `<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Rapportage — ${lijst.naam}</title>${standaardRapportCss()}</head><body>
+  ${standaardRapportHeader({ titel: lijst.naam, klant: lijst.klant, instrument: "Gecombineerde verdiepingsscan", respondenten: antwoorden.length, datum })}
+  <div class="content">
+    <div class="section">
+      <div class="section-title">Onderdelen in deze verdiepingsscan</div>
+      ${onderdelen.map((k) => `<div class="card"><div style="font-size:16px;font-weight:700;color:#0D1B2A;margin-bottom:6px">${mapping[k] || k}</div><div style="font-size:13px;line-height:1.65;color:#5b6775">Dit onderdeel is opgenomen in deze gecombineerde rapportage en wordt hieronder inhoudelijk uitgewerkt.</div></div>`).join("")}
+    </div>
+
+    ${sectionVeiligheid()}
+    ${sectionVerbeterenLeren()}
+    ${sectionEnergie()}
+    ${sectionBeleving()}
+  </div>
+  <div class="footer">© ${now.getFullYear()} Mijn Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik</div></body></html>`;
+
+  downloadHtmlRapport(`rapportage-gecombineerde-verdieping-${lijst.klant.toLowerCase().replace(/\s+/g, "-")}.html`, html);
+}
+
+
 function PageRapportages() {
   const [lijsten,    setLijsten]    = useState([]);
   const [antwoorden, setAntwoorden] = useState([]);
@@ -3358,6 +3840,52 @@ function PageRapportages() {
   const genereerRapport = (lijst) => {
     setGenererend(lijst.id);
     const resp       = antwoordenVoor(lijst.id);
+
+    if (isVeiligheidLeiderschapVerdieping(lijst)) {
+      try {
+        genereerRapportVeiligheidLeiderschap(lijst, resp);
+      } finally {
+        setGenererend(null);
+      }
+      return;
+    }
+
+    if (isVerbeterenLerenVerdieping(lijst)) {
+      try {
+        genereerRapportVerbeterenLeren(lijst, resp);
+      } finally {
+        setGenererend(null);
+      }
+      return;
+    }
+
+    if (isBelevingVeranderingVerdieping(lijst)) {
+      try {
+        genereerRapportBelevingVerandering(lijst, resp);
+      } finally {
+        setGenererend(null);
+      }
+      return;
+    }
+
+    if (isGecombineerdeVerdieping(lijst)) {
+      try {
+        genereerRapportGecombineerdeVerdieping(lijst, resp);
+      } finally {
+        setGenererend(null);
+      }
+      return;
+    }
+
+    if (isEnergieMotivatieVerdieping(lijst)) {
+      try {
+        genereerRapportEnergieMotivatie(lijst, resp);
+      } finally {
+        setGenererend(null);
+      }
+      return;
+    }
+
     const teamleden  = resp.filter(a => a.rol === "Teamlid");
     const management = resp.filter(a => a.rol === "Leidinggevende");
     const stellingen = lijst.stellingen || DEFAULT_STELLINGEN;
