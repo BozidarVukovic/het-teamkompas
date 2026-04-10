@@ -19,6 +19,7 @@ import {
   addDoc,
   getDocs,
   getDoc,
+  deleteDoc,
   query,
   orderBy,
   serverTimestamp,
@@ -1403,6 +1404,8 @@ function PageScans() {
   const [geselecteerd, setGeselecteerd] = useState(null);
   const [gekopieerd,   setGekopieerd]   = useState(null);
   const [opslaan,      setOpslaan]      = useState(false);
+  const [teVerwijderen, setTeVerwijderen] = useState(null);
+  const [verwijderen,   setVerwijderen]   = useState(false);
 
   const laadData = async () => {
     setLoading(true);
@@ -1444,9 +1447,22 @@ function PageScans() {
     }
   };
 
+  const verwijderScan = async () => {
+    if (!teVerwijderen) return;
+    setVerwijderen(true);
+    try {
+      await deleteDoc(doc(db, "vragenlijsten", teVerwijderen.id));
+      setLijsten(prev => prev.filter(l => l.id !== teVerwijderen.id));
+      setTeVerwijderen(null);
+    } catch (err) {
+      console.error("Verwijderen mislukt:", err);
+    } finally {
+      setVerwijderen(false);
+    }
+  };
+
   const kopieerLink = async (id) => {
     const url = `${window.location.origin}?scan=${id}`;
-
     try {
       await navigator.clipboard.writeText(url);
       setGekopieerd(id);
@@ -1469,6 +1485,42 @@ function PageScans() {
 
   return (
     <div>
+      {/* BEVESTIGINGSDIALOOG */}
+      {teVerwijderen && (
+        <div style={{position:"fixed",inset:0,zIndex:1000,background:"rgba(13,27,42,0.85)",
+          backdropFilter:"blur(6px)",display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+          <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:16,
+            padding:"32px",maxWidth:420,width:"100%",boxShadow:"0 40px 100px rgba(0,0,0,0.6)"}}>
+            <div style={{fontSize:32,marginBottom:16,textAlign:"center"}}>🗑️</div>
+            <div style={{fontSize:17,fontWeight:700,color:ADM.white,marginBottom:8,textAlign:"center"}}>
+              Scan verwijderen?
+            </div>
+            <div style={{fontSize:13,color:ADM.muted,lineHeight:1.65,marginBottom:8,textAlign:"center"}}>
+              <strong style={{color:ADM.white}}>{teVerwijderen.naam}</strong>
+            </div>
+            {antwoordenVoor(teVerwijderen.id).length > 0 && (
+              <div style={{fontSize:12,color:ADM.orange,background:"rgba(243,156,18,0.1)",
+                padding:"10px 14px",borderRadius:8,marginBottom:16,textAlign:"center"}}>
+                ⚠️ Deze scan heeft {antwoordenVoor(teVerwijderen.id).length} ingevulde antwoorden. Die blijven bewaard in Firestore.
+              </div>
+            )}
+            <div style={{display:"flex",gap:10,marginTop:20}}>
+              <button onClick={()=>setTeVerwijderen(null)}
+                style={{flex:1,background:"none",color:ADM.muted,border:`1px solid ${ADM.border}`,
+                  borderRadius:8,padding:"11px",fontSize:13,cursor:"pointer"}}>
+                Annuleer
+              </button>
+              <button onClick={verwijderScan} disabled={verwijderen}
+                style={{flex:1,background:ADM.red,color:"#ffffff",border:"none",
+                  borderRadius:8,padding:"11px",fontWeight:700,fontSize:13,
+                  cursor:verwijderen?"wait":"pointer"}}>
+                {verwijderen ? "Verwijderen..." : "Ja, verwijder"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
         <div style={{fontSize:13,color:ADM.muted}}>{lijsten.length} vragenlijst(en) actief</div>
         <button onClick={()=>setShowForm(!showForm)}
@@ -1528,6 +1580,11 @@ function PageScans() {
                       style={{background:"rgba(255,255,255,0.05)",color:ADM.muted,border:`1px solid ${ADM.border}`,
                         borderRadius:6,padding:"7px 14px",fontSize:12,cursor:"pointer"}}>
                       📊 Bekijk resultaten ({resp.length})
+                    </button>
+                    <button onClick={()=>setTeVerwijderen(lijst)}
+                      style={{background:"rgba(231,76,60,0.1)",color:ADM.red,border:`1px solid rgba(231,76,60,0.25)`,
+                        borderRadius:6,padding:"7px 14px",fontSize:12,cursor:"pointer",fontWeight:600}}>
+                      🗑️ Verwijderen
                     </button>
                   </div>
                 </div>
