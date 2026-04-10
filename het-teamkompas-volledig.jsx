@@ -2091,88 +2091,282 @@ function PageMetingen() {
 }
 
 function PageRapportages() {
-  const [rapporten, setRapporten] = useState([
-    { id:1, titel:"Evides — T0 Nulmeting Rapportage", klant:"Evides", type:"Teamscan", datum:"10 mrt 2026", status:"Gereed", formaat:"PDF" },
-    { id:2, titel:"Evides — Managementsamenvatting",   klant:"Evides", type:"Samenvatting", datum:"12 mrt 2026", status:"Gereed", formaat:"PPTX" },
-  ]);
-  const [showForm, setShowForm] = useState(false);
-  const [nieuw,    setNieuw]    = useState({ titel:"", klant:"Evides", type:"Teamscan", formaat:"PDF" });
+  const [lijsten,    setLijsten]    = useState([]);
+  const [antwoorden, setAntwoorden] = useState([]);
+  const [loading,    setLoading]    = useState(true);
+  const [genererend, setGenererend] = useState(null);
 
-  const maakAan = () => {
-    if (!nieuw.titel) return;
-    const now   = new Date();
-    const datum = `${now.getDate()} ${["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"][now.getMonth()]} ${now.getFullYear()}`;
-    setRapporten(prev => [...prev, { ...nieuw, id:Date.now(), datum, status:"In aanmaak" }]);
-    setNieuw({ titel:"", klant:"Evides", type:"Teamscan", formaat:"PDF" });
-    setShowForm(false);
+  useEffect(() => {
+    const laadData = async () => {
+      setLoading(true);
+      try {
+        const [vlSnap, antSnap] = await Promise.all([
+          getDocs(collection(db, "vragenlijsten")),
+          getDocs(collection(db, "antwoorden")),
+        ]);
+        setLijsten(vlSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setAntwoorden(antSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (err) {
+        console.error("Laden mislukt:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    laadData();
+  }, []);
+
+  const antwoordenVoor = (id) => antwoorden.filter(a => a.vragenlijstId === id);
+
+  const gemPijler = (pijlerIdx, subset, stellingen) => {
+    const ids  = stellingen.filter(s => s.pijler === pijlerIdx && s.type === "schaal").map(s => s.id);
+    const vals = subset.flatMap(a => ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null));
+    return vals.length ? (vals.reduce((a, b) => a + parseFloat(b), 0) / vals.length) : null;
   };
 
-  const statusColor = s => s==="Gereed" ? ADM.green : s==="In aanmaak" ? ADM.orange : ADM.muted;
+  const scoreKleurHex = (s) => {
+    if (!s || isNaN(s)) return "#6B7A8D";
+    if (parseFloat(s) >= 4) return "#2ecc71";
+    if (parseFloat(s) >= 3) return "#f39c12";
+    return "#e74c3c";
+  };
+
+  const pijlerKleuren = ["#5A8C3C", "#3A7DBF", "#E8821A", "#6B4E9E"];
+  const pijlerNamen   = ["Veiligheid & Leiderschap", "Beleving van Verandering", "Energie & Motivatie", "Verbeteren & Leren"];
+
+  const genereerRapport = (lijst) => {
+    setGenererend(lijst.id);
+    const resp       = antwoordenVoor(lijst.id);
+    const teamleden  = resp.filter(a => a.rol === "Teamlid");
+    const management = resp.filter(a => a.rol === "Leidinggevende");
+    const stellingen = lijst.stellingen || DEFAULT_STELLINGEN;
+
+    // Bereken scores
+    const scores = pijlerNamen.map((naam, i) => {
+      const totaal = gemPijler(i, resp, stellingen);
+      const team   = gemPijler(i, teamleden, stellingen);
+      const mgmt   = gemPijler(i, management, stellingen);
+      const gap    = (team !== null && mgmt !== null) ? (mgmt - team) : null;
+      return { naam, kleur: pijlerKleuren[i], totaal, team, mgmt, gap };
+    });
+
+    // Open antwoorden per pijler
+    const openAntwoorden = pijlerNamen.map((naam, pi) => {
+      const openStellingen = stellingen.filter(s => s.pijler === pi && s.type === "open");
+      const antw = openStellingen.flatMap(s =>
+        resp.map(a => a.antwoorden?.[s.id]).filter(v => v && v.trim().length > 3)
+      );
+      return { naam, kleur: pijlerKleuren[pi], vraag: openStellingen[0]?.tekst || "", antwoorden: antw };
+    });
+
+    const now    = new Date();
+    const datum  = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+
+    const scoreRij = (label, score, kleur) => score !== null ? `
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+        <div style="font-size:12px;color:${kleur};font-weight:600;width:130px;flex-shrink:0;">${label}</div>
+        <div style="flex:1;height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden;">
+          <div style="height:100%;border-radius:5px;background:${kleur};width:${(score/5)*100}%;"></div>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:${kleur};width:32px;text-align:right;">${score.toFixed(1)}</div>
+      </div>` : "";
+
+    const html = `<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Rapportage — ${lijst.naam}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f9fc; color: #1a1a2e; }
+    .header { background: #0D1B2A; color: white; padding: 40px 60px; position: relative; overflow: hidden; }
+    .header-bar { display: flex; height: 6px; margin-bottom: 32px; }
+    .header-bar div { flex: 1; }
+    .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+    .header p  { font-size: 14px; color: rgba(255,255,255,0.6); }
+    .header .meta { display: flex; gap: 32px; margin-top: 20px; }
+    .header .meta-item { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+    .header .meta-item span { display: block; font-size: 15px; color: white; font-weight: 600; margin-top: 2px; text-transform: none; letter-spacing: 0; }
+    .content { max-width: 900px; margin: 0 auto; padding: 40px 40px; }
+    .section { background: white; border-radius: 12px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #00A896; margin-bottom: 18px; }
+    .pijler-card { border-radius: 10px; padding: 22px; margin-bottom: 16px; border: 1px solid #eee; }
+    .pijler-naam { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+    .gap-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-left: 10px; }
+    .open-item { background: #f7f9fc; border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; font-size: 13px; line-height: 1.6; color: #444; border-left: 3px solid; }
+    .samenvatting-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .sum-card { border-radius: 10px; padding: 20px; text-align: center; }
+    .sum-score { font-size: 36px; font-weight: 700; margin: 8px 0 4px; }
+    .sum-label { font-size: 12px; opacity: 0.75; }
+    .footer { text-align: center; padding: 32px; color: #aaa; font-size: 12px; }
+    @media print { body { background: white; } .content { padding: 20px; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-bar">
+      <div style="background:#5A8C3C;"></div>
+      <div style="background:#3A7DBF;"></div>
+      <div style="background:#E8821A;"></div>
+      <div style="background:#6B4E9E;"></div>
+    </div>
+    <div style="font-size:11px;color:#00A896;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Het Teamkompas — Rapportage</div>
+    <h1>${lijst.naam}</h1>
+    <p>${lijst.klant}</p>
+    <div class="meta">
+      <div class="meta-item">Datum<span>${datum}</span></div>
+      <div class="meta-item">Respondenten<span>${resp.length}</span></div>
+      <div class="meta-item">Teamleden<span>${teamleden.length}</span></div>
+      <div class="meta-item">Leidinggevenden<span>${management.length}</span></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SAMENVATTING -->
+    <div class="section">
+      <div class="section-title">Samenvatting per domein</div>
+      <div class="samenvatting-grid">
+        ${scores.map(s => `
+        <div class="sum-card" style="background:${s.kleur}18;border:1px solid ${s.kleur}33;">
+          <div style="font-size:11px;font-weight:700;color:${s.kleur};letter-spacing:1px;text-transform:uppercase;">${s.naam}</div>
+          <div class="sum-score" style="color:${s.totaal ? scoreKleurHex(s.totaal) : '#aaa'};">${s.totaal ? s.totaal.toFixed(1) : "—"}</div>
+          <div class="sum-label" style="color:${s.kleur};">gemiddeld (schaal 1–5)</div>
+        </div>`).join("")}
+      </div>
+    </div>
+
+    <!-- GAP ANALYSE -->
+    ${teamleden.length > 0 && management.length > 0 ? `
+    <div class="section">
+      <div class="section-title">Gap-analyse: team vs. leidinggevenden</div>
+      ${scores.map(s => {
+        const gap = s.gap;
+        const gapKleur = gap === null ? "#aaa" : Math.abs(gap) >= 1.5 ? "#e74c3c" : Math.abs(gap) >= 0.8 ? "#f39c12" : "#2ecc71";
+        const gapLabel = gap === null ? "" : Math.abs(gap) >= 1.5 ? "Grote kloof" : Math.abs(gap) >= 0.8 ? "Merkbaar verschil" : "Kleine kloof";
+        return `
+        <div class="pijler-card">
+          <div class="pijler-naam" style="color:${s.kleur};">
+            ${s.naam}
+            ${gap !== null ? `<span class="gap-badge" style="background:${gapKleur}22;color:${gapKleur};">
+              ${gap > 0 ? "+" : ""}${gap.toFixed(1)} — ${gapLabel}
+            </span>` : ""}
+          </div>
+          ${scoreRij("👥 Team", s.team, "#5A8C3C")}
+          ${scoreRij("👔 Leidinggevenden", s.mgmt, "#6B4E9E")}
+        </div>`;
+      }).join("")}
+    </div>` : ""}
+
+    <!-- OPEN ANTWOORDEN -->
+    <div class="section">
+      <div class="section-title">Open antwoorden per domein</div>
+      ${openAntwoorden.map(p => p.antwoorden.length > 0 ? `
+      <div style="margin-bottom:24px;">
+        <div style="font-size:14px;font-weight:700;color:${p.kleur};margin-bottom:6px;">${p.naam}</div>
+        <div style="font-size:12px;color:#888;margin-bottom:10px;font-style:italic;">${p.vraag}</div>
+        ${p.antwoorden.map(a => `
+        <div class="open-item" style="border-color:${p.kleur};">${a}</div>`).join("")}
+      </div>` : "").join("")}
+      ${openAntwoorden.every(p => p.antwoorden.length === 0) ?
+        `<div style="color:#aaa;font-size:13px;">Nog geen open antwoorden beschikbaar.</div>` : ""}
+    </div>
+
+    <div class="section" style="background:#0D1B2A;color:white;">
+      <div style="font-size:11px;color:#00A896;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Over deze rapportage</div>
+      <p style="font-size:13px;line-height:1.7;color:rgba(255,255,255,0.65);">
+        Deze rapportage is gegenereerd op basis van de ingevulde teamscans via Het Teamkompas. 
+        Individuele antwoorden zijn anoniem verwerkt. Scores zijn gebaseerd op een schaal van 1 tot 5. 
+        Een score van 4 of hoger duidt op een sterke positie; tussen 3 en 4 is er ruimte voor verbetering; 
+        onder de 3 verdient het domein prioritaire aandacht.
+      </p>
+    </div>
+
+  </div>
+  <div class="footer">
+    © ${now.getFullYear()} Het Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik
+  </div>
+</body>
+</html>`;
+
+    // Download als HTML-bestand
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `rapportage-${lijst.klant.toLowerCase().replace(/\s+/g, "-")}-${lijst.naam.toLowerCase().replace(/\s+/g, "-")}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setGenererend(null);
+  };
+
+  if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
 
   return (
     <div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
-        <div style={{fontSize:13,color:ADM.muted}}>{rapporten.length} rapport(en)</div>
-        <button onClick={()=>setShowForm(!showForm)}
-          style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 18px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
-          + Rapport aanmaken
-        </button>
+      <div style={{fontSize:13,color:ADM.muted,marginBottom:8}}>
+        {lijsten.length} scan(s) beschikbaar · Rapportages worden gegenereerd op basis van ingevoerde scandata
       </div>
-      {showForm && (
-        <div style={{background:ADM.navy,border:`1px solid ${ADM.teal}`,borderRadius:12,padding:"24px",marginBottom:20}}>
-          <div style={{fontWeight:600,color:ADM.white,marginBottom:16}}>Nieuw rapport aanmaken</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
-            {[["titel","Rapporttitel *"],["klant","Klant"]].map(([k,l])=>(
-              <div key={k}>
-                <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:5}}>{l}</div>
-                <input value={nieuw[k]} onChange={e=>setNieuw(n=>({...n,[k]:e.target.value}))}
-                  style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
+      <div style={{fontSize:12,color:ADM.muted,marginBottom:20,lineHeight:1.6,
+        background:"rgba(0,168,150,0.06)",padding:"12px 16px",borderRadius:10,
+        borderLeft:`3px solid ${ADM.teal}`}}>
+        Klik op <strong style={{color:ADM.white}}>Genereer rapport</strong> om een HTML-rapportage te downloaden. 
+        Open het bestand in je browser en gebruik <strong style={{color:ADM.white}}>Ctrl+P / Cmd+P</strong> om het als PDF op te slaan.
+      </div>
+
+      <div style={{display:"flex",flexDirection:"column",gap:12}}>
+        {lijsten.map(lijst => {
+          const resp      = antwoordenVoor(lijst.id);
+          const isBezig   = genererend === lijst.id;
+          const heeftData = resp.length >= 1;
+
+          return (
+            <div key={lijst.id} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,
+              borderRadius:12,padding:"20px 24px"}}>
+              <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontWeight:600,color:ADM.white,fontSize:15,marginBottom:4}}>{lijst.naam}</div>
+                  <div style={{fontSize:12,color:ADM.muted,marginBottom:12}}>
+                    🏢 {lijst.klant} · 📅 {lijst.aangemaakt} · {resp.length} respondenten
+                  </div>
+                  <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+                    {heeftData ? (
+                      <button onClick={()=>genereerRapport(lijst)} disabled={isBezig}
+                        style={{background:isBezig?"rgba(0,168,150,0.3)":ADM.teal,
+                          color:ADM.navyDeep,border:"none",borderRadius:6,
+                          padding:"8px 16px",fontSize:12,cursor:isBezig?"wait":"pointer",
+                          fontWeight:700}}>
+                        {isBezig ? "⏳ Genereren..." : "📄 Genereer rapport"}
+                      </button>
+                    ) : (
+                      <span style={{fontSize:12,color:ADM.muted,fontStyle:"italic"}}>
+                        Nog geen respondenten — rapport beschikbaar zodra er data is
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6,flexShrink:0}}>
+                  <span style={{fontSize:11,fontWeight:600,padding:"4px 12px",borderRadius:20,
+                    background:"rgba(0,168,150,0.12)",color:ADM.teal}}>{lijst.status}</span>
+                  {resp.length > 0 && (
+                    <div style={{display:"flex",gap:6}}>
+                      {[["👥",resp.filter(a=>a.rol==="Teamlid").length,"Teamleden"],
+                        ["👔",resp.filter(a=>a.rol==="Leidinggevende").length,"Leidinggevenden"]
+                      ].map(([ic,n,l])=>(
+                        <span key={l} style={{fontSize:11,color:ADM.muted}}>{ic} {n}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            ))}
-            {[["type","Type",["Teamscan","Samenvatting","Voortgangsrapport","Eindrapport"]],
-              ["formaat","Formaat",["PDF","PPTX","Word"]]
-            ].map(([k,l,opts])=>(
-              <div key={k}>
-                <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:5}}>{l}</div>
-                <select value={nieuw[k]} onChange={e=>setNieuw(n=>({...n,[k]:e.target.value}))}
-                  style={{width:"100%",background:"#1A2E4A",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 12px",color:ADM.white,fontSize:13,outline:"none"}}>
-                  {opts.map(o=><option key={o}>{o}</option>)}
-                </select>
-              </div>
-            ))}
+            </div>
+          );
+        })}
+        {lijsten.length === 0 && (
+          <div style={{color:ADM.muted,fontSize:14,padding:20,textAlign:"center"}}>
+            Nog geen scans beschikbaar om een rapport van te genereren.
           </div>
-          <div style={{display:"flex",gap:10}}>
-            <button onClick={maakAan} style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 20px",fontWeight:700,fontSize:13,cursor:"pointer"}}>Aanmaken</button>
-            <button onClick={()=>setShowForm(false)} style={{background:"none",color:ADM.muted,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 20px",fontSize:13,cursor:"pointer"}}>Annuleer</button>
-          </div>
-        </div>
-      )}
-      <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,overflow:"hidden"}}>
-        <table style={{width:"100%",borderCollapse:"collapse"}}>
-          <thead>
-            <tr>{["Rapport","Klant","Type","Datum","Formaat","Status",""].map(h=>(
-              <th key={h} style={{fontSize:10,textTransform:"uppercase",letterSpacing:"1.5px",color:ADM.muted,padding:"12px 20px",textAlign:"left",fontWeight:600,borderBottom:`1px solid ${ADM.border}`}}>{h}</th>
-            ))}</tr>
-          </thead>
-          <tbody>
-            {rapporten.map(r=>(
-              <tr key={r.id} style={{borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
-                <td style={{padding:"14px 20px",fontWeight:600,color:ADM.white}}>{r.titel}</td>
-                <td style={{padding:"14px 20px",fontSize:13,color:ADM.muted}}>{r.klant}</td>
-                <td style={{padding:"14px 20px",fontSize:13,color:ADM.muted}}>{r.type}</td>
-                <td style={{padding:"14px 20px",fontSize:13,color:ADM.muted}}>{r.datum}</td>
-                <td style={{padding:"14px 20px",fontSize:13,color:ADM.muted}}>{r.formaat}</td>
-                <td style={{padding:"14px 20px"}}>
-                  <span style={{fontSize:11,fontWeight:600,padding:"3px 10px",borderRadius:20,
-                    background:`${statusColor(r.status)}22`,color:statusColor(r.status)}}>{r.status}</span>
-                </td>
-                <td style={{padding:"14px 20px"}}>
-                  {r.status==="Gereed" && <span style={{fontSize:12,color:ADM.teal,cursor:"pointer",fontWeight:600}}>↓ Download</span>}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        )}
       </div>
     </div>
   );
