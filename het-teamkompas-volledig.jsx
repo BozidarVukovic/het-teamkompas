@@ -623,7 +623,7 @@ function PublicSite({ onLoginClick }) {
                 lineHeight:1.3,maxWidth:620,marginBottom:16
               }}>
                 Samenwerking verbeteren begint niet met een nieuw proces.<br/>
-                <em style={{fontStyle:"italic",color:PUB.teal}}>Het begint met begrijpen wat er werkelijk tussen mensen speelt.</em>
+                <em style={{fontStyle:"italic",color:PUB.wit}}>Het begint met begrijpen wat er werkelijk tussen mensen speelt.</em>
               </p>
             </Fade>
           </div>
