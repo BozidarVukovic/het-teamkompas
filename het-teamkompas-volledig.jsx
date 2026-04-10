@@ -21,7 +21,9 @@ import {
   getDoc,
   deleteDoc,
   updateDoc,
+  setDoc,
   query,
+  where,
   orderBy,
   serverTimestamp,
 } from "firebase/firestore";
@@ -3557,6 +3559,165 @@ function genereerRapportBelevingVerandering(lijst, antwoorden) {
   downloadHtmlRapport(`rapportage-beleving-van-verandering-${lijst.klant.toLowerCase().replace(/\s+/g, "-")}.html`, html);
 }
 
+
+function genereerRapportEnergieMotivatie(lijst, antwoorden) {
+  const stellingen = lijst.stellingen || ENERGIE_MOTIVATIE_STELLINGEN;
+  const dimensiesMap = new Map();
+
+  stellingen.forEach((s) => {
+    if (!dimensiesMap.has(s.dimensieCode)) {
+      dimensiesMap.set(s.dimensieCode, {
+        code: s.dimensieCode,
+        naam: s.dimensie,
+        deel: s.deel,
+        ids: [],
+      });
+    }
+    dimensiesMap.get(s.dimensieCode).ids.push(s.id);
+  });
+
+  const dimensies = Array.from(dimensiesMap.values());
+
+  const gemiddeldeVoorIds = (ids) => {
+    const vals = antwoorden.flatMap(a => ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null));
+    return vals.length ? (vals.reduce((x,y)=>x+parseFloat(y),0) / vals.length) : null;
+  };
+
+  const scoreData = dimensies.map((d) => {
+    const gem = gemiddeldeVoorIds(d.ids);
+    const totaal = gem !== null ? Math.round(gem * 3) : null;
+    const interpretatie = totaal !== null ? interpretEnergieMotivatieScore(d.code, totaal) : null;
+    return { ...d, gem, totaal, interpretatie };
+  });
+
+  const somDeel = (prefix) => scoreData.filter(d => d.code.startsWith(prefix)).reduce((sum, d) => sum + (d.totaal || 0), 0);
+  const totaalTaakeisen = somDeel("A");
+  const totaalHulpbronnen = somDeel("B");
+  const balans = totaalTaakeisen - totaalHulpbronnen;
+
+  let balansTitel = "In balans";
+  let balansTekst = "Gezonde situatie: eisen en hulpbronnen zijn in evenwicht. Bewaken en onderhouden.";
+  let balansKleur = "#2ecc71";
+  if (balans < -20) {
+    balansTitel = "Sterk negatief";
+    balansTekst = "Hulpbronnen domineren. Zeer gunstig: medewerkers hebben ruime buffers om eisen op te vangen. Kans op bevlogenheid is hoog.";
+    balansKleur = "#2ecc71";
+  } else if (balans >= -20 && balans <= 0) {
+    balansTitel = "In balans";
+    balansTekst = "Gezonde situatie: eisen en hulpbronnen zijn in evenwicht. Bewaken en onderhouden.";
+    balansKleur = "#86efac";
+  } else if (balans > 0 && balans <= 20) {
+    balansTitel = "Lichte onbalans";
+    balansTekst = "Eisen beginnen hulpbronnen te overtreffen. Tijdig ingrijpen is raadzaam.";
+    balansKleur = "#f39c12";
+  } else if (balans > 20) {
+    balansTitel = "Taakeisen domineren";
+    balansTekst = "Risicosituatie: hoog risico op uitputting en uitval. Direct aandacht vereist voor vermindering van eisen of versterking van hulpbronnen.";
+    balansKleur = "#e74c3c";
+  }
+
+  const kleurVoorDimensie = (d) => {
+    const score = d.totaal || 0;
+    const negatiefGedraaid = d.code.startsWith("A") || d.code === "C2";
+    if (negatiefGedraaid) {
+      if (score >= 14) return "#e74c3c";
+      if (score >= 11) return "#f39c12";
+      return "#2ecc71";
+    }
+    if (score >= 14) return "#2ecc71";
+    if (score >= 11) return "#86efac";
+    if (score >= 7) return "#f39c12";
+    return "#e74c3c";
+  };
+
+  const groepen = [
+    { titel: "Deel A — Taakeisen", key: "Taakeisen", intro: "Hoge score = hoge belasting" },
+    { titel: "Deel B — Hulpbronnen", key: "Hulpbronnen", intro: "Hoge score = sterke hulpbron" },
+    { titel: "Deel C — Uitkomstmaten", key: "Uitkomstmaten", intro: "Bevlogenheid hoog = positief, uitputting hoog = zorgelijk" },
+  ];
+
+  const now = new Date();
+  const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+
+  const html = `<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Rapportage — ${lijst.naam}</title>
+${standaardRapportCss()}
+</head>
+<body>
+  ${standaardRapportHeader({ titel: lijst.naam, klant: lijst.klant, instrument: "Energie en motivatie", respondenten: antwoorden.length, datum })}
+  <div class="content">
+    <div class="section">
+      <div class="section-title">Balansanalyse</div>
+      <div class="kpi-grid">
+        <div class="kpi" style="background:rgba(243,156,18,0.10);border:1px solid rgba(243,156,18,0.22)">
+          <div class="label">Totaal taakeisen</div>
+          <div class="value" style="color:#f39c12">${totaalTaakeisen}</div>
+        </div>
+        <div class="kpi" style="background:rgba(46,204,113,0.10);border:1px solid rgba(46,204,113,0.22)">
+          <div class="label">Totaal hulpbronnen</div>
+          <div class="value" style="color:#2ecc71">${totaalHulpbronnen}</div>
+        </div>
+        <div class="kpi" style="background:${balansKleur}18;border:1px solid ${balansKleur}33">
+          <div class="label">Balans A − B</div>
+          <div class="value" style="color:${balansKleur}">${balans > 0 ? "+" + balans : balans}</div>
+        </div>
+      </div>
+      <div style="margin-top:18px;padding:14px 16px;border-radius:10px;background:${balansKleur}14;border-left:4px solid ${balansKleur}">
+        <div style="font-size:14px;font-weight:700;color:${balansKleur};margin-bottom:6px">${balansTitel}</div>
+        <div style="font-size:13px;line-height:1.7;color:#4a5568">${balansTekst}</div>
+      </div>
+    </div>
+
+    ${groepen.map((groep) => {
+      const dims = scoreData.filter(d => d.deel === groep.key);
+      return `
+      <div class="section">
+        <div class="section-title">${groep.titel}</div>
+        <div style="font-size:13px;color:#6B7A8D;line-height:1.7;margin-bottom:16px;">${groep.intro}</div>
+        ${dims.map((d) => {
+          const kleur = kleurVoorDimensie(d);
+          return `
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+              <div>
+                <div class="label" style="margin-bottom:4px">${d.code}</div>
+                <div style="font-size:16px;font-weight:700;color:#0D1B2A">${d.naam}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="font-size:26px;font-weight:700;color:${kleur}">${d.totaal ?? "—"}</div>
+                ${d.interpretatie ? `<span class="badge" style="background:${kleur}18;color:${kleur}">${d.interpretatie.label}</span>` : ""}
+              </div>
+            </div>
+            <div style="font-size:12px;line-height:1.65;color:#5b6775;background:#f7f9fc;padding:10px 12px;border-radius:8px;">
+              <strong style="color:#1a1a2e">Betekenis:</strong> ${d.interpretatie?.advies || "Nog onvoldoende data voor interpretatie."}
+            </div>
+          </div>`;
+        }).join("")}
+      </div>`;
+    }).join("")}
+
+    <div class="section">
+      <div class="section-title">Reflectievragen voor het gesprek</div>
+      ${ENERGIE_MOTIVATIE_REFLECTIEVRAGEN.map((q, i) => `
+        <div style="background:#f7f9fc;border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:13px;line-height:1.65;color:#394150;">
+          ${i+1}. ${q}
+        </div>
+      `).join("")}
+    </div>
+  </div>
+
+  <div class="footer">© ${now.getFullYear()} Mijn Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik</div>
+</body>
+</html>`;
+
+  downloadHtmlRapport(`rapportage-energie-en-motivatie-${lijst.klant.toLowerCase().replace(/\\s+/g, "-")}.html`, html);
+}
+
+
 function genereerRapportGecombineerdeVerdieping(lijst, antwoorden) {
   const onderdelen = getGecombineerdeOnderdelen(lijst);
   const mapping = {
@@ -3799,6 +3960,8 @@ function PageRapportages() {
   const [antwoorden, setAntwoorden] = useState([]);
   const [loading,    setLoading]    = useState(true);
   const [genererend, setGenererend] = useState(null);
+  const [rapportError, setRapportError] = useState("");
+  const [verwijderenId, setVerwijderenId] = useState(null);
 
   useEffect(() => {
     const laadData = async () => {
@@ -3808,7 +3971,11 @@ function PageRapportages() {
           getDocs(collection(db, "vragenlijsten")),
           getDocs(collection(db, "antwoorden")),
         ]);
-        setLijsten(vlSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setLijsten(
+          vlSnap.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .filter(item => !item.verwijderd && item.status !== "Verwijderd")
+        );
         setAntwoorden(antSnap.docs.map(d => ({ id: d.id, ...d.data() })));
       } catch (err) {
         console.error("Laden mislukt:", err);
@@ -3837,7 +4004,40 @@ function PageRapportages() {
   const pijlerKleuren = ["#5A8C3C", "#3A7DBF", "#E8821A", "#6B4E9E"];
   const pijlerNamen   = ["Veiligheid & Leiderschap", "Beleving van Verandering", "Energie & Motivatie", "Verbeteren & Leren"];
 
+
+  const verplaatsNaarPrullenbak = async (lijst) => {
+    setRapportError("");
+    setVerwijderenId(lijst.id);
+    try {
+      await setDoc(doc(db, "prullenbak", `${lijst.id}_${Date.now()}`), {
+        original_id: lijst.id,
+        bron_collectie: "vragenlijsten",
+        naam: lijst.naam || "",
+        klant: lijst.klant || "",
+        type: lijst.type || "basisscan",
+        status: lijst.status || "",
+        aangemaakt: lijst.aangemaakt || "",
+        parentVragenlijstId: lijst.parentVragenlijstId || null,
+        verdiepingOnderdelen: lijst.verdiepingOnderdelen || [],
+        verwijderd_op: serverTimestamp(),
+      });
+
+      await updateDoc(doc(db, "vragenlijsten", lijst.id), {
+        status: "Verwijderd",
+        verwijderd: true
+      });
+
+      setLijsten(prev => prev.filter(x => x.id !== lijst.id));
+    } catch (err) {
+      console.error("Naar prullenbak verplaatsen mislukt:", err);
+      setRapportError("Het verwijderen is mislukt. Probeer het opnieuw.");
+    } finally {
+      setVerwijderenId(null);
+    }
+  };
+
   const genereerRapport = (lijst) => {
+    setRapportError("");
     setGenererend(lijst.id);
     const resp       = antwoordenVoor(lijst.id);
 
@@ -4063,6 +4263,13 @@ function PageRapportages() {
         Klik op <strong style={{color:ADM.white}}>Genereer rapport</strong> om een HTML-rapportage te downloaden. 
         Open het bestand in je browser en gebruik <strong style={{color:ADM.white}}>Ctrl+P / Cmd+P</strong> om het als PDF op te slaan.
       </div>
+      {rapportError && (
+        <div style={{fontSize:12,color:ADM.red,marginBottom:20,lineHeight:1.6,
+          background:"rgba(231,76,60,0.10)",padding:"12px 16px",borderRadius:10,
+          borderLeft:`3px solid ${ADM.red}`}}>
+          {rapportError}
+        </div>
+      )}
 
       <div style={{display:"flex",flexDirection:"column",gap:12}}>
         {lijsten.map(lijst => {
@@ -4093,6 +4300,16 @@ function PageRapportages() {
                         Nog geen respondenten — rapport beschikbaar zodra er data is
                       </span>
                     )}
+
+                    <button
+                      onClick={()=>verplaatsNaarPrullenbak(lijst)}
+                      disabled={verwijderenId===lijst.id}
+                      style={{background:"rgba(231,76,60,0.10)",color:ADM.red,border:`1px solid rgba(231,76,60,0.24)`,
+                        borderRadius:6,padding:"8px 14px",fontSize:12,cursor:verwijderenId===lijst.id?"wait":"pointer",
+                        fontWeight:700}}
+                    >
+                      {verwijderenId===lijst.id ? "Verplaatsen..." : "🗑️ Verwijderen"}
+                    </button>
                   </div>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6,flexShrink:0}}>
@@ -4122,48 +4339,304 @@ function PageRapportages() {
   );
 }
 
+
+function PagePrullenbak() {
+  const [trashItems, setTrashItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [verwijderenId, setVerwijderenId] = useState(null);
+
+  const laadPrullenbak = async () => {
+    setLoading(true);
+    try {
+      const snap = await getDocs(collection(db, "prullenbak"));
+      const rows = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a,b) => {
+          const ad = a.verwijderd_op?.seconds || 0;
+          const bd = b.verwijderd_op?.seconds || 0;
+          return bd - ad;
+        });
+      setTrashItems(rows);
+    } catch (err) {
+      console.error("Laden prullenbak mislukt:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { laadPrullenbak(); }, []);
+
+  const definitiefVerwijderen = async (item) => {
+    setVerwijderenId(item.id);
+    try {
+      if (item.bron_collectie && item.original_id) {
+        try {
+          await deleteDoc(doc(db, item.bron_collectie, item.original_id));
+        } catch (err) {
+          console.warn("Origineel item was al verwijderd of niet bereikbaar:", err);
+        }
+      }
+      await deleteDoc(doc(db, "prullenbak", item.id));
+      setTrashItems(prev => prev.filter(x => x.id !== item.id));
+    } catch (err) {
+      console.error("Definitief verwijderen mislukt:", err);
+    } finally {
+      setVerwijderenId(null);
+    }
+  };
+
+  if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
+
+  return (
+    <div>
+      <div style={{fontSize:13,color:ADM.muted,marginBottom:20}}>
+        {trashItems.length} item(s) in de prullenbak
+      </div>
+
+      {trashItems.length === 0 ? (
+        <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"24px",color:ADM.muted,textAlign:"center"}}>
+          De prullenbak is leeg.
+        </div>
+      ) : (
+        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+          {trashItems.map((item) => (
+            <div key={item.id} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"18px 20px"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,flexWrap:"wrap"}}>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4}}>
+                    <div style={{fontWeight:700,color:ADM.white,fontSize:15}}>{item.naam || "Onbekend item"}</div>
+                    <span style={{fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:20,background:"rgba(231,76,60,0.14)",color:ADM.red}}>
+                      PRULLENBAK
+                    </span>
+                  </div>
+                  <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
+                    Type: {item.type || "Onbekend"} · Klant: {item.klant || "—"} · Bron: {item.bron_collectie || "—"}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => definitiefVerwijderen(item)}
+                  disabled={verwijderenId === item.id}
+                  style={{background:"rgba(231,76,60,0.12)",color:ADM.red,border:`1px solid rgba(231,76,60,0.28)`,
+                    borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verwijderenId===item.id?"wait":"pointer"}}
+                >
+                  {verwijderenId === item.id ? "Verwijderen..." : "Definitief verwijderen"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─────────────────────────────────────────────
 // DASHBOARD HOME
 // ─────────────────────────────────────────────
 function DashboardHome() {
+  const isMobile = useIsMobile();
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    actieveKlanten: 0,
+    teamsActief: 0,
+    respondenten: 0,
+    gemiddeldeTeamscore: null,
+  });
+  const [activiteiten, setActiviteiten] = useState([]);
+
+  useEffect(() => {
+    const laadDashboard = async () => {
+      setLoading(true);
+      try {
+        const [klantenSnap, vragenlijstenSnap, antwoordenSnap, trashSnap, contactSnap] = await Promise.all([
+          getDocs(collection(db, "klanten")).catch(() => ({ docs: [] })),
+          getDocs(collection(db, "vragenlijsten")).catch(() => ({ docs: [] })),
+          getDocs(collection(db, "antwoorden")).catch(() => ({ docs: [] })),
+          getDocs(collection(db, "prullenbak")).catch(() => ({ docs: [] })),
+          getDocs(collection(db, "contactaanvragen")).catch(() => ({ docs: [] })),
+        ]);
+
+        const klanten = klantenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const vragenlijsten = vragenlijstenSnap.docs
+          .map(d => ({ id: d.id, ...d.data() }))
+          .filter(v => !v.verwijderd && v.status !== "Verwijderd");
+        const antwoorden = antwoordenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const trash = trashSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const contacten = contactSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        const uniekeKlanten = new Set(
+          [
+            ...klanten.map(k => k.naam || k.klantnaam || "").filter(Boolean),
+            ...vragenlijsten.map(v => v.klant || "").filter(Boolean),
+          ]
+        );
+
+        const actieveVragenlijsten = vragenlijsten.filter(v => (v.status || "").toLowerCase() !== "afgerond");
+        const teamsActief = actieveVragenlijsten.length;
+        const respondenten = antwoorden.length;
+
+        const gemiddelden = antwoorden
+          .map(a => {
+            const vals = Object.values(a.antwoorden || {})
+              .map(v => parseFloat(v))
+              .filter(v => !Number.isNaN(v));
+            return vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
+          })
+          .filter(v => v !== null);
+
+        const gemiddeldeTeamscore = gemiddelden.length
+          ? gemiddelden.reduce((s, v) => s + v, 0) / gemiddelden.length
+          : null;
+
+        const activiteitenRuw = [
+          ...actieveVragenlijsten.slice(0, 6).map(v => ({
+            type: "scan",
+            titel: v.naam || "Nieuwe scan",
+            subtitel: v.klant || "Onbekende klant",
+            datum: v.aangemaakt || "",
+            icon: "📝",
+          })),
+          ...contacten.slice(0, 4).map(c => ({
+            type: "contact",
+            titel: c.organisatie || c.naam || "Nieuwe contactaanvraag",
+            subtitel: "Contactaanvraag ontvangen",
+            datum: c.datum || c.createdAt || "",
+            icon: "📬",
+          })),
+          ...trash.slice(0, 4).map(t => ({
+            type: "trash",
+            titel: t.naam || "Verwijderd item",
+            subtitel: "Verplaatst naar prullenbak",
+            datum: t.verwijderd_op?.seconds
+              ? new Date(t.verwijderd_op.seconds * 1000).toLocaleDateString("nl-NL")
+              : "",
+            icon: "🗑️",
+          })),
+        ].slice(0, 8);
+
+        setStats({
+          actieveKlanten: uniekeKlanten.size,
+          teamsActief,
+          respondenten,
+          gemiddeldeTeamscore,
+        });
+        setActiviteiten(activiteitenRuw);
+      } catch (err) {
+        console.error("Dashboard laden mislukt:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    laadDashboard();
+  }, []);
+
+  const statCards = [
+    {
+      label: "Actieve klanten",
+      value: stats.actieveKlanten,
+      sub: "Unieke organisaties in trajecten",
+      color: "#5A8C3C",
+      bg: "rgba(90,140,60,0.10)",
+      border: "rgba(90,140,60,0.22)",
+    },
+    {
+      label: "Teams actief",
+      value: stats.teamsActief,
+      sub: "Open scans en trajecten",
+      color: "#3A7DBF",
+      bg: "rgba(58,125,191,0.10)",
+      border: "rgba(58,125,191,0.22)",
+    },
+    {
+      label: "Respondenten",
+      value: stats.respondenten,
+      sub: "Totaal aantal inzendingen",
+      color: "#E8821A",
+      bg: "rgba(232,130,26,0.10)",
+      border: "rgba(232,130,26,0.22)",
+    },
+    {
+      label: "Gem. teamscore",
+      value: stats.gemiddeldeTeamscore !== null ? stats.gemiddeldeTeamscore.toFixed(1) : "—",
+      sub: "Gemiddeld over alle antwoorden",
+      color: "#6B4E9E",
+      bg: "rgba(107,78,158,0.10)",
+      border: "rgba(107,78,158,0.22)",
+    },
+  ];
+
+  if (loading) {
+    return <div style={{padding:"12px 2px",color:ADM.muted}}>Dashboard laden...</div>;
+  }
+
   return (
-    <div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:12,marginBottom:20}}>
-        {[
-          ["Actieve klanten","1","🏢","🎯 Doel: 5 in 2026",ADM.teal],
-          ["Teams actief","1","👥","↑ Evides traject loopt",ADM.teal],
-          ["Respondenten","9","📋","✓ T0 nulmeting compleet",ADM.teal],
-          ["Gem. teamscore","3.6","📊","● Oranje zone",ADM.orange],
-        ].map(([label,val,icon,sub,subColor],i) => (
-          <div key={i} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:14,padding:"22px 24px",position:"relative",overflow:"hidden"}}>
-            <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:ADM.teal,borderRadius:"14px 14px 0 0"}}/>
-            <div style={{position:"absolute",top:20,right:20,fontSize:24,opacity:0.15}}>{icon}</div>
-            <div style={{fontSize:11,textTransform:"uppercase",letterSpacing:"1.5px",color:ADM.muted,marginBottom:10}}>{label}</div>
-            <div style={{fontSize:34,fontWeight:700,color:i===3?ADM.orange:ADM.white,lineHeight:1,marginBottom:8}}>{val}</div>
-            <div style={{fontSize:12,color:subColor}}>{sub}</div>
-          </div>
-        ))}
-      </div>
-      <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:14,overflow:"hidden",marginBottom:16}}>
-        <div style={{padding:"18px 24px 14px",borderBottom:`1px solid ${ADM.border}`}}>
-          <div style={{fontSize:15,fontWeight:600,color:ADM.white}}>Recente activiteit</div>
+    <div style={{display:"grid",gap:24}}>
+      <div>
+        <div style={{fontSize:28,fontWeight:700,color:ADM.white,marginBottom:8}}>Dashboard</div>
+        <div style={{fontSize:14,color:ADM.muted,lineHeight:1.7,maxWidth:820}}>
+          Live overzicht van klanten, trajecten, respondenten en recente activiteit vanuit de beheeromgeving.
         </div>
-        {[
-          ["✓",ADM.green,"Evides","T0 nulmeting afgerond (9/9 ingevuld)","2 dagen geleden"],
-          ["📄",ADM.teal,"Evides","Rapportage gegenereerd","3 dagen geleden"],
-          ["📅",ADM.orange,"Prospect A","Intake-afspraak ingepland","5 dagen geleden"],
-          ["🏢",ADM.green,"Evides","Toegevoegd als klant","3 weken geleden"],
-        ].map(([icon,color,org,text,time],i) => (
-          <div key={i} style={{padding:"13px 24px",display:"flex",gap:14,alignItems:"flex-start",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
-            <div style={{width:32,height:32,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0,background:`${color}22`,color}}>{icon}</div>
-            <div>
-              <div style={{fontSize:13.5,color:ADM.text,lineHeight:1.4}}>
-                {org && <strong style={{color:ADM.white}}>{org} — </strong>}{text}
-              </div>
-              <div style={{fontSize:11,color:ADM.muted,marginTop:3}}>{time}</div>
+      </div>
+
+      <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "repeat(4,1fr)",gap:16}}>
+        {statCards.map((card, i) => (
+          <div key={i} style={{background:card.bg,border:`1px solid ${card.border}`,borderRadius:14,padding:"20px 18px"}}>
+            <div style={{fontSize:11,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:card.color,marginBottom:10}}>
+              {card.label}
+            </div>
+            <div style={{fontSize:34,fontWeight:700,color:card.color,lineHeight:1,marginBottom:8}}>
+              {card.value}
+            </div>
+            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
+              {card.sub}
             </div>
           </div>
         ))}
+      </div>
+
+      <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1.2fr 0.8fr",gap:18}}>
+        <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:14,padding:"22px 20px"}}>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:14}}>
+            Recente activiteit
+          </div>
+          {activiteiten.length === 0 ? (
+            <div style={{fontSize:13,color:ADM.muted}}>Nog geen recente activiteit gevonden.</div>
+          ) : (
+            <div style={{display:"flex",flexDirection:"column",gap:10}}>
+              {activiteiten.map((item, i) => (
+                <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",background:"rgba(255,255,255,0.03)",borderRadius:10,padding:"12px 14px"}}>
+                  <div style={{fontSize:18,lineHeight:1}}>{item.icon}</div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:2}}>{item.titel}</div>
+                    <div style={{fontSize:12,color:ADM.muted,lineHeight:1.5}}>
+                      {item.subtitel}{item.datum ? ` · ${item.datum}` : ""}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:14,padding:"22px 20px"}}>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:14}}>
+            Verbonden modules
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {[
+              ["Scans", `${stats.teamsActief} actief`],
+              ["Rapportages", "Gebaseerd op vragenlijsten en antwoorden"],
+              ["Prullenbak", "Zacht verwijderde items"],
+              ["Contactaanvragen", "Nieuwe leads en intake"],
+            ].map(([titel, sub], i) => (
+              <div key={i} style={{background:"rgba(255,255,255,0.03)",borderRadius:10,padding:"12px 14px"}}>
+                <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:3}}>{titel}</div>
+                <div style={{fontSize:12,color:ADM.muted,lineHeight:1.5}}>{sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -4199,6 +4672,7 @@ function AdminDashboard({ onLogout }) {
     { label:"Scans",            icon:"📝", section:"Trajecten" },
     { label:"Metingen",         icon:"📋", section:null },
     { label:"Rapportages",      icon:"📈", section:null },
+    { label:"Prullenbak",       icon:"🗑️", section:null },
     { label:"Instellingen",     icon:"⚙",  section:"Systeem" },
   ];
 
@@ -4208,6 +4682,7 @@ function AdminDashboard({ onLogout }) {
     if (activeNav === "Scans")            return <PageScans />;
     if (activeNav === "Metingen")         return <PageMetingen />;
     if (activeNav === "Rapportages")      return <PageRapportages />;
+    if (activeNav === "Prullenbak")       return <PagePrullenbak />;
     return <DashboardHome />;
   };
 
@@ -4276,14 +4751,14 @@ function AdminDashboard({ onLogout }) {
         <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:200,
           background:ADM.navy,borderTop:`1px solid ${ADM.border}`,
           display:"flex",justifyContent:"space-around",padding:"8px 0"}}>
-          {[["📊","Dashboard"],["📬","Contactaanvragen"],["📝","Scans"],["📋","Metingen"],["📈","Rapportages"]].map(([icon,label])=>(
+          {[["📊","Dashboard"],["📬","Contactaanvragen"],["📝","Scans"],["📋","Metingen"],["📈","Rapportages"],["🗑️","Prullenbak"]].map(([icon,label])=>(
             <div key={label} onClick={()=>setActiveNav(label)}
               style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"6px 8px",cursor:"pointer",
                 color:activeNav===label?ADM.teal:ADM.muted,
                 borderTop:`2px solid ${activeNav===label?ADM.teal:"transparent"}`,minWidth:52}}>
               <span style={{fontSize:18}}>{icon}</span>
               <span style={{fontSize:9,fontWeight:activeNav===label?700:400,whiteSpace:"nowrap"}}>
-                {label==="Contactaanvragen"?"Aanvragen":label==="Rapportages"?"Rapporten":label}
+                {label==="Contactaanvragen"?"Aanvragen":label==="Rapportages"?"Rapporten":label==="Prullenbak"?"Prullenbak":label}
               </span>
             </div>
           ))}
