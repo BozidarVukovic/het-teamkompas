@@ -186,6 +186,252 @@ const DEFAULT_STELLINGEN = [
   { id: 20, pijler: 3, tekst: "Wat zou het team concreet kunnen verbeteren?", type: "open" },
 ];
 
+const VEILIGHEID_LEIDERSCHAP_STELLINGEN = [
+  { id: 101, dimensieCode:"D1", dimensie:"Beschikbaar zijn", tekst:"Mijn leidinggevende is fysiek en mentaal aanwezig in gesprekken met mij.", type:"schaal" },
+  { id: 102, dimensieCode:"D1", dimensie:"Beschikbaar zijn", tekst:"Ik kan mijn leidinggevende bereiken wanneer ik dat nodig heb.", type:"schaal" },
+  { id: 103, dimensieCode:"D1", dimensie:"Beschikbaar zijn", tekst:"Mijn leidinggevende luistert echt naar wat ik zeg, zonder snel af te leiden.", type:"schaal" },
+
+  { id: 104, dimensieCode:"D2", dimensie:"Onvoorwaardelijk aanvaarden", tekst:"Mijn leidinggevende accepteert mij als persoon, ook als ik fouten maak.", type:"schaal" },
+  { id: 105, dimensieCode:"D2", dimensie:"Onvoorwaardelijk aanvaarden", tekst:"Ik voel me vrij om mezelf te zijn bij mijn leidinggevende.", type:"schaal" },
+  { id: 106, dimensieCode:"D2", dimensie:"Onvoorwaardelijk aanvaarden", tekst:"Mijn leidinggevende maakt onderscheid tussen mijn gedrag en wie ik ben als persoon.", type:"schaal" },
+
+  { id: 107, dimensieCode:"D3", dimensie:"Empathie tonen", tekst:"Mijn leidinggevende begrijpt hoe situaties op mij overkomen, ook al ziet hij of zij het anders.", type:"schaal" },
+  { id: 108, dimensieCode:"D3", dimensie:"Empathie tonen", tekst:"Als ik gestrest ben, reageert mijn leidinggevende met begrip.", type:"schaal" },
+  { id: 109, dimensieCode:"D3", dimensie:"Empathie tonen", tekst:"Mijn leidinggevende vraagt naar hoe ik mij voel, niet alleen naar wat ik doe.", type:"schaal" },
+
+  { id: 110, dimensieCode:"D4", dimensie:"Vertrouwen hebben in potentieel", tekst:"Mijn leidinggevende gelooft dat ik meer kan dan ik soms zelf denk.", type:"schaal" },
+  { id: 111, dimensieCode:"D4", dimensie:"Vertrouwen hebben in potentieel", tekst:"Mijn leidinggevende stimuleert mij om te groeien en nieuwe uitdagingen aan te gaan.", type:"schaal" },
+  { id: 112, dimensieCode:"D4", dimensie:"Vertrouwen hebben in potentieel", tekst:"Mijn leidinggevende investeert tijd in mijn persoonlijke en professionele ontwikkeling.", type:"schaal" },
+
+  { id: 113, dimensieCode:"D5", dimensie:"Geruststellen", tekst:"Mijn leidinggevende helpt mij om kalm te blijven in stressvolle situaties.", type:"schaal" },
+  { id: 114, dimensieCode:"D5", dimensie:"Geruststellen", tekst:"Ik voel me veilig om zorgen en angsten te delen met mijn leidinggevende.", type:"schaal" },
+  { id: 115, dimensieCode:"D5", dimensie:"Geruststellen", tekst:"Mijn leidinggevende reageert rustig en constructief wanneer er iets mis gaat.", type:"schaal" },
+
+  { id: 116, dimensieCode:"D6", dimensie:"Inspireren", tekst:"Mijn leidinggevende geeft mij het gevoel dat ons werk er echt toe doet.", type:"schaal" },
+  { id: 117, dimensieCode:"D6", dimensie:"Inspireren", tekst:"Mijn leidinggevende deelt een duidelijke en motiverende visie op de toekomst.", type:"schaal" },
+  { id: 118, dimensieCode:"D6", dimensie:"Inspireren", tekst:"Ik word geïnspireerd door de manier waarop mijn leidinggevende leiding geeft.", type:"schaal" },
+
+  { id: 119, dimensieCode:"D7", dimensie:"Leiden door resultaten", tekst:"Mijn leidinggevende stelt duidelijke doelen en verwachtingen.", type:"schaal" },
+  { id: 120, dimensieCode:"D7", dimensie:"Leiden door resultaten", tekst:"Mijn leidinggevende geeft constructieve feedback op mijn werk.", type:"schaal" },
+  { id: 121, dimensieCode:"D7", dimensie:"Leiden door resultaten", tekst:"Mijn leidinggevende erkent succes en prestaties binnen het team.", type:"schaal" },
+
+  { id: 122, dimensieCode:"D8", dimensie:"Uitdagen", tekst:"Mijn leidinggevende daagt mij uit om buiten mijn comfortzone te treden.", type:"schaal" },
+  { id: 123, dimensieCode:"D8", dimensie:"Uitdagen", tekst:"Mijn leidinggevende stelt kritische vragen die mij aan het denken zetten.", type:"schaal" },
+  { id: 124, dimensieCode:"D8", dimensie:"Uitdagen", tekst:"Ik word gestimuleerd om nieuwe ideeën en aanpakken uit te proberen, ook al is er een kans op falen.", type:"schaal" },
+
+  { id: 125, dimensieCode:"D9", dimensie:"Veiligheid bieden om te exploreren", tekst:"In ons team is het veilig om fouten te benoemen zonder angst voor negatieve gevolgen.", type:"schaal" },
+  { id: 126, dimensieCode:"D9", dimensie:"Veiligheid bieden om te exploreren", tekst:"Ik durf risico's te nemen omdat ik weet dat mijn leidinggevende mij ondersteunt.", type:"schaal" },
+  { id: 127, dimensieCode:"D9", dimensie:"Veiligheid bieden om te exploreren", tekst:"Ons team bespreekt open wat beter kan, ook als het gaat om moeilijke onderwerpen.", type:"schaal" },
+];
+
+const VEILIGHEID_LEIDERSCHAP_INTERPRETATIE = [
+  { min:3, max:6, label:"Aandachtspunt", advies:"Direct inzetten op verbetering. Bespreek met de leidinggevende en stel een concreet ontwikkelplan op." },
+  { min:7, max:10, label:"Ontwikkelpunt", advies:"Er is ruimte voor groei. Maak dit onderdeel van coachgesprekken en leiderschapsontwikkeling." },
+  { min:11, max:13, label:"Kracht", advies:"Goed functionerend. Borgen en bewust inzetten als voorbeeld voor andere dimensies." },
+  { min:14, max:15, label:"Excellentie", advies:"Uitmuntend. Deel kennis en gedrag met andere leidinggevenden als best practice." },
+];
+
+const VEILIGHEID_LEIDERSCHAP_REFLECTIEVRAGEN = [
+  "Op welke dimensie scoort de leidinggevende het sterkst? Wat maakt dat zo?",
+  "Welke dimensie vraagt de meeste aandacht? Wat is daar de impact van op het team?",
+  "Wat heeft de leidinggevende nodig om zich op de aandachtspunten te ontwikkelen?",
+  "Wat kan het team zelf bijdragen aan een veilige basis?",
+  "Wanneer voelt u zich het meest gesteund door uw leidinggevende? Wat doet hij of zij dan?",
+];
+
+
+const VERBETEREN_LEREN_STELLINGEN = [
+  // Leidinggevende — Lean
+  { id: 201, dimensieCode:"L1", dimensie:"Klantwaarde & doelgerichtheid", doelgroep:"Leidinggevende", tekst:"Ik stel regelmatig de vraag welke activiteiten binnen mijn afdeling werkelijk waarde toevoegen voor de klant.", type:"schaal" },
+  { id: 202, dimensieCode:"L1", dimensie:"Klantwaarde & doelgerichtheid", doelgroep:"Leidinggevende", tekst:"Ik help mijn team onderscheid te maken tussen waardevolle activiteiten en verspilling.", type:"schaal" },
+  { id: 203, dimensieCode:"L1", dimensie:"Klantwaarde & doelgerichtheid", doelgroep:"Leidinggevende", tekst:"Ik vertaal de behoeften van de klant actief naar concrete prioriteiten voor mijn team.", type:"schaal" },
+
+  { id: 204, dimensieCode:"L2", dimensie:"Continu verbeteren", doelgroep:"Leidinggevende", tekst:"Ik stimuleer mijn team om voortdurend na te denken over hoe processen eenvoudiger, sneller of beter kunnen.", type:"schaal" },
+  { id: 205, dimensieCode:"L2", dimensie:"Continu verbeteren", doelgroep:"Leidinggevende", tekst:"Ik geef ruimte en tijd voor verbeterinitiatieven, ook als dat op korte termijn extra inspanning vraagt.", type:"schaal" },
+  { id: 206, dimensieCode:"L2", dimensie:"Continu verbeteren", doelgroep:"Leidinggevende", tekst:"Ik geef het goede voorbeeld door zelf actief verbetermogelijkheden te signaleren en te benoemen.", type:"schaal" },
+
+  { id: 207, dimensieCode:"L3", dimensie:"Flow & verspilling elimineren", doelgroep:"Leidinggevende", tekst:"Ik signaleer actief wachttijden, overbodige stappen of duplicatie in het werk van mijn team.", type:"schaal" },
+  { id: 208, dimensieCode:"L3", dimensie:"Flow & verspilling elimineren", doelgroep:"Leidinggevende", tekst:"Ik neem maatregelen om knelpunten in het werkproces weg te nemen zodra ik ze zie.", type:"schaal" },
+  { id: 209, dimensieCode:"L3", dimensie:"Flow & verspilling elimineren", doelgroep:"Leidinggevende", tekst:"Ik houd rekening met de capaciteit van mijn team om overbelasting te voorkomen.", type:"schaal" },
+
+  { id: 210, dimensieCode:"L4", dimensie:"Respect voor mensen & teamontwikkeling", doelgroep:"Leidinggevende", tekst:"Ik investeer actief in de vakkennis en het probleemoplossend vermogen van mijn teamleden.", type:"schaal" },
+  { id: 211, dimensieCode:"L4", dimensie:"Respect voor mensen & teamontwikkeling", doelgroep:"Leidinggevende", tekst:"Ik betrek medewerkers bij het analyseren van problemen in plaats van zelf direct oplossingen aan te dragen.", type:"schaal" },
+  { id: 212, dimensieCode:"L4", dimensie:"Respect voor mensen & teamontwikkeling", doelgroep:"Leidinggevende", tekst:"Ik creëer een omgeving waarin medewerkers zich verantwoordelijk voelen voor kwaliteit en resultaat.", type:"schaal" },
+
+  // Leidinggevende — Agile
+  { id: 213, dimensieCode:"A1", dimensie:"Iteratief werken & korte feedbackcycli", doelgroep:"Leidinggevende", tekst:"Ik moedig mijn team aan om in korte cycli te werken en regelmatig te evalueren wat werkt.", type:"schaal" },
+  { id: 214, dimensieCode:"A1", dimensie:"Iteratief werken & korte feedbackcycli", doelgroep:"Leidinggevende", tekst:"Ik zorg ervoor dat er frequente momenten zijn waarop we voortgang bespreken en bijsturen.", type:"schaal" },
+  { id: 215, dimensieCode:"A1", dimensie:"Iteratief werken & korte feedbackcycli", doelgroep:"Leidinggevende", tekst:"Ik help mijn team om grote opdrachten op te splitsen in behapbare, afrondbare stukken.", type:"schaal" },
+
+  { id: 216, dimensieCode:"A2", dimensie:"Aanpassingsvermogen & wendbaarheid", doelgroep:"Leidinggevende", tekst:"Ik reageer constructief als plannen veranderen en help mijn team daarin mee te bewegen.", type:"schaal" },
+  { id: 217, dimensieCode:"A2", dimensie:"Aanpassingsvermogen & wendbaarheid", doelgroep:"Leidinggevende", tekst:"Ik stimuleer mijn team om verandering te zien als kans in plaats van als bedreiging.", type:"schaal" },
+  { id: 218, dimensieCode:"A2", dimensie:"Aanpassingsvermogen & wendbaarheid", doelgroep:"Leidinggevende", tekst:"Ik durf als leidinggevende bestaande aanpakken los te laten als de situatie daarom vraagt.", type:"schaal" },
+
+  { id: 219, dimensieCode:"A3", dimensie:"Zelforganisatie & gedelegeerde verantwoordelijkheid", doelgroep:"Leidinggevende", tekst:"Ik geef mijn team de ruimte om zelf beslissingen te nemen over de uitvoering van hun werk.", type:"schaal" },
+  { id: 220, dimensieCode:"A3", dimensie:"Zelforganisatie & gedelegeerde verantwoordelijkheid", doelgroep:"Leidinggevende", tekst:"Ik stuur op doelen en resultaten, in plaats van op methodes en controle.", type:"schaal" },
+  { id: 221, dimensieCode:"A3", dimensie:"Zelforganisatie & gedelegeerde verantwoordelijkheid", doelgroep:"Leidinggevende", tekst:"Ik stimuleer mijn team om problemen zelf op te lossen voordat ze naar mij toekomen.", type:"schaal" },
+
+  { id: 222, dimensieCode:"A4", dimensie:"Transparantie & open samenwerking", doelgroep:"Leidinggevende", tekst:"Ik deel informatie over voortgang, prioriteiten en obstakels open met mijn team.", type:"schaal" },
+  { id: 223, dimensieCode:"A4", dimensie:"Transparantie & open samenwerking", doelgroep:"Leidinggevende", tekst:"Ik faciliteer een cultuur waarin teamleden elkaar aanspreken en samenwerken zonder schotten.", type:"schaal" },
+  { id: 224, dimensieCode:"A4", dimensie:"Transparantie & open samenwerking", doelgroep:"Leidinggevende", tekst:"Ik maak de werkstroom zichtbaar zodat iedereen weet wat er speelt.", type:"schaal" },
+
+  // Teamspiegel — Lean
+  { id: 225, dimensieCode:"L1", dimensie:"Klantfocus & waardebewustzijn", doelgroep:"Teamlid", tekst:"Als team weten wij voor wie we ons werk doen en wat onze klant of opdrachtgever werkelijk waardeert.", type:"schaal" },
+  { id: 226, dimensieCode:"L1", dimensie:"Klantfocus & waardebewustzijn", doelgroep:"Teamlid", tekst:"Wij stellen ons regelmatig de vraag of onze activiteiten daadwerkelijk bijdragen aan het eindresultaat.", type:"schaal" },
+  { id: 227, dimensieCode:"L1", dimensie:"Klantfocus & waardebewustzijn", doelgroep:"Teamlid", tekst:"Wij zijn ons bewust van handelingen in ons werk die geen waarde toevoegen en proberen die te verminderen.", type:"schaal" },
+
+  { id: 228, dimensieCode:"L2", dimensie:"Continu verbeteren", doelgroep:"Teamlid", tekst:"Als team bespreken wij regelmatig wat beter kan in onze werkwijze.", type:"schaal" },
+  { id: 229, dimensieCode:"L2", dimensie:"Continu verbeteren", doelgroep:"Teamlid", tekst:"Wij voeren daadwerkelijk verbeteringen door en evalueren of ze het gewenste effect hebben.", type:"schaal" },
+  { id: 230, dimensieCode:"L2", dimensie:"Continu verbeteren", doelgroep:"Teamlid", tekst:"Wij leren van fouten en gebruiken die als input voor verbetering, zonder dat er een schuldige wordt aangewezen.", type:"schaal" },
+
+  { id: 231, dimensieCode:"L3", dimensie:"Procesbeheersing & kwaliteitsbewustzijn", doelgroep:"Teamlid", tekst:"Wij leveren ons werk op het afgesproken kwaliteitsniveau zonder dat daar constant controle voor nodig is.", type:"schaal" },
+  { id: 232, dimensieCode:"L3", dimensie:"Procesbeheersing & kwaliteitsbewustzijn", doelgroep:"Teamlid", tekst:"Als er iets fout gaat, lossen wij dat zo dicht mogelijk bij de bron op.", type:"schaal" },
+  { id: 233, dimensieCode:"L3", dimensie:"Procesbeheersing & kwaliteitsbewustzijn", doelgroep:"Teamlid", tekst:"Wij signaleren knelpunten of verstoringen in ons werkproces en brengen die actief onder de aandacht.", type:"schaal" },
+
+  { id: 234, dimensieCode:"L4", dimensie:"Eigenaarschap & betrokkenheid", doelgroep:"Teamlid", tekst:"Wij voelen ons als team gezamenlijk verantwoordelijk voor het resultaat.", type:"schaal" },
+  { id: 235, dimensieCode:"L4", dimensie:"Eigenaarschap & betrokkenheid", doelgroep:"Teamlid", tekst:"Teamleden nemen initiatief om problemen op te lossen zonder daarvoor altijd goedkeuring af te wachten.", type:"schaal" },
+  { id: 236, dimensieCode:"L4", dimensie:"Eigenaarschap & betrokkenheid", doelgroep:"Teamlid", tekst:"Wij spreken elkaar aan op gedrag en afspraken op een respectvolle en constructieve manier.", type:"schaal" },
+
+  // Teamspiegel — Agile
+  { id: 237, dimensieCode:"A1", dimensie:"Iteratief & resultaatgericht werken", doelgroep:"Teamlid", tekst:"Wij werken in herkenbare cycli en evalueren aan het einde wat we bereikt hebben en wat we kunnen verbeteren.", type:"schaal" },
+  { id: 238, dimensieCode:"A1", dimensie:"Iteratief & resultaatgericht werken", doelgroep:"Teamlid", tekst:"Wij stellen prioriteiten op basis van waarde en passen onze focus aan als omstandigheden veranderen.", type:"schaal" },
+  { id: 239, dimensieCode:"A1", dimensie:"Iteratief & resultaatgericht werken", doelgroep:"Teamlid", tekst:"Wij leveren regelmatig aantoonbare resultaten op in plaats van lang door te werken zonder tussentijdse output.", type:"schaal" },
+
+  { id: 240, dimensieCode:"A2", dimensie:"Flexibiliteit & omgaan met verandering", doelgroep:"Teamlid", tekst:"Als prioriteiten of plannen veranderen, passen wij ons als team snel aan zonder dat dit tot grote frustratie leidt.", type:"schaal" },
+  { id: 241, dimensieCode:"A2", dimensie:"Flexibiliteit & omgaan met verandering", doelgroep:"Teamlid", tekst:"Wij zien onverwachte situaties als kans om te leren en te improviseren.", type:"schaal" },
+  { id: 242, dimensieCode:"A2", dimensie:"Flexibiliteit & omgaan met verandering", doelgroep:"Teamlid", tekst:"Wij zijn bereid bestaande gewoontes of werkwijzen los te laten als iets beters beschikbaar is.", type:"schaal" },
+
+  { id: 243, dimensieCode:"A3", dimensie:"Samenwerking & gezamenlijk eigenaarschap", doelgroep:"Teamlid", tekst:"Wij werken nauw samen en helpen elkaar actief, ook als iets buiten iemands directe taakomschrijving valt.", type:"schaal" },
+  { id: 244, dimensieCode:"A3", dimensie:"Samenwerking & gezamenlijk eigenaarschap", doelgroep:"Teamlid", tekst:"Beslissingen over de uitvoering van ons werk nemen wij zoveel mogelijk zelf als team.", type:"schaal" },
+  { id: 245, dimensieCode:"A3", dimensie:"Samenwerking & gezamenlijk eigenaarschap", doelgroep:"Teamlid", tekst:"Wij hebben een gedeeld begrip van onze doelen en werken daar als een eenheid naartoe.", type:"schaal" },
+
+  { id: 246, dimensieCode:"A4", dimensie:"Reflectie & lerend vermogen", doelgroep:"Teamlid", tekst:"Wij nemen regelmatig de tijd om als team te reflecteren op onze samenwerking en werkwijze.", type:"schaal" },
+  { id: 247, dimensieCode:"A4", dimensie:"Reflectie & lerend vermogen", doelgroep:"Teamlid", tekst:"Wij durven kwetsbaar te zijn over wat niet goed gaat en spreken dat openlijk uit.", type:"schaal" },
+  { id: 248, dimensieCode:"A4", dimensie:"Reflectie & lerend vermogen", doelgroep:"Teamlid", tekst:"Verbeterpunten uit onze reflecties worden ook daadwerkelijk omgezet in aanpassingen.", type:"schaal" },
+];
+
+const VERBETEREN_LEREN_INTERPRETATIE = [
+  { min:3, max:6, label:"Beginner", advies:"Dit principe is nog nauwelijks aanwezig. Bewustwording is de eerste stap: bespreek wat het principe inhoudt en waarom het relevant is." },
+  { min:7, max:9, label:"Lerend", advies:"Er is een begin gemaakt maar de toepassing is nog onsystematisch. Kies een concrete gewoonte of praktijk om verder te ontwikkelen." },
+  { min:10, max:12, label:"Ontwikkelend", advies:"Dit principe is herkenbaar aanwezig maar nog niet volledig ingebed. Zoek naar mogelijkheden om het verder te borgen in de dagelijkse routines." },
+  { min:13, max:15, label:"Volwassen", advies:"Dit principe is structureel verankerd in de werkwijze. Gebruik dit als kracht en deel de aanpak met andere afdelingen of teams." },
+];
+
+const VERBETEREN_LEREN_REFLECTIEVRAGEN = [
+  "Op welke Lean- of Agile-dimensie scoort de afdeling het sterkst? Wat doen we concreet waardoor dit werkt?",
+  "Welke dimensie heeft de meeste aandacht nodig? Wat is het effect op het team als we hier niets aan doen?",
+  "Waar zit het grootste verschil tussen de zelfscore van de leidinggevende en de teamscore? Wat verklaart dat verschil?",
+  "Welke kleine, concrete gewoonte kunnen we morgen al invoeren om een stap verder te komen?",
+  "Welke Lean-principes en Agile-principes versterken elkaar in onze afdeling? Hoe benutten we dat?",
+  "Wat hebben wij als team nodig van de leidinggevende om verder te groeien in Lean-Agile werken?",
+];
+
+
+const ENERGIE_MOTIVATIE_STELLINGEN = [
+  // Deel A — taakeisen
+  { id: 301, dimensieCode:"A1", dimensie:"Kwantitatieve werkdruk", deel:"Taakeisen", tekst:"Ik heb meer werk dan ik binnen de beschikbare tijd kan afkrijgen.", type:"schaal" },
+  { id: 302, dimensieCode:"A1", dimensie:"Kwantitatieve werkdruk", deel:"Taakeisen", tekst:"Ik moet mijn werk haastig uitvoeren om alles op tijd af te ronden.", type:"schaal" },
+  { id: 303, dimensieCode:"A1", dimensie:"Kwantitatieve werkdruk", deel:"Taakeisen", tekst:"Ik ervaar de hoeveelheid werk die van mij wordt verwacht als te hoog.", type:"schaal" },
+
+  { id: 304, dimensieCode:"A2", dimensie:"Emotionele belasting", deel:"Taakeisen", tekst:"Mijn werk vraagt veel van mij op emotioneel vlak.", type:"schaal" },
+  { id: 305, dimensieCode:"A2", dimensie:"Emotionele belasting", deel:"Taakeisen", tekst:"Ik kom in situaties die mij emotioneel raken of uitputten.", type:"schaal" },
+  { id: 306, dimensieCode:"A2", dimensie:"Emotionele belasting", deel:"Taakeisen", tekst:"Ik moet in mijn werk regelmatig omgaan met moeilijke of belastende situaties van anderen.", type:"schaal" },
+
+  { id: 307, dimensieCode:"A3", dimensie:"Cognitieve complexiteit & mentale belasting", deel:"Taakeisen", tekst:"Mijn werk vereist een hoge mate van concentratie en mentale inspanning.", type:"schaal" },
+  { id: 308, dimensieCode:"A3", dimensie:"Cognitieve complexiteit & mentale belasting", deel:"Taakeisen", tekst:"Ik word in mijn werk geconfronteerd met ingewikkelde problemen waarvoor geen eenvoudige oplossing is.", type:"schaal" },
+  { id: 309, dimensieCode:"A3", dimensie:"Cognitieve complexiteit & mentale belasting", deel:"Taakeisen", tekst:"Ik moet veel informatie tegelijk verwerken en in samenhang beoordelen.", type:"schaal" },
+
+  { id: 310, dimensieCode:"A4", dimensie:"Rolonduidelijkheid & conflicterende eisen", deel:"Taakeisen", tekst:"Het is mij niet altijd duidelijk wat er precies van mij wordt verwacht in mijn werk.", type:"schaal" },
+  { id: 311, dimensieCode:"A4", dimensie:"Rolonduidelijkheid & conflicterende eisen", deel:"Taakeisen", tekst:"Ik ontvang tegenstrijdige opdrachten of verwachtingen vanuit verschillende kanten.", type:"schaal" },
+  { id: 312, dimensieCode:"A4", dimensie:"Rolonduidelijkheid & conflicterende eisen", deel:"Taakeisen", tekst:"Ik weet niet goed welke prioriteiten ik moet stellen in mijn dagelijks werk.", type:"schaal" },
+
+  { id: 313, dimensieCode:"A5", dimensie:"Werk-privéconflict", deel:"Taakeisen", tekst:"Mijn werk maakt het moeilijk om voldoende tijd en energie te hebben voor mijn privéleven.", type:"schaal" },
+  { id: 314, dimensieCode:"A5", dimensie:"Werk-privéconflict", deel:"Taakeisen", tekst:"Ik neem zorgen of gedachten over mijn werk mee naar huis.", type:"schaal" },
+  { id: 315, dimensieCode:"A5", dimensie:"Werk-privéconflict", deel:"Taakeisen", tekst:"Door mijn werk lukt het mij niet altijd om te ontspannen buiten werktijd.", type:"schaal" },
+
+  // Deel B — hulpbronnen
+  { id: 316, dimensieCode:"B1", dimensie:"Autonomie & regelmogelijkheden", deel:"Hulpbronnen", tekst:"Ik kan mijn werk grotendeels op mijn eigen manier inrichten.", type:"schaal" },
+  { id: 317, dimensieCode:"B1", dimensie:"Autonomie & regelmogelijkheden", deel:"Hulpbronnen", tekst:"Ik heb invloed op de planning en volgorde van mijn werkzaamheden.", type:"schaal" },
+  { id: 318, dimensieCode:"B1", dimensie:"Autonomie & regelmogelijkheden", deel:"Hulpbronnen", tekst:"Ik kan zelf beslissingen nemen over hoe ik mijn taken uitvoer.", type:"schaal" },
+
+  { id: 319, dimensieCode:"B2", dimensie:"Sociale steun van collega's", deel:"Hulpbronnen", tekst:"Mijn collega's staan voor mij klaar als ik hulp nodig heb.", type:"schaal" },
+  { id: 320, dimensieCode:"B2", dimensie:"Sociale steun van collega's", deel:"Hulpbronnen", tekst:"Ik ervaar een prettige samenwerking met mijn directe collega's.", type:"schaal" },
+  { id: 321, dimensieCode:"B2", dimensie:"Sociale steun van collega's", deel:"Hulpbronnen", tekst:"Ik kan bij mijn collega's terecht als ik ergens mee zit, ook als het niet puur over werk gaat.", type:"schaal" },
+
+  { id: 322, dimensieCode:"B3", dimensie:"Steun en coaching van de leidinggevende", deel:"Hulpbronnen", tekst:"Mijn leidinggevende ondersteunt mij actief in mijn werk en ontwikkeling.", type:"schaal" },
+  { id: 323, dimensieCode:"B3", dimensie:"Steun en coaching van de leidinggevende", deel:"Hulpbronnen", tekst:"Mijn leidinggevende geeft mij bruikbare feedback op mijn functioneren.", type:"schaal" },
+  { id: 324, dimensieCode:"B3", dimensie:"Steun en coaching van de leidinggevende", deel:"Hulpbronnen", tekst:"Ik voel mij gesteund door mijn leidinggevende als ik voor uitdagende situaties sta.", type:"schaal" },
+
+  { id: 325, dimensieCode:"B4", dimensie:"Groeimogelijkheden & ontwikkeling", deel:"Hulpbronnen", tekst:"Mijn werk biedt mij voldoende mogelijkheden om nieuwe dingen te leren.", type:"schaal" },
+  { id: 326, dimensieCode:"B4", dimensie:"Groeimogelijkheden & ontwikkeling", deel:"Hulpbronnen", tekst:"Ik krijg de kans om mij professioneel te ontwikkelen binnen mijn functie.", type:"schaal" },
+  { id: 327, dimensieCode:"B4", dimensie:"Groeimogelijkheden & ontwikkeling", deel:"Hulpbronnen", tekst:"Er is binnen de organisatie ruimte voor mijn persoonlijke groei en loopbaanontwikkeling.", type:"schaal" },
+
+  { id: 328, dimensieCode:"B5", dimensie:"Zingeving & betekenis van het werk", deel:"Hulpbronnen", tekst:"Ik begrijp hoe mijn werk bijdraagt aan het grotere geheel van de organisatie.", type:"schaal" },
+  { id: 329, dimensieCode:"B5", dimensie:"Zingeving & betekenis van het werk", deel:"Hulpbronnen", tekst:"Mijn werk voelt zinvol en waardevol aan.", type:"schaal" },
+  { id: 330, dimensieCode:"B5", dimensie:"Zingeving & betekenis van het werk", deel:"Hulpbronnen", tekst:"Ik haal voldoening uit de resultaten die ik boek in mijn werk.", type:"schaal" },
+
+  // Deel C — uitkomstmaten
+  { id: 331, dimensieCode:"C1", dimensie:"Bevlogenheid", deel:"Uitkomstmaten", tekst:"Ik ga met energie en enthousiasme aan het werk.", type:"schaal" },
+  { id: 332, dimensieCode:"C1", dimensie:"Bevlogenheid", deel:"Uitkomstmaten", tekst:"Als ik werk, verlies ik de tijd uit het oog, ik ben er volledig in opgegaan.", type:"schaal" },
+  { id: 333, dimensieCode:"C1", dimensie:"Bevlogenheid", deel:"Uitkomstmaten", tekst:"Mijn werk inspireert mij en geeft mij een gevoel van trots.", type:"schaal" },
+
+  { id: 334, dimensieCode:"C2", dimensie:"Uitputting", deel:"Uitkomstmaten", tekst:"Aan het einde van een werkdag voel ik mij leeg en uitgeput.", type:"schaal" },
+  { id: 335, dimensieCode:"C2", dimensie:"Uitputting", deel:"Uitkomstmaten", tekst:"Ik voel mij emotioneel uitgeput door mijn werk.", type:"schaal" },
+  { id: 336, dimensieCode:"C2", dimensie:"Uitputting", deel:"Uitkomstmaten", tekst:"Ik heb moeite om aan het begin van een nieuwe werkdag energie op te brengen.", type:"schaal" },
+];
+
+const ENERGIE_MOTIVATIE_REFLECTIEVRAGEN = [
+  "Welke taakeis wordt het zwaarst ervaren? Wat maakt die eis zo belastend in de dagelijkse praktijk?",
+  "Welke hulpbron is op dit moment het meest waardevol voor het team? Hoe kunnen we die verder versterken?",
+  "Zijn er hulpbronnen die nu onvoldoende aanwezig zijn maar die een groot verschil zouden maken?",
+  "In hoeverre is de huidige balans tussen taakeisen en hulpbronnen houdbaar op de langere termijn?",
+  "Wat kan de leidinggevende concreet doen om de balans te verbeteren? Wat kan het team zelf doen?",
+  "Zijn er medewerkers bij wie de signalen van uitputting al zichtbaar zijn? Welke stap wordt als eerste gezet?",
+];
+
+
+const BELEVING_VERANDERING_STELLINGEN = [
+  { id: 401, dimensieCode:"D1", dimensie:"Veiligheid & Vertrouwen", tekst:"Mijn leidinggevende creëert een omgeving waarin ik me veilig voel om mijn mening te geven.", type:"schaal" },
+  { id: 402, dimensieCode:"D1", dimensie:"Veiligheid & Vertrouwen", tekst:"Ik ervaar geen angst voor negatieve consequenties wanneer ik fouten toegeef bij mijn leidinggevende.", type:"schaal" },
+  { id: 403, dimensieCode:"D1", dimensie:"Veiligheid & Vertrouwen", tekst:"Mijn leidinggevende reageert voorspelbaar en consistent, zodat ik weet wat ik kan verwachten.", type:"schaal" },
+
+  { id: 404, dimensieCode:"D2", dimensie:"Autonomie & Controle", tekst:"Mijn leidinggevende geeft mij voldoende ruimte om mijn werk op mijn eigen manier in te richten.", type:"schaal" },
+  { id: 405, dimensieCode:"D2", dimensie:"Autonomie & Controle", tekst:"Ik word betrokken bij beslissingen die mijn werk direct raken.", type:"schaal" },
+  { id: 406, dimensieCode:"D2", dimensie:"Autonomie & Controle", tekst:"Mijn leidinggevende vertrouwt erop dat ik mijn taken zelfstandig kan uitvoeren.", type:"schaal" },
+
+  { id: 407, dimensieCode:"D3", dimensie:"Sociale Verbinding", tekst:"Mijn leidinggevende zorgt voor een gevoel van saamhorigheid en verbondenheid binnen het team.", type:"schaal" },
+  { id: 408, dimensieCode:"D3", dimensie:"Sociale Verbinding", tekst:"Ik voel me als persoon gezien en gewaardeerd door mijn leidinggevende, niet alleen als werknemer.", type:"schaal" },
+  { id: 409, dimensieCode:"D3", dimensie:"Sociale Verbinding", tekst:"Mijn leidinggevende moedigt samenwerking en onderling contact actief aan.", type:"schaal" },
+
+  { id: 410, dimensieCode:"D4", dimensie:"Eerlijkheid & Rechtvaardigheid", tekst:"Mijn leidinggevende behandelt alle teamleden eerlijk en consequent.", type:"schaal" },
+  { id: 411, dimensieCode:"D4", dimensie:"Eerlijkheid & Rechtvaardigheid", tekst:"Besluiten worden op een transparante manier genomen en toegelicht.", type:"schaal" },
+  { id: 412, dimensieCode:"D4", dimensie:"Eerlijkheid & Rechtvaardigheid", tekst:"Als er iets misgaat, zoekt mijn leidinggevende naar een eerlijke oplossing in plaats van een schuldige.", type:"schaal" },
+
+  { id: 413, dimensieCode:"D5", dimensie:"Erkenning & Status", tekst:"Mijn leidinggevende erkent mijn bijdragen en prestaties openlijk.", type:"schaal" },
+  { id: 414, dimensieCode:"D5", dimensie:"Erkenning & Status", tekst:"Ik voel dat mijn expertise en inbreng serieus worden genomen.", type:"schaal" },
+  { id: 415, dimensieCode:"D5", dimensie:"Erkenning & Status", tekst:"Mijn leidinggevende geeft feedback op een manier die mijn gevoel van competentie vergroot.", type:"schaal" },
+
+  { id: 416, dimensieCode:"D6", dimensie:"Stressregulatie & Herstel", tekst:"Mijn leidinggevende houdt actief rekening met de werkdruk en belastbaarheid van teamleden.", type:"schaal" },
+  { id: 417, dimensieCode:"D6", dimensie:"Stressregulatie & Herstel", tekst:"Er is binnen ons team ruimte voor herstel en ontspanning, ook in drukke periodes.", type:"schaal" },
+  { id: 418, dimensieCode:"D6", dimensie:"Stressregulatie & Herstel", tekst:"Mijn leidinggevende signaleert tijdig wanneer iemand onder te grote druk staat en grijpt dan in.", type:"schaal" },
+
+  { id: 419, dimensieCode:"D7", dimensie:"Zingeving & Motivatie", tekst:"Mijn leidinggevende verbindt ons dagelijks werk aan een groter doel of een bredere betekenis.", type:"schaal" },
+  { id: 420, dimensieCode:"D7", dimensie:"Zingeving & Motivatie", tekst:"Ik begrijp waarom mijn werk ertoe doet voor het team en de organisatie.", type:"schaal" },
+  { id: 421, dimensieCode:"D7", dimensie:"Zingeving & Motivatie", tekst:"Mijn leidinggevende stimuleert mij om werk te doen dat aansluit bij mijn persoonlijke drijfveren.", type:"schaal" },
+
+  { id: 422, dimensieCode:"D8", dimensie:"Leren, Groei & Neuroplasticiteit", tekst:"Mijn leidinggevende moedigt mij aan om te experimenteren, ook als dat betekent dat ik soms misluk.", type:"schaal" },
+  { id: 423, dimensieCode:"D8", dimensie:"Leren, Groei & Neuroplasticiteit", tekst:"Er is binnen het team ruimte om te leren van fouten zonder dat dit negatieve gevolgen heeft.", type:"schaal" },
+  { id: 424, dimensieCode:"D8", dimensie:"Leren, Groei & Neuroplasticiteit", tekst:"Mijn leidinggevende investeert actief in mijn ontwikkeling en groei.", type:"schaal" },
+];
+
+const BELEVING_VERANDERING_REFLECTIEVRAGEN = [
+  "Op welke dimensie ervaart het team de meeste veiligheid en activatie? Wat doet de leidinggevende concreet om dat te bereiken?",
+  "Welke dimensie vraagt de meeste aandacht? Wat is het effect hiervan op het dagelijks functioneren van het team?",
+  "Zijn er situaties waarin de dreigingsrespons van medewerkers getriggerd wordt? Hoe herkent u dat als leidinggevende?",
+  "Wat zou er veranderen in het team als de leidinggevende op de laagst scorende dimensie een concrete stap zou zetten?",
+  "Welke gewoonte of aanpak van de leidinggevende draagt het meest bij aan een breinvriendelijke werkomgeving?",
+];
+
 // ─────────────────────────────────────────────
 // PUBLIC SITE COMPONENTS
 // ─────────────────────────────────────────────
@@ -1285,7 +1531,7 @@ function ScanInvullen({ scanId }) {
           <div style={{fontSize:11,color:ADM.teal,fontWeight:600,textTransform:"uppercase",letterSpacing:"1.5px",marginBottom:8}}>Mijn Teamkompas</div>
           <div style={{fontSize:22,fontWeight:700,color:ADM.white,marginBottom:10}}>{lijst.naam}</div>
           <div style={{fontSize:14,color:ADM.muted,lineHeight:1.7}}>
-            Deze scan bestaat uit {totaal} vragen en duurt ongeveer 5–8 minuten. Je antwoorden zijn anoniem.
+            {(isVeiligheidLeiderschapVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst)) ? "Deze verdiepende scan bestaat uit" : "Deze scan bestaat uit"} {totaal} vragen en duurt ongeveer {(isVeiligheidLeiderschapVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst)) ? "6–10" : "5–8"} minuten. Je antwoorden zijn anoniem.
           </div>
         </div>
         <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"20px 22px",marginBottom:20}}>
@@ -1391,6 +1637,126 @@ function ScanInvullen({ scanId }) {
       </div>
     </div>
   );
+}
+
+
+function isVeiligheidLeiderschapVerdieping(lijst) {
+  return lijst?.type === "verdieping_veiligheid_leiderschap";
+}
+
+function getVeiligheidLeiderschapDimensies(stellingen = VEILIGHEID_LEIDERSCHAP_STELLINGEN) {
+  const seen = new Map();
+  stellingen.forEach((s) => {
+    if (!seen.has(s.dimensieCode)) {
+      seen.set(s.dimensieCode, { code: s.dimensieCode, naam: s.dimensie, vragen: [] });
+    }
+    seen.get(s.dimensieCode).vragen.push(s);
+  });
+  return Array.from(seen.values());
+}
+
+function interpretVeiligheidLeiderschapScore(score) {
+  return VEILIGHEID_LEIDERSCHAP_INTERPRETATIE.find((r) => score >= r.min && score <= r.max) || null;
+}
+
+function scoreColorByLabel(label) {
+  if (label === "Excellentie") return ADM.green;
+  if (label === "Kracht") return "#86efac";
+  if (label === "Ontwikkelpunt") return ADM.orange;
+  if (label === "Aandachtspunt") return ADM.red;
+  return ADM.muted;
+}
+
+function isVerbeterenLerenVerdieping(lijst) {
+  return lijst?.type === "verdieping_verbeteren_leren";
+}
+
+function interpretVerbeterenLerenScore(score) {
+  return VERBETEREN_LEREN_INTERPRETATIE.find((r) => score >= r.min && score <= r.max) || null;
+}
+
+function getVerbeterenLerenDimensies(stellingen = VERBETEREN_LEREN_STELLINGEN) {
+  const seen = new Map();
+  stellingen.forEach((s) => {
+    const key = `${s.dimensieCode}_${s.doelgroep}`;
+    if (!seen.has(key)) {
+      seen.set(key, { key, code: s.dimensieCode, naam: s.dimensie, doelgroep: s.doelgroep, vragen: [] });
+    }
+    seen.get(key).vragen.push(s);
+  });
+  return Array.from(seen.values());
+}
+
+function isEnergieMotivatieVerdieping(lijst) {
+  return lijst?.type === "verdieping_energie_motivatie";
+}
+
+function getEnergieMotivatieDimensies(stellingen = ENERGIE_MOTIVATIE_STELLINGEN) {
+  const seen = new Map();
+  stellingen.forEach((s) => {
+    if (!seen.has(s.dimensieCode)) {
+      seen.set(s.dimensieCode, { code: s.dimensieCode, naam: s.dimensie, deel: s.deel, vragen: [] });
+    }
+    seen.get(s.dimensieCode).vragen.push(s);
+  });
+  return Array.from(seen.values());
+}
+
+function interpretEnergieMotivatieScore(code, score) {
+  const isTaakeisOfUitputting = code.startsWith("A") || code === "C2";
+
+  if (score >= 3 && score <= 6) {
+    return isTaakeisOfUitputting
+      ? { label: "Laag", advies: "Gunstig: lage belasting of uitputting." }
+      : { label: "Laag", advies: "Aandachtspunt: weinig ondersteuning of energie." };
+  }
+  if (score >= 7 && score <= 10) {
+    return isTaakeisOfUitputting
+      ? { label: "Matig", advies: "Lichte belasting: bewust blijven volgen." }
+      : { label: "Matig", advies: "Ontwikkelzone: versterking gewenst." };
+  }
+  if (score >= 11 && score <= 13) {
+    return isTaakeisOfUitputting
+      ? { label: "Hoog", advies: "Aandachtspunt: hoge belasting, interventie overwegen." }
+      : { label: "Hoog", advies: "Kracht: sterke hulpbron, borgen en benutten." };
+  }
+  if (score >= 14 && score <= 15) {
+    return isTaakeisOfUitputting
+      ? { label: "Zeer hoog", advies: "Urgent: direct actie vereist, risico op uitval." }
+      : { label: "Zeer hoog", advies: "Excellent: uitmuntend niveau, inzetten als best practice." };
+  }
+  return null;
+}
+
+function isBelevingVeranderingVerdieping(lijst) {
+  return lijst?.type === "verdieping_beleving_verandering";
+}
+
+function getBelevingVeranderingDimensies(stellingen = BELEVING_VERANDERING_STELLINGEN) {
+  const seen = new Map();
+  stellingen.forEach((s) => {
+    if (!seen.has(s.dimensieCode)) {
+      seen.set(s.dimensieCode, { code: s.dimensieCode, naam: s.dimensie, vragen: [] });
+    }
+    seen.get(s.dimensieCode).vragen.push(s);
+  });
+  return Array.from(seen.values());
+}
+
+function interpretBelevingVeranderingScore(score) {
+  if (score >= 3 && score <= 6) {
+    return { label: "Rood — Stresszone", advies: "Het brein van medewerkers ervaart waarschijnlijk een dreigingsrespons op dit gebied. Direct aandacht vereist: maak het bespreekbaar en stel een concreet actieplan op." };
+  }
+  if (score >= 7 && score <= 10) {
+    return { label: "Oranje — Ontwikkelzone", advies: "Er is ruimte voor verbetering. De basis is aanwezig, maar medewerkers ervaren nog onvoldoende de voordelen van breinvriendelijk leiderschap op dit punt." };
+  }
+  if (score >= 11 && score <= 13) {
+    return { label: "Groen — Comfortzone", advies: "Het brein ervaart voldoende veiligheid en activatie op dit gebied. Borgen en bewust blijven inzetten." };
+  }
+  if (score >= 14 && score <= 15) {
+    return { label: "Blauw — Excellentiezone", advies: "Optimaal breinvriendelijk leiderschap op dit vlak. Gebruik dit als voorbeeld en deel de werkwijze met andere leidinggevenden." };
+  }
+  return null;
 }
 
 // ─────────────────────────────────────────────
@@ -1566,7 +1932,14 @@ function PageScans() {
             <div key={lijst.id} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"20px 24px"}}>
               <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontWeight:600,color:ADM.white,fontSize:15,marginBottom:4}}>{lijst.naam}</div>
+                  <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4}}>
+                    <div style={{fontWeight:600,color:ADM.white,fontSize:15}}>{lijst.naam}</div>
+                    {(isVeiligheidLeiderschapVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst)) && (
+                      <span style={{fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:20,background:"rgba(15,118,110,0.14)",color:ADM.teal}}>
+                        VERDIEPING
+                      </span>
+                    )}
+                  </div>
                   <div style={{fontSize:12,color:ADM.muted,marginBottom:12}}>
                     🏢 {lijst.klant} · 📅 {lijst.aangemaakt} · {(lijst.stellingen||[]).length} stellingen · {resp.length} ingevuld
                   </div>
@@ -1611,6 +1984,8 @@ function PageScans() {
 function ScanResultaten({ lijst, antwoorden, onBack }) {
   const [open,    setOpen]    = useState(null);
   const [tabBlad, setTabBlad] = useState("gap");
+  const [verdiepingMaken, setVerdiepingMaken] = useState(false);
+  const [verdiepingInfo, setVerdiepingInfo] = useState(null);
 
   const teamleden  = antwoorden.filter(a=>a.rol==="Teamlid");
   const management = antwoorden.filter(a=>a.rol==="Leidinggevende");
@@ -1652,6 +2027,238 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
           </div>
         );
       })}
+    </div>
+  );
+
+
+  const maakVerdiependeScan = async () => {
+    setVerdiepingMaken(true);
+    try {
+      const data = {
+        naam: `${lijst.klant} — Verdieping veiligheid en leiderschap`,
+        klant: lijst.klant,
+        aangemaakt: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
+        status: "Actief",
+        type: "verdieping_veiligheid_leiderschap",
+        parentVragenlijstId: lijst.id,
+        stellingen: VEILIGHEID_LEIDERSCHAP_STELLINGEN,
+      };
+      const ref = await addDoc(collection(db, "vragenlijsten"), data);
+      setVerdiepingInfo(prev => ({ ...(prev || {}), veiligheid: { id: ref.id, ...data } }));
+    } catch (err) {
+      console.error("Verdiepende scan aanmaken mislukt:", err);
+    } finally {
+      setVerdiepingMaken(false);
+    }
+  };
+
+  const maakVerdiepingVerbeterenLeren = async () => {
+    setVerdiepingMaken(true);
+    try {
+      const data = {
+        naam: `${lijst.klant} — Verdieping verbeteren en leren`,
+        klant: lijst.klant,
+        aangemaakt: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
+        status: "Actief",
+        type: "verdieping_verbeteren_leren",
+        parentVragenlijstId: lijst.id,
+        stellingen: VERBETEREN_LEREN_STELLINGEN,
+      };
+      const ref = await addDoc(collection(db, "vragenlijsten"), data);
+      setVerdiepingInfo(prev => ({ ...(prev || {}), verbeterenLeren: { id: ref.id, ...data } }));
+    } catch (err) {
+      console.error("Verdiepende scan verbeteren en leren aanmaken mislukt:", err);
+    } finally {
+      setVerdiepingMaken(false);
+    }
+  };
+
+  const veiligheidScoreTeam = gemPijler(0, teamleden);
+  const veiligheidScoreManagement = gemPijler(0, management);
+  const verbeterenLerenScoreTeam = gemPijler(3, teamleden);
+  const verbeterenLerenScoreManagement = gemPijler(3, management);
+
+  const energieMotivatieScoreTeam = gemPijler(2, teamleden);
+  const energieMotivatieScoreManagement = gemPijler(2, management);
+
+  const belevingVeranderingScoreTeam = gemPijler(1, teamleden);
+  const belevingVeranderingScoreManagement = gemPijler(1, management);
+
+  const maakVerdiepingBelevingVerandering = async () => {
+    setVerdiepingMaken(true);
+    try {
+      const data = {
+        naam: `${lijst.klant} — Verdieping beleving van verandering`,
+        klant: lijst.klant,
+        aangemaakt: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
+        status: "Actief",
+        type: "verdieping_beleving_verandering",
+        parentVragenlijstId: lijst.id,
+        stellingen: BELEVING_VERANDERING_STELLINGEN,
+      };
+      const ref = await addDoc(collection(db, "vragenlijsten"), data);
+      setVerdiepingInfo(prev => ({ ...(prev || {}), belevingVerandering: { id: ref.id, ...data } }));
+    } catch (err) {
+      console.error("Verdiepende scan beleving van verandering aanmaken mislukt:", err);
+    } finally {
+      setVerdiepingMaken(false);
+    }
+  };
+
+  const maakVerdiepingEnergieMotivatie = async () => {
+    setVerdiepingMaken(true);
+    try {
+      const data = {
+        naam: `${lijst.klant} — Verdieping energie en motivatie`,
+        klant: lijst.klant,
+        aangemaakt: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
+        status: "Actief",
+        type: "verdieping_energie_motivatie",
+        parentVragenlijstId: lijst.id,
+        stellingen: ENERGIE_MOTIVATIE_STELLINGEN,
+      };
+      const ref = await addDoc(collection(db, "vragenlijsten"), data);
+      setVerdiepingInfo(prev => ({ ...(prev || {}), energieMotivatie: { id: ref.id, ...data } }));
+    } catch (err) {
+      console.error("Verdiepende scan energie en motivatie aanmaken mislukt:", err);
+    } finally {
+      setVerdiepingMaken(false);
+    }
+  };
+
+  const veiligheidAandacht =
+    (veiligheidScoreTeam && parseFloat(veiligheidScoreTeam) < 3.5) ||
+    (veiligheidScoreManagement && parseFloat(veiligheidScoreManagement) < 3.5) ||
+    (!veiligheidScoreManagement && veiligheidScoreTeam && parseFloat(veiligheidScoreTeam) < 3.5);
+
+  const verbeterenLerenAandacht =
+    (verbeterenLerenScoreTeam && parseFloat(verbeterenLerenScoreTeam) < 3.5) ||
+    (verbeterenLerenScoreManagement && parseFloat(verbeterenLerenScoreManagement) < 3.5) ||
+    (!verbeterenLerenScoreManagement && verbeterenLerenScoreTeam && parseFloat(verbeterenLerenScoreTeam) < 3.5);
+
+  const energieMotivatieAandacht =
+    (energieMotivatieScoreTeam && parseFloat(energieMotivatieScoreTeam) < 3.5) ||
+    (energieMotivatieScoreManagement && parseFloat(energieMotivatieScoreManagement) < 3.5) ||
+    (!energieMotivatieScoreManagement && energieMotivatieScoreTeam && parseFloat(energieMotivatieScoreTeam) < 3.5);
+
+  const belevingVeranderingAandacht =
+    (belevingVeranderingScoreTeam && parseFloat(belevingVeranderingScoreTeam) < 3.5) ||
+    (belevingVeranderingScoreManagement && parseFloat(belevingVeranderingScoreManagement) < 3.5) ||
+    (!belevingVeranderingScoreManagement && belevingVeranderingScoreTeam && parseFloat(belevingVeranderingScoreTeam) < 3.5);
+
+  const VerdieningIntro = () => (
+    <div style={{background:"rgba(15,118,110,0.08)",border:`1px solid ${ADM.tealGlow}`,borderRadius:12,padding:"16px 18px",marginBottom:20}}>
+      <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>
+        Vervolgonderzoek
+      </div>
+      <div style={{fontSize:15,fontWeight:700,color:ADM.white,marginBottom:8}}>
+        Verdiepende scans beschikbaar
+      </div>
+      <div style={{fontSize:13,color:ADM.muted,lineHeight:1.65,marginBottom:14}}>
+        Start vanuit de basisscan een verdiepende meting op het domein dat extra aandacht vraagt.
+      </div>
+
+      <div style={{display:"grid",gridTemplateColumns:"1fr",gap:10}}>
+        {veiligheidAandacht && (
+          <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
+            <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Veiligheid en leiderschap</div>
+            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
+              Gebaseerd op de 9 Secure Base Leadership-dimensies.
+            </div>
+            {verdiepingInfo?.veiligheid ? (
+              <button
+                onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.veiligheid.id}`); } catch {} }}
+                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
+              >
+                🔗 Kopieer deelnemerslink
+              </button>
+            ) : (
+              <button
+                onClick={maakVerdiependeScan}
+                disabled={verdiepingMaken}
+                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}
+              >
+                {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan veiligheid en leiderschap"}
+              </button>
+            )}
+          </div>
+        )}
+
+        {verbeterenLerenAandacht && (
+          <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
+            <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Verbeteren en leren</div>
+            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
+              Lean- en Agile-volwassenheid vanuit twee perspectieven: leidinggevende en teamspiegel.
+            </div>
+            {verdiepingInfo?.verbeterenLeren ? (
+              <button
+                onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.verbeterenLeren.id}`); } catch {} }}
+                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
+              >
+                🔗 Kopieer deelnemerslink
+              </button>
+            ) : (
+              <button
+                onClick={maakVerdiepingVerbeterenLeren}
+                disabled={verdiepingMaken}
+                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}
+              >
+                {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan verbeteren en leren"}
+              </button>
+            )}
+          </div>
+        )}
+
+        {energieMotivatieAandacht && (
+          <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
+            <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Energie en motivatie</div>
+            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
+              JD-R verdieping op taakeisen, hulpbronnen, bevlogenheid en uitputting.
+            </div>
+            {verdiepingInfo?.energieMotivatie ? (
+              <button
+                onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.energieMotivatie.id}`); } catch {} }}
+                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
+              >
+                🔗 Kopieer deelnemerslink
+              </button>
+            ) : (
+              <button
+                onClick={maakVerdiepingEnergieMotivatie}
+                disabled={verdiepingMaken}
+                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}
+              >
+                {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan energie en motivatie"}
+              </button>
+            )}
+          </div>
+        )}
+
+        {belevingVeranderingAandacht && (
+          <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
+            <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Beleving van verandering</div>
+            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
+              Neuromanagement-verdieping op breinvriendelijk leiderschap en SCARF-gerelateerde dimensies.
+            </div>
+            {verdiepingInfo?.belevingVerandering ? (
+              <button
+                onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.belevingVerandering.id}`); } catch {} }}
+                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
+              >
+                🔗 Kopieer deelnemerslink
+              </button>
+            ) : (
+              <button
+                onClick={maakVerdiepingBelevingVerandering}
+                disabled={verdiepingMaken}
+                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}
+              >
+                {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan beleving van verandering"}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 
@@ -1705,6 +2312,433 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
     </div>
   );
 
+  if (isBelevingVeranderingVerdieping(lijst)) {
+    const dimensies = getBelevingVeranderingDimensies(stellingen);
+
+    const scoreGemiddelde = (vraagIds, subset) => {
+      const vals = subset.flatMap(a => vraagIds.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null));
+      return vals.length ? (vals.reduce((a,b)=>a+parseFloat(b),0) / vals.length) : null;
+    };
+
+    const dimensieScores = dimensies.map((d) => {
+      const ids = d.vragen.map(v => v.id);
+      const gem = scoreGemiddelde(ids, antwoorden);
+      const totaal = gem !== null ? Math.round(gem * 3) : null;
+      const interpretatie = totaal !== null ? interpretBelevingVeranderingScore(totaal) : null;
+      return { ...d, gem, totaal, interpretatie };
+    });
+
+    const kleurVanLabel = (label) => {
+      if (label?.startsWith("Rood")) return ADM.red;
+      if (label?.startsWith("Oranje")) return ADM.orange;
+      if (label?.startsWith("Groen")) return ADM.green;
+      if (label?.startsWith("Blauw")) return PUB.blauw;
+      return ADM.muted;
+    };
+
+    return (
+      <div>
+        <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",marginBottom:20,padding:0,fontWeight:600}}>
+          ← Terug naar vragenlijsten
+        </button>
+
+        <div style={{marginBottom:20}}>
+          <div style={{fontWeight:700,color:ADM.white,fontSize:18,marginBottom:4}}>{lijst.naam}</div>
+          <div style={{fontSize:13,color:ADM.muted,marginBottom:16}}>
+            {antwoorden.length} deelnemer(s) · neurowetenschappelijke verdieping op leiderschap en veranderbeleving
+          </div>
+        </div>
+
+        <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:12,padding:"16px 18px",marginBottom:20}}>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>
+            Score-interpretatie
+          </div>
+          <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>
+            Per dimensie worden drie vragen samengenomen tot een totaalscore van 3–15.
+            3–6 = rood, 7–10 = oranje, 11–13 = groen, 14–15 = blauw.
+          </div>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:24}}>
+          {dimensieScores.map((d)=> {
+            const kleur = kleurVanLabel(d.interpretatie?.label);
+            return (
+              <div key={d.code} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"18px 20px"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,marginBottom:12,flexWrap:"wrap"}}>
+                  <div>
+                    <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>{d.code}</div>
+                    <div style={{fontSize:15,fontWeight:700,color:ADM.white}}>{d.naam}</div>
+                  </div>
+                  <div style={{display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{fontSize:24,fontWeight:700,color:kleur}}>{d.totaal ?? "—"}</div>
+                    {d.interpretatie && <span style={{fontSize:11,fontWeight:700,padding:"4px 10px",borderRadius:20,background:`${kleur}22`,color:kleur}}>{d.interpretatie.label}</span>}
+                  </div>
+                </div>
+                <div style={{fontSize:12,color:ADM.muted,lineHeight:1.65,background:"rgba(255,255,255,0.04)",padding:"10px 12px",borderRadius:8}}>
+                  <strong style={{color:ADM.white}}>Betekenis & aanbeveling:</strong> {d.interpretatie?.advies || "Nog onvoldoende data voor interpretatie."}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"18px 20px"}}>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:12}}>
+            Reflectievragen
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {BELEVING_VERANDERING_REFLECTIEVRAGEN.map((vraag, i)=>(
+              <div key={i} style={{fontSize:13,color:ADM.text,lineHeight:1.6,background:"rgba(255,255,255,0.04)",padding:"10px 12px",borderRadius:8}}>
+                {i+1}. {vraag}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isEnergieMotivatieVerdieping(lijst)) {
+    const dimensies = getEnergieMotivatieDimensies(stellingen);
+
+    const scoreGemiddelde = (vraagIds, subset) => {
+      const vals = subset.flatMap(a => vraagIds.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null));
+      return vals.length ? (vals.reduce((a,b)=>a+parseFloat(b),0) / vals.length) : null;
+    };
+
+    const dimensieScores = dimensies.map((d) => {
+      const ids = d.vragen.map(v => v.id);
+      const gem = scoreGemiddelde(ids, antwoorden);
+      const totaal = gem !== null ? Math.round(gem * 3) : null;
+      const interpretatie = totaal !== null ? interpretEnergieMotivatieScore(d.code, totaal) : null;
+      return { ...d, gem, totaal, interpretatie };
+    });
+
+    const somDeel = (prefix) => dimensieScores.filter(d => d.code.startsWith(prefix)).reduce((sum, d) => sum + (d.totaal || 0), 0);
+    const somTaakeisen = somDeel("A");
+    const somHulpbronnen = somDeel("B");
+    const balans = somTaakeisen - somHulpbronnen;
+
+    let balansLabel = "In balans";
+    let balansUitleg = "Gezonde situatie: eisen en hulpbronnen zijn in evenwicht. Bewaken en onderhouden.";
+    let balansKleur = ADM.green;
+    if (balans < -20) {
+      balansLabel = "Sterk negatief";
+      balansUitleg = "Hulpbronnen domineren: zeer gunstig. Kans op bevlogenheid is hoog.";
+      balansKleur = ADM.green;
+    } else if (balans >= -20 && balans <= 0) {
+      balansLabel = "In balans";
+      balansUitleg = "Gezonde situatie: eisen en hulpbronnen zijn in evenwicht. Bewaken en onderhouden.";
+      balansKleur = "#86efac";
+    } else if (balans > 0 && balans <= 20) {
+      balansLabel = "Lichte onbalans";
+      balansUitleg = "Eisen beginnen hulpbronnen te overtreffen. Tijdig ingrijpen is raadzaam.";
+      balansKleur = ADM.orange;
+    } else if (balans > 20) {
+      balansLabel = "Taakeisen domineren";
+      balansUitleg = "Risicosituatie: hoog risico op uitputting en uitval. Direct aandacht vereist.";
+      balansKleur = ADM.red;
+    }
+
+    return (
+      <div>
+        <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",marginBottom:20,padding:0,fontWeight:600}}>
+          ← Terug naar vragenlijsten
+        </button>
+
+        <div style={{marginBottom:20}}>
+          <div style={{fontWeight:700,color:ADM.white,fontSize:18,marginBottom:4}}>{lijst.naam}</div>
+          <div style={{fontSize:13,color:ADM.muted,marginBottom:16}}>
+            {antwoorden.length} deelnemer(s) · JD-R verdieping op belasting, hulpbronnen en uitkomsten
+          </div>
+        </div>
+
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,marginBottom:20}}>
+          <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"16px 18px"}}>
+            <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:6}}>Totaal taakeisen</div>
+            <div style={{fontSize:28,fontWeight:700,color:ADM.orange}}>{somTaakeisen}</div>
+          </div>
+          <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"16px 18px"}}>
+            <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:6}}>Totaal hulpbronnen</div>
+            <div style={{fontSize:28,fontWeight:700,color:ADM.green}}>{somHulpbronnen}</div>
+          </div>
+          <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"16px 18px"}}>
+            <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:6}}>Balans A − B</div>
+            <div style={{fontSize:28,fontWeight:700,color:balansKleur}}>{balans > 0 ? `+${balans}` : balans}</div>
+          </div>
+        </div>
+
+        <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:12,padding:"16px 18px",marginBottom:20}}>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>
+            Balansanalyse
+          </div>
+          <div style={{fontSize:14,fontWeight:700,color:balansKleur,marginBottom:6}}>{balansLabel}</div>
+          <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>{balansUitleg}</div>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:24}}>
+          {dimensieScores.map((d)=> {
+            const kleur =
+              d.code.startsWith("A") || d.code === "C2"
+                ? (d.totaal >= 14 ? ADM.red : d.totaal >= 11 ? ADM.orange : "#86efac")
+                : (d.totaal >= 14 ? ADM.green : d.totaal >= 11 ? "#86efac" : d.totaal >= 7 ? ADM.orange : ADM.red);
+
+            return (
+              <div key={d.code} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"18px 20px"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,marginBottom:12,flexWrap:"wrap"}}>
+                  <div>
+                    <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>{d.code} · {d.deel}</div>
+                    <div style={{fontSize:15,fontWeight:700,color:ADM.white}}>{d.naam}</div>
+                  </div>
+                  <div style={{display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{fontSize:24,fontWeight:700,color:kleur}}>{d.totaal ?? "—"}</div>
+                    {d.interpretatie && <span style={{fontSize:11,fontWeight:700,padding:"4px 10px",borderRadius:20,background:`${kleur}22`,color:kleur}}>{d.interpretatie.label}</span>}
+                  </div>
+                </div>
+                <div style={{fontSize:12,color:ADM.muted,lineHeight:1.65,background:"rgba(255,255,255,0.04)",padding:"10px 12px",borderRadius:8}}>
+                  <strong style={{color:ADM.white}}>Betekenis:</strong> {d.interpretatie?.advies || "Nog onvoldoende data voor interpretatie."}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"18px 20px"}}>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:12}}>
+            Reflectievragen
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {ENERGIE_MOTIVATIE_REFLECTIEVRAGEN.map((vraag, i)=>(
+              <div key={i} style={{fontSize:13,color:ADM.text,lineHeight:1.6,background:"rgba(255,255,255,0.04)",padding:"10px 12px",borderRadius:8}}>
+                {i+1}. {vraag}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isVerbeterenLerenVerdieping(lijst)) {
+    const dimensies = getVerbeterenLerenDimensies(stellingen);
+    const leidinggevendeAntwoorden = antwoorden.filter(a => a.rol === "Leidinggevende");
+    const teamAntwoorden = antwoorden.filter(a => a.rol === "Teamlid");
+
+    const scoreGemiddelde = (vraagIds, subset) => {
+      const vals = subset.flatMap(a => vraagIds.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null));
+      return vals.length ? (vals.reduce((a,b)=>a+parseFloat(b),0) / vals.length) : null;
+    };
+
+    const dimensieGroepen = ["L1","L2","L3","L4","A1","A2","A3","A4"].map(code => {
+      const leidinggevendeDim = dimensies.find(d => d.code === code && d.doelgroep === "Leidinggevende");
+      const teamDim = dimensies.find(d => d.code === code && d.doelgroep === "Teamlid");
+      const leidinggevendeGem = leidinggevendeDim ? scoreGemiddelde(leidinggevendeDim.vragen.map(v=>v.id), leidinggevendeAntwoorden) : null;
+      const teamGem = teamDim ? scoreGemiddelde(teamDim.vragen.map(v=>v.id), teamAntwoorden) : null;
+      const leidinggevendeTotaal = leidinggevendeGem !== null ? Math.round(leidinggevendeGem * 3) : null;
+      const teamTotaal = teamGem !== null ? Math.round(teamGem * 3) : null;
+      const verschil = leidinggevendeTotaal !== null && teamTotaal !== null ? leidinggevendeTotaal - teamTotaal : null;
+      const interpretLeiding = leidinggevendeTotaal !== null ? interpretVerbeterenLerenScore(leidinggevendeTotaal) : null;
+      const interpretTeam = teamTotaal !== null ? interpretVerbeterenLerenScore(teamTotaal) : null;
+      return {
+        code,
+        naam: leidinggevendeDim?.naam || teamDim?.naam || code,
+        leidinggevendeDim,
+        teamDim,
+        leidinggevendeTotaal,
+        teamTotaal,
+        verschil,
+        interpretLeiding,
+        interpretTeam,
+      };
+    });
+
+    return (
+      <div>
+        <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",marginBottom:20,padding:0,fontWeight:600}}>
+          ← Terug naar vragenlijsten
+        </button>
+
+        <div style={{marginBottom:20}}>
+          <div style={{fontWeight:700,color:ADM.white,fontSize:18,marginBottom:4}}>{lijst.naam}</div>
+          <div style={{fontSize:13,color:ADM.muted,marginBottom:16}}>
+            {antwoorden.length} deelnemer(s) · Lean- en Agile-volwassenheid vanuit leidinggevende en teamspiegel
+          </div>
+        </div>
+
+        <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:12,padding:"16px 18px",marginBottom:20}}>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>
+            Score-interpretatie
+          </div>
+          <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>
+            Per dimensie worden drie vragen samengenomen tot een totaalscore van 3–15.
+            3–6 = beginner, 7–9 = lerend, 10–12 = ontwikkelend, 13–15 = volwassen.
+            Een verschil groter dan 3 punten tussen leidinggevende en team is betekenisvol en verdient bespreking.
+          </div>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:24}}>
+          {dimensieGroepen.map((d)=> {
+            const verschilBetekenisvol = d.verschil !== null && Math.abs(d.verschil) > 3;
+            return (
+              <div key={d.code} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"18px 20px"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,marginBottom:12,flexWrap:"wrap"}}>
+                  <div>
+                    <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>{d.code}</div>
+                    <div style={{fontSize:15,fontWeight:700,color:ADM.white}}>{d.naam}</div>
+                  </div>
+                  {verschilBetekenisvol && (
+                    <span style={{fontSize:11,fontWeight:700,padding:"4px 10px",borderRadius:20,background:`${ADM.orange}22`,color:ADM.orange}}>
+                      Verschil {d.verschil > 0 ? "+" : ""}{d.verschil}
+                    </span>
+                  )}
+                </div>
+
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
+                  <div style={{background:"rgba(255,255,255,0.04)",borderRadius:10,padding:"12px 14px"}}>
+                    <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:6}}>Leidinggevende</div>
+                    <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+                      <div style={{fontSize:24,fontWeight:700,color:scoreColorByLabel(d.interpretLeiding?.label)}}>{d.leidinggevendeTotaal ?? "—"}</div>
+                      {d.interpretLeiding && <span style={{fontSize:11,fontWeight:700,padding:"4px 10px",borderRadius:20,background:`${scoreColorByLabel(d.interpretLeiding.label)}22`,color:scoreColorByLabel(d.interpretLeiding.label)}}>{d.interpretLeiding.label}</span>}
+                    </div>
+                    <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
+                      {d.interpretLeiding?.advies || "Nog onvoldoende data voor interpretatie."}
+                    </div>
+                  </div>
+
+                  <div style={{background:"rgba(255,255,255,0.04)",borderRadius:10,padding:"12px 14px"}}>
+                    <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:6}}>Teamspiegel</div>
+                    <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+                      <div style={{fontSize:24,fontWeight:700,color:scoreColorByLabel(d.interpretTeam?.label)}}>{d.teamTotaal ?? "—"}</div>
+                      {d.interpretTeam && <span style={{fontSize:11,fontWeight:700,padding:"4px 10px",borderRadius:20,background:`${scoreColorByLabel(d.interpretTeam.label)}22`,color:scoreColorByLabel(d.interpretTeam.label)}}>{d.interpretTeam.label}</span>}
+                    </div>
+                    <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
+                      {d.interpretTeam?.advies || "Nog onvoldoende data voor interpretatie."}
+                    </div>
+                  </div>
+                </div>
+
+                {verschilBetekenisvol && (
+                  <div style={{fontSize:12,color:ADM.orange,lineHeight:1.65,background:"rgba(243,156,18,0.08)",padding:"10px 12px",borderRadius:8}}>
+                    Deze dimensie laat een betekenisvol verschil zien tussen zelfreflectie van de leidinggevende en de teamspiegel. Gebruik dit als gespreksthema.
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"18px 20px"}}>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:12}}>
+            Reflectievragen
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {VERBETEREN_LEREN_REFLECTIEVRAGEN.map((vraag, i)=>(
+              <div key={i} style={{fontSize:13,color:ADM.text,lineHeight:1.6,background:"rgba(255,255,255,0.04)",padding:"10px 12px",borderRadius:8}}>
+                {i+1}. {vraag}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isVeiligheidLeiderschapVerdieping(lijst)) {
+    const dimensies = getVeiligheidLeiderschapDimensies(stellingen);
+    const scoreGemiddelde = (vraagIds, subset) => {
+      const vals = subset.flatMap(a => vraagIds.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null));
+      return vals.length ? (vals.reduce((a,b)=>a+parseFloat(b),0) / vals.length) : null;
+    };
+
+    const dimensieScores = dimensies.map((d) => {
+      const ids = d.vragen.map(v => v.id);
+      const totaalGem = scoreGemiddelde(ids, antwoorden);
+      const totaal = totaalGem !== null ? Math.round(totaalGem * 3) : null;
+      const interpretatie = totaal !== null ? interpretVeiligheidLeiderschapScore(totaal) : null;
+      return { ...d, totaalGem, totaal, interpretatie };
+    });
+
+    return (
+      <div>
+        <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",marginBottom:20,padding:0,fontWeight:600}}>
+          ← Terug naar vragenlijsten
+        </button>
+
+        <div style={{marginBottom:20}}>
+          <div style={{fontWeight:700,color:ADM.white,fontSize:18,marginBottom:4}}>{lijst.naam}</div>
+          <div style={{fontSize:13,color:ADM.muted,marginBottom:16}}>
+            {antwoorden.length} deelnemer(s) · verdiepende scan veiligheid en leiderschap
+          </div>
+        </div>
+
+        <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:12,padding:"16px 18px",marginBottom:20}}>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>
+            Score-interpretatie
+          </div>
+          <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>
+            Per dimensie worden drie vragen samengenomen tot een totaalscore van 3–15.
+            3–6 = aandachtspunt, 7–10 = ontwikkelpunt, 11–13 = kracht, 14–15 = excellentie.
+          </div>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:24}}>
+          {dimensieScores.map((d)=> {
+            const kleur = scoreColorByLabel(d.interpretatie?.label);
+            return (
+              <div key={d.code} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"18px 20px"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,marginBottom:12,flexWrap:"wrap"}}>
+                  <div>
+                    <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>{d.code}</div>
+                    <div style={{fontSize:15,fontWeight:700,color:ADM.white}}>{d.naam}</div>
+                  </div>
+                  <div style={{display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{fontSize:24,fontWeight:700,color:kleur}}>{d.totaal ?? "—"}</div>
+                    {d.interpretatie && (
+                      <span style={{fontSize:11,fontWeight:700,padding:"4px 10px",borderRadius:20,background:`${kleur}22`,color:kleur}}>
+                        {d.interpretatie.label}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div style={{display:"grid",gridTemplateColumns:"1fr",gap:8,marginBottom:12}}>
+                  {d.vragen.map(v => {
+                    const avg = scoreGemiddelde([v.id], antwoorden);
+                    return (
+                      <div key={v.id} style={{display:"flex",alignItems:"center",gap:12}}>
+                        <div style={{fontSize:12,color:ADM.text,flex:1,lineHeight:1.5}}>{v.tekst}</div>
+                        <div style={{width:42,textAlign:"right",fontSize:13,fontWeight:700,color:avg !== null ? ADM.white : ADM.muted}}>
+                          {avg !== null ? avg.toFixed(1) : "—"}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div style={{fontSize:12,color:ADM.muted,lineHeight:1.65,background:"rgba(255,255,255,0.04)",padding:"10px 12px",borderRadius:8}}>
+                  <strong style={{color:ADM.white}}>Aanbeveling:</strong> {d.interpretatie?.advies || "Nog onvoldoende data voor interpretatie."}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"18px 20px"}}>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:12}}>
+            Reflectievragen
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {VEILIGHEID_LEIDERSCHAP_REFLECTIEVRAGEN.map((vraag, i)=>(
+              <div key={i} style={{fontSize:13,color:ADM.text,lineHeight:1.6,background:"rgba(255,255,255,0.04)",padding:"10px 12px",borderRadius:8}}>
+                {i+1}. {vraag}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,
@@ -1716,6 +2750,7 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
         <div style={{fontSize:13,color:ADM.muted,marginBottom:16}}>
           {antwoorden.length} deelnemers · {teamleden.length} teamleden · {management.length} leidinggevenden · {lijst.klant}
         </div>
+        {(veiligheidAandacht || verbeterenLerenAandacht || energieMotivatieAandacht || belevingVeranderingAandacht) && <VerdieningIntro /> }
         <div style={{display:"flex",borderBottom:`1px solid ${ADM.border}`,overflowX:"auto"}}>
           {[["gap","🔍 Gap-analyse"],["team","👥 Team"],["management","👔 Management"],["individueel","📋 Individueel"]].map(([v,l])=>(
             <button key={v} onClick={()=>setTabBlad(v)} style={tabStijl(v)}>{l}</button>
