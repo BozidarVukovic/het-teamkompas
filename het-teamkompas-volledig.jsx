@@ -432,6 +432,43 @@ const BELEVING_VERANDERING_REFLECTIEVRAGEN = [
   "Welke gewoonte of aanpak van de leidinggevende draagt het meest bij aan een breinvriendelijke werkomgeving?",
 ];
 
+
+const VERDIEPING_BLOKKEN = {
+  veiligheid_leiderschap: {
+    key: "veiligheid_leiderschap",
+    titel: "Veiligheid en leiderschap",
+    type: "verdieping_veiligheid_leiderschap",
+    stellingen: VEILIGHEID_LEIDERSCHAP_STELLINGEN,
+  },
+  verbeteren_leren: {
+    key: "verbeteren_leren",
+    titel: "Verbeteren en leren",
+    type: "verdieping_verbeteren_leren",
+    stellingen: VERBETEREN_LEREN_STELLINGEN,
+  },
+  energie_motivatie: {
+    key: "energie_motivatie",
+    titel: "Energie en motivatie",
+    type: "verdieping_energie_motivatie",
+    stellingen: ENERGIE_MOTIVATIE_STELLINGEN,
+  },
+  beleving_verandering: {
+    key: "beleving_verandering",
+    titel: "Beleving van verandering",
+    type: "verdieping_beleving_verandering",
+    stellingen: BELEVING_VERANDERING_STELLINGEN,
+  },
+};
+
+function flattenVerdiepingStellingen(keys = []) {
+  return keys.flatMap((k) => VERDIEPING_BLOKKEN[k]?.stellingen || []);
+}
+
+function gecombineerdeVerdiepingTitel(keys = []) {
+  const labels = keys.map((k) => VERDIEPING_BLOKKEN[k]?.titel).filter(Boolean);
+  return labels.length ? `Verdieping: ${labels.join(" + ")}` : "Verdieping";
+}
+
 // ─────────────────────────────────────────────
 // PUBLIC SITE COMPONENTS
 // ─────────────────────────────────────────────
@@ -1500,7 +1537,14 @@ function ScanInvullen({ scanId }) {
     </div>
   );
 
-  const stellingen = lijst.stellingen || DEFAULT_STELLINGEN;
+  const basisStellingen = lijst.stellingen || DEFAULT_STELLINGEN;
+  const stellingen = basisStellingen.filter((s) => {
+    if (!isGecombineerdeVerdieping(lijst) && !isVerbeterenLerenVerdieping(lijst)) return true;
+    if ((isGecombineerdeVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst)) && s.doelgroep) {
+      return !rol || s.doelgroep === rol;
+    }
+    return true;
+  });
   const totaal = stellingen.length;
   const huidige = stellingen[stap - 1];
   const voortgang = stap === 0 ? 0 : Math.round((stap / totaal) * 100);
@@ -1531,7 +1575,7 @@ function ScanInvullen({ scanId }) {
           <div style={{fontSize:11,color:ADM.teal,fontWeight:600,textTransform:"uppercase",letterSpacing:"1.5px",marginBottom:8}}>Mijn Teamkompas</div>
           <div style={{fontSize:22,fontWeight:700,color:ADM.white,marginBottom:10}}>{lijst.naam}</div>
           <div style={{fontSize:14,color:ADM.muted,lineHeight:1.7}}>
-            {(isVeiligheidLeiderschapVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst)) ? "Deze verdiepende scan bestaat uit" : "Deze scan bestaat uit"} {totaal} vragen en duurt ongeveer {(isVeiligheidLeiderschapVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst)) ? "6–10" : "5–8"} minuten. Je antwoorden zijn anoniem.
+            {(isVeiligheidLeiderschapVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst) || isGecombineerdeVerdieping(lijst)) ? "Deze verdiepende scan bestaat uit" : "Deze scan bestaat uit"} {totaal} vragen en duurt ongeveer {(isGecombineerdeVerdieping(lijst) ? "10–18" : (isVeiligheidLeiderschapVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst) || isGecombineerdeVerdieping(lijst)) ? "6–10" : "5–8")} minuten. Je antwoorden zijn anoniem.
           </div>
         </div>
         <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"20px 22px",marginBottom:20}}>
@@ -1547,6 +1591,11 @@ function ScanInvullen({ scanId }) {
               </div>
             ))}
           </div>
+          {isGecombineerdeVerdieping(lijst) && (
+            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginTop:12}}>
+              Deze gecombineerde verdiepingsscan bevat meerdere onderdelen. Op basis van jouw rol worden alleen de relevante vragen meegenomen.
+            </div>
+          )}
         </div>
         <button onClick={()=>{ if(rol) setStap(1); }}
           style={{width:"100%",background:rol?ADM.teal:"rgba(0,168,150,0.3)",color:ADM.navyDeep,
@@ -1759,6 +1808,14 @@ function interpretBelevingVeranderingScore(score) {
   return null;
 }
 
+function isGecombineerdeVerdieping(lijst) {
+  return lijst?.type === "verdieping_gecombineerd";
+}
+
+function getGecombineerdeOnderdelen(lijst) {
+  return Array.isArray(lijst?.verdiepingOnderdelen) ? lijst.verdiepingOnderdelen : [];
+}
+
 // ─────────────────────────────────────────────
 // ADMIN: SCAN BEHEER — Firestore
 // ─────────────────────────────────────────────
@@ -1934,7 +1991,7 @@ function PageScans() {
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4}}>
                     <div style={{fontWeight:600,color:ADM.white,fontSize:15}}>{lijst.naam}</div>
-                    {(isVeiligheidLeiderschapVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst)) && (
+                    {(isVeiligheidLeiderschapVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst) || isGecombineerdeVerdieping(lijst)) && (
                       <span style={{fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:20,background:"rgba(15,118,110,0.14)",color:ADM.teal}}>
                         VERDIEPING
                       </span>
@@ -2146,121 +2203,162 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
     (belevingVeranderingScoreManagement && parseFloat(belevingVeranderingScoreManagement) < 3.5) ||
     (!belevingVeranderingScoreManagement && belevingVeranderingScoreTeam && parseFloat(belevingVeranderingScoreTeam) < 3.5);
 
-  const VerdieningIntro = () => (
-    <div style={{background:"rgba(15,118,110,0.08)",border:`1px solid ${ADM.tealGlow}`,borderRadius:12,padding:"16px 18px",marginBottom:20}}>
-      <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>
-        Vervolgonderzoek
-      </div>
-      <div style={{fontSize:15,fontWeight:700,color:ADM.white,marginBottom:8}}>
-        Verdiepende scans beschikbaar
-      </div>
-      <div style={{fontSize:13,color:ADM.muted,lineHeight:1.65,marginBottom:14}}>
-        Start vanuit de basisscan een verdiepende meting op het domein dat extra aandacht vraagt.
-      </div>
+  const VerdieningIntro = () => {
+    const onderdelen = [
+      veiligheidAandacht ? "veiligheid_leiderschap" : null,
+      verbeterenLerenAandacht ? "verbeteren_leren" : null,
+      energieMotivatieAandacht ? "energie_motivatie" : null,
+      belevingVeranderingAandacht ? "beleving_verandering" : null,
+    ].filter(Boolean);
 
-      <div style={{display:"grid",gridTemplateColumns:"1fr",gap:10}}>
-        {veiligheidAandacht && (
-          <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
-            <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Veiligheid en leiderschap</div>
-            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
-              Gebaseerd op de 9 Secure Base Leadership-dimensies.
+    const heeftMeerdere = onderdelen.length > 1;
+
+    const maakGecombineerdeVerdieping = async () => {
+      setVerdiepingMaken(true);
+      try {
+        const data = {
+          naam: `${lijst.klant} — ${gecombineerdeVerdiepingTitel(onderdelen)}`,
+          klant: lijst.klant,
+          aangemaakt: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
+          status: "Actief",
+          type: "verdieping_gecombineerd",
+          parentVragenlijstId: lijst.id,
+          verdiepingOnderdelen: onderdelen,
+          stellingen: flattenVerdiepingStellingen(onderdelen),
+        };
+        const ref = await addDoc(collection(db, "vragenlijsten"), data);
+        setVerdiepingInfo(prev => ({ ...(prev || {}), gecombineerd: { id: ref.id, ...data } }));
+      } catch (err) {
+        console.error("Gecombineerde verdiepende scan aanmaken mislukt:", err);
+      } finally {
+        setVerdiepingMaken(false);
+      }
+    };
+
+    return (
+      <div style={{background:"rgba(15,118,110,0.08)",border:`1px solid ${ADM.tealGlow}`,borderRadius:12,padding:"16px 18px",marginBottom:20}}>
+        <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>
+          Vervolgonderzoek
+        </div>
+        <div style={{fontSize:15,fontWeight:700,color:ADM.white,marginBottom:8}}>
+          Verdiepende scans beschikbaar
+        </div>
+        <div style={{fontSize:13,color:ADM.muted,lineHeight:1.65,marginBottom:14}}>
+          Start vanuit de basisscan een verdiepende meting op het domein dat extra aandacht vraagt.
+          {heeftMeerdere && " Omdat meerdere domeinen aandacht vragen, kun je ook één gecombineerde verdiepingslink maken."}
+        </div>
+
+        {heeftMeerdere && (
+          <div style={{background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px",marginBottom:12}}>
+            <div style={{fontSize:13,fontWeight:700,color:ADM.white,marginBottom:8}}>
+              Gecombineerde verdiepingsscan
             </div>
-            {verdiepingInfo?.veiligheid ? (
+            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
+              Combineert: {onderdelen.map((k) => VERDIEPING_BLOKKEN[k]?.titel).filter(Boolean).join(" + ")}
+            </div>
+            {verdiepingInfo?.gecombineerd ? (
               <button
-                onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.veiligheid.id}`); } catch {} }}
+                onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.gecombineerd.id}`); } catch {} }}
                 style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
               >
-                🔗 Kopieer deelnemerslink
+                🔗 Kopieer gecombineerde deelnemerslink
               </button>
             ) : (
               <button
-                onClick={maakVerdiependeScan}
+                onClick={maakGecombineerdeVerdieping}
                 disabled={verdiepingMaken}
                 style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}
               >
-                {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan veiligheid en leiderschap"}
+                {verdiepingMaken ? "Aanmaken..." : "Maak één gecombineerde verdiepingslink"}
               </button>
             )}
           </div>
         )}
 
-        {verbeterenLerenAandacht && (
-          <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
-            <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Verbeteren en leren</div>
-            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
-              Lean- en Agile-volwassenheid vanuit twee perspectieven: leidinggevende en teamspiegel.
+        <div style={{display:"grid",gridTemplateColumns:"1fr",gap:10}}>
+          {veiligheidAandacht && (
+            <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
+              <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Veiligheid en leiderschap</div>
+              <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
+                Gebaseerd op de 9 Secure Base Leadership-dimensies.
+              </div>
+              {verdiepingInfo?.veiligheid ? (
+                <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.veiligheid.id}`); } catch {} }}
+                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
+                  🔗 Kopieer deelnemerslink
+                </button>
+              ) : (
+                <button onClick={maakVerdiependeScan} disabled={verdiepingMaken}
+                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}>
+                  {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan veiligheid en leiderschap"}
+                </button>
+              )}
             </div>
-            {verdiepingInfo?.verbeterenLeren ? (
-              <button
-                onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.verbeterenLeren.id}`); } catch {} }}
-                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
-              >
-                🔗 Kopieer deelnemerslink
-              </button>
-            ) : (
-              <button
-                onClick={maakVerdiepingVerbeterenLeren}
-                disabled={verdiepingMaken}
-                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}
-              >
-                {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan verbeteren en leren"}
-              </button>
-            )}
-          </div>
-        )}
+          )}
 
-        {energieMotivatieAandacht && (
-          <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
-            <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Energie en motivatie</div>
-            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
-              JD-R verdieping op taakeisen, hulpbronnen, bevlogenheid en uitputting.
+          {verbeterenLerenAandacht && (
+            <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
+              <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Verbeteren en leren</div>
+              <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
+                Lean- en Agile-volwassenheid vanuit twee perspectieven: leidinggevende en teamspiegel.
+              </div>
+              {verdiepingInfo?.verbeterenLeren ? (
+                <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.verbeterenLeren.id}`); } catch {} }}
+                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
+                  🔗 Kopieer deelnemerslink
+                </button>
+              ) : (
+                <button onClick={maakVerdiepingVerbeterenLeren} disabled={verdiepingMaken}
+                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}>
+                  {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan verbeteren en leren"}
+                </button>
+              )}
             </div>
-            {verdiepingInfo?.energieMotivatie ? (
-              <button
-                onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.energieMotivatie.id}`); } catch {} }}
-                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
-              >
-                🔗 Kopieer deelnemerslink
-              </button>
-            ) : (
-              <button
-                onClick={maakVerdiepingEnergieMotivatie}
-                disabled={verdiepingMaken}
-                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}
-              >
-                {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan energie en motivatie"}
-              </button>
-            )}
-          </div>
-        )}
+          )}
 
-        {belevingVeranderingAandacht && (
-          <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
-            <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Beleving van verandering</div>
-            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
-              Neuromanagement-verdieping op breinvriendelijk leiderschap en SCARF-gerelateerde dimensies.
+          {energieMotivatieAandacht && (
+            <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
+              <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Energie en motivatie</div>
+              <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
+                JD-R verdieping op taakeisen, hulpbronnen, bevlogenheid en uitputting.
+              </div>
+              {verdiepingInfo?.energieMotivatie ? (
+                <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.energieMotivatie.id}`); } catch {} }}
+                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
+                  🔗 Kopieer deelnemerslink
+                </button>
+              ) : (
+                <button onClick={maakVerdiepingEnergieMotivatie} disabled={verdiepingMaken}
+                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}>
+                  {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan energie en motivatie"}
+                </button>
+              )}
             </div>
-            {verdiepingInfo?.belevingVerandering ? (
-              <button
-                onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.belevingVerandering.id}`); } catch {} }}
-                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
-              >
-                🔗 Kopieer deelnemerslink
-              </button>
-            ) : (
-              <button
-                onClick={maakVerdiepingBelevingVerandering}
-                disabled={verdiepingMaken}
-                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}
-              >
-                {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan beleving van verandering"}
-              </button>
-            )}
-          </div>
-        )}
+          )}
+
+          {belevingVeranderingAandacht && (
+            <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
+              <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Beleving van verandering</div>
+              <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
+                Neuromanagement-verdieping op breinvriendelijk leiderschap en SCARF-gerelateerde dimensies.
+              </div>
+              {verdiepingInfo?.belevingVerandering ? (
+                <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.belevingVerandering.id}`); } catch {} }}
+                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
+                  🔗 Kopieer deelnemerslink
+                </button>
+              ) : (
+                <button onClick={maakVerdiepingBelevingVerandering} disabled={verdiepingMaken}
+                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}>
+                  {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan beleving van verandering"}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const DeelnemersLijst = ({ subset }) => (
     <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,overflow:"hidden"}}>
@@ -2311,6 +2409,49 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
       )}
     </div>
   );
+
+  if (isGecombineerdeVerdieping(lijst)) {
+    const onderdelen = getGecombineerdeOnderdelen(lijst);
+
+    return (
+      <div>
+        <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",marginBottom:20,padding:0,fontWeight:600}}>
+          ← Terug naar vragenlijsten
+        </button>
+
+        <div style={{marginBottom:20}}>
+          <div style={{fontWeight:700,color:ADM.white,fontSize:18,marginBottom:4}}>{lijst.naam}</div>
+          <div style={{fontSize:13,color:ADM.muted,marginBottom:16}}>
+            {antwoorden.length} deelnemer(s) · gecombineerde verdiepingsscan
+          </div>
+        </div>
+
+        <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:12,padding:"16px 18px",marginBottom:20}}>
+          <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>
+            Gecombineerde scan
+          </div>
+          <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>
+            Deze scan combineert meerdere verdiepende onderdelen in één deelnemerslink:
+            <strong style={{color:ADM.white}}> {onderdelen.map((k) => VERDIEPING_BLOKKEN[k]?.titel).filter(Boolean).join(" + ")}</strong>.
+            De inhoudelijke interpretatie gebeurt per onderdeel.
+          </div>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+          {onderdelen.map((k) => (
+            <div key={k} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"16px 18px"}}>
+              <div style={{fontSize:15,fontWeight:700,color:ADM.white,marginBottom:6}}>
+                {VERDIEPING_BLOKKEN[k]?.titel}
+              </div>
+              <div style={{fontSize:13,color:ADM.muted,lineHeight:1.65}}>
+                Gebruik dezelfde deelnemerslink om dit onderdeel mee te nemen. Open de resultaten later opnieuw om de scores en interpretatie per verdiepend onderdeel te bekijken.
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (isBelevingVeranderingVerdieping(lijst)) {
     const dimensies = getBelevingVeranderingDimensies(stellingen);
