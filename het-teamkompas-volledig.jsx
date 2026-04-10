@@ -20,6 +20,7 @@ import {
   getDocs,
   getDoc,
   deleteDoc,
+  updateDoc,
   query,
   orderBy,
   serverTimestamp,
@@ -1784,24 +1785,19 @@ function PageContactaanvragen() {
   const [aanvragen, setAanvragen] = useState([]);
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(null);
 
   useEffect(() => {
     const laadAanvragen = async () => {
       setLoading(true);
-
       try {
         const q = query(collection(db, "contactaanvragen"), orderBy("aangemaakt_op", "desc"));
         const snap = await getDocs(q);
-
         const rows = snap.docs.map((d) => {
           const data = d.data();
-          const datum =
-            data.aangemaakt_op?.toDate?.().toLocaleDateString("nl-NL", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            }) || "-";
-
+          const datum = data.aangemaakt_op?.toDate?.().toLocaleDateString("nl-NL", {
+            day: "numeric", month: "short", year: "numeric",
+          }) || "-";
           return {
             id: d.id,
             naam: data.naam || "",
@@ -1813,7 +1809,6 @@ function PageContactaanvragen() {
             status: data.status || "Nieuw",
           };
         });
-
         setAanvragen(rows);
       } catch (err) {
         console.error("Fout bij laden contactaanvragen:", err);
@@ -1821,42 +1816,51 @@ function PageContactaanvragen() {
         setLoading(false);
       }
     };
-
     laadAanvragen();
   }, []);
 
+  const updateStatus = async (id, nieuweStatus) => {
+    setUpdating(id);
+    try {
+      await updateDoc(doc(db, "contactaanvragen", id), { status: nieuweStatus });
+      setAanvragen(prev => prev.map(a => a.id === id ? { ...a, status: nieuweStatus } : a));
+      if (selected?.id === id) setSelected(prev => ({ ...prev, status: nieuweStatus }));
+    } catch (err) {
+      console.error("Status bijwerken mislukt:", err);
+    } finally {
+      setUpdating(null);
+    }
+  };
+
   const statusColor = (s) =>
-    s === "Nieuw" ? ADM.teal : s === "In behandeling" ? ADM.orange : ADM.muted;
+    s === "Nieuw" ? ADM.teal : s === "In behandeling" ? ADM.orange : s === "Verwerkt" ? ADM.green : ADM.muted;
 
   const statusBg = (s) =>
-    s === "Nieuw"
-      ? "rgba(0,168,150,0.12)"
-      : s === "In behandeling"
-      ? "rgba(243,156,18,0.12)"
-      : "rgba(255,255,255,0.05)";
+    s === "Nieuw" ? "rgba(0,168,150,0.12)"
+    : s === "In behandeling" ? "rgba(243,156,18,0.12)"
+    : s === "Verwerkt" ? "rgba(46,204,113,0.12)"
+    : "rgba(255,255,255,0.05)";
 
-  if (loading) {
-    return <div style={{ color: ADM.muted, padding: 20 }}>Laden...</div>;
-  }
+  if (loading) return <div style={{ color: ADM.muted, padding: 20 }}>Laden...</div>;
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: selected ? "1fr 380px" : "1fr", gap: 20 }}>
+    <div style={{ display: "grid", gridTemplateColumns: selected ? "1fr 400px" : "1fr", gap: 20 }}>
       <div>
         <div style={{ fontSize: 13, color: ADM.muted, marginBottom: 20 }}>
-          {aanvragen.filter((a) => a.status === "Nieuw").length} nieuwe aanvragen · {aanvragen.length} totaal
+          {aanvragen.filter(a => a.status === "Nieuw").length} nieuwe aanvragen ·{" "}
+          {aanvragen.filter(a => a.status === "In behandeling").length} in behandeling ·{" "}
+          {aanvragen.length} totaal
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {aanvragen.map((a) => (
-            <div
-              key={a.id}
+            <div key={a.id}
               onClick={() => setSelected(selected?.id === a.id ? null : a)}
               style={{
-                background: ADM.navy,
+                background: a.status === "Verwerkt" ? "rgba(255,255,255,0.02)" : ADM.navy,
                 border: `1px solid ${selected?.id === a.id ? ADM.teal : ADM.border}`,
-                borderRadius: 12,
-                padding: "18px 22px",
-                cursor: "pointer",
+                borderRadius: 12, padding: "18px 22px", cursor: "pointer",
+                opacity: a.status === "Verwerkt" ? 0.65 : 1,
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
@@ -1864,7 +1868,8 @@ function PageContactaanvragen() {
                   <div style={{ fontWeight: 600, color: ADM.white, fontSize: 15 }}>{a.naam}</div>
                   <div style={{ fontSize: 12, color: ADM.muted, marginTop: 2 }}>{a.org} · {a.datum}</div>
                 </div>
-                <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20, background: statusBg(a.status), color: statusColor(a.status) }}>
+                <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20,
+                  background: statusBg(a.status), color: statusColor(a.status), flexShrink: 0 }}>
                   {a.status}
                 </span>
               </div>
@@ -1887,12 +1892,16 @@ function PageContactaanvragen() {
             <div style={{ fontWeight: 700, color: ADM.white, fontSize: 16 }}>Detail</div>
             <span onClick={() => setSelected(null)} style={{ cursor: "pointer", color: ADM.muted, fontSize: 20 }}>×</span>
           </div>
-          {[
-            ["Naam", selected.naam],
-            ["Organisatie", selected.org],
-            ["E-mail", selected.email],
-            ["Telefoon", selected.tel || "-"],
-          ].map(([l, v]) => (
+
+          {/* Status badge */}
+          <div style={{ marginBottom: 20 }}>
+            <span style={{ fontSize: 11, fontWeight: 600, padding: "4px 12px", borderRadius: 20,
+              background: statusBg(selected.status), color: statusColor(selected.status) }}>
+              {selected.status}
+            </span>
+          </div>
+
+          {[["Naam", selected.naam], ["Organisatie", selected.org], ["E-mail", selected.email], ["Telefoon", selected.tel || "-"]].map(([l, v]) => (
             <div key={l} style={{ marginBottom: 14 }}>
               <div style={{ fontSize: 10, color: ADM.muted, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 4 }}>{l}</div>
               <div style={{ fontSize: 14, color: ADM.white }}>{v}</div>
@@ -1904,12 +1913,49 @@ function PageContactaanvragen() {
               {selected.bericht}
             </div>
           </div>
-          <a
-            href={`mailto:${selected.email}`}
-            style={{ display: "block", width: "100%", background: ADM.teal, color: ADM.navyDeep, border: "none", borderRadius: 8, padding: "11px", fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center", textDecoration: "none", boxSizing: "border-box" }}
-          >
-            Reageer via e-mail
-          </a>
+
+          {/* Acties */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <a href={`mailto:${selected.email}`}
+              style={{ display: "block", width: "100%", background: ADM.teal, color: ADM.navyDeep,
+                border: "none", borderRadius: 8, padding: "11px", fontWeight: 700, fontSize: 14,
+                cursor: "pointer", textAlign: "center", textDecoration: "none", boxSizing: "border-box" }}>
+              Reageer via e-mail
+            </a>
+
+            {selected.status !== "In behandeling" && selected.status !== "Verwerkt" && (
+              <button
+                onClick={e => { e.stopPropagation(); updateStatus(selected.id, "In behandeling"); }}
+                disabled={updating === selected.id}
+                style={{ width: "100%", background: "rgba(243,156,18,0.15)", color: ADM.orange,
+                  border: `1px solid rgba(243,156,18,0.3)`, borderRadius: 8, padding: "11px",
+                  fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                📋 Markeer als in behandeling
+              </button>
+            )}
+
+            {selected.status !== "Verwerkt" && (
+              <button
+                onClick={e => { e.stopPropagation(); updateStatus(selected.id, "Verwerkt"); }}
+                disabled={updating === selected.id}
+                style={{ width: "100%", background: "rgba(46,204,113,0.15)", color: ADM.green,
+                  border: `1px solid rgba(46,204,113,0.3)`, borderRadius: 8, padding: "11px",
+                  fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                {updating === selected.id ? "Opslaan..." : "✓ Markeer als verwerkt"}
+              </button>
+            )}
+
+            {selected.status === "Verwerkt" && (
+              <button
+                onClick={e => { e.stopPropagation(); updateStatus(selected.id, "Nieuw"); }}
+                disabled={updating === selected.id}
+                style={{ width: "100%", background: "rgba(255,255,255,0.04)", color: ADM.muted,
+                  border: `1px solid ${ADM.border}`, borderRadius: 8, padding: "11px",
+                  fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
+                ↩ Zet terug naar nieuw
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>
