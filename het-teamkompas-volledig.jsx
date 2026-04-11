@@ -3598,6 +3598,38 @@ function PageKlanten() {
     }
   };
 
+  const verwijderKlantNaarPrullenbak = async () => {
+    if (!selectedKlant || String(selectedKlant.id).startsWith("klant-")) return;
+    setVerwijderenKlant(true);
+    try {
+      await addDoc(collection(db, "prullenbak"), {
+        original_id: selectedKlant.id,
+        bron_collectie: "klanten",
+        naam: selectedKlant.naam || "",
+        klant: selectedKlant.naam || "",
+        type: "klant",
+        status: selectedKlant.status || "",
+        sector: selectedKlant.sector || "",
+        contact: selectedKlant.contact || "",
+        email: selectedKlant.email || "",
+        verwijderd_op: serverTimestamp(),
+        verwijderd_op_ms: Date.now(),
+      });
+
+      await updateDoc(doc(db, "klanten", selectedKlant.id), {
+        status: "Verwijderd",
+        verwijderd: true,
+      });
+
+      setSelectedKlant(null);
+      await laadData();
+    } catch (err) {
+      console.error("Verwijderen klant mislukt:", err);
+    } finally {
+      setVerwijderenKlant(false);
+    }
+  };
+
   const startNieuwTraject = async () => {
     if (!selectedKlant || !nieuwTraject.naam) return;
     setOpslaanTraject(true);
@@ -3711,6 +3743,7 @@ function PageKlanten() {
 
   const statusColor = s => s==="Actief" ? ADM.green : s==="In gesprek" ? ADM.orange : ADM.muted;
   const scoreColor = s => s >= 4 ? ADM.green : s >= 3 ? ADM.orange : ADM.red;
+  const formatScore = (value) => (typeof value === "number" && !Number.isNaN(value) ? value.toFixed(1) : "—");
   const geselecteerdeTrajecten = selectedKlant?.trajecten || [];
   const geselecteerdeMetingen = selectedKlant?.metingen || [];
   const geselecteerdTraject = geselecteerdeTrajecten.find(t => t.id === selectedTrajectId) || null;
@@ -3844,8 +3877,8 @@ function PageKlanten() {
                   <span style={{fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:20,background:`${statusColor(k.status)}22`,color:statusColor(k.status)}}>
                     {k.status}
                   </span>
-                  <div style={{fontSize:20,fontWeight:700,color:k.score !== null ? scoreColor(k.score) : ADM.muted}}>
-                    {k.score !== null ? k.score.toFixed(1) : "—"}
+                  <div style={{fontSize:20,fontWeight:700,color:typeof k.score === "number" && !Number.isNaN(k.score) ? scoreColor(k.score) : ADM.muted}}>
+                    {formatScore(k.score)}
                   </div>
                 </div>
               </div>
@@ -3870,14 +3903,14 @@ function PageKlanten() {
             <>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:18,flexWrap:"wrap"}}>
                 <div>
-                  <div style={{fontSize:26,fontWeight:700,color:ADM.white,marginBottom:6}}>{selectedKlant.naam}</div>
+                  <div style={{fontSize:26,fontWeight:700,color:ADM.white,marginBottom:6}}>{selectedKlant?.naam || "Onbekende klant"}</div>
                   <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>
-                    {selectedKlant.sector || "Sector onbekend"} · {selectedKlant.contact || "Geen contactpersoon"}{selectedKlant.email ? ` · ${selectedKlant.email}` : ""}
+                    {selectedKlant?.sector || "Sector onbekend"} · {selectedKlant?.contact || "Geen contactpersoon"}{selectedKlant?.email ? ` · ${selectedKlant.email}` : ""}
                   </div>
                 </div>
                 <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",justifyContent:"flex-end"}}>
                   <span style={{fontSize:11,fontWeight:700,padding:"5px 10px",borderRadius:20,background:`${statusColor(selectedKlant.status)}22`,color:statusColor(selectedKlant.status)}}>
-                    {selectedKlant.status}
+                    {selectedKlant?.status || "Onbekend"}
                   </span>
                   {isEchteKlantRecord && (
                     <button
@@ -4005,12 +4038,18 @@ function PageKlanten() {
                 </div>
               )}
 
+              {!isEchteKlantRecord && (
+                <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:14,background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"10px 12px"}}>
+                  Deze klant is samengesteld uit scans of metingen en staat nog niet als los klantrecord in de database. Alleen opgeslagen klantrecords kunnen naar de prullenbak worden verplaatst.
+                </div>
+              )}
+
               <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr 1fr" : "repeat(4,1fr)",gap:12,marginBottom:20}}>
                 {[
                   ["Trajecten", geselecteerdeTrajecten.length, "#3A7DBF"],
                   ["Metingen", geselecteerdeMetingen.length, "#E8821A"],
                   ["Rapportages", rapportagesCount, "#6B4E9E"],
-                  ["Gem. score", selectedKlant.score !== null ? selectedKlant.score.toFixed(1) : "—", "#5A8C3C"],
+                  ["Gem. score", formatScore(selectedKlant?.score), "#5A8C3C"],
                 ].map(([label, value, color], i) => (
                   <div key={i} style={{background:`${color}18`,border:`1px solid ${color}33`,borderRadius:10,padding:"14px 14px"}}>
                     <div style={{fontSize:11,color:color,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>{label}</div>
