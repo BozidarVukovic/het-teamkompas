@@ -188,6 +188,110 @@ const DEFAULT_STELLINGEN = [
   { id: 20, pijler: 3, tekst: "Wat zou het team concreet kunnen verbeteren?", type: "open" },
 ];
 
+const MEDEWERKERSSCAN_INTRO = "Deze vragenlijst helpt om beter te begrijpen hoe het werken binnen jouw team wordt ervaren. Er zijn geen goede of foute antwoorden. Jouw ervaring staat centraal. De uitkomsten worden gebruikt om samen te bepalen waar verbetering het meeste effect heeft.";
+
+const MANAGEMENTSCAN_INTRO = "Deze vragenlijst helpt inzicht te krijgen in waar de belangrijkste uitdagingen en ontwikkelpunten binnen het team liggen. Er zijn geen goede of foute antwoorden. Het doel is richting bepalen.";
+
+const MEDEWERKERSSCAN_STELLINGEN = [
+  { id: 1001, pijler: 4, tekst: "Ik voel me begrepen door mijn collega's.", type: "schaal" },
+  { id: 1002, pijler: 4, tekst: "Verschillen in werkstijl en communicatie worden gerespecteerd.", type: "schaal" },
+  { id: 1003, pijler: 4, tekst: "Misverstanden worden meestal open en constructief besproken.", type: "schaal" },
+  { id: 1004, pijler: 4, tekst: "Ik pas mijn manier van communiceren aan verschillende collega’s aan.", type: "schaal" },
+  { id: 1005, pijler: 4, tekst: "Waar ontstaan volgens jou in de samenwerking de meeste misverstanden?", type: "open" },
+
+  { id: 1006, pijler: 0, tekst: "Ik voel me veilig om mijn mening te geven.", type: "schaal" },
+  { id: 1007, pijler: 0, tekst: "Ik durf fouten of twijfels te bespreken.", type: "schaal" },
+  { id: 1008, pijler: 0, tekst: "Mijn leidinggevende nodigt uit tot openheid en dialoog.", type: "schaal" },
+  { id: 1009, pijler: 0, tekst: "Initiatief nemen wordt aangemoedigd.", type: "schaal" },
+  { id: 1010, pijler: 0, tekst: "In ons team wordt verschil in stijl en achtergrond gewaardeerd.", type: "schaal" },
+  { id: 1011, pijler: 0, tekst: "Wat zou jou helpen om je nog vrijer uit te spreken?", type: "open" },
+
+  { id: 1012, pijler: 1, tekst: "Veranderingen worden duidelijk en begrijpelijk uitgelegd.", type: "schaal" },
+  { id: 1013, pijler: 1, tekst: "Het tempo van verandering voelt voor mij passend.", type: "schaal" },
+  { id: 1014, pijler: 1, tekst: "Mijn zorgen of gevoelens bij verandering krijgen aandacht.", type: "schaal" },
+  { id: 1015, pijler: 1, tekst: "Veranderingen voelen meestal als een verbetering van het bestaande.", type: "schaal" },
+  { id: 1016, pijler: 1, tekst: "Wat roept verandering bij jou meestal op?", type: "open" },
+
+  { id: 1017, pijler: 2, tekst: "Mijn werk kost mij niet structureel meer energie dan het oplevert.", type: "schaal" },
+  { id: 1018, pijler: 2, tekst: "Ik haal voldoening uit mijn werk.", type: "schaal" },
+  { id: 1019, pijler: 2, tekst: "Frustraties in het dagelijks werk worden serieus genomen.", type: "schaal" },
+  { id: 1020, pijler: 2, tekst: "Ik ervaar voldoende autonomie en ondersteuning.", type: "schaal" },
+  { id: 1021, pijler: 2, tekst: "Wat kost jou op dit moment het meeste energie in je werk?", type: "open" },
+
+  { id: 1022, pijler: 3, tekst: "Verbeterideeën vanuit de werkvloer worden serieus genomen.", type: "schaal" },
+  { id: 1023, pijler: 3, tekst: "Ik voel eigenaarschap over verbeteringen in mijn werk.", type: "schaal" },
+  { id: 1024, pijler: 3, tekst: "Leren en experimenteren wordt aangemoedigd.", type: "schaal" },
+  { id: 1025, pijler: 3, tekst: "Verbeteren voelt als onderdeel van mijn werk, niet als extra taak.", type: "schaal" },
+  { id: 1026, pijler: 3, tekst: "Wat zou het verbeteren van je werk makkelijker maken?", type: "open" },
+
+  { id: 1027, pijler: 4, tekst: "Ik voel me betrokken bij veranderingen binnen mijn team.", type: "schaal" },
+  { id: 1028, pijler: 4, tekst: "Ik heb vertrouwen dat verbeteringen ook echt worden opgepakt.", type: "schaal" },
+  { id: 1029, pijler: 4, tekst: "Wat is volgens jou de belangrijkste eerste stap om het werken binnen jouw team te verbeteren?", type: "open" },
+];
+
+const MANAGEMENTSCAN_STELLINGEN = [
+  { id: 2001, pijler: 4, tekst: "Binnen mijn team is er begrip voor verschillen in werkstijl en communicatie.", type: "schaal" },
+  { id: 2002, pijler: 4, tekst: "Misverstanden worden meestal functioneel besproken, niet persoonlijk.", type: "schaal" },
+  { id: 2003, pijler: 4, tekst: "Medewerkers passen hun manier van communiceren aan aan elkaar.", type: "schaal" },
+  { id: 2004, pijler: 4, tekst: "Verschillen in aanpak worden gezien als krachtig in plaats van lastig.", type: "schaal" },
+  { id: 2005, pijler: 4, tekst: "Waar ontstaan in de samenwerking binnen het team fricties of misverstanden?", type: "open" },
+
+  { id: 2006, pijler: 0, tekst: "Medewerkers durven zich uit te spreken richting mij en andere leidinggevenden.", type: "schaal" },
+  { id: 2007, pijler: 0, tekst: "Fouten en onzekerheden kunnen besproken worden zonder angst voor negatieve gevolgen.", type: "schaal" },
+  { id: 2008, pijler: 0, tekst: "Verschil van mening leidt tot dialoog, niet tot terughoudendheid.", type: "schaal" },
+  { id: 2009, pijler: 0, tekst: "Initiatief komt vanuit meerdere mensen, niet steeds dezelfde.", type: "schaal" },
+  { id: 2010, pijler: 0, tekst: "Waar zie je dat medewerkers zich (nog) inhouden of voorzichtig zijn?", type: "open" },
+
+  { id: 2011, pijler: 1, tekst: "Veranderingen worden door medewerkers als duidelijk en begrijpelijk ervaren.", type: "schaal" },
+  { id: 2012, pijler: 1, tekst: "Het tempo van verandering past bij wat het team aankan.", type: "schaal" },
+  { id: 2013, pijler: 1, tekst: "Emoties en zorgen rondom verandering krijgen voldoende ruimte.", type: "schaal" },
+  { id: 2014, pijler: 1, tekst: "Nieuwe initiatieven voelen voor medewerkers als een verbetering van het bestaande.", type: "schaal" },
+  { id: 2015, pijler: 1, tekst: "Wat merk jij aan reacties van medewerkers wanneer er iets verandert?", type: "open" },
+
+  { id: 2016, pijler: 2, tekst: "De balans tussen werkdruk en herstel is binnen het team gezond.", type: "schaal" },
+  { id: 2017, pijler: 2, tekst: "Medewerkers halen voldoende energie en voldoening uit hun werk.", type: "schaal" },
+  { id: 2018, pijler: 2, tekst: "Structurele frustraties worden actief besproken en aangepakt.", type: "schaal" },
+  { id: 2019, pijler: 2, tekst: "Medewerkers ervaren voldoende autonomie en steun in hun werk.", type: "schaal" },
+  { id: 2020, pijler: 2, tekst: "Wat kost medewerkers op dit moment structureel de meeste energie?", type: "open" },
+
+  { id: 2021, pijler: 3, tekst: "Verbeterideeën ontstaan vooral vanuit het dagelijks werk.", type: "schaal" },
+  { id: 2022, pijler: 3, tekst: "Medewerkers voelen eigenaarschap over verbeteringen.", type: "schaal" },
+  { id: 2023, pijler: 3, tekst: "Kleine experimenten en leren worden aangemoedigd.", type: "schaal" },
+  { id: 2024, pijler: 3, tekst: "Verbeteren wordt ervaren als onderdeel van het werk, niet als extra taak.", type: "schaal" },
+  { id: 2025, pijler: 3, tekst: "Wat gebeurt er nu met ideeën of signalen vanuit de werkvloer?", type: "open" },
+
+  { id: 2026, pijler: 4, tekst: "Ik heb goed zicht op waar de grootste menselijke uitdagingen binnen mijn team liggen.", type: "schaal" },
+  { id: 2027, pijler: 4, tekst: "Ik voel ruimte om hier samen met medewerkers aan te werken.", type: "schaal" },
+  { id: 2028, pijler: 4, tekst: "Wat is volgens jou de belangrijkste eerste stap om het werken binnen jouw team te verbeteren?", type: "open" },
+  { id: 2029, pijler: 4, tekst: "Waar zie jij de grootste hefboom om beweging te creëren?", type: "open" },
+];
+
+function getScanTemplate(scanType = "algemeen") {
+  if (scanType === "medewerkers") {
+    return {
+      type: "medewerkersscan",
+      doelgroep: "Teamlid",
+      introductietekst: MEDEWERKERSSCAN_INTRO,
+      stellingen: MEDEWERKERSSCAN_STELLINGEN,
+    };
+  }
+  if (scanType === "management") {
+    return {
+      type: "managementscan",
+      doelgroep: "Leidinggevende",
+      introductietekst: MANAGEMENTSCAN_INTRO,
+      stellingen: MANAGEMENTSCAN_STELLINGEN,
+    };
+  }
+  return {
+    type: "basisscan",
+    doelgroep: "",
+    introductietekst: "",
+    stellingen: DEFAULT_STELLINGEN,
+  };
+}
+
+
 const VEILIGHEID_LEIDERSCHAP_STELLINGEN = [
   { id: 101, dimensieCode:"D1", dimensie:"Beschikbaar zijn", tekst:"Mijn leidinggevende is fysiek en mentaal aanwezig in gesprekken met mij.", type:"schaal" },
   { id: 102, dimensieCode:"D1", dimensie:"Beschikbaar zijn", tekst:"Ik kan mijn leidinggevende bereiken wanneer ik dat nodig heb.", type:"schaal" },
@@ -1922,7 +2026,7 @@ function PageScans() {
   const [antwoorden, setAntwoorden] = useState([]);
   const [loading,    setLoading]    = useState(true);
   const [showForm,   setShowForm]   = useState(false);
-  const [nieuw,      setNieuw]      = useState({ naam:"", klant:"" });
+  const [nieuw,      setNieuw]      = useState({ naam:"", klant:"", scanType:"algemeen" });
   const [geselecteerd, setGeselecteerd] = useState(null);
   const [gekopieerd,   setGekopieerd]   = useState(null);
   const [opslaan,      setOpslaan]      = useState(false);
@@ -1951,16 +2055,20 @@ function PageScans() {
     if (!nieuw.naam || !nieuw.klant) return;
     setOpslaan(true);
     try {
+      const template = getScanTemplate(nieuw.scanType);
       const data = {
         naam:       nieuw.naam,
         klant:      nieuw.klant,
         aangemaakt: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
         status:     "Actief",
-        stellingen: DEFAULT_STELLINGEN,
+        type:       template.type,
+        doelgroep:  template.doelgroep,
+        introductietekst: template.introductietekst,
+        stellingen: template.stellingen,
       };
       const ref = await addDoc(collection(db, "vragenlijsten"), data);
       setLijsten(prev => [...prev, { id:ref.id, ...data }]);
-      setNieuw({ naam:"", klant:"" });
+      setNieuw({ naam:"", klant:"", scanType:"algemeen" });
       setShowForm(false);
     } catch (err) {
       console.error("Aanmaken mislukt:", err);
@@ -3254,7 +3362,7 @@ function PageKlanten() {
   const [selectedTrajectId, setSelectedTrajectId] = useState(null);
   const [selectedMetingId, setSelectedMetingId] = useState(null);
   const [nieuw, setNieuw] = useState({ naam:"", sector:"", contact:"", email:"", status:"Actief" });
-  const [nieuwTraject, setNieuwTraject] = useState({ naam:"", status:"Actief" });
+  const [nieuwTraject, setNieuwTraject] = useState({ naam:"", status:"Actief", scanType:"algemeen" });
   const [nieuweMeting, setNieuweMeting] = useState({
     trajectId:"",
     trajectNaam:"",
@@ -3390,15 +3498,18 @@ function PageKlanten() {
     if (!selectedKlant || !nieuwTraject.naam) return;
     setOpslaanTraject(true);
     try {
+      const template = getScanTemplate(nieuwTraject.scanType);
       await addDoc(collection(db, "vragenlijsten"), {
         naam: nieuwTraject.naam,
         klant: selectedKlant.naam,
         aangemaakt: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
         status: nieuwTraject.status || "Actief",
-        type: "basisscan",
-        stellingen: DEFAULT_STELLINGEN,
+        type: template.type,
+        doelgroep: template.doelgroep,
+        introductietekst: template.introductietekst,
+        stellingen: template.stellingen,
       });
-      setNieuwTraject({ naam:"", status:"Actief" });
+      setNieuwTraject({ naam:"", status:"Actief", scanType:"algemeen" });
       setShowTrajectForm(false);
       await laadData();
     } catch (err) {
@@ -3682,7 +3793,7 @@ function PageKlanten() {
               {showTrajectForm && (
                 <div style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"16px 16px",marginBottom:16}}>
                   <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>Nieuw traject</div>
-                  <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1fr 160px",gap:10,marginBottom:10}}>
+                  <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1fr 160px 220px",gap:10,marginBottom:10}}>
                     <input
                       value={nieuwTraject.naam}
                       onChange={e=>setNieuwTraject(n=>({...n, naam:e.target.value}))}
@@ -3695,6 +3806,15 @@ function PageKlanten() {
                       placeholder="Status"
                       style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
                     />
+                    <select
+                      value={nieuwTraject.scanType || "algemeen"}
+                      onChange={e=>setNieuwTraject(n=>({...n, scanType:e.target.value}))}
+                      style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+                    >
+                      <option value="algemeen" style={{color:"#111"}}>Algemene teamscan</option>
+                      <option value="medewerkers" style={{color:"#111"}}>Medewerkersscan</option>
+                      <option value="management" style={{color:"#111"}}>Managementscan</option>
+                    </select>
                   </div>
                   <div style={{display:"flex",gap:10}}>
                     <button onClick={startNieuwTraject} disabled={opslaanTraject}
@@ -3808,7 +3928,7 @@ function PageKlanten() {
                             </div>
                           </div>
                           <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
-                            Status: {t.status || "Actief"} · Antwoorden: {antwoordenCount}
+                            Status: {t.status || "Actief"} · Antwoorden: {antwoordenCount}{t.doelgroep ? ` · ${t.doelgroep === "Teamlid" ? "alleen medewerkers" : "alleen management"}` : ""}
                           </div>
                         </div>
                       );
@@ -4120,6 +4240,22 @@ function PageMetingen() {
                   />
                 </div>
               ))}
+            </div>
+          </div>
+
+          <div style={{marginBottom:16}}>
+            <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:5}}>Type scan</div>
+            <select
+              value={nieuw.scanType || "algemeen"}
+              onChange={e=>setNieuw(n=>({...n, scanType:e.target.value}))}
+              style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+            >
+              <option value="algemeen" style={{color:"#111"}}>Algemene teamscan</option>
+              <option value="medewerkers" style={{color:"#111"}}>Medewerkersscan</option>
+              <option value="management" style={{color:"#111"}}>Managementscan</option>
+            </select>
+            <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginTop:8}}>
+              De keuze bepaalt welke vragen, introductietekst en doelgroep worden vastgezet in de link.
             </div>
           </div>
 
