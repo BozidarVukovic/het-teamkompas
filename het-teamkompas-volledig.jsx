@@ -1009,20 +1009,13 @@ function PublicSite({ onLoginClick }) {
             padding:isMobile?"28px 24px":"0 80px"
           }}>
             <Fade>
-              <div style={{maxWidth:620,marginBottom:16}}>
-                <p style={{
-                  fontSize:isMobile?20:34,fontWeight:700,color:PUB.wit,
-                  lineHeight:1.25,marginBottom:10
-                }}>
-                  Samenwerking verbeteren begint niet met een nieuw proces.
-                </p>
-                <p style={{
-                  fontSize:isMobile?14:18,fontWeight:500,color:"rgba(255,255,255,0.88)",
-                  lineHeight:1.6,margin:0
-                }}>
-                  Het begint met begrijpen wat er werkelijk tussen mensen speelt.
-                </p>
-              </div>
+              <p style={{
+                fontSize:isMobile?20:34,fontWeight:700,color:PUB.wit,
+                lineHeight:1.3,maxWidth:620,marginBottom:16
+              }}>
+                Samenwerking verbeteren begint niet met een nieuw proces.<br/>
+                <em style={{fontStyle:"italic",color:PUB.wit}}>Het begint met begrijpen wat er werkelijk tussen mensen speelt.</em>
+              </p>
             </Fade>
           </div>
         </div>
@@ -3482,7 +3475,9 @@ function PageKlanten() {
         getDocs(collection(db, "contactaanvragen")).catch(() => ({ docs: [] })),
       ]);
 
-      const klantenDb = klantenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const klantenDb = klantenSnap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(k => !k.verwijderd && k.status !== "Verwijderd");
       const vragenlijstenDb = vragenlijstenSnap.docs
         .map(d => ({ id: d.id, ...d.data() }))
         .filter(v => !v.verwijderd && v.status !== "Verwijderd");
@@ -3568,6 +3563,38 @@ function PageKlanten() {
       console.error("Opslaan klant mislukt:", err);
     } finally {
       setOpslaan(false);
+    }
+  };
+
+  const verwijderKlantNaarPrullenbak = async () => {
+    if (!selectedKlant || String(selectedKlant.id).startsWith("klant-")) return;
+    setVerwijderenKlant(true);
+    try {
+      await addDoc(collection(db, "prullenbak"), {
+        original_id: selectedKlant.id,
+        bron_collectie: "klanten",
+        naam: selectedKlant.naam || "",
+        klant: selectedKlant.naam || "",
+        type: "klant",
+        status: selectedKlant.status || "",
+        sector: selectedKlant.sector || "",
+        contact: selectedKlant.contact || "",
+        email: selectedKlant.email || "",
+        verwijderd_op: serverTimestamp(),
+        verwijderd_op_ms: Date.now(),
+      });
+
+      await updateDoc(doc(db, "klanten", selectedKlant.id), {
+        status: "Verwijderd",
+        verwijderd: true,
+      });
+
+      setSelectedKlant(null);
+      await laadData();
+    } catch (err) {
+      console.error("Verwijderen klant mislukt:", err);
+    } finally {
+      setVerwijderenKlant(false);
     }
   };
 
@@ -3689,6 +3716,7 @@ function PageKlanten() {
   const geselecteerdTraject = geselecteerdeTrajecten.find(t => t.id === selectedTrajectId) || null;
   const geselecteerdeMeting = geselecteerdeMetingen.find(m => m.id === selectedMetingId) || null;
   const rapportagesCount = geselecteerdeTrajecten.filter(v => antwoorden.some(a => a.vragenlijstId === v.id)).length;
+  const isEchteKlantRecord = selectedKlant && !String(selectedKlant.id).startsWith("klant-");
   const metingGem = (scores) => {
     const vals = Object.values(scores || {}).filter(v => v !== null && v !== undefined && v !== "");
     return vals.length ? (vals.reduce((a,b)=>a+parseFloat(b),0)/vals.length).toFixed(1) : "—";
@@ -3847,9 +3875,21 @@ function PageKlanten() {
                     {selectedKlant.sector || "Sector onbekend"} · {selectedKlant.contact || "Geen contactpersoon"}{selectedKlant.email ? ` · ${selectedKlant.email}` : ""}
                   </div>
                 </div>
-                <span style={{fontSize:11,fontWeight:700,padding:"5px 10px",borderRadius:20,background:`${statusColor(selectedKlant.status)}22`,color:statusColor(selectedKlant.status)}}>
-                  {selectedKlant.status}
-                </span>
+                <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",justifyContent:"flex-end"}}>
+                  <span style={{fontSize:11,fontWeight:700,padding:"5px 10px",borderRadius:20,background:`${statusColor(selectedKlant.status)}22`,color:statusColor(selectedKlant.status)}}>
+                    {selectedKlant.status}
+                  </span>
+                  {isEchteKlantRecord && (
+                    <button
+                      onClick={verwijderKlantNaarPrullenbak}
+                      disabled={verwijderenKlant}
+                      style={{background:"rgba(231,76,60,0.10)",color:ADM.red,border:`1px solid rgba(231,76,60,0.24)`,
+                        borderRadius:8,padding:"8px 12px",fontSize:12,fontWeight:700,cursor:verwijderenKlant?"wait":"pointer"}}
+                    >
+                      {verwijderenKlant ? "Verplaatsen..." : "🗑️ Klant verwijderen"}
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:18}}>
@@ -3956,6 +3996,12 @@ function PageKlanten() {
                       Sluiten
                     </button>
                   </div>
+                </div>
+              )}
+
+              {!isEchteKlantRecord && (
+                <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:14,background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"10px 12px"}}>
+                  Deze klant is samengesteld uit scans of metingen en staat nog niet als los klantrecord in de database. Alleen opgeslagen klantrecords kunnen naar de prullenbak worden verplaatst.
                 </div>
               )}
 
