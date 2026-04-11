@@ -1897,31 +1897,27 @@ function ScanInvullen({ scanId }) {
           </div>
           {huidige.type==="schaal" ? (
             <div>
-              <div style={{display:"flex",gap:20,marginBottom:4,justifyContent:"center",alignItems:"center"}}>
+              <div style={{display:"flex",gap:20,marginBottom:0,justifyContent:"center",alignItems:"center"}}>
                 {[1,2,3,4,5].map(n=>(
-                  <div key={n} style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                    <div onClick={()=>slaAntwoordOp(huidige.id,n)}
-                      style={{width:56,height:56,borderRadius:"50%",display:"flex",alignItems:"center",
-                        justifyContent:"center",fontSize:20,fontWeight:700,cursor:"pointer",transition:"all .15s",
-                        border:`2px solid ${antwoorden[huidige.id]===n?ADM.teal:"rgba(255,255,255,0.12)"}`,
-                        background:antwoorden[huidige.id]===n?ADM.teal:"rgba(255,255,255,0.04)",
-                        color:antwoorden[huidige.id]===n?ADM.navyDeep:ADM.muted,
-                        transform:antwoorden[huidige.id]===n?"scale(1.06)":"scale(1)"}}>
-                      {n}
-                    </div>
-                    <div style={{height:18,marginTop:5,display:"flex",alignItems:"flex-start",justifyContent:"center"}}>
-                      {n===3 && (
-                        <span style={{fontSize:10,color:ADM.muted,textAlign:"center",lineHeight:1.3}}>
-                          Neutraal
-                        </span>
-                      )}
-                    </div>
+                  <div key={n} onClick={()=>slaAntwoordOp(huidige.id,n)}
+                    style={{width:56,height:56,borderRadius:"50%",display:"flex",alignItems:"center",
+                      justifyContent:"center",fontSize:20,fontWeight:700,cursor:"pointer",transition:"all .15s",
+                      border:`2px solid ${antwoorden[huidige.id]===n?ADM.teal:"rgba(255,255,255,0.12)"}`,
+                      background:antwoorden[huidige.id]===n?ADM.teal:"rgba(255,255,255,0.04)",
+                      color:antwoorden[huidige.id]===n?ADM.navyDeep:ADM.muted,
+                      transform:antwoorden[huidige.id]===n?"scale(1.06)":"scale(1)"}}>
+                    {n}
                   </div>
                 ))}
               </div>
-              <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:ADM.muted,padding:"0 2px",marginTop:4}}>
-                <span>Helemaal oneens</span>
-                <span>Helemaal eens</span>
+              <div style={{display:"flex",gap:20,justifyContent:"center",marginTop:8}}>
+                {[1,2,3,4,5].map(n=>(
+                  <div key={n} style={{width:56,display:"flex",justifyContent:"center"}}>
+                    {n===1 && <span style={{fontSize:11,color:ADM.muted,textAlign:"center",lineHeight:1.3,whiteSpace:"nowrap"}}>Helemaal<br/>oneens</span>}
+                    {n===3 && <span style={{fontSize:11,color:ADM.muted,textAlign:"center",lineHeight:1.3}}>Neutraal</span>}
+                    {n===5 && <span style={{fontSize:11,color:ADM.muted,textAlign:"center",lineHeight:1.3,whiteSpace:"nowrap"}}>Helemaal<br/>eens</span>}
+                  </div>
+                ))}
               </div>
             </div>
           ) : (
