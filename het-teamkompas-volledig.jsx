@@ -1566,6 +1566,30 @@ function LoginScreen({ onLogin, onBack }) {
 // ─────────────────────────────────────────────
 // SCAN INVULLEN — resultaten naar Firestore
 // ─────────────────────────────────────────────
+
+function berekenScanScoresVoorMeting(stellingen = [], antwoorden = {}) {
+  const pijlerMap = {};
+  stellingen
+    .filter((s) => s.type === "schaal")
+    .forEach((s) => {
+      const raw = antwoorden?.[s.id];
+      const val = raw === undefined || raw === null || raw === "" ? null : parseFloat(raw);
+      if (val === null || Number.isNaN(val)) return;
+      if (!pijlerMap[s.pijler]) pijlerMap[s.pijler] = [];
+      pijlerMap[s.pijler].push(val);
+    });
+
+  const avg = (arr) => arr && arr.length ? Math.round((arr.reduce((a,b)=>a+b,0)/arr.length) * 10) / 10 : null;
+
+  return {
+    "Veiligheid & Leiderschap": avg(pijlerMap[0]),
+    "Beleving van Verandering": avg(pijlerMap[1]),
+    "Energie & Motivatie": avg(pijlerMap[2]),
+    "Verbeteren & Leren": avg(pijlerMap[3]),
+    "Gedrag (centraal)": avg(pijlerMap[4]),
+  };
+}
+
 function ScanInvullen({ scanId }) {
   const [lijst, setLijst] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -1684,6 +1708,32 @@ function ScanInvullen({ scanId }) {
         ingediend_op: serverTimestamp(),
       });
 
+      try {
+        const scoresVoorMeting = berekenScanScoresVoorMeting(lijst?.stellingen || DEFAULT_STELLINGEN, antwoorden);
+        const bestaandeMetingenSnap = await getDocs(collection(db, "metingen"));
+        const bestaatAlVoorTraject = bestaandeMetingenSnap.docs.some((d) => {
+          const data = d.data() || {};
+          return data.trajectId === scanId && (data.type === "T0 Meting" || data.type === "Nulmeting");
+        });
+
+        if (!bestaatAlVoorTraject) {
+          await addDoc(collection(db, "metingen"), {
+            klant: lijst?.klant || "",
+            trajectId: scanId,
+            trajectNaam: lijst?.naam || "",
+            type: "T0 Meting",
+            datum: new Date().toLocaleDateString("nl-NL"),
+            respondenten: 1,
+            scores: scoresVoorMeting,
+            status: "Compleet",
+            bron: "Automatisch uit scan",
+            aangemaakt_op: serverTimestamp(),
+          });
+        }
+      } catch (metingErr) {
+        console.error("Automatische nulmeting opslaan mislukt:", metingErr);
+      }
+
       setIngediend(true);
     } catch (err) {
       console.error("Fout bij opslaan:", err);
@@ -1766,11 +1816,8 @@ function ScanInvullen({ scanId }) {
         {vasteRol ? (
           <div style={{background:ADM.navy,border:`1px solid ${ADM.teal}`,borderRadius:12,padding:"20px 22px",marginBottom:20}}>
             <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>Deze vragenlijst is bedoeld voor</div>
-            <div style={{fontSize:18,fontWeight:700,color:ADM.white,marginBottom:8}}>
+            <div style={{fontSize:18,fontWeight:700,color:ADM.white}}>
               {vasteRol === "Teamlid" ? "Medewerkers" : "Managers / leidinggevenden"}
-            </div>
-            <div style={{fontSize:13,color:ADM.muted,lineHeight:1.6}}>
-              Om te voorkomen dat deelnemers de verkeerde vragenlijst invullen, staat de doelgroep van deze scan vast. Je kunt hier dus niet wisselen naar de andere vragenlijst.
             </div>
           </div>
         ) : (
@@ -2026,7 +2073,7 @@ function PageScans() {
   const [antwoorden, setAntwoorden] = useState([]);
   const [loading,    setLoading]    = useState(true);
   const [showForm,   setShowForm]   = useState(false);
-  const [nieuw,      setNieuw]      = useState({ naam:"", klant:"", scanType:"algemeen" });
+  const [nieuw,      setNieuw]      = useState({ naam:"", klant:"", scanType:"medewerkers" });
   const [geselecteerd, setGeselecteerd] = useState(null);
   const [gekopieerd,   setGekopieerd]   = useState(null);
   const [opslaan,      setOpslaan]      = useState(false);
@@ -2040,7 +2087,11 @@ function PageScans() {
         getDocs(collection(db, "vragenlijsten")),
         getDocs(collection(db, "antwoorden")),
       ]);
-      setLijsten(vlSnap.docs.map(d=>({ id:d.id, ...d.data() })));
+      setLijsten(
+        vlSnap.docs
+          .map(d=>({ id:d.id, ...d.data() }))
+          .filter(item => !item.verwijderd && item.status !== "Verwijderd")
+      );
       setAntwoorden(antSnap.docs.map(d=>({ id:d.id, ...d.data() })));
     } catch (err) {
       console.error("Laden mislukt:", err);
@@ -2068,7 +2119,7 @@ function PageScans() {
       };
       const ref = await addDoc(collection(db, "vragenlijsten"), data);
       setLijsten(prev => [...prev, { id:ref.id, ...data }]);
-      setNieuw({ naam:"", klant:"", scanType:"algemeen" });
+      setNieuw({ naam:"", klant:"", scanType:"medewerkers" });
       setShowForm(false);
     } catch (err) {
       console.error("Aanmaken mislukt:", err);
@@ -2081,11 +2132,30 @@ function PageScans() {
     if (!teVerwijderen) return;
     setVerwijderen(true);
     try {
-      await deleteDoc(doc(db, "vragenlijsten", teVerwijderen.id));
+      await addDoc(collection(db, "prullenbak"), {
+        original_id: teVerwijderen.id,
+        bron_collectie: "vragenlijsten",
+        naam: teVerwijderen.naam || "",
+        klant: teVerwijderen.klant || "",
+        type: teVerwijderen.type || "basisscan",
+        status: teVerwijderen.status || "",
+        aangemaakt: teVerwijderen.aangemaakt || "",
+        doelgroep: teVerwijderen.doelgroep || "",
+        parentVragenlijstId: teVerwijderen.parentVragenlijstId || null,
+        verdiepingOnderdelen: teVerwijderen.verdiepingOnderdelen || [],
+        verwijderd_op: serverTimestamp(),
+        verwijderd_op_ms: Date.now(),
+      });
+
+      await updateDoc(doc(db, "vragenlijsten", teVerwijderen.id), {
+        status: "Verwijderd",
+        verwijderd: true,
+      });
+
       setLijsten(prev => prev.filter(l => l.id !== teVerwijderen.id));
       setTeVerwijderen(null);
     } catch (err) {
-      console.error("Verwijderen mislukt:", err);
+      console.error("Verplaatsen naar prullenbak mislukt:", err);
     } finally {
       setVerwijderen(false);
     }
@@ -3362,7 +3432,7 @@ function PageKlanten() {
   const [selectedTrajectId, setSelectedTrajectId] = useState(null);
   const [selectedMetingId, setSelectedMetingId] = useState(null);
   const [nieuw, setNieuw] = useState({ naam:"", sector:"", contact:"", email:"", status:"Actief" });
-  const [nieuwTraject, setNieuwTraject] = useState({ naam:"", status:"Actief", scanType:"algemeen" });
+  const [nieuwTraject, setNieuwTraject] = useState({ naam:"", status:"Actief", scanType:"medewerkers" });
   const [nieuweMeting, setNieuweMeting] = useState({
     trajectId:"",
     trajectNaam:"",
@@ -3509,7 +3579,7 @@ function PageKlanten() {
         introductietekst: template.introductietekst,
         stellingen: template.stellingen,
       });
-      setNieuwTraject({ naam:"", status:"Actief", scanType:"algemeen" });
+      setNieuwTraject({ naam:"", status:"Actief", scanType:"medewerkers" });
       setShowTrajectForm(false);
       await laadData();
     } catch (err) {
@@ -4250,12 +4320,11 @@ function PageMetingen() {
               onChange={e=>setNieuw(n=>({...n, scanType:e.target.value}))}
               style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
             >
-              <option value="algemeen" style={{color:"#111"}}>Algemene teamscan</option>
               <option value="medewerkers" style={{color:"#111"}}>Medewerkersscan</option>
               <option value="management" style={{color:"#111"}}>Managementscan</option>
             </select>
             <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginTop:8}}>
-              De keuze bepaalt welke vragen, introductietekst en doelgroep worden vastgezet in de link.
+              Kies hier of je de medewerkersscan of de managementscan wilt versturen.
             </div>
           </div>
 
@@ -4313,8 +4382,8 @@ function PageMetingen() {
           </div>
         ))}
         {metingen.length === 0 && (
-          <div style={{color:ADM.muted,fontSize:14,padding:20,textAlign:"center"}}>
-            Nog geen metingen opgeslagen.
+          <div style={{color:ADM.muted,fontSize:14,padding:20,textAlign:"center",lineHeight:1.7}}>
+            Nog geen metingen opgeslagen. Na een eerste ingevulde scan wordt automatisch een T0-meting aangemaakt. Je kunt daarnaast ook handmatig een nieuw meetmoment toevoegen.
           </div>
         )}
       </div>
@@ -5439,7 +5508,7 @@ function PagePrullenbak() {
                     </span>
                   </div>
                   <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
-                    Type: {item.type || "Onbekend"} · Klant: {item.klant || "—"} · Bron: {item.bron_collectie || "—"}
+                    Type: {item.type || "Onbekend"} · Klant: {item.klant || "—"}{item.doelgroep ? ` · Doelgroep: ${item.doelgroep === "Teamlid" ? "medewerkers" : "management / leidinggevenden"}` : ""} · Bron: {item.bron_collectie || "—"}
                   </div>
                 </div>
 
