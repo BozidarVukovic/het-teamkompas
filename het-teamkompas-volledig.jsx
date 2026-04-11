@@ -3598,38 +3598,6 @@ function PageKlanten() {
     }
   };
 
-  const verwijderKlantNaarPrullenbak = async () => {
-    if (!selectedKlant || String(selectedKlant.id).startsWith("klant-")) return;
-    setVerwijderenKlant(true);
-    try {
-      await addDoc(collection(db, "prullenbak"), {
-        original_id: selectedKlant.id,
-        bron_collectie: "klanten",
-        naam: selectedKlant.naam || "",
-        klant: selectedKlant.naam || "",
-        type: "klant",
-        status: selectedKlant.status || "",
-        sector: selectedKlant.sector || "",
-        contact: selectedKlant.contact || "",
-        email: selectedKlant.email || "",
-        verwijderd_op: serverTimestamp(),
-        verwijderd_op_ms: Date.now(),
-      });
-
-      await updateDoc(doc(db, "klanten", selectedKlant.id), {
-        status: "Verwijderd",
-        verwijderd: true,
-      });
-
-      setSelectedKlant(null);
-      await laadData();
-    } catch (err) {
-      console.error("Verwijderen klant mislukt:", err);
-    } finally {
-      setVerwijderenKlant(false);
-    }
-  };
-
   const startNieuwTraject = async () => {
     if (!selectedKlant || !nieuwTraject.naam) return;
     setOpslaanTraject(true);
@@ -3877,7 +3845,7 @@ function PageKlanten() {
                   <span style={{fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:20,background:`${statusColor(k.status)}22`,color:statusColor(k.status)}}>
                     {k.status}
                   </span>
-                  <div style={{fontSize:20,fontWeight:700,color:typeof k.score === "number" && !Number.isNaN(k.score) ? scoreColor(k.score) : ADM.muted}}>
+                  <div style={{fontSize:20,fontWeight:700,color:k.score !== null ? scoreColor(k.score) : ADM.muted}}>
                     {formatScore(k.score)}
                   </div>
                 </div>
@@ -3903,14 +3871,14 @@ function PageKlanten() {
             <>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:18,flexWrap:"wrap"}}>
                 <div>
-                  <div style={{fontSize:26,fontWeight:700,color:ADM.white,marginBottom:6}}>{selectedKlant?.naam || "Onbekende klant"}</div>
+                  <div style={{fontSize:26,fontWeight:700,color:ADM.white,marginBottom:6}}>{selectedKlant.naam}</div>
                   <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>
-                    {selectedKlant?.sector || "Sector onbekend"} · {selectedKlant?.contact || "Geen contactpersoon"}{selectedKlant?.email ? ` · ${selectedKlant.email}` : ""}
+                    {selectedKlant.sector || "Sector onbekend"} · {selectedKlant.contact || "Geen contactpersoon"}{selectedKlant.email ? ` · ${selectedKlant.email}` : ""}
                   </div>
                 </div>
                 <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",justifyContent:"flex-end"}}>
-                  <span style={{fontSize:11,fontWeight:700,padding:"5px 10px",borderRadius:20,background:`${statusColor(selectedKlant.status)}22`,color:statusColor(selectedKlant.status)}}>
-                    {selectedKlant?.status || "Onbekend"}
+                  <span style={{fontSize:11,fontWeight:700,padding:"5px 10px",borderRadius:20,background:`${statusColor(selectedKlant?.status || "")}22`,color:statusColor(selectedKlant?.status || "")}}>
+                    {selectedKlant.status}
                   </span>
                   {isEchteKlantRecord && (
                     <button
@@ -4029,12 +3997,6 @@ function PageKlanten() {
                       Sluiten
                     </button>
                   </div>
-                </div>
-              )}
-
-              {!isEchteKlantRecord && (
-                <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:14,background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"10px 12px"}}>
-                  Deze klant is samengesteld uit scans of metingen en staat nog niet als los klantrecord in de database. Alleen opgeslagen klantrecords kunnen naar de prullenbak worden verplaatst.
                 </div>
               )}
 
