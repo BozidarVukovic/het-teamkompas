@@ -230,40 +230,47 @@ const MEDEWERKERSSCAN_STELLINGEN = [
 ];
 
 const MANAGEMENTSCAN_STELLINGEN = [
-  { id: 2001, pijler: 4, tekst: "Binnen mijn team is er begrip voor verschillen in werkstijl en communicatie.", type: "schaal" },
-  { id: 2002, pijler: 4, tekst: "Misverstanden worden meestal functioneel besproken, niet persoonlijk.", type: "schaal" },
-  { id: 2003, pijler: 4, tekst: "Medewerkers passen hun manier van communiceren aan aan elkaar.", type: "schaal" },
-  { id: 2004, pijler: 4, tekst: "Verschillen in aanpak worden gezien als krachtig in plaats van lastig.", type: "schaal" },
+  // Samenwerking & communicatie (pijler 4) — spiegel van 1001–1004
+  { id: 2001, pijler: 4, tekst: "Medewerkers voelen zich begrepen door elkaar.", type: "schaal" },
+  { id: 2002, pijler: 4, tekst: "Verschillen in werkstijl en communicatie worden binnen het team gerespecteerd.", type: "schaal" },
+  { id: 2003, pijler: 4, tekst: "Misverstanden worden open en constructief besproken, niet persoonlijk gemaakt.", type: "schaal" },
+  { id: 2004, pijler: 4, tekst: "Medewerkers passen hun manier van communiceren aan aan elkaar.", type: "schaal" },
   { id: 2005, pijler: 4, tekst: "Waar ontstaan in de samenwerking binnen het team fricties of misverstanden?", type: "open" },
 
-  { id: 2006, pijler: 0, tekst: "Medewerkers durven zich uit te spreken richting mij en andere leidinggevenden.", type: "schaal" },
-  { id: 2007, pijler: 0, tekst: "Fouten en onzekerheden kunnen besproken worden zonder angst voor negatieve gevolgen.", type: "schaal" },
-  { id: 2008, pijler: 0, tekst: "Verschil van mening leidt tot dialoog, niet tot terughoudendheid.", type: "schaal" },
+  // Psychologische veiligheid (pijler 0) — spiegel van 1006–1010
+  { id: 2006, pijler: 0, tekst: "Medewerkers voelen zich veilig om hun mening te geven.", type: "schaal" },
+  { id: 2007, pijler: 0, tekst: "Medewerkers durven fouten of twijfels te bespreken.", type: "schaal" },
+  { id: 2008, pijler: 0, tekst: "Ik nodig medewerkers actief uit tot openheid en dialoog.", type: "schaal" },
   { id: 2009, pijler: 0, tekst: "Initiatief komt vanuit meerdere mensen, niet steeds dezelfde.", type: "schaal" },
-  { id: 2010, pijler: 0, tekst: "Waar zie je dat medewerkers zich (nog) inhouden of voorzichtig zijn?", type: "open" },
+  { id: 2010, pijler: 0, tekst: "Verschillen in stijl en achtergrond worden in het team gezien als kracht.", type: "schaal" },
+  { id: 2011, pijler: 0, tekst: "Waar zie je dat medewerkers zich (nog) inhouden of voorzichtig zijn?", type: "open" },
 
-  { id: 2011, pijler: 1, tekst: "Veranderingen worden door medewerkers als duidelijk en begrijpelijk ervaren.", type: "schaal" },
-  { id: 2012, pijler: 1, tekst: "Het tempo van verandering past bij wat het team aankan.", type: "schaal" },
-  { id: 2013, pijler: 1, tekst: "Emoties en zorgen rondom verandering krijgen voldoende ruimte.", type: "schaal" },
-  { id: 2014, pijler: 1, tekst: "Nieuwe initiatieven voelen voor medewerkers als een verbetering van het bestaande.", type: "schaal" },
-  { id: 2015, pijler: 1, tekst: "Wat merk jij aan reacties van medewerkers wanneer er iets verandert?", type: "open" },
+  // Beleving van verandering (pijler 1) — spiegel van 1012–1015
+  { id: 2012, pijler: 1, tekst: "Ik communiceer veranderingen op een manier die medewerkers als duidelijk en begrijpelijk ervaren.", type: "schaal" },
+  { id: 2013, pijler: 1, tekst: "Het tempo van verandering past bij wat het team aankan.", type: "schaal" },
+  { id: 2014, pijler: 1, tekst: "Emoties en zorgen rondom verandering krijgen voldoende ruimte.", type: "schaal" },
+  { id: 2015, pijler: 1, tekst: "Nieuwe initiatieven voelen voor medewerkers als een verbetering van het bestaande.", type: "schaal" },
+  { id: 2016, pijler: 1, tekst: "Wat merk jij aan reacties van medewerkers wanneer er iets verandert?", type: "open" },
 
-  { id: 2016, pijler: 2, tekst: "De balans tussen werkdruk en herstel is binnen het team gezond.", type: "schaal" },
-  { id: 2017, pijler: 2, tekst: "Medewerkers halen voldoende energie en voldoening uit hun werk.", type: "schaal" },
-  { id: 2018, pijler: 2, tekst: "Structurele frustraties worden actief besproken en aangepakt.", type: "schaal" },
-  { id: 2019, pijler: 2, tekst: "Medewerkers ervaren voldoende autonomie en steun in hun werk.", type: "schaal" },
-  { id: 2020, pijler: 2, tekst: "Wat kost medewerkers op dit moment structureel de meeste energie?", type: "open" },
+  // Energie & motivatie (pijler 2) — spiegel van 1017–1020
+  { id: 2017, pijler: 2, tekst: "De balans tussen werkdruk en herstel is binnen het team gezond.", type: "schaal" },
+  { id: 2018, pijler: 2, tekst: "Medewerkers halen voldoende energie en voldoening uit hun werk.", type: "schaal" },
+  { id: 2019, pijler: 2, tekst: "Structurele frustraties worden actief besproken en aangepakt.", type: "schaal" },
+  { id: 2020, pijler: 2, tekst: "Medewerkers ervaren voldoende autonomie en steun in hun werk.", type: "schaal" },
+  { id: 2021, pijler: 2, tekst: "Wat kost medewerkers op dit moment structureel de meeste energie?", type: "open" },
 
-  { id: 2021, pijler: 3, tekst: "Verbeterideeën ontstaan vooral vanuit het dagelijks werk.", type: "schaal" },
-  { id: 2022, pijler: 3, tekst: "Medewerkers voelen eigenaarschap over verbeteringen.", type: "schaal" },
-  { id: 2023, pijler: 3, tekst: "Kleine experimenten en leren worden aangemoedigd.", type: "schaal" },
-  { id: 2024, pijler: 3, tekst: "Verbeteren wordt ervaren als onderdeel van het werk, niet als extra taak.", type: "schaal" },
-  { id: 2025, pijler: 3, tekst: "Wat gebeurt er nu met ideeën of signalen vanuit de werkvloer?", type: "open" },
+  // Verbeteren & leren (pijler 3) — spiegel van 1022–1025
+  { id: 2022, pijler: 3, tekst: "Verbeterideeën vanuit de werkvloer worden serieus opgepakt.", type: "schaal" },
+  { id: 2023, pijler: 3, tekst: "Medewerkers voelen eigenaarschap over verbeteringen in het werk.", type: "schaal" },
+  { id: 2024, pijler: 3, tekst: "Kleine experimenten en leren worden aangemoedigd.", type: "schaal" },
+  { id: 2025, pijler: 3, tekst: "Verbeteren wordt door medewerkers ervaren als onderdeel van het werk, niet als extra taak.", type: "schaal" },
+  { id: 2026, pijler: 3, tekst: "Wat gebeurt er nu met ideeën of signalen vanuit de werkvloer?", type: "open" },
 
-  { id: 2026, pijler: 4, tekst: "Ik heb goed zicht op waar de grootste menselijke uitdagingen binnen mijn team liggen.", type: "schaal" },
-  { id: 2027, pijler: 4, tekst: "Ik voel ruimte om hier samen met medewerkers aan te werken.", type: "schaal" },
-  { id: 2028, pijler: 4, tekst: "Wat is volgens jou de belangrijkste eerste stap om het werken binnen jouw team te verbeteren?", type: "open" },
-  { id: 2029, pijler: 4, tekst: "Waar zie jij de grootste hefboom om beweging te creëren?", type: "open" },
+  // Richting & betrokkenheid (pijler 4) — spiegel van 1027–1028
+  { id: 2027, pijler: 4, tekst: "Medewerkers voelen zich betrokken bij veranderingen binnen het team.", type: "schaal" },
+  { id: 2028, pijler: 4, tekst: "Ik heb goed zicht op waar de grootste uitdagingen liggen en pak die ook samen met medewerkers op.", type: "schaal" },
+  { id: 2029, pijler: 4, tekst: "Wat is volgens jou de belangrijkste eerste stap om het werken binnen jouw team te verbeteren?", type: "open" },
+  { id: 2030, pijler: 4, tekst: "Waar zie jij de grootste hefboom om beweging te creëren?", type: "open" },
 ];
 
 function getScanTemplate(scanType = "algemeen") {
@@ -1890,20 +1897,27 @@ function ScanInvullen({ scanId }) {
           </div>
           {huidige.type==="schaal" ? (
             <div>
-              <div style={{display:"flex",gap:12,marginBottom:16,justifyContent:"center"}}>
+              <div style={{display:"flex",gap:20,marginBottom:8,justifyContent:"center",alignItems:"flex-end"}}>
                 {[1,2,3,4,5].map(n=>(
-                  <div key={n} onClick={()=>slaAntwoordOp(huidige.id,n)}
-                    style={{width:56,height:56,borderRadius:"50%",display:"flex",alignItems:"center",
-                      justifyContent:"center",fontSize:20,fontWeight:700,cursor:"pointer",transition:"all .15s",
-                      border:`2px solid ${antwoorden[huidige.id]===n?ADM.teal:"rgba(255,255,255,0.12)"}`,
-                      background:antwoorden[huidige.id]===n?ADM.teal:"rgba(255,255,255,0.04)",
-                      color:antwoorden[huidige.id]===n?ADM.navyDeep:ADM.muted,
-                      transform:antwoorden[huidige.id]===n?"scale(1.06)":"scale(1)"}}>
-                    {n}
+                  <div key={n} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+                    <div onClick={()=>slaAntwoordOp(huidige.id,n)}
+                      style={{width:56,height:56,borderRadius:"50%",display:"flex",alignItems:"center",
+                        justifyContent:"center",fontSize:20,fontWeight:700,cursor:"pointer",transition:"all .15s",
+                        border:`2px solid ${antwoorden[huidige.id]===n?ADM.teal:"rgba(255,255,255,0.12)"}`,
+                        background:antwoorden[huidige.id]===n?ADM.teal:"rgba(255,255,255,0.04)",
+                        color:antwoorden[huidige.id]===n?ADM.navyDeep:ADM.muted,
+                        transform:antwoorden[huidige.id]===n?"scale(1.06)":"scale(1)"}}>
+                      {n}
+                    </div>
+                    {n===3 && (
+                      <div style={{fontSize:10,color:ADM.muted,textAlign:"center",lineHeight:1.3,maxWidth:52}}>
+                        Neutraal
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
-              <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:ADM.muted,padding:"0 2px"}}>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:ADM.muted,padding:"0 2px",marginTop:8}}>
                 <span>Helemaal oneens</span>
                 <span>Helemaal eens</span>
               </div>
