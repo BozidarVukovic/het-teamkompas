@@ -1009,13 +1009,20 @@ function PublicSite({ onLoginClick }) {
             padding:isMobile?"28px 24px":"0 80px"
           }}>
             <Fade>
-              <p style={{
-                fontSize:isMobile?20:34,fontWeight:700,color:PUB.wit,
-                lineHeight:1.3,maxWidth:620,marginBottom:16
-              }}>
-                Samenwerking verbeteren begint niet met een nieuw proces.<br/>
-                <em style={{fontStyle:"italic",color:PUB.wit}}>Het begint met begrijpen wat er werkelijk tussen mensen speelt.</em>
-              </p>
+              <div style={{maxWidth:620,marginBottom:16}}>
+                <p style={{
+                  fontSize:isMobile?20:34,fontWeight:700,color:PUB.wit,
+                  lineHeight:1.25,marginBottom:10
+                }}>
+                  Samenwerking verbeteren begint niet met een nieuw proces.
+                </p>
+                <p style={{
+                  fontSize:isMobile?14:18,fontWeight:500,color:"rgba(255,255,255,0.88)",
+                  lineHeight:1.6,margin:0
+                }}>
+                  Het begint met begrijpen wat er werkelijk tussen mensen speelt.
+                </p>
+              </div>
             </Fade>
           </div>
         </div>
