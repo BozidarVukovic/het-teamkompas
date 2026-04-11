@@ -5688,6 +5688,521 @@ function PageRapportages() {
     setGenererend(null);
   };
 
+  // ─── ADVIESRAPPORT: uitgebreid consultancy rapport ────────────────────────
+  const genereerAdviesrapport = (mwLijst, mgLijst) => {
+    setRapportError("");
+    setGenererend(`advies_${mwLijst.id}`);
+
+    const mwResp = antwoordenVoor(mwLijst.id);
+    const mgResp = antwoordenVoor(mgLijst.id);
+    const mwStellingen = mwLijst.stellingen || MEDEWERKERSSCAN_STELLINGEN;
+    const mgStellingen = mgLijst.stellingen || MANAGEMENTSCAN_STELLINGEN;
+
+    const now   = new Date();
+    const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+
+    const DOMEINEN = [
+      {
+        naam: "Veiligheid & Leiderschap", kleur: "#5A8C3C", lichtKleur: "#f0f6ec", pijler: 0,
+        icon: "🛡",
+        theorie: "Psychologische veiligheid is de belangrijkste voorspeller van teamprestaties, zoals Amy Edmondson van Harvard aantoonde: teams die fouten durven benoemen leren sneller en presteren structureel beter. Het gaat niet om harmonie, maar om de bereidheid risico te nemen in interpersoonlijke situaties — een mening geven, een idee opperen, een zorg uitspreken. Wanneer deze veiligheid ontbreekt, trekken mensen zich terug in zelfbescherming. Initiatief droogt op. Innovatie stokt. De leidinggevende speelt hierin een cruciale rol: psychologische veiligheid wordt niet geïnstalleerd via een workshop, maar dagelijks opgebouwd of afgebroken door klein gedrag — hoe gereageerd wordt op een vraag, hoe omgegaan wordt met een fout, of ruimte werkelijk genomen mag worden.",
+        gapDuiding: "De gap tussen uw waarneming en de beleving van het team wijst op een blinde vlek in het leiderschap. U ervaart de sfeer als opener dan medewerkers die doen. Dit is een veelvoorkomend patroon: leidinggevenden zien de deur als open; medewerkers ervaren drempels die voor de leidinggevende onzichtbaar zijn. Deze drempels zijn zelden bedoeld, maar altijd voelbaar.",
+        geenGapDuiding: "De scores laten weinig verschil zien tussen uw perspectief en dat van het team. Dat is een goed teken van wederzijds begrip op dit domein.",
+        acties_manager: [
+          { titel: "Kwetsbaarheid als instrument", tekst: "Deel bewust eigen twijfels of fouten in teamoverleggen. Niet als show, maar als signaal: hier mag dat. Wanneer de leidinggevende zelf kwetsbaar is, daalt de drempel voor anderen significant." },
+          { titel: "Reageer actief beloningend op tegenstemmen", tekst: "Wanneer iemand een afwijkende mening inbrengt, bedank expliciet: 'Fijn dat je dat zegt — dat hadden we anders gemist.' Dit gedrag, consistent herhaald, herprogrammeert de teamcultuur." },
+          { titel: "Introduceer een vaste 'afwijkende mening' ronde", tekst: "Sluit vergaderingen af met de vraag: 'Wat hebben we vandaag niet gezegd dat we wel hadden moeten zeggen?' Dit maakt het structureel veilig om het oneens te zijn." },
+          { titel: "Voer individuele check-ins in", tekst: "Plan maandelijks een korte 1-op-1 (15-20 min) zonder agenda. Niet over werk, maar over hoe het gáát. Dit is de meest directe investering in psychologische veiligheid." },
+        ],
+        acties_team: [
+          { titel: "Oefen met kleine risico's", tekst: "Begin met kleine momenten van openheid: een vraag stellen die je normaliter niet stelt, een idee opperen waarvan je twijfelt. Veiligheid groeit door gebruik." },
+          { titel: "Bespreek wat veiligheid in dit team betekent", tekst: "Maak dit onderwerp expliciet als team. Wat zijn situaties waarin iedereen zich vrij voelt? Wat zijn patronen die mensen doen zwijgen? Bewustwording is de eerste stap." },
+          { titel: "Erken en waardeer bijdragen van anderen", tekst: "Wanneer een collega iets inbrengt dat lastig is, steun dat zichtbaar. Een team dat zijn eigen veiligheid bewaakt is weerbaarder dan een team dat dat van de manager verwacht." },
+        ],
+      },
+      {
+        naam: "Beleving van Verandering", kleur: "#3A7DBF", lichtKleur: "#edf4fb", pijler: 1,
+        icon: "🔄",
+        theorie: "Mensen zijn van nature geen tegenstanders van verandering — ze zijn tegenstanders van onduidelijkheid, verlies van controle en het gevoel niet gehoord te worden. De neurowetenschapper David Rock beschrijft dit met het SCARF-model: Status, Certainty, Autonomy, Relatedness en Fairness zijn vijf domeinen die het brein actief monitort op dreiging. Verandering raakt al deze domeinen tegelijk. Zonder bewuste begeleiding activeert verandering een dreigingsrespons — het brein gaat in overlevingsmodus. Wat leidinggevenden daarin overschatten is de kracht van uitleggen. Begrijpen is niet hetzelfde als accepteren. Mensen hebben ruimte nodig om hun eigen betekenis te geven aan verandering, inclusief de weerstand en het verlies.",
+        gapDuiding: "Dit is de grootste kloof in uw scan. U ervaart de veranderingen als helder en begrijpelijk; het team ervaart onduidelijkheid, onvoldoende tempo, en onvoldoende ruimte voor emoties en zorgen. Dit verschil is kenmerkend voor leidinggevenden die verandering inhoudelijk goed begeleiden maar de menselijke dimensie onderschatten. De boodschap is overgebracht — de betekenis is nog niet geland.",
+        geenGapDuiding: "Team en manager beleven verandering op vergelijkbare wijze. Dit duidt op gezonde communicatie rondom verandertrajecten.",
+        acties_manager: [
+          { titel: "Onderscheid uitleggen van betekenis geven", tekst: "Informeer niet alleen over wát er verandert en waaróm — creëer ook ruimte voor wat dit met mensen doet. Plan een 'veranderconversatie' los van de informatiestroom: geen presentatie, maar een open gesprek over beleving." },
+          { titel: "Maak de reisroute zichtbaar", tekst: "Teken samen met het team de verandering als een reis: waar staan we nu, wat zijn de volgende stappen, wanneer kunnen mensen invloed uitoefenen? Visualiseer dit en hang het op. Duidelijkheid reduceert angst." },
+          { titel: "Erken het verlies expliciet", tekst: "Elke verandering betekent ook iets loslaten. Benoem dit: 'Ik begrijp dat dit vraagt dat jullie iets gewends loslaten. Dat is niet niks.' Dit klinkt klein, maar heeft groot effect op acceptatie." },
+          { titel: "Betrek het team vroeg en substantieel", tekst: "Consulteer medewerkers niet na de beslissing, maar bij het bepalen van de aanpak. Autonomie in het hoe vergroot de acceptatie van het wat, zelfs als de richting vastligt." },
+        ],
+        acties_team: [
+          { titel: "Benoem concreet wat onduidelijk is", tekst: "Formuleer de specifieke vragen die leven: niet 'dit voelt onzeker', maar 'ik weet niet wat dit betekent voor mijn takenpakket over zes maanden.' Concrete vragen kunnen beantwoord worden; vage zorgen niet." },
+          { titel: "Onderscheid bezwaar van vraag", tekst: "Weerstand tegen verandering is vaak een vraag in vermomming. Oefen als team om bezwaren om te zetten in vragen: 'Wat heb ik nodig om dit te omarmen?' opent een gesprek dat 'dit werkt toch nooit' sluit." },
+          { titel: "Deel ervaringen uit eerdere veranderingen", tekst: "Welke veranderingen hebben in dit team wél goed gewerkt? Wat maakte dat zo? Dit activeren van positieve veranderervaringen helpt het team zijn eigen verandervermogen te herkennen." },
+        ],
+      },
+      {
+        naam: "Energie & Motivatie", kleur: "#E8821A", lichtKleur: "#fef5ec", pijler: 2,
+        icon: "⚡",
+        theorie: "Het Job Demands-Resources model (Bakker & Demerouti) toont aan dat bevlogenheid ontstaat op het snijvlak van betekenisvol werk en voldoende hulpbronnen om dat werk te doen. Wanneer taakeisen structureel de beschikbare hulpbronnen overtreffen, ontstaat uitputting. Wanneer hulpbronnen taakeisen overtreffen zonder voldoende uitdaging, ontstaat verveling. De zone van bevlogenheid is smal en vereist actief onderhoud. Motivatie is geen vaste eigenschap van een medewerker — het is de uitkomst van de relatie tussen de persoon, het werk, de context en het leiderschap. Leidinggevenden die motivatieproblemen individualiseren ('hij heeft geen drive') missen de systeemvraag: welke context produceren wij die dit gedrag oproept?",
+        gapDuiding: "De gap op dit domein is kleiner dan op verandering en verbeteren, maar significant. U ziet meer energie en voldoening dan medewerkers rapporteren. Dit kan wijzen op een selectieve zichtbaarheid: u ziet de positieve momenten, medewerkers dragen ook de onderstroom van dagelijkse frustraties die niet altijd de weg naar boven vinden.",
+        geenGapDuiding: "De energiebeleving wordt door beide partijen vergelijkbaar ingeschat. Dit is een gezonde basis voor verdere ontwikkeling.",
+        acties_manager: [
+          { titel: "Breng structurele energievreters in kaart", tekst: "Organiseer een 'energieaudit': vraag het team wat energie geeft en wat structureel energie kost. Niet als klaagmoment, maar als probleemanalyse. Focus vervolgens op het wegnemen van de grootste energielek — ook als dat systeem- of organisatievragen oproept." },
+          { titel: "Geef betekenis terug aan het werk", tekst: "Verbind het dagelijkse werk expliciet aan de grotere impact: voor de klant, voor de organisatie, voor de samenleving. Mensen willen weten waarom hun bijdrage ertoe doet. Dit gesprek voeren — met regelmaat en oprechtheid — is een van de krachtigste motivatie-interventies." },
+          { titel: "Differentieer in motivatiebehoeften", tekst: "Niet iedereen is gemotiveerd door hetzelfde. Voer individuele gesprekken over wat dit werk voor iemand betekenisvol maakt. Pas ondersteuning en uitdaging daarop aan. Dit vereist meer dan een functioneringsgesprek per jaar." },
+          { titel: "Bescherm herstelruimte actief", tekst: "Herstel is geen luxe maar een prestatievereiste. Zorg dat pauzes genomen worden, overwerk de uitzondering blijft en vakantie volledig is. Dit begint bij het eigen gedrag van de leidinggevende." },
+        ],
+        acties_team: [
+          { titel: "Signaleer energievreters vroeg en concreet", tekst: "Wacht niet tot uitputting. Benoem bij de leidinggevende of in teamoverleg wanneer iets structureel energie kost — met concrete voorbeelden. Vroege signalering maakt oplossingen mogelijk die later niet meer beschikbaar zijn." },
+          { titel: "Investeer in onderlinge hulpbronnen", tekst: "Energie is besmettelijk. Zoek actief de collega's die je energie geven en investeer in die contacten. Help elkaar bij taken die de ander energie kosten maar jou relatief weinig. Wederzijdse hulpbronnen versterken het team als geheel." },
+          { titel: "Definieer je eigen energiebronnen", tekst: "Wat maakt dat je 's ochtends met zin aan het werk begint? Zorg dat je werk minstens een deel van die bronnen bevat. Als dat niet het geval is, maak dat bespreekbaar — niet als klacht, maar als concrete vraag om herpositionering." },
+        ],
+      },
+      {
+        naam: "Verbeteren & Leren", kleur: "#6B4E9E", lichtKleur: "#f3f0f9", pijler: 3,
+        icon: "📈",
+        theorie: "Organisaties die leren zijn niet organisaties die trainingen organiseren — het zijn organisaties waar leren ingebed is in de dagelijkse praktijk. Chris Argyris onderscheidde single-loop leren (problemen oplossen binnen bestaande aannames) van double-loop leren (het bevragen van de aannames zelf). De meeste teams zijn vaardig in het eerste, maar schieten tekort in het tweede. Eigenaarschap over verbetering — het gevoel dat ik invloed heb op hoe mijn werk beter kan — is de kern van een leercultuur. Wanneer medewerkers verbeterideeën inbrengen die niet worden opgepakt, of wanneer verbeteren als extra taak voelt bovenop de reguliere werkdruk, trekt dit eigenaarschap zich terug. Het resultaat is een team dat uitvoert maar niet evolueert.",
+        gapDuiding: "Dit domein laat een van de grootste gaps zien. U ervaart een cultuur van verbeteren en leren; het team ervaart dat verbeterideeën niet landen en dat verbeteren als last voelt. Dit is een kritisch signaal: de infrastructuur van leren is mogelijk aanwezig, maar de cultuur nog niet. Ideeën worden wellicht ontvangen maar niet merkbaar opgepakt — wat het inbrengen ervan geleidelijk ontmoedigt.",
+        geenGapDuiding: "De leercultuur wordt door beide partijen vergelijkbaar beleefd. Er is een gezonde basis voor verdere verdieping.",
+        acties_manager: [
+          { titel: "Sluit de feedbackloop structureel", tekst: "Elke keer dat een verbeteridee wordt ingebracht en niets mee gedaan wordt zonder uitleg, sterft een stuk eigenaarschap. Introduceer een zichtbaar systeem: idee → reactie binnen zeven dagen → besluit met onderbouwing. Maak dit transparant." },
+          { titel: "Maak van fouten leermateriaal", tekst: "Voer maandelijks een 'leermoment' in: bespreek één ding dat niet goed ging en wat we er als team van leren. Zonder schuldvraag. Dit normaliseert falen als onderdeel van verbeteren." },
+          { titel: "Experimenteerruimte als beleid", tekst: "Reserveer bewust tijd en ruimte voor kleine experimenten — een anders ingerichte werkprocedure, een nieuw hulpmiddel, een andere aanpak van een terugkerend probleem. Klein beginnen, snel leren, breed delen." },
+          { titel: "Erken en vier verbeterinitiatieven", tekst: "Wanneer een medewerker een verbetering doorvoert, maak dit zichtbaar in het team. Niet als loftuiting, maar als signaal: dit is hoe we hier werken. Gedrag dat gezien en gewaardeerd wordt, herhaalt zich." },
+        ],
+        acties_team: [
+          { titel: "Breng verbeterideeën gestructureerd in", tekst: "Een idee dat goed geframed is, maakt meer kans. Beschrijf het probleem, de voorgestelde oplossing, de verwachte impact en wat je nodig hebt. Dit vergroot de kans op opvolging en laat zien dat je verder denkt dan klagen." },
+          { titel: "Eigenaardschap begint bij jezelf", tekst: "Wacht niet op toestemming voor kleine verbeteringen binnen je eigen werkplek of werkwijze. Begin klein, doe het, deel het. Dit bouwt een reputatie op als iemand die actief bijdraagt aan verbetering." },
+          { titel: "Leer van elkaar, niet alleen van trainingen", tekst: "Plan informele kennisdeling: 'Wat heb jij deze week geleerd?' als vaste afsluiter van een teamoverleg. Dit versterkt het collectieve leren zonder extra belasting." },
+        ],
+      },
+    ];
+
+    const gemPijlerLijst = (pijler, resp, stellingen) => {
+      const ids  = stellingen.filter(s => s.pijler === pijler && s.type === "schaal").map(s => s.id);
+      const vals = resp.flatMap(a => ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null && v !== ""));
+      return vals.length ? vals.reduce((s, v) => s + parseFloat(v), 0) / vals.length : null;
+    };
+
+    const scores = DOMEINEN.map(d => {
+      const mw  = gemPijlerLijst(d.pijler, mwResp, mwStellingen);
+      const mg  = gemPijlerLijst(d.pijler, mgResp, mgStellingen);
+      const gap = mw !== null && mg !== null ? mg - mw : null;
+      return { ...d, mw, mg, gap };
+    });
+
+    // Open antwoorden
+    const openPerDomein = DOMEINEN.map(d => {
+      const mwOpen = mwStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+      const mgOpen = mgStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+      const mwAntw = mwOpen.flatMap(s => mwResp.map(a => a.antwoorden?.[s.id]).filter(v => v?.trim().length > 3));
+      const mgAntw = mgOpen.flatMap(s => mgResp.map(a => a.antwoorden?.[s.id]).filter(v => v?.trim().length > 3));
+      return { ...d, mwVraag: mwOpen[0]?.tekst || "", mgVraag: mgOpen[0]?.tekst || "", mwAntw, mgAntw };
+    });
+
+    const scoreKleur  = s => !s || isNaN(s) ? "#999" : s >= 4 ? "#2ecc71" : s >= 3 ? "#f39c12" : "#e74c3c";
+    const scoreLabel  = s => !s || isNaN(s) ? "—" : s >= 4 ? "Sterk" : s >= 3 ? "Aandacht nodig" : "Prioriteit";
+    const gapKleur    = gap => gap === null ? "#999" : Math.abs(gap) >= 1.0 ? "#e74c3c" : Math.abs(gap) >= 0.5 ? "#f39c12" : "#2ecc71";
+    const prioriteit  = scores.slice().sort((a,b) => (b.gap||0) - (a.gap||0));
+
+    const minScore    = scores.reduce((min, s) => s.mw !== null && s.mw < (min?.mw ?? 99) ? s : min, null);
+    const maxGap      = scores.reduce((max, s) => s.gap !== null && s.gap > (max?.gap ?? -99) ? s : max, null);
+
+    const balk = (score, kleur, breedte = 180) => score !== null
+      ? `<div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:${breedte}px;height:8px;background:#eee;border-radius:4px;overflow:hidden;flex-shrink:0;">
+            <div style="height:100%;border-radius:4px;background:${kleur};width:${(score/5)*100}%;"></div>
+          </div>
+          <span style="font-size:15px;font-weight:700;color:${kleur};">${score.toFixed(1)}</span>
+         </div>`
+      : `<span style="color:#aaa;font-size:13px;">—</span>`;
+
+    const html = `<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Adviesrapport — ${mwLijst.naam}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Segoe UI', sans-serif; background: #f4f6f9; color: #1a1a2e; font-size: 14px; line-height: 1.6; }
+
+  /* ── Cover ── */
+  .cover { background: #0D1B2A; min-height: 100vh; display: flex; flex-direction: column; padding: 0; page-break-after: always; position: relative; overflow: hidden; }
+  .cover-accent { height: 6px; display: flex; }
+  .cover-accent div { flex: 1; }
+  .cover-body { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 80px 80px 60px; }
+  .cover-tag { font-size: 11px; color: #0F766E; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 48px; }
+  .cover-title { font-size: 52px; font-weight: 800; color: #ffffff; line-height: 1.1; margin-bottom: 20px; max-width: 700px; }
+  .cover-subtitle { font-size: 20px; color: rgba(255,255,255,0.5); font-weight: 300; margin-bottom: 60px; }
+  .cover-meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 32px; }
+  .cover-meta-item { padding-right: 32px; }
+  .cover-meta-label { font-size: 10px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+  .cover-meta-value { font-size: 16px; font-weight: 600; color: #ffffff; }
+  .cover-deco { position: absolute; right: -80px; top: 50%; transform: translateY(-50%); width: 500px; height: 500px; border-radius: 50%; background: rgba(15,118,110,0.06); border: 1px solid rgba(15,118,110,0.08); }
+  .cover-deco2 { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); width: 340px; height: 340px; border-radius: 50%; background: rgba(15,118,110,0.05); border: 1px solid rgba(15,118,110,0.07); }
+
+  /* ── Layout ── */
+  .content { max-width: 980px; margin: 0 auto; padding: 60px 40px; }
+  .page-break { page-break-before: always; }
+
+  /* ── Secties ── */
+  .chapter { margin-bottom: 64px; }
+  .chapter-label { font-size: 10px; color: #0F766E; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+  .chapter-title { font-size: 28px; font-weight: 800; color: #0D1B2A; margin-bottom: 6px; line-height: 1.2; }
+  .chapter-sub { font-size: 15px; color: #6B7A8D; margin-bottom: 32px; font-weight: 400; }
+  .divider { height: 1px; background: #eaecf0; margin: 40px 0; }
+
+  /* ── Leidende inzichten ── */
+  .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+  .insight-card { border-radius: 12px; padding: 24px; }
+  .insight-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+  .insight-value { font-size: 40px; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+  .insight-desc { font-size: 12px; color: #6B7A8D; line-height: 1.5; }
+
+  /* ── Samenvatting scorekaarten ── */
+  .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+  .score-card { background: white; border-radius: 14px; padding: 28px; box-shadow: 0 2px 16px rgba(0,0,0,0.05); border-left: 4px solid; }
+  .score-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .score-card-naam { font-size: 13px; font-weight: 700; }
+  .score-card-icon { font-size: 20px; }
+  .score-rij { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .score-rolabel { font-size: 11px; font-weight: 600; width: 100px; flex-shrink: 0; color: #6B7A8D; }
+  .score-pill { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
+  .gap-indicator { display: flex; align-items: center; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid #f0f0f0; }
+  .gap-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+
+  /* ── Gap tabel ── */
+  .gap-table { width: 100%; border-collapse: collapse; }
+  .gap-table th { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #9aa3af; font-weight: 700; padding: 0 20px 14px; text-align: left; border-bottom: 2px solid #f0f0f0; }
+  .gap-table th.c { text-align: center; }
+  .gap-table td { padding: 18px 20px; border-bottom: 1px solid #f8f9fa; vertical-align: middle; font-size: 13px; }
+  .gap-table tr:last-child td { border-bottom: none; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+  .gap-pil { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px; }
+
+  /* ── Domeinsectie ── */
+  .domein-section { background: white; border-radius: 16px; padding: 40px; margin-bottom: 32px; box-shadow: 0 2px 20px rgba(0,0,0,0.05); page-break-inside: avoid; }
+  .domein-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 28px; }
+  .domein-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .domein-titels { flex: 1; }
+  .domein-naam { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+  .domein-scores-inline { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+  .score-inline { display: flex; align-items: center; gap: 6px; }
+  .score-inline-label { font-size: 11px; color: #6B7A8D; font-weight: 600; }
+  .score-inline-val { font-size: 18px; font-weight: 800; }
+
+  .theorie-blok { background: #f8f9fb; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; border-left: 3px solid #dde1e9; }
+  .theorie-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #9aa3af; margin-bottom: 10px; }
+  .theorie-tekst { font-size: 13px; color: #3d4555; line-height: 1.75; }
+
+  .gap-duiding { border-radius: 10px; padding: 18px 22px; margin-bottom: 24px; }
+  .gap-duiding-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+  .gap-duiding-tekst { font-size: 13px; line-height: 1.75; }
+
+  .open-sectie { margin-bottom: 24px; }
+  .open-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #9aa3af; margin-bottom: 12px; }
+  .open-item { background: #f8f9fb; border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; font-size: 13px; line-height: 1.65; color: #444; border-left: 3px solid; }
+
+  .acties-blok { margin-bottom: 0; }
+  .acties-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #9aa3af; margin-bottom: 14px; }
+  .acties-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .actie-kaart { border-radius: 10px; padding: 18px 20px; border: 1px solid #eee; }
+  .actie-titel { font-size: 13px; font-weight: 700; color: #0D1B2A; margin-bottom: 6px; }
+  .actie-tekst { font-size: 12px; color: #5b6775; line-height: 1.65; }
+  .acties-roltitel { font-size: 12px; font-weight: 700; color: #0D1B2A; margin: 16px 0 10px; display: flex; align-items: center; gap: 6px; }
+
+  /* ── Conclusie ── */
+  .conclusie-box { background: #0D1B2A; color: white; border-radius: 16px; padding: 40px 44px; margin-bottom: 32px; }
+  .conclusie-label { font-size: 10px; color: #0F766E; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+  .conclusie-title { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+  .conclusie-tekst { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.8; }
+  .prioriteit-rij { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .prioriteit-rij:last-child { border-bottom: none; }
+  .prioriteit-nr { width: 28px; height: 28px; border-radius: 50%; background: rgba(15,118,110,0.25); color: #0F766E; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .prioriteit-naam { font-size: 14px; font-weight: 600; color: white; flex: 1; }
+  .prioriteit-gap { font-size: 12px; color: rgba(255,255,255,0.45); }
+
+  .vervolgstap-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 32px; }
+  .vervolgstap-kaart { background: white; border-radius: 12px; padding: 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+  .vervolgstap-nr { font-size: 32px; font-weight: 800; color: #eee; margin-bottom: 8px; }
+  .vervolgstap-titel { font-size: 13px; font-weight: 700; color: #0D1B2A; margin-bottom: 6px; }
+  .vervolgstap-tekst { font-size: 12px; color: #6B7A8D; line-height: 1.6; }
+
+  .footer { text-align: center; padding: 40px 20px; color: #b0b8c4; font-size: 11px; border-top: 1px solid #eaecf0; margin-top: 40px; }
+
+  @media print {
+    body { background: white; }
+    .content { padding: 30px 20px; }
+    .cover { min-height: unset; padding-bottom: 40px; }
+    .page-break { page-break-before: always; }
+    .domein-section { page-break-inside: avoid; box-shadow: none; border: 1px solid #eee; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     COVER
+════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-accent">
+    <div style="background:#5A8C3C;"></div>
+    <div style="background:#3A7DBF;"></div>
+    <div style="background:#E8821A;"></div>
+    <div style="background:#6B4E9E;"></div>
+  </div>
+  <div class="cover-deco"></div>
+  <div class="cover-deco2"></div>
+  <div class="cover-body">
+    <div>
+      <div class="cover-tag">Het Teamkompas · Adviesrapport</div>
+      <div class="cover-title">Teamanalyse &amp;<br/>Ontwikkeladvies</div>
+      <div class="cover-subtitle">${mwLijst.naam} · ${mwLijst.klant}</div>
+    </div>
+    <div class="cover-meta-grid">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Opgesteld op</div>
+        <div class="cover-meta-value">${datum}</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Medewerkers</div>
+        <div class="cover-meta-value">${mwResp.length} respondenten</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Leidinggevende</div>
+        <div class="cover-meta-value">${mgResp.length} respondent${mgResp.length !== 1 ? "en" : ""}</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Instrument</div>
+        <div class="cover-meta-value">Het Teamkompas</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     INHOUD
+════════════════════════════════════════ -->
+<div class="content">
+
+  <!-- ── Inleiding ── -->
+  <div class="chapter">
+    <div class="chapter-label">01 · Inleiding</div>
+    <div class="chapter-title">Wat dit rapport u vertelt</div>
+    <div class="chapter-sub">En hoe u er het meeste uit haalt</div>
+
+    <p style="font-size:14px;color:#3d4555;line-height:1.85;margin-bottom:20px;">
+      Voor u ligt het adviesrapport op basis van de Teamscan van Het Teamkompas. Dit rapport combineert de resultaten van de medewerkerscan en de managementscan tot één geïntegreerd beeld van hoe uw team functioneert — en waar de grootste kansen liggen voor ontwikkeling.
+    </p>
+    <p style="font-size:14px;color:#3d4555;line-height:1.85;margin-bottom:20px;">
+      Het rapport is opgebouwd langs vier domeinen: <strong>Veiligheid &amp; Leiderschap</strong>, <strong>Beleving van Verandering</strong>, <strong>Energie &amp; Motivatie</strong> en <strong>Verbeteren &amp; Leren</strong>. Deze domeinen vormen samen het fundament van een goed functionerend team. Ze zijn niet los van elkaar te zien — veiligheid beïnvloedt energie, energie beïnvloedt het vermogen tot verandering, en verandering vraagt om een cultuur van leren.
+    </p>
+    <p style="font-size:14px;color:#3d4555;line-height:1.85;">
+      Bijzonder aan dit rapport is de <strong>perceptiegap</strong>: het verschil tussen hoe de leidinggevende het team ervaart en hoe het team zichzelf ervaart. Waar deze gap groot is, ligt niet een schuldvraag maar een ontwikkelkans. De adviezen in dit rapport zijn direct toepasbaar, zonder grote reorganisaties of extra budgetten.
+    </p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── Leidende inzichten ── -->
+  <div class="chapter">
+    <div class="chapter-label">02 · Leidende inzichten</div>
+    <div class="chapter-title">Wat direct opvalt</div>
+    <div class="chapter-sub">De drie meest bepalende signalen uit de data</div>
+
+    <div class="insight-grid">
+      <div class="insight-card" style="background:${minScore?.lichtKleur||'#f0f6ec'};border:1px solid ${minScore?.kleur||'#5A8C3C'}22;">
+        <div class="insight-label" style="color:${minScore?.kleur||'#5A8C3C'};">Domein met laagste teamscore</div>
+        <div class="insight-value" style="color:${minScore?.kleur||'#5A8C3C'};">${minScore?.mw?.toFixed(1) || "—"}</div>
+        <div style="font-size:14px;font-weight:600;color:#0D1B2A;margin-bottom:4px;">${minScore?.naam || "—"}</div>
+        <div class="insight-desc">Dit domein verdient prioritaire aandacht vanuit het perspectief van het team.</div>
+      </div>
+      <div class="insight-card" style="background:${maxGap?.lichtKleur||'#edf4fb'};border:1px solid ${maxGap?.kleur||'#3A7DBF'}22;">
+        <div class="insight-label" style="color:${maxGap?.kleur||'#3A7DBF'};">Grootste perceptiegap</div>
+        <div class="insight-value" style="color:${maxGap?.kleur||'#3A7DBF'};">+${maxGap?.gap?.toFixed(2) || "—"}</div>
+        <div style="font-size:14px;font-weight:600;color:#0D1B2A;margin-bottom:4px;">${maxGap?.naam || "—"}</div>
+        <div class="insight-desc">Hier is het verschil in perceptie tussen leidinggevende en team het grootst.</div>
+      </div>
+    </div>
+
+    <div style="background:white;border-radius:14px;padding:32px;box-shadow:0 2px 16px rgba(0,0,0,0.05);margin-bottom:0;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#9aa3af;margin-bottom:20px;">Domeinoverzicht — scores op schaal 1–5</div>
+      <table class="gap-table">
+        <thead>
+          <tr>
+            <th>Domein</th>
+            <th class="c">👥 Team</th>
+            <th class="c">👔 Manager</th>
+            <th class="c">Gap</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${scores.map(s => {
+            const gc = gapKleur(s.gap);
+            return `<tr>
+              <td><span class="dot" style="background:${s.kleur};"></span><strong style="color:${s.kleur};">${s.naam}</strong></td>
+              <td style="text-align:center;font-size:18px;font-weight:800;color:${scoreKleur(s.mw)};">${s.mw?.toFixed(1) || "—"}</td>
+              <td style="text-align:center;font-size:18px;font-weight:800;color:${scoreKleur(s.mg)};">${s.mg?.toFixed(1) || "—"}</td>
+              <td style="text-align:center;"><span class="gap-pil" style="background:${gc}15;color:${gc};">${s.gap !== null ? (s.gap > 0 ? "▲ +" : "▼ ") + s.gap.toFixed(2) : "—"}</span></td>
+              <td><span class="score-pill" style="background:${scoreKleur(s.mw)}15;color:${scoreKleur(s.mw)};">${scoreLabel(s.mw)}</span></td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="divider page-break"></div>
+
+  <!-- ── Per domein ── -->
+  <div class="chapter">
+    <div class="chapter-label">03 · Domeinanalyse</div>
+    <div class="chapter-title">Diepteanalyse per domein</div>
+    <div class="chapter-sub">Theorie, data, perceptie en concrete adviezen</div>
+
+    ${scores.map((s, idx) => {
+      const open = openPerDomein[idx];
+      const heeftOpen = open.mwAntw.length > 0 || open.mgAntw.length > 0;
+      const gapAbs = s.gap !== null ? Math.abs(s.gap) : 0;
+      const gapTekst = s.gap !== null
+        ? `${s.gap > 0 ? "+" : ""}${s.gap.toFixed(2)} — ${gapAbs >= 1.0 ? "Grote kloof" : gapAbs >= 0.5 ? "Merkbaar verschil" : "Kleine kloof"}`
+        : "Geen gap-data";
+      const gc = gapKleur(s.gap);
+      const duidingTekst = gapAbs >= 0.5 ? s.gapDuiding : s.geenGapDuiding;
+
+      return `
+      <div class="domein-section" ${idx > 0 ? 'style="margin-top:32px;"' : ''}>
+
+        <div class="domein-header">
+          <div class="domein-icon" style="background:${s.lichtKleur};">${s.icon}</div>
+          <div class="domein-titels">
+            <div class="domein-naam" style="color:${s.kleur};">${s.naam}</div>
+            <div class="domein-scores-inline">
+              <div class="score-inline">
+                <span class="score-inline-label">👥 Team</span>
+                <span class="score-inline-val" style="color:${scoreKleur(s.mw)};">${s.mw?.toFixed(1) || "—"}</span>
+              </div>
+              <div style="width:1px;height:20px;background:#eee;"></div>
+              <div class="score-inline">
+                <span class="score-inline-label">👔 Manager</span>
+                <span class="score-inline-val" style="color:${scoreKleur(s.mg)};">${s.mg?.toFixed(1) || "—"}</span>
+              </div>
+              <div style="width:1px;height:20px;background:#eee;"></div>
+              <span class="gap-pil" style="background:${gc}15;color:${gc};">${s.gap !== null ? (s.gap > 0 ? "▲ +" : "▼ ") + s.gap.toFixed(2) : "—"} gap</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="theorie-blok">
+          <div class="theorie-label">Theoretische achtergrond</div>
+          <div class="theorie-tekst">${s.theorie}</div>
+        </div>
+
+        <div class="gap-duiding" style="background:${gc}0d;border:1px solid ${gc}22;">
+          <div class="gap-duiding-label" style="color:${gc};">Wat de data zegt</div>
+          <div class="gap-duiding-tekst" style="color:#3d4555;">${duidingTekst}</div>
+        </div>
+
+        ${heeftOpen ? `
+        <div class="open-sectie">
+          <div class="open-label">Wat mensen zelf zeggen</div>
+          ${open.mwAntw.length > 0 ? `
+          <div style="font-size:11px;color:#6B7A8D;font-weight:600;margin-bottom:8px;">👥 MEDEWERKERS</div>
+          ${open.mwAntw.map(a => `<div class="open-item" style="border-color:${s.kleur};">${a}</div>`).join("")}` : ""}
+          ${open.mgAntw.length > 0 ? `
+          <div style="font-size:11px;color:#6B7A8D;font-weight:600;margin-bottom:8px;margin-top:12px;">👔 MANAGER</div>
+          ${open.mgAntw.map(a => `<div class="open-item" style="border-color:${s.kleur};opacity:0.85;">${a}</div>`).join("")}` : ""}
+        </div>` : ""}
+
+        <div class="acties-blok">
+          <div class="acties-label">Concrete adviezen</div>
+          <div class="acties-roltitel" style="color:${s.kleur};">👔 Voor de leidinggevende</div>
+          <div class="acties-grid">
+            ${s.acties_manager.map(a => `
+            <div class="actie-kaart" style="border-color:${s.kleur}22;background:${s.lichtKleur};">
+              <div class="actie-titel">${a.titel}</div>
+              <div class="actie-tekst">${a.tekst}</div>
+            </div>`).join("")}
+          </div>
+          <div class="acties-roltitel">👥 Voor het team</div>
+          <div class="acties-grid">
+            ${s.acties_team.map(a => `
+            <div class="actie-kaart">
+              <div class="actie-titel">${a.titel}</div>
+              <div class="actie-tekst">${a.tekst}</div>
+            </div>`).join("")}
+          </div>
+        </div>
+
+      </div>`;
+    }).join("")}
+  </div>
+
+  <div class="divider page-break"></div>
+
+  <!-- ── Conclusie & vervolgstappen ── -->
+  <div class="chapter">
+    <div class="chapter-label">04 · Conclusie</div>
+    <div class="chapter-title">Prioriteiten en vervolgstappen</div>
+    <div class="chapter-sub">Waar te beginnen en hoe verder</div>
+
+    <div class="conclusie-box">
+      <div class="conclusie-label">Prioritering op basis van gap</div>
+      <div class="conclusie-title">Aanbevolen volgorde van aanpak</div>
+      <div class="conclusie-tekst" style="margin-bottom:24px;">
+        Onderstaande prioritering is gebaseerd op de combinatie van teamscores en perceptiegaps.
+        Domeinen met een lage teamscore én een grote gap vragen om de meeste aandacht,
+        omdat ze zowel een prestatiekloof als een bewustzijnskloof vertegenwoordigen.
+      </div>
+      ${prioriteit.map((s, i) => `
+      <div class="prioriteit-rij">
+        <div class="prioriteit-nr">${i+1}</div>
+        <div>
+          <div class="prioriteit-naam">${s.naam}</div>
+          <div class="prioriteit-gap">Teamscore ${s.mw?.toFixed(1)||"—"} · Gap ${s.gap !== null ? (s.gap>0?"+":"")+s.gap.toFixed(2) : "—"} · ${Math.abs(s.gap||0)>=1.0?"Grote kloof":Math.abs(s.gap||0)>=0.5?"Merkbaar verschil":"Kleine kloof"}</div>
+        </div>
+      </div>`).join("")}
+    </div>
+
+    <div class="vervolgstap-grid">
+      <div class="vervolgstap-kaart">
+        <div class="vervolgstap-nr">01</div>
+        <div class="vervolgstap-titel">Bespreek dit rapport</div>
+        <div class="vervolgstap-tekst">Plan een teamgesprek om de resultaten te bespreken. Niet als presentatie, maar als gesprek. Vraag: "Herkent u dit? Wat verrast u?" Maak de data van iedereen.</div>
+      </div>
+      <div class="vervolgstap-kaart">
+        <div class="vervolgstap-nr">02</div>
+        <div class="vervolgstap-titel">Kies één prioriteit</div>
+        <div class="vervolgstap-tekst">Begin bij het domein met de grootste gap én de laagste teamscore. Formuleer samen drie concrete acties en wijs een eigenaar aan per actie. Doe minder, maar doe het goed.</div>
+      </div>
+      <div class="vervolgstap-kaart">
+        <div class="vervolgstap-nr">03</div>
+        <div class="vervolgstap-titel">Meet over 90 dagen</div>
+        <div class="vervolgstap-tekst">Herhaal de scan over drie maanden. Niet als controle, maar als kompas. Kleine verschuivingen zijn betekenisvol. Vier wat beter gaat — dat bekrachtigt de beweging.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  © ${now.getFullYear()} Het Teamkompas · mijnteamkompas.nl · Vertrouwelijk — uitsluitend bestemd voor de leidinggevende van ${mwLijst.klant}
+</div>
+
+</body>
+</html>`;
+
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `adviesrapport-${mwLijst.klant.toLowerCase().replace(/\s+/g, "-")}-${mwLijst.naam.toLowerCase().replace(/\s+/g, "-")}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setGenererend(null);
+  };
+
   const genereerRapport = (lijst) => {
     setRapportError("");
     setGenererend(lijst.id);
@@ -5992,12 +6507,20 @@ function PageRapportages() {
                       {/* Knoppen */}
                       <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                         {heeftData ? (
-                          <button onClick={()=>genereerTotaalrapport(mw, mg)} disabled={isBezig}
-                            style={{background:isBezig?"rgba(0,168,150,0.3)":ADM.teal,color:ADM.navyDeep,
-                              border:"none",borderRadius:6,padding:"9px 18px",fontSize:12,
-                              cursor:isBezig?"wait":"pointer",fontWeight:700}}>
-                            {isBezig ? "⏳ Genereren..." : "📊 Totaalrapportage"}
-                          </button>
+                          <>
+                            <button onClick={()=>genereerTotaalrapport(mw, mg)} disabled={isBezig}
+                              style={{background:isBezig?"rgba(0,168,150,0.3)":ADM.teal,color:ADM.navyDeep,
+                                border:"none",borderRadius:6,padding:"9px 18px",fontSize:12,
+                                cursor:isBezig?"wait":"pointer",fontWeight:700}}>
+                              {isBezig ? "⏳ Genereren..." : "📊 Totaalrapportage"}
+                            </button>
+                            <button onClick={()=>genereerAdviesrapport(mw, mg)} disabled={genererend===`advies_${mw.id}`}
+                              style={{background:genererend===`advies_${mw.id}`?"rgba(107,78,158,0.3)":"rgba(107,78,158,0.15)",
+                                color:"#6B4E9E",border:"1px solid rgba(107,78,158,0.35)",borderRadius:6,padding:"9px 18px",
+                                fontSize:12,cursor:genererend===`advies_${mw.id}`?"wait":"pointer",fontWeight:700}}>
+                              {genererend===`advies_${mw.id}` ? "⏳ Genereren..." : "📋 Adviesrapport"}
+                            </button>
+                          </>
                         ) : (
                           <span style={{fontSize:12,color:ADM.muted,fontStyle:"italic",alignSelf:"center"}}>
                             {!heeftMwData && !heeftMgData ? "Nog geen data" : !heeftMwData ? "Wacht op medewerkers" : "Wacht op manager"}
