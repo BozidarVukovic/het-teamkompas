@@ -4235,8 +4235,8 @@ function PageKlanten() {
                       .slice()
                       .sort((a,b) => (b.aangemaakt_op?.seconds || 0) - (a.aangemaakt_op?.seconds || 0))
                       .map(m => (
-                        <div key={m.id} style={{background:selectedMetingId===m.id?"rgba(15,118,110,0.10)":"rgba(255,255,255,0.03)",border:selectedMetingId===m.id?`1px solid ${ADM.teal}`:"1px solid transparent",borderRadius:10,padding:"12px 14px"}}>
-                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10}}>
+                        <div key={m.id} style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${selectedMetingId===m.id?ADM.teal:ADM.border}`,borderRadius:10,overflow:"hidden"}}>
+                          <div style={{padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:10}}>
                             <div>
                               <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:4}}>{m.type || "Meting"}</div>
                               <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
@@ -4244,17 +4244,31 @@ function PageKlanten() {
                               </div>
                             </div>
                             <div style={{display:"flex",alignItems:"center",gap:8}}>
-                              <button
-                                onClick={() => openMeting(m.id)}
-                                style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"7px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
-                              >
-                                Open meting
-                              </button>
                               <div style={{fontSize:20,fontWeight:700,color:metingGem(m.scores)!=="—" ? scoreColor(parseFloat(metingGem(m.scores))) : ADM.muted}}>
                                 {metingGem(m.scores)}
                               </div>
+                              <button
+                                onClick={() => setSelectedMetingId(selectedMetingId===m.id ? null : m.id)}
+                                style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
+                              >
+                                {selectedMetingId===m.id ? "Sluiten" : "Open meting"}
+                              </button>
                             </div>
                           </div>
+                          {selectedMetingId===m.id && (
+                            <div style={{borderTop:`1px solid ${ADM.border}`,padding:"12px 14px"}}>
+                              <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:8}}>
+                                {pijlerNamenMeting.map(p => (
+                                  <div key={p} style={{background:"rgba(255,255,255,0.03)",borderRadius:8,padding:"10px 12px",display:"flex",justifyContent:"space-between",gap:10}}>
+                                    <span style={{fontSize:12,color:ADM.text}}>{p}</span>
+                                    <span style={{fontSize:12,fontWeight:700,color:(m.scores?.[p]||0)>0?scoreColor(m.scores?.[p]):ADM.muted}}>
+                                      {m.scores?.[p]??("—")}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ))}
                   </div>
