@@ -4308,6 +4308,8 @@ function PageMetingen() {
   const [showForm, setShowForm] = useState(false);
   const [opslaan, setOpslaan] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [teVerwijderen, setTeVerwijderen] = useState(null);
+  const [verwijderen, setVerwijderen] = useState(false);
   const [nieuw, setNieuw] = useState({
     klant: "",
     trajectId: "",
@@ -4406,10 +4408,79 @@ function PageMetingen() {
     }
   };
 
+  const verwijderMeting = async () => {
+    if (!teVerwijderen) return;
+    setVerwijderen(true);
+    try {
+      await addDoc(collection(db, "prullenbak"), {
+        original_id: teVerwijderen.id,
+        bron_collectie: "metingen",
+        naam: `${teVerwijderen.klant || ""} — ${teVerwijderen.type || "Meting"}`,
+        klant: teVerwijderen.klant || "",
+        type: "meting",
+        trajectId: teVerwijderen.trajectId || null,
+        trajectNaam: teVerwijderen.trajectNaam || null,
+        datum: teVerwijderen.datum || "",
+        respondenten: teVerwijderen.respondenten || 0,
+        scores: teVerwijderen.scores || {},
+        status: teVerwijderen.status || "",
+        verwijderd_op: serverTimestamp(),
+        verwijderd_op_ms: Date.now(),
+      });
+      await updateDoc(doc(db, "metingen", teVerwijderen.id), {
+        verwijderd: true,
+        status: "Verwijderd",
+      });
+      setMetingen(prev => prev.filter(m => m.id !== teVerwijderen.id));
+      if (selected?.id === teVerwijderen.id) setSelected(null);
+      setTeVerwijderen(null);
+    } catch (err) {
+      console.error("Verwijderen meting mislukt:", err);
+    } finally {
+      setVerwijderen(false);
+    }
+  };
+
   if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
 
   return (
     <div>
+      {/* BEVESTIGINGSDIALOOG VERWIJDEREN */}
+      {teVerwijderen && (
+        <div style={{position:"fixed",inset:0,zIndex:1000,background:"rgba(13,27,42,0.85)",
+          backdropFilter:"blur(6px)",display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+          <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:16,
+            padding:"32px",maxWidth:420,width:"100%",boxShadow:"0 40px 100px rgba(0,0,0,0.6)"}}>
+            <div style={{fontSize:32,marginBottom:16,textAlign:"center"}}>🗑️</div>
+            <div style={{fontSize:17,fontWeight:700,color:ADM.white,marginBottom:8,textAlign:"center"}}>
+              Meting verwijderen?
+            </div>
+            <div style={{fontSize:13,color:ADM.muted,lineHeight:1.65,marginBottom:16,textAlign:"center"}}>
+              <strong style={{color:ADM.white}}>{teVerwijderen.klant} — {teVerwijderen.type}</strong>
+              <br/>
+              <span style={{fontSize:12}}>📅 {teVerwijderen.datum}</span>
+            </div>
+            <div style={{fontSize:12,color:ADM.orange,background:"rgba(243,156,18,0.1)",
+              padding:"10px 14px",borderRadius:8,marginBottom:20,textAlign:"center"}}>
+              De meting wordt naar de prullenbak verplaatst en kan daar worden hersteld.
+            </div>
+            <div style={{display:"flex",gap:10}}>
+              <button onClick={()=>setTeVerwijderen(null)}
+                style={{flex:1,background:"none",color:ADM.muted,border:`1px solid ${ADM.border}`,
+                  borderRadius:8,padding:"11px",fontSize:13,cursor:"pointer"}}>
+                Annuleer
+              </button>
+              <button onClick={verwijderMeting} disabled={verwijderen}
+                style={{flex:1,background:ADM.red,color:"#ffffff",border:"none",
+                  borderRadius:8,padding:"11px",fontWeight:700,fontSize:13,
+                  cursor:verwijderen?"wait":"pointer"}}>
+                {verwijderen ? "Verwijderen..." : "Ja, verwijder"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
         <div style={{fontSize:13,color:ADM.muted}}>{metingen.length} meting(en) · {vragenlijsten.length} traject(en) beschikbaar</div>
         <button onClick={()=>setShowForm(!showForm)}
@@ -4514,19 +4585,27 @@ function PageMetingen() {
       <div style={{display:"flex",flexDirection:"column",gap:14}}>
         {metingen.map(m=>(
           <div key={m.id} style={{background:ADM.navy,border:`1px solid ${selected?.id===m.id?ADM.teal:ADM.border}`,borderRadius:12,overflow:"hidden"}}>
-            <div onClick={()=>setSelected(selected?.id===m.id?null:m)}
-              style={{padding:"18px 22px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}}>
-              <div>
+            <div style={{padding:"18px 22px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
+              <div style={{flex:1,minWidth:0,cursor:"pointer"}} onClick={()=>setSelected(selected?.id===m.id?null:m)}>
                 <div style={{fontWeight:600,color:ADM.white,fontSize:15}}>{m.klant} — {m.type}</div>
                 <div style={{fontSize:12,color:ADM.muted,marginTop:3}}>
                   📅 {m.datum} · {m.respondenten} respondenten{m.trajectNaam ? ` · gekoppeld aan ${m.trajectNaam}` : ""}
                 </div>
               </div>
-              <div style={{display:"flex",alignItems:"center",gap:14}}>
+              <div style={{display:"flex",alignItems:"center",gap:10,flexShrink:0}}>
                 <div style={{fontSize:24,fontWeight:700,color:gemScore(m.scores)!=="—" ? scoreColor(parseFloat(gemScore(m.scores))) : ADM.muted}}>
                   {gemScore(m.scores)}
                 </div>
-                <span style={{fontSize:12,color:ADM.teal}}>{selected?.id===m.id?"▲":"▼"}</span>
+                <button
+                  onClick={(e)=>{ e.stopPropagation(); setTeVerwijderen(m); }}
+                  title="Verwijder meting"
+                  style={{background:"rgba(231,76,60,0.10)",color:ADM.red,border:`1px solid rgba(231,76,60,0.24)`,
+                    borderRadius:7,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer",flexShrink:0}}>
+                  🗑️
+                </button>
+                <span style={{fontSize:12,color:ADM.teal,cursor:"pointer"}} onClick={()=>setSelected(selected?.id===m.id?null:m)}>
+                  {selected?.id===m.id?"▲":"▼"}
+                </span>
               </div>
             </div>
             {selected?.id===m.id && (
@@ -5716,6 +5795,7 @@ function PagePrullenbak() {
 function DashboardHome() {
   const isMobile = useIsMobile();
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState({
     actieveKlanten: 0,
     teamsActief: 0,
@@ -5725,102 +5805,104 @@ function DashboardHome() {
   const [activiteiten, setActiviteiten] = useState([]);
   const [metingenTotaal, setMetingenTotaal] = useState(0);
 
-  useEffect(() => {
-    const laadDashboard = async () => {
-      setLoading(true);
-      try {
-        const [klantenSnap, vragenlijstenSnap, antwoordenSnap, trashSnap, contactSnap, metingenSnap] = await Promise.all([
-          getDocs(collection(db, "klanten")).catch(() => ({ docs: [] })),
-          getDocs(collection(db, "vragenlijsten")).catch(() => ({ docs: [] })),
-          getDocs(collection(db, "antwoorden")).catch(() => ({ docs: [] })),
-          getDocs(collection(db, "prullenbak")).catch(() => ({ docs: [] })),
-          getDocs(collection(db, "contactaanvragen")).catch(() => ({ docs: [] })),
-          getDocs(collection(db, "metingen")).catch(() => ({ docs: [] })),
-        ]);
+  const laadDashboard = async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else setLoading(true);
+    try {
+      const [klantenSnap, vragenlijstenSnap, antwoordenSnap, trashSnap, contactSnap, metingenSnap] = await Promise.all([
+        getDocs(collection(db, "klanten")).catch(() => ({ docs: [] })),
+        getDocs(collection(db, "vragenlijsten")).catch(() => ({ docs: [] })),
+        getDocs(collection(db, "antwoorden")).catch(() => ({ docs: [] })),
+        getDocs(collection(db, "prullenbak")).catch(() => ({ docs: [] })),
+        getDocs(collection(db, "contactaanvragen")).catch(() => ({ docs: [] })),
+        getDocs(collection(db, "metingen")).catch(() => ({ docs: [] })),
+      ]);
 
-        const klanten = klantenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        const vragenlijsten = vragenlijstenSnap.docs
-          .map(d => ({ id: d.id, ...d.data() }))
-          .filter(v => !v.verwijderd && v.status !== "Verwijderd");
-        const antwoorden = antwoordenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        const trash = trashSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        const contacten = contactSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        const metingen = metingenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const klanten = klantenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const vragenlijsten = vragenlijstenSnap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(v => !v.verwijderd && v.status !== "Verwijderd");
+      const antwoorden = antwoordenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const trash = trashSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const contacten = contactSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const metingen = metingenSnap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(m => !m.verwijderd && m.status !== "Verwijderd");
 
-        const uniekeKlanten = new Set(
-          [
-            ...klanten.map(k => k.naam || k.klantnaam || "").filter(Boolean),
-            ...vragenlijsten.map(v => v.klant || "").filter(Boolean),
-          ]
-        );
+      const uniekeKlanten = new Set(
+        [
+          ...klanten.map(k => k.naam || k.klantnaam || "").filter(Boolean),
+          ...vragenlijsten.map(v => v.klant || "").filter(Boolean),
+        ]
+      );
 
-        const actieveVragenlijsten = vragenlijsten.filter(v => (v.status || "").toLowerCase() !== "afgerond");
-        const teamsActief = actieveVragenlijsten.length;
-        const respondenten = antwoorden.length;
+      const actieveVragenlijsten = vragenlijsten.filter(v => (v.status || "").toLowerCase() !== "afgerond");
+      const teamsActief = actieveVragenlijsten.length;
+      const respondenten = antwoorden.length;
 
-        const gemiddelden = antwoorden
-          .map(a => {
-            const vals = Object.values(a.antwoorden || {})
-              .map(v => parseFloat(v))
-              .filter(v => !Number.isNaN(v));
-            return vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
-          })
-          .filter(v => v !== null);
+      const gemiddelden = antwoorden
+        .map(a => {
+          const vals = Object.values(a.antwoorden || {})
+            .map(v => parseFloat(v))
+            .filter(v => !Number.isNaN(v));
+          return vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
+        })
+        .filter(v => v !== null);
 
-        const gemiddeldeTeamscore = gemiddelden.length
-          ? gemiddelden.reduce((s, v) => s + v, 0) / gemiddelden.length
-          : null;
+      const gemiddeldeTeamscore = gemiddelden.length
+        ? gemiddelden.reduce((s, v) => s + v, 0) / gemiddelden.length
+        : null;
 
-        const activiteitenRuw = [
-          ...actieveVragenlijsten.slice(0, 6).map(v => ({
-            type: "scan",
-            titel: v.naam || "Nieuwe scan",
-            subtitel: v.klant || "Onbekende klant",
-            datum: v.aangemaakt || "",
-            icon: "📝",
-          })),
-          ...contacten.slice(0, 4).map(c => ({
-            type: "contact",
-            titel: c.organisatie || c.naam || "Nieuwe contactaanvraag",
-            subtitel: "Contactaanvraag ontvangen",
-            datum: c.datum || c.createdAt || "",
-            icon: "📬",
-          })),
-          ...metingen.slice(0, 4).map(m => ({
-            type: "meting",
-            titel: `${m.klant || "Onbekende klant"} — ${m.type || "Meting"}`,
-            subtitel: m.trajectNaam ? `Nieuwe meting opgeslagen · ${m.trajectNaam}` : "Nieuwe meting opgeslagen",
-            datum: m.datum || "",
-            icon: "📋",
-          })),
-          ...trash.slice(0, 4).map(t => ({
-            type: "trash",
-            titel: t.naam || "Verwijderd item",
-            subtitel: "Verplaatst naar prullenbak",
-            datum: t.verwijderd_op?.seconds
-              ? new Date(t.verwijderd_op.seconds * 1000).toLocaleDateString("nl-NL")
-              : "",
-            icon: "🗑️",
-          })),
-        ].slice(0, 8);
+      const activiteitenRuw = [
+        ...actieveVragenlijsten.slice(0, 6).map(v => ({
+          type: "scan",
+          titel: v.naam || "Nieuwe scan",
+          subtitel: v.klant || "Onbekende klant",
+          datum: v.aangemaakt || "",
+          icon: "📝",
+        })),
+        ...contacten.slice(0, 4).map(c => ({
+          type: "contact",
+          titel: c.organisatie || c.naam || "Nieuwe contactaanvraag",
+          subtitel: "Contactaanvraag ontvangen",
+          datum: c.datum || c.createdAt || "",
+          icon: "📬",
+        })),
+        ...metingen.slice(0, 4).map(m => ({
+          type: "meting",
+          titel: `${m.klant || "Onbekende klant"} — ${m.type || "Meting"}`,
+          subtitel: m.trajectNaam ? `Nieuwe meting opgeslagen · ${m.trajectNaam}` : "Nieuwe meting opgeslagen",
+          datum: m.datum || "",
+          icon: "📋",
+        })),
+        ...trash.slice(0, 4).map(t => ({
+          type: "trash",
+          titel: t.naam || "Verwijderd item",
+          subtitel: "Verplaatst naar prullenbak",
+          datum: t.verwijderd_op?.seconds
+            ? new Date(t.verwijderd_op.seconds * 1000).toLocaleDateString("nl-NL")
+            : "",
+          icon: "🗑️",
+        })),
+      ].slice(0, 8);
 
-        setStats({
-          actieveKlanten: uniekeKlanten.size,
-          teamsActief,
-          respondenten,
-          gemiddeldeTeamscore,
-        });
-        setMetingenTotaal(metingen.length);
-        setActiviteiten(activiteitenRuw);
-      } catch (err) {
-        console.error("Dashboard laden mislukt:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setStats({
+        actieveKlanten: uniekeKlanten.size,
+        teamsActief,
+        respondenten,
+        gemiddeldeTeamscore,
+      });
+      setMetingenTotaal(metingen.length);
+      setActiviteiten(activiteitenRuw);
+    } catch (err) {
+      console.error("Dashboard laden mislukt:", err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
-    laadDashboard();
-  }, []);
+  useEffect(() => { laadDashboard(); }, []);
 
   const statCards = [
     {
@@ -5863,12 +5945,36 @@ function DashboardHome() {
 
   return (
     <div style={{display:"grid",gap:24}}>
-      <div>
-        <div style={{fontSize:28,fontWeight:700,color:ADM.white,marginBottom:8}}>Dashboard</div>
-        <div style={{fontSize:14,color:ADM.muted,lineHeight:1.7,maxWidth:820}}>
-          Live overzicht van klanten, trajecten, respondenten en recente activiteit vanuit de beheeromgeving.
+      <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:16,flexWrap:"wrap"}}>
+        <div>
+          <div style={{fontSize:28,fontWeight:700,color:ADM.white,marginBottom:8}}>Dashboard</div>
+          <div style={{fontSize:14,color:ADM.muted,lineHeight:1.7,maxWidth:820}}>
+            Live overzicht van klanten, trajecten, respondenten en recente activiteit vanuit de beheeromgeving.
+          </div>
         </div>
+        <button
+          onClick={()=>laadDashboard(true)}
+          disabled={refreshing}
+          style={{
+            display:"flex",alignItems:"center",gap:8,
+            background:refreshing?"rgba(15,118,110,0.15)":ADM.tealGlow,
+            color:refreshing?ADM.muted:ADM.teal,
+            border:`1px solid ${refreshing?"rgba(255,255,255,0.07)":"rgba(15,118,110,0.3)"}`,
+            borderRadius:10,padding:"10px 18px",fontSize:13,fontWeight:700,
+            cursor:refreshing?"not-allowed":"pointer",
+            transition:"all 0.2s",flexShrink:0,
+          }}
+        >
+          <span style={{
+            display:"inline-block",
+            animation:refreshing?"spin 1s linear infinite":"none",
+            fontSize:15,
+          }}>↻</span>
+          {refreshing ? "Vernieuwen..." : "Vernieuwen"}
+        </button>
       </div>
+
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
 
       <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "repeat(4,1fr)",gap:16}}>
         {statCards.map((card, i) => (
