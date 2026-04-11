@@ -3141,20 +3141,344 @@ function PageContactaanvragen() {
 }
 
 function PageKlanten() {
-  const [klanten, setKlanten] = useState([
-    { id:1, naam:"Evides", sector:"Energie", contact:"Mark Janssen", email:"m.janssen@evides.nl", status:"Actief", score:3.6, fase:"T0 → T1", startdatum:"Jan 2025", team:9 },
-  ]);
+  const isMobile = useIsMobile();
+  const [loading, setLoading] = useState(true);
+  const [klanten, setKlanten] = useState([]);
+  const [vragenlijsten, setVragenlijsten] = useState([]);
+  const [metingen, setMetingen] = useState([]);
+  const [antwoorden, setAntwoorden] = useState([]);
+  const [contactaanvragen, setContactaanvragen] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [nieuw,    setNieuw]    = useState({ naam:"", sector:"", contact:"", email:"", status:"Actief" });
+  const [showTrajectForm, setShowTrajectForm] = useState(false);
+  const [showMetingForm, setShowMetingForm] = useState(false);
+  const [opslaan, setOpslaan] = useState(false);
+  const [opslaanTraject, setOpslaanTraject] = useState(false);
+  const [opslaanMeting, setOpslaanMeting] = useState(false);
+  const [selectedKlant, setSelectedKlant] = useState(null);
+  const [selectedTrajectId, setSelectedTrajectId] = useState(null);
+  const [selectedMetingId, setSelectedMetingId] = useState(null);
+  const [nieuw, setNieuw] = useState({ naam:"", sector:"", contact:"", email:"", status:"Actief" });
+  const [nieuwTraject, setNieuwTraject] = useState({ naam:"", status:"Actief" });
+  const [nieuweMeting, setNieuweMeting] = useState({
+    trajectId:"",
+    trajectNaam:"",
+    type:"T1 Meting",
+    datum:"",
+    respondenten:"",
+    scores:{}
+  });
 
-  const voegToe = () => {
+  const pijlerNamenMeting = ["Veiligheid & Leiderschap","Beleving van Verandering","Energie & Motivatie","Verbeteren & Leren","Gedrag (centraal)"];
+
+  const parseDateFlexible = (val) => {
+    if (!val) return null;
+    if (typeof val === "string") {
+      const d1 = new Date(val);
+      if (!Number.isNaN(d1.getTime())) return d1;
+      const m = val.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/) || val.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (m) {
+        const d2 = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+        if (!Number.isNaN(d2.getTime())) return d2;
+      }
+    }
+    if (val?.seconds) return new Date(val.seconds * 1000);
+    return null;
+  };
+
+  const fmtDate = (val) => {
+    const d = parseDateFlexible(val);
+    return d ? d.toLocaleDateString("nl-NL") : (typeof val === "string" ? val : "—");
+  };
+
+  const laadData = async () => {
+    setLoading(true);
+    try {
+      const [klantenSnap, vragenlijstenSnap, metingenSnap, antwoordenSnap, contactSnap] = await Promise.all([
+        getDocs(collection(db, "klanten")).catch(() => ({ docs: [] })),
+        getDocs(collection(db, "vragenlijsten")).catch(() => ({ docs: [] })),
+        getDocs(collection(db, "metingen")).catch(() => ({ docs: [] })),
+        getDocs(collection(db, "antwoorden")).catch(() => ({ docs: [] })),
+        getDocs(collection(db, "contactaanvragen")).catch(() => ({ docs: [] })),
+      ]);
+
+      const klantenDb = klantenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const vragenlijstenDb = vragenlijstenSnap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(v => !v.verwijderd && v.status !== "Verwijderd");
+      const metingenDb = metingenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const antwoordenDb = antwoordenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const contactDb = contactSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      const klantNamen = Array.from(new Set([
+        ...klantenDb.map(k => k.naam).filter(Boolean),
+        ...vragenlijstenDb.map(v => v.klant).filter(Boolean),
+        ...metingenDb.map(m => m.klant).filter(Boolean),
+        ...contactDb.map(c => c.organisatie || c.bedrijf || c.klant).filter(Boolean),
+      ]));
+
+      const opgebouwd = klantNamen.map((naam, idx) => {
+        const basis = klantenDb.find(k => k.naam === naam) || {};
+        const klantTrajecten = vragenlijstenDb.filter(v => v.klant === naam);
+        const klantMetingen = metingenDb.filter(m => m.klant === naam);
+        const klantContact = contactDb.filter(c => (c.organisatie || c.bedrijf || c.klant) === naam);
+        const antwoordenCount = antwoordenDb.filter(a => klantTrajecten.some(v => v.id === a.vragenlijstId)).length;
+
+        const gemTrajectScoreBron = antwoordenDb
+          .filter(a => klantTrajecten.some(v => v.id === a.vragenlijstId))
+          .map(a => {
+            const vals = Object.values(a.antwoorden || {}).map(v => parseFloat(v)).filter(v => !Number.isNaN(v));
+            return vals.length ? vals.reduce((s,v) => s + v, 0) / vals.length : null;
+          })
+          .filter(v => v !== null);
+
+        const score = gemTrajectScoreBron.length
+          ? (gemTrajectScoreBron.reduce((s,v) => s + v, 0) / gemTrajectScoreBron.length)
+          : null;
+
+        return {
+          id: basis.id || `klant-${idx}`,
+          naam,
+          sector: basis.sector || "",
+          contact: basis.contact || "",
+          email: basis.email || "",
+          status: basis.status || (klantTrajecten.length ? "Actief" : "In gesprek"),
+          score,
+          fase: klantTrajecten.length ? `${klantTrajecten.length} traject(en)` : "Intake",
+          startdatum: basis.startdatum || (klantTrajecten[0]?.aangemaakt || "—"),
+          team: antwoordenCount,
+          trajecten: klantTrajecten,
+          metingen: klantMetingen,
+          contactmomenten: klantContact,
+        };
+      }).sort((a,b) => a.naam.localeCompare(b.naam, "nl"));
+
+      setKlanten(opgebouwd);
+      setVragenlijsten(vragenlijstenDb);
+      setMetingen(metingenDb);
+      setAntwoorden(antwoordenDb);
+      setContactaanvragen(contactDb);
+
+      setSelectedKlant(prev => {
+        if (!opgebouwd.length) return null;
+        if (!prev) return opgebouwd[0];
+        return opgebouwd.find(k => k.naam === prev.naam) || opgebouwd[0];
+      });
+    } catch (err) {
+      console.error("Laden klanten mislukt:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { laadData(); }, []);
+
+  const voegToe = async () => {
     if (!nieuw.naam || !nieuw.contact) return;
-    setKlanten(prev => [...prev, { ...nieuw, id:Date.now(), score:null, fase:"Intake", startdatum:"Nu", team:0 }]);
-    setNieuw({ naam:"", sector:"", contact:"", email:"", status:"Actief" });
-    setShowForm(false);
+    setOpslaan(true);
+    try {
+      await addDoc(collection(db, "klanten"), {
+        ...nieuw,
+        startdatum: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
+      });
+      setNieuw({ naam:"", sector:"", contact:"", email:"", status:"Actief" });
+      setShowForm(false);
+      await laadData();
+    } catch (err) {
+      console.error("Opslaan klant mislukt:", err);
+    } finally {
+      setOpslaan(false);
+    }
+  };
+
+  const startNieuwTraject = async () => {
+    if (!selectedKlant || !nieuwTraject.naam) return;
+    setOpslaanTraject(true);
+    try {
+      await addDoc(collection(db, "vragenlijsten"), {
+        naam: nieuwTraject.naam,
+        klant: selectedKlant.naam,
+        aangemaakt: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
+        status: nieuwTraject.status || "Actief",
+        type: "basisscan",
+        stellingen: DEFAULT_STELLINGEN,
+      });
+      setNieuwTraject({ naam:"", status:"Actief" });
+      setShowTrajectForm(false);
+      await laadData();
+    } catch (err) {
+      console.error("Opslaan traject mislukt:", err);
+    } finally {
+      setOpslaanTraject(false);
+    }
+  };
+
+  const kiesMetingTraject = (trajectId) => {
+    const traject = (selectedKlant?.trajecten || []).find(t => t.id === trajectId);
+    setNieuweMeting(prev => ({
+      ...prev,
+      trajectId,
+      trajectNaam: traject?.naam || "",
+    }));
+  };
+
+  const voegMetingToe = async () => {
+    if (!selectedKlant || !nieuweMeting.datum) return;
+    setOpslaanMeting(true);
+    try {
+      await addDoc(collection(db, "metingen"), {
+        klant: selectedKlant.naam,
+        trajectId: nieuweMeting.trajectId || null,
+        trajectNaam: nieuweMeting.trajectNaam || null,
+        type: nieuweMeting.type || "T1 Meting",
+        datum: nieuweMeting.datum,
+        respondenten: parseInt(nieuweMeting.respondenten) || 0,
+        scores: Object.fromEntries(
+          pijlerNamenMeting.map(p => [p, nieuweMeting.scores[p] === undefined || nieuweMeting.scores[p] === "" ? null : parseFloat(nieuweMeting.scores[p])])
+        ),
+        status: "Compleet",
+        aangemaakt_op: serverTimestamp(),
+      });
+      setNieuweMeting({ trajectId:"", trajectNaam:"", type:"T1 Meting", datum:"", respondenten:"", scores:{} });
+      setShowMetingForm(false);
+      await laadData();
+    } catch (err) {
+      console.error("Opslaan meting mislukt:", err);
+    } finally {
+      setOpslaanMeting(false);
+    }
+  };
+
+  const downloadBasisRapport = (traj, resp) => {
+    const now = new Date();
+    const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+    const averages = [0,1,2,3,4].map(pi => {
+      const ids = (traj.stellingen || DEFAULT_STELLINGEN).filter(s => s.pijler === pi && s.type === "schaal").map(s => s.id);
+      const vals = resp.flatMap(a => ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null));
+      return vals.length ? (vals.reduce((s,v)=>s+parseFloat(v),0) / vals.length) : null;
+    });
+
+    const html = `<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Rapportage — ${traj.naam}</title>${standaardRapportCss()}</head><body>
+    ${standaardRapportHeader({ titel: traj.naam, klant: traj.klant, instrument: "Basisscan", respondenten: resp.length, datum })}
+    <div class="content">
+      <div class="section">
+        <div class="section-title">Samenvatting per domein</div>
+        ${["Veiligheid & Leiderschap","Beleving van Verandering","Energie & Motivatie","Verbeteren & Leren","Gedrag (centraal)"].map((naam, i) => `
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+              <div style="font-size:16px;font-weight:700;color:#0D1B2A">${naam}</div>
+              <div style="font-size:24px;font-weight:700;color:${averages[i] !== null ? (averages[i] >= 4 ? "#2ecc71" : averages[i] >= 3 ? "#f39c12" : "#e74c3c") : "#6B7A8D"}">
+                ${averages[i] !== null ? averages[i].toFixed(1) : "—"}
+              </div>
+            </div>
+          </div>`).join("")}
+      </div>
+    </div>
+    <div class="footer">© ${now.getFullYear()} Mijn Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik</div></body></html>`;
+    downloadHtmlRapport(`rapportage-basisscan-${traj.klant.toLowerCase().replace(/\s+/g, "-")}-${traj.naam.toLowerCase().replace(/\s+/g, "-")}.html`, html);
+  };
+
+  const openRapportageVoorTraject = (traj) => {
+    const resp = antwoorden.filter(a => a.vragenlijstId === traj.id);
+    if (!resp.length) return;
+    if (isVeiligheidLeiderschapVerdieping(traj)) return genereerRapportVeiligheidLeiderschap(traj, resp);
+    if (isVerbeterenLerenVerdieping(traj)) return genereerRapportVerbeterenLeren(traj, resp);
+    if (isEnergieMotivatieVerdieping(traj)) return genereerRapportEnergieMotivatie(traj, resp);
+    if (isBelevingVeranderingVerdieping(traj)) return genereerRapportBelevingVerandering(traj, resp);
+    if (isGecombineerdeVerdieping(traj)) return genereerRapportGecombineerdeVerdieping(traj, resp);
+    return downloadBasisRapport(traj, resp);
+  };
+
+  const openTraject = (trajId) => {
+    setSelectedTrajectId(trajId);
+    setSelectedMetingId(null);
+  };
+
+  const openMeting = (metingId) => {
+    setSelectedMetingId(metingId);
+    setSelectedTrajectId(null);
   };
 
   const statusColor = s => s==="Actief" ? ADM.green : s==="In gesprek" ? ADM.orange : ADM.muted;
+  const scoreColor = s => s >= 4 ? ADM.green : s >= 3 ? ADM.orange : ADM.red;
+  const geselecteerdeTrajecten = selectedKlant?.trajecten || [];
+  const geselecteerdeMetingen = selectedKlant?.metingen || [];
+  const geselecteerdTraject = geselecteerdeTrajecten.find(t => t.id === selectedTrajectId) || null;
+  const geselecteerdeMeting = geselecteerdeMetingen.find(m => m.id === selectedMetingId) || null;
+  const rapportagesCount = geselecteerdeTrajecten.filter(v => antwoorden.some(a => a.vragenlijstId === v.id)).length;
+  const metingGem = (scores) => {
+    const vals = Object.values(scores || {}).filter(v => v !== null && v !== undefined && v !== "");
+    return vals.length ? (vals.reduce((a,b)=>a+parseFloat(b),0)/vals.length).toFixed(1) : "—";
+  };
+
+  const tijdlijnItems = (klant) => {
+    if (!klant) return [];
+    const trajectItems = (klant.trajecten || []).map(t => ({
+      id: `traject_${t.id}`,
+      linkedId: t.id,
+      linkedType: "traject",
+      datum: fmtDate(t.aangemaakt),
+      sortDate: parseDateFlexible(t.aangemaakt),
+      type: "traject",
+      icon: "📝",
+      titel: t.naam,
+      subtitel: `Traject gestart · status ${t.status || "Actief"}`,
+    }));
+    const scanItems = (klant.trajecten || []).flatMap(t => {
+      const count = antwoorden.filter(a => a.vragenlijstId === t.id).length;
+      return count > 0 ? [{
+        id: `scan_${t.id}`,
+        linkedId: t.id,
+        linkedType: "rapportage",
+        datum: fmtDate(t.aangemaakt),
+        sortDate: parseDateFlexible(t.aangemaakt),
+        type: "scan",
+        icon: "✅",
+        titel: t.naam,
+        subtitel: `${count} ingevulde scan(s) ontvangen`,
+      }] : [];
+    });
+    const metingItems = (klant.metingen || []).map(m => ({
+      id: `meting_${m.id}`,
+      linkedId: m.id,
+      linkedType: "meting",
+      datum: fmtDate(m.datum || m.aangemaakt_op),
+      sortDate: parseDateFlexible(m.datum) || parseDateFlexible(m.aangemaakt_op),
+      type: "meting",
+      icon: "📋",
+      titel: m.type || "Meting",
+      subtitel: m.trajectNaam ? `Meting toegevoegd · ${m.trajectNaam}` : "Meting toegevoegd",
+    }));
+    const rapportItems = (klant.trajecten || []).flatMap(t => {
+      const count = antwoorden.filter(a => a.vragenlijstId === t.id).length;
+      return count > 0 ? [{
+        id: `rapport_${t.id}`,
+        linkedId: t.id,
+        linkedType: "rapportage",
+        datum: fmtDate(t.aangemaakt),
+        sortDate: parseDateFlexible(t.aangemaakt),
+        type: "rapportage",
+        icon: "📄",
+        titel: t.naam,
+        subtitel: "Rapportage beschikbaar",
+      }] : [];
+    });
+    const contactItems = (klant.contactmomenten || []).map(c => ({
+      id: `contact_${c.id}`,
+      linkedId: c.id,
+      linkedType: "contact",
+      datum: fmtDate(c.datum || c.createdAt),
+      sortDate: parseDateFlexible(c.datum) || parseDateFlexible(c.createdAt),
+      type: "contact",
+      icon: "📬",
+      titel: c.organisatie || klant.naam,
+      subtitel: "Contactaanvraag ontvangen",
+    }));
+
+    return [...contactItems, ...trajectItems, ...scanItems, ...metingItems, ...rapportItems]
+      .sort((a,b) => (b.sortDate?.getTime() || 0) - (a.sortDate?.getTime() || 0));
+  };
+
+  if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
 
   return (
     <div>
@@ -3165,95 +3489,12 @@ function PageKlanten() {
           + Klant toevoegen
         </button>
       </div>
+
       {showForm && (
         <div style={{background:ADM.navy,border:`1px solid ${ADM.teal}`,borderRadius:12,padding:"22px",marginBottom:20}}>
-          <div style={{fontWeight:600,color:ADM.white,marginBottom:16}}>Nieuwe klant</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
-            {[["naam","Organisatienaam *"],["sector","Sector"],["contact","Contactpersoon *"],["email","E-mail"]].map(([k,l])=>(
-              <div key={k}>
-                <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:5}}>{l}</div>
-                <input value={nieuw[k]} onChange={e=>setNieuw(n=>({...n,[k]:e.target.value}))}
-                  style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,
-                    borderRadius:8,padding:"9px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
-              </div>
-            ))}
-          </div>
-          <div style={{display:"flex",gap:10}}>
-            <button onClick={voegToe} style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 20px",fontWeight:700,fontSize:13,cursor:"pointer"}}>Opslaan</button>
-            <button onClick={()=>setShowForm(false)} style={{background:"none",color:ADM.muted,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 20px",fontSize:13,cursor:"pointer"}}>Annuleer</button>
-          </div>
-        </div>
-      )}
-      <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,overflow:"hidden"}}>
-        <table style={{width:"100%",borderCollapse:"collapse"}}>
-          <thead>
-            <tr>{["Organisatie","Sector","Contactpersoon","Status","Score","Fase"].map(h=>(
-              <th key={h} style={{fontSize:10,textTransform:"uppercase",letterSpacing:"1.5px",color:ADM.muted,padding:"12px 20px",textAlign:"left",fontWeight:600,borderBottom:`1px solid ${ADM.border}`}}>{h}</th>
-            ))}</tr>
-          </thead>
-          <tbody>
-            {klanten.map(k=>(
-              <tr key={k.id} style={{borderBottom:`1px solid rgba(255,255,255,0.04)`}}>
-                <td style={{padding:"14px 20px",fontWeight:600,color:ADM.white}}>{k.naam}</td>
-                <td style={{padding:"14px 20px",fontSize:13,color:ADM.muted}}>{k.sector||"—"}</td>
-                <td style={{padding:"14px 20px",fontSize:13,color:ADM.text}}>{k.contact}</td>
-                <td style={{padding:"14px 20px"}}>
-                  <span style={{fontSize:11,fontWeight:600,padding:"3px 10px",borderRadius:20,
-                    background:`${statusColor(k.status)}22`,color:statusColor(k.status)}}>{k.status}</span>
-                </td>
-                <td style={{padding:"14px 20px",fontWeight:700,fontSize:15,
-                  color:k.score>=4?ADM.green:k.score>=3?ADM.orange:k.score?ADM.red:ADM.muted}}>
-                  {k.score||"—"}
-                </td>
-                <td style={{padding:"14px 20px",fontSize:12,color:ADM.muted}}>{k.fase}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function PageMetingen() {
-  const pijlerNamen = ["Veiligheid & Leiderschap","Beleving van Verandering","Energie & Motivatie","Verbeteren & Leren","Gedrag (centraal)"];
-  const [metingen,  setMetingen]  = useState([
-    { id:1, klant:"Evides", type:"T0 Nulmeting", datum:"Februari 2025", respondenten:9,
-      scores:{ "Veiligheid & Leiderschap":2.8, "Beleving van Verandering":3.7, "Energie & Motivatie":3.5, "Verbeteren & Leren":4.0, "Gedrag (centraal)":3.4 }, status:"Compleet" },
-  ]);
-  const [showForm, setShowForm] = useState(false);
-  const [nieuw,    setNieuw]    = useState({ klant:"Evides", type:"T1 Meting", datum:"", respondenten:"", scores:{} });
-  const [selected, setSelected] = useState(null);
-
-  const scoreColor = s => s>=4 ? ADM.green : s>=3 ? ADM.orange : ADM.red;
-  const gemScore   = scores => {
-    const vals = Object.values(scores).filter(Boolean);
-    return vals.length ? (vals.reduce((a,b)=>a+parseFloat(b),0)/vals.length).toFixed(1) : "—";
-  };
-
-  const slaOp = () => {
-    if (!nieuw.klant || !nieuw.datum) return;
-    setMetingen(prev => [...prev, { ...nieuw, id:Date.now(), status:"Compleet",
-      respondenten:parseInt(nieuw.respondenten)||0,
-      scores:Object.fromEntries(pijlerNamen.map(p=>[p,parseFloat(nieuw.scores[p])||null])) }]);
-    setShowForm(false);
-    setNieuw({ klant:"Evides", type:"T1 Meting", datum:"", respondenten:"", scores:{} });
-  };
-
-  return (
-    <div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
-        <div style={{fontSize:13,color:ADM.muted}}>{metingen.length} meting(en)</div>
-        <button onClick={()=>setShowForm(!showForm)}
-          style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 18px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
-          + Nieuwe meting
-        </button>
-      </div>
-      {showForm && (
-        <div style={{background:ADM.navy,border:`1px solid ${ADM.teal}`,borderRadius:12,padding:"24px",marginBottom:20}}>
-          <div style={{fontWeight:600,color:ADM.white,marginBottom:16}}>Nieuwe meting invoeren</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:16}}>
-            {[["klant","Klant"],["type","Type meting"],["datum","Datum"],["respondenten","Respondenten"]].map(([k,l])=>(
+          <div style={{fontWeight:600,color:ADM.white,marginBottom:16}}>Nieuwe klant toevoegen</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
+            {[["naam","Naam organisatie"],["sector","Sector"],["contact","Contactpersoon"],["email","E-mail"],["status","Status"]].map(([k,l])=>(
               <div key={k}>
                 <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:5}}>{l}</div>
                 <input value={nieuw[k]} onChange={e=>setNieuw(n=>({...n,[k]:e.target.value}))}
@@ -3261,25 +3502,544 @@ function PageMetingen() {
               </div>
             ))}
           </div>
+          <div style={{display:"flex",gap:10}}>
+            <button onClick={voegToe} disabled={opslaan}
+              style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 20px",fontWeight:700,fontSize:13,cursor:opslaan?"wait":"pointer"}}>
+              {opslaan ? "Opslaan..." : "Opslaan"}
+            </button>
+            <button onClick={()=>setShowForm(false)}
+              style={{background:"none",color:ADM.muted,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 20px",fontSize:13,cursor:"pointer"}}>
+              Annuleer
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "0.95fr 1.25fr",gap:18}}>
+        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+          {klanten.map(k => (
+            <div key={k.id}
+              onClick={()=>{ setSelectedKlant(k); setSelectedTrajectId(null); setSelectedMetingId(null); }}
+              style={{background:ADM.navy,border:`1px solid ${selectedKlant?.id===k.id?ADM.teal:ADM.border}`,borderRadius:12,padding:"18px 20px",cursor:"pointer"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10}}>
+                <div>
+                  <div style={{fontWeight:700,color:ADM.white,fontSize:15,marginBottom:4}}>{k.naam}</div>
+                  <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
+                    {k.sector || "Sector onbekend"} · {k.contact || "Geen contactpersoon"}
+                  </div>
+                </div>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6}}>
+                  <span style={{fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:20,background:`${statusColor(k.status)}22`,color:statusColor(k.status)}}>
+                    {k.status}
+                  </span>
+                  <div style={{fontSize:20,fontWeight:700,color:k.score !== null ? scoreColor(k.score) : ADM.muted}}>
+                    {k.score !== null ? k.score.toFixed(1) : "—"}
+                  </div>
+                </div>
+              </div>
+              <div style={{display:"flex",gap:12,marginTop:12,flexWrap:"wrap",fontSize:12,color:ADM.muted}}>
+                <span>📝 {k.trajecten.length} traject(en)</span>
+                <span>📋 {k.metingen.length} meting(en)</span>
+                <span>📈 {k.team || 0} antwoorden</span>
+              </div>
+            </div>
+          ))}
+          {klanten.length === 0 && (
+            <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"24px",textAlign:"center",color:ADM.muted}}>
+              Nog geen klanten beschikbaar.
+            </div>
+          )}
+        </div>
+
+        <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:14,padding:"22px 20px"}}>
+          {!selectedKlant ? (
+            <div style={{color:ADM.muted}}>Selecteer een klant om details te bekijken.</div>
+          ) : (
+            <>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:18,flexWrap:"wrap"}}>
+                <div>
+                  <div style={{fontSize:26,fontWeight:700,color:ADM.white,marginBottom:6}}>{selectedKlant.naam}</div>
+                  <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>
+                    {selectedKlant.sector || "Sector onbekend"} · {selectedKlant.contact || "Geen contactpersoon"}{selectedKlant.email ? ` · ${selectedKlant.email}` : ""}
+                  </div>
+                </div>
+                <span style={{fontSize:11,fontWeight:700,padding:"5px 10px",borderRadius:20,background:`${statusColor(selectedKlant.status)}22`,color:statusColor(selectedKlant.status)}}>
+                  {selectedKlant.status}
+                </span>
+              </div>
+
+              <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:18}}>
+                <button
+                  onClick={()=>setShowTrajectForm(v => !v)}
+                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
+                >
+                  + Nieuw traject
+                </button>
+                <button
+                  onClick={()=>setShowMetingForm(v => !v)}
+                  style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
+                >
+                  + Nieuwe meting
+                </button>
+              </div>
+
+              {showTrajectForm && (
+                <div style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"16px 16px",marginBottom:16}}>
+                  <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>Nieuw traject</div>
+                  <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1fr 160px",gap:10,marginBottom:10}}>
+                    <input
+                      value={nieuwTraject.naam}
+                      onChange={e=>setNieuwTraject(n=>({...n, naam:e.target.value}))}
+                      placeholder="Naam van het traject"
+                      style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+                    />
+                    <input
+                      value={nieuwTraject.status}
+                      onChange={e=>setNieuwTraject(n=>({...n, status:e.target.value}))}
+                      placeholder="Status"
+                      style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+                    />
+                  </div>
+                  <div style={{display:"flex",gap:10}}>
+                    <button onClick={startNieuwTraject} disabled={opslaanTraject}
+                      style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 16px",fontWeight:700,fontSize:13,cursor:opslaanTraject?"wait":"pointer"}}>
+                      {opslaanTraject ? "Opslaan..." : "Traject opslaan"}
+                    </button>
+                    <button onClick={()=>setShowTrajectForm(false)}
+                      style={{background:"none",color:ADM.muted,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 16px",fontSize:13,cursor:"pointer"}}>
+                      Sluiten
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {showMetingForm && (
+                <div style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"16px 16px",marginBottom:16}}>
+                  <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>Nieuwe meting</div>
+                  <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1fr 1fr 1fr",gap:10,marginBottom:10}}>
+                    <select
+                      value={nieuweMeting.trajectId}
+                      onChange={e=>kiesMetingTraject(e.target.value)}
+                      style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+                    >
+                      <option value="" style={{color:"#111"}}>Geen traject geselecteerd</option>
+                      {geselecteerdeTrajecten.map(t => (
+                        <option key={t.id} value={t.id} style={{color:"#111"}}>{t.naam}</option>
+                      ))}
+                    </select>
+                    <input
+                      value={nieuweMeting.type}
+                      onChange={e=>setNieuweMeting(n=>({...n, type:e.target.value}))}
+                      placeholder="Type meting"
+                      style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+                    />
+                    <input
+                      value={nieuweMeting.datum}
+                      onChange={e=>setNieuweMeting(n=>({...n, datum:e.target.value}))}
+                      placeholder="Datum"
+                      style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+                    />
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "repeat(2,1fr)",gap:10,marginBottom:12}}>
+                    {pijlerNamenMeting.map(p=>(
+                      <div key={p} style={{display:"flex",alignItems:"center",gap:10}}>
+                        <div style={{fontSize:12,color:ADM.text,flex:1}}>{p}</div>
+                        <input
+                          type="number" min="1" max="5" step="0.1"
+                          value={nieuweMeting.scores[p] || ""}
+                          onChange={e=>setNieuweMeting(n=>({...n,scores:{...n.scores,[p]:e.target.value}}))}
+                          style={{width:64,background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"8px 10px",color:ADM.white,fontSize:13,outline:"none",textAlign:"center"}}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{display:"flex",gap:10}}>
+                    <button onClick={voegMetingToe} disabled={opslaanMeting}
+                      style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 16px",fontWeight:700,fontSize:13,cursor:opslaanMeting?"wait":"pointer"}}>
+                      {opslaanMeting ? "Opslaan..." : "Meting opslaan"}
+                    </button>
+                    <button onClick={()=>setShowMetingForm(false)}
+                      style={{background:"none",color:ADM.muted,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 16px",fontSize:13,cursor:"pointer"}}>
+                      Sluiten
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr 1fr" : "repeat(4,1fr)",gap:12,marginBottom:20}}>
+                {[
+                  ["Trajecten", geselecteerdeTrajecten.length, "#3A7DBF"],
+                  ["Metingen", geselecteerdeMetingen.length, "#E8821A"],
+                  ["Rapportages", rapportagesCount, "#6B4E9E"],
+                  ["Gem. score", selectedKlant.score !== null ? selectedKlant.score.toFixed(1) : "—", "#5A8C3C"],
+                ].map(([label, value, color], i) => (
+                  <div key={i} style={{background:`${color}18`,border:`1px solid ${color}33`,borderRadius:10,padding:"14px 14px"}}>
+                    <div style={{fontSize:11,color:color,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>{label}</div>
+                    <div style={{fontSize:26,fontWeight:700,color:color}}>{value}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1fr 1fr",gap:16,marginBottom:16}}>
+                <div>
+                  <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>
+                    Trajecten
+                  </div>
+                  <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                    {geselecteerdeTrajecten.length === 0 ? (
+                      <div style={{fontSize:13,color:ADM.muted}}>Nog geen trajecten gekoppeld.</div>
+                    ) : geselecteerdeTrajecten.map(t => {
+                      const antwoordenCount = antwoorden.filter(a => a.vragenlijstId === t.id).length;
+                      return (
+                        <div key={t.id} style={{background:selectedTrajectId===t.id?"rgba(15,118,110,0.10)":"rgba(255,255,255,0.03)",border:selectedTrajectId===t.id?`1px solid ${ADM.teal}`:"1px solid transparent",borderRadius:10,padding:"12px 14px"}}>
+                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap",marginBottom:4}}>
+                            <div style={{fontSize:14,fontWeight:700,color:ADM.white}}>{t.naam}</div>
+                            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                              <button
+                                onClick={() => openTraject(t.id)}
+                                style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"7px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
+                              >
+                                Open traject
+                              </button>
+                              {antwoordenCount > 0 && (
+                                <button
+                                  onClick={() => openRapportageVoorTraject(t)}
+                                  style={{background:"rgba(15,118,110,0.12)",color:ADM.teal,border:`1px solid rgba(15,118,110,0.26)`,borderRadius:8,padding:"7px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
+                                >
+                                  📄 Rapportage
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                          <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
+                            Status: {t.status || "Actief"} · Antwoorden: {antwoordenCount}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>
+                    Metingen
+                  </div>
+                  <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                    {geselecteerdeMetingen.length === 0 ? (
+                      <div style={{fontSize:13,color:ADM.muted}}>Nog geen metingen gekoppeld.</div>
+                    ) : geselecteerdeMetingen
+                      .slice()
+                      .sort((a,b) => (b.aangemaakt_op?.seconds || 0) - (a.aangemaakt_op?.seconds || 0))
+                      .map(m => (
+                        <div key={m.id} style={{background:selectedMetingId===m.id?"rgba(15,118,110,0.10)":"rgba(255,255,255,0.03)",border:selectedMetingId===m.id?`1px solid ${ADM.teal}`:"1px solid transparent",borderRadius:10,padding:"12px 14px"}}>
+                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10}}>
+                            <div>
+                              <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:4}}>{m.type || "Meting"}</div>
+                              <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
+                                {m.datum || "—"}{m.trajectNaam ? ` · ${m.trajectNaam}` : ""}
+                              </div>
+                            </div>
+                            <div style={{display:"flex",alignItems:"center",gap:8}}>
+                              <button
+                                onClick={() => openMeting(m.id)}
+                                style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"7px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
+                              >
+                                Open meting
+                              </button>
+                              <div style={{fontSize:20,fontWeight:700,color:metingGem(m.scores)!=="—" ? scoreColor(parseFloat(metingGem(m.scores))) : ADM.muted}}>
+                                {metingGem(m.scores)}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+
+              {(geselecteerdTraject || geselecteerdeMeting) && (
+                <div style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"16px 16px",marginBottom:16}}>
+                  {geselecteerdTraject && (
+                    <>
+                      <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>Geopend traject</div>
+                      <div style={{fontSize:16,fontWeight:700,color:ADM.white,marginBottom:6}}>{geselecteerdTraject.naam}</div>
+                      <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>
+                        Status: {geselecteerdTraject.status || "Actief"} · Type: {geselecteerdTraject.type || "basisscan"} · Aangemaakt: {geselecteerdTraject.aangemaakt || "—"}
+                      </div>
+                    </>
+                  )}
+                  {geselecteerdeMeting && (
+                    <>
+                      <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>Geopende meting</div>
+                      <div style={{fontSize:16,fontWeight:700,color:ADM.white,marginBottom:6}}>{geselecteerdeMeting.type || "Meting"}</div>
+                      <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7,marginBottom:10}}>
+                        Datum: {geselecteerdeMeting.datum || "—"}{geselecteerdeMeting.trajectNaam ? ` · ${geselecteerdeMeting.trajectNaam}` : ""}
+                      </div>
+                      <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1fr 1fr",gap:10}}>
+                        {pijlerNamenMeting.map(p => (
+                          <div key={p} style={{background:"rgba(255,255,255,0.03)",borderRadius:8,padding:"10px 12px",display:"flex",justifyContent:"space-between",gap:10}}>
+                            <span style={{fontSize:12,color:ADM.text}}>{p}</span>
+                            <span style={{fontSize:12,fontWeight:700,color:(geselecteerdeMeting.scores?.[p] || 0) > 0 ? scoreColor(geselecteerdeMeting.scores?.[p]) : ADM.muted}}>
+                              {geselecteerdeMeting.scores?.[p] ?? "—"}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
+              <div>
+                <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>
+                  Tijdlijn
+                </div>
+                <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                  {tijdlijnItems(selectedKlant).length === 0 ? (
+                    <div style={{fontSize:13,color:ADM.muted}}>Nog geen gebeurtenissen beschikbaar.</div>
+                  ) : tijdlijnItems(selectedKlant).map((item, i) => (
+                    <div key={item.id || i} style={{display:"flex",gap:12,alignItems:"flex-start",background:"rgba(255,255,255,0.03)",borderRadius:10,padding:"12px 14px"}}>
+                      <div style={{fontSize:18,lineHeight:1}}>{item.icon}</div>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+                          <div style={{fontSize:14,fontWeight:700,color:ADM.white}}>{item.titel}</div>
+                          <div style={{fontSize:12,color:ADM.muted}}>{item.datum}</div>
+                        </div>
+                        <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginTop:2,marginBottom:8}}>
+                          {item.subtitel}
+                        </div>
+                        <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                          {item.linkedType === "traject" && (
+                            <button onClick={() => openTraject(item.linkedId)}
+                              style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}>
+                              Open traject
+                            </button>
+                          )}
+                          {item.linkedType === "meting" && (
+                            <button onClick={() => openMeting(item.linkedId)}
+                              style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}>
+                              Open meting
+                            </button>
+                          )}
+                          {item.linkedType === "rapportage" && (
+                            <button onClick={() => {
+                              const t = geselecteerdeTrajecten.find(x => x.id === item.linkedId);
+                              if (t) openRapportageVoorTraject(t);
+                            }}
+                              style={{background:"rgba(15,118,110,0.12)",color:ADM.teal,border:`1px solid rgba(15,118,110,0.26)`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}>
+                              📄 Open rapportage
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PageMetingen() {
+  const pijlerNamen = ["Veiligheid & Leiderschap","Beleving van Verandering","Energie & Motivatie","Verbeteren & Leren","Gedrag (centraal)"];
+  const [metingen, setMetingen] = useState([]);
+  const [vragenlijsten, setVragenlijsten] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [opslaan, setOpslaan] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [nieuw, setNieuw] = useState({
+    klant: "",
+    trajectId: "",
+    trajectNaam: "",
+    type: "T1 Meting",
+    datum: "",
+    respondenten: "",
+    scores: {},
+  });
+
+  const scoreColor = s => s >= 4 ? ADM.green : s >= 3 ? ADM.orange : ADM.red;
+  const gemScore = scores => {
+    const vals = Object.values(scores || {}).filter(v => v !== null && v !== undefined && v !== "");
+    return vals.length ? (vals.reduce((a,b)=>a+parseFloat(b),0)/vals.length).toFixed(1) : "—";
+  };
+
+  const laadData = async () => {
+    setLoading(true);
+    try {
+      const [metingenSnap, vragenlijstenSnap] = await Promise.all([
+        getDocs(collection(db, "metingen")),
+        getDocs(collection(db, "vragenlijsten")),
+      ]);
+
+      const trajecten = vragenlijstenSnap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(v => !v.verwijderd && v.status !== "Verwijderd")
+        .sort((a,b) => (a.naam || "").localeCompare(b.naam || "", "nl"));
+
+      const rows = metingenSnap.docs.map(d => {
+        const data = d.data();
+        return {
+          id: d.id,
+          klant: data.klant || "",
+          trajectId: data.trajectId || "",
+          trajectNaam: data.trajectNaam || "",
+          type: data.type || "Meting",
+          datum: data.datum || "",
+          respondenten: data.respondenten || 0,
+          scores: data.scores || {},
+          status: data.status || "Compleet",
+          aangemaakt_op: data.aangemaakt_op || null,
+        };
+      }).sort((a,b) => {
+        const ad = a.aangemaakt_op?.seconds || 0;
+        const bd = b.aangemaakt_op?.seconds || 0;
+        return bd - ad;
+      });
+
+      setVragenlijsten(trajecten);
+      setMetingen(rows);
+    } catch (err) {
+      console.error("Laden metingen mislukt:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { laadData(); }, []);
+
+  const kiesTraject = (trajectId) => {
+    const traject = vragenlijsten.find(v => v.id === trajectId);
+    setNieuw(n => ({
+      ...n,
+      trajectId,
+      trajectNaam: traject?.naam || "",
+      klant: traject?.klant || n.klant,
+    }));
+  };
+
+  const slaOp = async () => {
+    if (!nieuw.klant || !nieuw.datum) return;
+    setOpslaan(true);
+    try {
+      const payload = {
+        klant: nieuw.klant,
+        trajectId: nieuw.trajectId || null,
+        trajectNaam: nieuw.trajectNaam || null,
+        type: nieuw.type || "Meting",
+        datum: nieuw.datum,
+        respondenten: parseInt(nieuw.respondenten) || 0,
+        scores: Object.fromEntries(
+          pijlerNamen.map(p => [p, nieuw.scores[p] === undefined || nieuw.scores[p] === "" ? null : parseFloat(nieuw.scores[p])])
+        ),
+        status: "Compleet",
+        aangemaakt_op: serverTimestamp(),
+      };
+      const ref = await addDoc(collection(db, "metingen"), payload);
+      setMetingen(prev => [{ id: ref.id, ...payload }, ...prev]);
+      setNieuw({ klant:"", trajectId:"", trajectNaam:"", type:"T1 Meting", datum:"", respondenten:"", scores:{} });
+      setShowForm(false);
+    } catch (err) {
+      console.error("Opslaan meting mislukt:", err);
+    } finally {
+      setOpslaan(false);
+    }
+  };
+
+  if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
+
+  return (
+    <div>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
+        <div style={{fontSize:13,color:ADM.muted}}>{metingen.length} meting(en) · {vragenlijsten.length} traject(en) beschikbaar</div>
+        <button onClick={()=>setShowForm(!showForm)}
+          style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 18px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
+          + Nieuwe meting
+        </button>
+      </div>
+
+      {showForm && (
+        <div style={{background:ADM.navy,border:`1px solid ${ADM.teal}`,borderRadius:12,padding:"24px",marginBottom:20}}>
+          <div style={{fontWeight:600,color:ADM.white,marginBottom:16}}>Nieuwe meting invoeren</div>
+
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
+            <div>
+              <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:5}}>Koppel aan traject</div>
+              <select
+                value={nieuw.trajectId}
+                onChange={e=>kiesTraject(e.target.value)}
+                style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+              >
+                <option value="" style={{color:"#111"}}>Geen traject geselecteerd</option>
+                {vragenlijsten.map(v => (
+                  <option key={v.id} value={v.id} style={{color:"#111"}}>
+                    {v.naam} — {v.klant}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:5}}>Klant</div>
+              <input
+                value={nieuw.klant}
+                onChange={e=>setNieuw(n=>({...n, klant:e.target.value}))}
+                style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+              />
+            </div>
+
+            {[["type","Type meting"],["datum","Datum"],["respondenten","Respondenten"]].map(([k,l])=>(
+              <div key={k}>
+                <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:5}}>{l}</div>
+                <input value={nieuw[k]} onChange={e=>setNieuw(n=>({...n,[k]:e.target.value}))}
+                  style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
+              </div>
+            ))}
+          </div>
+
+          {nieuw.trajectNaam && (
+            <div style={{fontSize:12,color:ADM.teal,marginBottom:16,background:"rgba(15,118,110,0.10)",padding:"10px 12px",borderRadius:8}}>
+              Gekoppeld traject: <strong>{nieuw.trajectNaam}</strong>
+            </div>
+          )}
+
           <div style={{marginBottom:16}}>
             <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>Scores per pijler</div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
               {pijlerNamen.map(p=>(
                 <div key={p} style={{display:"flex",alignItems:"center",gap:10}}>
                   <div style={{fontSize:12,color:ADM.text,flex:1}}>{p}</div>
-                  <input type="number" min="1" max="5" step="0.1" value={nieuw.scores[p]||""}
+                  <input
+                    type="number"
+                    min="1"
+                    max="5"
+                    step="0.1"
+                    value={nieuw.scores[p] || ""}
                     onChange={e=>setNieuw(n=>({...n,scores:{...n.scores,[p]:e.target.value}}))}
-                    style={{width:64,background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"8px 10px",color:ADM.white,fontSize:13,outline:"none",textAlign:"center"}}/>
+                    style={{width:64,background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"8px 10px",color:ADM.white,fontSize:13,outline:"none",textAlign:"center"}}
+                  />
                 </div>
               ))}
             </div>
           </div>
+
           <div style={{display:"flex",gap:10}}>
-            <button onClick={slaOp} style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 20px",fontWeight:700,fontSize:13,cursor:"pointer"}}>Opslaan</button>
-            <button onClick={()=>setShowForm(false)} style={{background:"none",color:ADM.muted,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 20px",fontSize:13,cursor:"pointer"}}>Annuleer</button>
+            <button onClick={slaOp} disabled={opslaan}
+              style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 20px",fontWeight:700,fontSize:13,cursor:opslaan?"wait":"pointer"}}>
+              {opslaan ? "Opslaan..." : "Opslaan"}
+            </button>
+            <button onClick={()=>setShowForm(false)}
+              style={{background:"none",color:ADM.muted,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 20px",fontSize:13,cursor:"pointer"}}>
+              Annuleer
+            </button>
           </div>
         </div>
       )}
+
       <div style={{display:"flex",flexDirection:"column",gap:14}}>
         {metingen.map(m=>(
           <div key={m.id} style={{background:ADM.navy,border:`1px solid ${selected?.id===m.id?ADM.teal:ADM.border}`,borderRadius:12,overflow:"hidden"}}>
@@ -3287,33 +4047,48 @@ function PageMetingen() {
               style={{padding:"18px 22px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer"}}>
               <div>
                 <div style={{fontWeight:600,color:ADM.white,fontSize:15}}>{m.klant} — {m.type}</div>
-                <div style={{fontSize:12,color:ADM.muted,marginTop:3}}>📅 {m.datum} · {m.respondenten} respondenten</div>
+                <div style={{fontSize:12,color:ADM.muted,marginTop:3}}>
+                  📅 {m.datum} · {m.respondenten} respondenten{m.trajectNaam ? ` · gekoppeld aan ${m.trajectNaam}` : ""}
+                </div>
               </div>
               <div style={{display:"flex",alignItems:"center",gap:14}}>
-                <div style={{fontSize:24,fontWeight:700,color:scoreColor(gemScore(m.scores))}}>{gemScore(m.scores)}</div>
+                <div style={{fontSize:24,fontWeight:700,color:gemScore(m.scores)!=="—" ? scoreColor(parseFloat(gemScore(m.scores))) : ADM.muted}}>
+                  {gemScore(m.scores)}
+                </div>
                 <span style={{fontSize:12,color:ADM.teal}}>{selected?.id===m.id?"▲":"▼"}</span>
               </div>
             </div>
             {selected?.id===m.id && (
               <div style={{borderTop:`1px solid ${ADM.border}`,padding:"16px 22px"}}>
+                {m.trajectNaam && (
+                  <div style={{fontSize:12,color:ADM.teal,marginBottom:12,background:"rgba(15,118,110,0.10)",padding:"10px 12px",borderRadius:8}}>
+                    Trajectkoppeling: <strong>{m.trajectNaam}</strong>
+                  </div>
+                )}
                 {pijlerNamen.map(p=>(
                   <div key={p} style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
                     <div style={{fontSize:13,color:ADM.text,width:220,flexShrink:0}}>{p}</div>
                     <div style={{flex:1,height:8,background:"rgba(255,255,255,0.07)",borderRadius:4,overflow:"hidden"}}>
-                      <div style={{height:"100%",borderRadius:4,width:`${((m.scores[p]||0)/5)*100}%`,background:scoreColor(m.scores[p])}}/>
+                      <div style={{height:"100%",borderRadius:4,width:`${(((m.scores||{})[p]||0)/5)*100}%`,background:((m.scores||{})[p]||0)>0?scoreColor((m.scores||{})[p]):ADM.border}}/>
                     </div>
-                    <div style={{fontSize:14,fontWeight:700,color:scoreColor(m.scores[p]),width:30,textAlign:"right"}}>{m.scores[p]||"—"}</div>
+                    <div style={{fontSize:14,fontWeight:700,color:((m.scores||{})[p]||0)>0?scoreColor((m.scores||{})[p]):ADM.muted,width:30,textAlign:"right"}}>
+                      {((m.scores||{})[p] ?? "—")}
+                    </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
         ))}
+        {metingen.length === 0 && (
+          <div style={{color:ADM.muted,fontSize:14,padding:20,textAlign:"center"}}>
+            Nog geen metingen opgeslagen.
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
 
 
 function downloadHtmlRapport(filename, html) {
@@ -4477,17 +5252,19 @@ function DashboardHome() {
     gemiddeldeTeamscore: null,
   });
   const [activiteiten, setActiviteiten] = useState([]);
+  const [metingenTotaal, setMetingenTotaal] = useState(0);
 
   useEffect(() => {
     const laadDashboard = async () => {
       setLoading(true);
       try {
-        const [klantenSnap, vragenlijstenSnap, antwoordenSnap, trashSnap, contactSnap] = await Promise.all([
+        const [klantenSnap, vragenlijstenSnap, antwoordenSnap, trashSnap, contactSnap, metingenSnap] = await Promise.all([
           getDocs(collection(db, "klanten")).catch(() => ({ docs: [] })),
           getDocs(collection(db, "vragenlijsten")).catch(() => ({ docs: [] })),
           getDocs(collection(db, "antwoorden")).catch(() => ({ docs: [] })),
           getDocs(collection(db, "prullenbak")).catch(() => ({ docs: [] })),
           getDocs(collection(db, "contactaanvragen")).catch(() => ({ docs: [] })),
+          getDocs(collection(db, "metingen")).catch(() => ({ docs: [] })),
         ]);
 
         const klanten = klantenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -4497,6 +5274,7 @@ function DashboardHome() {
         const antwoorden = antwoordenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         const trash = trashSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         const contacten = contactSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const metingen = metingenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
         const uniekeKlanten = new Set(
           [
@@ -4537,6 +5315,13 @@ function DashboardHome() {
             datum: c.datum || c.createdAt || "",
             icon: "📬",
           })),
+          ...metingen.slice(0, 4).map(m => ({
+            type: "meting",
+            titel: `${m.klant || "Onbekende klant"} — ${m.type || "Meting"}`,
+            subtitel: m.trajectNaam ? `Nieuwe meting opgeslagen · ${m.trajectNaam}` : "Nieuwe meting opgeslagen",
+            datum: m.datum || "",
+            icon: "📋",
+          })),
           ...trash.slice(0, 4).map(t => ({
             type: "trash",
             titel: t.naam || "Verwijderd item",
@@ -4554,6 +5339,7 @@ function DashboardHome() {
           respondenten,
           gemiddeldeTeamscore,
         });
+        setMetingenTotaal(metingen.length);
         setActiviteiten(activiteitenRuw);
       } catch (err) {
         console.error("Dashboard laden mislukt:", err);
@@ -4660,6 +5446,7 @@ function DashboardHome() {
           <div style={{display:"flex",flexDirection:"column",gap:10}}>
             {[
               ["Scans", `${stats.teamsActief} actief`],
+              ["Metingen", `${metingenTotaal} opgeslagen meetmoment(en)`],
               ["Rapportages", "Gebaseerd op vragenlijsten en antwoorden"],
               ["Prullenbak", "Zacht verwijderde items"],
               ["Contactaanvragen", "Nieuwe leads en intake"],
