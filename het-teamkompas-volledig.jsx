@@ -1600,6 +1600,15 @@ function ScanInvullen({ scanId }) {
   const [ingediend, setIngediend] = useState(false);
   const [opslaan, setOpslaan] = useState(false);
 
+  // Rol uit URL-parameter lezen (?scan=id&rol=medewerker of &rol=manager)
+  const rolUitUrl = (() => {
+    const params = new URLSearchParams(window.location.search);
+    const r = (params.get("rol") || "").toLowerCase();
+    if (r.includes("manager") || r.includes("leiding") || r.includes("management")) return "Leidinggevende";
+    if (r.includes("medewerker") || r.includes("teamlid") || r.includes("werknemer")) return "Teamlid";
+    return "";
+  })();
+
   useEffect(() => {
     const laadLijst = async () => {
       try {
@@ -1671,7 +1680,7 @@ function ScanInvullen({ scanId }) {
     return "";
   };
 
-  const vasteRol = bepaalVasteRol(lijst);
+  const vasteRol = rolUitUrl || bepaalVasteRol(lijst);
 
   const introTekst = (() => {
     const explicieteIntro = String(lijst?.introductietekst || lijst?.intro || "").trim();
@@ -1703,7 +1712,7 @@ function ScanInvullen({ scanId }) {
       await addDoc(collection(db, "antwoorden"), {
         vragenlijstId: scanId,
         klant: lijst?.klant || "",
-        rol: vasteRol || rol || "Onbekend",
+        rol: rolUitUrl || vasteRol || rol || "Onbekend",
         antwoorden,
         ingediend_op: serverTimestamp(),
       });
@@ -2161,11 +2170,11 @@ function PageScans() {
     }
   };
 
-  const kopieerLink = async (id) => {
-    const url = `${window.location.origin}?scan=${id}`;
+  const kopieerLink = async (id, rolParam) => {
+    const url = `${window.location.origin}?scan=${id}&rol=${rolParam}`;
     try {
       await navigator.clipboard.writeText(url);
-      setGekopieerd(id);
+      setGekopieerd(`${id}_${rolParam}`);
       setTimeout(() => setGekopieerd(null), 2000);
     } catch (err) {
       console.error("Kopiëren mislukt:", err);
@@ -2261,6 +2270,8 @@ function PageScans() {
       <div style={{display:"flex",flexDirection:"column",gap:12}}>
         {lijsten.map(lijst => {
           const resp = antwoordenVoor(lijst.id);
+          const mwResp = resp.filter(a => a.rol === "Teamlid");
+          const mgResp = resp.filter(a => a.rol === "Leidinggevende");
           return (
             <div key={lijst.id} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"20px 24px"}}>
               <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
@@ -2273,24 +2284,46 @@ function PageScans() {
                       </span>
                     )}
                   </div>
-                  <div style={{fontSize:12,color:ADM.muted,marginBottom:12}}>
-                    🏢 {lijst.klant} · 📅 {lijst.aangemaakt} · {(lijst.stellingen||[]).length} stellingen · {resp.length} ingevuld
+                  <div style={{fontSize:12,color:ADM.muted,marginBottom:10}}>
+                    🏢 {lijst.klant} · 📅 {lijst.aangemaakt} · {(lijst.stellingen||[]).length} stellingen
                   </div>
-                  <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-                    <button onClick={()=>kopieerLink(lijst.id)}
-                      style={{background:gekopieerd===lijst.id?"rgba(46,204,113,0.15)":ADM.tealGlow,
-                        color:gekopieerd===lijst.id?ADM.green:ADM.teal,border:"none",borderRadius:6,
-                        padding:"7px 14px",fontSize:12,cursor:"pointer",fontWeight:600}}>
-                      {gekopieerd===lijst.id ? "✓ Gekopieerd!" : "🔗 Kopieer deelnemerslink"}
+
+                  {/* Responsstatus */}
+                  <div style={{display:"flex",gap:14,marginBottom:12,flexWrap:"wrap"}}>
+                    <span style={{fontSize:12,color:ADM.muted}}>
+                      <span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:mwResp.length>=5?ADM.green:mwResp.length>0?ADM.orange:ADM.border,marginRight:5}}/>
+                      👥 Medewerkers: <strong style={{color:ADM.white}}>{mwResp.length}</strong>{mwResp.length<5?<span style={{color:ADM.orange}}> (min. 5)</span>:null}
+                    </span>
+                    <span style={{fontSize:12,color:ADM.muted}}>
+                      <span style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:mgResp.length>=1?ADM.green:ADM.border,marginRight:5}}/>
+                      👔 Manager: <strong style={{color:ADM.white}}>{mgResp.length}</strong>{mgResp.length===0?<span style={{color:ADM.orange}}> (nog niet)</span>:null}
+                    </span>
+                  </div>
+
+                  {/* Scanlinks */}
+                  <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:10}}>
+                    <button onClick={()=>kopieerLink(lijst.id,"medewerker")}
+                      style={{background:gekopieerd===`${lijst.id}_medewerker`?"rgba(46,204,113,0.15)":"rgba(90,140,60,0.12)",
+                        color:gekopieerd===`${lijst.id}_medewerker`?ADM.green:"#5A8C3C",
+                        border:`1px solid ${gekopieerd===`${lijst.id}_medewerker`?"rgba(46,204,113,0.4)":"rgba(90,140,60,0.3)"}`,
+                        borderRadius:6,padding:"7px 12px",fontSize:12,cursor:"pointer",fontWeight:600}}>
+                      {gekopieerd===`${lijst.id}_medewerker` ? "✓ Gekopieerd!" : "🔗 Link medewerkers"}
+                    </button>
+                    <button onClick={()=>kopieerLink(lijst.id,"manager")}
+                      style={{background:gekopieerd===`${lijst.id}_manager`?"rgba(46,204,113,0.15)":"rgba(107,78,158,0.12)",
+                        color:gekopieerd===`${lijst.id}_manager`?ADM.green:"#6B4E9E",
+                        border:`1px solid ${gekopieerd===`${lijst.id}_manager`?"rgba(46,204,113,0.4)":"rgba(107,78,158,0.3)"}`,
+                        borderRadius:6,padding:"7px 12px",fontSize:12,cursor:"pointer",fontWeight:600}}>
+                      {gekopieerd===`${lijst.id}_manager` ? "✓ Gekopieerd!" : "🔗 Link manager"}
                     </button>
                     <button onClick={()=>setGeselecteerd(lijst)}
                       style={{background:"rgba(255,255,255,0.05)",color:ADM.muted,border:`1px solid ${ADM.border}`,
-                        borderRadius:6,padding:"7px 14px",fontSize:12,cursor:"pointer"}}>
-                      📊 Bekijk resultaten ({resp.length})
+                        borderRadius:6,padding:"7px 12px",fontSize:12,cursor:"pointer"}}>
+                      📊 Resultaten ({resp.length})
                     </button>
                     <button onClick={()=>setTeVerwijderen(lijst)}
                       style={{background:"rgba(231,76,60,0.1)",color:ADM.red,border:`1px solid rgba(231,76,60,0.25)`,
-                        borderRadius:6,padding:"7px 14px",fontSize:12,cursor:"pointer",fontWeight:600}}>
+                        borderRadius:6,padding:"7px 12px",fontSize:12,cursor:"pointer",fontWeight:600}}>
                       🗑️ Verwijderen
                     </button>
                   </div>
@@ -3432,6 +3465,7 @@ function PageKlanten() {
   const [selectedKlant, setSelectedKlant] = useState(null);
   const [selectedTrajectId, setSelectedTrajectId] = useState(null);
   const [selectedMetingId, setSelectedMetingId] = useState(null);
+  const [gekopieerd, setGekopieerd] = useState(null);
   const [nieuw, setNieuw] = useState({ naam:"", sector:"", contact:"", email:"", status:"Actief" });
   const [nieuwTraject, setNieuwTraject] = useState({ naam:"", status:"Actief", scanType:"medewerkers" });
   const [nieuweMeting, setNieuweMeting] = useState({
@@ -4030,30 +4064,111 @@ function PageKlanten() {
                     {geselecteerdeTrajecten.length === 0 ? (
                       <div style={{fontSize:13,color:ADM.muted}}>Nog geen trajecten gekoppeld.</div>
                     ) : geselecteerdeTrajecten.map(t => {
-                      const antwoordenCount = antwoorden.filter(a => a.vragenlijstId === t.id).length;
+                      const alleAntwoorden = antwoorden.filter(a => a.vragenlijstId === t.id);
+                      const medewerkersAntwoorden = alleAntwoorden.filter(a => a.rol === "Teamlid");
+                      const managerAntwoorden = alleAntwoorden.filter(a => a.rol === "Leidinggevende");
+                      const baseUrl = window.location.origin;
+                      const medewerkersLink = `${baseUrl}?scan=${t.id}&rol=medewerker`;
+                      const managerLink = `${baseUrl}?scan=${t.id}&rol=manager`;
+                      const kopieerId_mw = `mw_${t.id}`;
+                      const kopieerId_mg = `mg_${t.id}`;
+
                       return (
                         <div key={t.id} style={{background:selectedTrajectId===t.id?"rgba(15,118,110,0.10)":"rgba(255,255,255,0.03)",border:selectedTrajectId===t.id?`1px solid ${ADM.teal}`:"1px solid transparent",borderRadius:10,padding:"12px 14px"}}>
-                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap",marginBottom:4}}>
+                          {/* Header traject */}
+                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap",marginBottom:10}}>
                             <div style={{fontSize:14,fontWeight:700,color:ADM.white}}>{t.naam}</div>
                             <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                               <button
                                 onClick={() => openTraject(t.id)}
-                                style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"7px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
+                                style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
                               >
-                                Open traject
+                                Open
                               </button>
-                              {antwoordenCount > 0 && (
+                              {alleAntwoorden.length > 0 && (
                                 <button
                                   onClick={() => openRapportageVoorTraject(t)}
-                                  style={{background:"rgba(15,118,110,0.12)",color:ADM.teal,border:`1px solid rgba(15,118,110,0.26)`,borderRadius:8,padding:"7px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
+                                  style={{background:"rgba(15,118,110,0.12)",color:ADM.teal,border:`1px solid rgba(15,118,110,0.26)`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
                                 >
-                                  📄 Rapportage
+                                  📄 Rapport
                                 </button>
                               )}
                             </div>
                           </div>
-                          <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
-                            Status: {t.status || "Actief"} · Antwoorden: {antwoordenCount}{t.doelgroep ? ` · ${t.doelgroep === "Teamlid" ? "alleen medewerkers" : "alleen management"}` : ""}
+
+                          {/* Responsstatus */}
+                          <div style={{display:"flex",gap:12,marginBottom:10,flexWrap:"wrap"}}>
+                            <div style={{display:"flex",alignItems:"center",gap:6}}>
+                              <div style={{width:8,height:8,borderRadius:"50%",background:medewerkersAntwoorden.length >= 5 ? ADM.green : medewerkersAntwoorden.length > 0 ? ADM.orange : ADM.border,flexShrink:0}}/>
+                              <span style={{fontSize:12,color:ADM.muted}}>
+                                👥 Medewerkers: <strong style={{color:ADM.white}}>{medewerkersAntwoorden.length}</strong>
+                                {medewerkersAntwoorden.length < 5 && <span style={{color:ADM.orange}}> (min. 5)</span>}
+                              </span>
+                            </div>
+                            <div style={{display:"flex",alignItems:"center",gap:6}}>
+                              <div style={{width:8,height:8,borderRadius:"50%",background:managerAntwoorden.length >= 1 ? ADM.green : ADM.border,flexShrink:0}}/>
+                              <span style={{fontSize:12,color:ADM.muted}}>
+                                👔 Manager: <strong style={{color:ADM.white}}>{managerAntwoorden.length}</strong>
+                                {managerAntwoorden.length === 0 && <span style={{color:ADM.orange}}> (nog niet ingevuld)</span>}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Scanlinks */}
+                          <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                            {/* Medewerkers link */}
+                            <div style={{background:"rgba(90,140,60,0.08)",border:"1px solid rgba(90,140,60,0.22)",borderRadius:8,padding:"8px 10px"}}>
+                              <div style={{fontSize:10,color:"#5A8C3C",fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>
+                                Link medewerkers
+                              </div>
+                              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                                <div style={{fontSize:11,color:ADM.muted,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontFamily:"monospace"}}>
+                                  {medewerkersLink}
+                                </div>
+                                <button
+                                  onClick={async () => {
+                                    try {
+                                      await navigator.clipboard.writeText(medewerkersLink);
+                                      setGekopieerd(kopieerId_mw);
+                                      setTimeout(() => setGekopieerd(null), 2000);
+                                    } catch {}
+                                  }}
+                                  style={{background:gekopieerd===kopieerId_mw?"rgba(46,204,113,0.2)":"rgba(255,255,255,0.08)",
+                                    color:gekopieerd===kopieerId_mw?ADM.green:ADM.white,
+                                    border:`1px solid ${gekopieerd===kopieerId_mw?"rgba(46,204,113,0.4)":ADM.border}`,
+                                    borderRadius:6,padding:"5px 10px",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}
+                                >
+                                  {gekopieerd===kopieerId_mw ? "✓ Gekopieerd" : "Kopieer"}
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Manager link */}
+                            <div style={{background:"rgba(107,78,158,0.08)",border:"1px solid rgba(107,78,158,0.22)",borderRadius:8,padding:"8px 10px"}}>
+                              <div style={{fontSize:10,color:"#6B4E9E",fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>
+                                Link manager
+                              </div>
+                              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                                <div style={{fontSize:11,color:ADM.muted,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontFamily:"monospace"}}>
+                                  {managerLink}
+                                </div>
+                                <button
+                                  onClick={async () => {
+                                    try {
+                                      await navigator.clipboard.writeText(managerLink);
+                                      setGekopieerd(kopieerId_mg);
+                                      setTimeout(() => setGekopieerd(null), 2000);
+                                    } catch {}
+                                  }}
+                                  style={{background:gekopieerd===kopieerId_mg?"rgba(46,204,113,0.2)":"rgba(255,255,255,0.08)",
+                                    color:gekopieerd===kopieerId_mg?ADM.green:ADM.white,
+                                    border:`1px solid ${gekopieerd===kopieerId_mg?"rgba(46,204,113,0.4)":ADM.border}`,
+                                    borderRadius:6,padding:"5px 10px",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}
+                                >
+                                  {gekopieerd===kopieerId_mg ? "✓ Gekopieerd" : "Kopieer"}
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       );
