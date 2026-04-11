@@ -1897,9 +1897,9 @@ function ScanInvullen({ scanId }) {
           </div>
           {huidige.type==="schaal" ? (
             <div>
-              <div style={{display:"flex",gap:20,marginBottom:8,justifyContent:"center",alignItems:"flex-end"}}>
+              <div style={{display:"flex",gap:20,marginBottom:4,justifyContent:"center",alignItems:"center"}}>
                 {[1,2,3,4,5].map(n=>(
-                  <div key={n} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+                  <div key={n} style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
                     <div onClick={()=>slaAntwoordOp(huidige.id,n)}
                       style={{width:56,height:56,borderRadius:"50%",display:"flex",alignItems:"center",
                         justifyContent:"center",fontSize:20,fontWeight:700,cursor:"pointer",transition:"all .15s",
@@ -1909,15 +1909,17 @@ function ScanInvullen({ scanId }) {
                         transform:antwoorden[huidige.id]===n?"scale(1.06)":"scale(1)"}}>
                       {n}
                     </div>
-                    {n===3 && (
-                      <div style={{fontSize:10,color:ADM.muted,textAlign:"center",lineHeight:1.3,maxWidth:52}}>
-                        Neutraal
-                      </div>
-                    )}
+                    <div style={{height:18,marginTop:5,display:"flex",alignItems:"flex-start",justifyContent:"center"}}>
+                      {n===3 && (
+                        <span style={{fontSize:10,color:ADM.muted,textAlign:"center",lineHeight:1.3}}>
+                          Neutraal
+                        </span>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
-              <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:ADM.muted,padding:"0 2px",marginTop:8}}>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:ADM.muted,padding:"0 2px",marginTop:4}}>
                 <span>Helemaal oneens</span>
                 <span>Helemaal eens</span>
               </div>
@@ -3651,17 +3653,43 @@ function PageKlanten() {
     if (!selectedKlant || !nieuwTraject.naam) return;
     setOpslaanTraject(true);
     try {
-      const template = getScanTemplate(nieuwTraject.scanType);
-      await addDoc(collection(db, "vragenlijsten"), {
-        naam: nieuwTraject.naam,
-        klant: selectedKlant.naam,
-        aangemaakt: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
-        status: nieuwTraject.status || "Actief",
-        type: template.type,
-        doelgroep: template.doelgroep,
-        introductietekst: template.introductietekst,
-        stellingen: template.stellingen,
+      const mwTemplate  = getScanTemplate("medewerkers");
+      const mgTemplate  = getScanTemplate("management");
+      const aangemaakt  = new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"});
+      const status      = nieuwTraject.status || "Actief";
+
+      // Eerst managementscan aanmaken zodat we het id hebben
+      const mgRef = await addDoc(collection(db, "vragenlijsten"), {
+        naam:             nieuwTraject.naam,
+        klant:            selectedKlant.naam,
+        aangemaakt,
+        status,
+        type:             mgTemplate.type,
+        doelgroep:        mgTemplate.doelgroep,
+        introductietekst: mgTemplate.introductietekst,
+        stellingen:       mgTemplate.stellingen,
+        trajectRol:       "management",
       });
+
+      // Dan medewerkerscan aanmaken met koppeling naar management-id
+      const mwRef = await addDoc(collection(db, "vragenlijsten"), {
+        naam:             nieuwTraject.naam,
+        klant:            selectedKlant.naam,
+        aangemaakt,
+        status,
+        type:             mwTemplate.type,
+        doelgroep:        mwTemplate.doelgroep,
+        introductietekst: mwTemplate.introductietekst,
+        stellingen:       mwTemplate.stellingen,
+        trajectRol:       "medewerkers",
+        managementScanId: mgRef.id,
+      });
+
+      // Management-scan bijwerken met koppeling naar medewerkers-id
+      await updateDoc(doc(db, "vragenlijsten", mgRef.id), {
+        medewerkersScanId: mwRef.id,
+      });
+
       setNieuwTraject({ naam:"", status:"Actief", scanType:"medewerkers" });
       setShowTrajectForm(false);
       await laadData();
@@ -3960,7 +3988,7 @@ function PageKlanten() {
               {showTrajectForm && (
                 <div style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"16px 16px",marginBottom:16}}>
                   <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>Nieuw traject</div>
-                  <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1fr 160px 220px",gap:10,marginBottom:10}}>
+                  <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1fr 160px",gap:10,marginBottom:10}}>
                     <input
                       value={nieuwTraject.naam}
                       onChange={e=>setNieuwTraject(n=>({...n, naam:e.target.value}))}
@@ -3973,15 +4001,9 @@ function PageKlanten() {
                       placeholder="Status"
                       style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
                     />
-                    <select
-                      value={nieuwTraject.scanType || "algemeen"}
-                      onChange={e=>setNieuwTraject(n=>({...n, scanType:e.target.value}))}
-                      style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
-                    >
-                      <option value="algemeen" style={{color:"#111"}}>Algemene teamscan</option>
-                      <option value="medewerkers" style={{color:"#111"}}>Medewerkersscan</option>
-                      <option value="management" style={{color:"#111"}}>Managementscan</option>
-                    </select>
+                  </div>
+                  <div style={{fontSize:12,color:ADM.muted,marginBottom:10,lineHeight:1.6}}>
+                    Er worden automatisch twee vragenlijsten aangemaakt: één voor medewerkers en één voor de manager, elk met de juiste vragen.
                   </div>
                   <div style={{display:"flex",gap:10}}>
                     <button onClick={startNieuwTraject} disabled={opslaanTraject}
@@ -4077,116 +4099,132 @@ function PageKlanten() {
                   <div style={{display:"flex",flexDirection:"column",gap:10}}>
                     {geselecteerdeTrajecten.length === 0 ? (
                       <div style={{fontSize:13,color:ADM.muted}}>Nog geen trajecten gekoppeld.</div>
-                    ) : geselecteerdeTrajecten.map(t => {
-                      const alleAntwoorden = antwoorden.filter(a => a.vragenlijstId === t.id);
-                      const medewerkersAntwoorden = alleAntwoorden.filter(a => a.rol === "Teamlid");
-                      const managerAntwoorden = alleAntwoorden.filter(a => a.rol === "Leidinggevende");
-                      const baseUrl = window.location.origin;
-                      const medewerkersLink = `${baseUrl}?scan=${t.id}&rol=medewerker`;
-                      const managerLink = `${baseUrl}?scan=${t.id}&rol=manager`;
-                      const kopieerId_mw = `mw_${t.id}`;
-                      const kopieerId_mg = `mg_${t.id}`;
+                    ) : (() => {
+                      // Groepeer trajecten per naam: medewerkers + management bij elkaar
+                      const groepen = [];
+                      const gezien = new Set();
+                      geselecteerdeTrajecten.forEach(t => {
+                        if (gezien.has(t.id)) return;
+                        gezien.add(t.id);
+                        const mwT = t.trajectRol === "medewerkers" ? t
+                          : geselecteerdeTrajecten.find(x => x.id === t.medewerkersScanId) || null;
+                        const mgT = t.trajectRol === "management" ? t
+                          : geselecteerdeTrajecten.find(x => x.id === t.managementScanId) || null;
+                        if (mwT) gezien.add(mwT.id);
+                        if (mgT) gezien.add(mgT.id);
+                        // Fallback voor oude trajecten zonder trajectRol
+                        const naam = t.naam;
+                        groepen.push({ naam, mwT: mwT || t, mgT });
+                      });
 
-                      return (
-                        <div key={t.id} style={{background:selectedTrajectId===t.id?"rgba(15,118,110,0.10)":"rgba(255,255,255,0.03)",border:selectedTrajectId===t.id?`1px solid ${ADM.teal}`:"1px solid transparent",borderRadius:10,padding:"12px 14px"}}>
-                          {/* Header traject */}
-                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap",marginBottom:10}}>
-                            <div style={{fontSize:14,fontWeight:700,color:ADM.white}}>{t.naam}</div>
-                            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-                              <button
-                                onClick={() => openTraject(t.id)}
-                                style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
-                              >
-                                Open
-                              </button>
-                              {alleAntwoorden.length > 0 && (
-                                <button
-                                  onClick={() => openRapportageVoorTraject(t)}
-                                  style={{background:"rgba(15,118,110,0.12)",color:ADM.teal,border:`1px solid rgba(15,118,110,0.26)`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
-                                >
-                                  📄 Rapport
-                                </button>
+                      return groepen.map((g, gi) => {
+                        const mwId = g.mwT?.id;
+                        const mgId = g.mgT?.id;
+                        const mwAntwoorden = mwId ? antwoorden.filter(a => a.vragenlijstId === mwId && a.rol === "Teamlid") : [];
+                        const mgAntwoorden = mgId ? antwoorden.filter(a => a.vragenlijstId === mgId && a.rol === "Leidinggevende") : [];
+                        // voor rapport: combineer alle antwoorden van beide scans
+                        const alleAntwoorden = [
+                          ...(mwId ? antwoorden.filter(a => a.vragenlijstId === mwId) : []),
+                          ...(mgId ? antwoorden.filter(a => a.vragenlijstId === mgId) : []),
+                        ];
+                        const baseUrl = window.location.origin;
+                        const medewerkersLink = mwId ? `${baseUrl}?scan=${mwId}` : null;
+                        const managerLink     = mgId ? `${baseUrl}?scan=${mgId}` : null;
+                        const kopieerId_mw = `mw_${mwId}`;
+                        const kopieerId_mg = `mg_${mgId}`;
+                        const trajectRef = g.mwT || g.mgT;
+
+                        return (
+                          <div key={gi} style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
+                            {/* Header */}
+                            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap",marginBottom:10}}>
+                              <div style={{fontSize:14,fontWeight:700,color:ADM.white}}>{g.naam}</div>
+                              <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                                {trajectRef && (
+                                  <button
+                                    onClick={() => openTraject(trajectRef.id)}
+                                    style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
+                                  >
+                                    Open
+                                  </button>
+                                )}
+                                {alleAntwoorden.length > 0 && trajectRef && (
+                                  <button
+                                    onClick={() => openRapportageVoorTraject(trajectRef)}
+                                    style={{background:"rgba(15,118,110,0.12)",color:ADM.teal,border:`1px solid rgba(15,118,110,0.26)`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
+                                  >
+                                    📄 Rapport
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Responsstatus */}
+                            <div style={{display:"flex",gap:12,marginBottom:10,flexWrap:"wrap"}}>
+                              <div style={{display:"flex",alignItems:"center",gap:6}}>
+                                <div style={{width:8,height:8,borderRadius:"50%",background:mwAntwoorden.length>=5?ADM.green:mwAntwoorden.length>0?ADM.orange:ADM.border,flexShrink:0}}/>
+                                <span style={{fontSize:12,color:ADM.muted}}>
+                                  👥 Medewerkers: <strong style={{color:ADM.white}}>{mwAntwoorden.length}</strong>
+                                  {mwAntwoorden.length<5 && <span style={{color:ADM.orange}}> (min. 5)</span>}
+                                </span>
+                              </div>
+                              <div style={{display:"flex",alignItems:"center",gap:6}}>
+                                <div style={{width:8,height:8,borderRadius:"50%",background:mgAntwoorden.length>=1?ADM.green:ADM.border,flexShrink:0}}/>
+                                <span style={{fontSize:12,color:ADM.muted}}>
+                                  👔 Manager: <strong style={{color:ADM.white}}>{mgAntwoorden.length}</strong>
+                                  {mgAntwoorden.length===0 && <span style={{color:ADM.orange}}> (nog niet ingevuld)</span>}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Scanlinks */}
+                            <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                              {medewerkersLink && (
+                                <div style={{background:"rgba(90,140,60,0.08)",border:"1px solid rgba(90,140,60,0.22)",borderRadius:8,padding:"8px 10px"}}>
+                                  <div style={{fontSize:10,color:"#5A8C3C",fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>
+                                    Link medewerkers
+                                  </div>
+                                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                                    <div style={{fontSize:11,color:ADM.muted,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontFamily:"monospace"}}>
+                                      {medewerkersLink}
+                                    </div>
+                                    <button
+                                      onClick={async()=>{try{await navigator.clipboard.writeText(medewerkersLink);setGekopieerd(kopieerId_mw);setTimeout(()=>setGekopieerd(null),2000);}catch{}}}
+                                      style={{background:gekopieerd===kopieerId_mw?"rgba(46,204,113,0.2)":"rgba(255,255,255,0.08)",color:gekopieerd===kopieerId_mw?ADM.green:ADM.white,border:`1px solid ${gekopieerd===kopieerId_mw?"rgba(46,204,113,0.4)":ADM.border}`,borderRadius:6,padding:"5px 10px",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}
+                                    >
+                                      {gekopieerd===kopieerId_mw?"✓ Gekopieerd":"Kopieer"}
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                              {managerLink && (
+                                <div style={{background:"rgba(107,78,158,0.08)",border:"1px solid rgba(107,78,158,0.22)",borderRadius:8,padding:"8px 10px"}}>
+                                  <div style={{fontSize:10,color:"#6B4E9E",fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>
+                                    Link manager
+                                  </div>
+                                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                                    <div style={{fontSize:11,color:ADM.muted,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontFamily:"monospace"}}>
+                                      {managerLink}
+                                    </div>
+                                    <button
+                                      onClick={async()=>{try{await navigator.clipboard.writeText(managerLink);setGekopieerd(kopieerId_mg);setTimeout(()=>setGekopieerd(null),2000);}catch{}}}
+                                      style={{background:gekopieerd===kopieerId_mg?"rgba(46,204,113,0.2)":"rgba(255,255,255,0.08)",color:gekopieerd===kopieerId_mg?ADM.green:ADM.white,border:`1px solid ${gekopieerd===kopieerId_mg?"rgba(46,204,113,0.4)":ADM.border}`,borderRadius:6,padding:"5px 10px",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}
+                                    >
+                                      {gekopieerd===kopieerId_mg?"✓ Gekopieerd":"Kopieer"}
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                              {!mgId && (
+                                <div style={{fontSize:11,color:ADM.muted,fontStyle:"italic"}}>
+                                  Oud traject — manager-link niet beschikbaar. Maak een nieuw traject aan voor aparte links.
+                                </div>
                               )}
                             </div>
                           </div>
-
-                          {/* Responsstatus */}
-                          <div style={{display:"flex",gap:12,marginBottom:10,flexWrap:"wrap"}}>
-                            <div style={{display:"flex",alignItems:"center",gap:6}}>
-                              <div style={{width:8,height:8,borderRadius:"50%",background:medewerkersAntwoorden.length >= 5 ? ADM.green : medewerkersAntwoorden.length > 0 ? ADM.orange : ADM.border,flexShrink:0}}/>
-                              <span style={{fontSize:12,color:ADM.muted}}>
-                                👥 Medewerkers: <strong style={{color:ADM.white}}>{medewerkersAntwoorden.length}</strong>
-                                {medewerkersAntwoorden.length < 5 && <span style={{color:ADM.orange}}> (min. 5)</span>}
-                              </span>
-                            </div>
-                            <div style={{display:"flex",alignItems:"center",gap:6}}>
-                              <div style={{width:8,height:8,borderRadius:"50%",background:managerAntwoorden.length >= 1 ? ADM.green : ADM.border,flexShrink:0}}/>
-                              <span style={{fontSize:12,color:ADM.muted}}>
-                                👔 Manager: <strong style={{color:ADM.white}}>{managerAntwoorden.length}</strong>
-                                {managerAntwoorden.length === 0 && <span style={{color:ADM.orange}}> (nog niet ingevuld)</span>}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Scanlinks */}
-                          <div style={{display:"flex",flexDirection:"column",gap:6}}>
-                            {/* Medewerkers link */}
-                            <div style={{background:"rgba(90,140,60,0.08)",border:"1px solid rgba(90,140,60,0.22)",borderRadius:8,padding:"8px 10px"}}>
-                              <div style={{fontSize:10,color:"#5A8C3C",fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>
-                                Link medewerkers
-                              </div>
-                              <div style={{display:"flex",alignItems:"center",gap:8}}>
-                                <div style={{fontSize:11,color:ADM.muted,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontFamily:"monospace"}}>
-                                  {medewerkersLink}
-                                </div>
-                                <button
-                                  onClick={async () => {
-                                    try {
-                                      await navigator.clipboard.writeText(medewerkersLink);
-                                      setGekopieerd(kopieerId_mw);
-                                      setTimeout(() => setGekopieerd(null), 2000);
-                                    } catch {}
-                                  }}
-                                  style={{background:gekopieerd===kopieerId_mw?"rgba(46,204,113,0.2)":"rgba(255,255,255,0.08)",
-                                    color:gekopieerd===kopieerId_mw?ADM.green:ADM.white,
-                                    border:`1px solid ${gekopieerd===kopieerId_mw?"rgba(46,204,113,0.4)":ADM.border}`,
-                                    borderRadius:6,padding:"5px 10px",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}
-                                >
-                                  {gekopieerd===kopieerId_mw ? "✓ Gekopieerd" : "Kopieer"}
-                                </button>
-                              </div>
-                            </div>
-
-                            {/* Manager link */}
-                            <div style={{background:"rgba(107,78,158,0.08)",border:"1px solid rgba(107,78,158,0.22)",borderRadius:8,padding:"8px 10px"}}>
-                              <div style={{fontSize:10,color:"#6B4E9E",fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>
-                                Link manager
-                              </div>
-                              <div style={{display:"flex",alignItems:"center",gap:8}}>
-                                <div style={{fontSize:11,color:ADM.muted,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontFamily:"monospace"}}>
-                                  {managerLink}
-                                </div>
-                                <button
-                                  onClick={async () => {
-                                    try {
-                                      await navigator.clipboard.writeText(managerLink);
-                                      setGekopieerd(kopieerId_mg);
-                                      setTimeout(() => setGekopieerd(null), 2000);
-                                    } catch {}
-                                  }}
-                                  style={{background:gekopieerd===kopieerId_mg?"rgba(46,204,113,0.2)":"rgba(255,255,255,0.08)",
-                                    color:gekopieerd===kopieerId_mg?ADM.green:ADM.white,
-                                    border:`1px solid ${gekopieerd===kopieerId_mg?"rgba(46,204,113,0.4)":ADM.border}`,
-                                    borderRadius:6,padding:"5px 10px",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}
-                                >
-                                  {gekopieerd===kopieerId_mg ? "✓ Gekopieerd" : "Kopieer"}
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      });
+                    })()}
                   </div>
                 </div>
 
