@@ -4009,7 +4009,7 @@ function PageRapportages() {
     setRapportError("");
     setVerwijderenId(lijst.id);
     try {
-      await setDoc(doc(db, "prullenbak", `${lijst.id}_${Date.now()}`), {
+      const trashPayload = {
         original_id: lijst.id,
         bron_collectie: "vragenlijsten",
         naam: lijst.naam || "",
@@ -4020,7 +4020,10 @@ function PageRapportages() {
         parentVragenlijstId: lijst.parentVragenlijstId || null,
         verdiepingOnderdelen: lijst.verdiepingOnderdelen || [],
         verwijderd_op: serverTimestamp(),
-      });
+        verwijderd_op_ms: Date.now(),
+      };
+
+      await addDoc(collection(db, "prullenbak"), trashPayload);
 
       await updateDoc(doc(db, "vragenlijsten", lijst.id), {
         status: "Verwijderd",
@@ -4344,6 +4347,7 @@ function PagePrullenbak() {
   const [trashItems, setTrashItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [verwijderenId, setVerwijderenId] = useState(null);
+  const [herstellenId, setHerstellenId] = useState(null);
 
   const laadPrullenbak = async () => {
     setLoading(true);
@@ -4351,8 +4355,8 @@ function PagePrullenbak() {
       const snap = await getDocs(collection(db, "prullenbak"));
       const rows = snap.docs.map(d => ({ id: d.id, ...d.data() }))
         .sort((a,b) => {
-          const ad = a.verwijderd_op?.seconds || 0;
-          const bd = b.verwijderd_op?.seconds || 0;
+          const ad = a.verwijderd_op?.seconds || a.verwijderd_op_ms || 0;
+          const bd = b.verwijderd_op?.seconds || b.verwijderd_op_ms || 0;
           return bd - ad;
         });
       setTrashItems(rows);
@@ -4364,6 +4368,25 @@ function PagePrullenbak() {
   };
 
   useEffect(() => { laadPrullenbak(); }, []);
+
+
+  const herstellen = async (item) => {
+    setHerstellenId(item.id);
+    try {
+      if (item.bron_collectie && item.original_id) {
+        await updateDoc(doc(db, item.bron_collectie, item.original_id), {
+          status: item.status || "Actief",
+          verwijderd: false,
+        });
+      }
+      await deleteDoc(doc(db, "prullenbak", item.id));
+      setTrashItems(prev => prev.filter(x => x.id !== item.id));
+    } catch (err) {
+      console.error("Herstellen mislukt:", err);
+    } finally {
+      setHerstellenId(null);
+    }
+  };
 
   const definitiefVerwijderen = async (item) => {
     setVerwijderenId(item.id);
@@ -4413,14 +4436,25 @@ function PagePrullenbak() {
                   </div>
                 </div>
 
-                <button
-                  onClick={() => definitiefVerwijderen(item)}
-                  disabled={verwijderenId === item.id}
-                  style={{background:"rgba(231,76,60,0.12)",color:ADM.red,border:`1px solid rgba(231,76,60,0.28)`,
-                    borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verwijderenId===item.id?"wait":"pointer"}}
-                >
-                  {verwijderenId === item.id ? "Verwijderen..." : "Definitief verwijderen"}
-                </button>
+                <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                  <button
+                    onClick={() => herstellen(item)}
+                    disabled={herstellenId === item.id}
+                    style={{background:"rgba(15,118,110,0.12)",color:ADM.teal,border:`1px solid rgba(15,118,110,0.28)`,
+                      borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:herstellenId===item.id?"wait":"pointer"}}
+                  >
+                    {herstellenId === item.id ? "Herstellen..." : "↩️ Herstellen"}
+                  </button>
+
+                  <button
+                    onClick={() => definitiefVerwijderen(item)}
+                    disabled={verwijderenId === item.id}
+                    style={{background:"rgba(231,76,60,0.12)",color:ADM.red,border:`1px solid rgba(231,76,60,0.28)`,
+                      borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verwijderenId===item.id?"wait":"pointer"}}
+                  >
+                    {verwijderenId === item.id ? "Verwijderen..." : "Definitief verwijderen"}
+                  </button>
+                </div>
               </div>
             </div>
           ))}
