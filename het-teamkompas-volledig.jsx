@@ -3428,6 +3428,7 @@ function PageKlanten() {
   const [opslaan, setOpslaan] = useState(false);
   const [opslaanTraject, setOpslaanTraject] = useState(false);
   const [opslaanMeting, setOpslaanMeting] = useState(false);
+  const [verwijderenKlant, setVerwijderenKlant] = useState(false);
   const [selectedKlant, setSelectedKlant] = useState(null);
   const [selectedTrajectId, setSelectedTrajectId] = useState(null);
   const [selectedMetingId, setSelectedMetingId] = useState(null);
