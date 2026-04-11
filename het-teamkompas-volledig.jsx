@@ -5426,6 +5426,268 @@ function PageRapportages() {
     }
   };
 
+  // ─── TOTAALRAPPORTAGE: medewerkers + management gecombineerd ──────────────
+  const genereerTotaalrapport = (mwLijst, mgLijst) => {
+    setRapportError("");
+    setGenererend(`totaal_${mwLijst.id}`);
+
+    const mwResp = antwoordenVoor(mwLijst.id); // medewerkers-antwoorden
+    const mgResp = antwoordenVoor(mgLijst.id); // management-antwoorden
+
+    const mwStellingen = mwLijst.stellingen || MEDEWERKERSSCAN_STELLINGEN;
+    const mgStellingen = mgLijst.stellingen || MANAGEMENTSCAN_STELLINGEN;
+
+    const now   = new Date();
+    const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+
+    const DOMEINEN = [
+      { naam: "Veiligheid & Leiderschap", kleur: "#5A8C3C", pijler: 0 },
+      { naam: "Beleving van Verandering", kleur: "#3A7DBF", pijler: 1 },
+      { naam: "Energie & Motivatie",      kleur: "#E8821A", pijler: 2 },
+      { naam: "Verbeteren & Leren",       kleur: "#6B4E9E", pijler: 3 },
+    ];
+
+    // Score per pijler berekenen op basis van de juiste vragenlijst
+    const gemPijlerLijst = (pijler, resp, stellingen) => {
+      const ids  = stellingen.filter(s => s.pijler === pijler && s.type === "schaal").map(s => s.id);
+      const vals = resp.flatMap(a => ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null && v !== ""));
+      return vals.length ? vals.reduce((s, v) => s + parseFloat(v), 0) / vals.length : null;
+    };
+
+    const scores = DOMEINEN.map(d => {
+      const mw   = gemPijlerLijst(d.pijler, mwResp, mwStellingen);
+      const mg   = gemPijlerLijst(d.pijler, mgResp, mgStellingen);
+      const gap  = mw !== null && mg !== null ? mg - mw : null;
+      return { ...d, mw, mg, gap };
+    });
+
+    // Open antwoorden per domein — medewerkers en manager apart
+    const openPerDomein = DOMEINEN.map(d => {
+      const mwOpen = mwStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+      const mgOpen = mgStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+      const mwAntw = mwOpen.flatMap(s => mwResp.map(a => a.antwoorden?.[s.id]).filter(v => v?.trim().length > 3));
+      const mgAntw = mgOpen.flatMap(s => mgResp.map(a => a.antwoorden?.[s.id]).filter(v => v?.trim().length > 3));
+      return { ...d, mwVraag: mwOpen[0]?.tekst || "", mgVraag: mgOpen[0]?.tekst || "", mwAntw, mgAntw };
+    });
+
+    const scoreKleur = s => !s || isNaN(s) ? "#aaa" : s >= 4 ? "#2ecc71" : s >= 3 ? "#f39c12" : "#e74c3c";
+
+    const gapKleur = gap => {
+      if (gap === null) return "#aaa";
+      const abs = Math.abs(gap);
+      return abs >= 1.0 ? "#e74c3c" : abs >= 0.5 ? "#f39c12" : "#2ecc71";
+    };
+    const gapLabel = gap => {
+      if (gap === null) return "";
+      const abs = Math.abs(gap);
+      const richting = gap > 0 ? "Manager ziet het positiever" : "Medewerkers zien het positiever";
+      if (abs >= 1.0) return `Grote kloof · ${richting}`;
+      if (abs >= 0.5) return `Merkbaar verschil · ${richting}`;
+      return "Kleine kloof";
+    };
+
+    const balk = (score, kleur, breedte = 200) =>
+      score !== null
+        ? `<div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:${breedte}px;height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden;flex-shrink:0;">
+              <div style="height:100%;border-radius:5px;background:${kleur};width:${(score/5)*100}%;"></div>
+            </div>
+            <div style="font-size:15px;font-weight:700;color:${kleur};min-width:30px;">${score.toFixed(1)}</div>
+           </div>`
+        : `<span style="color:#aaa;font-size:13px;">Geen data</span>`;
+
+    const html = `<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Totaalrapportage — ${mwLijst.naam}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f9; color: #1a1a2e; }
+
+    .header { background: #0D1B2A; color: white; padding: 44px 60px 36px; }
+    .header-bar { display: flex; height: 6px; margin-bottom: 28px; border-radius: 3px; overflow: hidden; }
+    .header-bar div { flex: 1; }
+    .koplabel { font-size: 11px; color: #0F766E; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+    .header h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+    .header .sub { font-size: 14px; color: rgba(255,255,255,0.55); margin-bottom: 24px; }
+    .meta { display: flex; gap: 32px; flex-wrap: wrap; }
+    .meta-item { font-size: 11px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; }
+    .meta-item span { display: block; font-size: 15px; color: white; font-weight: 600; margin-top: 3px; text-transform: none; letter-spacing: 0; }
+
+    .content { max-width: 940px; margin: 0 auto; padding: 40px; }
+
+    .section { background: white; border-radius: 14px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 2px 14px rgba(0,0,0,0.06); }
+    .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #0F766E; margin-bottom: 20px; }
+
+    /* Samenvatting kompas-grid */
+    .kompas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .kompas-card { border-radius: 10px; padding: 20px 22px; }
+    .kompas-naam { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .kompas-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .kompas-rolabel { font-size: 12px; font-weight: 600; width: 110px; flex-shrink: 0; }
+
+    /* Gap tabel */
+    .gap-tabel { width: 100%; border-collapse: collapse; }
+    .gap-tabel th { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #6B7A8D; font-weight: 700; padding: 0 16px 12px; text-align: left; border-bottom: 2px solid #eee; }
+    .gap-tabel th.center { text-align: center; }
+    .gap-tabel td { padding: 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    .gap-tabel tr:last-child td { border-bottom: none; }
+    .domein-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; flex-shrink: 0; }
+    .gap-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px; white-space: nowrap; }
+    .gap-arrow { font-size: 16px; }
+
+    /* Open antwoorden */
+    .open-blok { margin-bottom: 28px; }
+    .open-domein { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+    .open-groep { margin-bottom: 16px; }
+    .open-roltitel { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #6B7A8D; margin-bottom: 8px; }
+    .open-vraag { font-size: 12px; color: #888; font-style: italic; margin-bottom: 8px; }
+    .open-item { background: #f7f9fc; border-radius: 8px; padding: 11px 15px; margin-bottom: 6px; font-size: 13px; line-height: 1.65; color: #444; border-left: 3px solid; }
+
+    .toelichting { background: #0D1B2A; color: white; border-radius: 14px; padding: 24px 32px; margin-bottom: 24px; }
+    .footer { text-align: center; padding: 32px; color: #aaa; font-size: 12px; }
+    @media print { body { background: white; } .content { padding: 20px; } }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-bar">
+    <div style="background:#5A8C3C;"></div>
+    <div style="background:#3A7DBF;"></div>
+    <div style="background:#E8821A;"></div>
+    <div style="background:#6B4E9E;"></div>
+  </div>
+  <div class="koplabel">Het Teamkompas — Totaalrapportage</div>
+  <h1>${mwLijst.naam}</h1>
+  <div class="sub">${mwLijst.klant}</div>
+  <div class="meta">
+    <div class="meta-item">Datum<span>${datum}</span></div>
+    <div class="meta-item">Medewerkers<span>${mwResp.length} respondenten</span></div>
+    <div class="meta-item">Leidinggevende<span>${mgResp.length} respondent${mgResp.length !== 1 ? "en" : ""}</span></div>
+    <div class="meta-item">Domeinen<span>4 domeinen gemeten</span></div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ═══ SECTIE 1: SCORES PER DOMEIN ═══ -->
+  <div class="section">
+    <div class="section-label">Scores per domein</div>
+    <div class="kompas-grid">
+      ${scores.map(s => `
+      <div class="kompas-card" style="background:${s.kleur}0f;border:1px solid ${s.kleur}28;">
+        <div class="kompas-naam" style="color:${s.kleur};">${s.naam}</div>
+        <div class="kompas-row">
+          <div class="kompas-rolabel" style="color:#5A8C3C;">👥 Medewerkers</div>
+          ${balk(s.mw, scoreKleur(s.mw), 160)}
+        </div>
+        <div class="kompas-row">
+          <div class="kompas-rolabel" style="color:#6B4E9E;">👔 Manager</div>
+          ${balk(s.mg, scoreKleur(s.mg), 160)}
+        </div>
+      </div>`).join("")}
+    </div>
+  </div>
+
+  <!-- ═══ SECTIE 2: GAP-ANALYSE ═══ -->
+  <div class="section">
+    <div class="section-label">Gap-analyse — verschil manager vs. medewerkers</div>
+    <p style="font-size:13px;color:#6B7A8D;line-height:1.7;margin-bottom:20px;">
+      Een positieve gap betekent dat de manager het domein hoger beoordeelt dan medewerkers.
+      Een negatieve gap betekent dat medewerkers positiever zijn dan de manager.
+      Een gap ≥ 0.5 verdient aandacht; ≥ 1.0 is een significante kloof.
+    </p>
+    <table class="gap-tabel">
+      <thead>
+        <tr>
+          <th>Domein</th>
+          <th class="center">👥 Medewerkers</th>
+          <th class="center">👔 Manager</th>
+          <th class="center">Gap</th>
+          <th>Signaal</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${scores.map(s => {
+          const gc = gapKleur(s.gap);
+          const gl = gapLabel(s.gap);
+          const gapTekst = s.gap !== null ? `${s.gap > 0 ? "+" : ""}${s.gap.toFixed(2)}` : "—";
+          return `<tr>
+            <td><span class="domein-dot" style="background:${s.kleur};"></span><strong style="color:${s.kleur};">${s.naam}</strong></td>
+            <td style="text-align:center;font-size:18px;font-weight:700;color:${scoreKleur(s.mw)};">${s.mw !== null ? s.mw.toFixed(1) : "—"}</td>
+            <td style="text-align:center;font-size:18px;font-weight:700;color:${scoreKleur(s.mg)};">${s.mg !== null ? s.mg.toFixed(1) : "—"}</td>
+            <td style="text-align:center;">
+              <span class="gap-pill" style="background:${gc}18;color:${gc};">
+                <span class="gap-arrow">${s.gap !== null && s.gap > 0 ? "▲" : s.gap !== null && s.gap < 0 ? "▼" : "●"}</span>
+                ${gapTekst}
+              </span>
+            </td>
+            <td style="font-size:12px;color:#5b6775;line-height:1.5;">${gl}</td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══ SECTIE 3: OPEN ANTWOORDEN ═══ -->
+  <div class="section">
+    <div class="section-label">Open antwoorden per domein</div>
+    ${openPerDomein.map(d => {
+      const heeftData = d.mwAntw.length > 0 || d.mgAntw.length > 0;
+      if (!heeftData) return "";
+      return `
+      <div class="open-blok">
+        <div class="open-domein" style="color:${d.kleur};">${d.naam}</div>
+        ${d.mwAntw.length > 0 ? `
+        <div class="open-groep">
+          <div class="open-roltitel">👥 Medewerkers</div>
+          ${d.mwVraag ? `<div class="open-vraag">${d.mwVraag}</div>` : ""}
+          ${d.mwAntw.map(a => `<div class="open-item" style="border-color:${d.kleur};">${a}</div>`).join("")}
+        </div>` : ""}
+        ${d.mgAntw.length > 0 ? `
+        <div class="open-groep">
+          <div class="open-roltitel">👔 Manager</div>
+          ${d.mgVraag ? `<div class="open-vraag">${d.mgVraag}</div>` : ""}
+          ${d.mgAntw.map(a => `<div class="open-item" style="border-color:${d.kleur};opacity:0.85;">${a}</div>`).join("")}
+        </div>` : ""}
+      </div>`;
+    }).join("")}
+    ${openPerDomein.every(d => d.mwAntw.length === 0 && d.mgAntw.length === 0)
+      ? `<p style="color:#aaa;font-size:13px;">Nog geen open antwoorden beschikbaar.</p>`
+      : ""}
+  </div>
+
+  <!-- ═══ TOELICHTING ═══ -->
+  <div class="toelichting">
+    <div style="font-size:11px;color:#0F766E;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Over deze rapportage</div>
+    <p style="font-size:13px;line-height:1.7;color:rgba(255,255,255,0.65);">
+      Deze totaalrapportage combineert de medewerkersscan en de managementscan van Het Teamkompas.
+      Scores lopen van 1 tot 5. Een score ≥ 4 duidt op een sterke positie; 3–4 vraagt aandacht; onder 3 is prioritaire actie gewenst.
+      De gap-analyse toont het verschil in perceptie tussen de leidinggevende en het team per domein.
+      Individuele antwoorden zijn anoniem verwerkt.
+    </p>
+  </div>
+
+</div>
+<div class="footer">
+  © ${now.getFullYear()} Het Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik
+</div>
+</body>
+</html>`;
+
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `totaalrapportage-${mwLijst.klant.toLowerCase().replace(/\s+/g, "-")}-${mwLijst.naam.toLowerCase().replace(/\s+/g, "-")}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setGenererend(null);
+  };
+
   const genereerRapport = (lijst) => {
     setRapportError("");
     setGenererend(lijst.id);
@@ -5662,63 +5924,157 @@ function PageRapportages() {
       )}
 
       <div style={{display:"flex",flexDirection:"column",gap:12}}>
-        {lijsten.map(lijst => {
-          const resp      = antwoordenVoor(lijst.id);
-          const isBezig   = genererend === lijst.id;
-          const heeftData = resp.length >= 1;
+        {(() => {
+          // Groepeer gekoppelde medewerkers+management paren
+          const gepaard = new Set();
+          const groepen = [];
 
-          return (
-            <div key={lijst.id} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,
-              borderRadius:12,padding:"20px 24px"}}>
-              <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontWeight:600,color:ADM.white,fontSize:15,marginBottom:4}}>{lijst.naam}</div>
-                  <div style={{fontSize:12,color:ADM.muted,marginBottom:12}}>
-                    🏢 {lijst.klant} · 📅 {lijst.aangemaakt} · {resp.length} respondenten
-                  </div>
-                  <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
-                    {heeftData ? (
-                      <button onClick={()=>genereerRapport(lijst)} disabled={isBezig}
-                        style={{background:isBezig?"rgba(0,168,150,0.3)":ADM.teal,
-                          color:ADM.navyDeep,border:"none",borderRadius:6,
-                          padding:"8px 16px",fontSize:12,cursor:isBezig?"wait":"pointer",
-                          fontWeight:700}}>
-                        {isBezig ? "⏳ Genereren..." : "📄 Genereer rapport"}
-                      </button>
-                    ) : (
-                      <span style={{fontSize:12,color:ADM.muted,fontStyle:"italic"}}>
-                        Nog geen respondenten — rapport beschikbaar zodra er data is
-                      </span>
-                    )}
+          lijsten.forEach(lijst => {
+            if (gepaard.has(lijst.id)) return;
+            gepaard.add(lijst.id);
 
-                    <button
-                      onClick={()=>verplaatsNaarPrullenbak(lijst)}
-                      disabled={verwijderenId===lijst.id}
-                      style={{background:"rgba(231,76,60,0.10)",color:ADM.red,border:`1px solid rgba(231,76,60,0.24)`,
-                        borderRadius:6,padding:"8px 14px",fontSize:12,cursor:verwijderenId===lijst.id?"wait":"pointer",
-                        fontWeight:700}}
-                    >
-                      {verwijderenId===lijst.id ? "Verplaatsen..." : "🗑️ Verwijderen"}
-                    </button>
+            if (lijst.trajectRol === "medewerkers" && lijst.managementScanId) {
+              const mgLijst = lijsten.find(l => l.id === lijst.managementScanId);
+              if (mgLijst) {
+                gepaard.add(mgLijst.id);
+                groepen.push({ type: "paar", mw: lijst, mg: mgLijst });
+                return;
+              }
+            }
+            if (lijst.trajectRol === "management" && lijst.medewerkersScanId) {
+              const mwLijst = lijsten.find(l => l.id === lijst.medewerkersScanId);
+              if (mwLijst) {
+                gepaard.add(mwLijst.id);
+                groepen.push({ type: "paar", mw: mwLijst, mg: lijst });
+                return;
+              }
+            }
+            // Losstaande of oude vragenlijsten
+            groepen.push({ type: "enkel", lijst });
+          });
+
+          return groepen.map((groep, gi) => {
+            if (groep.type === "paar") {
+              const { mw, mg } = groep;
+              const mwResp = antwoordenVoor(mw.id);
+              const mgResp = antwoordenVoor(mg.id);
+              const isBezig = genererend === `totaal_${mw.id}`;
+              const heeftData = mwResp.length >= 1 && mgResp.length >= 1;
+              const heeftMwData = mwResp.length >= 1;
+              const heeftMgData = mgResp.length >= 1;
+
+              return (
+                <div key={gi} style={{background:ADM.navy,border:`1px solid ${ADM.teal}33`,borderRadius:12,padding:"20px 24px"}}>
+                  <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4,flexWrap:"wrap"}}>
+                        <div style={{fontWeight:700,color:ADM.white,fontSize:15}}>{mw.naam}</div>
+                        <span style={{fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:20,background:"rgba(15,118,110,0.15)",color:ADM.teal}}>TEAMSCAN PAAR</span>
+                      </div>
+                      <div style={{fontSize:12,color:ADM.muted,marginBottom:14}}>
+                        🏢 {mw.klant} · 📅 {mw.aangemaakt}
+                      </div>
+
+                      {/* Responsstatus */}
+                      <div style={{display:"flex",gap:16,marginBottom:14,flexWrap:"wrap"}}>
+                        <span style={{fontSize:12,color:ADM.muted,display:"flex",alignItems:"center",gap:6}}>
+                          <span style={{width:7,height:7,borderRadius:"50%",background:mwResp.length>=5?ADM.green:mwResp.length>0?ADM.orange:"#444",display:"inline-block",flexShrink:0}}/>
+                          👥 Medewerkers: <strong style={{color:ADM.white}}>{mwResp.length}</strong>
+                          {mwResp.length < 5 && <span style={{color:ADM.orange}}> (min. 5)</span>}
+                        </span>
+                        <span style={{fontSize:12,color:ADM.muted,display:"flex",alignItems:"center",gap:6}}>
+                          <span style={{width:7,height:7,borderRadius:"50%",background:mgResp.length>=1?ADM.green:"#444",display:"inline-block",flexShrink:0}}/>
+                          👔 Manager: <strong style={{color:ADM.white}}>{mgResp.length}</strong>
+                          {mgResp.length === 0 && <span style={{color:ADM.orange}}> (nog niet ingevuld)</span>}
+                        </span>
+                      </div>
+
+                      {/* Knoppen */}
+                      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                        {heeftData ? (
+                          <button onClick={()=>genereerTotaalrapport(mw, mg)} disabled={isBezig}
+                            style={{background:isBezig?"rgba(0,168,150,0.3)":ADM.teal,color:ADM.navyDeep,
+                              border:"none",borderRadius:6,padding:"9px 18px",fontSize:12,
+                              cursor:isBezig?"wait":"pointer",fontWeight:700}}>
+                            {isBezig ? "⏳ Genereren..." : "📊 Totaalrapportage"}
+                          </button>
+                        ) : (
+                          <span style={{fontSize:12,color:ADM.muted,fontStyle:"italic",alignSelf:"center"}}>
+                            {!heeftMwData && !heeftMgData ? "Nog geen data" : !heeftMwData ? "Wacht op medewerkers" : "Wacht op manager"}
+                          </span>
+                        )}
+                        {heeftMwData && (
+                          <button onClick={()=>genereerRapport(mw)} disabled={genererend===mw.id}
+                            style={{background:"rgba(90,140,60,0.12)",color:"#5A8C3C",
+                              border:"1px solid rgba(90,140,60,0.3)",borderRadius:6,padding:"9px 14px",
+                              fontSize:12,cursor:"pointer",fontWeight:600}}>
+                            📄 Medewerkers
+                          </button>
+                        )}
+                        {heeftMgData && (
+                          <button onClick={()=>genereerRapport(mg)} disabled={genererend===mg.id}
+                            style={{background:"rgba(107,78,158,0.12)",color:"#6B4E9E",
+                              border:"1px solid rgba(107,78,158,0.3)",borderRadius:6,padding:"9px 14px",
+                              fontSize:12,cursor:"pointer",fontWeight:600}}>
+                            📄 Manager
+                          </button>
+                        )}
+                        <button onClick={()=>verplaatsNaarPrullenbak(mw)}
+                          style={{background:"rgba(231,76,60,0.10)",color:ADM.red,
+                            border:`1px solid rgba(231,76,60,0.24)`,borderRadius:6,
+                            padding:"9px 12px",fontSize:12,cursor:"pointer",fontWeight:700}}>
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6,flexShrink:0}}>
-                  <span style={{fontSize:11,fontWeight:600,padding:"4px 12px",borderRadius:20,
-                    background:"rgba(0,168,150,0.12)",color:ADM.teal}}>{lijst.status}</span>
-                  {resp.length > 0 && (
-                    <div style={{display:"flex",gap:6}}>
-                      {[["👥",resp.filter(a=>a.rol==="Teamlid").length,"Teamleden"],
-                        ["👔",resp.filter(a=>a.rol==="Leidinggevende").length,"Leidinggevenden"]
-                      ].map(([ic,n,l])=>(
-                        <span key={l} style={{fontSize:11,color:ADM.muted}}>{ic} {n}</span>
-                      ))}
+              );
+            }
+
+            // Enkelvoudige (oude) vragenlijst
+            const { lijst } = groep;
+            const resp    = antwoordenVoor(lijst.id);
+            const isBezig = genererend === lijst.id;
+            const heeftData = resp.length >= 1;
+            return (
+              <div key={gi} style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"20px 24px"}}>
+                <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontWeight:600,color:ADM.white,fontSize:15,marginBottom:4}}>{lijst.naam}</div>
+                    <div style={{fontSize:12,color:ADM.muted,marginBottom:12}}>
+                      🏢 {lijst.klant} · 📅 {lijst.aangemaakt} · {resp.length} respondenten
                     </div>
-                  )}
+                    <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+                      {heeftData ? (
+                        <button onClick={()=>genereerRapport(lijst)} disabled={isBezig}
+                          style={{background:isBezig?"rgba(0,168,150,0.3)":ADM.teal,color:ADM.navyDeep,
+                            border:"none",borderRadius:6,padding:"8px 16px",fontSize:12,
+                            cursor:isBezig?"wait":"pointer",fontWeight:700}}>
+                          {isBezig ? "⏳ Genereren..." : "📄 Genereer rapport"}
+                        </button>
+                      ) : (
+                        <span style={{fontSize:12,color:ADM.muted,fontStyle:"italic"}}>
+                          Nog geen respondenten
+                        </span>
+                      )}
+                      <button onClick={()=>verplaatsNaarPrullenbak(lijst)} disabled={verwijderenId===lijst.id}
+                        style={{background:"rgba(231,76,60,0.10)",color:ADM.red,
+                          border:`1px solid rgba(231,76,60,0.24)`,borderRadius:6,
+                          padding:"8px 14px",fontSize:12,cursor:"pointer",fontWeight:700}}>
+                        {verwijderenId===lijst.id ? "Verplaatsen..." : "🗑️ Verwijderen"}
+                      </button>
+                    </div>
+                  </div>
+                  <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6,flexShrink:0}}>
+                    <span style={{fontSize:11,fontWeight:600,padding:"4px 12px",borderRadius:20,
+                      background:"rgba(0,168,150,0.12)",color:ADM.teal}}>{lijst.status}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          });
+        })()}
         {lijsten.length === 0 && (
           <div style={{color:ADM.muted,fontSize:14,padding:20,textAlign:"center"}}>
             Nog geen scans beschikbaar om een rapport van te genereren.
