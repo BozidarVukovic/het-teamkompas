@@ -5427,7 +5427,7 @@ function PageRapportages() {
   };
 
   // ─── TOTAALRAPPORTAGE: medewerkers + management gecombineerd ──────────────
-  const genereerTotaalrapport = (mwLijst, mgLijst) => {
+  const genereerTotaalrapport = (mwLijst, mgLijst, verdiepingen = []) => {
     setRapportError("");
     setGenererend(`totaal_${mwLijst.id}`);
 
@@ -5671,6 +5671,68 @@ function PageRapportages() {
     </p>
   </div>
 
+  ${verdiepingen.length > 0 ? `
+  <!-- ═══ VERDIEPINGSRESULTATEN ═══ -->
+  <div class="section">
+    <div class="section-label">Verdiepende scans — aanvullende inzichten</div>
+    <p style="font-size:13px;color:#6B7A8D;line-height:1.7;margin-bottom:20px;">
+      Onderstaande verdiepende scans zijn aanvullend ingezet op de domeinen die extra aandacht vroegen.
+      De resultaten zijn hieronder per scan samengevat.
+    </p>
+    ${verdiepingen.map(v => {
+      const vResp = antwoordenVoor(v.id);
+      const vLabel = {
+        verdieping_veiligheid_leiderschap: "Veiligheid & Leiderschap — Secure Base",
+        verdieping_beleving_verandering:   "Beleving van Verandering — SCARF",
+        verdieping_energie_motivatie:      "Energie & Motivatie — JD-R model",
+        verdieping_verbeteren_leren:       "Verbeteren & Leren — Lean/Agile",
+        verdieping_gecombineerd:           "Gecombineerde verdieping",
+      }[v.type] || v.naam;
+      const vKleur = {
+        verdieping_veiligheid_leiderschap: "#5A8C3C",
+        verdieping_beleving_verandering:   "#3A7DBF",
+        verdieping_energie_motivatie:      "#E8821A",
+        verdieping_verbeteren_leren:       "#6B4E9E",
+        verdieping_gecombineerd:           "#0F766E",
+      }[v.type] || "#0F766E";
+      return `
+      <div style="border-radius:12px;padding:20px 24px;margin-bottom:14px;border:1px solid ${vKleur}30;background:${vKleur}08;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:11px;color:${vKleur};font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Verdiepende scan</div>
+            <div style="font-size:16px;font-weight:700;color:#0D1B2A;">${vLabel}</div>
+          </div>
+          <div style="font-size:12px;color:#6B7A8D;">${vResp.length} respondent${vResp.length !== 1 ? "en" : ""} · ${v.aangemaakt || ""}</div>
+        </div>
+        ${vResp.length === 0
+          ? `<p style="font-size:13px;color:#aaa;">Nog geen respondenten — resultaten beschikbaar zodra de scan ingevuld is.</p>`
+          : (() => {
+              const dimMap = new Map();
+              (v.stellingen || []).filter(s => s.type === "schaal").forEach(s => {
+                const key = s.dimensieCode || s.dimensie || `pijler_${s.pijler}`;
+                const naam = s.dimensie || key;
+                if (!dimMap.has(key)) dimMap.set(key, { naam, ids: [] });
+                dimMap.get(key).ids.push(s.id);
+              });
+              const dims = Array.from(dimMap.values()).slice(0, 8);
+              return dims.map(d => {
+                const vals = vResp.flatMap(a => d.ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null && v !== ""));
+                const gem  = vals.length ? vals.reduce((s,v) => s + parseFloat(v), 0) / vals.length : null;
+                const kleur = gem === null ? "#aaa" : gem >= 4 ? "#2ecc71" : gem >= 3 ? "#f39c12" : "#e74c3c";
+                return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <div style="font-size:12px;color:#5b6775;width:180px;flex-shrink:0;">${d.naam}</div>
+                  <div style="flex:1;height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;">
+                    <div style="height:100%;border-radius:4px;background:${kleur};width:${gem ? (gem/5)*100 : 0}%;"></div>
+                  </div>
+                  <div style="font-size:13px;font-weight:700;color:${kleur};min-width:28px;">${gem ? gem.toFixed(1) : "—"}</div>
+                </div>`;
+              }).join("");
+            })()
+        }
+      </div>`;
+    }).join("")}
+  </div>` : ""}
+
 </div>
 <div class="footer">
   © ${now.getFullYear()} Het Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik
@@ -5689,7 +5751,7 @@ function PageRapportages() {
   };
 
   // ─── ADVIESRAPPORT: uitgebreid consultancy rapport ────────────────────────
-  const genereerAdviesrapport = (mwLijst, mgLijst) => {
+  const genereerAdviesrapport = (mwLijst, mgLijst, verdiepingen = []) => {
     setRapportError("");
     setGenererend(`advies_${mwLijst.id}`);
 
@@ -6141,9 +6203,97 @@ function PageRapportages() {
 
   <div class="divider page-break"></div>
 
+  ${verdiepingen.length > 0 ? `
+  <!-- ── Verdiepende scans ── -->
+  <div class="chapter">
+    <div class="chapter-label">04 · Verdiepende scans</div>
+    <div class="chapter-title">Aanvullende inzichten per domein</div>
+    <div class="chapter-sub">Resultaten van de ingezette verdiepende meting${verdiepingen.length > 1 ? "en" : ""}</div>
+
+    ${verdiepingen.map(v => {
+      const vResp = antwoordenVoor(v.id);
+      const vLabelMap = {
+        verdieping_veiligheid_leiderschap: { label: "Veiligheid & Leiderschap", sub: "Gebaseerd op de 9 kenmerken van Secure Base Leadership (Kohlrieser, Goldsworthy & Cooke)", kleur: "#5A8C3C", licht: "#f0f6ec" },
+        verdieping_beleving_verandering:   { label: "Beleving van Verandering", sub: "Gebaseerd op het SCARF-model (Rock, 2008) — neurowetenschappelijke inzichten over breinvriendelijk leiderschap", kleur: "#3A7DBF", licht: "#edf4fb" },
+        verdieping_energie_motivatie:      { label: "Energie & Motivatie", sub: "Gebaseerd op het JD-R model (Bakker & Demerouti) — taakeisen, hulpbronnen, bevlogenheid en uitputting", kleur: "#E8821A", licht: "#fef5ec" },
+        verdieping_verbeteren_leren:       { label: "Verbeteren & Leren", sub: "Gebaseerd op Lean- en Agile-principes — zelfreflectie leidinggevende en teamspiegel", kleur: "#6B4E9E", licht: "#f3f0f9" },
+        verdieping_gecombineerd:           { label: "Gecombineerde verdieping", sub: "Meerdere domeinen in één verdiepende meting gecombineerd", kleur: "#0F766E", licht: "#f0faf9" },
+      };
+      const meta = vLabelMap[v.type] || { label: v.naam, sub: "", kleur: "#0F766E", licht: "#f4f7f9" };
+
+      const dimMap = new Map();
+      (v.stellingen || []).filter(s => s.type === "schaal").forEach(s => {
+        const key  = s.dimensieCode || s.dimensie || `pijler_${s.pijler}`;
+        const naam = s.dimensie || key;
+        if (!dimMap.has(key)) dimMap.set(key, { naam, ids: [] });
+        dimMap.get(key).ids.push(s.id);
+      });
+
+      const dims = Array.from(dimMap.values());
+      const dimScores = dims.map(d => {
+        const vals = vResp.flatMap(a => d.ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null && v !== ""));
+        const gem  = vals.length ? vals.reduce((s,v) => s + parseFloat(v), 0) / vals.length : null;
+        return { ...d, gem };
+      });
+
+      const sterkst = dimScores.filter(d => d.gem !== null).sort((a,b) => b.gem - a.gem)[0];
+      const zwakst  = dimScores.filter(d => d.gem !== null).sort((a,b) => a.gem - b.gem)[0];
+
+      return `
+      <div class="domein-section" style="margin-bottom:24px;">
+        <div class="domein-header">
+          <div class="domein-icon" style="background:${meta.licht};">🔍</div>
+          <div class="domein-titels">
+            <div class="domein-naam" style="color:${meta.kleur};">${meta.label} — Verdieping</div>
+            <div style="font-size:12px;color:#6B7A8D;margin-top:4px;">${meta.sub}</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
+          <div style="background:#f8f9fb;border-radius:10px;padding:14px 18px;flex:1;min-width:140px;">
+            <div style="font-size:10px;color:#9aa3af;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Respondenten</div>
+            <div style="font-size:24px;font-weight:800;color:${meta.kleur};">${vResp.length}</div>
+          </div>
+          <div style="background:#f8f9fb;border-radius:10px;padding:14px 18px;flex:1;min-width:140px;">
+            <div style="font-size:10px;color:#9aa3af;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Dimensies gemeten</div>
+            <div style="font-size:24px;font-weight:800;color:${meta.kleur};">${dims.length}</div>
+          </div>
+          ${sterkst ? `<div style="background:${meta.licht};border-radius:10px;padding:14px 18px;flex:2;min-width:200px;border:1px solid ${meta.kleur}22;">
+            <div style="font-size:10px;color:${meta.kleur};font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Sterkste dimensie</div>
+            <div style="font-size:14px;font-weight:700;color:#0D1B2A;">${sterkst.naam} — <span style="color:#2ecc71;">${sterkst.gem?.toFixed(1)}</span></div>
+          </div>` : ""}
+          ${zwakst && zwakst !== sterkst ? `<div style="background:#fff8f7;border-radius:10px;padding:14px 18px;flex:2;min-width:200px;border:1px solid #e74c3c22;">
+            <div style="font-size:10px;color:#e74c3c;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Aandachtsdimensie</div>
+            <div style="font-size:14px;font-weight:700;color:#0D1B2A;">${zwakst.naam} — <span style="color:#e74c3c;">${zwakst.gem?.toFixed(1)}</span></div>
+          </div>` : ""}
+        </div>
+
+        ${vResp.length === 0
+          ? `<div style="background:#f8f9fb;border-radius:10px;padding:18px 22px;color:#aaa;font-size:13px;">Nog geen respondenten. Resultaten worden hier getoond zodra de verdiepende scan ingevuld is.</div>`
+          : `<div>
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#9aa3af;margin-bottom:14px;">Scores per dimensie</div>
+              ${dimScores.map(d => {
+                const kleur = d.gem === null ? "#aaa" : d.gem >= 4 ? "#2ecc71" : d.gem >= 3 ? "#f39c12" : "#e74c3c";
+                return `<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+                  <div style="font-size:12px;color:#3d4555;width:200px;flex-shrink:0;line-height:1.3;">${d.naam}</div>
+                  <div style="flex:1;height:10px;background:#eee;border-radius:5px;overflow:hidden;">
+                    <div style="height:100%;border-radius:5px;background:${kleur};width:${d.gem ? (d.gem/5)*100 : 0}%;"></div>
+                  </div>
+                  <div style="font-size:15px;font-weight:700;color:${kleur};min-width:32px;text-align:right;">${d.gem ? d.gem.toFixed(1) : "—"}</div>
+                </div>`;
+              }).join("")}
+            </div>`
+        }
+      </div>`;
+    }).join("")}
+  </div>
+
+  <div class="divider page-break"></div>
+  ` : ""}
+
   <!-- ── Conclusie & vervolgstappen ── -->
   <div class="chapter">
-    <div class="chapter-label">04 · Conclusie</div>
+    <div class="chapter-label">${verdiepingen.length > 0 ? "05" : "04"} · Conclusie</div>
     <div class="chapter-title">Prioriteiten en vervolgstappen</div>
     <div class="chapter-sub">Waar te beginnen en hoe verder</div>
 
@@ -6478,6 +6628,19 @@ function PageRapportages() {
               const heeftMwData = mwResp.length >= 1;
               const heeftMgData = mgResp.length >= 1;
 
+              // Verdiepende scans gekoppeld aan dit traject-paar
+              const verdiepingen = lijsten.filter(l =>
+                l.parentVragenlijstId === mw.id ||
+                l.parentVragenlijstId === mg.id
+              );
+              const verdiepingTypes = {
+                verdieping_veiligheid_leiderschap: { label: "Veiligheid & Leiderschap", kleur: "#5A8C3C" },
+                verdieping_beleving_verandering:   { label: "Beleving van Verandering", kleur: "#3A7DBF" },
+                verdieping_energie_motivatie:      { label: "Energie & Motivatie",       kleur: "#E8821A" },
+                verdieping_verbeteren_leren:       { label: "Verbeteren & Leren",        kleur: "#6B4E9E" },
+                verdieping_gecombineerd:           { label: "Gecombineerde verdieping",  kleur: "#0F766E" },
+              };
+
               return (
                 <div key={gi} style={{background:ADM.navy,border:`1px solid ${ADM.teal}33`,borderRadius:12,padding:"20px 24px"}}>
                   <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
@@ -6504,21 +6667,55 @@ function PageRapportages() {
                         </span>
                       </div>
 
-                      {/* Knoppen */}
+                      {/* Verdiepende scans */}
+                      {verdiepingen.length > 0 && (
+                        <div style={{marginBottom:14}}>
+                          <div style={{fontSize:10,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",fontWeight:700,marginBottom:8}}>
+                            Verdiepende scans ({verdiepingen.length})
+                          </div>
+                          <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                            {verdiepingen.map(v => {
+                              const vResp = antwoordenVoor(v.id);
+                              const meta  = verdiepingTypes[v.type] || { label: v.naam, kleur: "#0F766E" };
+                              const isVBezig = genererend === v.id;
+                              return (
+                                <div key={v.id} style={{background:`${meta.kleur}0c`,border:`1px solid ${meta.kleur}28`,borderRadius:8,padding:"10px 12px",display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+                                  <div style={{flex:1,minWidth:0}}>
+                                    <span style={{fontSize:12,fontWeight:700,color:meta.kleur}}>{meta.label}</span>
+                                    <span style={{fontSize:11,color:ADM.muted,marginLeft:8}}>
+                                      {vResp.length} respondent{vResp.length !== 1 ? "en" : ""}
+                                      {vResp.length === 0 && <span style={{color:ADM.orange}}> · wacht op invulling</span>}
+                                    </span>
+                                  </div>
+                                  {vResp.length >= 1 && (
+                                    <button onClick={()=>genereerRapport(v)} disabled={isVBezig}
+                                      style={{background:`${meta.kleur}18`,color:meta.kleur,border:`1px solid ${meta.kleur}33`,
+                                        borderRadius:6,padding:"5px 10px",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}>
+                                      {isVBezig ? "⏳" : "📄 Verdiepingsrapport"}
+                                    </button>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Hoofdknoppen */}
                       <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                         {heeftData ? (
                           <>
-                            <button onClick={()=>genereerTotaalrapport(mw, mg)} disabled={isBezig}
+                            <button onClick={()=>genereerTotaalrapport(mw, mg, verdiepingen)} disabled={isBezig}
                               style={{background:isBezig?"rgba(0,168,150,0.3)":ADM.teal,color:ADM.navyDeep,
                                 border:"none",borderRadius:6,padding:"9px 18px",fontSize:12,
                                 cursor:isBezig?"wait":"pointer",fontWeight:700}}>
-                              {isBezig ? "⏳ Genereren..." : "📊 Totaalrapportage"}
+                              {isBezig ? "⏳ Genereren..." : `📊 Totaalrapportage${verdiepingen.length>0?" + verdieping":""}`}
                             </button>
-                            <button onClick={()=>genereerAdviesrapport(mw, mg)} disabled={genererend===`advies_${mw.id}`}
+                            <button onClick={()=>genereerAdviesrapport(mw, mg, verdiepingen)} disabled={genererend===`advies_${mw.id}`}
                               style={{background:genererend===`advies_${mw.id}`?"rgba(107,78,158,0.3)":"rgba(107,78,158,0.15)",
                                 color:"#6B4E9E",border:"1px solid rgba(107,78,158,0.35)",borderRadius:6,padding:"9px 18px",
                                 fontSize:12,cursor:genererend===`advies_${mw.id}`?"wait":"pointer",fontWeight:700}}>
-                              {genererend===`advies_${mw.id}` ? "⏳ Genereren..." : "📋 Adviesrapport"}
+                              {genererend===`advies_${mw.id}` ? "⏳ Genereren..." : `📋 Adviesrapport${verdiepingen.length>0?" + verdieping":""}`}
                             </button>
                           </>
                         ) : (
