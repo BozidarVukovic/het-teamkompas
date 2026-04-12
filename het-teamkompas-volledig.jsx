@@ -1945,9 +1945,11 @@ function ScanInvullen({ scanId }) {
               <div style={{display:"flex",gap:20,justifyContent:"center",marginTop:8}}>
                 {[1,2,3,4,5].map(n=>(
                   <div key={n} style={{width:56,display:"flex",justifyContent:"center"}}>
-                    {n===1 && <span style={{fontSize:11,color:ADM.muted,textAlign:"center",lineHeight:1.3,whiteSpace:"nowrap"}}>Helemaal<br/>oneens</span>}
-                    {n===3 && <span style={{fontSize:11,color:ADM.muted,textAlign:"center",lineHeight:1.3}}>Neutraal</span>}
-                    {n===5 && <span style={{fontSize:11,color:ADM.muted,textAlign:"center",lineHeight:1.3,whiteSpace:"nowrap"}}>Helemaal<br/>eens</span>}
+                    {n===1 && <span style={{fontSize:10,color:ADM.muted,textAlign:"center",lineHeight:1.3,whiteSpace:"nowrap"}}>Helemaal<br/>oneens</span>}
+                    {n===2 && <span style={{fontSize:10,color:ADM.muted,textAlign:"center",lineHeight:1.3}}>Oneens</span>}
+                    {n===3 && <span style={{fontSize:10,color:ADM.muted,textAlign:"center",lineHeight:1.3}}>Neutraal /<br/>wisselend</span>}
+                    {n===4 && <span style={{fontSize:10,color:ADM.muted,textAlign:"center",lineHeight:1.3}}>Eens</span>}
+                    {n===5 && <span style={{fontSize:10,color:ADM.muted,textAlign:"center",lineHeight:1.3,whiteSpace:"nowrap"}}>Helemaal<br/>eens</span>}
                   </div>
                 ))}
               </div>
@@ -2557,27 +2559,27 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
     (!belevingVeranderingScoreManagement && belevingVeranderingScoreTeam && parseFloat(belevingVeranderingScoreTeam) < 3.5);
 
   const VerdieningIntro = () => {
-    const onderdelen = [
+    const aanbevolenOnderdelen = [
       veiligheidAandacht ? "veiligheid_leiderschap" : null,
       verbeterenLerenAandacht ? "verbeteren_leren" : null,
       energieMotivatieAandacht ? "energie_motivatie" : null,
       belevingVeranderingAandacht ? "beleving_verandering" : null,
     ].filter(Boolean);
 
-    const heeftMeerdere = onderdelen.length > 1;
+    const heeftMeerdereAanbevolen = aanbevolenOnderdelen.length > 1;
 
     const maakGecombineerdeVerdieping = async () => {
       setVerdiepingMaken(true);
       try {
         const data = {
-          naam: `${lijst.klant} — ${gecombineerdeVerdiepingTitel(onderdelen)}`,
+          naam: `${lijst.klant} — ${gecombineerdeVerdiepingTitel(aanbevolenOnderdelen)}`,
           klant: lijst.klant,
           aangemaakt: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
           status: "Actief",
           type: "verdieping_gecombineerd",
           parentVragenlijstId: lijst.id,
-          verdiepingOnderdelen: onderdelen,
-          stellingen: flattenVerdiepingStellingen(onderdelen),
+          verdiepingOnderdelen: aanbevolenOnderdelen,
+          stellingen: flattenVerdiepingStellingen(aanbevolenOnderdelen),
         };
         const ref = await addDoc(collection(db, "vragenlijsten"), data);
         setVerdiepingInfo(prev => ({ ...(prev || {}), gecombineerd: { id: ref.id, ...data } }));
@@ -2588,126 +2590,88 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
       }
     };
 
+    const verdiepingKaart = (config) => {
+      const { key, titel, beschrijving, infoKey, maakFn, score, kleur } = config;
+      const isAanbevolen = aanbevolenOnderdelen.includes(key);
+      const info = verdiepingInfo?.[infoKey];
+      return (
+        <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${isAanbevolen ? kleur+"55" : ADM.border}`,borderRadius:10,padding:"12px 14px",position:"relative"}}>
+          {isAanbevolen && (
+            <span style={{position:"absolute",top:10,right:10,fontSize:10,fontWeight:700,
+              padding:"3px 8px",borderRadius:20,background:kleur+"22",color:kleur}}>
+              Aanbevolen
+            </span>
+          )}
+          <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:4,paddingRight:90}}>{titel}</div>
+          {score !== null && (
+            <div style={{fontSize:11,color:isAanbevolen?"#f39c12":ADM.muted,marginBottom:6}}>
+              Score: {parseFloat(score).toFixed(1)}{isAanbevolen ? " — vraagt extra aandacht" : " — voldoende, optionele verdieping"}
+            </div>
+          )}
+          {score === null && (
+            <div style={{fontSize:11,color:ADM.muted,marginBottom:6}}>Nog geen score beschikbaar</div>
+          )}
+          <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>{beschrijving}</div>
+          {info ? (
+            <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${info.id}`); } catch {} }}
+              style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 14px",fontWeight:700,fontSize:12,cursor:"pointer"}}>
+              🔗 Kopieer deelnemerslink
+            </button>
+          ) : (
+            <button onClick={maakFn} disabled={verdiepingMaken}
+              style={{background:isAanbevolen?ADM.teal:"rgba(255,255,255,0.06)",
+                color:isAanbevolen?ADM.navyDeep:ADM.white,
+                border:isAanbevolen?"none":`1px solid ${ADM.border}`,
+                borderRadius:8,padding:"9px 14px",fontWeight:700,fontSize:12,
+                cursor:verdiepingMaken?"wait":"pointer"}}>
+              {verdiepingMaken ? "Aanmaken..." : `Start verdiepende scan`}
+            </button>
+          )}
+        </div>
+      );
+    };
+
     return (
       <div style={{background:"rgba(15,118,110,0.08)",border:`1px solid ${ADM.tealGlow}`,borderRadius:12,padding:"16px 18px",marginBottom:20}}>
         <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>
           Vervolgonderzoek
         </div>
         <div style={{fontSize:15,fontWeight:700,color:ADM.white,marginBottom:8}}>
-          Verdiepende scans beschikbaar
+          Verdiepende scans
         </div>
         <div style={{fontSize:13,color:ADM.muted,lineHeight:1.65,marginBottom:14}}>
-          Start vanuit de basisscan een verdiepende meting op het domein dat extra aandacht vraagt.
-          {heeftMeerdere && " Omdat meerdere domeinen aandacht vragen, kun je ook één gecombineerde verdiepingslink maken."}
+          {aanbevolenOnderdelen.length > 0
+            ? `Op ${aanbevolenOnderdelen.length === 1 ? "één domein" : aanbevolenOnderdelen.length + " domeinen"} is een verdiepende scan aanbevolen. Je kunt ook op elk ander domein een verdieping inzetten.`
+            : "Alle scores liggen boven de aandachtsdrempel. Je kunt alsnog op elk domein een verdiepende scan inzetten naar keuze."}
         </div>
 
-        {heeftMeerdere && (
-          <div style={{background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px",marginBottom:12}}>
-            <div style={{fontSize:13,fontWeight:700,color:ADM.white,marginBottom:8}}>
-              Gecombineerde verdiepingsscan
+        {heeftMeerdereAanbevolen && (
+          <div style={{background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.teal}44`,borderRadius:10,padding:"12px 14px",marginBottom:12}}>
+            <div style={{fontSize:13,fontWeight:700,color:ADM.white,marginBottom:6}}>
+              Gecombineerde verdiepingsscan <span style={{fontSize:11,fontWeight:400,color:ADM.teal}}>Aanbevolen</span>
             </div>
             <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
-              Combineert: {onderdelen.map((k) => VERDIEPING_BLOKKEN[k]?.titel).filter(Boolean).join(" + ")}
+              Combineert alle aanbevolen domeinen in één link: {aanbevolenOnderdelen.map((k) => VERDIEPING_BLOKKEN[k]?.titel).filter(Boolean).join(" + ")}
             </div>
             {verdiepingInfo?.gecombineerd ? (
-              <button
-                onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.gecombineerd.id}`); } catch {} }}
-                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
-              >
+              <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.gecombineerd.id}`); } catch {} }}
+                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
                 🔗 Kopieer gecombineerde deelnemerslink
               </button>
             ) : (
-              <button
-                onClick={maakGecombineerdeVerdieping}
-                disabled={verdiepingMaken}
-                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}
-              >
-                {verdiepingMaken ? "Aanmaken..." : "Maak één gecombineerde verdiepingslink"}
+              <button onClick={maakGecombineerdeVerdieping} disabled={verdiepingMaken}
+                style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}>
+                {verdiepingMaken ? "Aanmaken..." : "Maak gecombineerde verdiepingslink"}
               </button>
             )}
           </div>
         )}
 
         <div style={{display:"grid",gridTemplateColumns:"1fr",gap:10}}>
-          {veiligheidAandacht && (
-            <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
-              <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Veiligheid en leiderschap</div>
-              <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
-                Gebaseerd op de 9 Secure Base Leadership-dimensies.
-              </div>
-              {verdiepingInfo?.veiligheid ? (
-                <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.veiligheid.id}`); } catch {} }}
-                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
-                  🔗 Kopieer deelnemerslink
-                </button>
-              ) : (
-                <button onClick={maakVerdiependeScan} disabled={verdiepingMaken}
-                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}>
-                  {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan veiligheid en leiderschap"}
-                </button>
-              )}
-            </div>
-          )}
-
-          {verbeterenLerenAandacht && (
-            <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
-              <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Verbeteren en leren</div>
-              <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
-                Lean- en Agile-volwassenheid vanuit twee perspectieven: leidinggevende en teamspiegel.
-              </div>
-              {verdiepingInfo?.verbeterenLeren ? (
-                <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.verbeterenLeren.id}`); } catch {} }}
-                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
-                  🔗 Kopieer deelnemerslink
-                </button>
-              ) : (
-                <button onClick={maakVerdiepingVerbeterenLeren} disabled={verdiepingMaken}
-                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}>
-                  {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan verbeteren en leren"}
-                </button>
-              )}
-            </div>
-          )}
-
-          {energieMotivatieAandacht && (
-            <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
-              <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Energie en motivatie</div>
-              <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
-                JD-R verdieping op taakeisen, hulpbronnen, bevlogenheid en uitputting.
-              </div>
-              {verdiepingInfo?.energieMotivatie ? (
-                <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.energieMotivatie.id}`); } catch {} }}
-                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
-                  🔗 Kopieer deelnemerslink
-                </button>
-              ) : (
-                <button onClick={maakVerdiepingEnergieMotivatie} disabled={verdiepingMaken}
-                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}>
-                  {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan energie en motivatie"}
-                </button>
-              )}
-            </div>
-          )}
-
-          {belevingVeranderingAandacht && (
-            <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
-              <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:6}}>Beleving van verandering</div>
-              <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
-                Neuromanagement-verdieping op breinvriendelijk leiderschap en SCARF-gerelateerde dimensies.
-              </div>
-              {verdiepingInfo?.belevingVerandering ? (
-                <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.belevingVerandering.id}`); } catch {} }}
-                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
-                  🔗 Kopieer deelnemerslink
-                </button>
-              ) : (
-                <button onClick={maakVerdiepingBelevingVerandering} disabled={verdiepingMaken}
-                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:verdiepingMaken?"wait":"pointer"}}>
-                  {verdiepingMaken ? "Aanmaken..." : "Start verdiepende scan beleving van verandering"}
-                </button>
-              )}
-            </div>
-          )}
+          {verdiepingKaart({ key:"veiligheid_leiderschap", titel:"Veiligheid & Leiderschap", beschrijving:"9 Secure Base Leadership-dimensies — beschikbaarheid, empathie, vertrouwen, uitdagen en meer.", infoKey:"veiligheid", maakFn:maakVerdiependeScan, score:veiligheidScoreTeam, kleur:"#5A8C3C" })}
+          {verdiepingKaart({ key:"beleving_verandering",   titel:"Beleving van Verandering", beschrijving:"Neuromanagement-verdieping op breinvriendelijk leiderschap en SCARF-dimensies.", infoKey:"belevingVerandering", maakFn:maakVerdiepingBelevingVerandering, score:belevingVeranderingScoreTeam, kleur:"#3A7DBF" })}
+          {verdiepingKaart({ key:"energie_motivatie",      titel:"Energie & Motivatie", beschrijving:"JD-R verdieping op taakeisen, hulpbronnen, bevlogenheid en uitputting.", infoKey:"energieMotivatie", maakFn:maakVerdiepingEnergieMotivatie, score:energieMotivatieScoreTeam, kleur:"#E8821A" })}
+          {verdiepingKaart({ key:"verbeteren_leren",       titel:"Verbeteren & Leren", beschrijving:"Lean- en Agile-volwassenheid vanuit twee perspectieven: leidinggevende en teamspiegel.", infoKey:"verbeterenLeren", maakFn:maakVerdiepingVerbeterenLeren, score:verbeterenLerenScoreTeam, kleur:"#6B4E9E" })}
         </div>
       </div>
     );
@@ -5672,30 +5636,50 @@ function PageRapportages() {
     const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
 
     const DOMEINEN = [
-      { naam: "Veiligheid & Leiderschap", kleur: "#5A8C3C", pijler: 0 },
-      { naam: "Beleving van Verandering", kleur: "#3A7DBF", pijler: 1 },
-      { naam: "Energie & Motivatie",      kleur: "#E8821A", pijler: 2 },
-      { naam: "Verbeteren & Leren",       kleur: "#6B4E9E", pijler: 3 },
+      { naam: "Veiligheid & Leiderschap", kleur: "#5A8C3C", pijler: 0, mwIds: null, mgIds: null },
+      { naam: "Beleving van Verandering", kleur: "#3A7DBF", pijler: 1, mwIds: null, mgIds: null },
+      { naam: "Energie & Motivatie",      kleur: "#E8821A", pijler: 2, mwIds: null, mgIds: null },
+      { naam: "Verbeteren & Leren",       kleur: "#6B4E9E", pijler: 3, mwIds: null, mgIds: null },
+      // Pijler 4 opgesplitst in twee domeinen
+      { naam: "Samenwerking & Communicatie", kleur: "#0F766E", pijler: 4,
+        mwIds: [1001,1002,1003,1004], mgIds: [2001,2002,2003,2004] },
+      { naam: "Richting & Betrokkenheid",    kleur: "#8B5CF6", pijler: 4,
+        mwIds: [1027,1028], mgIds: [2027,2028] },
     ];
 
     // Score per pijler berekenen op basis van de juiste vragenlijst
-    const gemPijlerLijst = (pijler, resp, stellingen) => {
-      const ids  = stellingen.filter(s => s.pijler === pijler && s.type === "schaal").map(s => s.id);
+    const gemPijlerLijst = (pijler, resp, stellingen, explicieteIds = null) => {
+      const ids = explicieteIds
+        ? explicieteIds
+        : stellingen.filter(s => s.pijler === pijler && s.type === "schaal").map(s => s.id);
       const vals = resp.flatMap(a => ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null && v !== ""));
       return vals.length ? vals.reduce((s, v) => s + parseFloat(v), 0) / vals.length : null;
     };
 
     const scores = DOMEINEN.map(d => {
-      const mw   = gemPijlerLijst(d.pijler, mwResp, mwStellingen);
-      const mg   = gemPijlerLijst(d.pijler, mgResp, mgStellingen);
+      const mw   = gemPijlerLijst(d.pijler, mwResp, mwStellingen, d.mwIds);
+      const mg   = gemPijlerLijst(d.pijler, mgResp, mgStellingen, d.mgIds);
       const gap  = mw !== null && mg !== null ? mg - mw : null;
       return { ...d, mw, mg, gap };
     });
 
     // Open antwoorden per domein — medewerkers en manager apart
+    // Expliciete open vraag-id mapping per domein
+    const openIdsMap = {
+      "Samenwerking & Communicatie": { mw: [1005], mg: [2005] },
+      "Richting & Betrokkenheid":    { mw: [1029], mg: [2029, 2030] },
+    };
+
     const openPerDomein = DOMEINEN.map(d => {
-      const mwOpen = mwStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
-      const mgOpen = mgStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+      const explicieteIds = openIdsMap[d.naam];
+      let mwOpen, mgOpen;
+      if (explicieteIds) {
+        mwOpen = mwStellingen.filter(s => explicieteIds.mw.includes(s.id));
+        mgOpen = mgStellingen.filter(s => explicieteIds.mg.includes(s.id));
+      } else {
+        mwOpen = mwStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+        mgOpen = mgStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+      }
       const mwAntw = mwOpen.flatMap(s => mwResp.map(a => a.antwoorden?.[s.id]).filter(v => v?.trim().length > 3));
       const mgAntw = mgOpen.flatMap(s => mgResp.map(a => a.antwoorden?.[s.id]).filter(v => v?.trim().length > 3));
       return { ...d, mwVraag: mwOpen[0]?.tekst || "", mgVraag: mgOpen[0]?.tekst || "", mwAntw, mgAntw };
@@ -6088,28 +6072,73 @@ function PageRapportages() {
           { titel: "Leer van elkaar, niet alleen van trainingen", tekst: "Plan informele kennisdeling: 'Wat heb jij deze week geleerd?' als vaste afsluiter van een teamoverleg. Dit versterkt het collectieve leren zonder extra belasting." },
         ],
       },
+      {
+        naam: "Samenwerking & Communicatie", kleur: "#0F766E", lichtKleur: "#f0faf9", pijler: 4,
+        icon: "🤝",
+        mwIds: [1001,1002,1003,1004], mgIds: [2001,2002,2003,2004],
+        mwOpenIds: [1005], mgOpenIds: [2005],
+        theorie: "Effectieve samenwerking vraagt meer dan goede intenties — het vraagt bewuste afstemming op communicatiestijl, verwachtingen en de manier waarop mensen met misverstanden omgaan. Verschillen in werkstijl en communicatie zijn onvermijdelijk in elk divers team. De vraag is niet hóf die verschillen er zijn, maar of het team ze ziet als bron van kracht of als bron van wrijving. Teams die leren elkaars communicatiestijl te lezen en zich bewust aanpassen, zijn veerkrachtiger, innovatiever en prettiger om in te werken.",
+        gapDuiding: "Er is een verschil in hoe de manager en het team de samenwerking en communicatie ervaren. Dit kan duiden op blinde vlekken aan managementkant over wat er werkelijk speelt in de onderlinge dynamiek, of op patronen die medewerkers als normaal zijn gaan beschouwen maar die de leidinggevende nog niet heeft opgemerkt.",
+        geenGapDuiding: "Manager en team beoordelen de samenwerking en communicatie vergelijkbaar. Er is een gedeeld beeld van hoe de onderlinge afstemming verloopt.",
+        acties_manager: [
+          { titel: "Maak communicatiestijlen bespreekbaar", tekst: "Investeer in een gesprek over hoe mensen van nature communiceren. Niet als beoordeling, maar als wederzijds begrip. Dit verlaagt de drempel om stijlverschillen te benoemen als die tot wrijving leiden." },
+          { titel: "Normaliseer het corrigeren van misverstanden", tekst: "Wanneer een misverstand ontstaat, maak het bespreekbaar zonder de schuldvraag. Introduceer een teamafspraak: 'Als het niet klopt wat ik hoor, zeg het dan.' Dit maakt het veilig om te corrigeren." },
+        ],
+        acties_team: [
+          { titel: "Vraag door in plaats van aanvullen", tekst: "Wanneer iets onduidelijk is, vraag dan expliciet wat bedoeld wordt voordat je conclusies trekt. Dit voorkomt misverstanden die stilzwijgend escaleren." },
+          { titel: "Benoem stijlverschillen als kracht", tekst: "Oefen in het benoemen wat een collega goed doet op een manier die jij anders aanpakt. Dit verschuift het frame van 'anders is lastig' naar 'anders is aanvullend'." },
+        ],
+      },
+      {
+        naam: "Richting & Betrokkenheid", kleur: "#8B5CF6", lichtKleur: "#f5f3ff", pijler: 4,
+        icon: "🧭",
+        mwIds: [1027,1028], mgIds: [2027,2028],
+        mwOpenIds: [1029], mgOpenIds: [2029, 2030],
+        theorie: "Betrokkenheid bij de richting van een team is geen vanzelfsprekendheid — het ontstaat wanneer mensen het gevoel hebben dat ze er daadwerkelijk toe doen. Dat vraagt van de leidinggevende meer dan transparantie over plannen: het vraagt dat medewerkers zichzelf herkennen in de koers. Richting bepalen is geen eenrichtingsverkeer. De meest duurzame beweging ontstaat wanneer de leidinggevende zicht heeft op de menselijke uitdagingen in het team én wanneer medewerkers vertrouwen hebben dat hun inbreng ook echt iets verandert.",
+        gapDuiding: "Er zit een verschil in hoe betrokken medewerkers zich voelen bij de richting van het team en hoe de manager dit inschat. Dit kan betekenen dat de leidinggevende meer zicht heeft op de koers dan het team ervaart — of dat medewerkers minder vertrouwen hebben dat hun inbreng echt wordt opgepakt dan de leidinggevende denkt.",
+        geenGapDuiding: "De betrokkenheid bij richting en de verwachtingen daarover worden door beide partijen vergelijkbaar beleefd. Er is een gezonde basis van gedeeld perspectief op de koers van het team.",
+        acties_manager: [
+          { titel: "Maak de eerste stap concreet en zichtbaar", tekst: "Vraag het team expliciet: 'Wat is voor jullie de meest voelbare eerste stap?' en koppel dit terug als actie. Het nakomen van deze afspraak is de meest effectieve manier om vertrouwen op te bouwen." },
+          { titel: "Benoem waar de hefboom zit", tekst: "Deel uw eigen beeld van waar de grootste winst te behalen is, en vraag het team daarna om reactie. Dit opent een gesprek over richting in plaats van een presentatie erover." },
+        ],
+        acties_team: [
+          { titel: "Formuleer uw eerste stap als voorstel", tekst: "Schrijf individueel op wat voor jou de meest waardevolle eerste stap zou zijn. Deel dit in het team. Concrete voorstellen zijn krachtiger dan algemene wensen." },
+          { titel: "Spreek uit wat vertrouwen geeft of ontbreekt", tekst: "Benoem als team wat nodig is om meer vertrouwen te hebben dat verbeteringen ook echt worden opgepakt. Dit maakt verwachtingen bespreekbaar." },
+        ],
+      },
     ];
 
-    const gemPijlerLijst = (pijler, resp, stellingen) => {
-      const ids  = stellingen.filter(s => s.pijler === pijler && s.type === "schaal").map(s => s.id);
+    const gemPijlerLijst = (pijler, resp, stellingen, explicieteIds = null) => {
+      const ids = explicieteIds
+        ? explicieteIds
+        : stellingen.filter(s => s.pijler === pijler && s.type === "schaal").map(s => s.id);
       const vals = resp.flatMap(a => ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null && v !== ""));
       return vals.length ? vals.reduce((s, v) => s + parseFloat(v), 0) / vals.length : null;
     };
 
     const scores = DOMEINEN.map(d => {
-      const mw  = gemPijlerLijst(d.pijler, mwResp, mwStellingen);
-      const mg  = gemPijlerLijst(d.pijler, mgResp, mgStellingen);
+      const mw  = gemPijlerLijst(d.pijler, mwResp, mwStellingen, d.mwIds || null);
+      const mg  = gemPijlerLijst(d.pijler, mgResp, mgStellingen, d.mgIds || null);
       const gap = mw !== null && mg !== null ? mg - mw : null;
       return { ...d, mw, mg, gap };
     });
 
-    // Open antwoorden
+    // Open antwoorden — met expliciete id-mapping voor samenwerking en richting
     const openPerDomein = DOMEINEN.map(d => {
-      const mwOpen = mwStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
-      const mgOpen = mgStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+      let mwOpen, mgOpen;
+      if (d.mwOpenIds) {
+        mwOpen = mwStellingen.filter(s => d.mwOpenIds.includes(s.id));
+        mgOpen = mgStellingen.filter(s => d.mgOpenIds.includes(s.id));
+      } else {
+        mwOpen = mwStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+        mgOpen = mgStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+      }
       const mwAntw = mwOpen.flatMap(s => mwResp.map(a => a.antwoorden?.[s.id]).filter(v => v?.trim().length > 3));
       const mgAntw = mgOpen.flatMap(s => mgResp.map(a => a.antwoorden?.[s.id]).filter(v => v?.trim().length > 3));
-      return { ...d, mwVraag: mwOpen[0]?.tekst || "", mgVraag: mgOpen[0]?.tekst || "", mwAntw, mgAntw };
+      // Voor richting: meerdere open vragen per label
+      const mwVragen = mwOpen.map(s => s.tekst).filter(Boolean);
+      const mgVragen = mgOpen.map(s => s.tekst).filter(Boolean);
+      return { ...d, mwVraag: mwOpen[0]?.tekst || "", mgVraag: mgOpen[0]?.tekst || "", mwVragen, mgVragen, mwAntw, mgAntw };
     });
 
     const scoreKleur  = s => !s || isNaN(s) ? "#999" : s >= 4 ? "#2ecc71" : s >= 3 ? "#f39c12" : "#e74c3c";
@@ -6423,10 +6452,27 @@ function PageRapportages() {
           <div class="open-label">Wat mensen zelf zeggen</div>
           ${open.mwAntw.length > 0 ? `
           <div style="font-size:11px;color:#6B7A8D;font-weight:600;margin-bottom:8px;">👥 MEDEWERKERS</div>
-          ${open.mwAntw.map(a => `<div class="open-item" style="border-color:${s.kleur};">${a}</div>`).join("")}` : ""}
+          ${open.mwVragen && open.mwVragen.length > 1
+            ? open.mwVragen.map((vraag, vi) => {
+                const vragAntw = (open.mwOpenIds || []).length > 1
+                  ? mwResp.map(a => a.antwoorden?.[(mwStellingen.filter(s => s.type==="open" && open.mwOpenIds?.includes(s.id))[vi] || {}).id]).filter(v => v?.trim().length > 3)
+                  : open.mwAntw;
+                return vragAntw.length > 0 ? `<div style="font-size:11px;color:#9aa3af;font-style:italic;margin-bottom:6px;margin-top:8px;">${vraag}</div>${vragAntw.map(a => `<div class="open-item" style="border-color:${s.kleur};">${a}</div>`).join("")}` : "";
+              }).join("")
+            : (open.mwVraag ? `<div style="font-size:11px;color:#9aa3af;font-style:italic;margin-bottom:6px;">${open.mwVraag}</div>` : "") +
+              open.mwAntw.map(a => `<div class="open-item" style="border-color:${s.kleur};">${a}</div>`).join("")
+          }` : ""}
           ${open.mgAntw.length > 0 ? `
           <div style="font-size:11px;color:#6B7A8D;font-weight:600;margin-bottom:8px;margin-top:12px;">👔 MANAGER</div>
-          ${open.mgAntw.map(a => `<div class="open-item" style="border-color:${s.kleur};opacity:0.85;">${a}</div>`).join("")}` : ""}
+          ${open.mgVragen && open.mgVragen.length > 1
+            ? open.mgVragen.map((vraag, vi) => {
+                const stelling = mgStellingen.filter(s => s.type==="open" && (open.mgOpenIds||[]).includes(s.id))[vi];
+                const vragAntw = stelling ? mgResp.map(a => a.antwoorden?.[stelling.id]).filter(v => v?.trim().length > 3) : [];
+                return vragAntw.length > 0 ? `<div style="font-size:11px;color:#9aa3af;font-style:italic;margin-bottom:6px;margin-top:8px;">${vraag}</div>${vragAntw.map(a => `<div class="open-item" style="border-color:${s.kleur};opacity:0.85;">${a}</div>`).join("")}` : "";
+              }).join("")
+            : (open.mgVraag ? `<div style="font-size:11px;color:#9aa3af;font-style:italic;margin-bottom:6px;">${open.mgVraag}</div>` : "") +
+              open.mgAntw.map(a => `<div class="open-item" style="border-color:${s.kleur};opacity:0.85;">${a}</div>`).join("")
+          }` : ""}
         </div>` : ""}
 
         <div class="acties-blok">
