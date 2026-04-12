@@ -4400,6 +4400,80 @@ function PageKlanten() {
                                 </div>
                               )}
                             </div>
+
+                            {/* ── Verdiepende scans ── */}
+                            {(() => {
+                              const refId = mwId || (trajectRef?.id);
+                              if (!refId) return null;
+
+                              // Bestaande verdiepingen voor dit traject
+                              const bestaandeVerdiepingen = vragenlijsten.filter(v =>
+                                v.parentVragenlijstId === mwId ||
+                                v.parentVragenlijstId === mgId
+                              );
+
+                              const VERDIEP_CONFIG = [
+                                { key:"veiligheid_leiderschap", type:"verdieping_veiligheid_leiderschap", label:"Veiligheid & Leiderschap", kleur:"#5A8C3C", stellingen: VEILIGHEID_LEIDERSCHAP_STELLINGEN },
+                                { key:"beleving_verandering",   type:"verdieping_beleving_verandering",   label:"Beleving van Verandering", kleur:"#3A7DBF", stellingen: BELEVING_VERANDERING_STELLINGEN },
+                                { key:"energie_motivatie",      type:"verdieping_energie_motivatie",      label:"Energie & Motivatie",      kleur:"#E8821A", stellingen: ENERGIE_MOTIVATIE_STELLINGEN },
+                                { key:"verbeteren_leren",       type:"verdieping_verbeteren_leren",       label:"Verbeteren & Leren",       kleur:"#6B4E9E", stellingen: VERBETEREN_LEREN_STELLINGEN },
+                              ];
+
+                              const maakVerdieping = async (config) => {
+                                try {
+                                  const ref = await addDoc(collection(db, "vragenlijsten"), {
+                                    naam: `${selectedKlant.naam} — Verdieping ${config.label}`,
+                                    klant: selectedKlant.naam,
+                                    aangemaakt: new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}),
+                                    status: "Actief",
+                                    type: config.type,
+                                    parentVragenlijstId: refId,
+                                    stellingen: config.stellingen,
+                                  });
+                                  await laadData();
+                                } catch (err) {
+                                  console.error("Verdiepende scan aanmaken mislukt:", err);
+                                }
+                              };
+
+                              return (
+                                <div style={{marginTop:10,paddingTop:10,borderTop:`1px solid ${ADM.border}`}}>
+                                  <div style={{fontSize:10,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>
+                                    Verdiepende scans
+                                  </div>
+                                  <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                                    {VERDIEP_CONFIG.map(config => {
+                                      const bestaand = bestaandeVerdiepingen.find(v => v.type === config.type);
+                                      const vResp = bestaand ? antwoorden.filter(a => a.vragenlijstId === bestaand.id).length : 0;
+                                      return (
+                                        <div key={config.key} style={{display:"flex",alignItems:"center",gap:10,justifyContent:"space-between",flexWrap:"wrap"}}>
+                                          <div style={{display:"flex",alignItems:"center",gap:8,flex:1,minWidth:0}}>
+                                            <div style={{width:6,height:6,borderRadius:"50%",background:config.kleur,flexShrink:0}}/>
+                                            <span style={{fontSize:12,color:bestaand?ADM.white:ADM.muted}}>{config.label}</span>
+                                            {bestaand && <span style={{fontSize:11,color:ADM.muted}}>· {vResp} respondent{vResp!==1?"en":""}</span>}
+                                          </div>
+                                          {bestaand ? (
+                                            <button
+                                              onClick={async()=>{try{await navigator.clipboard.writeText(`${window.location.origin}?scan=${bestaand.id}`);}catch{}}}
+                                              style={{background:`${config.kleur}18`,color:config.kleur,border:`1px solid ${config.kleur}33`,borderRadius:6,padding:"4px 10px",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}
+                                            >
+                                              🔗 Kopieer link
+                                            </button>
+                                          ) : (
+                                            <button
+                                              onClick={()=>maakVerdieping(config)}
+                                              style={{background:"rgba(255,255,255,0.05)",color:ADM.muted,border:`1px solid ${ADM.border}`,borderRadius:6,padding:"4px 10px",fontSize:11,fontWeight:600,cursor:"pointer",whiteSpace:"nowrap"}}
+                                            >
+                                              + Inzetten
+                                            </button>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              );
+                            })()}
                           </div>
                         );
                       });
