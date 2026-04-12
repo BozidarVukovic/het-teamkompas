@@ -5681,6 +5681,7 @@ function PageRapportages() {
     </p>
     ${verdiepingen.map(v => {
       const vResp = antwoordenVoor(v.id);
+      const isJDR = v.type === "verdieping_energie_motivatie";
       const vLabel = {
         verdieping_veiligheid_leiderschap: "Veiligheid & Leiderschap — Secure Base",
         verdieping_beleving_verandering:   "Beleving van Verandering — SCARF",
@@ -5704,6 +5705,7 @@ function PageRapportages() {
           </div>
           <div style="font-size:12px;color:#6B7A8D;">${vResp.length} respondent${vResp.length !== 1 ? "en" : ""} · ${v.aangemaakt || ""}</div>
         </div>
+        ${isJDR ? `<div style="font-size:11px;color:#6B7A8D;font-style:italic;margin-bottom:10px;">⚠ Taakeisen & Uitputting: lager = gunstiger. Hulpbronnen & Bevlogenheid: hoger = gunstiger.</div>` : ""}
         ${vResp.length === 0
           ? `<p style="font-size:13px;color:#aaa;">Nog geen respondenten — resultaten beschikbaar zodra de scan ingevuld is.</p>`
           : (() => {
@@ -5711,16 +5713,23 @@ function PageRapportages() {
               (v.stellingen || []).filter(s => s.type === "schaal").forEach(s => {
                 const key = s.dimensieCode || s.dimensie || `pijler_${s.pijler}`;
                 const naam = s.dimensie || key;
-                if (!dimMap.has(key)) dimMap.set(key, { naam, ids: [] });
+                const code = s.dimensieCode || "";
+                if (!dimMap.has(key)) dimMap.set(key, { naam, code, ids: [] });
                 dimMap.get(key).ids.push(s.id);
               });
-              const dims = Array.from(dimMap.values()).slice(0, 8);
+              const dims = Array.from(dimMap.values()).slice(0, 12);
               return dims.map(d => {
                 const vals = vResp.flatMap(a => d.ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null && v !== ""));
                 const gem  = vals.length ? vals.reduce((s,v) => s + parseFloat(v), 0) / vals.length : null;
-                const kleur = gem === null ? "#aaa" : gem >= 4 ? "#2ecc71" : gem >= 3 ? "#f39c12" : "#e74c3c";
+                // JD-R: taakeisen (A) en uitputting (C2) zijn omgekeerd — laag is goed
+                const isOmgekeerd = isJDR && (d.code.startsWith("A") || d.code === "C2");
+                const kleur = gem === null ? "#aaa"
+                  : isOmgekeerd
+                    ? (gem <= 2 ? "#2ecc71" : gem <= 3 ? "#f39c12" : "#e74c3c")
+                    : (gem >= 4 ? "#2ecc71" : gem >= 3 ? "#f39c12" : "#e74c3c");
+                const label = isOmgekeerd ? (gem <= 2 ? "Laag ✓" : gem <= 3 ? "Matig" : "Hoog ⚠") : "";
                 return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                  <div style="font-size:12px;color:#5b6775;width:180px;flex-shrink:0;">${d.naam}</div>
+                  <div style="font-size:12px;color:#5b6775;width:220px;flex-shrink:0;">${d.naam}${isOmgekeerd ? " ↓" : ""}</div>
                   <div style="flex:1;height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;">
                     <div style="height:100%;border-radius:4px;background:${kleur};width:${gem ? (gem/5)*100 : 0}%;"></div>
                   </div>
@@ -6212,10 +6221,11 @@ function PageRapportages() {
 
     ${verdiepingen.map(v => {
       const vResp = antwoordenVoor(v.id);
+      const isJDR = v.type === "verdieping_energie_motivatie";
       const vLabelMap = {
         verdieping_veiligheid_leiderschap: { label: "Veiligheid & Leiderschap", sub: "Gebaseerd op de 9 kenmerken van Secure Base Leadership (Kohlrieser, Goldsworthy & Cooke)", kleur: "#5A8C3C", licht: "#f0f6ec" },
         verdieping_beleving_verandering:   { label: "Beleving van Verandering", sub: "Gebaseerd op het SCARF-model (Rock, 2008) — neurowetenschappelijke inzichten over breinvriendelijk leiderschap", kleur: "#3A7DBF", licht: "#edf4fb" },
-        verdieping_energie_motivatie:      { label: "Energie & Motivatie", sub: "Gebaseerd op het JD-R model (Bakker & Demerouti) — taakeisen, hulpbronnen, bevlogenheid en uitputting", kleur: "#E8821A", licht: "#fef5ec" },
+        verdieping_energie_motivatie:      { label: "Energie & Motivatie", sub: "Gebaseerd op het JD-R model (Bakker & Demerouti) — taakeisen (laag = gunstig), hulpbronnen & bevlogenheid (hoog = gunstig), uitputting (laag = gunstig)", kleur: "#E8821A", licht: "#fef5ec" },
         verdieping_verbeteren_leren:       { label: "Verbeteren & Leren", sub: "Gebaseerd op Lean- en Agile-principes — zelfreflectie leidinggevende en teamspiegel", kleur: "#6B4E9E", licht: "#f3f0f9" },
         verdieping_gecombineerd:           { label: "Gecombineerde verdieping", sub: "Meerdere domeinen in één verdiepende meting gecombineerd", kleur: "#0F766E", licht: "#f0faf9" },
       };
@@ -6225,7 +6235,8 @@ function PageRapportages() {
       (v.stellingen || []).filter(s => s.type === "schaal").forEach(s => {
         const key  = s.dimensieCode || s.dimensie || `pijler_${s.pijler}`;
         const naam = s.dimensie || key;
-        if (!dimMap.has(key)) dimMap.set(key, { naam, ids: [] });
+        const code = s.dimensieCode || "";
+        if (!dimMap.has(key)) dimMap.set(key, { naam, code, ids: [] });
         dimMap.get(key).ids.push(s.id);
       });
 
@@ -6233,11 +6244,17 @@ function PageRapportages() {
       const dimScores = dims.map(d => {
         const vals = vResp.flatMap(a => d.ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null && v !== ""));
         const gem  = vals.length ? vals.reduce((s,v) => s + parseFloat(v), 0) / vals.length : null;
-        return { ...d, gem };
+        // JD-R: taakeisen (A) en uitputting (C2) zijn omgekeerd — laag is goed
+        const isOmgekeerd = isJDR && (d.code.startsWith("A") || d.code === "C2");
+        // Omreken naar "positieve richting" voor vergelijking sterkste/zwakste
+        const gemPositief = gem !== null ? (isOmgekeerd ? 6 - gem : gem) : null;
+        return { ...d, gem, isOmgekeerd, gemPositief };
       });
 
-      const sterkst = dimScores.filter(d => d.gem !== null).sort((a,b) => b.gem - a.gem)[0];
-      const zwakst  = dimScores.filter(d => d.gem !== null).sort((a,b) => a.gem - b.gem)[0];
+      // Sterkste = hoogste positieve score; zwakste = laagste positieve score
+      const gesorteerd = dimScores.filter(d => d.gemPositief !== null).sort((a,b) => b.gemPositief - a.gemPositief);
+      const sterkst = gesorteerd[0];
+      const zwakst  = gesorteerd[gesorteerd.length - 1];
 
       return `
       <div class="domein-section" style="margin-bottom:24px;">
@@ -6259,23 +6276,33 @@ function PageRapportages() {
             <div style="font-size:24px;font-weight:800;color:${meta.kleur};">${dims.length}</div>
           </div>
           ${sterkst ? `<div style="background:${meta.licht};border-radius:10px;padding:14px 18px;flex:2;min-width:200px;border:1px solid ${meta.kleur}22;">
-            <div style="font-size:10px;color:${meta.kleur};font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Sterkste dimensie</div>
+            <div style="font-size:10px;color:${meta.kleur};font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Sterkste dimensie${sterkst.isOmgekeerd ? " (laag = goed)" : ""}</div>
             <div style="font-size:14px;font-weight:700;color:#0D1B2A;">${sterkst.naam} — <span style="color:#2ecc71;">${sterkst.gem?.toFixed(1)}</span></div>
           </div>` : ""}
           ${zwakst && zwakst !== sterkst ? `<div style="background:#fff8f7;border-radius:10px;padding:14px 18px;flex:2;min-width:200px;border:1px solid #e74c3c22;">
-            <div style="font-size:10px;color:#e74c3c;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Aandachtsdimensie</div>
+            <div style="font-size:10px;color:#e74c3c;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Aandachtsdimensie${zwakst.isOmgekeerd ? " (hoog = belasting)" : ""}</div>
             <div style="font-size:14px;font-weight:700;color:#0D1B2A;">${zwakst.naam} — <span style="color:#e74c3c;">${zwakst.gem?.toFixed(1)}</span></div>
           </div>` : ""}
         </div>
+
+        ${isJDR ? `<div style="background:#fff8f0;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#9a6800;border-left:3px solid #E8821A;">
+          <strong>Leeswijzer JD-R model:</strong> Taakeisen (A1–A5) en Uitputting (C2): een <em>lage</em> score is gunstig — deze zijn gemarkeerd met ↓.
+          Hulpbronnen (B1–B5) en Bevlogenheid (C1): een <em>hoge</em> score is gunstig.
+        </div>` : ""}
 
         ${vResp.length === 0
           ? `<div style="background:#f8f9fb;border-radius:10px;padding:18px 22px;color:#aaa;font-size:13px;">Nog geen respondenten. Resultaten worden hier getoond zodra de verdiepende scan ingevuld is.</div>`
           : `<div>
               <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#9aa3af;margin-bottom:14px;">Scores per dimensie</div>
               ${dimScores.map(d => {
-                const kleur = d.gem === null ? "#aaa" : d.gem >= 4 ? "#2ecc71" : d.gem >= 3 ? "#f39c12" : "#e74c3c";
+                // Kleur op basis van richting: omgekeerde dimensies kleuren rood bij hoge score
+                const kleur = d.gem === null ? "#aaa"
+                  : d.isOmgekeerd
+                    ? (d.gem <= 2 ? "#2ecc71" : d.gem <= 3.5 ? "#f39c12" : "#e74c3c")
+                    : (d.gem >= 4 ? "#2ecc71" : d.gem >= 3 ? "#f39c12" : "#e74c3c");
+                const richtingLabel = d.isOmgekeerd ? " ↓" : "";
                 return `<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-                  <div style="font-size:12px;color:#3d4555;width:200px;flex-shrink:0;line-height:1.3;">${d.naam}</div>
+                  <div style="font-size:12px;color:#3d4555;width:220px;flex-shrink:0;line-height:1.3;">${d.naam}${richtingLabel}</div>
                   <div style="flex:1;height:10px;background:#eee;border-radius:5px;overflow:hidden;">
                     <div style="height:100%;border-radius:5px;background:${kleur};width:${d.gem ? (d.gem/5)*100 : 0}%;"></div>
                   </div>
