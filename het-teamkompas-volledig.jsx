@@ -3208,7 +3208,7 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
         <div style={{fontSize:13,color:ADM.muted,marginBottom:16}}>
           {antwoorden.length} deelnemers · {teamleden.length} teamleden · {management.length} leidinggevenden · {lijst.klant}
         </div>
-        {(veiligheidAandacht || verbeterenLerenAandacht || energieMotivatieAandacht || belevingVeranderingAandacht) && <VerdieningIntro /> }
+        {<VerdieningIntro />}
         <div style={{display:"flex",borderBottom:`1px solid ${ADM.border}`,overflowX:"auto"}}>
           {[["gap","🔍 Gap-analyse"],["team","👥 Team"],["management","👔 Management"],["individueel","📋 Individueel"]].map(([v,l])=>(
             <button key={v} onClick={()=>setTabBlad(v)} style={tabStijl(v)}>{l}</button>
