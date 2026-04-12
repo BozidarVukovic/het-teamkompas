@@ -1725,14 +1725,15 @@ function ScanInvullen({ scanId }) {
       });
 
       try {
-        const scoresVoorMeting = berekenScanScoresVoorMeting(lijst?.stellingen || DEFAULT_STELLINGEN, antwoorden);
         const bestaandeMetingenSnap = await getDocs(collection(db, "metingen"));
-        const bestaatAlVoorTraject = bestaandeMetingenSnap.docs.some((d) => {
+        const bestaandeMeting = bestaandeMetingenSnap.docs.find((d) => {
           const data = d.data() || {};
           return data.trajectId === scanId && (data.type === "T0 Meting" || data.type === "Nulmeting");
         });
 
-        if (!bestaatAlVoorTraject) {
+        if (!bestaandeMeting) {
+          // Eerste respondent — meting aanmaken
+          const scoresVoorMeting = berekenScanScoresVoorMeting(lijst?.stellingen || DEFAULT_STELLINGEN, antwoorden);
           await addDoc(collection(db, "metingen"), {
             klant: lijst?.klant || "",
             trajectId: scanId,
@@ -1744,6 +1745,37 @@ function ScanInvullen({ scanId }) {
             status: "Compleet",
             bron: "Automatisch uit scan",
             aangemaakt_op: serverTimestamp(),
+          });
+        } else {
+          // Volgende respondenten — teller ophogen en scores herberekenen over alle antwoorden
+          const alleAntwoordenSnap = await getDocs(collection(db, "antwoorden"));
+          const alleAntwoorden = alleAntwoordenSnap.docs
+            .map(d => d.data())
+            .filter(a => a.vragenlijstId === scanId);
+          const stellingen = lijst?.stellingen || DEFAULT_STELLINGEN;
+          // Herbereken scores gemiddeld over alle respondenten
+          const pijlerMap = {};
+          stellingen.filter(s => s.type === "schaal").forEach(s => {
+            if (!pijlerMap[s.pijler]) pijlerMap[s.pijler] = [];
+            alleAntwoorden.forEach(a => {
+              const val = a.antwoorden?.[s.id];
+              if (val !== undefined && val !== null && val !== "") {
+                pijlerMap[s.pijler].push(parseFloat(val));
+              }
+            });
+          });
+          const avg = arr => arr.length ? Math.round((arr.reduce((a,b) => a+b, 0) / arr.length) * 10) / 10 : null;
+          const herberekendScores = {
+            "Veiligheid & Leiderschap": avg(pijlerMap[0] || []),
+            "Beleving van Verandering":  avg(pijlerMap[1] || []),
+            "Energie & Motivatie":       avg(pijlerMap[2] || []),
+            "Verbeteren & Leren":        avg(pijlerMap[3] || []),
+            "Gedrag (centraal)":         avg(pijlerMap[4] || []),
+          };
+          await updateDoc(doc(db, "metingen", bestaandeMeting.id), {
+            respondenten: alleAntwoorden.length,
+            scores: herberekendScores,
+            datum: new Date().toLocaleDateString("nl-NL"),
           });
         }
       } catch (metingErr) {
@@ -5531,12 +5563,24 @@ function PageRapportages() {
   };
 
   // ─── TOTAALRAPPORTAGE: medewerkers + management gecombineerd ──────────────
-  const genereerTotaalrapport = (mwLijst, mgLijst, verdiepingen = []) => {
+  const genereerTotaalrapport = async (mwLijst, mgLijst, verdiepingen = []) => {
     setRapportError("");
     setGenererend(`totaal_${mwLijst.id}`);
 
-    const mwResp = antwoordenVoor(mwLijst.id); // medewerkers-antwoorden
-    const mgResp = antwoordenVoor(mgLijst.id); // management-antwoorden
+    // Altijd verse data ophalen op moment van genereren
+    let mwResp, mgResp;
+    try {
+      const antSnap = await getDocs(collection(db, "antwoorden"));
+      const alleAntwoorden = antSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(a => !a.verwijderd);
+      mwResp = alleAntwoorden.filter(a => a.vragenlijstId === mwLijst.id);
+      mgResp = alleAntwoorden.filter(a => a.vragenlijstId === mgLijst.id);
+      // Update ook de lokale state zodat de responstellingen kloppen
+      setAntwoorden(alleAntwoorden);
+    } catch (err) {
+      console.error("Antwoorden ophalen mislukt:", err);
+      setGenererend(null);
+      return;
+    }
 
     const mwStellingen = mwLijst.stellingen || MEDEWERKERSSCAN_STELLINGEN;
     const mgStellingen = mgLijst.stellingen || MANAGEMENTSCAN_STELLINGEN;
@@ -5864,12 +5908,24 @@ function PageRapportages() {
   };
 
   // ─── ADVIESRAPPORT: uitgebreid consultancy rapport ────────────────────────
-  const genereerAdviesrapport = (mwLijst, mgLijst, verdiepingen = []) => {
+  const genereerAdviesrapport = async (mwLijst, mgLijst, verdiepingen = []) => {
     setRapportError("");
     setGenererend(`advies_${mwLijst.id}`);
 
-    const mwResp = antwoordenVoor(mwLijst.id);
-    const mgResp = antwoordenVoor(mgLijst.id);
+    // Altijd verse data ophalen op moment van genereren
+    let mwResp, mgResp;
+    try {
+      const antSnap = await getDocs(collection(db, "antwoorden"));
+      const alleAntwoorden = antSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(a => !a.verwijderd);
+      mwResp = alleAntwoorden.filter(a => a.vragenlijstId === mwLijst.id);
+      mgResp = alleAntwoorden.filter(a => a.vragenlijstId === mgLijst.id);
+      setAntwoorden(alleAntwoorden);
+    } catch (err) {
+      console.error("Antwoorden ophalen mislukt:", err);
+      setGenererend(null);
+      return;
+    }
+
     const mwStellingen = mwLijst.stellingen || MEDEWERKERSSCAN_STELLINGEN;
     const mgStellingen = mgLijst.stellingen || MANAGEMENTSCAN_STELLINGEN;
 
@@ -6702,8 +6758,28 @@ function PageRapportages() {
 
   return (
     <div>
-      <div style={{fontSize:13,color:ADM.muted,marginBottom:8}}>
-        {lijsten.length} scan(s) beschikbaar · Rapportages worden gegenereerd op basis van ingevoerde scandata
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8,gap:12,flexWrap:"wrap"}}>
+        <div style={{fontSize:13,color:ADM.muted}}>
+          {lijsten.length} scan(s) beschikbaar · {antwoorden.length} antwoorden geladen
+        </div>
+        <button
+          onClick={async () => {
+            setLoading(true);
+            try {
+              const [vlSnap, antSnap] = await Promise.all([
+                getDocs(collection(db, "vragenlijsten")),
+                getDocs(collection(db, "antwoorden")),
+              ]);
+              setLijsten(vlSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(item => !item.verwijderd && item.status !== "Verwijderd"));
+              setAntwoorden(antSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(a => !a.verwijderd));
+            } catch (err) { console.error(err); }
+            finally { setLoading(false); }
+          }}
+          style={{display:"flex",alignItems:"center",gap:6,background:ADM.tealGlow,color:ADM.teal,
+            border:"1px solid rgba(15,118,110,0.3)",borderRadius:8,padding:"7px 14px",
+            fontSize:12,fontWeight:700,cursor:"pointer"}}>
+          ↻ Vernieuwen
+        </button>
       </div>
       <div style={{fontSize:12,color:ADM.muted,marginBottom:20,lineHeight:1.6,
         background:"rgba(0,168,150,0.06)",padding:"12px 16px",borderRadius:10,
