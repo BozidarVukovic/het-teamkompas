@@ -3507,6 +3507,9 @@ function PageKlanten() {
   const [opslaanMeting, setOpslaanMeting] = useState(false);
   const [verwijderenKlant, setVerwijderenKlant] = useState(false);
   const [verwijderenSamengesteld, setVerwijderenSamengesteld] = useState(false);
+  const [bewerkModus, setBewerkModus] = useState(false);
+  const [bewerkData, setBewerkData] = useState({});
+  const [opslaan_bewerk, setOpslaanBewerk] = useState(false);
   const [selectedKlant, setSelectedKlant] = useState(null);
   const [selectedTrajectId, setSelectedTrajectId] = useState(null);
   const [selectedMetingId, setSelectedMetingId] = useState(null);
@@ -3770,6 +3773,37 @@ function PageKlanten() {
     }
   };
 
+  const startBewerken = () => {
+    setBewerkData({
+      naam:    selectedKlant.naam    || "",
+      sector:  selectedKlant.sector  || "",
+      contact: selectedKlant.contact || "",
+      email:   selectedKlant.email   || "",
+      status:  selectedKlant.status  || "Actief",
+    });
+    setBewerkModus(true);
+  };
+
+  const slaWijzigingenOp = async () => {
+    if (!selectedKlant || !isEchteKlantRecord) return;
+    setOpslaanBewerk(true);
+    try {
+      await updateDoc(doc(db, "klanten", selectedKlant.id), {
+        naam:    bewerkData.naam    || selectedKlant.naam,
+        sector:  bewerkData.sector  || "",
+        contact: bewerkData.contact || "",
+        email:   bewerkData.email   || "",
+        status:  bewerkData.status  || "Actief",
+      });
+      setBewerkModus(false);
+      await laadData();
+    } catch (err) {
+      console.error("Opslaan wijzigingen mislukt:", err);
+    } finally {
+      setOpslaanBewerk(false);
+    }
+  };
+
   const startNieuwTraject = async () => {
     if (!selectedKlant || !nieuwTraject.naam) return;
     setOpslaanTraject(true);
@@ -4030,7 +4064,7 @@ function PageKlanten() {
         <div style={{display:"flex",flexDirection:"column",gap:12}}>
           {klanten.map(k => (
             <div key={k.id}
-              onClick={()=>{ setSelectedKlant(k); setSelectedTrajectId(null); setSelectedMetingId(null); }}
+              onClick={()=>{ setSelectedKlant(k); setSelectedTrajectId(null); setSelectedMetingId(null); setBewerkModus(false); }}
               style={{background:ADM.navy,border:`1px solid ${selectedKlant?.id===k.id?ADM.teal:ADM.border}`,borderRadius:12,padding:"18px 20px",cursor:"pointer"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10}}>
                 <div>
@@ -4067,29 +4101,78 @@ function PageKlanten() {
             <div style={{color:ADM.muted}}>Selecteer een klant om details te bekijken.</div>
           ) : (
             <>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:18,flexWrap:"wrap"}}>
-                <div>
-                  <div style={{fontSize:26,fontWeight:700,color:ADM.white,marginBottom:6}}>{selectedKlant.naam}</div>
-                  <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>
-                    {selectedKlant.sector || "Sector onbekend"} · {selectedKlant.contact || "Geen contactpersoon"}{selectedKlant.email ? ` · ${selectedKlant.email}` : ""}
+              {/* ── Klantinfo header ── */}
+              {bewerkModus ? (
+                <div style={{marginBottom:18}}>
+                  <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:12}}>
+                    Klant bewerken
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:10,marginBottom:12}}>
+                    {[
+                      ["naam",    "Naam organisatie"],
+                      ["sector",  "Sector"],
+                      ["contact", "Contactpersoon"],
+                      ["email",   "E-mailadres"],
+                      ["status",  "Status"],
+                    ].map(([k, l]) => (
+                      <div key={k}>
+                        <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:5}}>{l}</div>
+                        <input
+                          value={bewerkData[k] || ""}
+                          onChange={e => setBewerkData(d => ({...d, [k]: e.target.value}))}
+                          style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.teal}55`,
+                            borderRadius:8,padding:"9px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{display:"flex",gap:10}}>
+                    <button onClick={slaWijzigingenOp} disabled={opslaan_bewerk}
+                      style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,
+                        padding:"9px 18px",fontWeight:700,fontSize:13,cursor:opslaan_bewerk?"wait":"pointer"}}>
+                      {opslaan_bewerk ? "Opslaan..." : "Opslaan"}
+                    </button>
+                    <button onClick={()=>setBewerkModus(false)}
+                      style={{background:"none",color:ADM.muted,border:`1px solid ${ADM.border}`,
+                        borderRadius:8,padding:"9px 18px",fontSize:13,cursor:"pointer"}}>
+                      Annuleer
+                    </button>
                   </div>
                 </div>
-                <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",justifyContent:"flex-end"}}>
-                  <span style={{fontSize:11,fontWeight:700,padding:"5px 10px",borderRadius:20,background:`${statusColor(selectedKlant?.status || "")}22`,color:statusColor(selectedKlant?.status || "")}}>
-                    {selectedKlant.status}
-                  </span>
-                  {isEchteKlantRecord && (
-                    <button
-                      onClick={verwijderKlantNaarPrullenbak}
-                      disabled={verwijderenKlant}
-                      style={{background:"rgba(231,76,60,0.10)",color:ADM.red,border:`1px solid rgba(231,76,60,0.24)`,
-                        borderRadius:8,padding:"8px 12px",fontSize:12,fontWeight:700,cursor:verwijderenKlant?"wait":"pointer"}}
-                    >
-                      {verwijderenKlant ? "Verplaatsen..." : "🗑️ Klant verwijderen"}
-                    </button>
-                  )}
+              ) : (
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:18,flexWrap:"wrap"}}>
+                  <div>
+                    <div style={{fontSize:26,fontWeight:700,color:ADM.white,marginBottom:6}}>{selectedKlant.naam}</div>
+                    <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>
+                      {selectedKlant.sector || "Sector onbekend"} · {selectedKlant.contact || "Geen contactpersoon"}{selectedKlant.email ? ` · ${selectedKlant.email}` : ""}
+                    </div>
+                  </div>
+                  <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",justifyContent:"flex-end"}}>
+                    <span style={{fontSize:11,fontWeight:700,padding:"5px 10px",borderRadius:20,background:`${statusColor(selectedKlant?.status || "")}22`,color:statusColor(selectedKlant?.status || "")}}>
+                      {selectedKlant.status}
+                    </span>
+                    {isEchteKlantRecord && (
+                      <button
+                        onClick={startBewerken}
+                        style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,
+                          borderRadius:8,padding:"8px 12px",fontSize:12,fontWeight:700,cursor:"pointer"}}
+                      >
+                        ✏️ Bewerken
+                      </button>
+                    )}
+                    {isEchteKlantRecord && (
+                      <button
+                        onClick={verwijderKlantNaarPrullenbak}
+                        disabled={verwijderenKlant}
+                        style={{background:"rgba(231,76,60,0.10)",color:ADM.red,border:`1px solid rgba(231,76,60,0.24)`,
+                          borderRadius:8,padding:"8px 12px",fontSize:12,fontWeight:700,cursor:verwijderenKlant?"wait":"pointer"}}
+                      >
+                        {verwijderenKlant ? "Verplaatsen..." : "🗑️ Klant verwijderen"}
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:18}}>
                 <button
@@ -7388,6 +7471,287 @@ function DashboardHome() {
 // ─────────────────────────────────────────────
 // ADMIN DASHBOARD SHELL
 // ─────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// INSTELLINGEN — Data-export en beheer
+// ─────────────────────────────────────────────
+function PageInstellingen() {
+  const [exportBezig, setExportBezig] = useState(false);
+  const [exportStatus, setExportStatus] = useState(null); // null | "ok" | "fout"
+  const [exportInfo, setExportInfo] = useState(null);
+  const isMobile = useIsMobile();
+
+  const exporteerAlleData = async () => {
+    setExportBezig(true);
+    setExportStatus(null);
+    setExportInfo(null);
+    try {
+      const [
+        klantenSnap, vlSnap, antSnap, metSnap,
+        contactSnap, prullenbakSnap,
+      ] = await Promise.all([
+        getDocs(collection(db, "klanten")),
+        getDocs(collection(db, "vragenlijsten")),
+        getDocs(collection(db, "antwoorden")),
+        getDocs(collection(db, "metingen")),
+        getDocs(collection(db, "contactaanvragen")),
+        getDocs(collection(db, "prullenbak")),
+      ]);
+
+      const ts = (val) => {
+        if (!val) return null;
+        if (val?.seconds) return new Date(val.seconds * 1000).toISOString();
+        return val;
+      };
+
+      const klanten      = klantenSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
+      const vragenlijsten= vlSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
+      const antwoorden   = antSnap.docs.map(d => {
+        const data = d.data();
+        return {
+          _id: d.id,
+          vragenlijstId: data.vragenlijstId || "",
+          klant: data.klant || "",
+          rol: data.rol || "",
+          ingediend_op: ts(data.ingediend_op),
+          antwoorden: data.antwoorden || {},
+          verwijderd: data.verwijderd || false,
+        };
+      });
+      const metingen     = metSnap.docs.map(d => {
+        const data = d.data();
+        return { _id: d.id, ...data, aangemaakt_op: ts(data.aangemaakt_op) };
+      });
+      const contacten    = contactSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
+      const prullenbak   = prullenbakSnap.docs.map(d => {
+        const data = d.data();
+        return { _id: d.id, ...data, verwijderd_op: ts(data.verwijderd_op) };
+      });
+
+      const exportData = {
+        _meta: {
+          geexporteerd_op: new Date().toISOString(),
+          versie: "1.0",
+          omschrijving: "Het Teamkompas — volledige data-export",
+          collecties: {
+            klanten: klanten.length,
+            vragenlijsten: vragenlijsten.length,
+            antwoorden: antwoorden.length,
+            metingen: metingen.length,
+            contactaanvragen: contacten.length,
+            prullenbak: prullenbak.length,
+          },
+        },
+        klanten,
+        vragenlijsten,
+        antwoorden,
+        metingen,
+        contactaanvragen: contacten,
+        prullenbak,
+      };
+
+      const json = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement("a");
+      const datum = new Date().toISOString().slice(0, 10);
+      a.href     = url;
+      a.download = `teamkompas-export-${datum}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      setExportInfo(exportData._meta.collecties);
+      setExportStatus("ok");
+    } catch (err) {
+      console.error("Export mislukt:", err);
+      setExportStatus("fout");
+    } finally {
+      setExportBezig(false);
+    }
+  };
+
+  const exporteerAntwoordenCsv = async () => {
+    setExportBezig(true);
+    setExportStatus(null);
+    try {
+      const [vlSnap, antSnap] = await Promise.all([
+        getDocs(collection(db, "vragenlijsten")),
+        getDocs(collection(db, "antwoorden")),
+      ]);
+
+      const vl = {};
+      vlSnap.docs.forEach(d => { vl[d.id] = d.data(); });
+
+      const antwoorden = antSnap.docs
+        .map(d => ({ _id: d.id, ...d.data() }))
+        .filter(a => !a.verwijderd);
+
+      if (antwoorden.length === 0) {
+        setExportStatus("fout");
+        setExportBezig(false);
+        return;
+      }
+
+      // Verzamel alle unieke vraag-ids
+      const alleVraagIds = new Set();
+      antwoorden.forEach(a => Object.keys(a.antwoorden || {}).forEach(id => alleVraagIds.add(id)));
+      const vraagIds = Array.from(alleVraagIds).sort((a,b) => Number(a)-Number(b));
+
+      // Header
+      const header = [
+        "respondent_id", "klant", "vragenlijst_naam", "rol",
+        "ingediend_op", ...vraagIds.map(id => `vraag_${id}`)
+      ];
+
+      const rijen = antwoorden.map(a => {
+        const ts = a.ingediend_op?.seconds
+          ? new Date(a.ingediend_op.seconds * 1000).toISOString()
+          : (a.ingediend_op || "");
+        const vlData = vl[a.vragenlijstId] || {};
+        return [
+          a._id,
+          `"${(a.klant || "").replace(/"/g, '""')}"`,
+          `"${(vlData.naam || "").replace(/"/g, '""')}"`,
+          a.rol || "",
+          ts,
+          ...vraagIds.map(id => {
+            const val = (a.antwoorden || {})[id];
+            if (val === undefined || val === null) return "";
+            if (typeof val === "string") return `"${val.replace(/"/g, '""')}"`;
+            return val;
+          }),
+        ].join(",");
+      });
+
+      const csv  = [header.join(","), ...rijen].join("\n");
+      const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement("a");
+      const datum = new Date().toISOString().slice(0, 10);
+      a.href     = url;
+      a.download = `teamkompas-antwoorden-${datum}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setExportStatus("ok");
+      setExportInfo({ antwoorden: antwoorden.length });
+    } catch (err) {
+      console.error("CSV export mislukt:", err);
+      setExportStatus("fout");
+    } finally {
+      setExportBezig(false);
+    }
+  };
+
+  return (
+    <div style={{maxWidth:720}}>
+      <div style={{fontSize:13,color:ADM.muted,marginBottom:28,lineHeight:1.7}}>
+        Exporteer alle data uit Firestore als back-up. De exports bevatten alle klanten,
+        trajecten, antwoorden, metingen en contactaanvragen — ook verwijderde items in de prullenbak.
+      </div>
+
+      {/* Status melding */}
+      {exportStatus === "ok" && (
+        <div style={{background:"rgba(46,204,113,0.10)",border:"1px solid rgba(46,204,113,0.3)",
+          borderRadius:10,padding:"12px 16px",marginBottom:20,fontSize:13,color:ADM.green}}>
+          ✓ Export geslaagd — het bestand is gedownload.
+          {exportInfo && (
+            <div style={{marginTop:8,fontSize:12,color:ADM.muted,lineHeight:1.7}}>
+              {Object.entries(exportInfo).map(([k,v]) => (
+                <span key={k} style={{marginRight:16}}><strong style={{color:ADM.white}}>{v}</strong> {k}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+      {exportStatus === "fout" && (
+        <div style={{background:"rgba(231,76,60,0.10)",border:"1px solid rgba(231,76,60,0.3)",
+          borderRadius:10,padding:"12px 16px",marginBottom:20,fontSize:13,color:ADM.red}}>
+          ✗ Export mislukt. Controleer de verbinding en probeer opnieuw.
+        </div>
+      )}
+
+      {/* Export kaarten */}
+      <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:16,marginBottom:32}}>
+
+        {/* Volledige JSON export */}
+        <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:14,padding:"24px"}}>
+          <div style={{fontSize:22,marginBottom:12}}>📦</div>
+          <div style={{fontSize:15,fontWeight:700,color:ADM.white,marginBottom:8}}>
+            Volledige back-up
+          </div>
+          <div style={{fontSize:12,color:ADM.muted,lineHeight:1.7,marginBottom:20}}>
+            Alle collecties in één JSON-bestand. Bevat klanten, vragenlijsten, alle antwoorden
+            (inclusief open vragen), metingen, contactaanvragen en prullenbak.
+            Geschikt als volledige veiligheidskopie.
+          </div>
+          <div style={{fontSize:11,color:ADM.muted,marginBottom:16,padding:"8px 12px",
+            background:"rgba(255,255,255,0.04)",borderRadius:8}}>
+            📄 Formaat: <strong style={{color:ADM.white}}>JSON</strong> · Leesbaar in elke teksteditor of importeerbaar in een nieuw systeem
+          </div>
+          <button
+            onClick={exporteerAlleData}
+            disabled={exportBezig}
+            style={{width:"100%",background:exportBezig?"rgba(0,168,150,0.3)":ADM.teal,
+              color:ADM.navyDeep,border:"none",borderRadius:8,padding:"11px",
+              fontWeight:700,fontSize:13,cursor:exportBezig?"wait":"pointer"}}>
+            {exportBezig ? "⏳ Exporteren..." : "⬇ Download JSON back-up"}
+          </button>
+        </div>
+
+        {/* Antwoorden CSV export */}
+        <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:14,padding:"24px"}}>
+          <div style={{fontSize:22,marginBottom:12}}>📊</div>
+          <div style={{fontSize:15,fontWeight:700,color:ADM.white,marginBottom:8}}>
+            Antwoorden als spreadsheet
+          </div>
+          <div style={{fontSize:12,color:ADM.muted,lineHeight:1.7,marginBottom:20}}>
+            Alle scanantwoorden per respondent in één CSV-bestand. Elke rij is één
+            respondent, elke kolom één vraag. Direct te openen in Excel of Google Sheets
+            voor eigen analyse.
+          </div>
+          <div style={{fontSize:11,color:ADM.muted,marginBottom:16,padding:"8px 12px",
+            background:"rgba(255,255,255,0.04)",borderRadius:8}}>
+            📄 Formaat: <strong style={{color:ADM.white}}>CSV</strong> · Direct te openen in Excel, Google Sheets of SPSS
+          </div>
+          <button
+            onClick={exporteerAntwoordenCsv}
+            disabled={exportBezig}
+            style={{width:"100%",background:exportBezig?"rgba(107,78,158,0.3)":"rgba(107,78,158,0.15)",
+              color:"#6B4E9E",border:"1px solid rgba(107,78,158,0.35)",borderRadius:8,padding:"11px",
+              fontWeight:700,fontSize:13,cursor:exportBezig?"wait":"pointer"}}>
+            {exportBezig ? "⏳ Exporteren..." : "⬇ Download CSV antwoorden"}
+          </button>
+        </div>
+      </div>
+
+      {/* Uitleg */}
+      <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:14,padding:"24px"}}>
+        <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",
+          letterSpacing:"1px",marginBottom:14}}>Wat zit er in de export?</div>
+        <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:12}}>
+          {[
+            ["📋 Klanten",         "Naam, sector, contactpersoon, e-mail en status van alle klantrecords."],
+            ["📝 Vragenlijsten",    "Alle trajecten inclusief de volledige vragenset per traject."],
+            ["💬 Antwoorden",      "Alle ingevulde scanantwoorden per respondent, inclusief open vragen en rol (medewerker/manager)."],
+            ["📊 Metingen",        "Alle meetmomenten met scores per domein en respondentenaantal."],
+            ["📬 Contactaanvragen","Alle binnengekomen contactformulieren van de website."],
+            ["🗑️ Prullenbak",      "Eerder verwijderde items — volledigheidshalve meegenomen in de JSON back-up."],
+          ].map(([titel, tekst]) => (
+            <div key={titel} style={{background:"rgba(255,255,255,0.03)",borderRadius:8,padding:"12px 14px"}}>
+              <div style={{fontSize:13,fontWeight:700,color:ADM.white,marginBottom:4}}>{titel}</div>
+              <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>{tekst}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{marginTop:16,fontSize:12,color:ADM.muted,lineHeight:1.7,
+          borderTop:`1px solid ${ADM.border}`,paddingTop:14}}>
+          ⚠️ De export bevat persoonsgegevens. Sla het bestand op een beveiligde locatie op
+          en deel het niet onbeveiligd. In lijn met de AVG-verklaring van Het Teamkompas.
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AdminDashboard({ onLogout }) {
   const [activeNav, setActiveNav] = useState("Dashboard");
   const isMobile = useIsMobile();
@@ -7426,6 +7790,7 @@ function AdminDashboard({ onLogout }) {
     if (activeNav === "Metingen")         return <PageMetingen />;
     if (activeNav === "Rapportages")      return <PageRapportages />;
     if (activeNav === "Prullenbak")       return <PagePrullenbak />;
+    if (activeNav === "Instellingen")     return <PageInstellingen />;
     return <DashboardHome />;
   };
 
