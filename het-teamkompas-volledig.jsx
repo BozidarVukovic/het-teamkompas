@@ -1687,20 +1687,50 @@ function ScanInvullen({ scanId }) {
     return "";
   };
 
-  const vasteRol = rolUitUrl || bepaalVasteRol(lijst);
+  const vasteRol = (() => {
+    // Verdiepende scans: rol op basis van type — niet heuristisch bepalen
+    if (isVeiligheidLeiderschapVerdieping(lijst)) return "Teamlid";
+    if (isBelevingVeranderingVerdieping(lijst))   return "Teamlid";
+    if (isEnergieMotivatieVerdieping(lijst))      return "Teamlid";
+    // Verbeteren & Leren: heeft zowel medewerkers- als leidinggevende-vragen → rolkeuze
+    if (isVerbeterenLerenVerdieping(lijst))        return "";
+    // Gecombineerde verdieping: rolkeuze (kan beide bevatten)
+    if (isGecombineerdeVerdieping(lijst))          return "";
+    // Basisscan: gebruik url-parameter of heuristiek
+    return rolUitUrl || bepaalVasteRol(lijst);
+  })();
 
   const introTekst = (() => {
     const explicieteIntro = String(lijst?.introductietekst || lijst?.intro || "").trim();
     if (explicieteIntro) return explicieteIntro;
 
+    // Domeinspecifieke intro per verdiepende scan
+    if (isVeiligheidLeiderschapVerdieping(lijst)) {
+      return "Deze verdiepende scan gaat over de mate waarin jij je leidinggevende ervaart als een veilige basis — iemand die beschikbaar is, je aanvaardt zoals je bent, empathie toont en je uitdaagt om te groeien. De scan is gebaseerd op de negen kenmerken van Secure Base Leadership. Er zijn geen goede of foute antwoorden. Jouw eerlijke beleving geeft de meeste inzicht.";
+    }
+    if (isBelevingVeranderingVerdieping(lijst)) {
+      return "Deze verdiepende scan brengt in kaart hoe jij het leiderschap van jouw leidinggevende ervaart in relatie tot verandering. De vragen zijn gebaseerd op neurowetenschappelijke inzichten over hoe het menselijk brein optimaal functioneert — het SCARF-model. Je antwoorden zijn anoniem en worden alleen op teamniveau besproken.";
+    }
+    if (isEnergieMotivatieVerdieping(lijst)) {
+      return "Deze verdiepende scan gaat over de balans tussen wat jouw werk van je vraagt en wat het je geeft. We meten taakeisen (aspecten die energie kosten), hulpbronnen (aspecten die energie geven) en uitkomsten zoals bevlogenheid en uitputting. Dit is gebaseerd op het JD-R model. Let op: bij de taakeisen betekent een hogere score een hogere belasting. Er zijn geen goede of foute antwoorden.";
+    }
+    if (isVerbeterenLerenVerdieping(lijst)) {
+      if (vasteRol === "Leidinggevende" || rol === "Leidinggevende") {
+        return "Dit deel van de scan is bedoeld voor jou als leidinggevende. Je beoordeelt je eigen gedrag op Lean- en Agile-dimensies: klantgerichtheid, continu verbeteren, verspilling elimineren en zelforganisatie. Eerlijkheid tegenover jezelf geeft de meeste inzicht.";
+      }
+      return "Dit deel van de scan is bedoeld voor teamleden. Je beoordeelt hoe het team als geheel werkt op het gebied van klantfocus, continu verbeteren, procesbeheersing en samenwerking. De resultaten worden op teamniveau besproken — niet individueel.";
+    }
+    if (isGecombineerdeVerdieping(lijst)) {
+      return "Deze gecombineerde verdiepingsscan bevat meerdere onderdelen. Op basis van jouw rol worden de relevante vragen voor jou geselecteerd. Er zijn geen goede of foute antwoorden — jouw eerlijke beleving staat centraal.";
+    }
+
+    // Basisscan
     if (vasteRol === "Teamlid") {
       return "Deze vragenlijst helpt om beter te begrijpen hoe het werken binnen jouw team wordt ervaren. Er zijn geen goede of foute antwoorden. Jouw ervaring staat centraal. De uitkomsten worden gebruikt om samen te bepalen waar verbetering het meeste effect heeft.";
     }
-
     if (vasteRol === "Leidinggevende") {
       return "Deze vragenlijst helpt inzicht te krijgen in waar de belangrijkste uitdagingen en ontwikkelpunten binnen het team liggen. Er zijn geen goede of foute antwoorden. Het doel is richting bepalen.";
     }
-
     return "Deze vragenlijst helpt om zicht te krijgen op hoe samenwerking, veiligheid, verandering, energie en verbeteren binnen het team worden ervaren.";
   })();
 
@@ -1850,7 +1880,17 @@ function ScanInvullen({ scanId }) {
           <div style={{fontSize:11,color:ADM.teal,fontWeight:600,textTransform:"uppercase",letterSpacing:"1.5px",marginBottom:8}}>Mijn Teamkompas</div>
           <div style={{fontSize:22,fontWeight:700,color:ADM.white,marginBottom:10}}>{lijst.naam}</div>
           <div style={{fontSize:14,color:ADM.muted,lineHeight:1.7,marginBottom:16}}>
-            {(isVeiligheidLeiderschapVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst) || isGecombineerdeVerdieping(lijst)) ? "Deze verdiepende scan bestaat uit" : "Deze scan bestaat uit"} {totaal} vragen en duurt ongeveer {(isGecombineerdeVerdieping(lijst) ? "10–18" : (isVeiligheidLeiderschapVerdieping(lijst) || isVerbeterenLerenVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst) || isGecombineerdeVerdieping(lijst)) ? "6–10" : "5–8")} minuten. Je antwoorden zijn anoniem.
+            {isVeiligheidLeiderschapVerdieping(lijst)
+              ? `Verdiepende scan · ${totaal} vragen · ca. 8–12 minuten · anoniem`
+              : isBelevingVeranderingVerdieping(lijst)
+              ? `Verdiepende scan · ${totaal} vragen · ca. 8–12 minuten · anoniem`
+              : isEnergieMotivatieVerdieping(lijst)
+              ? `Verdiepende scan · ${totaal} vragen · ca. 8–12 minuten · anoniem`
+              : isVerbeterenLerenVerdieping(lijst)
+              ? `Verdiepende scan · ${totaal} vragen · ca. 10–15 minuten · anoniem`
+              : isGecombineerdeVerdieping(lijst)
+              ? `Gecombineerde verdiepende scan · ${totaal} vragen · ca. 10–18 minuten · anoniem`
+              : `Deze scan bestaat uit ${totaal} vragen en duurt ongeveer 5–8 minuten. Je antwoorden zijn anoniem.`}
           </div>
 
           <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:12,padding:"16px 18px",textAlign:"left"}}>
@@ -1865,12 +1905,12 @@ function ScanInvullen({ scanId }) {
           <div style={{background:ADM.navy,border:`1px solid ${ADM.teal}`,borderRadius:12,padding:"20px 22px",marginBottom:20}}>
             <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>Deze vragenlijst is bedoeld voor</div>
             <div style={{fontSize:18,fontWeight:700,color:ADM.white}}>
-              {vasteRol === "Teamlid" ? "Medewerkers" : "Managers / leidinggevenden"}
+              {vasteRol === "Teamlid" ? "👥 Medewerkers / teamleden" : "👔 Managers / leidinggevenden"}
             </div>
           </div>
         ) : (
           <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"20px 22px",marginBottom:20}}>
-            <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>Jouw rol</div>
+            <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>Wat is jouw rol?</div>
             <div style={{display:"flex",gap:10}}>
               {["Teamlid","Leidinggevende"].map(r=>(
                 <div key={r} onClick={()=>setRol(r)}
@@ -1878,13 +1918,19 @@ function ScanInvullen({ scanId }) {
                     border:`1px solid ${rol===r?ADM.teal:ADM.border}`,
                     background:rol===r?ADM.tealGlow:"transparent",
                     color:rol===r?ADM.teal:ADM.muted}}>
-                  {r}
+                  {r === "Teamlid" ? "👥 Teamlid" : "👔 Leidinggevende"}
                 </div>
               ))}
             </div>
+            {isVerbeterenLerenVerdieping(lijst) && (
+              <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginTop:12,padding:"10px 12px",background:"rgba(107,78,158,0.08)",borderRadius:8,borderLeft:"3px solid #6B4E9E"}}>
+                <strong style={{color:"#a78bfa"}}>Teamlid:</strong> jij beantwoordt de teamspiegel-vragen over hoe het team samenwerkt en verbetert.<br/>
+                <strong style={{color:"#a78bfa"}}>Leidinggevende:</strong> jij beantwoordt de zelfreflectievragen over jouw eigen Lean- en Agile-gedrag.
+              </div>
+            )}
             {isGecombineerdeVerdieping(lijst) && (
               <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginTop:12}}>
-                Deze gecombineerde verdiepingsscan bevat meerdere onderdelen. Op basis van jouw rol worden alleen de relevante vragen meegenomen.
+                Op basis van jouw rol worden de relevante vragen geselecteerd.
               </div>
             )}
           </div>
@@ -1895,7 +1941,11 @@ function ScanInvullen({ scanId }) {
             border:"none",borderRadius:12,padding:"16px 18px",fontWeight:800,fontSize:17,letterSpacing:"0.2px",
             boxShadow:(actieveRol || vasteRol)?"0 10px 24px rgba(0,168,150,0.28)":"none",
             cursor:(actieveRol || vasteRol)?"pointer":"not-allowed"}}>
-          Start de teamscan →
+          {isVerbeterenLerenVerdieping(lijst) || isGecombineerdeVerdieping(lijst)
+            ? "Start de verdiepende scan →"
+            : isVeiligheidLeiderschapVerdieping(lijst) || isBelevingVeranderingVerdieping(lijst) || isEnergieMotivatieVerdieping(lijst)
+              ? "Start de scan →"
+              : "Start de teamscan →"}
         </button>
       </div>
     </div>
