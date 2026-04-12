@@ -3529,9 +3529,12 @@ function PageKlanten() {
       const vragenlijstenDb = vragenlijstenSnap.docs
         .map(d => ({ id: d.id, ...d.data() }))
         .filter(v => !v.verwijderd && v.status !== "Verwijderd");
-      const metingenDb = metingenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-      const antwoordenDb = antwoordenSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-      const contactDb = contactSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const metingenDb  = metingenSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .filter(m => !m.verwijderd && m.status !== "Verwijderd");
+      const antwoordenDb = antwoordenSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .filter(a => !a.verwijderd);
+      const contactDb = contactSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .filter(c => !c.verwijderd);
 
       const klantNamen = Array.from(new Set([
         ...klantenDb.map(k => k.naam).filter(Boolean),
@@ -3653,9 +3656,15 @@ function PageKlanten() {
     const naam = selectedKlant.naam;
     const nu   = Date.now();
     try {
+      let aantalVerwijderd = 0;
+
       // Vragenlijsten
       const vlSnap = await getDocs(collection(db, "vragenlijsten"));
-      const teVerwijderenVl = vlSnap.docs.filter(d => d.data().klant === naam && !d.data().verwijderd);
+      const teVerwijderenVl = vlSnap.docs.filter(d => {
+        const data = d.data();
+        return data.klant === naam && !data.verwijderd && data.status !== "Verwijderd";
+      });
+      console.log(`[Verwijder] Vragenlijsten gevonden: ${teVerwijderenVl.length}`);
       for (const d of teVerwijderenVl) {
         await addDoc(collection(db, "prullenbak"), {
           original_id: d.id, bron_collectie: "vragenlijsten",
@@ -3665,30 +3674,61 @@ function PageKlanten() {
           verwijderd_op: serverTimestamp(), verwijderd_op_ms: nu,
         });
         await updateDoc(doc(db, "vragenlijsten", d.id), { verwijderd: true, status: "Verwijderd" });
+        aantalVerwijderd++;
       }
 
-      // Metingen
+      // Metingen (ook al verwijderd gemarkeerde — voor de zekerheid)
       const metSnap = await getDocs(collection(db, "metingen"));
-      const teVerwijderenMet = metSnap.docs.filter(d => d.data().klant === naam && !d.data().verwijderd);
+      const teVerwijderenMet = metSnap.docs.filter(d => d.data().klant === naam);
+      console.log(`[Verwijder] Metingen gevonden: ${teVerwijderenMet.length}`);
       for (const d of teVerwijderenMet) {
-        await addDoc(collection(db, "prullenbak"), {
-          original_id: d.id, bron_collectie: "metingen",
-          naam: `${naam} — ${d.data().type || "Meting"}`, klant: naam,
-          type: "meting", datum: d.data().datum || "",
-          scores: d.data().scores || {},
-          verwijderd_op: serverTimestamp(), verwijderd_op_ms: nu,
-        });
+        if (!d.data().verwijderd) {
+          await addDoc(collection(db, "prullenbak"), {
+            original_id: d.id, bron_collectie: "metingen",
+            naam: `${naam} — ${d.data().type || "Meting"}`, klant: naam,
+            type: "meting", datum: d.data().datum || "",
+            scores: d.data().scores || {},
+            verwijderd_op: serverTimestamp(), verwijderd_op_ms: nu,
+          });
+        }
         await updateDoc(doc(db, "metingen", d.id), { verwijderd: true, status: "Verwijderd" });
+        aantalVerwijderd++;
       }
 
-      // Antwoorden — markeer als verwijderd (geen prullenbak, anoniem)
+      // Antwoorden
       const antSnap = await getDocs(collection(db, "antwoorden"));
       const vlIds   = new Set(teVerwijderenVl.map(d => d.id));
-      const teVerwijderenAnt = antSnap.docs.filter(d => d.data().klant === naam || vlIds.has(d.data().vragenlijstId));
+      // Zoek ook op alle vragenlijst-ids, ook al verwijderde
+      const alleVlIds = new Set(vlSnap.docs.filter(d => d.data().klant === naam).map(d => d.id));
+      const teVerwijderenAnt = antSnap.docs.filter(d => {
+        const data = d.data();
+        return data.klant === naam || alleVlIds.has(data.vragenlijstId);
+      });
+      console.log(`[Verwijder] Antwoorden gevonden: ${teVerwijderenAnt.length}`);
       for (const d of teVerwijderenAnt) {
         await updateDoc(doc(db, "antwoorden", d.id), { verwijderd: true });
+        aantalVerwijderd++;
       }
 
+      // Contactaanvragen
+      const contactSnap = await getDocs(collection(db, "contactaanvragen"));
+      const teVerwijderenContact = contactSnap.docs.filter(d => {
+        const data = d.data();
+        return (data.organisatie === naam || data.bedrijf === naam || data.klant === naam) && !data.verwijderd;
+      });
+      console.log(`[Verwijder] Contactaanvragen gevonden: ${teVerwijderenContact.length}`);
+      for (const d of teVerwijderenContact) {
+        await addDoc(collection(db, "prullenbak"), {
+          original_id: d.id, bron_collectie: "contactaanvragen",
+          naam: d.data().naam || naam, klant: naam,
+          type: "contact",
+          verwijderd_op: serverTimestamp(), verwijderd_op_ms: nu,
+        });
+        await updateDoc(doc(db, "contactaanvragen", d.id), { verwijderd: true });
+        aantalVerwijderd++;
+      }
+
+      console.log(`[Verwijder] Totaal verwijderd: ${aantalVerwijderd} records voor klant "${naam}"`);
       setSelectedKlant(null);
       await laadData();
     } catch (err) {
