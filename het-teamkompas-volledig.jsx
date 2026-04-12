@@ -3474,6 +3474,7 @@ function PageKlanten() {
   const [opslaanTraject, setOpslaanTraject] = useState(false);
   const [opslaanMeting, setOpslaanMeting] = useState(false);
   const [verwijderenKlant, setVerwijderenKlant] = useState(false);
+  const [verwijderenSamengesteld, setVerwijderenSamengesteld] = useState(false);
   const [selectedKlant, setSelectedKlant] = useState(null);
   const [selectedTrajectId, setSelectedTrajectId] = useState(null);
   const [selectedMetingId, setSelectedMetingId] = useState(null);
@@ -3642,6 +3643,58 @@ function PageKlanten() {
       console.error("Verwijderen klant mislukt:", err);
     } finally {
       setVerwijderenKlant(false);
+    }
+  };
+
+  // Verwijder samengestelde klant: alle vragenlijsten, metingen en antwoorden met deze naam
+  const verwijderSamengesteldeKlant = async () => {
+    if (!selectedKlant) return;
+    setVerwijderenSamengesteld(true);
+    const naam = selectedKlant.naam;
+    const nu   = Date.now();
+    try {
+      // Vragenlijsten
+      const vlSnap = await getDocs(collection(db, "vragenlijsten"));
+      const teVerwijderenVl = vlSnap.docs.filter(d => d.data().klant === naam && !d.data().verwijderd);
+      for (const d of teVerwijderenVl) {
+        await addDoc(collection(db, "prullenbak"), {
+          original_id: d.id, bron_collectie: "vragenlijsten",
+          naam: d.data().naam || "", klant: naam,
+          type: d.data().type || "basisscan", status: d.data().status || "",
+          aangemaakt: d.data().aangemaakt || "",
+          verwijderd_op: serverTimestamp(), verwijderd_op_ms: nu,
+        });
+        await updateDoc(doc(db, "vragenlijsten", d.id), { verwijderd: true, status: "Verwijderd" });
+      }
+
+      // Metingen
+      const metSnap = await getDocs(collection(db, "metingen"));
+      const teVerwijderenMet = metSnap.docs.filter(d => d.data().klant === naam && !d.data().verwijderd);
+      for (const d of teVerwijderenMet) {
+        await addDoc(collection(db, "prullenbak"), {
+          original_id: d.id, bron_collectie: "metingen",
+          naam: `${naam} — ${d.data().type || "Meting"}`, klant: naam,
+          type: "meting", datum: d.data().datum || "",
+          scores: d.data().scores || {},
+          verwijderd_op: serverTimestamp(), verwijderd_op_ms: nu,
+        });
+        await updateDoc(doc(db, "metingen", d.id), { verwijderd: true, status: "Verwijderd" });
+      }
+
+      // Antwoorden — markeer als verwijderd (geen prullenbak, anoniem)
+      const antSnap = await getDocs(collection(db, "antwoorden"));
+      const vlIds   = new Set(teVerwijderenVl.map(d => d.id));
+      const teVerwijderenAnt = antSnap.docs.filter(d => d.data().klant === naam || vlIds.has(d.data().vragenlijstId));
+      for (const d of teVerwijderenAnt) {
+        await updateDoc(doc(db, "antwoorden", d.id), { verwijderd: true });
+      }
+
+      setSelectedKlant(null);
+      await laadData();
+    } catch (err) {
+      console.error("Verwijderen samengestelde klant mislukt:", err);
+    } finally {
+      setVerwijderenSamengesteld(false);
     }
   };
 
@@ -4068,8 +4121,19 @@ function PageKlanten() {
               )}
 
               {!isEchteKlantRecord && (
-                <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:14,background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"10px 12px"}}>
-                  Deze klant is samengesteld uit scans of metingen en staat nog niet als los klantrecord in de database. Alleen opgeslagen klantrecords kunnen naar de prullenbak worden verplaatst.
+                <div style={{marginBottom:14,background:"rgba(231,76,60,0.06)",border:`1px solid rgba(231,76,60,0.2)`,borderRadius:10,padding:"12px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
+                  <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,flex:1}}>
+                    Deze klant bestaat alleen in gekoppelde scans of metingen — er is geen los klantrecord.
+                    Gebruik de knop om alle bijbehorende data te verwijderen.
+                  </div>
+                  <button
+                    onClick={verwijderSamengesteldeKlant}
+                    disabled={verwijderenSamengesteld}
+                    style={{background:"rgba(231,76,60,0.12)",color:ADM.red,border:`1px solid rgba(231,76,60,0.3)`,
+                      borderRadius:8,padding:"8px 14px",fontSize:12,fontWeight:700,
+                      cursor:verwijderenSamengesteld?"wait":"pointer",whiteSpace:"nowrap",flexShrink:0}}>
+                    {verwijderenSamengesteld ? "Verwijderen..." : "🗑️ Alles verwijderen"}
+                  </button>
                 </div>
               )}
 
