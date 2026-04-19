@@ -1057,8 +1057,8 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
 
             <Fade delay={isMobile ? 0 : 0.1}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80&fit=crop&crop=center" alt="Teamoverleg over samenwerking en teamontwikkeling" style={{ width: "100%", height: isMobile ? 170 : 250, objectFit: "cover", borderRadius: 12, boxShadow: "0 18px 44px rgba(13,27,42,0.14)" }} />
-                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=80&fit=crop&crop=center" alt="Leidinggevende in gesprek over gedrag en communicatie in teams" style={{ width: "100%", height: isMobile ? 170 : 250, objectFit: "cover", borderRadius: 12, boxShadow: "0 18px 44px rgba(13,27,42,0.14)", marginTop: isMobile ? 0 : 26 }} />
+                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&q=80&fit=crop&crop=center" alt="Collega's in overleg over samenwerking en teamontwikkeling" style={{ width: "100%", height: isMobile ? 170 : 250, objectFit: "cover", borderRadius: 12, boxShadow: "0 18px 44px rgba(13,27,42,0.14)" }} />
+                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=80&fit=crop&crop=center" alt="Leidinggevende in gesprek over gedrag en communicatie in teams" style={{ width: "100%", height: isMobile ? 170 : 250, objectFit: "cover", borderRadius: 12, boxShadow: "0 18px 44px rgba(13,27,42,0.14)" }} />
                 <div style={{ gridColumn: "1 / -1", background: PUB.donker, borderRadius: 14, padding: isMobile ? "18px 18px" : "22px 24px", boxShadow: "0 18px 44px rgba(13,27,42,0.18)" }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: PUB.teal, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>Waarom dit werkt</div>
                   <div style={{ fontSize: isMobile ? 15 : 17, fontWeight: 700, color: PUB.wit, lineHeight: 1.45, marginBottom: 8 }}>
