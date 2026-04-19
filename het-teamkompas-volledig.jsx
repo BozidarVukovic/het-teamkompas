@@ -1017,8 +1017,8 @@ function PublicSite({ onLoginClick }) {
           }}>
             <Fade>
               <p style={{
-                fontSize:isMobile?20:34,fontWeight:700,color:PUB.wit,
-                lineHeight:1.3,maxWidth:620,marginBottom:16
+                fontSize:isMobile?16:24,fontWeight:700,color:PUB.wit,
+                lineHeight:1.35,maxWidth:480,marginBottom:16
               }}>
                 Samenwerking verbeteren begint niet met een nieuw proces.<br/>
                 <em style={{fontStyle:"italic",color:PUB.wit}}>Het begint met begrijpen wat er werkelijk tussen mensen speelt.</em>
