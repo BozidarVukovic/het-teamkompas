@@ -1182,6 +1182,15 @@ function PublicSite({ onLoginClick }) {
                 </Fade>
               ))}
               <Fade delay={0.35}>
+                <div style={{borderRadius:10,overflow:"hidden",boxShadow:"0 8px 32px rgba(0,0,0,0.10)"}}>
+                  <img
+                    src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=900&q=80&fit=crop&crop=center"
+                    alt="Team staat samen bij een verbeterbord"
+                    style={{width:"100%",height:220,objectFit:"cover",objectPosition:"center 40%",display:"block"}}
+                  />
+                </div>
+              </Fade>
+              <Fade delay={0.45}>
                 <div style={{padding:18,borderRadius:8,background:PUB.navy,border:`1px solid ${PUB.tealGlow}`}}>
                   <p style={{fontSize:13,color:"rgba(255,255,255,0.62)",marginBottom:11,lineHeight:1.6}}>
                     Benieuwd of onze aanpak past bij wat er in jouw organisatie speelt? Plan een vrijblijvend gesprek van 30 minuten. We luisteren eerst.
