@@ -787,13 +787,14 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
 
   const navLinks = [
     ["Aanpak","aanpak"],
+    ["Insights Discovery","insights-discovery"],
     ["Voor wie","voor-wie"],
     ["Over ons","over-ons"],
     ["Werkwijze","werkwijze"]
   ];
 
   useEffect(() => {
-    const ids = ["aanpak", "voor-wie", "over-ons", "werkwijze"];
+    const ids = ["aanpak", "insights-discovery", "voor-wie", "over-ons", "werkwijze"];
     const observers = [];
 
     const updateActive = () => {
@@ -955,6 +956,230 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
   );
 }
 
+function SeoFaqItem({ vraag, antwoord, isMobile }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div
+      style={{
+        background: open ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.04)",
+        border: `1px solid ${open ? "rgba(0,168,150,0.24)" : "rgba(255,255,255,0.08)"}`,
+        borderRadius: 12,
+        overflow: "hidden",
+        transition: "all 0.2s ease",
+      }}
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 16,
+          background: "transparent",
+          border: "none",
+          color: PUB.wit,
+          padding: isMobile ? "16px 18px" : "18px 22px",
+          textAlign: "left",
+          cursor: "pointer",
+        }}
+      >
+        <span style={{ fontSize: isMobile ? 15 : 16, fontWeight: 600, lineHeight: 1.45 }}>{vraag}</span>
+        <span style={{ color: PUB.teal, fontSize: 22, lineHeight: 1, flexShrink: 0 }}>{open ? "−" : "+"}</span>
+      </button>
+      {open && (
+        <div style={{ padding: isMobile ? "0 18px 18px" : "0 22px 20px", fontSize: 14, color: "rgba(255,255,255,0.7)", lineHeight: 1.75 }}>
+          {antwoord}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function InsightDiscoveryLandingSection({ isMobile, openModal }) {
+  const voordelen = [
+    "meer begrip voor verschillen in communicatiestijl en werkvoorkeur",
+    "betere samenwerking binnen teams",
+    "sterkere feedback en constructievere gesprekken",
+    "meer psychologische veiligheid en openheid",
+    "leiderschap dat beter aansluit op wat het team nodig heeft",
+    "meer focus op kwaliteiten, complementariteit en teamdynamiek",
+  ];
+
+  const toepassingen = [
+    ["Samenwerking verbeteren", "Wanneer teams langs elkaar heen werken, helpen Insights Discovery profielen om verschillen in gedrag zichtbaar en bespreekbaar te maken."],
+    ["Leiderschap versterken", "Leidinggevenden krijgen meer zicht op hun eigen stijl en leren beter aansluiten op wat verschillende teamleden nodig hebben."],
+    ["Verandering begeleiden", "Inzicht in gedrag helpt teams om onder druk of in verandering constructiever te communiceren en sneller begrip op te bouwen."],
+  ];
+
+  const faqs = [
+    ["Wat is de meerwaarde van Insights Discovery voor teamontwikkeling?", "Insights Discovery maakt gedragsverschillen herkenbaar en bespreekbaar. Daardoor verbeteren communicatie, samenwerking en wederzijds begrip binnen teams."],
+    ["Is Insights Discovery alleen geschikt voor individuele ontwikkeling?", "Nee. Het individuele profiel is het vertrekpunt, maar de echte impact ontstaat wanneer gedragsinzicht wordt verbonden aan de teamdynamiek, samenwerking en het leiderschap."],
+    ["Voor welke teams is deze aanpak geschikt?", "Voor managementteams, projectteams, zorgteams, stafteams en teams in verandering. Overal waar samenwerking, communicatie en onderlinge afstemming bepalend zijn, voegt gedragsinzicht waarde toe."],
+    ["Wat maakt Mijn Teamkompas hierin anders?", "Wij gebruiken Insights Discovery niet als los profiel, maar als onderdeel van een bredere teamanalyse waarin ook veiligheid, motivatie, verandering en leren worden meegenomen."],
+  ];
+
+  return (
+    <div id="insights-discovery" style={{ background: PUB.wit }}>
+      <div style={{ padding: isMobile ? "52px 20px 28px" : "88px 60px 42px" }}>
+        <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr 0.95fr", gap: isMobile ? 28 : 42, alignItems: "center" }}>
+            <Fade>
+              <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.15em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Insights Discovery en teamontwikkeling</div>
+              <h2 style={{ fontSize: isMobile ? 29 : 42, fontWeight: 700, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>
+                Inzicht in gedrag als <em style={{ fontStyle: "italic", color: PUB.teal }}>versneller van teamontwikkeling</em>
+              </h2>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, marginBottom: 16, maxWidth: 620 }}>
+                Veel teams lopen niet vast door een gebrek aan inzet of expertise, maar doordat verschillen in gedrag, communicatie en tempo onzichtbaar blijven.
+                Met <strong style={{ color: PUB.donker }}>Insights Discovery profielen</strong> maakt Mijn Teamkompas die verschillen zichtbaar en praktisch toepasbaar.
+              </p>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, marginBottom: 26, maxWidth: 620 }}>
+                Zo ontstaat meer begrip, sterkere samenwerking, gerichter leiderschap en een stevigere basis voor duurzame <strong style={{ color: PUB.donker }}>teamontwikkeling</strong>.
+                Niet als losse teamsessie, maar als onderdeel van een bredere aanpak om samenwerking daadwerkelijk te verbeteren.
+              </p>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
+                <span onClick={openModal} style={{ background: PUB.teal, color: PUB.donker, padding: "13px 22px", borderRadius: 4, fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                  Plan een kennismaking
+                </span>
+                <span onClick={() => document.getElementById("insights-faq")?.scrollIntoView({ behavior: "smooth", block: "start" })} style={{ border: `1px solid ${PUB.lijn}`, color: PUB.donker, padding: "13px 22px", borderRadius: 4, fontSize: 14, cursor: "pointer", background: PUB.wit }}>
+                  Bekijk veelgestelde vragen
+                </span>
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+                {["Insights Discovery profielen", "teamontwikkeling", "gedrag in teams", "samenwerking verbeteren"].map((label) => (
+                  <span key={label} style={{ fontSize: 11, color: PUB.tealDark, background: "rgba(0,168,150,0.08)", border: "1px solid rgba(0,168,150,0.14)", padding: "6px 10px", borderRadius: 999, fontWeight: 600 }}>
+                    {label}
+                  </span>
+                ))}
+              </div>
+            </Fade>
+
+            <Fade delay={isMobile ? 0 : 0.1}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80&fit=crop&crop=center" alt="Teamoverleg over samenwerking en teamontwikkeling" style={{ width: "100%", height: isMobile ? 170 : 250, objectFit: "cover", borderRadius: 12, boxShadow: "0 18px 44px rgba(13,27,42,0.14)" }} />
+                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=80&fit=crop&crop=center" alt="Leidinggevende in gesprek over gedrag en communicatie in teams" style={{ width: "100%", height: isMobile ? 170 : 250, objectFit: "cover", borderRadius: 12, boxShadow: "0 18px 44px rgba(13,27,42,0.14)", marginTop: isMobile ? 0 : 26 }} />
+                <div style={{ gridColumn: "1 / -1", background: PUB.donker, borderRadius: 14, padding: isMobile ? "18px 18px" : "22px 24px", boxShadow: "0 18px 44px rgba(13,27,42,0.18)" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: PUB.teal, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>Waarom dit werkt</div>
+                  <div style={{ fontSize: isMobile ? 15 : 17, fontWeight: 700, color: PUB.wit, lineHeight: 1.45, marginBottom: 8 }}>
+                    Mensen hoeven niet hetzelfde te zijn om beter samen te werken. Ze moeten elkaar beter leren begrijpen.
+                  </div>
+                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.64)", lineHeight: 1.7 }}>
+                    Precies daar maken gedragsprofielen, teamanalyse en gerichte dialoog het verschil.
+                  </div>
+                </div>
+              </div>
+            </Fade>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ padding: isMobile ? "0 20px 52px" : "0 60px 78px" }}>
+        <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 18 : 22 }}>
+          <Fade>
+            <div style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 14, padding: isMobile ? "22px 18px" : "26px 24px", height: "100%" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: PUB.teal, marginBottom: 12 }}>De toegevoegde waarde</div>
+              <h3 style={{ fontSize: isMobile ? 23 : 30, lineHeight: 1.18, color: PUB.donker, marginBottom: 14 }}>Waarom inzicht in gedrag zoveel verschil maakt</h3>
+              <p style={{ fontSize: 14, lineHeight: 1.8, color: PUB.sub, marginBottom: 20 }}>
+                Wanneer teams beter begrijpen hoe mensen communiceren, reageren onder druk en samenwerken, ontstaan minder misverstanden en meer mogelijkheden om kwaliteiten slim te benutten.
+              </p>
+              <div style={{ display: "grid", gap: 10 }}>
+                {voordelen.map((item, i) => (
+                  <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "10px 0", borderTop: i === 0 ? "none" : `1px solid ${PUB.lijn}` }}>
+                    <div style={{ width: 9, height: 9, borderRadius: "50%", background: PUB.teal, marginTop: 7, flexShrink: 0 }} />
+                    <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.donker }}>{item}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Fade>
+
+          <Fade delay={isMobile ? 0 : 0.08}>
+            <div style={{ background: PUB.donker, borderRadius: 14, padding: isMobile ? "22px 18px" : "26px 24px", height: "100%", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(0,168,150,0.18), transparent 40%)" }} />
+              <div style={{ position: "relative", zIndex: 1 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: PUB.teal, marginBottom: 12 }}>Van profiel naar praktijk</div>
+                <h3 style={{ fontSize: isMobile ? 23 : 30, lineHeight: 1.18, color: PUB.wit, marginBottom: 14 }}>Insights Discovery werkt pas echt wanneer je het vertaalt naar het team</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.8, color: "rgba(255,255,255,0.66)", marginBottom: 22 }}>
+                  Daarom gebruikt Mijn Teamkompas gedragsprofielen niet als los instrument, maar als onderdeel van een bredere analyse van teamdynamiek, leiderschap en samenwerking.
+                </p>
+                <div style={{ display: "grid", gap: 12 }}>
+                  {toepassingen.map(([titel, tekst]) => (
+                    <div key={titel} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "14px 15px" }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: PUB.wit, marginBottom: 6 }}>{titel}</div>
+                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.66)", lineHeight: 1.7 }}>{tekst}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Fade>
+        </div>
+      </div>
+
+      <div style={{ background: PUB.licht, padding: isMobile ? "52px 20px" : "76px 60px" }}>
+        <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+          <Fade>
+            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.15em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wat dit oplevert</div>
+            <h3 style={{ fontSize: isMobile ? 27 : 38, fontWeight: 700, lineHeight: 1.12, color: PUB.donker, marginBottom: 14, maxWidth: 760 }}>
+              Een gedeelde taal voor gedrag, communicatie en teamdynamiek
+            </h3>
+            <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, maxWidth: 760, marginBottom: 30 }}>
+              Dat helpt teams om eerlijker te praten over wat goed gaat, waar het schuurt en wat nodig is om samenwerking structureel te versterken.
+            </p>
+          </Fade>
+
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16, alignItems: "stretch" }}>
+            {[
+              ["01", "Meer begrip", "Teamleden herkennen elkaars kwaliteiten, voorkeuren en reacties onder druk sneller en met minder oordeel."],
+              ["02", "Betere afstemming", "Gesprekken over feedback, rolverdeling, tempo en samenwerking worden concreter en productiever."],
+              ["03", "Duurzamere teamontwikkeling", "Inzichten worden gekoppeld aan de praktijk van het team en leiden tot gerichtere interventies en meer eigenaarschap."],
+            ].map(([nr, titel, tekst], i) => (
+              <Fade key={titel} delay={i * 0.08} style={{ height: "100%" }}>
+                <div style={{ height: "100%", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 14, padding: isMobile ? "22px 18px" : "24px 22px", boxShadow: "0 12px 30px rgba(13,27,42,0.05)" }}>
+                  <div style={{ fontSize: 34, lineHeight: 1, fontWeight: 700, color: "rgba(0,168,150,0.16)", marginBottom: 10 }}>{nr}</div>
+                  <div style={{ fontSize: 19, fontWeight: 700, color: PUB.donker, marginBottom: 10 }}>{titel}</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub }}>{tekst}</div>
+                </div>
+              </Fade>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div id="insights-faq" style={{ background: PUB.donker, padding: isMobile ? "52px 20px" : "76px 60px", position: "relative", overflow: "hidden" }}>
+        <Strepen />
+        <div style={{ maxWidth: 980, margin: "0 auto", position: "relative", zIndex: 1 }}>
+          <Fade>
+            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.15em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Veelgestelde vragen</div>
+            <h3 style={{ fontSize: isMobile ? 27 : 38, fontWeight: 700, lineHeight: 1.12, color: PUB.wit, marginBottom: 14 }}>
+              Insights Discovery, gedrag in teams en samenwerking verbeteren
+            </h3>
+            <p style={{ fontSize: 15, lineHeight: 1.8, color: "rgba(255,255,255,0.66)", marginBottom: 28, maxWidth: 760 }}>
+              Deze vragen leven vaak bij organisaties die gedragsprofielen willen inzetten voor teamontwikkeling, leiderschap en betere communicatie in teams.
+            </p>
+          </Fade>
+          <div style={{ display: "grid", gap: 12 }}>
+            {faqs.map(([vraag, antwoord]) => (
+              <SeoFaqItem key={vraag} vraag={vraag} antwoord={antwoord} isMobile={isMobile} />
+            ))}
+          </div>
+          <Fade delay={0.1}>
+            <div style={{ marginTop: 30, display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 12 }}>
+              <span onClick={openModal} style={{ background: PUB.teal, color: PUB.donker, padding: "13px 22px", borderRadius: 4, fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                Bespreek jouw teamvraag
+              </span>
+              <span onClick={() => document.getElementById("werkwijze")?.scrollIntoView({ behavior: "smooth", block: "start" })} style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "13px 22px", borderRadius: 4, fontSize: 14, cursor: "pointer" }}>
+                Bekijk onze werkwijze
+              </span>
+            </div>
+          </Fade>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─────────────────────────────────────────────
 // PUBLIC SITE
 // ─────────────────────────────────────────────
@@ -1029,15 +1254,15 @@ function PublicSite({ onLoginClick }) {
   return (
     <>
       <Helmet>
-        <title>Mijn Teamkompas | Teamscan, teamcoaching en leiderschapsbegeleiding</title>
+        <title>Mijn Teamkompas | teamontwikkeling, Insights Discovery en leiderschapsbegeleiding</title>
         <meta
           name="description"
-          content="Mijn Teamkompas helpt teams te groeien met teamscan, teamcoaching en leiderschapsbegeleiding."
+          content="Mijn Teamkompas helpt teams groeien met teamontwikkeling, Insights Discovery profielen, teamscans en leiderschapsbegeleiding."
         />
-        <meta property="og:title" content="Mijn Teamkompas | Teamscan, teamcoaching en leiderschapsbegeleiding" />
+        <meta property="og:title" content="Mijn Teamkompas | teamontwikkeling, Insights Discovery en leiderschapsbegeleiding" />
         <meta
           property="og:description"
-          content="Mijn Teamkompas helpt teams te groeien met teamscan, teamcoaching en leiderschapsbegeleiding."
+          content="Mijn Teamkompas helpt teams groeien met teamontwikkeling, Insights Discovery profielen, teamscans en leiderschapsbegeleiding."
         />
         <meta property="og:type" content="website" />
       </Helmet>
@@ -1326,6 +1551,8 @@ function PublicSite({ onLoginClick }) {
           </div>
         </div>
 
+        <InsightDiscoveryLandingSection isMobile={isMobile} openModal={openModal} />
+
         {/* CTA */}
         <div style={{padding:isMobile?"48px 24px":"72px 80px",
           background:`linear-gradient(135deg, ${PUB.donker} 0%, ${PUB.navy} 60%, rgba(0,168,150,0.15) 100%)`,
@@ -1363,6 +1590,7 @@ function PublicSite({ onLoginClick }) {
               ["Aanpak",[
                 ["Teamkompas Scan",    ()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})],
                 ["De vier domeinen",   ()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["Insights Discovery", ()=>document.getElementById("insights-discovery")?.scrollIntoView({behavior:"smooth",block:"start"})],
                 ["Werkwijze",          ()=>document.getElementById("werkwijze")?.scrollIntoView({behavior:"smooth",block:"start"})],
               ]],
               ["Voor wie",[
