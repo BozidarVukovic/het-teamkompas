@@ -602,89 +602,181 @@ function KompasDot({ size = 26 }) {
 
 function KompasAnim() {
   const isMobile = useIsMobile();
-  const size = isMobile ? 360 : 480;
+  const size = isMobile ? 340 : 460;
+  const cx = size / 2;
+  const id = "kmp";
 
-  const kw = [
-    [PUB.groen, "Veiligheid"],
-    [PUB.blauw, "Verandering"],
-    [PUB.oranje, "Energie"],
-    [PUB.paars, "Leren"],
+  // Ring animation via CSS injected once
+  const css = `
+    @keyframes ${id}Spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes ${id}SpinR { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+    @keyframes ${id}Pulse { 0%,100%{opacity:.55} 50%{opacity:.85} }
+    .${id}-outerRing { transform-origin: ${cx}px ${cx}px; animation: ${id}Spin 28s linear infinite; }
+    .${id}-midRing   { transform-origin: ${cx}px ${cx}px; animation: ${id}SpinR 18s linear infinite; }
+    .${id}-glow      { animation: ${id}Pulse 4s ease-in-out infinite; }
+  `;
+
+  const R  = cx - 4;          // outer ring radius
+  const R2 = R - 22;          // mid ring radius
+  const R3 = R - 50;          // inner quad radius (edge of coloured segments)
+  const Rc = isMobile ? 56 : 64; // centre circle radius
+
+  // Compass points on outer ring
+  const cardinals = [
+    { label:"N", angle:-90 },
+    { label:"O", angle:0   },
+    { label:"Z", angle:90  },
+    { label:"W", angle:180 },
   ];
+  // Tick marks every 22.5 deg
+  const ticks = Array.from({length:16},(_,i)=>i*22.5);
+
+  // Quadrant arcs (each 90°), drawn as SVG paths
+  // order: top-right=Veiligheid(groen), bottom-right=Energie(oranje), bottom-left=Leren(paars), top-left=Verandering(blauw)
+  const quads = [
+    { color: PUB.groen,  startDeg: -90, label:"Veiligheid",  lx: cx + R3*0.42, ly: cx - R3*0.42 },
+    { color: PUB.oranje, startDeg:   0, label:"Energie",     lx: cx + R3*0.42, ly: cx + R3*0.42 },
+    { color: PUB.paars,  startDeg:  90, label:"Leren",       lx: cx - R3*0.42, ly: cx + R3*0.42 },
+    { color: PUB.blauw,  startDeg: 180, label:"Verandering", lx: cx - R3*0.42, ly: cx - R3*0.42 },
+  ];
+
+  function polar(cx, cy, r, deg) {
+    const rad = (deg * Math.PI) / 180;
+    return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)];
+  }
+
+  function quadPath(cx, cy, outerR, innerR, startDeg, endDeg, gap=2) {
+    const s1 = startDeg + gap, e1 = endDeg - gap;
+    const [x1,y1] = polar(cx,cy,outerR,s1);
+    const [x2,y2] = polar(cx,cy,outerR,e1);
+    const [x3,y3] = polar(cx,cy,innerR,e1);
+    const [x4,y4] = polar(cx,cy,innerR,s1);
+    return `M${x1},${y1} A${outerR},${outerR} 0 0,1 ${x2},${y2} L${x3},${y3} A${innerR},${innerR} 0 0,0 ${x4},${y4} Z`;
+  }
 
   return (
     <div style={{ width:size, height:size, position:"relative", flexShrink:0 }}>
-      {[0,16,32].map((ins,i) => (
-        <div
-          key={i}
-          style={{
-            position:"absolute",
-            inset:ins,
-            borderRadius:"50%",
-            border:`1px solid rgba(255,255,255,${0.08 - i*0.02})`,
-          }}
-        />
-      ))}
+      <style>{css}</style>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{overflow:"visible"}}>
+        <defs>
+          {/* Radial gradient per quadrant for depth */}
+          {quads.map((q,i)=>(
+            <radialGradient key={i} id={`${id}qg${i}`} cx="50%" cy="50%" r="70%">
+              <stop offset="0%" stopColor={q.color} stopOpacity="1"/>
+              <stop offset="100%" stopColor={q.color} stopOpacity="0.55"/>
+            </radialGradient>
+          ))}
+          {/* Centre glow */}
+          <radialGradient id={`${id}cg`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={PUB.teal} stopOpacity="0.22"/>
+            <stop offset="100%" stopColor={PUB.teal} stopOpacity="0"/>
+          </radialGradient>
+          {/* Outer ring gradient */}
+          <linearGradient id={`${id}rg`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.18)"/>
+            <stop offset="100%" stopColor="rgba(255,255,255,0.04)"/>
+          </linearGradient>
+          {/* Drop shadow filter */}
+          <filter id={`${id}shadow`} x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="4" stdDeviation="12" floodColor="#000" floodOpacity="0.45"/>
+          </filter>
+          {/* Inner bevel filter */}
+          <filter id={`${id}bevel`}>
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+            <feOffset dx="0" dy="3" result="offsetBlur"/>
+            <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+          </filter>
+        </defs>
 
-      <div
-        style={{
-          position:"absolute",
-          inset:46,
-          borderRadius:"50%",
-          overflow:"hidden",
-          display:"grid",
-          gridTemplateColumns:"1fr 1fr",
-          boxShadow:"0 0 48px rgba(0,0,0,0.42)",
-        }}
-      >
-        {kw.map(([c,l],i) => (
-          <div
-            key={i}
-            style={{
-              background:c,
-              display:"flex",
-              alignItems:"center",
-              justifyContent:"center",
-              padding:12,
-            }}
-          >
-            <span
-              style={{
-                fontSize:isMobile ? 14 : 16,
-                fontWeight:700,
-                color:"rgba(255,255,255,0.95)",
-                textAlign:"center",
-                lineHeight:1.2,
-                letterSpacing:"0.01em",
-              }}
-            >
-              {l}
-            </span>
-          </div>
+        {/* Subtle outer glow halo */}
+        <circle cx={cx} cy={cx} r={R+8} fill="none" stroke={PUB.teal} strokeWidth="18" strokeOpacity="0.06" className={`${id}-glow`}/>
+
+        {/* === ROTATING OUTER RING (N/O/Z/W) === */}
+        <g className={`${id}-outerRing`}>
+          {/* Ring band */}
+          <circle cx={cx} cy={cx} r={R} fill={`url(#${id}rg)`} stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
+          <circle cx={cx} cy={cx} r={R-18} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1"/>
+
+          {/* Tick marks */}
+          {ticks.map((deg,i)=>{
+            const isMajor = i % 4 === 0;
+            const [x1,y1] = polar(cx,cx,R-1, deg);
+            const [x2,y2] = polar(cx,cx,R-(isMajor?14:8), deg);
+            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+              stroke={isMajor?"rgba(255,255,255,0.7)":"rgba(255,255,255,0.25)"}
+              strokeWidth={isMajor?1.5:0.8}/>;
+          })}
+
+          {/* Cardinal labels — each individually counter-rotated to stay upright */}
+          {cardinals.map(({label,angle},i)=>{
+            const [lx,ly] = polar(cx,cx, R-10, angle);
+            const counterRot = -angle - 90; // cancel out the ring rotation offset
+            return (
+              <text key={i}
+                x={lx} y={ly+1}
+                textAnchor="middle" dominantBaseline="middle"
+                fontSize={isMobile?10:11} fontWeight="700" fontFamily="Roboto,sans-serif"
+                fill={label==="N"?"#E8821A":"rgba(255,255,255,0.85)"}
+                transform={`rotate(${counterRot + 90}, ${lx}, ${ly})`}>
+                {label}
+              </text>
+            );
+          })}
+        </g>
+
+        {/* === ROTATING MID RING (decorative, counter-direction) === */}
+        <g className={`${id}-midRing`}>
+          <circle cx={cx} cy={cx} r={R2} fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="1" strokeDasharray="4 8"/>
+        </g>
+
+        {/* === QUADRANT SEGMENTS with depth === */}
+        {quads.map((q,i)=>(
+          <g key={i} filter={`url(#${id}shadow)`}>
+            <path d={quadPath(cx,cx, R3, Rc+4, q.startDeg, q.startDeg+90)}
+              fill={`url(#${id}qg${i})`}/>
+            {/* Highlight arc (top edge shine) */}
+            <path d={quadPath(cx,cx, R3, R3-6, q.startDeg, q.startDeg+90, 3)}
+              fill="rgba(255,255,255,0.10)"/>
+          </g>
         ))}
-      </div>
 
-      <div
-        style={{
-          position:"absolute",
-          top:"50%",
-          left:"50%",
-          transform:"translate(-50%,-50%)",
-          width:isMobile ? 116 : 130,
-          height:isMobile ? 116 : 130,
-          borderRadius:"50%",
-          background:PUB.donker,
-          border:"2px solid rgba(15,118,110,0.38)",
-          display:"flex",
-          alignItems:"center",
-          justifyContent:"center",
-          zIndex:10,
-          boxShadow:"0 0 28px rgba(0,0,0,0.38)",
-        }}
-      >
-        <span style={{fontSize:isMobile ? 22 : 24, fontWeight:700, color:PUB.teal}}>
+        {/* Dividing lines between quadrants */}
+        {[0,90,180,270].map((deg,i)=>{
+          const [x1,y1] = polar(cx,cx,Rc+4,deg);
+          const [x2,y2] = polar(cx,cx,R3,deg);
+          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+            stroke="rgba(13,27,42,0.6)" strokeWidth="1.5"/>;
+        })}
+
+        {/* Quadrant labels */}
+        {quads.map((q,i)=>(
+          <text key={i} x={q.lx} y={q.ly}
+            textAnchor="middle" dominantBaseline="middle"
+            fontSize={isMobile?12:13} fontWeight="700" fontFamily="Roboto,sans-serif"
+            fill="rgba(255,255,255,0.92)" letterSpacing="0.02em">
+            {q.label}
+          </text>
+        ))}
+
+        {/* === CENTRE CIRCLE === */}
+        {/* Glow behind centre */}
+        <circle cx={cx} cy={cx} r={Rc+12} fill={`url(#${id}cg)`}/>
+        {/* Circle with 3D gradient */}
+        <circle cx={cx} cy={cx} r={Rc}
+          fill={PUB.donker}
+          stroke={PUB.teal} strokeWidth="1.5" strokeOpacity="0.5"
+          filter={`url(#${id}shadow)`}/>
+        {/* Top highlight for 3D pop */}
+        <ellipse cx={cx} cy={cx - Rc*0.28} rx={Rc*0.55} ry={Rc*0.22}
+          fill="rgba(255,255,255,0.07)"/>
+        {/* Label */}
+        <text x={cx} y={cx+2}
+          textAnchor="middle" dominantBaseline="middle"
+          fontSize={isMobile?18:20} fontWeight="700" fontFamily="Roboto,sans-serif"
+          fill={PUB.teal}>
           Gedrag
-        </span>
-      </div>
+        </text>
+      </svg>
     </div>
   );
 }
