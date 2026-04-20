@@ -1265,9 +1265,9 @@ function ThemeDeepDiveSection({ isMobile, openModal }) {
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, minmax(0, 1fr))', gap: isMobile ? 20 : 24 }}>
           {themaItems.map((item, i) => (
             <Fade key={item.id} delay={i * 0.06}>
-              <div style={{ border: `1px solid ${PUB.lijn}`, borderRadius: 16, overflow: 'hidden', background: PUB.wit, boxShadow: '0 12px 34px rgba(13,27,42,0.08)' }}>
+              <div style={{ border: `1px solid ${PUB.lijn}`, borderRadius: 16, overflow: 'hidden', background: PUB.wit, boxShadow: '0 12px 34px rgba(13,27,42,0.08)', height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <img src={item.image} alt={item.alt} style={{ width: '100%', height: isMobile ? 200 : 240, objectFit: 'cover', display: 'block' }} />
-                <div style={{ padding: isMobile ? '22px 18px' : '24px 22px' }}>
+                <div style={{ padding: isMobile ? '22px 18px' : '24px 22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: item.kleur, marginBottom: 12 }}>
                     <span style={{ width: 10, height: 10, borderRadius: '50%', background: item.kleur, display: 'inline-block' }} />
                     {item.label}
@@ -1287,7 +1287,7 @@ function ThemeDeepDiveSection({ isMobile, openModal }) {
                     <div style={{ fontSize: 12, fontWeight: 700, color: PUB.donker, marginBottom: 6 }}>Wat dit oplevert</div>
                     <div style={{ fontSize: 13, lineHeight: 1.7, color: PUB.sub }}>{item.opbrengst}</div>
                   </div>
-                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 'auto' }}>
                     <span onClick={openModal} style={{ background: item.kleur, color: PUB.wit, padding: '11px 16px', borderRadius: 6, fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
                       Bespreek dit thema
                     </span>
