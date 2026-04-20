@@ -1336,7 +1336,7 @@ function DiverseWorkplacesSection({ isMobile }) {
             Van zorg en uitvoering tot kantoor en projectteam: <em style={{ fontStyle: 'italic', color: PUB.teal }}>samenwerking vraagt overal iets anders</em>
           </h2>
           <p style={{ fontSize: 15, lineHeight: 1.78, color: PUB.sub, maxWidth: 780, marginBottom: 30 }}>
-            Daarom laten we op de website bewust verschillende omgevingen zien. Niet iedereen werkt in een strak directiekantoor. Juist de dagelijkse context bepaalt hoe leiderschap, communicatie en teamontwikkeling vorm krijgen.
+            Daarom laten we op de website bewust verschillende werkomgevingen zien. Sterke samenwerking ontstaat overal waar mensen samen verantwoordelijkheid dragen, van kantoor en zorgomgeving tot werkvloer en buitenlocatie.
           </p>
         </Fade>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, minmax(0, 1fr))', gap: isMobile ? 18 : 20 }}>
