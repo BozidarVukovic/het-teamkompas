@@ -787,6 +787,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
 
   const navLinks = [
     ["Aanpak","aanpak"],
+    ["Thema's","themas"],
     ["Insights Discovery","insights-discovery"],
     ["Voor wie","voor-wie"],
     ["Over ons","over-ons"],
@@ -794,7 +795,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
   ];
 
   useEffect(() => {
-    const ids = ["aanpak", "insights-discovery", "voor-wie", "over-ons", "werkwijze"];
+    const ids = ["aanpak", "themas", "insights-discovery", "voor-wie", "over-ons", "werkwijze"];
     const observers = [];
 
     const updateActive = () => {
@@ -1183,6 +1184,179 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
 // ─────────────────────────────────────────────
 // PUBLIC SITE
 // ─────────────────────────────────────────────
+
+function ThemeDeepDiveSection({ isMobile, openModal }) {
+  const themaItems = [
+    {
+      id: 'veiligheid-leiderschap',
+      kleur: PUB.groen,
+      label: 'Veiligheid en leiderschap',
+      titel: 'Teams groeien wanneer veiligheid en leiderschap elkaar versterken',
+      intro: 'Samenwerking verbetert pas echt wanneer mensen zich vrij voelen om zich uit te spreken én leidinggevenden richting geven zonder de verbinding te verliezen.',
+      herkenning: [
+        'Mensen zeggen na het overleg iets anders dan tijdens het overleg.',
+        'Fouten of spanningen worden laat of helemaal niet besproken.',
+        'De leidinggevende blijft de belangrijkste bron van richting en initiatief.'
+      ],
+      opbrengst: 'Meer openheid, meer eigenaarschap en gesprekken die sneller tot beweging leiden.',
+      image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=80&fit=crop&crop=center',
+      alt: 'Teamoverleg waarin collega\'s actief luisteren en samenwerken.'
+    },
+    {
+      id: 'energie-motivatie',
+      kleur: PUB.oranje,
+      label: 'Energie en motivatie',
+      titel: 'Motivatie groeit meestal niet door meer enthousiasme, maar door minder frustratie',
+      intro: 'Veel teams zijn niet ongemotiveerd. Ze lopen leeg op onduidelijkheid, verstoringen, onhandige processen en een gebrek aan invloed op het eigen werk.',
+      herkenning: [
+        'Collega\'s doen wat nodig is, maar nemen weinig extra initiatief.',
+        'Kleine irritaties kosten opvallend veel energie.',
+        'Werkdruk is structureel gespreksonderwerp geworden.'
+      ],
+      opbrengst: 'Meer grip op energielekken, scherpere prioriteiten en meer duurzame bevlogenheid.',
+      image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80&fit=crop&crop=center',
+      alt: 'Collega\'s werken samen aan een tafel in een nuchtere werkomgeving.'
+    },
+    {
+      id: 'beleving-verandering',
+      kleur: PUB.blauw,
+      label: 'Beleving van verandering',
+      titel: 'Verandering stokt zelden op de inhoud, maar vaak op de beleving',
+      intro: 'Wat op papier logisch is, kan in de praktijk voelen als verlies van grip, ritme of duidelijkheid. Daarom kijken wij niet alleen naar de veranderopgave, maar vooral naar hoe die binnenkomt.',
+      herkenning: [
+        'Er is formeel draagvlak, maar weinig echte beweging.',
+        'Dezelfde vragen blijven terugkomen.',
+        'Teams begrijpen de verandering rationeel, maar voelen nog geen houvast.'
+      ],
+      opbrengst: 'Meer draagvlak, kleinere haalbare stappen en verandering die beter landt in de dagelijkse praktijk.',
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80&fit=crop&crop=center',
+      alt: 'Groep mensen bespreekt verandering op een whiteboard.'
+    },
+    {
+      id: 'verbeteren-leren',
+      kleur: PUB.paars,
+      label: 'Verbeteren en leren',
+      titel: 'Duurzame verbetering ontstaat wanneer leren onderdeel wordt van het werk',
+      intro: 'Verbeteren werkt pas wanneer teams ruimte ervaren om samen terug te kijken, kleine stappen te zetten en daarvan zichtbaar te leren.',
+      herkenning: [
+        'Er zijn genoeg ideeën, maar weinig opvolging.',
+        'Verbeteren voelt als iets extra\'s naast het gewone werk.',
+        'Teams bespreken knelpunten, maar veranderen hun routines nog onvoldoende.'
+      ],
+      opbrengst: 'Meer leervermogen, betere opvolging en een cultuur waarin verbeteren werkbaar blijft.',
+      image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&q=80&fit=crop&crop=center',
+      alt: 'Team bij een verbeterbord in gesprek over volgende stappen.'
+    }
+  ];
+
+  return (
+    <div id="themas" style={{ background: PUB.wit, padding: isMobile ? '52px 20px' : '80px 60px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <Fade>
+          <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.15em', color: PUB.teal, textTransform: 'uppercase', marginBottom: 12 }}>De vier thema\'s</div>
+          <h2 style={{ fontSize: isMobile ? 28 : 40, fontWeight: 700, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>
+            Vier invalshoeken die samen zichtbaar maken <em style={{ fontStyle: 'italic', color: PUB.teal }}>wat teams vooruithelpt</em>
+          </h2>
+          <p style={{ fontSize: 15, lineHeight: 1.78, color: PUB.sub, maxWidth: 760, marginBottom: 34 }}>
+            Deze thema\'s zijn geen losse blogs, maar vaste inhoudelijke bouwstenen van Mijn Teamkompas. Zo kunnen bezoekers gericht lezen zonder te verdwalen, terwijl steeds duidelijk blijft hoe elk thema samenhangt met samenwerking, leiderschap en resultaat.
+          </p>
+        </Fade>
+
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, minmax(0, 1fr))', gap: isMobile ? 20 : 24 }}>
+          {themaItems.map((item, i) => (
+            <Fade key={item.id} delay={i * 0.06}>
+              <div style={{ border: `1px solid ${PUB.lijn}`, borderRadius: 16, overflow: 'hidden', background: PUB.wit, boxShadow: '0 12px 34px rgba(13,27,42,0.08)' }}>
+                <img src={item.image} alt={item.alt} style={{ width: '100%', height: isMobile ? 200 : 240, objectFit: 'cover', display: 'block' }} />
+                <div style={{ padding: isMobile ? '22px 18px' : '24px 22px' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: item.kleur, marginBottom: 12 }}>
+                    <span style={{ width: 10, height: 10, borderRadius: '50%', background: item.kleur, display: 'inline-block' }} />
+                    {item.label}
+                  </div>
+                  <h3 style={{ fontSize: isMobile ? 22 : 26, lineHeight: 1.2, color: PUB.donker, marginBottom: 12 }}>{item.titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub, marginBottom: 16 }}>{item.intro}</p>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: PUB.donker, marginBottom: 10 }}>Herkenbare signalen:</div>
+                  <div style={{ display: 'grid', gap: 9, marginBottom: 16 }}>
+                    {item.herkenning.map((punt) => (
+                      <div key={punt} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: item.kleur, marginTop: 7, flexShrink: 0 }} />
+                        <div style={{ fontSize: 13, lineHeight: 1.7, color: PUB.donker }}>{punt}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ padding: '14px 15px', borderRadius: 12, background: PUB.licht, border: `1px solid ${PUB.lijn}`, marginBottom: 16 }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: PUB.donker, marginBottom: 6 }}>Wat dit oplevert</div>
+                    <div style={{ fontSize: 13, lineHeight: 1.7, color: PUB.sub }}>{item.opbrengst}</div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                    <span onClick={openModal} style={{ background: item.kleur, color: PUB.wit, padding: '11px 16px', borderRadius: 6, fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+                      Bespreek dit thema
+                    </span>
+                    <span onClick={() => document.getElementById('werkwijze')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} style={{ border: `1px solid ${PUB.lijn}`, color: PUB.donker, padding: '11px 16px', borderRadius: 6, fontSize: 13, cursor: 'pointer', background: PUB.wit }}>
+                      Bekijk de werkwijze
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Fade>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DiverseWorkplacesSection({ isMobile }) {
+  const plekken = [
+    {
+      titel: 'Niet alleen voor kantooromgevingen',
+      tekst: 'Onze aanpak werkt juist ook in organisaties waar het werk snel, praktisch en onder druk is. Denk aan zorg, publieke dienstverlening, onderwijs en uitvoerende teams.',
+      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80&fit=crop&crop=center',
+      alt: 'Professionals in een zorgomgeving in overleg.'
+    },
+    {
+      titel: 'Ook waar dagelijks werk leidend is',
+      tekst: 'Samenwerking verbeteren moet aansluiten op hoe mensen echt werken. Daarom past Mijn Teamkompas net zo goed bij operationele teams en werkvloeren als bij managementteams.',
+      image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1200&q=80&fit=crop&crop=center',
+      alt: 'Collega\'s overleggen op een praktische werkvloer.'
+    },
+    {
+      titel: 'Menselijk, nuchter en toepasbaar',
+      tekst: 'Geen gelikte theorie voor alleen luxe boardrooms, maar begeleiding die werkt in echte organisaties met echte druk, echte verschillen en echte verantwoordelijkheden.',
+      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80&fit=crop&crop=center',
+      alt: 'Divers team werkt samen aan een tafel in een alledaagse werkomgeving.'
+    }
+  ];
+
+  return (
+    <div style={{ background: PUB.licht, padding: isMobile ? '52px 20px' : '78px 60px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <Fade>
+          <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.15em', color: PUB.teal, textTransform: 'uppercase', marginBottom: 12 }}>In diverse werkomgevingen</div>
+          <h2 style={{ fontSize: isMobile ? 28 : 40, fontWeight: 700, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>
+            Van zorg en uitvoering tot kantoor en projectteam: <em style={{ fontStyle: 'italic', color: PUB.teal }}>samenwerking vraagt overal iets anders</em>
+          </h2>
+          <p style={{ fontSize: 15, lineHeight: 1.78, color: PUB.sub, maxWidth: 780, marginBottom: 30 }}>
+            Daarom laten we op de website bewust verschillende omgevingen zien. Niet iedereen werkt in een strak directiekantoor. Juist de dagelijkse context bepaalt hoe leiderschap, communicatie en teamontwikkeling vorm krijgen.
+          </p>
+        </Fade>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, minmax(0, 1fr))', gap: isMobile ? 18 : 20 }}>
+          {plekken.map((plek, i) => (
+            <Fade key={plek.titel} delay={i * 0.08}>
+              <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, overflow: 'hidden', boxShadow: '0 12px 30px rgba(13,27,42,0.08)' }}>
+                <img src={plek.image} alt={plek.alt} style={{ width: '100%', height: isMobile ? 210 : 220, objectFit: 'cover', display: 'block' }} />
+                <div style={{ padding: '20px 18px 22px' }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: PUB.donker, marginBottom: 8 }}>{plek.titel}</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.72, color: PUB.sub }}>{plek.tekst}</div>
+                </div>
+              </div>
+            </Fade>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PublicSite({ onLoginClick }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState({
@@ -1392,6 +1566,10 @@ function PublicSite({ onLoginClick }) {
             </Fade>
           </div>
         </div>
+
+        <ThemeDeepDiveSection isMobile={isMobile} openModal={openModal} />
+
+        <DiverseWorkplacesSection isMobile={isMobile} />
 
         {/* WAT ORGANISATIES MOGEN VERWACHTEN */}
         <div style={{background:PUB.donker,padding:isMobile?"48px 24px":"72px 96px",position:"relative",overflow:"hidden"}}>
