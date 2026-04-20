@@ -1253,12 +1253,12 @@ function ThemeDeepDiveSection({ isMobile, openModal }) {
     <div id="themas" style={{ background: PUB.wit, padding: isMobile ? '52px 20px' : '80px 60px' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <Fade>
-          <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.15em', color: PUB.teal, textTransform: 'uppercase', marginBottom: 12 }}>De vier thema\'s</div>
+          <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.15em', color: PUB.teal, textTransform: 'uppercase', marginBottom: 12 }}>Vier thema's</div>
           <h2 style={{ fontSize: isMobile ? 28 : 40, fontWeight: 700, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>
             Vier invalshoeken die samen zichtbaar maken <em style={{ fontStyle: 'italic', color: PUB.teal }}>wat teams vooruithelpt</em>
           </h2>
           <p style={{ fontSize: 15, lineHeight: 1.78, color: PUB.sub, maxWidth: 760, marginBottom: 34 }}>
-            Deze thema\'s zijn geen losse blogs, maar vaste inhoudelijke bouwstenen van Mijn Teamkompas. Zo kunnen bezoekers gericht lezen zonder te verdwalen, terwijl steeds duidelijk blijft hoe elk thema samenhangt met samenwerking, leiderschap en resultaat.
+            Elk thema belicht een belangrijk onderdeel van sterke samenwerking. Samen geven deze vier thema's richting aan gesprekken over leiderschap, motivatie, verandering en ontwikkeling binnen teams.
           </p>
         </Fade>
 
