@@ -2924,6 +2924,15 @@ function PageScans() {
                         borderRadius:6,padding:"7px 12px",fontSize:12,cursor:"pointer"}}>
                       📊 Resultaten ({resp.length})
                     </button>
+                    <button onClick={()=>exporteerScanAlsCsv(lijst, resp)} disabled={resp.length === 0}
+                      style={{background:resp.length === 0 ? "rgba(255,255,255,0.03)" : "rgba(0,168,150,0.12)",
+                        color:resp.length === 0 ? ADM.muted : ADM.teal,
+                        border:`1px solid ${resp.length === 0 ? ADM.border : "rgba(0,168,150,0.3)"}`,
+                        borderRadius:6,padding:"7px 12px",fontSize:12,
+                        cursor:resp.length === 0 ? "not-allowed" : "pointer",fontWeight:600}}
+                      title={resp.length === 0 ? "Nog geen respondenten" : "Download alle antwoorden als CSV"}>
+                      ⬇ CSV-export
+                    </button>
                     <button onClick={()=>setTeVerwijderen(lijst)}
                       style={{background:"rgba(231,76,60,0.1)",color:ADM.red,border:`1px solid rgba(231,76,60,0.25)`,
                         borderRadius:6,padding:"7px 12px",fontSize:12,cursor:"pointer",fontWeight:600}}>
@@ -2950,6 +2959,116 @@ function PageScans() {
 // ─────────────────────────────────────────────
 // ADMIN: SCAN RESULTATEN (gap-analyse)
 // ─────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// CSV-EXPORT PER SCAN — volledige data per respondent
+// ─────────────────────────────────────────────
+function exporteerScanAlsCsv(lijst, antwoorden) {
+  const stellingen = lijst.stellingen || DEFAULT_STELLINGEN;
+  const nu = new Date();
+  const datumLabel = nu.toLocaleDateString("nl-NL").replace(/\//g, "-");
+
+  // Helper: bereken domeinscores per respondent op basis van schaalvragen
+  const berekenRespondentScores = (respondent) => {
+    const pijlerMap = {};
+    stellingen.filter(s => s.type === "schaal").forEach(s => {
+      const val = respondent.antwoorden?.[s.id];
+      if (val === undefined || val === null || val === "") return;
+      const num = parseFloat(val);
+      if (Number.isNaN(num)) return;
+      const pijler = s.pijler !== undefined ? s.pijler : (s.dimensieCode || "overig");
+      if (!pijlerMap[pijler]) pijlerMap[pijler] = [];
+      pijlerMap[pijler].push(num);
+    });
+    const avg = arr => arr && arr.length ? Math.round((arr.reduce((a,b)=>a+b,0) / arr.length) * 100) / 100 : null;
+    const pijlerLabels = {
+      0: "Veiligheid & Leiderschap",
+      1: "Beleving van Verandering",
+      2: "Energie & Motivatie",
+      3: "Verbeteren & Leren",
+      4: "Gedrag (centraal)",
+    };
+    const result = {};
+    Object.keys(pijlerMap).forEach(k => {
+      const label = pijlerLabels[k] !== undefined ? pijlerLabels[k] : `Dimensie ${k}`;
+      result[label] = avg(pijlerMap[k]);
+    });
+    return result;
+  };
+
+  // Escape helper voor CSV-waarden
+  const esc = (val) => {
+    if (val === undefined || val === null) return "";
+    const str = String(val);
+    if (str.includes('"') || str.includes(",") || str.includes("\n") || str.includes(";")) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  };
+
+  // Haal alle unieke domeinlabels op over alle respondenten heen voor kolomkoppen
+  const alleDomeinen = new Set();
+  antwoorden.forEach(a => {
+    const scores = berekenRespondentScores(a);
+    Object.keys(scores).forEach(d => alleDomeinen.add(d));
+  });
+  const domeinKolommen = Array.from(alleDomeinen).sort();
+
+  // Sorteer stellingen op id voor consistente kolomvolgorde
+  const stellingenGesorteerd = [...stellingen].sort((a,b) => (a.id || 0) - (b.id || 0));
+
+  // Bouw header
+  const header = [
+    "respondent_id",
+    "klant",
+    "vragenlijst_naam",
+    "vragenlijst_id",
+    "scan_type",
+    "rol",
+    "ingediend_op",
+    ...domeinKolommen.map(d => `score_${d}`),
+    ...stellingenGesorteerd.map(s => {
+      const prefix = s.type === "open" ? "open" : "schaal";
+      const dim = s.dimensie ? ` [${s.dimensie}]` : (s.pijler !== undefined ? ` [pijler_${s.pijler}]` : "");
+      return `${prefix}_${s.id}${dim}: ${s.tekst || ""}`;
+    }),
+  ];
+
+  // Bouw rijen
+  const rijen = antwoorden.map(a => {
+    const ts = a.ingediend_op?.seconds
+      ? new Date(a.ingediend_op.seconds * 1000).toISOString()
+      : (a.ingediend_op || "");
+    const scores = berekenRespondentScores(a);
+    return [
+      a.id || "",
+      lijst.klant || "",
+      lijst.naam || "",
+      lijst.id || "",
+      lijst.type || "basisscan",
+      a.rol || "",
+      ts,
+      ...domeinKolommen.map(d => scores[d] !== null && scores[d] !== undefined ? scores[d] : ""),
+      ...stellingenGesorteerd.map(s => {
+        const val = a.antwoorden?.[s.id];
+        return val === undefined || val === null ? "" : val;
+      }),
+    ].map(esc).join(",");
+  });
+
+  const csv = [header.map(esc).join(","), ...rijen].join("\n");
+
+  // UTF-8 BOM zodat Excel het correct opent met speciale tekens
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const klantSlug = (lijst.klant || "onbekend").toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+  const naamSlug = (lijst.naam || "scan").toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+  a.href = url;
+  a.download = `scan-export-${klantSlug}-${naamSlug}-${datumLabel}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 function ScanResultaten({ lijst, antwoorden, onBack }) {
   const [open,    setOpen]    = useState(null);
   const [tabBlad, setTabBlad] = useState("gap");
@@ -2959,6 +3078,11 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
   const teamleden  = antwoorden.filter(a=>a.rol==="Teamlid");
   const management = antwoorden.filter(a=>a.rol==="Leidinggevende");
   const stellingen = lijst.stellingen || DEFAULT_STELLINGEN;
+
+  // CSV-export: volledige data per respondent — antwoorden + vragen + scores + metadata
+  const downloadCsvPerScan = () => {
+    exporteerScanAlsCsv(lijst, antwoorden);
+  };
 
   const gemPijler = (pijlerIdx, subset) => {
     const ids  = stellingen.filter(s=>s.pijler===pijlerIdx && s.type==="schaal").map(s=>s.id);
@@ -3289,9 +3413,20 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
 
     return (
       <div>
-        <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",marginBottom:20,padding:0,fontWeight:600}}>
-          ← Terug naar vragenlijsten
-        </button>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginBottom:20,flexWrap:"wrap"}}>
+          <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",padding:0,fontWeight:600}}>
+            ← Terug naar vragenlijsten
+          </button>
+          <button onClick={downloadCsvPerScan} disabled={antwoorden.length === 0}
+            style={{background:antwoorden.length === 0 ? "rgba(255,255,255,0.03)" : "rgba(0,168,150,0.12)",
+              color:antwoorden.length === 0 ? ADM.muted : ADM.teal,
+              border:`1px solid ${antwoorden.length === 0 ? ADM.border : "rgba(0,168,150,0.3)"}`,
+              borderRadius:8,padding:"8px 14px",fontSize:12,
+              cursor:antwoorden.length === 0 ? "not-allowed" : "pointer",fontWeight:700}}
+            title={antwoorden.length === 0 ? "Nog geen respondenten" : "Download volledige data als CSV"}>
+            ⬇ Download CSV
+          </button>
+        </div>
 
         <div style={{marginBottom:20}}>
           <div style={{fontWeight:700,color:ADM.white,fontSize:18,marginBottom:4}}>{lijst.naam}</div>
@@ -3353,9 +3488,20 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
 
     return (
       <div>
-        <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",marginBottom:20,padding:0,fontWeight:600}}>
-          ← Terug naar vragenlijsten
-        </button>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginBottom:20,flexWrap:"wrap"}}>
+          <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",padding:0,fontWeight:600}}>
+            ← Terug naar vragenlijsten
+          </button>
+          <button onClick={downloadCsvPerScan} disabled={antwoorden.length === 0}
+            style={{background:antwoorden.length === 0 ? "rgba(255,255,255,0.03)" : "rgba(0,168,150,0.12)",
+              color:antwoorden.length === 0 ? ADM.muted : ADM.teal,
+              border:`1px solid ${antwoorden.length === 0 ? ADM.border : "rgba(0,168,150,0.3)"}`,
+              borderRadius:8,padding:"8px 14px",fontSize:12,
+              cursor:antwoorden.length === 0 ? "not-allowed" : "pointer",fontWeight:700}}
+            title={antwoorden.length === 0 ? "Nog geen respondenten" : "Download volledige data als CSV"}>
+            ⬇ Download CSV
+          </button>
+        </div>
 
         <div style={{marginBottom:20}}>
           <div style={{fontWeight:700,color:ADM.white,fontSize:18,marginBottom:4}}>{lijst.naam}</div>
@@ -3457,9 +3603,20 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
 
     return (
       <div>
-        <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",marginBottom:20,padding:0,fontWeight:600}}>
-          ← Terug naar vragenlijsten
-        </button>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginBottom:20,flexWrap:"wrap"}}>
+          <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",padding:0,fontWeight:600}}>
+            ← Terug naar vragenlijsten
+          </button>
+          <button onClick={downloadCsvPerScan} disabled={antwoorden.length === 0}
+            style={{background:antwoorden.length === 0 ? "rgba(255,255,255,0.03)" : "rgba(0,168,150,0.12)",
+              color:antwoorden.length === 0 ? ADM.muted : ADM.teal,
+              border:`1px solid ${antwoorden.length === 0 ? ADM.border : "rgba(0,168,150,0.3)"}`,
+              borderRadius:8,padding:"8px 14px",fontSize:12,
+              cursor:antwoorden.length === 0 ? "not-allowed" : "pointer",fontWeight:700}}
+            title={antwoorden.length === 0 ? "Nog geen respondenten" : "Download volledige data als CSV"}>
+            ⬇ Download CSV
+          </button>
+        </div>
 
         <div style={{marginBottom:20}}>
           <div style={{fontWeight:700,color:ADM.white,fontSize:18,marginBottom:4}}>{lijst.naam}</div>
@@ -3569,9 +3726,20 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
 
     return (
       <div>
-        <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",marginBottom:20,padding:0,fontWeight:600}}>
-          ← Terug naar vragenlijsten
-        </button>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginBottom:20,flexWrap:"wrap"}}>
+          <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",padding:0,fontWeight:600}}>
+            ← Terug naar vragenlijsten
+          </button>
+          <button onClick={downloadCsvPerScan} disabled={antwoorden.length === 0}
+            style={{background:antwoorden.length === 0 ? "rgba(255,255,255,0.03)" : "rgba(0,168,150,0.12)",
+              color:antwoorden.length === 0 ? ADM.muted : ADM.teal,
+              border:`1px solid ${antwoorden.length === 0 ? ADM.border : "rgba(0,168,150,0.3)"}`,
+              borderRadius:8,padding:"8px 14px",fontSize:12,
+              cursor:antwoorden.length === 0 ? "not-allowed" : "pointer",fontWeight:700}}
+            title={antwoorden.length === 0 ? "Nog geen respondenten" : "Download volledige data als CSV"}>
+            ⬇ Download CSV
+          </button>
+        </div>
 
         <div style={{marginBottom:20}}>
           <div style={{fontWeight:700,color:ADM.white,fontSize:18,marginBottom:4}}>{lijst.naam}</div>
@@ -3675,9 +3843,20 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
 
     return (
       <div>
-        <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",marginBottom:20,padding:0,fontWeight:600}}>
-          ← Terug naar vragenlijsten
-        </button>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginBottom:20,flexWrap:"wrap"}}>
+          <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",padding:0,fontWeight:600}}>
+            ← Terug naar vragenlijsten
+          </button>
+          <button onClick={downloadCsvPerScan} disabled={antwoorden.length === 0}
+            style={{background:antwoorden.length === 0 ? "rgba(255,255,255,0.03)" : "rgba(0,168,150,0.12)",
+              color:antwoorden.length === 0 ? ADM.muted : ADM.teal,
+              border:`1px solid ${antwoorden.length === 0 ? ADM.border : "rgba(0,168,150,0.3)"}`,
+              borderRadius:8,padding:"8px 14px",fontSize:12,
+              cursor:antwoorden.length === 0 ? "not-allowed" : "pointer",fontWeight:700}}
+            title={antwoorden.length === 0 ? "Nog geen respondenten" : "Download volledige data als CSV"}>
+            ⬇ Download CSV
+          </button>
+        </div>
 
         <div style={{marginBottom:20}}>
           <div style={{fontWeight:700,color:ADM.white,fontSize:18,marginBottom:4}}>{lijst.naam}</div>
@@ -3756,10 +3935,20 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
 
   return (
     <div>
-      <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,
-        fontSize:13,cursor:"pointer",marginBottom:20,padding:0,fontWeight:600}}>
-        ← Terug naar vragenlijsten
-      </button>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginBottom:20,flexWrap:"wrap"}}>
+        <button onClick={onBack} style={{background:"none",border:"none",color:ADM.teal,fontSize:13,cursor:"pointer",padding:0,fontWeight:600}}>
+          ← Terug naar vragenlijsten
+        </button>
+        <button onClick={downloadCsvPerScan} disabled={antwoorden.length === 0}
+          style={{background:antwoorden.length === 0 ? "rgba(255,255,255,0.03)" : "rgba(0,168,150,0.12)",
+            color:antwoorden.length === 0 ? ADM.muted : ADM.teal,
+            border:`1px solid ${antwoorden.length === 0 ? ADM.border : "rgba(0,168,150,0.3)"}`,
+            borderRadius:8,padding:"8px 14px",fontSize:12,
+            cursor:antwoorden.length === 0 ? "not-allowed" : "pointer",fontWeight:700}}
+          title={antwoorden.length === 0 ? "Nog geen respondenten" : "Download volledige data als CSV"}>
+          ⬇ Download CSV
+        </button>
+      </div>
       <div style={{marginBottom:20}}>
         <div style={{fontWeight:700,color:ADM.white,fontSize:18,marginBottom:4}}>{lijst.naam}</div>
         <div style={{fontSize:13,color:ADM.muted,marginBottom:16}}>
