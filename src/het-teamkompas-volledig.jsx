@@ -1522,7 +1522,7 @@ function PublicSite({ onLoginClick }) {
             <Fade>
               <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Herkenbare aanleiding</div>
               <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Als het team wel wil, maar nog niet in beweging komt.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>De website moet bezoekers direct laten voelen: dit gaat over mijn team. Niet door grote beloftes, maar door herkenbare spanning, rust en een duidelijke eerste stap.</p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>Misschien loopt het in je team niet slecht, maar ook niet zoals je zou willen. Dingen blijven liggen, gesprekken worden niet gevoerd of verandering blijft hangen in goede intenties. Dan helpt het om eerst helder te krijgen wat er echt speelt.</p>
               <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Bespreek jullie situatie</span>
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14, alignItems: "stretch" }}>
@@ -1544,7 +1544,7 @@ function PublicSite({ onLoginClick }) {
               <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 36px" }}>
                 <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Na je aanvraag</div>
                 <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.14, color: PUB.donker, marginBottom: 14 }}>Wat gebeurt er als je contact opneemt?</h2>
-                <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Een goede funnel verlaagt onzekerheid. Daarom maken we de eerste stap klein, professioneel en veilig.</p>
+                <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Je wilt eerst begrijpen wat er speelt, voordat je iets in gang zet. Daarom beginnen we altijd met een verkennend gesprek waarin we samen kijken wat er nodig is en of dit bij jullie past.</p>
               </div>
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 18 }}>
@@ -1565,7 +1565,7 @@ function PublicSite({ onLoginClick }) {
               <div style={{ maxWidth: 820, marginBottom: 34 }}>
                 <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Begeleid traject met fysieke begeleiding</div>
                 <h2 style={{ fontSize: isMobile ? 30 : 46, lineHeight: 1.1, color: PUB.wit, marginBottom: 14 }}>Van eerste contact tot inzicht, teamdag en borging.</h2>
-                <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)" }}>Deze route is leidend op de website: persoonlijk, zorgvuldig en gericht op vertrouwen. De digitale route kan later als schaalbaar alternatief worden aangeboden.</p>
+                <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)" }}>Geen enkel team is hetzelfde. Daarom kijken we altijd eerst naar jullie situatie en stemmen we de aanpak daarop af. Zo ontstaat een traject dat past bij jullie team, in plaats van een standaardoplossing.</p>
               </div>
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
