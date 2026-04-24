@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Scan-links zijn voor specifieke respondenten, niet voor indexering
+Disallow: /?scan=
+
+Sitemap: https://www.mijnteamkompas.nl/sitemap.xml

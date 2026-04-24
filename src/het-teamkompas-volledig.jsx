@@ -5,6 +5,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import { Routes, Route } from "react-router-dom";
+import OnzeAanpak from "./OnzeAanpak";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -8601,42 +8603,49 @@ export default function App() {
     };
   }, []);
 
-  return (
+  const homeElement = (
     <HelmetProvider>
       {(() => {
-  if (!authReady) {
-        return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#0D1B2A",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ textAlign: "center", color: "#8fa3bb" }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>🧭</div>
-          <div style={{ fontSize: 15 }}>Laden...</div>
-        </div>
-      </div>
-    );
-  }
+        if (!authReady) {
+          return (
+            <div
+              style={{
+                minHeight: "100vh",
+                background: "#0D1B2A",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div style={{ textAlign: "center", color: "#8fa3bb" }}>
+                <div style={{ fontSize: 32, marginBottom: 12 }}>🧭</div>
+                <div style={{ fontSize: 15 }}>Laden...</div>
+              </div>
+            </div>
+          );
+        }
 
-  if (view === "scan") {
-        return <ScanInvullen scanId={scanId} />;
-  }
+        if (view === "scan") {
+          return <ScanInvullen scanId={scanId} />;
+        }
 
-  if (view === "login") {
-        return <LoginScreen onLogin={() => setView("admin")} onBack={() => setView("public")} />;
-  }
+        if (view === "login") {
+          return <LoginScreen onLogin={() => setView("admin")} onBack={() => setView("public")} />;
+        }
 
-  if (view === "admin") {
-        return <AdminDashboard onLogout={() => setView("public")} />;
-  }
+        if (view === "admin") {
+          return <AdminDashboard onLogout={() => setView("public")} />;
+        }
 
         return <PublicSite onLoginClick={() => setView("login")} />;
       })()}
     </HelmetProvider>
+  );
+
+  return (
+    <Routes>
+      <Route path="/" element={homeElement} />
+      <Route path="/onze-aanpak" element={<OnzeAanpak />} />
+    </Routes>
   );
 }
