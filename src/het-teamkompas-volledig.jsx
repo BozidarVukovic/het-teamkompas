@@ -1527,10 +1527,10 @@ function PublicSite({ onLoginClick }) {
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>De website moet bezoekers direct laten voelen: dit gaat over mijn team. Niet door grote beloftes, maar door herkenbare spanning, rust en een duidelijke eerste stap.</p>
               <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Bespreek jullie situatie</span>
             </Fade>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14, alignItems: "stretch" }}>
               {vragen.map((v, i) => (
-                <Fade key={v} delay={i * .05}>
-                  <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 22, minHeight: 110, boxShadow: "0 14px 34px rgba(13,27,42,0.06)" }}>
+                <Fade key={v} delay={i * .05} style={{ height: "100%" }}>
+                  <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 22, minHeight: 150, height: "100%", boxSizing: "border-box", boxShadow: "0 14px 34px rgba(13,27,42,0.06)" }}>
                     <div style={{ width: 30, height: 30, borderRadius: "50%", background: PUB.tealGlow, color: PUB.teal, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, marginBottom: 14 }}>{i + 1}</div>
                     <div style={{ fontSize: 16, lineHeight: 1.55, color: PUB.donker, fontWeight: 700 }}>{v}</div>
                   </div>
@@ -1602,24 +1602,6 @@ function PublicSite({ onLoginClick }) {
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-
-        <section id="vertrouwen" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.wit }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", gap: 44, alignItems: "center" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
-              {[["Voorbeeldrapport", "Laat zien hoe een terugkoppeling eruitziet, eventueel geanonimiseerd."], ["Anonieme casus", "Beschrijf herkenbaar wat een teamvraag was, wat jullie deden en wat het opleverde."], ["Professionele belofte", "Maak duidelijk dat jullie zorgvuldig omgaan met data, veiligheid en vertrouwelijkheid."]].map(([titel, tekst]) => (
-                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24 }}>
-                  <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 8 }}>{titel}</div>
-                  <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub }}>{tekst}</div>
-                </div>
-              ))}
-            </div>
-            <Fade>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vertrouwen zonder jezelf centraal te zetten</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.14, marginBottom: 16 }}>Maak bewijs zichtbaar zonder dat Bo en Ed prominent in beeld hoeven.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Gebruik professionele beelden van samenwerking, anonieme voorbeelden, een voorbeeldrapport en duidelijke procesuitleg. Zo ontstaat vertrouwen zonder persoonlijke profilering via LinkedIn of foto’s van jullie zelf.</p>
-            </Fade>
           </div>
         </section>
 
