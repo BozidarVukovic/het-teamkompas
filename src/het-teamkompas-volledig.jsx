@@ -786,18 +786,16 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
   const [activeSection, setActiveSection] = useState("home");
 
   const navLinks = [
-    ["Aanpak","aanpak"],
-    ["Traject","begeleid-traject"],
-    ["Opbrengst","opbrengst"],
-    ["Voor wie","voor-wie"],
-    ["FAQ","insights-faq"],
-    ["Contact","contact-cta"]
+    ["Voor wie", "voor-wie"],
+    ["Eerste stap", "eerste-stap"],
+    ["Traject", "traject"],
+    ["Teamscan", "teamscan"],
+    ["Contact", "contact"]
   ];
 
   useEffect(() => {
-    const ids = ["aanpak", "begeleid-traject", "opbrengst", "voor-wie", "insights-faq", "contact-cta"];
     const observers = [];
-
+    const ids = ["voor-wie", "eerste-stap", "traject", "teamscan", "contact"];
     const updateActive = () => {
       const hero = document.getElementById("home");
       if (hero) {
