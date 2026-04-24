@@ -1420,10 +1420,7 @@ function PublicSite({ onLoginClick }) {
         }),
       });
 
-      if (!res.ok) {
-        console.warn("EmailJS gaf geen 200-response");
-      }
-
+      if (!res.ok) console.warn("EmailJS gaf geen 200-response");
       setStatus("sent");
     } catch (error) {
       console.error("Fout bij versturen:", error);
@@ -1431,474 +1428,271 @@ function PublicSite({ onLoginClick }) {
     }
   };
 
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  const funnelSteps = [
+    ["1", "Contact via website", "Laagdrempelig een vraagstuk delen zonder verplichting."],
+    ["2", "Kennismaking & intake", "Samen scherp krijgen wat er speelt en wat nodig is."],
+    ["3", "Voorstel / trajectontwerp", "Een passende aanpak voor jullie team en context."],
+    ["4", "Teamscan uitzetten", "Veilig en gestructureerd ophalen wat teamleden ervaren."],
+    ["5", "Analyse teamscan", "Patronen, verschillen en signalen vertalen naar betekenis."],
+    ["6", "Insights Discovery profielen", "Gedrag, communicatie en samenwerking concreet maken."],
+    ["7", "Terugkoppeling & maatwerkadvies", "Duidelijke conclusies en haalbare vervolgstappen."],
+    ["8", "Workshop of teamdag", "Gerichte interventie waarin inzicht wordt omgezet in gedrag."],
+    ["9", "Borging / follow-up", "Zorgen dat inzichten blijven landen in het dagelijks werk."],
+  ];
+
+  const trustItems = [
+    ["Menselijk", "we kijken naar gedrag, veiligheid, energie en samenwerking achter de cijfers."],
+    ["Onderbouwd", "teamscan, Insights Discovery en bewezen veranderkundige principes versterken elkaar."],
+    ["Praktisch", "geen standaardrapport, maar concrete stappen die passen bij jullie dagelijkse realiteit."],
+  ];
+
+  const vragen = [
+    "Er wordt veel besproken, maar weinig echt uitgesproken.",
+    "Samenwerking kost meer energie dan nodig is.",
+    "Verandering roept twijfel, afwachten of weerstand op.",
+    "Leidinggevenden zoeken taal en richting om het team verder te brengen.",
+  ];
+
+  const pijlerCards = [
+    ["Gedrag & communicatie", PUB.blauw, "hoe mensen elkaar begrijpen, aanvullen of juist mislopen."],
+    ["Veiligheid & leiderschap", PUB.groen, "of mensen zich vrij voelen om eerlijk te zijn en initiatief te nemen."],
+    ["Energie & motivatie", PUB.oranje, "waar werk energie geeft en waar het team structureel leegloopt."],
+    ["Verbeteren & leren", PUB.paars, "of verbeterideeën zichtbaar worden, besproken worden en landen in gedrag."],
+  ];
+
+  const ctaStyle = { background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center", boxShadow: "0 12px 28px rgba(15,118,110,0.24)" };
+  const ghostStyle = { border: "1px solid rgba(255,255,255,0.30)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: "pointer", textAlign: "center", background: "rgba(255,255,255,0.04)" };
+
   return (
     <>
       <Helmet>
-        <title>Mijn Teamkompas | teamontwikkeling, Insights Discovery en leiderschapsbegeleiding</title>
-        <meta
-          name="description"
-          content="Mijn Teamkompas helpt teams groeien met teamontwikkeling, Insights Discovery profielen, teamscans en leiderschapsbegeleiding."
-        />
-        <meta property="og:title" content="Mijn Teamkompas | teamontwikkeling, Insights Discovery en leiderschapsbegeleiding" />
-        <meta
-          property="og:description"
-          content="Mijn Teamkompas helpt teams groeien met teamontwikkeling, Insights Discovery profielen, teamscans en leiderschapsbegeleiding."
-        />
+        <title>Mijn Teamkompas | teamontwikkeling, teamscan en begeleiding op maat</title>
+        <meta name="description" content="Mijn Teamkompas helpt teams zichtbaar maken wat samenwerking belemmert en vertaalt dit naar teamscan, analyse, Insights Discovery en begeleiding op maat." />
+        <meta property="og:title" content="Mijn Teamkompas | teamontwikkeling, teamscan en begeleiding op maat" />
+        <meta property="og:description" content="Van eerste contact naar inzicht, maatwerkadvies, teamdag en borging. Mijn Teamkompas maakt zichtbaar wat teams vaak niet uitspreken." />
         <meta property="og:type" content="website" />
       </Helmet>
 
-      <div style={{fontFamily:"'Roboto', sans-serif",color:"#2D3748",overflowX:"hidden",paddingTop:64}}>
+      <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, overflowX: "hidden", paddingTop: 64, background: PUB.wit }}>
         <NavBar isMobile={isMobile} onLoginClick={onLoginClick} openModal={openModal} />
 
-        {/* HERO */}
-        <div id="home" style={{background:PUB.donker,display:"grid",
-          gridTemplateColumns:isMobile?"1fr":"1fr 1fr",
-          alignItems:"center",minHeight:isMobile?"auto":"86vh",
-          position:"relative",overflow:"hidden"}}>
-          <div style={{position:"absolute",inset:0,
-            backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.033) 1px,transparent 1px)",
-            backgroundSize:"30px 30px",pointerEvents:"none"}}/>
-          <Strepen/>
-          <div style={{padding:isMobile?"60px 24px 40px 32px":"60px 48px 60px 60px",position:"relative",zIndex:2}}>
-            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,
-              textTransform:"uppercase",marginBottom:16}}>Voor teams en leidinggevenden in beweging</div>
-            <h1 style={{fontSize:isMobile?30:44,fontWeight:700,lineHeight:1.2,color:PUB.wit,marginBottom:16}}>
-              Samenwerking verbeteren begint met zichtbaar maken wat teams vaak niet uitspreken.
+        <section id="home" style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "86vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", alignItems: "center", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.035) 1px,transparent 1px)", backgroundSize: "30px 30px" }} />
+          <Strepen />
+          <div style={{ padding: isMobile ? "58px 24px 36px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 16 }}>Teamontwikkeling met teamscan, analyse en begeleiding</div>
+            <h1 style={{ fontSize: isMobile ? 34 : 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, marginBottom: 20, letterSpacing: "-0.03em" }}>
+              Waarom verandert er niets in je team, terwijl iedereen voelt dat het beter kan?
             </h1>
-            <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:"rgba(255,255,255,0.57)",maxWidth:520,marginBottom:14}}>
-              Mijn Teamkompas helpt teams en leidinggevenden begrijpen waar vertrouwen, duidelijkheid, energie en eigenaarschap vastlopen, en vertaalt dat naar een zorgvuldig begeleid traject met teamscan, analyse en interventie op maat.
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 640, marginBottom: 16 }}>
+              Mijn Teamkompas maakt zichtbaar wat er onder de oppervlakte speelt en vertaalt dat naar concrete begeleiding, een zorgvuldig trajectontwerp en een teamdag die past bij jullie dagelijkse werkelijkheid.
             </p>
-            <div style={{fontSize:12,fontWeight:400,color:"rgba(255,255,255,0.42)",marginBottom:32}}>
-              Verkennende kennismaking, maatwerkadvies en begeleiding die past bij jullie context.
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
+              <span style={ctaStyle} onClick={openModal}>Plan een verkennende kennismaking</span>
+              <span style={ghostStyle} onClick={() => scrollTo("traject")}>Bekijk het begeleide traject</span>
             </div>
-            <div style={{display:"flex",flexDirection:isMobile?"column":"row",gap:12}}>
-              <span style={{background:PUB.teal,color:PUB.donker,padding:"13px 22px",borderRadius:4,
-                fontWeight:600,fontSize:14,cursor:"pointer",textAlign:"center"}} onClick={openModal}>
-                Plan een verkennende kennismaking
-              </span>
-              <span onClick={()=>document.getElementById("begeleid-traject")?.scrollIntoView({behavior:"smooth",block:"start"})}
-                style={{border:"1px solid rgba(255,255,255,0.26)",color:"rgba(255,255,255,0.78)",
-                padding:"13px 22px",borderRadius:4,fontSize:14,cursor:"pointer",textAlign:"center"}}>
-                Bekijk het traject
-              </span>
+            <div style={{ marginTop: 24, color: "rgba(255,255,255,0.48)", fontSize: 13 }}>
+              Geen verplichting. Eerst samen scherp krijgen of en hoe Mijn Teamkompas kan helpen.
             </div>
           </div>
-          {!isMobile && (
-            <div style={{display:"flex",alignItems:"center",justifyContent:"center",
-              padding:"60px 40px",position:"relative",zIndex:2}}>
-              <KompasAnim/>
+          <div style={{ minHeight: isMobile ? 320 : "86vh", position: "relative", zIndex: 1 }}>
+            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=1600&q=80&fit=crop&crop=center" alt="Team in begeleide sessie rondom samenwerking" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: .82 }} />
+            <div style={{ position: "absolute", inset: 0, background: isMobile ? "linear-gradient(to top, rgba(13,27,42,0.88), rgba(13,27,42,0.18))" : "linear-gradient(to right, rgba(13,27,42,0.92), rgba(13,27,42,0.10))" }} />
+            <div style={{ position: "absolute", left: isMobile ? 22 : 44, right: isMobile ? 22 : 44, bottom: isMobile ? 24 : 44, background: "rgba(255,255,255,0.92)", borderRadius: 18, padding: 22, boxShadow: "0 24px 70px rgba(0,0,0,0.28)" }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: PUB.teal, marginBottom: 8 }}>De eerste stap</div>
+              <div style={{ fontSize: isMobile ? 20 : 24, fontWeight: 800, color: PUB.donker, lineHeight: 1.2, marginBottom: 8 }}>Van losse signalen naar een gedeeld beeld.</div>
+              <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.sub }}>Een kennismaking geeft rust, taal en richting voordat er een traject wordt gestart.</div>
             </div>
-          )}
-          {isMobile && (
-            <div style={{display:"flex",justifyContent:"center",padding:"32px 24px",zIndex:2}}>
-              <KompasAnim/>
-            </div>
-          )}
-        </div>
+          </div>
+        </section>
 
-        {/* FOTOSECTIE */}
-        <div style={{position:"relative",width:"100%",height:isMobile?280:480,overflow:"hidden"}}>
-          <img
-            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600&q=80&fit=crop&crop=center"
-            alt="Mensen in serieus overleg aan tafel"
-            style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 40%",display:"block"}}
-          />
-          <div style={{
-            position:"absolute",inset:0,
-            background:"linear-gradient(to right, rgba(13,27,42,0.78) 0%, rgba(13,27,42,0.45) 55%, rgba(13,27,42,0.18) 100%)"
-          }}/>
-          <div style={{
-            position:"absolute",inset:0,
-            display:"flex",flexDirection:"column",justifyContent:"center",
-            padding:isMobile?"28px 24px":"0 80px"
-          }}>
+        <section style={{ background: PUB.wit, padding: isMobile ? "28px 20px" : "34px 60px", borderBottom: `1px solid ${PUB.lijn}` }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+            {trustItems.map(([titel, tekst]) => (
+              <div key={titel} style={{ border: `1px solid ${PUB.lijn}`, borderRadius: 14, padding: 18, background: "#fff" }}>
+                <div style={{ fontSize: 16, fontWeight: 800, color: PUB.donker, marginBottom: 6 }}>{titel}</div>
+                <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.sub }}>{tekst}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="voor-wie" style={{ padding: isMobile ? "54px 20px" : "82px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 42, alignItems: "center" }}>
             <Fade>
-              <p style={{
-                fontSize:isMobile?16:24,fontWeight:700,color:PUB.wit,
-                lineHeight:1.35,maxWidth:480,marginBottom:16
-              }}>
-                Niet elk teamprobleem vraagt om harder sturen.<br/>
-                <em style={{fontStyle:"italic",color:PUB.wit}}>Vaak helpt het eerst om zorgvuldig zichtbaar te maken wat er onder de oppervlakte speelt.</em>
-              </p>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Herkenbare aanleiding</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Als het team wel wil, maar nog niet in beweging komt.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>De website moet bezoekers direct laten voelen: dit gaat over mijn team. Niet door grote beloftes, maar door herkenbare spanning, rust en een duidelijke eerste stap.</p>
+              <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Bespreek jullie situatie</span>
             </Fade>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
+              {vragen.map((v, i) => (
+                <Fade key={v} delay={i * .05}>
+                  <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 22, minHeight: 110, boxShadow: "0 14px 34px rgba(13,27,42,0.06)" }}>
+                    <div style={{ width: 30, height: 30, borderRadius: "50%", background: PUB.tealGlow, color: PUB.teal, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, marginBottom: 14 }}>{i + 1}</div>
+                    <div style={{ fontSize: 16, lineHeight: 1.55, color: PUB.donker, fontWeight: 700 }}>{v}</div>
+                  </div>
+                </Fade>
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* AANPAK */}
-        <div id="aanpak" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
-          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
+        <section id="eerste-stap" style={{ padding: isMobile ? "54px 20px" : "82px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
             <Fade>
-              <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Onze aanpak</div>
-              <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-                Geen standaardtraject, maar een <br/><em style={{fontStyle:"italic",color:PUB.teal}}>zorgvuldige route naar beweging</em>
-              </h2>
-              <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,marginBottom:28}}>
-                Mijn Teamkompas helpt organisaties om eerst scherp te krijgen wat er werkelijk speelt in samenwerking, leiderschap en teamdynamiek. Van daaruit vertalen we signalen naar een voorstel dat past bij jullie team, context en ontwikkelvraag.
-              </p>
-              {[["1","We starten met een scherpe verkenning","In een eerste gesprek brengen we jullie vraag, context en gewenste opbrengst in beeld."],
-                ["2","We maken patronen zichtbaar","Met een teamscan en verdiepende duiding brengen we boven- en onderstroom zorgvuldig samen."],
-                ["3","We vertalen inzicht naar maatwerk","De uitkomsten worden omgezet in heldere adviezen, een passende interventie en concrete vervolgstappen."],
-              ].map(([nr,t,b],i)=>(
-                <Fade key={i} delay={i*0.1}>
-                  <div style={{display:"flex",gap:14,alignItems:"flex-start",marginBottom:16}}>
-                    <div style={{width:33,height:33,borderRadius:"50%",background:PUB.donker,
-                      color:PUB.teal,display:"flex",alignItems:"center",justifyContent:"center",
-                      fontSize:15,fontWeight:700,flexShrink:0}}>{nr}</div>
-                    <div>
-                      <div style={{fontSize:14,fontWeight:600,color:PUB.donker,marginBottom:2}}>{t}</div>
-                      <div style={{fontSize:13,color:PUB.sub,lineHeight:1.6}}>{b}</div>
+              <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 36px" }}>
+                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Na je aanvraag</div>
+                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.14, color: PUB.donker, marginBottom: 14 }}>Wat gebeurt er als je contact opneemt?</h2>
+                <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Een goede funnel verlaagt onzekerheid. Daarom maken we de eerste stap klein, professioneel en veilig.</p>
+              </div>
+            </Fade>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 18 }}>
+              {[["1", "Korte kennismaking", "We plannen een verkennend gesprek van ongeveer 30 minuten."], ["2", "Vraagstuk verkennen", "We bespreken wat zichtbaar is, wat onderliggend speelt en wat het team nodig heeft."], ["3", "Eerste richting", "Je ontvangt een heldere inschatting van een passende vervolgstap."]].map(([nr, titel, tekst]) => (
+                <div key={nr} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 26 }}>
+                  <div style={{ color: PUB.teal, fontWeight: 900, fontSize: 28, marginBottom: 12 }}>{nr}</div>
+                  <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 10 }}>{titel}</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub }}>{tekst}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="traject" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.donker, color: PUB.wit }}>
+          <div style={{ maxWidth: 1220, margin: "0 auto" }}>
+            <Fade>
+              <div style={{ maxWidth: 820, marginBottom: 34 }}>
+                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Begeleid traject met fysieke begeleiding</div>
+                <h2 style={{ fontSize: isMobile ? 30 : 46, lineHeight: 1.1, color: PUB.wit, marginBottom: 14 }}>Van eerste contact tot inzicht, teamdag en borging.</h2>
+                <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)" }}>Deze route is leidend op de website: persoonlijk, zorgvuldig en gericht op vertrouwen. De digitale route kan later als schaalbaar alternatief worden aangeboden.</p>
+              </div>
+            </Fade>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+              {funnelSteps.map(([nr, titel, tekst], i) => (
+                <Fade key={titel} delay={(i % 3) * .04}>
+                  <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 18, padding: 22, minHeight: 150 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                      <div style={{ width: 34, height: 34, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>{nr}</div>
+                      <div style={{ fontSize: 17, fontWeight: 800 }}>{titel}</div>
                     </div>
-                  </div>
-                </Fade>
-              ))}
-            </Fade>
-            <Fade delay={isMobile?0:0.2}>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:3,
-                borderRadius:10,overflow:"hidden",boxShadow:"0 14px 44px rgba(0,0,0,0.13)"}}>
-                {[[PUB.groen,"01","Vertrouwen & veiligheid","Kunnen mensen zich uitspreken, fouten bespreken en elkaar echt aanspreken?","Gebaseerd op Secure Base Leadership"],
-                  [PUB.blauw,"02","Verandering & duidelijkheid","Begrijpen mensen wat er verandert, waarom dat nodig is en wat er van hen wordt gevraagd?","Gebaseerd op neuromanagement"],
-                  [PUB.oranje,"03","Energie & motivatie","Waar geven werk en samenwerking energie, en waar ontstaan juist belasting, frustratie of uitputting?","Gebaseerd op het JD-R model"],
-                  [PUB.paars,"04","Leren & verbeteren","Hoe leert een team van ervaringen en hoe worden verbeteringen ook echt vastgehouden?","Gebaseerd op lean en agile"],
-                ].map(([c,nr,t,b,m],i)=>(
-                  <div key={i} style={{background:c,padding:isMobile?"16px 12px":"24px 18px",display:"flex",flexDirection:"column",gap:5}}>
-                    <div style={{fontSize:isMobile?20:30,fontWeight:700,color:"rgba(255,255,255,0.16)",lineHeight:1}}>{nr}</div>
-                    <div style={{fontSize:isMobile?13:15,fontWeight:700,color:PUB.wit,lineHeight:1.2}}>{t}</div>
-                    <div style={{fontSize:isMobile?11:12,color:"rgba(255,255,255,0.76)",lineHeight:1.55}}>{b}</div>
-                    <div style={{fontSize:9,fontWeight:600,letterSpacing:"0.08em",color:"rgba(255,255,255,0.42)",textTransform:"uppercase",marginTop:"auto",paddingTop:8}}>{m}</div>
-                  </div>
-                ))}
-              </div>
-            </Fade>
-          </div>
-        </div>
-
-        <ThemeDeepDiveSection isMobile={isMobile} openModal={openModal} />
-
-        <DiverseWorkplacesSection isMobile={isMobile} />
-
-        {/* WAT EEN BEGELEID TRAJECT OPLEVERT */}
-        <div id="opbrengst" style={{background:PUB.donker,padding:isMobile?"48px 24px":"72px 96px",position:"relative",overflow:"hidden"}}>
-          <Strepen/>
-          <Fade>
-            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>
-              Wat een begeleid traject oplevert
-            </div>
-            <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.15,color:PUB.wit,marginBottom:16,maxWidth:760}}>
-              Wat teams en leidinggevenden <em style={{fontStyle:"italic",color:PUB.teal}}>concreet ervaren</em>
-            </h2>
-            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.62)",maxWidth:760,marginBottom:36}}>
-              Geen standaardrapport dat in een la verdwijnt, maar een traject dat richting geeft aan gesprekken, gedrag en vervolgstappen in de praktijk.
-            </p>
-            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(2,1fr)",gap:isMobile?10:12,maxWidth:900,gridAutoRows:"1fr"}}>
-              {[
-                "Je krijgt sneller scherp waar samenwerking stroef loopt en waar de echte ruimte zit",
-                "Leidinggevenden ontvangen concrete handvatten voor gesprek, sturing en vervolg",
-                "Teams ervaren meer taal en veiligheid om uit te spreken wat eerder onbesproken bleef",
-                "De scan wordt vertaald naar begrijpelijke patronen en geen losse scorelijst",
-                "Interventies sluiten aan op de dagelijkse praktijk en hoeven niet groot te beginnen",
-                "De opbrengst is gericht op beweging, borging en een logisch vervolgtraject",
-              ].map((item,i)=>(
-                <Fade key={i} delay={i*0.05} style={{height:"100%"}}>
-                  <div style={{height:"100%",boxSizing:"border-box",display:"flex",gap:12,alignItems:"center",padding:"16px 18px",
-                    background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10}}>
-                    <div style={{width:8,height:8,borderRadius:"50%",background:PUB.teal,flexShrink:0}}/>
-                    <div style={{fontSize:14,color:"rgba(255,255,255,0.84)",lineHeight:1.6}}>{item}</div>
+                    <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.62)" }}>{tekst}</div>
                   </div>
                 </Fade>
               ))}
             </div>
-          </Fade>
-        </div>
-
-        {/* SECTOREN */}
-        <div id="voor-wie" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.licht}}>
-          <Fade>
-            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Voor wie dit passend is</div>
-            <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-              Passend voor teams waar <br/><em style={{fontStyle:"italic",color:PUB.teal}}>onderstroom en opgave samenkomen</em>
-            </h2>
-            <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,maxWidth:560,marginBottom:40}}>
-              Mijn Teamkompas is vooral geschikt voor teams waar verandering, samenwerking en leiderschap elkaar raken. Bijvoorbeeld wanneer er gedoe onder de oppervlakte zit, onduidelijkheid blijft bestaan of een team wel wil bewegen maar nog geen gedeeld vertrekpunt heeft.
-            </p>
-          </Fade>
-          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)",gap:isMobile?12:16,alignItems:"stretch"}}>
-            {[["Zakelijke dienstverlening","Groeiende organisaties waar cultuur en structuur achterlopen op de ambities en teams meer eigenaarschap nodig hebben."],
-              ["Gemeenten","Verandering in een politieke omgeving waar draagvlak, psychologische veiligheid en duidelijkheid voortdurend onder druk staan."],
-              ["Onderwijs","Schoolteams en hogescholen waar de werkdruk hoog is en het gesprek over samenwerking zelden gevoerd wordt."],
-              ["Industrie","Teams op de werkvloer waar veiligheidscultuur en continu verbeteren hand in hand moeten gaan."],
-            ].map(([t,b],i)=>(
-              <Fade key={i} delay={i*0.1} style={{height:"100%"}}>
-                <div style={{height:"100%",background:PUB.wit,border:`1px solid ${PUB.lijn}`,borderRadius:8,padding:"22px 18px",boxSizing:"border-box"}}>
-                  <div style={{fontSize:17,fontWeight:700,color:PUB.donker,marginBottom:7}}>{t}</div>
-                  <div style={{fontSize:13,color:PUB.sub,lineHeight:1.65}}>{b}</div>
-                </div>
-              </Fade>
-            ))}
           </div>
-        </div>
+        </section>
 
-        {/* ZORGVULDIGHEID */}
-        <div id="zorgvuldig" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
-          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
+        <section id="teamscan" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".95fr 1.05fr", gap: 44, alignItems: "center" }}>
             <Fade>
-              <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Zorgvuldig en professioneel</div>
-              <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-                Een aanpak die vertrouwen <br/><em style={{fontStyle:"italic",color:PUB.teal}}>verdient door zorgvuldigheid</em>
-              </h2>
-              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:16}}>
-                Mijn Teamkompas kiest niet voor snelle labels of standaardoplossingen. We werken met een aanpak waarin meting, duiding en begeleiding elkaar versterken.
-              </p>
-              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:16}}>
-                We combineren jarenlange praktijkervaring in leiderschap en organisatieverandering met een aanpak die direct toepasbaar is. Geen theorie die blijft hangen in een presentatie maar inzichten die mensen de volgende dag al anders laten handelen.
-              </p>
-              <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:16}}>
-                We helpen niet alleen begrijpen wat er speelt. We helpen het gesprek en het gedrag ook echt veranderen.
-              </p>
-              <Fade delay={0.15}>
-                <div style={{borderRadius:10,overflow:"hidden",boxShadow:"0 8px 32px rgba(0,0,0,0.10)"}}>
-                  <img
-                    src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=900&q=80&fit=crop&crop=center"
-                    alt="Team staat samen bij een verbeterbord"
-                    style={{width:"100%",height:240,objectFit:"cover",objectPosition:"center 40%",display:"block"}}
-                  />
-                </div>
-              </Fade>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>De teamscan</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, marginBottom: 16 }}>Geen vragenlijstje, maar een startpunt voor betekenisvol gesprek.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 22 }}>De teamscan helpt patronen zichtbaar maken in gedrag, veiligheid, energie en verbeteren. De waarde ontstaat door de combinatie van data, duiding en begeleiding.</p>
+              <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Verken de teamscan</span>
             </Fade>
-            <div style={{display:"flex",flexDirection:"column",gap:14}}>
-              <Fade>
-                <div style={{borderRadius:10,overflow:"hidden",marginBottom:6,boxShadow:"0 8px 32px rgba(0,0,0,0.10)"}}>
-                  <img
-                    src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=900&q=80&fit=crop&crop=faces,center"
-                    alt="Één-op-één gesprek tussen begeleider en leidinggevende"
-                    style={{width:"100%",height:220,objectFit:"cover",objectPosition:"center 20%",display:"block"}}
-                  />
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
+              {pijlerCards.map(([titel, kleur, tekst]) => (
+                <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderTop: `5px solid ${kleur}`, borderRadius: 18, padding: 22, boxShadow: "0 14px 34px rgba(13,27,42,0.06)" }}>
+                  <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 10 }}>{titel}</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub }}>{tekst}</div>
                 </div>
-              </Fade>
-              {[
-                ["Mensgericht én praktisch","Geen abstracte verandertaal, maar begeleiding die aansluit op de dagelijkse praktijk van teams en leidinggevenden."],
-                ["Onderstroom zichtbaar maken","We helpen organisaties begrijpen wat niet wordt uitgesproken maar wel bepalend is voor samenwerking en beweging."],
-                ["Richting geven aan vervolg","Inzichten worden vertaald naar gesprekken, interventies en vervolgstappen die uitvoerbaar en relevant zijn."],
-              ].map(([titel,tekst],i)=>(
-                <Fade key={i} delay={i*0.12}>
-                  <div style={{display:"flex",gap:14,alignItems:"flex-start",padding:18,
-                    borderRadius:8,border:`1px solid ${PUB.lijn}`,background:PUB.licht}}>
-                    <div style={{width:10,height:10,borderRadius:"50%",background:PUB.teal,marginTop:5,flexShrink:0}}/>
-                    <div>
-                      <div style={{fontSize:14,fontWeight:700,color:PUB.donker,marginBottom:5}}>{titel}</div>
-                      <div style={{fontSize:13,color:PUB.sub,lineHeight:1.65}}>{tekst}</div>
-                    </div>
-                  </div>
-                </Fade>
               ))}
-              <Fade delay={0.35}>
-                <div style={{padding:18,borderRadius:8,background:PUB.navy,border:`1px solid ${PUB.tealGlow}`}}>
-                  <p style={{fontSize:13,color:"rgba(255,255,255,0.62)",marginBottom:11,lineHeight:1.6}}>
-                    Benieuwd of onze aanpak past bij wat er in jouw organisatie speelt? Plan een vrijblijvend gesprek van 30 minuten. We luisteren eerst.
-                  </p>
-                  <span style={{background:PUB.teal,color:PUB.donker,padding:"10px 18px",borderRadius:4,
-                    fontWeight:600,fontSize:13,cursor:"pointer",display:"block",textAlign:"center"}}
-                    onClick={openModal}>Plan een vrijblijvend kennismakingsgesprek →</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="vertrouwen" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", gap: 44, alignItems: "center" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
+              {[["Voorbeeldrapport", "Laat zien hoe een terugkoppeling eruitziet, eventueel geanonimiseerd."], ["Anonieme casus", "Beschrijf herkenbaar wat een teamvraag was, wat jullie deden en wat het opleverde."], ["Professionele belofte", "Maak duidelijk dat jullie zorgvuldig omgaan met data, veiligheid en vertrouwelijkheid."]].map(([titel, tekst]) => (
+                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24 }}>
+                  <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 8 }}>{titel}</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub }}>{tekst}</div>
                 </div>
-              </Fade>
+              ))}
             </div>
+            <Fade>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vertrouwen zonder jezelf centraal te zetten</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.14, marginBottom: 16 }}>Maak bewijs zichtbaar zonder dat Bo en Ed prominent in beeld hoeven.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Gebruik professionele beelden van samenwerking, anonieme voorbeelden, een voorbeeldrapport en duidelijke procesuitleg. Zo ontstaat vertrouwen zonder persoonlijke profilering via LinkedIn of foto’s van jullie zelf.</p>
+            </Fade>
           </div>
-        </div>
+        </section>
 
-        {/* BEGELEID TRAJECT */}
-        <div id="begeleid-traject" style={{padding:isMobile?"56px 20px":"76px 60px",background:PUB.donker,position:"relative",overflow:"hidden"}}>
-          <Fade>
-            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:"rgba(255,255,255,0.38)",textTransform:"uppercase",marginBottom:12}}>Begeleid traject</div>
-            <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.wit,marginBottom:14}}>
-              Van eerste verkenning naar <em style={{fontStyle:"italic",color:PUB.teal}}>gerichte begeleiding</em>
-            </h2>
-            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.6)",maxWidth:680,marginBottom:40}}>
-              Voor organisaties die kiezen voor fysieke begeleiding verloopt het traject stap voor stap. Zo ontstaat rust, duidelijkheid en een aanpak die past bij de vraag van het team.
-            </p>
-          </Fade>
-          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)",gap:isMobile?12:14,position:"relative",zIndex:1,alignItems:"stretch"}}>
-            {[
-              ["01","Kennismaking en intake","We verkennen wat er speelt, wat al geprobeerd is en waar de grootste behoefte ligt."],
-              ["02","Voorstel op maat","Je ontvangt een helder voorstel met passende opbouw, doorlooptijd en gewenste opbrengst."],
-              ["03","Teamscan uitzetten","De teamscan wordt zorgvuldig klaargezet en gedeeld met de juiste doelgroep."],
-              ["04","Analyse en duiding","We vertalen scores, signalen en patronen naar een begrijpelijk beeld van het team."],
-              ["05","Terugkoppeling en interventie","De uitkomsten worden besproken en vertaald naar een workshop, teamdag of gerichte sessie."],
-              ["06","Borging en vervolg","We bepalen welke vervolgstap nodig is om beweging vast te houden en verder te verdiepen."],
-            ].map(([nr,t,b],i)=>(
-              <Fade key={i} delay={i*0.08} style={{height:"100%"}}>
-                <div style={{height:"100%",boxSizing:"border-box",display:"flex",flexDirection:"column",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",padding:"24px 20px",borderRadius:10}}>
-                  <div style={{fontSize:38,fontWeight:700,color:"rgba(0,168,150,0.18)",lineHeight:1,marginBottom:12}}>{nr}</div>
-                  <div style={{fontSize:17,fontWeight:700,color:PUB.wit,marginBottom:9,lineHeight:1.3}}>{t}</div>
-                  <div style={{fontSize:13,color:"rgba(255,255,255,0.58)",lineHeight:1.7}}>{b}</div>
-                </div>
-              </Fade>
-            ))}
+        <section style={{ padding: isMobile ? "46px 20px" : "70px 60px", background: PUB.teal }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto", textAlign: "center", color: PUB.wit }}>
+            <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.14, marginBottom: 14 }}>Wil je weten wat er in jouw team onder de oppervlakte speelt?</h2>
+            <p style={{ fontSize: 16, lineHeight: 1.75, opacity: .9, maxWidth: 720, margin: "0 auto 26px" }}>Begin met een korte verkenning. Daarna bepalen we samen of een teamscan, analyse of teamdag logisch is.</p>
+            <span onClick={openModal} style={{ display: "inline-block", background: PUB.wit, color: PUB.tealDark, padding: "14px 24px", borderRadius: 8, fontWeight: 800, cursor: "pointer" }}>Plan een verkennende kennismaking</span>
           </div>
-        </div>
+        </section>
 
-        <InsightDiscoveryLandingSection isMobile={isMobile} openModal={openModal} />
-
-        {/* CTA */}
-        <div id="contact-cta" style={{padding:isMobile?"48px 24px":"72px 80px",
-          background:`linear-gradient(135deg, ${PUB.donker} 0%, ${PUB.navy} 60%, rgba(0,168,150,0.15) 100%)`,
-          textAlign:"center",position:"relative",overflow:"hidden",borderTop:`1px solid ${PUB.tealGlow}`}}>
-          <Fade>
-            <h2 style={{fontSize:isMobile?28:42,fontWeight:700,lineHeight:1.15,color:PUB.wit,marginBottom:14}}>
-              Wil je verkennen of een begeleid traject<br/>past bij jullie team?
-            </h2>
-            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.78)",maxWidth:480,margin:"0 auto 28px"}}>
-              Plan een verkennende kennismaking. We bespreken kort wat er speelt, of een teamscan passend is en welke eerste stap logisch voelt.
-            </p>
-            <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
-              <span style={{background:PUB.teal,color:PUB.donker,padding:"13px 26px",borderRadius:4,fontWeight:700,fontSize:14,cursor:"pointer"}} onClick={openModal}>
-                Plan een verkennende kennismaking
-              </span>
-              <span onClick={()=>document.getElementById("begeleid-traject")?.scrollIntoView({behavior:"smooth",block:"start"})}
-                style={{border:"1px solid rgba(255,255,255,0.38)",color:PUB.wit,padding:"13px 26px",borderRadius:4,fontSize:14,cursor:"pointer"}}>
-                Bekijk onze werkwijze
-              </span>
+        <section id="contact" style={{ padding: isMobile ? "48px 20px" : "70px 60px", background: PUB.donker }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ height: 3, display: "flex", marginBottom: 18 }}>
+              {[PUB.groen, PUB.blauw, PUB.oranje, PUB.paars].map((c, i) => <div key={i} style={{ flex: 1, background: c }} />)}
             </div>
-          </Fade>
-        </div>
-
-        {/* FOOTER */}
-        <div style={{background:PUB.donker,padding:isMobile?"44px 24px 22px":"44px 60px 22px",borderTop:"1px solid rgba(0,168,150,0.12)"}}>
-          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"2fr 1fr 1fr 1fr",gap:isMobile?24:30,marginBottom:30}}>
-            <div>
-              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:11}}>
-                <KompasDot size={20}/>
-                <span style={{fontSize:13,fontWeight:600,color:PUB.wit}}>Mijn Teamkompas</span>
+            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
+              <div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: PUB.wit, marginBottom: 4 }}>Mijn Teamkompas</div>
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)" }}>Organisatie · groei · richting</div>
               </div>
-              <p style={{fontSize:14,fontStyle:"italic",color:PUB.teal,marginBottom:9}}>Mensen maken het verschil.</p>
-            </div>
-            {[
-              ["Aanpak",[
-                ["Teamkompas Scan",    ()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["Begeleid traject",   ()=>document.getElementById("begeleid-traject")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["Insights Discovery", ()=>document.getElementById("insights-discovery")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["Opbrengst",          ()=>document.getElementById("opbrengst")?.scrollIntoView({behavior:"smooth",block:"start"})],
-              ]],
-              ["Voor wie",[
-                ["Zakelijke dienstverlening", ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["Gemeenten",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["Onderwijs",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["Industrie",                 ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
-              ]],
-              ["Contact",[
-                ["Afspraak maken",         ()=>openModal()],
-                ["info@mijnteamkompas.nl", ()=>window.location.href="mailto:info@mijnteamkompas.nl"],
-              ]],
-            ].map(([t,ls],i)=>(
-              <div key={i}>
-                <div style={{fontSize:9,fontWeight:600,letterSpacing:"0.14em",textTransform:"uppercase",color:"rgba(255,255,255,0.28)",marginBottom:12}}>{t}</div>
-                {ls.map(([l,fn])=>(
-                  <div key={l} onClick={fn}
-                    style={{fontSize:12,color:"rgba(255,255,255,0.52)",marginBottom:8,cursor:"pointer",
-                      WebkitTapHighlightColor:"transparent",padding:"4px 0"}}
-                    onMouseEnter={e=>e.currentTarget.style.color="rgba(0,168,150,0.9)"}
-                    onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.52)"}>
-                    {l}
-                  </div>
-                ))}
+              <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => window.open("/privacyverklaring_mijnteamkompas.pdf", "_blank")}>Privacyverklaring</span>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => window.open("/algemene_voorwaarden_mijnteamkompas.pdf", "_blank")}>Algemene voorwaarden</span>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={onLoginClick}>Beheer</span>
               </div>
-            ))}
-          </div>
-          <div style={{height:3,display:"flex",marginBottom:16}}>
-            {[PUB.groen,PUB.blauw,PUB.oranje,PUB.paars].map((c,i)=><div key={i} style={{flex:1,background:c}}/>)}
-          </div>
-          <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
-            <span style={{fontSize:11,color:"rgba(255,255,255,0.22)"}}>© 2026 Mijn Teamkompas</span>
-            <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
-              <span style={{fontSize:11,color:"rgba(255,255,255,0.22)",cursor:"pointer"}}
-                onClick={()=>window.open("/privacyverklaring_mijnteamkompas.pdf","_blank")}>
-                Privacyverklaring
-              </span>
-              <span style={{fontSize:11,color:"rgba(255,255,255,0.22)",cursor:"pointer"}}
-                onClick={()=>window.open("/algemene_voorwaarden_mijnteamkompas.pdf","_blank")}>
-                Algemene voorwaarden
-              </span>
             </div>
           </div>
-        </div>
+        </section>
       </div>
 
-      {/* CONTACT MODAL */}
       {modalOpen && (
-        <div onClick={closeModal} style={{position:"fixed",inset:0,zIndex:1000,
-          background:"rgba(13,27,42,0.85)",backdropFilter:"blur(6px)",
-          display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
-          <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:520,
-            background:"#1A2E4A",borderRadius:16,border:"1px solid rgba(0,168,150,0.2)",
-            boxShadow:"0 40px 100px rgba(0,0,0,0.6)",overflow:"hidden"}}>
-            <div style={{padding:"28px 32px 20px",borderBottom:"1px solid rgba(255,255,255,0.07)",
-              display:"flex",alignItems:"flex-start",justifyContent:"space-between"}}>
+        <div onClick={closeModal} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(13,27,42,0.85)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+          <div onClick={(e) => e.stopPropagation()} style={{ width: "100%", maxWidth: 520, background: "#1A2E4A", borderRadius: 16, border: "1px solid rgba(0,168,150,0.2)", boxShadow: "0 40px 100px rgba(0,0,0,0.6)", overflow: "hidden" }}>
+            <div style={{ padding: "28px 32px 20px", borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
               <div>
-                <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:"#00A896",textTransform:"uppercase",marginBottom:6}}>Verkennende kennismaking</div>
-                <div style={{fontSize:22,fontWeight:700,color:"#ffffff"}}>Plan een verkennende kennismaking</div>
-                <div style={{fontSize:13,color:"#8fa3bb",marginTop:4}}>We reageren zo snel mogelijk en gebruiken je gegevens alleen voor deze aanvraag.</div>
+                <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.15em", color: "#00A896", textTransform: "uppercase", marginBottom: 6 }}>Verkennende kennismaking</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: "#ffffff" }}>Plan een verkennende kennismaking</div>
+                <div style={{ fontSize: 13, color: "#8fa3bb", marginTop: 4 }}>We reageren zo snel mogelijk en gebruiken je gegevens alleen voor deze aanvraag.</div>
               </div>
-              <div onClick={closeModal} style={{cursor:"pointer",color:"#8fa3bb",fontSize:22,lineHeight:1,padding:"4px 8px",marginTop:-4}}>×</div>
+              <div onClick={closeModal} style={{ cursor: "pointer", color: "#8fa3bb", fontSize: 22, lineHeight: 1, padding: "4px 8px", marginTop: -4 }}>×</div>
             </div>
             {status === "sent" ? (
-              <div style={{padding:"48px 32px",textAlign:"center"}}>
-                <div style={{fontSize:40,marginBottom:16}}>✅</div>
-                <div style={{fontSize:20,fontWeight:700,color:"#ffffff",marginBottom:10}}>Bericht ontvangen!</div>
-                <div style={{fontSize:14,color:"#8fa3bb",lineHeight:1.7,marginBottom:24}}>
-                  Bedankt voor je aanvraag. We nemen zo snel mogelijk contact met je op om de situatie kort te verkennen.
-                </div>
-                <span onClick={closeModal} style={{background:"#00A896",color:"#0D1B2A",
-                  padding:"10px 24px",borderRadius:8,fontWeight:700,fontSize:14,cursor:"pointer"}}>
-                  Sluiten
-                </span>
+              <div style={{ padding: "48px 32px", textAlign: "center" }}>
+                <div style={{ fontSize: 40, marginBottom: 16 }}>✅</div>
+                <div style={{ fontSize: 20, fontWeight: 800, color: "#ffffff", marginBottom: 10 }}>Bericht ontvangen</div>
+                <div style={{ fontSize: 14, color: "#8fa3bb", lineHeight: 1.7, marginBottom: 24 }}>Bedankt voor je aanvraag. We nemen zo snel mogelijk contact met je op om de situatie kort te verkennen.</div>
+                <span onClick={closeModal} style={{ background: "#00A896", color: "#0D1B2A", padding: "10px 24px", borderRadius: 8, fontWeight: 800, fontSize: 14, cursor: "pointer" }}>Sluiten</span>
               </div>
             ) : (
-              <div style={{padding:"24px 32px 32px"}}>
-                {[["naam","Naam *","Je volledige naam","text"],
-                  ["organisatie","Organisatie","Naam van de organisatie","text"],
-                  ["teamgrootte","Teamgrootte","Bijvoorbeeld 8 of 25","text"],
-                  ["email","E-mailadres *","naam@organisatie.nl","email"],
-                  ["telefoon","Telefoonnummer","+31 6 ...","tel"],
-                ].map(([key,label,ph,type])=>(
-                  <div key={key} style={{marginBottom:14}}>
-                    <div style={{fontSize:11,color:"#8fa3bb",marginBottom:5,textTransform:"uppercase",letterSpacing:"1px",fontWeight:600}}>{label}</div>
-                    <input type={type} placeholder={ph} value={form[key]}
-                      onChange={e=>setForm(f=>({...f,[key]:e.target.value}))}
-                      style={{width:"100%",background:"rgba(255,255,255,0.05)",
-                        border:`1px solid ${status==="error" && !form[key] && (key==="naam"||key==="email") ? "#e74c3c" : "rgba(255,255,255,0.1)"}`,
-                        borderRadius:8,padding:"10px 14px",color:"#ffffff",fontSize:14,
-                        outline:"none",boxSizing:"border-box"}}/>
+              <div style={{ padding: "24px 32px 32px" }}>
+                {[["naam", "Naam *", "Je volledige naam", "text"], ["organisatie", "Organisatie", "Naam van de organisatie", "text"], ["teamgrootte", "Teamgrootte", "Bijvoorbeeld 8 of 25", "text"], ["email", "E-mailadres *", "naam@organisatie.nl", "email"], ["telefoon", "Telefoonnummer", "+31 6 ...", "tel"]].map(([key, label, ph, type]) => (
+                  <div key={key} style={{ marginBottom: 14 }}>
+                    <div style={{ fontSize: 11, color: "#8fa3bb", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>{label}</div>
+                    <input type={type} placeholder={ph} value={form[key]} onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: `1px solid ${status === "error" && !form[key] && (key === "naam" || key === "email") ? "#e74c3c" : "rgba(255,255,255,0.1)"}`, borderRadius: 8, padding: "10px 14px", color: "#ffffff", fontSize: 14, outline: "none", boxSizing: "border-box" }} />
                   </div>
                 ))}
-                <div style={{marginBottom:14}}>
-                  <div style={{fontSize:11,color:"#8fa3bb",marginBottom:5,textTransform:"uppercase",letterSpacing:"1px",fontWeight:600}}>Gewenste eerste stap</div>
-                  <select value={form.gewensteStap} onChange={e=>setForm(f=>({...f,gewensteStap:e.target.value}))}
-                    style={{width:"100%",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:8,padding:"10px 14px",color:"#ffffff",fontSize:14,outline:"none",boxSizing:"border-box"}}>
-                    {["Kennismaking","Teamscan verkennen","Advies over trajectopbouw","Workshop of teamdag"].map(opt => <option key={opt} value={opt} style={{color:'#0D1B2A'}}>{opt}</option>)}
+                <div style={{ marginBottom: 14 }}>
+                  <div style={{ fontSize: 11, color: "#8fa3bb", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>Gewenste eerste stap</div>
+                  <select value={form.gewensteStap} onChange={(e) => setForm((f) => ({ ...f, gewensteStap: e.target.value }))} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px 14px", color: "#ffffff", fontSize: 14, outline: "none", boxSizing: "border-box" }}>
+                    {["Kennismaking", "Teamscan verkennen", "Advies over trajectopbouw", "Workshop of teamdag"].map((opt) => <option key={opt} value={opt} style={{ color: "#0D1B2A" }}>{opt}</option>)}
                   </select>
                 </div>
-                <div style={{marginBottom:20}}>
-                  <div style={{fontSize:11,color:"#8fa3bb",marginBottom:5,textTransform:"uppercase",letterSpacing:"1px",fontWeight:600}}>Wat speelt er nu</div>
-                  <textarea placeholder="Beschrijf kort wat er in het team speelt of welke vraag jullie willen verkennen." value={form.bericht}
-                    onChange={e=>setForm(f=>({...f,bericht:e.target.value}))} rows={4}
-                    style={{width:"100%",background:"rgba(255,255,255,0.05)",
-                      border:"1px solid rgba(255,255,255,0.1)",borderRadius:8,
-                      padding:"10px 14px",color:"#ffffff",fontSize:14,outline:"none",
-                      boxSizing:"border-box",resize:"vertical"}}/>
+                <div style={{ marginBottom: 20 }}>
+                  <div style={{ fontSize: 11, color: "#8fa3bb", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>Wat speelt er nu?</div>
+                  <textarea placeholder="Beschrijf kort wat er in het team speelt of welke vraag jullie willen verkennen." value={form.bericht} onChange={(e) => setForm((f) => ({ ...f, bericht: e.target.value }))} rows={4} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px 14px", color: "#ffffff", fontSize: 14, outline: "none", boxSizing: "border-box", resize: "vertical" }} />
                 </div>
-                {status === "error" && (
-                  <div style={{fontSize:12,color:"#e74c3c",marginBottom:12}}>Vul minimaal naam en e-mailadres in.</div>
-                )}
-                <div style={{display:"flex",gap:10,alignItems:"center"}}>
-                  <button onClick={handleSubmit} disabled={status==="sending"}
-                    style={{flex:1,background:status==="sending"?"#007d70":"#00A896",
-                      color:"#0D1B2A",border:"none",borderRadius:8,padding:"13px",
-                      fontWeight:700,fontSize:15,cursor:status==="sending"?"wait":"pointer"}}>
-                    {status === "sending" ? "Versturen..." : "Verstuur verkenning →"}
-                  </button>
-                  <span onClick={closeModal} style={{fontSize:13,color:"#8fa3bb",cursor:"pointer"}}>Annuleer</span>
+                {status === "error" && <div style={{ fontSize: 12, color: "#e74c3c", marginBottom: 12 }}>Vul minimaal naam en e-mailadres in.</div>}
+                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                  <button onClick={handleSubmit} disabled={status === "sending"} style={{ flex: 1, background: status === "sending" ? "#007d70" : "#00A896", color: "#0D1B2A", border: "none", borderRadius: 8, padding: "13px", fontWeight: 800, fontSize: 15, cursor: status === "sending" ? "wait" : "pointer" }}>{status === "sending" ? "Versturen..." : "Verstuur verkenning"}</button>
+                  <span onClick={closeModal} style={{ fontSize: 13, color: "#8fa3bb", cursor: "pointer" }}>Annuleer</span>
                 </div>
-                <div style={{fontSize:11,color:"rgba(255,255,255,0.25)",marginTop:12,textAlign:"center"}}>
-                  Je gegevens worden uitsluitend gebruikt om deze aanvraag zorgvuldig op te volgen.
-                </div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginTop: 12, textAlign: "center" }}>Je gegevens worden uitsluitend gebruikt om deze aanvraag zorgvuldig op te volgen.</div>
               </div>
             )}
           </div>
