@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import OnzeAanpak from "./OnzeAanpak";
 import { initializeApp } from "firebase/app";
 import {
@@ -784,6 +784,7 @@ function KompasAnim() {
 }
 
 function NavBar({ isMobile, onLoginClick, openModal }) {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
@@ -905,6 +906,15 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             ))}
 
             <span
+              onClick={() => navigate("/onze-aanpak")}
+              style={{...navLinkStyle("onze-aanpak"), color:"rgba(255,255,255,0.72)"}}
+              onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.72)"; }}
+            >
+              Onze aanpak
+            </span>
+
+            <span
               onClick={openModal}
               style={{background:"#F4F7F9",color:"#0D1B2A",fontWeight:700,padding:"10px 18px",
                 borderRadius:999,fontSize:12,cursor:"pointer",boxShadow:"0 8px 22px rgba(0,0,0,0.18)"}}
@@ -942,6 +952,12 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
               {l}
             </div>
           ))}
+          <div
+            onClick={()=>{navigate("/onze-aanpak");setMenuOpen(false);}}
+            style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
+          >
+            Onze aanpak
+          </div>
           <div onClick={()=>{openModal();setMenuOpen(false);}}
             style={{padding:"14px 24px",color:"#ffffff",fontSize:15,cursor:"pointer",fontWeight:700,
               borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
@@ -1456,7 +1472,7 @@ function PublicSite({ onLoginClick }) {
   ];
 
   const pijlerCards = [
-    ["Gedrag & communicatie", PUB.blauw, "hoe mensen elkaar begrijpen, aanvullen of juist mislopen."],
+    ["Samenwerking & communicatie", PUB.blauw, "hoe mensen elkaar begrijpen, aanvullen of juist mislopen."],
     ["Veiligheid & leiderschap", PUB.groen, "of mensen zich vrij voelen om eerlijk te zijn en initiatief te nemen."],
     ["Energie & motivatie", PUB.oranje, "waar werk energie geeft en waar het team structureel leegloopt."],
     ["Verbeteren & leren", PUB.paars, "of verbeterideeën zichtbaar worden, besproken worden en landen in gedrag."],
@@ -1491,7 +1507,7 @@ function PublicSite({ onLoginClick }) {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
               <span style={ctaStyle} onClick={openModal}>Plan een verkennende kennismaking</span>
-              <span style={ghostStyle} onClick={() => scrollTo("traject")}>Bekijk het begeleide traject</span>
+              <span style={ghostStyle} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
             </div>
             <div style={{ marginTop: 24, color: "rgba(255,255,255,0.48)", fontSize: 13 }}>
               Geen verplichting. Eerst samen scherp krijgen of en hoe Mijn Teamkompas kan helpen.
@@ -1591,7 +1607,7 @@ function PublicSite({ onLoginClick }) {
             <Fade>
               <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>De teamscan</div>
               <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, marginBottom: 16 }}>Geen vragenlijstje, maar een startpunt voor betekenisvol gesprek.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 22 }}>De teamscan helpt patronen zichtbaar maken in gedrag, veiligheid, energie en verbeteren. De waarde ontstaat door de combinatie van data, duiding en begeleiding.</p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 22 }}>De teamscan helpt patronen zichtbaar maken in samenwerking, veiligheid, energie en verbeteren. Insights Discovery gebruiken we aanvullend als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en verandert.</p>
               <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Verken de teamscan</span>
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
