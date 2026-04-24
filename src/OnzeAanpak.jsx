@@ -46,6 +46,7 @@ function Card({ children, topColor }) {
 
 export default function OnzeAanpakPage() {
   const ctaStyle = { background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", boxShadow: "0 12px 28px rgba(15,118,110,0.24)" };
+  const contactHref = "mailto:info@mijnteamkompas.nl?subject=Verkennend%20gesprek%20Mijn%20Teamkompas&body=Hallo%20Mijn%20Teamkompas%2C%0A%0AIk%20wil%20graag%20een%20verkennend%20gesprek%20plannen.%0A%0ANaam%3A%20%0AOrganisatie%3A%20%0ATelefoonnummer%3A%20%0AVraag%20of%20situatie%3A%20%0A";
 
   const domeinen = [
     ["Veiligheid & leiderschap", PUB.groen, "We kijken of mensen zich vrij voelen om eerlijk te zijn, vragen te stellen en initiatief te nemen. Zonder veiligheid ontstaat weinig echte beweging."],
@@ -78,7 +79,7 @@ export default function OnzeAanpakPage() {
             <a href="/" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Home</a>
             <a href="/#teamscan" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Teamscan</a>
             <a href="/#contact" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Contact</a>
-            <a href="/#contact" style={{ background: PUB.licht, color: PUB.donker, padding: "10px 18px", borderRadius: 999, fontSize: 12, fontWeight: 800, textDecoration: "none" }}>Neem contact op</a>
+            <a href={contactHref} style={{ background: PUB.licht, color: PUB.donker, padding: "10px 18px", borderRadius: 999, fontSize: 12, fontWeight: 800, textDecoration: "none" }}>Neem contact op</a>
           </nav>
         </header>
 
@@ -87,7 +88,7 @@ export default function OnzeAanpakPage() {
             <SectionLabel>Onze aanpak</SectionLabel>
             <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>We maken zichtbaar wat samenwerking helpt of belemmert.</h1>
             <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. De teamscan brengt vier domeinen in beeld. Insights Discovery gebruiken we als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en samenwerkt.</p>
-            <a href="/#contact" style={ctaStyle}>Bespreek jullie situatie</a>
+            <a href={contactHref} style={ctaStyle}>Bespreek jullie situatie</a>
           </div>
           <div style={{ minHeight: "72vh", position: "relative" }}>
             <img src={images.hero} alt="Team in gesprek tijdens een begeleide sessie" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.84 }} />
@@ -167,7 +168,7 @@ export default function OnzeAanpakPage() {
               <SectionLabel>Wat we bewust niet doen</SectionLabel>
               <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Geen modelshow. Geen standaardtraject. Geen rapport dat in een la verdwijnt.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>We geven voldoende uitleg om vertrouwen te bouwen, maar houden de echte waarde in de begeleiding: het scherp duiden van jullie specifieke context, de teamscanuitkomsten en de gedragsvoorkeuren van het team.</p>
-              <a href="/#contact" style={ctaStyle}>Plan een verkennend gesprek</a>
+              <a href={contactHref} style={ctaStyle}>Plan een verkennend gesprek</a>
             </div>
             <img src={images.zorg} alt="Samenwerking in een professionele zorgcontext" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
           </div>
