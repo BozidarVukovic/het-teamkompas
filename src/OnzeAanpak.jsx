@@ -35,7 +35,7 @@ const PUB = {
 };
 
 const images = {
-  hero: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1600&q=80&fit=crop&crop=center",
+  hero: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1600&q=90&fit=crop&crop=faces",
   team: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=80&fit=crop&crop=center",
   workshop: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80&fit=crop&crop=center",
   zorg: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80&fit=crop&crop=center",
@@ -142,16 +142,23 @@ export default function OnzeAanpakPage() {
           </nav>
         </header>
 
-        <section style={{ background: PUB.donker, minHeight: "72vh", display: "grid", gridTemplateColumns: "1.05fr .95fr", alignItems: "center", overflow: "hidden" }}>
-          <div style={{ padding: "78px 58px 78px 72px" }}>
+        <section style={{ background: `linear-gradient(135deg, ${PUB.donker} 0%, ${PUB.navy} 62%, #10253A 100%)`, minHeight: "72vh", display: "grid", gridTemplateColumns: "1.05fr .95fr", alignItems: "center", overflow: "hidden" }}>
+          <div style={{ padding: "78px 58px 78px 72px", position: "relative", zIndex: 2 }}>
             <SectionLabel>Onze aanpak</SectionLabel>
             <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>We maken zichtbaar wat samenwerking helpt of belemmert.</h1>
             <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. De teamscan brengt vier domeinen in beeld. Insights Discovery gebruiken we als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en samenwerkt.</p>
-            <button type="button" onClick={openModal} style={ctaStyle}>Bespreek jullie situatie</button>
+            <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>Bespreek jullie situatie</button>
+              <span style={{ color: "rgba(255,255,255,0.58)", fontSize: 14 }}>Van teamscan naar gesprek, duiding en concrete beweging.</span>
+            </div>
           </div>
           <div style={{ minHeight: "72vh", position: "relative" }}>
-            <img src={images.hero} alt="Team in gesprek tijdens een begeleide sessie" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.84 }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.9), rgba(13,27,42,0.08))" }} />
+            <img src={images.hero} alt="Teamcoaching sessie waarin teamleden in gesprek zijn over samenwerking en leiderschap" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block", opacity: 0.92, filter: "saturate(0.94) contrast(1.04)" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94) 0%, rgba(13,27,42,0.54) 38%, rgba(13,27,42,0.06) 100%)" }} />
+            <div style={{ position: "absolute", left: 34, bottom: 34, maxWidth: 340, background: "rgba(13,27,42,0.72)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 18, padding: "18px 20px", backdropFilter: "blur(8px)", boxShadow: "0 22px 50px rgba(0,0,0,0.26)" }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: PUB.teal, marginBottom: 8 }}>Reflectie en begeleiding</div>
+              <div style={{ fontSize: 18, lineHeight: 1.45, fontWeight: 800, color: PUB.wit }}>Niet harder werken, maar anders kijken naar wat samenwerking helpt of belemmert.</div>
+            </div>
           </div>
         </section>
 
