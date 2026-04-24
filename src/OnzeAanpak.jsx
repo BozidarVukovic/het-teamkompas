@@ -48,7 +48,6 @@ export default function OnzeAanpakPage() {
   const ctaStyle = { background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", boxShadow: "0 12px 28px rgba(15,118,110,0.24)" };
 
   const domeinen = [
-    ["Gedrag & communicatie", PUB.blauw, "We maken zichtbaar hoe mensen elkaar begrijpen, aanvullen of juist mislopen. Niet om mensen in hokjes te plaatsen, maar om samenwerking bespreekbaar te maken."],
     ["Veiligheid & leiderschap", PUB.groen, "We kijken of mensen zich vrij voelen om eerlijk te zijn, vragen te stellen en initiatief te nemen. Zonder veiligheid ontstaat weinig echte beweging."],
     ["Energie & motivatie", PUB.oranje, "We onderzoeken waar het werk energie geeft en waar het team structureel leegloopt. Kleine dagelijkse frustraties zijn vaak groter dan ze lijken."],
     ["Verandering & betekenis", PUB.teal, "We kijken hoe verandering wordt ervaren. Begrijpen mensen waarom iets nodig is, voelt het haalbaar en sluit het aan bij wat vertrouwd is?"],
@@ -66,7 +65,7 @@ export default function OnzeAanpakPage() {
     <HelmetProvider>
       <Helmet>
         <title>Onze aanpak | Mijn Teamkompas</title>
-        <meta name="description" content="Ontdek hoe Mijn Teamkompas teamontwikkeling benadert via gedrag, veiligheid, motivatie, verandering en verbeteren zonder de aanpak onnodig complex te maken." />
+        <meta name="description" content="Ontdek hoe Mijn Teamkompas teamontwikkeling benadert via vier teamscandomeinen en Insights Discovery als gedragslens." />
       </Helmet>
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
@@ -87,7 +86,7 @@ export default function OnzeAanpakPage() {
           <div style={{ padding: "78px 58px 78px 72px" }}>
             <SectionLabel>Onze aanpak</SectionLabel>
             <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>We maken zichtbaar wat samenwerking helpt of belemmert.</h1>
-            <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. Zo ontstaat geen theoretisch rapport, maar een helder gesprek over gedrag, veiligheid, energie en verbetering in de dagelijkse werkelijkheid van het team.</p>
+            <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. De teamscan brengt vier domeinen in beeld. Insights Discovery gebruiken we als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en samenwerkt.</p>
             <a href="/#contact" style={ctaStyle}>Bespreek jullie situatie</a>
           </div>
           <div style={{ minHeight: "72vh", position: "relative" }}>
@@ -101,7 +100,7 @@ export default function OnzeAanpakPage() {
             <div>
               <SectionLabel>Waarom deze aanpak</SectionLabel>
               <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Teams lopen zelden vast op één oorzaak.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>In teams spelen meerdere lagen tegelijk. Gedrag, veiligheid, motivatie, veranderbeleving en dagelijkse verbeterkracht beïnvloeden elkaar. Daarom kijken we niet naar één model, maar naar de samenhang tussen wat mensen doen, voelen, nodig hebben en bespreekbaar durven maken.</p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>In teams spelen meerdere lagen tegelijk. Veiligheid, motivatie, veranderbeleving en dagelijkse verbeterkracht beïnvloeden elkaar. Daarom kijken we niet naar één losse score, maar naar de samenhang tussen wat mensen ervaren, nodig hebben en bespreekbaar durven maken.</p>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De kracht zit in het combineren van data met menselijk gesprek. De teamscan geeft richting, de begeleiding zorgt dat inzichten worden vertaald naar concreet gedrag.</p>
             </div>
             <img src={images.team} alt="Professioneel team dat samenwerkt aan een vraagstuk" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
@@ -111,17 +110,31 @@ export default function OnzeAanpakPage() {
         <section style={{ padding: "86px 60px", background: PUB.wit }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ textAlign: "center", maxWidth: 800, margin: "0 auto 38px" }}>
-              <SectionLabel>Vijf kijkrichtingen</SectionLabel>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 14px" }}>Genoeg onderbouwing om vertrouwen te geven, zonder het onnodig ingewikkeld te maken.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Onder de aanpak liggen herkenbare inzichten uit teamontwikkeling, gedragsvoorkeuren, veilig leiderschap, motivatie, neuromanagement en continu verbeteren. Op de website houden we het praktisch en toegankelijk.</p>
+              <SectionLabel>Vier domeinen en één gedragslens</SectionLabel>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 14px" }}>De teamscan laat zien wat er speelt. Insights Discovery helpt begrijpen hoe het team daarmee omgaat.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De teamscan brengt vier domeinen in beeld: veiligheid en leiderschap, energie en motivatie, verandering en betekenis, en verbeteren en leren. De gedragsvoorkeuren uit Insights Discovery gebruiken we als verdiepende lens om te begrijpen hoe mensen binnen deze domeinen communiceren, reageren en samenwerken.</p>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 18 }}>
               {domeinen.map(([titel, kleur, tekst]) => (
                 <Card key={titel} topColor={kleur}>
                   <h3 style={{ fontSize: 20, margin: "0 0 10px", color: PUB.donker }}>{titel}</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>
                 </Card>
               ))}
+            </div>
+            <div style={{ marginTop: 18 }}>
+              <Card topColor={PUB.blauw}>
+                <div style={{ display: "grid", gridTemplateColumns: "0.9fr 1.1fr", gap: 22, alignItems: "center" }}>
+                  <div>
+                    <h3 style={{ fontSize: 24, margin: "0 0 10px", color: PUB.donker }}>Insights Discovery als gedragslens</h3>
+                    <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>Insights Discovery is geen vijfde teamscandomein, maar een lens op het team. Het laat zien welke gedragsvoorkeuren aanwezig zijn en hoe die invloed hebben op communicatie, besluitvorming, spanning en verandering.</p>
+                  </div>
+                  <div style={{ background: PUB.licht, borderRadius: 16, padding: 22, border: `1px solid ${PUB.lijn}` }}>
+                    <div style={{ fontSize: 13, fontWeight: 800, color: PUB.teal, marginBottom: 8 }}>Kort gezegd</div>
+                    <div style={{ fontSize: 18, lineHeight: 1.55, color: PUB.donker, fontWeight: 700 }}>De teamscan laat zien wat er speelt. Insights Discovery helpt begrijpen hoe dit team daarmee omgaat.</div>
+                  </div>
+                </div>
+              </Card>
             </div>
           </div>
         </section>
@@ -153,7 +166,7 @@ export default function OnzeAanpakPage() {
             <div>
               <SectionLabel>Wat we bewust niet doen</SectionLabel>
               <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Geen modelshow. Geen standaardtraject. Geen rapport dat in een la verdwijnt.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>We geven voldoende uitleg om vertrouwen te bouwen, maar houden de echte waarde in de begeleiding: het scherp duiden van jullie specifieke context en het ontwerpen van een passende vervolgstap.</p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>We geven voldoende uitleg om vertrouwen te bouwen, maar houden de echte waarde in de begeleiding: het scherp duiden van jullie specifieke context, de teamscanuitkomsten en de gedragsvoorkeuren van het team.</p>
               <a href="/#contact" style={ctaStyle}>Plan een verkennend gesprek</a>
             </div>
             <img src={images.zorg} alt="Samenwerking in een professionele zorgcontext" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
