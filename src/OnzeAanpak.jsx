@@ -1,5 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import { initializeApp, getApps } from "firebase/app";
+import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDgl6gj1LmOZ-1Mcin1jNfkkZg82c2Jtz0",
+  authDomain: "mijn-teamkompas-6de84.firebaseapp.com",
+  projectId: "mijn-teamkompas-6de84",
+  storageBucket: "mijn-teamkompas-6de84.firebasestorage.app",
+  messagingSenderId: "820620515571",
+  appId: "1:820620515571:web:86a4e792eebe4c7cf03f86",
+};
+const EMAILJS_SERVICE_ID = "service_eytet3a";
+const EMAILJS_TEMPLATE_ID = "pysvu9a";
+const EMAILJS_PUBLIC_KEY = "aXtk48FJxZBI-fBNQ";
+const firebaseApp = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
 
 const PUB = {
   donker: "#0D1B2A",
@@ -45,8 +62,50 @@ function Card({ children, topColor }) {
 }
 
 export default function OnzeAanpakPage() {
-  const ctaStyle = { background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", boxShadow: "0 12px 28px rgba(15,118,110,0.24)" };
-  const contactHref = "mailto:info@mijnteamkompas.nl?subject=Verkennend%20gesprek%20Mijn%20Teamkompas&body=Hallo%20Mijn%20Teamkompas%2C%0A%0AIk%20wil%20graag%20een%20verkennend%20gesprek%20plannen.%0A%0ANaam%3A%20%0AOrganisatie%3A%20%0ATelefoonnummer%3A%20%0AVraag%20of%20situatie%3A%20%0A";
+  const ctaStyle = { background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", boxShadow: "0 12px 28px rgba(15,118,110,0.24)", border: "none" };
+  const [modalOpen, setModalOpen] = useState(false);
+  const [status, setStatus] = useState("idle");
+  const [form, setForm] = useState({ naam: "", organisatie: "", teamgrootte: "", email: "", telefoon: "", gewensteStap: "Kennismaking", bericht: "" });
+
+  const openModal = () => {
+    setStatus("idle");
+    setForm({ naam: "", organisatie: "", teamgrootte: "", email: "", telefoon: "", gewensteStap: "Kennismaking", bericht: "" });
+    setModalOpen(true);
+  };
+
+  const closeModal = () => setModalOpen(false);
+
+  const handleSubmit = async () => {
+    if (!form.naam || !form.email) { setStatus("error"); return; }
+    setStatus("sending");
+    try {
+      await addDoc(collection(db, "contactaanvragen"), { ...form, status: "Nieuw", bron: "Onze aanpak", aangemaakt_op: serverTimestamp() });
+      const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service_id: EMAILJS_SERVICE_ID,
+          template_id: EMAILJS_TEMPLATE_ID,
+          user_id: EMAILJS_PUBLIC_KEY,
+          template_params: {
+            from_naam: form.naam,
+            from_organisatie: form.organisatie,
+            from_email: form.email,
+            from_telefoon: form.telefoon,
+            teamgrootte: form.teamgrootte,
+            gewenste_stap: form.gewensteStap,
+            bericht: form.bericht,
+            to_email: "info@mijnteamkompas.nl",
+          },
+        }),
+      });
+      if (!res.ok) console.warn("EmailJS gaf geen 200-response");
+      setStatus("sent");
+    } catch (error) {
+      console.error("Fout bij versturen:", error);
+      setStatus("error");
+    }
+  };
 
   const domeinen = [
     ["Veiligheid & leiderschap", PUB.groen, "We kijken of mensen zich vrij voelen om eerlijk te zijn, vragen te stellen en initiatief te nemen. Zonder veiligheid ontstaat weinig echte beweging."],
@@ -79,7 +138,7 @@ export default function OnzeAanpakPage() {
             <a href="/" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Home</a>
             <a href="/#teamscan" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Teamscan</a>
             <a href="/#contact" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Contact</a>
-            <a href={contactHref} style={{ background: PUB.licht, color: PUB.donker, padding: "10px 18px", borderRadius: 999, fontSize: 12, fontWeight: 800, textDecoration: "none" }}>Neem contact op</a>
+            <button type="button" onClick={openModal} style={{ background: PUB.licht, color: PUB.donker, padding: "10px 18px", borderRadius: 999, fontSize: 12, fontWeight: 800, textDecoration: "none", border: "none", cursor: "pointer" }}>Neem contact op</button>
           </nav>
         </header>
 
@@ -88,7 +147,7 @@ export default function OnzeAanpakPage() {
             <SectionLabel>Onze aanpak</SectionLabel>
             <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>We maken zichtbaar wat samenwerking helpt of belemmert.</h1>
             <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. De teamscan brengt vier domeinen in beeld. Insights Discovery gebruiken we als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en samenwerkt.</p>
-            <a href={contactHref} style={ctaStyle}>Bespreek jullie situatie</a>
+            <button type="button" onClick={openModal} style={ctaStyle}>Bespreek jullie situatie</button>
           </div>
           <div style={{ minHeight: "72vh", position: "relative" }}>
             <img src={images.hero} alt="Team in gesprek tijdens een begeleide sessie" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.84 }} />
@@ -168,12 +227,61 @@ export default function OnzeAanpakPage() {
               <SectionLabel>Wat we bewust niet doen</SectionLabel>
               <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Geen modelshow. Geen standaardtraject. Geen rapport dat in een la verdwijnt.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>We geven voldoende uitleg om vertrouwen te bouwen, maar houden de echte waarde in de begeleiding: het scherp duiden van jullie specifieke context, de teamscanuitkomsten en de gedragsvoorkeuren van het team.</p>
-              <a href={contactHref} style={ctaStyle}>Plan een verkennend gesprek</a>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een verkennend gesprek</button>
             </div>
             <img src={images.zorg} alt="Samenwerking in een professionele zorgcontext" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
           </div>
         </section>
       </div>
+
+      {modalOpen && (
+        <div onClick={closeModal} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(13,27,42,0.85)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+          <div onClick={(e) => e.stopPropagation()} style={{ width: "100%", maxWidth: 520, background: "#1A2E4A", borderRadius: 16, border: "1px solid rgba(0,168,150,0.2)", boxShadow: "0 40px 100px rgba(0,0,0,0.6)", overflow: "hidden" }}>
+            <div style={{ padding: "28px 32px 20px", borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.15em", color: "#00A896", textTransform: "uppercase", marginBottom: 6 }}>Verkennende kennismaking</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: "#ffffff" }}>Plan een verkennende kennismaking</div>
+                <div style={{ fontSize: 13, color: "#8fa3bb", marginTop: 4 }}>We reageren zo snel mogelijk en gebruiken je gegevens alleen voor deze aanvraag.</div>
+              </div>
+              <div onClick={closeModal} style={{ cursor: "pointer", color: "#8fa3bb", fontSize: 22, lineHeight: 1, padding: "4px 8px", marginTop: -4 }}>×</div>
+            </div>
+            {status === "sent" ? (
+              <div style={{ padding: "48px 32px", textAlign: "center" }}>
+                <div style={{ fontSize: 40, marginBottom: 16 }}>✅</div>
+                <div style={{ fontSize: 20, fontWeight: 800, color: "#ffffff", marginBottom: 10 }}>Bericht ontvangen</div>
+                <div style={{ fontSize: 14, color: "#8fa3bb", lineHeight: 1.7, marginBottom: 24 }}>Bedankt voor je aanvraag. We nemen zo snel mogelijk contact met je op om de situatie kort te verkennen.</div>
+                <span onClick={closeModal} style={{ background: "#00A896", color: "#0D1B2A", padding: "10px 24px", borderRadius: 8, fontWeight: 800, fontSize: 14, cursor: "pointer" }}>Sluiten</span>
+              </div>
+            ) : (
+              <div style={{ padding: "24px 32px 32px" }}>
+                {[["naam", "Naam *", "Je volledige naam", "text"], ["organisatie", "Organisatie", "Naam van de organisatie", "text"], ["teamgrootte", "Teamgrootte", "Bijvoorbeeld 8 of 25", "text"], ["email", "E-mailadres *", "naam@organisatie.nl", "email"], ["telefoon", "Telefoonnummer", "+31 6 ...", "tel"]].map(([key, label, ph, type]) => (
+                  <div key={key} style={{ marginBottom: 14 }}>
+                    <div style={{ fontSize: 11, color: "#8fa3bb", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>{label}</div>
+                    <input type={type} placeholder={ph} value={form[key]} onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: `1px solid ${status === "error" && !form[key] && (key === "naam" || key === "email") ? "#e74c3c" : "rgba(255,255,255,0.1)"}`, borderRadius: 8, padding: "10px 14px", color: "#ffffff", fontSize: 14, outline: "none", boxSizing: "border-box" }} />
+                  </div>
+                ))}
+                <div style={{ marginBottom: 14 }}>
+                  <div style={{ fontSize: 11, color: "#8fa3bb", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>Gewenste eerste stap</div>
+                  <select value={form.gewensteStap} onChange={(e) => setForm((f) => ({ ...f, gewensteStap: e.target.value }))} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px 14px", color: "#ffffff", fontSize: 14, outline: "none", boxSizing: "border-box" }}>
+                    {["Kennismaking", "Teamscan verkennen", "Advies over trajectopbouw", "Workshop of teamdag"].map((opt) => <option key={opt} value={opt} style={{ color: "#0D1B2A" }}>{opt}</option>)}
+                  </select>
+                </div>
+                <div style={{ marginBottom: 20 }}>
+                  <div style={{ fontSize: 11, color: "#8fa3bb", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>Wat speelt er nu?</div>
+                  <textarea placeholder="Beschrijf kort wat er in het team speelt of welke vraag jullie willen verkennen." value={form.bericht} onChange={(e) => setForm((f) => ({ ...f, bericht: e.target.value }))} rows={4} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px 14px", color: "#ffffff", fontSize: 14, outline: "none", boxSizing: "border-box", resize: "vertical" }} />
+                </div>
+                {status === "error" && <div style={{ fontSize: 12, color: "#e74c3c", marginBottom: 12 }}>Vul minimaal naam en e-mailadres in.</div>}
+                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                  <button onClick={handleSubmit} disabled={status === "sending"} style={{ flex: 1, background: status === "sending" ? "#007d70" : "#00A896", color: "#0D1B2A", border: "none", borderRadius: 8, padding: "13px", fontWeight: 800, fontSize: 15, cursor: status === "sending" ? "wait" : "pointer" }}>{status === "sending" ? "Versturen..." : "Verstuur verkenning"}</button>
+                  <span onClick={closeModal} style={{ fontSize: 13, color: "#8fa3bb", cursor: "pointer" }}>Annuleer</span>
+                </div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginTop: 12, textAlign: "center" }}>Je gegevens worden uitsluitend gebruikt om deze aanvraag zorgvuldig op te volgen.</div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
     </HelmetProvider>
   );
 }
