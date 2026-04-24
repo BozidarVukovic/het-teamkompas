@@ -137,7 +137,7 @@ export default function OnzeAanpakPage() {
           <nav style={{ display: "flex", alignItems: "center", gap: 22 }}>
             <a href="/" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Home</a>
             <a href="/#teamscan" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Teamscan</a>
-            <a href="/#contact" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Contact</a>
+            <button type="button" onClick={openModal} style={{ background: "transparent", border: "none", padding: 0, color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>Contact</button>
             <button type="button" onClick={openModal} style={{ background: PUB.licht, color: PUB.donker, padding: "10px 18px", borderRadius: 999, fontSize: 12, fontWeight: 800, textDecoration: "none", border: "none", cursor: "pointer" }}>Neem contact op</button>
           </nav>
         </header>
