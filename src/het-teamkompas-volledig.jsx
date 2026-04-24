@@ -787,15 +787,15 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
 
   const navLinks = [
     ["Aanpak","aanpak"],
-    ["Thema's","themas"],
-    ["Insights Discovery","insights-discovery"],
+    ["Traject","begeleid-traject"],
+    ["Opbrengst","opbrengst"],
     ["Voor wie","voor-wie"],
-    ["Over ons","over-ons"],
-    ["Werkwijze","werkwijze"]
+    ["FAQ","insights-faq"],
+    ["Contact","contact-cta"]
   ];
 
   useEffect(() => {
-    const ids = ["aanpak", "themas", "insights-discovery", "voor-wie", "over-ons", "werkwijze"];
+    const ids = ["aanpak", "begeleid-traject", "opbrengst", "voor-wie", "insights-faq", "contact-cta"];
     const observers = [];
 
     const updateActive = () => {
@@ -1171,7 +1171,7 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
                 Bespreek jouw teamvraag
               </span>
               <span onClick={() => document.getElementById("werkwijze")?.scrollIntoView({ behavior: "smooth", block: "start" })} style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "13px 22px", borderRadius: 4, fontSize: 14, cursor: "pointer" }}>
-                Bekijk onze werkwijze
+                Bekijk het traject
               </span>
             </div>
           </Fade>
@@ -1362,8 +1362,10 @@ function PublicSite({ onLoginClick }) {
   const [form, setForm] = useState({
     naam: "",
     organisatie: "",
+    teamgrootte: "",
     email: "",
     telefoon: "",
+    gewensteStap: "Kennismaking",
     bericht: "",
   });
   const [status, setStatus] = useState("idle");
@@ -1372,7 +1374,7 @@ function PublicSite({ onLoginClick }) {
   const openModal = () => {
     setModalOpen(true);
     setStatus("idle");
-    setForm({ naam: "", organisatie: "", email: "", telefoon: "", bericht: "" });
+    setForm({ naam: "", organisatie: "", teamgrootte: "", email: "", telefoon: "", gewensteStap: "Kennismaking", bericht: "" });
   };
 
   const closeModal = () => setModalOpen(false);
@@ -1391,6 +1393,8 @@ function PublicSite({ onLoginClick }) {
         organisatie: form.organisatie,
         email: form.email,
         telefoon: form.telefoon,
+        teamgrootte: form.teamgrootte,
+        gewensteStap: form.gewensteStap,
         bericht: form.bericht,
         status: "Nieuw",
         aangemaakt_op: serverTimestamp(),
@@ -1408,6 +1412,8 @@ function PublicSite({ onLoginClick }) {
             from_organisatie: form.organisatie,
             from_email: form.email,
             from_telefoon: form.telefoon,
+            teamgrootte: form.teamgrootte,
+            gewenste_stap: form.gewensteStap,
             bericht: form.bericht,
             to_email: "info@mijnteamkompas.nl",
           },
@@ -1455,25 +1461,25 @@ function PublicSite({ onLoginClick }) {
           <Strepen/>
           <div style={{padding:isMobile?"60px 24px 40px 32px":"60px 48px 60px 60px",position:"relative",zIndex:2}}>
             <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,
-              textTransform:"uppercase",marginBottom:16}}>Voor teams en leidinggevenden</div>
+              textTransform:"uppercase",marginBottom:16}}>Voor teams en leidinggevenden in beweging</div>
             <h1 style={{fontSize:isMobile?30:44,fontWeight:700,lineHeight:1.2,color:PUB.wit,marginBottom:16}}>
-              Goede teams worden niet beter door harder te werken. Ze worden beter door anders te kijken.
+              Samenwerking verbeteren begint met zichtbaar maken wat teams vaak niet uitspreken.
             </h1>
             <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:"rgba(255,255,255,0.57)",maxWidth:520,marginBottom:14}}>
-              Wij meten wat er speelt, begrijpen wat het betekent en bewegen wat vastloopt.
+              Mijn Teamkompas helpt teams en leidinggevenden begrijpen waar vertrouwen, duidelijkheid, energie en eigenaarschap vastlopen, en vertaalt dat naar een zorgvuldig begeleid traject met teamscan, analyse en interventie op maat.
             </p>
             <div style={{fontSize:12,fontWeight:400,color:"rgba(255,255,255,0.42)",marginBottom:32}}>
-              Voor teams en organisaties in beweging.
+              Verkennende kennismaking, maatwerkadvies en begeleiding die past bij jullie context.
             </div>
             <div style={{display:"flex",flexDirection:isMobile?"column":"row",gap:12}}>
               <span style={{background:PUB.teal,color:PUB.donker,padding:"13px 22px",borderRadius:4,
                 fontWeight:600,fontSize:14,cursor:"pointer",textAlign:"center"}} onClick={openModal}>
-                Plan een kennismakingsgesprek
+                Plan een verkennende kennismaking
               </span>
-              <span onClick={()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})}
+              <span onClick={()=>document.getElementById("begeleid-traject")?.scrollIntoView({behavior:"smooth",block:"start"})}
                 style={{border:"1px solid rgba(255,255,255,0.26)",color:"rgba(255,255,255,0.78)",
                 padding:"13px 22px",borderRadius:4,fontSize:14,cursor:"pointer",textAlign:"center"}}>
-                Bekijk onze aanpak
+                Bekijk het traject
               </span>
             </div>
           </div>
@@ -1511,8 +1517,8 @@ function PublicSite({ onLoginClick }) {
                 fontSize:isMobile?16:24,fontWeight:700,color:PUB.wit,
                 lineHeight:1.35,maxWidth:480,marginBottom:16
               }}>
-                Samenwerking verbeteren begint niet met een nieuw proces.<br/>
-                <em style={{fontStyle:"italic",color:PUB.wit}}>Het begint met begrijpen wat er werkelijk tussen mensen speelt.</em>
+                Niet elk teamprobleem vraagt om harder sturen.<br/>
+                <em style={{fontStyle:"italic",color:PUB.wit}}>Vaak helpt het eerst om zorgvuldig zichtbaar te maken wat er onder de oppervlakte speelt.</em>
               </p>
             </Fade>
           </div>
@@ -1524,15 +1530,14 @@ function PublicSite({ onLoginClick }) {
             <Fade>
               <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Onze aanpak</div>
               <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-                Wat maakt samenwerking <br/><em style={{fontStyle:"italic",color:PUB.teal}}>sterk of kwetsbaar?</em>
+                Geen standaardtraject, maar een <br/><em style={{fontStyle:"italic",color:PUB.teal}}>zorgvuldige route naar beweging</em>
               </h2>
               <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,marginBottom:28}}>
-                Wij helpen teams en leidinggevenden zichtbaar te maken wat samenwerking belemmert en wat juist beweging geeft.
-                Niet met losse inzichten, maar met een scherp beeld van wat er speelt in gedrag, vertrouwen, energie, verandering en dagelijks leiderschap.
+                Mijn Teamkompas helpt organisaties om eerst scherp te krijgen wat er werkelijk speelt in samenwerking, leiderschap en teamdynamiek. Van daaruit vertalen we signalen naar een voorstel dat past bij jullie team, context en ontwikkelvraag.
               </p>
-              {[["1","We maken zichtbaar wat er speelt","We brengen in kaart waar samenwerking vastloopt, waar onduidelijkheid ontstaat en waar energie of vertrouwen wegvalt."],
-                ["2","We vertalen signalen naar richting","We maken patronen begrijpelijk voor team en leidinggevende, zodat duidelijk wordt waar de grootste kans op verbetering ligt."],
-                ["3","We zetten inzicht om in beweging","We vertalen de uitkomsten naar concrete gesprekken, interventies en vervolgstappen die in de praktijk uitvoerbaar zijn."],
+              {[["1","We starten met een scherpe verkenning","In een eerste gesprek brengen we jullie vraag, context en gewenste opbrengst in beeld."],
+                ["2","We maken patronen zichtbaar","Met een teamscan en verdiepende duiding brengen we boven- en onderstroom zorgvuldig samen."],
+                ["3","We vertalen inzicht naar maatwerk","De uitkomsten worden omgezet in heldere adviezen, een passende interventie en concrete vervolgstappen."],
               ].map(([nr,t,b],i)=>(
                 <Fade key={i} delay={i*0.1}>
                   <div style={{display:"flex",gap:14,alignItems:"flex-start",marginBottom:16}}>
@@ -1571,27 +1576,27 @@ function PublicSite({ onLoginClick }) {
 
         <DiverseWorkplacesSection isMobile={isMobile} />
 
-        {/* WAT ORGANISATIES MOGEN VERWACHTEN */}
-        <div style={{background:PUB.donker,padding:isMobile?"48px 24px":"72px 96px",position:"relative",overflow:"hidden"}}>
+        {/* WAT EEN BEGELEID TRAJECT OPLEVERT */}
+        <div id="opbrengst" style={{background:PUB.donker,padding:isMobile?"48px 24px":"72px 96px",position:"relative",overflow:"hidden"}}>
           <Strepen/>
           <Fade>
             <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>
-              Wat organisaties van ons mogen verwachten
+              Wat een begeleid traject oplevert
             </div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.15,color:PUB.wit,marginBottom:16,maxWidth:760}}>
-              Wat jouw organisatie <em style={{fontStyle:"italic",color:PUB.teal}}>eraan heeft</em>
+              Wat teams en leidinggevenden <em style={{fontStyle:"italic",color:PUB.teal}}>concreet ervaren</em>
             </h2>
             <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.62)",maxWidth:760,marginBottom:36}}>
-              Geen stapel aanbevelingen die in een la verdwijnen. Wat we doen wordt zichtbaar in hoe mensen samenwerken, communiceren en eigenaarschap nemen.
+              Geen standaardrapport dat in een la verdwijnt, maar een traject dat richting geeft aan gesprekken, gedrag en vervolgstappen in de praktijk.
             </p>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(2,1fr)",gap:isMobile?10:12,maxWidth:900,gridAutoRows:"1fr"}}>
               {[
-                "Je weet sneller wat samenwerking belemmert en waar de echte ruimte zit",
-                "Teams spreken zich opener uit omdat ze begrijpen wat er speelt",
-                "Leidinggevenden krijgen concrete handvatten om anders te sturen",
-                "Interventies zijn direct uitvoerbaar in de dagelijkse praktijk",
-                "De aanpak is mensgericht én gericht op zichtbaar resultaat",
-                "Gedrag, samenwerking en eigenaarschap veranderen merkbaar",
+                "Je krijgt sneller scherp waar samenwerking stroef loopt en waar de echte ruimte zit",
+                "Leidinggevenden ontvangen concrete handvatten voor gesprek, sturing en vervolg",
+                "Teams ervaren meer taal en veiligheid om uit te spreken wat eerder onbesproken bleef",
+                "De scan wordt vertaald naar begrijpelijke patronen en geen losse scorelijst",
+                "Interventies sluiten aan op de dagelijkse praktijk en hoeven niet groot te beginnen",
+                "De opbrengst is gericht op beweging, borging en een logisch vervolgtraject",
               ].map((item,i)=>(
                 <Fade key={i} delay={i*0.05} style={{height:"100%"}}>
                   <div style={{height:"100%",boxSizing:"border-box",display:"flex",gap:12,alignItems:"center",padding:"16px 18px",
@@ -1608,12 +1613,12 @@ function PublicSite({ onLoginClick }) {
         {/* SECTOREN */}
         <div id="voor-wie" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.licht}}>
           <Fade>
-            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Voor wie werken wij</div>
+            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Voor wie dit passend is</div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-              Herkenbaar in elke sector.<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Toepasbaar in jouw team.</em>
+              Passend voor teams waar <br/><em style={{fontStyle:"italic",color:PUB.teal}}>onderstroom en opgave samenkomen</em>
             </h2>
             <p style={{fontSize:15,lineHeight:1.75,color:PUB.sub,maxWidth:560,marginBottom:40}}>
-              Wij werken met organisaties waar samenwerking onder druk staat door groei, verandering of complexiteit. Waar openheid en aanspreekbaarheid nodig zijn. En waar leidinggevenden meer grip willen zonder harder te trekken.
+              Mijn Teamkompas is vooral geschikt voor teams waar verandering, samenwerking en leiderschap elkaar raken. Bijvoorbeeld wanneer er gedoe onder de oppervlakte zit, onduidelijkheid blijft bestaan of een team wel wil bewegen maar nog geen gedeeld vertrekpunt heeft.
             </p>
           </Fade>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)",gap:isMobile?12:16,alignItems:"stretch"}}>
@@ -1632,16 +1637,16 @@ function PublicSite({ onLoginClick }) {
           </div>
         </div>
 
-        {/* OVER ONS */}
-        <div id="over-ons" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
+        {/* ZORGVULDIGHEID */}
+        <div id="zorgvuldig" style={{padding:isMobile?"48px 20px":"72px 60px",background:PUB.wit}}>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:52,alignItems:"start"}}>
             <Fade>
-              <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Wie wij zijn</div>
+              <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:PUB.teal,textTransform:"uppercase",marginBottom:12}}>Zorgvuldig en professioneel</div>
               <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.donker,marginBottom:14}}>
-                Ervaring die je herkent.<br/><em style={{fontStyle:"italic",color:PUB.teal}}>Aanpak die werkt.</em>
+                Een aanpak die vertrouwen <br/><em style={{fontStyle:"italic",color:PUB.teal}}>verdient door zorgvuldigheid</em>
               </h2>
               <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:16}}>
-                Wij helpen organisaties zichtbaar te maken wat in samenwerking vaak onbesproken blijft, maar wel bepalend is voor vertrouwen, duidelijkheid en beweging.
+                Mijn Teamkompas kiest niet voor snelle labels of standaardoplossingen. We werken met een aanpak waarin meting, duiding en begeleiding elkaar versterken.
               </p>
               <p style={{fontSize:isMobile?14:15,lineHeight:1.75,color:PUB.sub,marginBottom:16}}>
                 We combineren jarenlange praktijkervaring in leiderschap en organisatieverandering met een aanpak die direct toepasbaar is. Geen theorie die blijft hangen in een presentatie maar inzichten die mensen de volgende dag al anders laten handelen.
@@ -1699,30 +1704,31 @@ function PublicSite({ onLoginClick }) {
           </div>
         </div>
 
-        {/* WERKWIJZE */}
-        <div id="werkwijze" style={{padding:"72px 60px",background:PUB.donker,position:"relative",overflow:"hidden"}}>
+        {/* BEGELEID TRAJECT */}
+        <div id="begeleid-traject" style={{padding:isMobile?"56px 20px":"76px 60px",background:PUB.donker,position:"relative",overflow:"hidden"}}>
           <Fade>
-            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:"rgba(255,255,255,0.38)",textTransform:"uppercase",marginBottom:12}}>Hoe we werken</div>
+            <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:"rgba(255,255,255,0.38)",textTransform:"uppercase",marginBottom:12}}>Begeleid traject</div>
             <h2 style={{fontSize:isMobile?26:38,fontWeight:700,lineHeight:1.1,color:PUB.wit,marginBottom:14}}>
-              <em style={{fontStyle:"italic",color:PUB.teal}}>Drie stappen</em> naar beweging
+              Van eerste verkenning naar <em style={{fontStyle:"italic",color:PUB.teal}}>gerichte begeleiding</em>
             </h2>
-            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.48)",maxWidth:440,marginBottom:44}}>
-              Elk traject begint met luisteren. Dan meten. Dan bewegen.
+            <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.6)",maxWidth:680,marginBottom:40}}>
+              Voor organisaties die kiezen voor fysieke begeleiding verloopt het traject stap voor stap. Zo ontstaat rust, duidelijkheid en een aanpak die past bij de vraag van het team.
             </p>
           </Fade>
-          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)",gap:isMobile?12:3,position:"relative",zIndex:1,alignItems:"stretch"}}>
-            {[["01","Teamkompas Scan","We meten op alle vijf domeinen tegelijk.","4–6 weken"],
-              ["02","Inzicht & Dialoog","We presenteren de resultaten en faciliteren het gesprek.","Workshop & sessies"],
-              ["03","Gerichte Interventies","Concrete stappen op maat voor uw organisatie.","Op maat"],
-            ].map(([nr,t,b,tag],i)=>(
-              <Fade key={i} delay={i*0.12} style={{height:"100%"}}>
-                <div style={{height:"100%",boxSizing:"border-box",display:"flex",flexDirection:"column",
-                  background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",padding:"28px 22px"}}>
-                  <div style={{fontSize:42,fontWeight:700,color:"rgba(0,168,150,0.15)",lineHeight:1,marginBottom:13}}>{nr}</div>
-                  <div style={{fontSize:18,fontWeight:700,color:PUB.wit,marginBottom:9}}>{t}</div>
-                  <div style={{fontSize:13,color:"rgba(255,255,255,0.46)",lineHeight:1.7,marginBottom:16,flex:1}}>{b}</div>
-                  <span style={{fontSize:9,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",
-                    color:PUB.teal,padding:"3px 9px",border:"1px solid rgba(0,168,150,0.25)",borderRadius:2,alignSelf:"flex-start"}}>{tag}</span>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)",gap:isMobile?12:14,position:"relative",zIndex:1,alignItems:"stretch"}}>
+            {[
+              ["01","Kennismaking en intake","We verkennen wat er speelt, wat al geprobeerd is en waar de grootste behoefte ligt."],
+              ["02","Voorstel op maat","Je ontvangt een helder voorstel met passende opbouw, doorlooptijd en gewenste opbrengst."],
+              ["03","Teamscan uitzetten","De teamscan wordt zorgvuldig klaargezet en gedeeld met de juiste doelgroep."],
+              ["04","Analyse en duiding","We vertalen scores, signalen en patronen naar een begrijpelijk beeld van het team."],
+              ["05","Terugkoppeling en interventie","De uitkomsten worden besproken en vertaald naar een workshop, teamdag of gerichte sessie."],
+              ["06","Borging en vervolg","We bepalen welke vervolgstap nodig is om beweging vast te houden en verder te verdiepen."],
+            ].map(([nr,t,b],i)=>(
+              <Fade key={i} delay={i*0.08} style={{height:"100%"}}>
+                <div style={{height:"100%",boxSizing:"border-box",display:"flex",flexDirection:"column",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",padding:"24px 20px",borderRadius:10}}>
+                  <div style={{fontSize:38,fontWeight:700,color:"rgba(0,168,150,0.18)",lineHeight:1,marginBottom:12}}>{nr}</div>
+                  <div style={{fontSize:17,fontWeight:700,color:PUB.wit,marginBottom:9,lineHeight:1.3}}>{t}</div>
+                  <div style={{fontSize:13,color:"rgba(255,255,255,0.58)",lineHeight:1.7}}>{b}</div>
                 </div>
               </Fade>
             ))}
@@ -1732,21 +1738,21 @@ function PublicSite({ onLoginClick }) {
         <InsightDiscoveryLandingSection isMobile={isMobile} openModal={openModal} />
 
         {/* CTA */}
-        <div style={{padding:isMobile?"48px 24px":"72px 80px",
+        <div id="contact-cta" style={{padding:isMobile?"48px 24px":"72px 80px",
           background:`linear-gradient(135deg, ${PUB.donker} 0%, ${PUB.navy} 60%, rgba(0,168,150,0.15) 100%)`,
           textAlign:"center",position:"relative",overflow:"hidden",borderTop:`1px solid ${PUB.tealGlow}`}}>
           <Fade>
             <h2 style={{fontSize:isMobile?28:42,fontWeight:700,lineHeight:1.15,color:PUB.wit,marginBottom:14}}>
-              Benieuwd wat er in jouw team<br/>onder de oppervlakte speelt?
+              Wil je verkennen of een begeleid traject<br/>past bij jullie team?
             </h2>
             <p style={{fontSize:15,lineHeight:1.75,color:"rgba(255,255,255,0.78)",maxWidth:480,margin:"0 auto 28px"}}>
-              Plan een vrijblijvend kennismakingsgesprek van 30 minuten en verken waar de grootste kans op beweging zit.
+              Plan een verkennende kennismaking. We bespreken kort wat er speelt, of een teamscan passend is en welke eerste stap logisch voelt.
             </p>
             <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
               <span style={{background:PUB.teal,color:PUB.donker,padding:"13px 26px",borderRadius:4,fontWeight:700,fontSize:14,cursor:"pointer"}} onClick={openModal}>
-                Plan een kennismakingsgesprek
+                Plan een verkennende kennismaking
               </span>
-              <span onClick={()=>document.getElementById("werkwijze")?.scrollIntoView({behavior:"smooth",block:"start"})}
+              <span onClick={()=>document.getElementById("begeleid-traject")?.scrollIntoView({behavior:"smooth",block:"start"})}
                 style={{border:"1px solid rgba(255,255,255,0.38)",color:PUB.wit,padding:"13px 26px",borderRadius:4,fontSize:14,cursor:"pointer"}}>
                 Bekijk onze werkwijze
               </span>
@@ -1767,9 +1773,9 @@ function PublicSite({ onLoginClick }) {
             {[
               ["Aanpak",[
                 ["Teamkompas Scan",    ()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["De vier domeinen",   ()=>document.getElementById("aanpak")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["Begeleid traject",   ()=>document.getElementById("begeleid-traject")?.scrollIntoView({behavior:"smooth",block:"start"})],
                 ["Insights Discovery", ()=>document.getElementById("insights-discovery")?.scrollIntoView({behavior:"smooth",block:"start"})],
-                ["Werkwijze",          ()=>document.getElementById("werkwijze")?.scrollIntoView({behavior:"smooth",block:"start"})],
+                ["Opbrengst",          ()=>document.getElementById("opbrengst")?.scrollIntoView({behavior:"smooth",block:"start"})],
               ]],
               ["Voor wie",[
                 ["Zakelijke dienstverlening", ()=>document.getElementById("voor-wie")?.scrollIntoView({behavior:"smooth",block:"start"})],
@@ -1826,9 +1832,9 @@ function PublicSite({ onLoginClick }) {
             <div style={{padding:"28px 32px 20px",borderBottom:"1px solid rgba(255,255,255,0.07)",
               display:"flex",alignItems:"flex-start",justifyContent:"space-between"}}>
               <div>
-                <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:"#00A896",textTransform:"uppercase",marginBottom:6}}>Vrijblijvend kennismakingsgesprek</div>
-                <div style={{fontSize:22,fontWeight:700,color:"#ffffff"}}>Plan een kennismakingsgesprek</div>
-                <div style={{fontSize:13,color:"#8fa3bb",marginTop:4}}>We nemen binnen één werkdag contact op.</div>
+                <div style={{fontSize:12,fontWeight:600,letterSpacing:"0.15em",color:"#00A896",textTransform:"uppercase",marginBottom:6}}>Verkennende kennismaking</div>
+                <div style={{fontSize:22,fontWeight:700,color:"#ffffff"}}>Plan een verkennende kennismaking</div>
+                <div style={{fontSize:13,color:"#8fa3bb",marginTop:4}}>We reageren zo snel mogelijk en gebruiken je gegevens alleen voor deze aanvraag.</div>
               </div>
               <div onClick={closeModal} style={{cursor:"pointer",color:"#8fa3bb",fontSize:22,lineHeight:1,padding:"4px 8px",marginTop:-4}}>×</div>
             </div>
@@ -1837,7 +1843,7 @@ function PublicSite({ onLoginClick }) {
                 <div style={{fontSize:40,marginBottom:16}}>✅</div>
                 <div style={{fontSize:20,fontWeight:700,color:"#ffffff",marginBottom:10}}>Bericht ontvangen!</div>
                 <div style={{fontSize:14,color:"#8fa3bb",lineHeight:1.7,marginBottom:24}}>
-                  Bedankt voor uw interesse. We nemen zo snel mogelijk contact met u op.
+                  Bedankt voor je aanvraag. We nemen zo snel mogelijk contact met je op om de situatie kort te verkennen.
                 </div>
                 <span onClick={closeModal} style={{background:"#00A896",color:"#0D1B2A",
                   padding:"10px 24px",borderRadius:8,fontWeight:700,fontSize:14,cursor:"pointer"}}>
@@ -1846,9 +1852,10 @@ function PublicSite({ onLoginClick }) {
               </div>
             ) : (
               <div style={{padding:"24px 32px 32px"}}>
-                {[["naam","Naam *","Uw volledige naam","text"],
-                  ["organisatie","Organisatie","Naam van uw organisatie","text"],
-                  ["email","E-mailadres *","uw@email.nl","email"],
+                {[["naam","Naam *","Je volledige naam","text"],
+                  ["organisatie","Organisatie","Naam van de organisatie","text"],
+                  ["teamgrootte","Teamgrootte","Bijvoorbeeld 8 of 25","text"],
+                  ["email","E-mailadres *","naam@organisatie.nl","email"],
                   ["telefoon","Telefoonnummer","+31 6 ...","tel"],
                 ].map(([key,label,ph,type])=>(
                   <div key={key} style={{marginBottom:14}}>
@@ -1861,9 +1868,16 @@ function PublicSite({ onLoginClick }) {
                         outline:"none",boxSizing:"border-box"}}/>
                   </div>
                 ))}
+                <div style={{marginBottom:14}}>
+                  <div style={{fontSize:11,color:"#8fa3bb",marginBottom:5,textTransform:"uppercase",letterSpacing:"1px",fontWeight:600}}>Gewenste eerste stap</div>
+                  <select value={form.gewensteStap} onChange={e=>setForm(f=>({...f,gewensteStap:e.target.value}))}
+                    style={{width:"100%",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:8,padding:"10px 14px",color:"#ffffff",fontSize:14,outline:"none",boxSizing:"border-box"}}>
+                    {["Kennismaking","Teamscan verkennen","Advies over trajectopbouw","Workshop of teamdag"].map(opt => <option key={opt} value={opt} style={{color:'#0D1B2A'}}>{opt}</option>)}
+                  </select>
+                </div>
                 <div style={{marginBottom:20}}>
-                  <div style={{fontSize:11,color:"#8fa3bb",marginBottom:5,textTransform:"uppercase",letterSpacing:"1px",fontWeight:600}}>Bericht</div>
-                  <textarea placeholder="Vertel ons kort waar u mee bezig bent..." value={form.bericht}
+                  <div style={{fontSize:11,color:"#8fa3bb",marginBottom:5,textTransform:"uppercase",letterSpacing:"1px",fontWeight:600}}>Wat speelt er nu</div>
+                  <textarea placeholder="Beschrijf kort wat er in het team speelt of welke vraag jullie willen verkennen." value={form.bericht}
                     onChange={e=>setForm(f=>({...f,bericht:e.target.value}))} rows={4}
                     style={{width:"100%",background:"rgba(255,255,255,0.05)",
                       border:"1px solid rgba(255,255,255,0.1)",borderRadius:8,
@@ -1878,12 +1892,12 @@ function PublicSite({ onLoginClick }) {
                     style={{flex:1,background:status==="sending"?"#007d70":"#00A896",
                       color:"#0D1B2A",border:"none",borderRadius:8,padding:"13px",
                       fontWeight:700,fontSize:15,cursor:status==="sending"?"wait":"pointer"}}>
-                    {status === "sending" ? "Versturen..." : "Verstuur aanvraag →"}
+                    {status === "sending" ? "Versturen..." : "Verstuur verkenning →"}
                   </button>
                   <span onClick={closeModal} style={{fontSize:13,color:"#8fa3bb",cursor:"pointer"}}>Annuleer</span>
                 </div>
                 <div style={{fontSize:11,color:"rgba(255,255,255,0.25)",marginTop:12,textAlign:"center"}}>
-                  Uw gegevens worden uitsluitend gebruikt om contact met u op te nemen.
+                  Je gegevens worden uitsluitend gebruikt om deze aanvraag zorgvuldig op te volgen.
                 </div>
               </div>
             )}
