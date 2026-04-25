@@ -12,6 +12,7 @@ import Verkennen from "./Verkennen";
 import TeamscanDigitaal from "./TeamscanDigitaal";
 import ContactModal from "./ContactModal";
 import { auth, db, ADMIN_EMAILS } from "./firebase";
+import FunnelDashboard from "./FunnelDashboard";
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -8528,6 +8529,7 @@ export default function App() {
         <Route path="/onze-aanpak" element={<OnzeAanpak />} />
         <Route path="/verkennen" element={<Verkennen />} />
         <Route path="/teamscan" element={<TeamscanDigitaal />} />
+        <Route path="/funnel" element={<FunnelDashboard />} />
       </Routes>
     </HelmetProvider>
   );
