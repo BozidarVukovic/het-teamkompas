@@ -17,6 +17,8 @@ const C = {
   rood: "#B91C1C",
 };
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState(false);
 
@@ -29,8 +31,6 @@ function useIsMobile() {
 
   return isMobile;
 }
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const inputStyle = {
   width: "100%",
@@ -52,19 +52,61 @@ const labelStyle = {
   color: C.donker,
 };
 
+const buttonBase = {
+  border: "none",
+  borderRadius: 12,
+  padding: "15px 18px",
+  fontWeight: 900,
+  cursor: "pointer",
+  minHeight: 52,
+};
+
 function Field({ label, children, help }) {
   return (
     <label style={{ display: "block" }}>
       <span style={labelStyle}>{label}</span>
       {children}
-      {help ? <span style={{ display: "block", marginTop: 6, fontSize: 12, color: C.sub }}>{help}</span> : null}
+      {help ? (
+        <span style={{ display: "block", marginTop: 6, fontSize: 12, color: C.sub }}>
+          {help}
+        </span>
+      ) : null}
     </label>
+  );
+}
+
+function StepBadge({ active, done, number, label }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div
+        style={{
+          width: 34,
+          height: 34,
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontWeight: 900,
+          background: done ? C.groen : active ? C.blauw : C.lijn,
+          color: done || active ? C.wit : C.sub,
+        }}
+      >
+        {done ? "✓" : number}
+      </div>
+      <span style={{ fontSize: 14, fontWeight: 900, color: active ? C.donker : C.sub }}>{label}</span>
+    </div>
   );
 }
 
 export default function TeamscanDigitaal() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+
+  const [step, setStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+  const [skipTeamEmails, setSkipTeamEmails] = useState(false);
 
   const [form, setForm] = useState({
     bedrijf: "",
@@ -76,10 +118,6 @@ export default function TeamscanDigitaal() {
   });
 
   const [collegaEmails, setCollegaEmails] = useState([""]);
-  const [touched, setTouched] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
 
   const teamGrootteNummer = Number(form.teamGrootte || 0);
 
@@ -89,23 +127,12 @@ export default function TeamscanDigitaal() {
   );
 
   const emailFouten = useMemo(
-    () => collegaEmails
-      .map((email, index) => ({ email: email.trim(), index }))
-      .filter(({ email }) => email && !emailRegex.test(email)),
+    () =>
+      collegaEmails
+        .map((email, index) => ({ email: email.trim(), index }))
+        .filter(({ email }) => email && !emailRegex.test(email)),
     [collegaEmails]
   );
-
-  const missing = [];
-  if (!form.bedrijf.trim()) missing.push("naam van het bedrijf");
-  if (!form.afdeling.trim()) missing.push("afdeling of team");
-  if (!form.managerNaam.trim()) missing.push("naam van de aanvrager");
-  if (!form.managerEmail.trim()) missing.push("e-mailadres van de aanvrager");
-  if (form.managerEmail.trim() && !emailRegex.test(form.managerEmail.trim())) missing.push("geldig e-mailadres van de aanvrager");
-  if (!teamGrootteNummer || teamGrootteNummer < 1) missing.push("aantal teamleden");
-  if (teamGrootteNummer > 0 && ingevuldeEmails.length !== teamGrootteNummer) missing.push(`e-mailadres van alle ${teamGrootteNummer} teamleden`);
-  if (emailFouten.length > 0) missing.push("geldige e-mailadressen van teamleden");
-
-  const isValid = missing.length === 0;
 
   function updateForm(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -134,13 +161,45 @@ export default function TeamscanDigitaal() {
     setCollegaEmails((current) => current.map((email, i) => (i === index ? value : email)));
   }
 
+  function validateStepOne() {
+    const missing = [];
+    if (!form.bedrijf.trim()) missing.push("naam van de organisatie");
+    if (!form.afdeling.trim()) missing.push("afdeling of team");
+    if (!form.managerNaam.trim()) missing.push("naam van de aanvrager");
+    if (!form.managerEmail.trim()) missing.push("e-mailadres van de aanvrager");
+    if (form.managerEmail.trim() && !emailRegex.test(form.managerEmail.trim())) missing.push("geldig e-mailadres van de aanvrager");
+    if (!teamGrootteNummer || teamGrootteNummer < 1) missing.push("aantal collega’s");
+    return missing;
+  }
+
+  function validateStepTwo() {
+    if (skipTeamEmails) return [];
+    const missing = [];
+    if (teamGrootteNummer > 0 && ingevuldeEmails.length !== teamGrootteNummer) {
+      missing.push(`e-mailadres van alle ${teamGrootteNummer} collega’s`);
+    }
+    if (emailFouten.length > 0) missing.push("geldige e-mailadressen van collega’s");
+    return missing;
+  }
+
+  function goToStepTwo() {
+    setError("");
+    const missing = validateStepOne();
+    if (missing.length > 0) {
+      setError(`Vul eerst deze gegevens aan: ${missing.join(", ")}.`);
+      return;
+    }
+    setStep(2);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
-    setTouched(true);
     setError("");
 
-    if (!isValid) {
-      setError("Vul de ontbrekende gegevens aan voordat je de aanvraag verstuurt.");
+    const missing = [...validateStepOne(), ...validateStepTwo()];
+    if (missing.length > 0) {
+      setError(`Vul deze gegevens nog aan: ${missing.join(", ")}.`);
       return;
     }
 
@@ -151,17 +210,23 @@ export default function TeamscanDigitaal() {
         type: "digitale_teamscan_selfservice",
         status: "nieuw",
         bron: "website_teamscan_digitaal",
+        funnelFase: "lead_aanvraag",
         bedrijf: form.bedrijf.trim(),
         afdeling: form.afdeling.trim(),
         managerNaam: form.managerNaam.trim(),
         managerEmail: form.managerEmail.trim().toLowerCase(),
         teamGrootte: teamGrootteNummer,
-        collegaEmails: ingevuldeEmails.map((email) => email.toLowerCase()),
+        collegaEmailsLaterToevoegen: skipTeamEmails,
+        collegaEmails: skipTeamEmails ? [] : ingevuldeEmails.map((email) => email.toLowerCase()),
+        aantalCollegaEmailsIngevuld: skipTeamEmails ? 0 : ingevuldeEmails.length,
         toelichting: form.toelichting.trim(),
+        opvolgingNodig: true,
+        gewensteVervolgactie: skipTeamEmails ? "manager_benaderen_voor_teamleden" : "scan_klaarzetten_en_mailen",
         aangemaaktOp: serverTimestamp(),
       });
 
       setSuccess(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (submitError) {
       console.error("Aanvraag digitale teamscan mislukt", submitError);
       setError("Het versturen lukt nu niet. Probeer het later opnieuw of neem contact op via info@mijnteamkompas.nl.");
@@ -170,12 +235,54 @@ export default function TeamscanDigitaal() {
     }
   }
 
-  const stappen = [
-    ["1", "Vul de aanvraag in", "Je geeft aan voor welk team de scan bedoeld is en wie de contactpersoon is."],
-    ["2", "Voeg teamleden toe", "Je vult de e-mailadressen in van de collega’s die je wilt betrekken."],
-    ["3", "Wij zetten de scan klaar", "De manager en teamleden ontvangen daarna duidelijke uitleg en de vragenlijst."],
-    ["4", "Je ontvangt inzicht", "Na invullen worden de uitkomsten samengebracht in een helder overzicht met vervolgstappen."],
+  const benefits = [
+    ["Veilig starten", "Heldere uitleg voor manager en teamleden."],
+    ["Snel overzicht", "Je ziet waar samenwerking energie geeft en waar het schuurt."],
+    ["Praktische vervolgstappen", "Geen lange rapporten, maar richting voor verbetering."],
   ];
+
+  const process = [
+    ["1", "Aanvraag", "Je vult de gegevens van organisatie, afdeling en aanvrager in."],
+    ["2", "Teamleden", "Je voegt de e-mailadressen toe of doet dat later."],
+    ["3", "Uitnodiging", "Manager en teamleden ontvangen uitleg en de vragenlijst."],
+    ["4", "Inzicht", "De uitkomsten worden samengebracht in een helder overzicht."],
+  ];
+
+  if (success) {
+    return (
+      <HelmetProvider>
+        <Helmet>
+          <title>Teamscan aangevraagd | Mijn Teamkompas</title>
+        </Helmet>
+        <div style={{ fontFamily: "Roboto, sans-serif", background: C.licht, color: C.donker, minHeight: "100vh", padding: isMobile ? "36px 20px" : "70px 24px" }}>
+          <div style={{ maxWidth: 900, margin: "0 auto", background: C.wit, borderRadius: 28, padding: isMobile ? 26 : 44, boxShadow: "0 24px 70px rgba(13,27,42,0.12)", border: `1px solid ${C.lijn}` }}>
+            <div style={{ width: 58, height: 58, borderRadius: "50%", background: C.groen, color: C.wit, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 900, marginBottom: 22 }}>✓</div>
+            <h1 style={{ fontSize: isMobile ? 32 : 46, lineHeight: 1.08, margin: "0 0 12px" }}>Je aanvraag is ontvangen.</h1>
+            <p style={{ fontSize: 17, lineHeight: 1.75, color: C.sub, margin: "0 0 28px" }}>
+              We nemen je aanvraag in behandeling. Je ontvangt een bevestiging en daarna zorgen we dat de teamscan zorgvuldig wordt klaargezet.
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 14, marginBottom: 28 }}>
+              {[
+                ["1", "Bevestiging", "Je ontvangt bericht op het opgegeven e-mailadres."],
+                ["2", "Klaarzetten", "De teamscan wordt zorgvuldig voorbereid voor jouw team."],
+                ["3", "Vervolg", "Na deelname ontvang je inzicht en praktische vervolgstappen."],
+              ].map(([nr, titel, tekst]) => (
+                <div key={titel} style={{ border: `1px solid ${C.lijn}`, borderRadius: 18, padding: 18, background: C.licht }}>
+                  <div style={{ width: 34, height: 34, borderRadius: "50%", background: C.blauw, color: C.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, marginBottom: 10 }}>{nr}</div>
+                  <div style={{ fontWeight: 900, marginBottom: 6 }}>{titel}</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.6, color: C.sub }}>{tekst}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12 }}>
+              <button onClick={() => navigate("/verkennen")} style={{ ...buttonBase, background: C.teal, color: C.wit }}>Plan ook een verkennend gesprek</button>
+              <button onClick={() => navigate("/")} style={{ ...buttonBase, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Terug naar home</button>
+            </div>
+          </div>
+        </div>
+      </HelmetProvider>
+    );
+  }
 
   return (
     <HelmetProvider>
@@ -183,7 +290,7 @@ export default function TeamscanDigitaal() {
         <title>Digitale teamscan aanvragen | Mijn Teamkompas</title>
         <meta
           name="description"
-          content="Vraag eenvoudig een digitale teamscan aan voor jouw team. Vul de teamgegevens in en Mijn Teamkompas zet de scan zorgvuldig klaar."
+          content="Vraag eenvoudig een digitale teamscan aan voor jouw team. Binnen enkele minuten geregeld, veilig voor teamleden en gericht op praktische vervolgstappen."
         />
       </Helmet>
 
@@ -192,143 +299,143 @@ export default function TeamscanDigitaal() {
           <div style={{ maxWidth: 1180, margin: "0 auto", padding: "16px 22px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
             <div onClick={() => navigate("/")} style={{ fontWeight: 900, fontSize: 20, cursor: "pointer", color: C.donker }}>Mijn Teamkompas</div>
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-              <button onClick={() => navigate("/verkennen")} style={{ background: "transparent", border: `1px solid ${C.lijn}`, color: C.donker, borderRadius: 10, padding: "10px 14px", fontWeight: 800, cursor: "pointer" }}>Persoonlijk traject</button>
+              <button onClick={() => navigate("/verkennen")} style={{ background: "transparent", border: `1px solid ${C.lijn}`, color: C.donker, borderRadius: 10, padding: "10px 14px", fontWeight: 800, cursor: "pointer" }}>Persoonlijk starten</button>
               <button onClick={() => navigate("/")} style={{ background: C.blauw, border: "none", color: C.wit, borderRadius: 10, padding: "10px 16px", fontWeight: 900, cursor: "pointer" }}>Terug naar home</button>
             </div>
           </div>
         </header>
 
-        <section style={{ background: "linear-gradient(135deg,#0D1B2A 0%, #143B68 100%)", color: C.wit, padding: isMobile ? "56px 22px" : "82px 60px" }}>
+        <section style={{ background: "linear-gradient(135deg,#0D1B2A 0%, #143B68 100%)", color: C.wit, padding: isMobile ? "54px 22px" : "80px 60px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr 0.95fr", gap: 42, alignItems: "center" }}>
             <div>
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", textTransform: "uppercase", color: "#7DB7FF", marginBottom: 14 }}>Digitale teamscan</div>
-              <h1 style={{ fontSize: isMobile ? 36 : 58, lineHeight: 1.04, margin: "0 0 18px", letterSpacing: "-0.03em" }}>Start eenvoudig met inzicht in je team.</h1>
+              <h1 style={{ fontSize: isMobile ? 36 : 58, lineHeight: 1.04, margin: "0 0 18px", letterSpacing: "-0.03em" }}>Start de teamscan voor jouw team.</h1>
               <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 680 }}>
-                Vul de gegevens van je team in. Wij zetten de teamscan zorgvuldig klaar en zorgen dat de manager en teamleden duidelijke uitleg ontvangen.
+                Binnen 2 minuten geregeld. Jouw team ontvangt een korte vragenlijst en jij krijgt inzicht in wat er speelt, waar energie zit en welke vervolgstappen logisch zijn.
               </p>
-              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2,1fr)", gap: 12, marginTop: 26 }}>
-                {stappen.map(([nr, titel, tekst]) => (
-                  <div key={titel} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 16, padding: 16 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: C.blauw, color: C.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, marginBottom: 10 }}>{nr}</div>
-                    <div style={{ fontWeight: 900, marginBottom: 5 }}>{titel}</div>
-                    <div style={{ fontSize: 13, lineHeight: 1.55, color: "rgba(255,255,255,0.72)" }}>{tekst}</div>
-                  </div>
-                ))}
+              <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 26 }}>
+                <a href="#aanvraag" style={{ ...buttonBase, display: "inline-flex", alignItems: "center", justifyContent: "center", textDecoration: "none", background: C.blauw, color: C.wit }}>Start de aanvraag</a>
+                <button onClick={() => navigate("/verkennen")} style={{ ...buttonBase, background: "rgba(255,255,255,0.06)", color: C.wit, border: "1px solid rgba(255,255,255,0.22)" }}>Liever persoonlijk starten</button>
               </div>
             </div>
 
-            <div style={{ background: C.wit, color: C.donker, borderRadius: 24, padding: isMobile ? 22 : 30, boxShadow: "0 24px 70px rgba(0,0,0,0.25)" }}>
-              <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 8 }}>Aanvraag digitale teamscan</div>
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: C.sub, margin: "0 0 22px" }}>
-                Dit kost ongeveer 3 minuten. De gegevens komen binnen in de beheeromgeving zodat de scan zorgvuldig kan worden klaargezet.
-              </p>
-
-              {success ? (
-                <div style={{ background: "#ECFDF5", border: "1px solid #BBF7D0", borderRadius: 16, padding: 22 }}>
-                  <h2 style={{ margin: "0 0 8px", fontSize: 24 }}>Aanvraag ontvangen</h2>
-                  <p style={{ margin: 0, color: C.sub, lineHeight: 1.7 }}>
-                    Dank je wel. We hebben de aanvraag ontvangen en zetten de vervolgstap klaar. De manager ontvangt bericht over het vervolg.
-                  </p>
-                  <button onClick={() => navigate("/")} style={{ marginTop: 18, background: C.teal, color: C.wit, border: "none", borderRadius: 12, padding: "13px 18px", fontWeight: 900, cursor: "pointer" }}>Terug naar home</button>
+            <div style={{ display: "grid", gap: 12 }}>
+              {benefits.map(([titel, tekst]) => (
+                <div key={titel} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 18, padding: 18 }}>
+                  <div style={{ fontWeight: 900, marginBottom: 6 }}>{titel}</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.6, color: "rgba(255,255,255,0.72)" }}>{tekst}</div>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} noValidate>
-                  <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
-                    <Field label="Naam organisatie">
-                      <input style={inputStyle} value={form.bedrijf} onChange={(e) => updateForm("bedrijf", e.target.value)} placeholder="Bijvoorbeeld: Zorggroep Noord" />
-                    </Field>
+              ))}
+            </div>
+          </div>
+        </section>
 
+        <section style={{ padding: isMobile ? "44px 22px" : "66px 60px", background: C.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 28px" }}>
+              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Hoe het werkt</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 12px" }}>Een eenvoudige route naar teaminzicht.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.75, color: C.sub }}>Geen ingewikkeld traject vooraf. Je start met een compacte aanvraag, daarna zorgen wij dat het proces zorgvuldig wordt ingericht.</p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4,1fr)", gap: 14 }}>
+              {process.map(([nr, titel, tekst]) => (
+                <div key={titel} style={{ background: C.wit, border: `1px solid ${C.lijn}`, borderRadius: 18, padding: 20, minHeight: 158, boxShadow: "0 14px 34px rgba(13,27,42,0.06)" }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: C.blauw, color: C.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, marginBottom: 14 }}>{nr}</div>
+                  <div style={{ fontSize: 17, fontWeight: 900, marginBottom: 8 }}>{titel}</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.65, color: C.sub }}>{tekst}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="aanvraag" style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.8fr 1.2fr", gap: 34, alignItems: "start" }}>
+            <aside style={{ background: C.licht, border: `1px solid ${C.lijn}`, borderRadius: 24, padding: 24 }}>
+              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Leadgenerator</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, margin: "0 0 12px" }}>Start zonder verplichting.</h2>
+              <p style={{ color: C.sub, lineHeight: 1.75, margin: "0 0 20px" }}>
+                In deze fase gebruiken we de digitale teamscan om teams laagdrempelig te helpen en te leren waar de meeste behoefte zit. Er zijn nu geen kosten verbonden aan deze aanvraag.
+              </p>
+              <div style={{ display: "grid", gap: 14 }}>
+                <StepBadge active={step === 1} done={step > 1} number="1" label="Teamgegevens" />
+                <StepBadge active={step === 2} done={false} number="2" label="Teamleden" />
+              </div>
+            </aside>
+
+            <form onSubmit={handleSubmit} style={{ background: C.wit, border: `1px solid ${C.lijn}`, borderRadius: 24, padding: isMobile ? 22 : 30, boxShadow: "0 20px 60px rgba(13,27,42,0.08)" }}>
+              {step === 1 ? (
+                <div>
+                  <h2 style={{ fontSize: isMobile ? 26 : 34, margin: "0 0 8px" }}>Voor welk team wil je starten?</h2>
+                  <p style={{ color: C.sub, lineHeight: 1.7, margin: "0 0 24px" }}>Vul eerst de basisgegevens in. Daarna kun je de collega’s toevoegen die je wilt betrekken.</p>
+
+                  <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 16 }}>
+                    <Field label="Naam organisatie">
+                      <input style={inputStyle} value={form.bedrijf} onChange={(e) => updateForm("bedrijf", e.target.value)} placeholder="Bijvoorbeeld: Zorggroep Nova" />
+                    </Field>
                     <Field label="Afdeling of team">
                       <input style={inputStyle} value={form.afdeling} onChange={(e) => updateForm("afdeling", e.target.value)} placeholder="Bijvoorbeeld: HR advies" />
                     </Field>
-
                     <Field label="Naam aanvrager / manager">
                       <input style={inputStyle} value={form.managerNaam} onChange={(e) => updateForm("managerNaam", e.target.value)} placeholder="Voor- en achternaam" />
                     </Field>
-
                     <Field label="E-mailadres aanvrager / manager">
                       <input style={inputStyle} type="email" value={form.managerEmail} onChange={(e) => updateForm("managerEmail", e.target.value)} placeholder="naam@organisatie.nl" />
                     </Field>
-                  </div>
-
-                  <div style={{ marginTop: 16 }}>
-                    <Field label="Hoeveel collega’s wil je betrekken in de teamscan?" help="Vul het aantal teamleden in. Daarna verschijnen automatisch de velden voor de e-mailadressen.">
+                    <Field label="Aantal collega’s in de teamscan" help="Vul alleen de collega’s in die je daadwerkelijk wilt uitnodigen.">
                       <input style={inputStyle} inputMode="numeric" value={form.teamGrootte} onChange={(e) => updateTeamGrootte(e.target.value)} placeholder="Bijvoorbeeld: 8" />
                     </Field>
-                  </div>
-
-                  {teamGrootteNummer > 0 ? (
-                    <div style={{ marginTop: 18, padding: 16, border: `1px solid ${C.lijn}`, borderRadius: 16, background: C.licht }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "baseline", marginBottom: 12 }}>
-                        <div style={{ fontWeight: 900 }}>E-mailadressen teamleden</div>
-                        <div style={{ fontSize: 12, color: C.sub }}>{ingevuldeEmails.length} van {teamGrootteNummer} ingevuld</div>
-                      </div>
-
-                      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 10 }}>
-                        {collegaEmails.map((email, index) => (
-                          <Field key={index} label={`Teamlid ${index + 1}`}>
-                            <input
-                              style={{
-                                ...inputStyle,
-                                borderColor: touched && email.trim() && !emailRegex.test(email.trim()) ? C.rood : C.lijn,
-                              }}
-                              type="email"
-                              value={email}
-                              onChange={(e) => updateCollegaEmail(index, e.target.value)}
-                              placeholder={`teamlid${index + 1}@organisatie.nl`}
-                            />
-                          </Field>
-                        ))}
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <div style={{ marginTop: 16 }}>
-                    <Field label="Korte toelichting (optioneel)" help="Bijvoorbeeld: waarom je de scan wilt inzetten of wat er speelt in het team.">
-                      <textarea
-                        style={{ ...inputStyle, minHeight: 88, resize: "vertical" }}
-                        value={form.toelichting}
-                        onChange={(e) => updateForm("toelichting", e.target.value)}
-                        placeholder="Korte context of aanleiding"
-                      />
+                    <Field label="Korte toelichting (optioneel)">
+                      <input style={inputStyle} value={form.toelichting} onChange={(e) => updateForm("toelichting", e.target.value)} placeholder="Bijvoorbeeld: nieuw team, samenwerking, energie" />
                     </Field>
                   </div>
 
-                  {touched && !isValid ? (
-                    <div style={{ marginTop: 14, padding: 13, borderRadius: 12, background: "#FEF2F2", color: C.rood, fontSize: 13, lineHeight: 1.6 }}>
-                      {error || "Vul de ontbrekende gegevens aan."}
+                  {error ? <div style={{ marginTop: 18, color: C.rood, fontWeight: 800 }}>{error}</div> : null}
+
+                  <button type="button" onClick={goToStepTwo} style={{ ...buttonBase, width: "100%", marginTop: 24, background: C.blauw, color: C.wit }}>Ga verder →</button>
+                </div>
+              ) : (
+                <div>
+                  <h2 style={{ fontSize: isMobile ? 26 : 34, margin: "0 0 8px" }}>Wie wil je uitnodigen?</h2>
+                  <p style={{ color: C.sub, lineHeight: 1.7, margin: "0 0 18px" }}>
+                    Vul de e-mailadressen in van de collega’s die de vragenlijst mogen ontvangen. Heb je die nog niet compleet? Dan kun je ze later toevoegen.
+                  </p>
+
+                  <label style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: 14, border: `1px solid ${C.lijn}`, borderRadius: 14, background: skipTeamEmails ? "#EEF7F3" : C.licht, marginBottom: 18, cursor: "pointer" }}>
+                    <input type="checkbox" checked={skipTeamEmails} onChange={(e) => setSkipTeamEmails(e.target.checked)} style={{ marginTop: 3 }} />
+                    <span>
+                      <strong>Ik voeg de e-mailadressen later toe</strong>
+                      <span style={{ display: "block", color: C.sub, fontSize: 13, lineHeight: 1.5, marginTop: 3 }}>Handig als je nu alvast wilt starten, maar de lijst nog moet controleren.</span>
+                    </span>
+                  </label>
+
+                  {!skipTeamEmails ? (
+                    <div style={{ display: "grid", gap: 12 }}>
+                      {Array.from({ length: Math.max(teamGrootteNummer, 1) }).map((_, index) => (
+                        <Field key={index} label={`E-mailadres collega ${index + 1}`}>
+                          <input
+                            style={{ ...inputStyle, borderColor: collegaEmails[index] && !emailRegex.test(collegaEmails[index].trim()) ? C.rood : C.lijn }}
+                            type="email"
+                            value={collegaEmails[index] || ""}
+                            onChange={(e) => updateCollegaEmail(index, e.target.value)}
+                            placeholder={`collega${index + 1}@organisatie.nl`}
+                          />
+                        </Field>
+                      ))}
                     </div>
                   ) : null}
 
-                  {error && isValid ? (
-                    <div style={{ marginTop: 14, padding: 13, borderRadius: 12, background: "#FEF2F2", color: C.rood, fontSize: 13, lineHeight: 1.6 }}>{error}</div>
-                  ) : null}
+                  {error ? <div style={{ marginTop: 18, color: C.rood, fontWeight: 800 }}>{error}</div> : null}
 
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    style={{
-                      marginTop: 18,
-                      width: "100%",
-                      background: submitting ? "#94A3B8" : C.blauw,
-                      color: C.wit,
-                      border: "none",
-                      borderRadius: 12,
-                      padding: "15px 20px",
-                      fontWeight: 900,
-                      cursor: submitting ? "not-allowed" : "pointer",
-                      minHeight: 54,
-                    }}
-                  >
-                    {submitting ? "Aanvraag wordt verstuurd..." : "Teamscan aanvragen"}
-                  </button>
-
-                  <p style={{ margin: "12px 0 0", fontSize: 12, color: C.sub, lineHeight: 1.6 }}>
-                    We gebruiken deze gegevens alleen om de teamscan klaar te zetten en de juiste deelnemers te informeren.
-                  </p>
-                </form>
+                  <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 24 }}>
+                    <button type="button" onClick={() => { setError(""); setStep(1); }} style={{ ...buttonBase, flex: 1, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Terug</button>
+                    <button type="submit" disabled={submitting} style={{ ...buttonBase, flex: 2, background: submitting ? C.sub : C.groen, color: C.wit, opacity: submitting ? 0.75 : 1 }}>
+                      {submitting ? "Aanvraag versturen..." : "Start aanvraag teamscan"}
+                    </button>
+                  </div>
+                </div>
               )}
-            </div>
+            </form>
           </div>
         </section>
       </div>
