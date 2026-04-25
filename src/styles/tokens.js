@@ -1,0 +1,33 @@
+export const PUB = {
+  donker: "#0D1B2A",
+  navy: "#1A2E4A",
+  teal: "#0F766E",
+  tealDark: "#0B5F5A",
+  tealGlow: "rgba(0,168,150,0.15)",
+  groen: "#5A8C3C",
+  blauw: "#3A7DBF",
+  paars: "#6B4E9E",
+  oranje: "#E8821A",
+  licht: "#F4F7F9",
+  wit: "#FFFFFF",
+  sub: "#6B7A8D",
+  lijn: "#dde4ed",
+};
+
+export const ADM = {
+  navyDeep: "#0D1B2A",
+  navy: "#1A2E4A",
+  navyMid: "#223a5a",
+  navyLight: "#2d4d73",
+  teal: "#0F766E",
+  tealDark: "#0B5F5A",
+  tealGlow: "rgba(0,168,150,0.15)",
+  tealGlow2: "rgba(0,168,150,0.08)",
+  white: "#ffffff",
+  text: "#e2eaf2",
+  muted: "#8fa3bb",
+  border: "rgba(255,255,255,0.07)",
+  green: "#2ecc71",
+  orange: "#f39c12",
+  red: "#e74c3c",
+};
