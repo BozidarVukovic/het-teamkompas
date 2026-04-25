@@ -1,96 +1,184 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-
-const C = {
-  donker: "#0D1B2A",
-  navy: "#1A2E4A",
-  teal: "#0F766E",
-  groen: "#2F8F3A",
-  blauw: "#0F66D0",
-  paars: "#6B4E9E",
-  wit: "#FFFFFF",
-  licht: "#F4F7F9",
-  lijn: "#DDE4ED",
-  sub: "#5F6B7A",
-};
-
-function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState(false);
-  React.useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 820);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-  return isMobile;
-}
-
 export default function KlantreisKeuze() {
-  const navigate = useNavigate();
-  const isMobile = useIsMobile();
-
-  const cards = [
-    {
-      label: "Persoonlijk traject",
-      title: "Eerst vertrouwen opbouwen",
-      text: "Voor leiders en teams die willen begrijpen wat er onder de oppervlakte speelt voordat ze een traject starten.",
-      button: "Verken persoonlijk traject",
-      route: "/verkennen",
-      color: C.groen,
-      icon: "🤝",
-      bullets: ["kennismaking", "teamscan", "analyse", "teamdag of begeleiding"],
-    },
-    {
-      label: "Digitale teamscan",
-      title: "Direct zelfstandig starten",
-      text: "Voor organisaties die snel en schaalbaar inzicht willen krijgen via een digitale scan, analyse en adviesrapport.",
-      button: "Start digitale teamscan",
-      route: "/teamscan",
-      color: C.blauw,
-      icon: "📊",
-      bullets: ["aanvraag", "scan uitzetten", "automatische analyse", "dashboard en advies"],
-    },
-  ];
-
   return (
-    <section style={{ background: C.wit, padding: isMobile ? "54px 20px" : "78px 60px", borderBottom: `1px solid ${C.lijn}` }}>
-      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", maxWidth: 820, margin: "0 auto 34px" }}>
-          <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 12 }}>
-            Twee klantreizen
-          </div>
-          <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, color: C.donker, margin: "0 0 14px" }}>
-            Kies de manier van starten die past bij jouw team.
+    <div style={{ padding: "80px 20px", background: "#F7F9FB" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: "40px" }}>
+          <p
+            style={{
+              color: "#0F766E",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              marginBottom: "12px",
+            }}
+          >
+            twee manieren om te starten
+          </p>
+
+          <h2
+            style={{
+              fontSize: "36px",
+              lineHeight: 1.15,
+              marginBottom: "12px",
+              color: "#0D1B2A",
+            }}
+          >
+            kies de route die past bij jouw team
           </h2>
-          <p style={{ fontSize: 16, lineHeight: 1.75, color: C.sub, margin: 0 }}>
-            Sommige teams hebben eerst vertrouwen, taal en begeleiding nodig. Andere teams willen digitaal en zelfstandig starten met een teamscan. Beide routes leiden naar inzicht, richting en concrete vervolgstappen.
+
+          <p
+            style={{
+              color: "#5A6B7A",
+              fontSize: "18px",
+              lineHeight: 1.6,
+              maxWidth: "760px",
+              margin: "0 auto",
+            }}
+          >
+            sommige teams willen eerst samen scherp krijgen wat er speelt. andere teams willen direct inzicht krijgen en zelfstandig de eerste stap zetten.
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 22 }}>
-          {cards.map((card) => (
-            <div key={card.title} style={{ background: C.licht, border: `1px solid ${C.lijn}`, borderRadius: 22, padding: isMobile ? 24 : 30, boxShadow: "0 18px 50px rgba(13,27,42,0.08)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 5, background: card.color }} />
-              <div style={{ width: 56, height: 56, borderRadius: 18, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, marginBottom: 18, border: `1px solid ${C.lijn}` }}>
-                {card.icon}
-              </div>
-              <div style={{ color: card.color, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 900, marginBottom: 10 }}>{card.label}</div>
-              <h3 style={{ fontSize: isMobile ? 25 : 30, lineHeight: 1.15, color: C.donker, margin: "0 0 12px" }}>{card.title}</h3>
-              <p style={{ fontSize: 15, lineHeight: 1.75, color: C.sub, margin: "0 0 20px" }}>{card.text}</p>
-              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 10, marginBottom: 24 }}>
-                {card.bullets.map((b) => (
-                  <div key={b} style={{ background: C.wit, border: `1px solid ${C.lijn}`, borderRadius: 12, padding: "10px 12px", fontSize: 13, color: C.donker, fontWeight: 700 }}>
-                    ✓ {b}
-                  </div>
-                ))}
-              </div>
-              <button onClick={() => navigate(card.route)} style={{ width: "100%", border: "none", background: card.color, color: C.wit, borderRadius: 12, padding: "14px 18px", fontSize: 15, fontWeight: 900, cursor: "pointer", boxShadow: "0 14px 34px rgba(13,27,42,0.16)" }}>
-                {card.button}
-              </button>
+        <div style={{ display: "flex", gap: "30px", flexWrap: "wrap", alignItems: "stretch" }}>
+          <div
+            style={{
+              flex: 1,
+              minWidth: "300px",
+              background: "white",
+              padding: "32px",
+              borderRadius: "18px",
+              boxShadow: "0 18px 45px rgba(13, 27, 42, 0.08)",
+              border: "1px solid rgba(13, 27, 42, 0.06)",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                alignSelf: "flex-start",
+                padding: "7px 12px",
+                borderRadius: "999px",
+                background: "#EAF7EF",
+                color: "#15803D",
+                fontWeight: 700,
+                fontSize: "13px",
+                marginBottom: "18px",
+              }}
+            >
+              persoonlijke route
             </div>
-          ))}
+
+            <h3 style={{ fontSize: "24px", lineHeight: 1.25, color: "#0D1B2A", marginBottom: "10px" }}>
+              samen scherp krijgen wat er speelt
+            </h3>
+
+            <p style={{ color: "#5A6B7A", lineHeight: 1.6, marginBottom: "20px" }}>
+              voor teams die willen starten met een goed gesprek, verdieping en begeleiding op maat.
+            </p>
+
+            <ul style={{ marginTop: "0", marginBottom: "30px", paddingLeft: "20px", color: "#334155", lineHeight: 1.8 }}>
+              <li>teamscan en gezamenlijke duiding</li>
+              <li>inzicht in gedrag, samenwerking en onderstroom</li>
+              <li>gerichte teaminterventie of teamdag</li>
+              <li>persoonlijke begeleiding naar concrete vervolgstappen</li>
+            </ul>
+
+            <button
+              onClick={() => (window.location.href = "/verkennen")}
+              style={{
+                marginTop: "auto",
+                width: "100%",
+                background: "#16A34A",
+                color: "white",
+                border: "none",
+                padding: "15px 18px",
+                borderRadius: "12px",
+                cursor: "pointer",
+                fontWeight: 700,
+                fontSize: "16px",
+                minHeight: "54px",
+              }}
+            >
+              plan een verkennend gesprek
+            </button>
+          </div>
+
+          <div
+            style={{
+              flex: 1,
+              minWidth: "300px",
+              background: "white",
+              padding: "32px",
+              borderRadius: "18px",
+              boxShadow: "0 18px 45px rgba(13, 27, 42, 0.08)",
+              border: "1px solid rgba(13, 27, 42, 0.06)",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                alignSelf: "flex-start",
+                padding: "7px 12px",
+                borderRadius: "999px",
+                background: "#EEF4FF",
+                color: "#1D4ED8",
+                fontWeight: 700,
+                fontSize: "13px",
+                marginBottom: "18px",
+              }}
+            >
+              digitale route
+            </div>
+
+            <h3 style={{ fontSize: "24px", lineHeight: 1.25, color: "#0D1B2A", marginBottom: "10px" }}>
+              direct inzicht met de teamscan
+            </h3>
+
+            <p style={{ color: "#5A6B7A", lineHeight: 1.6, marginBottom: "20px" }}>
+              voor teams die zelfstandig willen starten en snel overzicht willen krijgen.
+            </p>
+
+            <ul style={{ marginTop: "0", marginBottom: "30px", paddingLeft: "20px", color: "#334155", lineHeight: 1.8 }}>
+              <li>direct starten met de teamscan</li>
+              <li>helder inzicht in wat er speelt</li>
+              <li>concreet overzicht van kansen en risico&apos;s</li>
+              <li>praktische handvatten voor verbetering</li>
+            </ul>
+
+            <p style={{ fontSize: "14px", color: "#7A8A99", lineHeight: 1.6, marginTop: "-12px", marginBottom: "24px" }}>
+              je kunt later altijd kiezen voor persoonlijke begeleiding.
+            </p>
+
+            <button
+              onClick={() => (window.location.href = "/teamscan")}
+              style={{
+                marginTop: "auto",
+                width: "100%",
+                background: "#2563EB",
+                color: "white",
+                border: "none",
+                padding: "15px 18px",
+                borderRadius: "12px",
+                cursor: "pointer",
+                fontWeight: 700,
+                fontSize: "16px",
+                minHeight: "54px",
+              }}
+            >
+              start digitale teamscan
+            </button>
+          </div>
+        </div>
+
+        <div style={{ textAlign: "center", marginTop: "30px", color: "#5A6B7A", fontSize: "16px" }}>
+          twijfel je wat past? begin dan met een verkennend gesprek.
         </div>
       </div>
-    </section>
+    </div>
   );
 }
