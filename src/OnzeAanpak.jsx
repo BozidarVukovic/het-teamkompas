@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+<<<<<<< HEAD
 import { initializeApp, getApps } from "firebase/app";
 import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
 
@@ -17,6 +18,9 @@ const EMAILJS_TEMPLATE_ID = "pysvu9a";
 const EMAILJS_PUBLIC_KEY = "aXtk48FJxZBI-fBNQ";
 const firebaseApp = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
+=======
+import ContactModal from "./ContactModal";
+>>>>>>> 7bf14c5 (update homepage met klantreis keuze)
 
 const PUB = {
   donker: "#0D1B2A",
@@ -64,6 +68,7 @@ function Card({ children, topColor }) {
 export default function OnzeAanpakPage() {
   const ctaStyle = { background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", boxShadow: "0 12px 28px rgba(15,118,110,0.24)", border: "none" };
   const [modalOpen, setModalOpen] = useState(false);
+<<<<<<< HEAD
   const [status, setStatus] = useState("idle");
   const [form, setForm] = useState({ naam: "", organisatie: "", teamgrootte: "", email: "", telefoon: "", gewensteStap: "Kennismaking", bericht: "" });
 
@@ -106,6 +111,11 @@ export default function OnzeAanpakPage() {
       setStatus("error");
     }
   };
+=======
+  const openModal = () => setModalOpen(true);
+
+  const closeModal = () => setModalOpen(false);
+>>>>>>> 7bf14c5 (update homepage met klantreis keuze)
 
   const domeinen = [
     ["Veiligheid & leiderschap", PUB.groen, "We kijken of mensen zich vrij voelen om eerlijk te zijn, vragen te stellen en initiatief te nemen. Zonder veiligheid ontstaat weinig echte beweging."],
@@ -241,6 +251,7 @@ export default function OnzeAanpakPage() {
         </section>
       </div>
 
+<<<<<<< HEAD
       {modalOpen && (
         <div onClick={closeModal} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(13,27,42,0.85)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
           <div onClick={(e) => e.stopPropagation()} style={{ width: "100%", maxWidth: 520, background: "#1A2E4A", borderRadius: 16, border: "1px solid rgba(0,168,150,0.2)", boxShadow: "0 40px 100px rgba(0,0,0,0.6)", overflow: "hidden" }}>
@@ -288,6 +299,9 @@ export default function OnzeAanpakPage() {
           </div>
         </div>
       )}
+=======
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Onze aanpak" />
+>>>>>>> 7bf14c5 (update homepage met klantreis keuze)
 
     </HelmetProvider>
   );
