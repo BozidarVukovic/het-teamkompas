@@ -8529,7 +8529,7 @@ export default function App() {
         <Route path="/onze-aanpak" element={<OnzeAanpak />} />
         <Route path="/verkennen" element={<Verkennen />} />
         <Route path="/teamscan" element={<TeamscanDigitaal />} />
-        <Route path="/funnel" element={<FunnelDashboard />} />
+        <Route path="/admin/funnel" element={<FunnelDashboard />} />
       </Routes>
     </HelmetProvider>
   );
