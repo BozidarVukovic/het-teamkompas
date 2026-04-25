@@ -8516,12 +8516,7 @@ export default function App() {
           return <AdminDashboard onLogout={() => setView("public")} />;
         }
 
-        return (
-          <>
-            <PublicSite onLoginClick={() => setView("login")} />
-            <KlantreisKeuze />
-          </>
-        );
+        return <PublicSite onLoginClick={() => setView("login")} />;
       })()}
     </HelmetProvider>
   );
