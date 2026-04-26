@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../lib/firebase";
-import { ADM } from "../../styles/tokens";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { auth, ADMIN_EMAILS } from "../../lib/firebase";
+import { ADM, PUB } from "../../styles/tokens";
 export default function LoginScreen({ onLogin, onBack }) {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
