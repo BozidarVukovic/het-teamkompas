@@ -55,3 +55,19 @@ export function getLaagsteVeiligheidLeiderschapScore(scores = {}) {
 export function interpretVeiligheidLeiderschapScore(score, interpretatie = []) {
   return interpretatie.find((r) => score >= r.min && score <= r.max) || null;
 }
+
+export function isBelevingVeranderingVerdieping(lijst) {
+  return lijst?.type === "verdieping_beleving_verandering";
+}
+
+export function isEnergieMotivatieVerdieping(lijst) {
+  return lijst?.type === "verdieping_energie_motivatie";
+}
+
+export function isVerbeterenLerenVerdieping(lijst) {
+  return lijst?.type === "verdieping_verbeteren_leren";
+}
+
+export function isGecombineerdeVerdieping(lijst) {
+  return lijst?.type === "verdieping_gecombineerd";
+}

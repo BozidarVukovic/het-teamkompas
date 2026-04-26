@@ -21,8 +21,11 @@ import {
   berekenScanScoresVoorMeting,
   isVeiligheidLeiderschapVerdieping,
   getVeiligheidLeiderschapDimensies,
-  getLaagsteVeiligheidLeiderschapScore,
   interpretVeiligheidLeiderschapScore,
+  isBelevingVeranderingVerdieping,
+  isEnergieMotivatieVerdieping,
+  isVerbeterenLerenVerdieping,
+  isGecombineerdeVerdieping,
 } from "./lib/scanUtils";
 import {
   PIJLERS,
@@ -1094,9 +1097,6 @@ function PublicSite({ onLoginClick }) {
   );
 }
 
-// ─────────────────────────────────────────────
-// LOGIN SCREEN — Firebase Auth + ADMIN_EMAILS check
-// ─────────────────────────────────────────────
 
 
 // ─────────────────────────────────────────────
@@ -1561,9 +1561,6 @@ function scoreColorByLabel(label) {
   return ADM.muted;
 }
 
-function isVerbeterenLerenVerdieping(lijst) {
-  return lijst?.type === "verdieping_verbeteren_leren";
-}
 
 function interpretVerbeterenLerenScore(score) {
   return VERBETEREN_LEREN_INTERPRETATIE.find((r) => score >= r.min && score <= r.max) || null;
@@ -1581,9 +1578,6 @@ function getVerbeterenLerenDimensies(stellingen = VERBETEREN_LEREN_STELLINGEN) {
   return Array.from(seen.values());
 }
 
-function isEnergieMotivatieVerdieping(lijst) {
-  return lijst?.type === "verdieping_energie_motivatie";
-}
 
 function getEnergieMotivatieDimensies(stellingen = ENERGIE_MOTIVATIE_STELLINGEN) {
   const seen = new Map();
@@ -1622,9 +1616,6 @@ function interpretEnergieMotivatieScore(code, score) {
   return null;
 }
 
-function isBelevingVeranderingVerdieping(lijst) {
-  return lijst?.type === "verdieping_beleving_verandering";
-}
 
 function getBelevingVeranderingDimensies(stellingen = BELEVING_VERANDERING_STELLINGEN) {
   const seen = new Map();
@@ -1653,9 +1644,6 @@ function interpretBelevingVeranderingScore(score) {
   return null;
 }
 
-function isGecombineerdeVerdieping(lijst) {
-  return lijst?.type === "verdieping_gecombineerd";
-}
 
 function getGecombineerdeOnderdelen(lijst) {
   return Array.isArray(lijst?.verdiepingOnderdelen) ? lijst.verdiepingOnderdelen : [];
