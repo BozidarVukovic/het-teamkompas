@@ -16,7 +16,13 @@ import FunnelDashboard from "./FunnelDashboard";
 import { PUB, ADM } from "./styles/tokens";
 import { useInView, useIsMobile } from "./components/shared/hooks";
 import Fade from "./components/shared/Fade";
-import { berekenScanScoresVoorMeting } from "./lib/scanUtils";
+import {
+  berekenScanScoresVoorMeting,
+  isVeiligheidLeiderschapVerdieping,
+  getVeiligheidLeiderschapDimensies,
+  getLaagsteVeiligheidLeiderschapScore,
+  interpretVeiligheidLeiderschapScore,
+} from "./lib/scanUtils";
 import {
   PIJLERS,
   DEFAULT_STELLINGEN,
@@ -1722,24 +1728,7 @@ function ScanInvullen({ scanId }) {
 
 
 
-function isVeiligheidLeiderschapVerdieping(lijst) {
-  return lijst?.type === "verdieping_veiligheid_leiderschap";
-}
 
-function getVeiligheidLeiderschapDimensies(stellingen = VEILIGHEID_LEIDERSCHAP_STELLINGEN) {
-  const seen = new Map();
-  stellingen.forEach((s) => {
-    if (!seen.has(s.dimensieCode)) {
-      seen.set(s.dimensieCode, { code: s.dimensieCode, naam: s.dimensie, vragen: [] });
-    }
-    seen.get(s.dimensieCode).vragen.push(s);
-  });
-  return Array.from(seen.values());
-}
-
-function interpretVeiligheidLeiderschapScore(score) {
-  return VEILIGHEID_LEIDERSCHAP_INTERPRETATIE.find((r) => score >= r.min && score <= r.max) || null;
-}
 
 function scoreColorByLabel(label) {
   if (label === "Excellentie") return ADM.green;
@@ -3009,7 +2998,11 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
       const ids = d.vragen.map(v => v.id);
       const totaalGem = scoreGemiddelde(ids, antwoorden);
       const totaal = totaalGem !== null ? Math.round(totaalGem * 3) : null;
-      const interpretatie = totaal !== null ? interpretVeiligheidLeiderschapScore(totaal) : null;
+      const interpretatie = totaal !== null ? interpretVeiligheidLeiderschapScore(
+    totaal,
+    VEILIGHEID_LEIDERSCHAP_INTERPRETATIE
+  )
+: null;
       return { ...d, totaalGem, totaal, interpretatie };
     });
 

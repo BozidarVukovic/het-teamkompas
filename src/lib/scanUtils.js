@@ -20,3 +20,38 @@ export function berekenScanScoresVoorMeting(stellingen = [], antwoorden = {}) {
     "Gedrag (centraal)": avg(pijlerMap[4]),
   };
 }
+export function isVeiligheidLeiderschapVerdieping(lijst) {
+  return lijst?.type === "verdieping_veiligheid_leiderschap";
+}
+
+export function getVeiligheidLeiderschapDimensies(stellingen = []) {
+  const seen = new Map();
+
+  stellingen.forEach((s) => {
+    if (!seen.has(s.dimensieCode)) {
+      seen.set(s.dimensieCode, {
+        code: s.dimensieCode,
+        naam: s.dimensie,
+        vragen: [],
+      });
+    }
+
+    seen.get(s.dimensieCode).vragen.push(s);
+  });
+
+  return Array.from(seen.values());
+}
+
+export function getLaagsteVeiligheidLeiderschapScore(scores = {}) {
+  const entries = Object.entries(scores || {}).filter(
+    ([_, value]) => typeof value === "number" && Number.isFinite(value)
+  );
+
+  if (!entries.length) return null;
+
+  return entries.sort((a, b) => a[1] - b[1])[0];
+}
+
+export function interpretVeiligheidLeiderschapScore(score, interpretatie = []) {
+  return interpretatie.find((r) => score >= r.min && score <= r.max) || null;
+}
