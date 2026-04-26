@@ -20,7 +20,7 @@ import { db } from "../../lib/firebase";
 import { ADM } from "../../styles/tokens";
 import { getScanTemplate } from "../../data/scanData";
 
-export default function PageScans({ ScanResultaten }) {
+export default function PageScans({ ScanResultaten, exporteerScanAlsCsv }) {
   const [lijsten,    setLijsten]    = useState([]);
   const [antwoorden, setAntwoorden] = useState([]);
   const [loading,    setLoading]    = useState(true);
