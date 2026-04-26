@@ -17,6 +17,7 @@ import { PUB, ADM } from "./styles/tokens";
 import { useInView, useIsMobile } from "./components/shared/hooks";
 import Fade from "./components/shared/Fade";
 import LoginScreen from "./components/admin/LoginScreen";
+import KompasDot from "./components/shared/KompasDot";
 import {
   berekenScanScoresVoorMeting,
   isVeiligheidLeiderschapVerdieping,
@@ -99,12 +100,6 @@ function Strepen() {
   );
 }
 
-function KompasDot({ size = 26 }) {
-  return (
-    <div style={{ width:size,height:size,borderRadius:"50%",flexShrink:0,
-      background:`conic-gradient(${PUB.groen} 0 25%,${PUB.blauw} 25% 50%,${PUB.oranje} 50% 75%,${PUB.paars} 75%)` }} />
-  );
-}
 
 function KompasAnim() {
   const isMobile = useIsMobile();
