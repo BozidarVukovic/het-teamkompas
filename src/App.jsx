@@ -6908,7 +6908,7 @@ function AdminDashboard({ onLogout }) {
   const renderPage = () => {
     if (activeNav === "Contactaanvragen") return <PageContactaanvragen />;
     if (activeNav === "Klanten")          return <PageKlanten />;
-    if (activeNav === "Scans")            return <PageScans />;
+    if (activeNav === "Scans")            return <PageScans ScanResultaten={ScanResultaten} />;
     if (activeNav === "Metingen")         return <PageMetingen />;
     if (activeNav === "Rapportages")      return <PageRapportages />;
     if (activeNav === "Prullenbak")       return <PagePrullenbak />;

@@ -1,3 +1,10 @@
+import {
+  isVeiligheidLeiderschapVerdieping,
+  isBelevingVeranderingVerdieping,
+  isEnergieMotivatieVerdieping,
+  isVerbeterenLerenVerdieping,
+  isGecombineerdeVerdieping,
+} from "../../lib/scanUtils";
 import { useEffect, useState } from "react";
 import {
   addDoc,
@@ -13,7 +20,7 @@ import { db } from "../../lib/firebase";
 import { ADM } from "../../styles/tokens";
 import { getScanTemplate } from "../../data/scanData";
 
-export default function PageScans() {
+export default function PageScans({ ScanResultaten }) {
   const [lijsten,    setLijsten]    = useState([]);
   const [antwoorden, setAntwoorden] = useState([]);
   const [loading,    setLoading]    = useState(true);
