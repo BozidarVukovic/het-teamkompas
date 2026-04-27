@@ -1,1 +1,2 @@
-
+- lokale en live adminroute voor het funnel-dashboard: `/admin/funnel`
+- `/admin` is op dit moment geen geldige route en geeft lokaal een wit scherm of route-melding
