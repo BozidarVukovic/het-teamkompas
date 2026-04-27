@@ -7119,6 +7119,7 @@ export default function App() {
         <Route path="/verkennen" element={<Verkennen />} />
         <Route path="/teamscan" element={<TeamscanDigitaal />} />
         <Route path="/admin/funnel" element={<FunnelDashboard />} />
+        <Route path="/beheer" element={<FunnelDashboard />} />
       </Routes>
     </HelmetProvider>
   );
