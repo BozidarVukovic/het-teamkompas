@@ -20,6 +20,7 @@ import LoginScreen from "./components/admin/LoginScreen";
 import KompasDot from "./components/shared/KompasDot";
 import ScanInvullen from "./pages/public/ScanInvullen";
 import PageScans from "./pages/admin/PageScans";
+import Teamontwikkeling from "./pages/public/Teamontwikkeling";
 import {
   berekenScanScoresVoorMeting,
   isVeiligheidLeiderschapVerdieping,
@@ -7118,6 +7119,7 @@ export default function App() {
         <Route path="/onze-aanpak" element={<OnzeAanpak />} />
         <Route path="/verkennen" element={<Verkennen />} />
         <Route path="/teamscan" element={<TeamscanDigitaal />} />
+        <Route path="/teamontwikkeling" element={<Teamontwikkeling />} />
         <Route path="/admin/funnel" element={<FunnelDashboard />} />
         <Route path="/beheer" element={<FunnelDashboard />} />
       </Routes>
