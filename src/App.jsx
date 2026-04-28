@@ -408,6 +408,15 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             ))}
 
             <span
+              onClick={() => navigate("/teamontwikkeling")}
+              style={{...navLinkStyle("teamontwikkeling"), color:"rgba(255,255,255,0.72)"}}
+              onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.72)"; }}
+            >
+              Teamontwikkeling
+            </span>
+
+            <span
               onClick={() => navigate("/onze-aanpak")}
               style={{...navLinkStyle("onze-aanpak"), color:"rgba(255,255,255,0.72)"}}
               onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
@@ -454,6 +463,12 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
               {l}
             </div>
           ))}
+          <div
+            onClick={()=>{navigate("/teamontwikkeling");setMenuOpen(false);}}
+            style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
+          >
+            Teamontwikkeling
+          </div>
           <div
             onClick={()=>{navigate("/onze-aanpak");setMenuOpen(false);}}
             style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
