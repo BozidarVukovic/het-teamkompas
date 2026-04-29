@@ -1,8 +1,27 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import KompasDot from "../../components/shared/KompasDot";
+import { db } from "../../lib/firebase";
 import { PUB } from "../../styles/tokens";
 
 export default function Teamontwikkeling() {
+    const registreerEvent = async (event) => {
+  try {
+    await addDoc(collection(db, "teamscanEvents"), {
+      event,
+      pagina: "teamontwikkeling",
+      url: window.location.href,
+      timestamp: serverTimestamp(),
+    });
+  } catch (error) {
+    console.warn("Funnel-event niet opgeslagen", error);
+  }
+  };
+
+  useEffect(() => {
+    registreerEvent("teamontwikkeling_bekeken");
+  }, []);
   return (
     <>
       <Helmet>
@@ -76,6 +95,7 @@ export default function Teamontwikkeling() {
           <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
             <a
               href="/teamscan"
+              onClick={() => registreerEvent("teamontwikkeling_teamscan_click")}
               style={{
                 background: PUB.teal,
                 color: "white",
@@ -91,6 +111,7 @@ export default function Teamontwikkeling() {
 
             <a
               href="/"
+              onClick={() => registreerEvent("teamontwikkeling_home_click")}
               style={{
                 background: "white",
                 color: PUB.navy,
@@ -305,6 +326,7 @@ export default function Teamontwikkeling() {
 
       <a
         href="/teamscan"
+        onClick={() => registreerEvent("teamontwikkeling_teamscan_click")}
         style={{
           display: "inline-flex",
           marginTop: 22,
@@ -648,6 +670,7 @@ export default function Teamontwikkeling() {
     <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
       <a
         href="/teamscan"
+        onClick={() => registreerEvent("teamontwikkeling_teamscan_click")}
         style={{
           background: PUB.teal,
           color: "white",
@@ -662,6 +685,7 @@ export default function Teamontwikkeling() {
 
       <a
         href="/"
+        onClick={() => registreerEvent("teamontwikkeling_home_click")}
         style={{
           background: "white",
           color: PUB.navy,
