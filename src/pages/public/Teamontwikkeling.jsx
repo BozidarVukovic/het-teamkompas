@@ -244,7 +244,140 @@ export default function Teamontwikkeling() {
     </div>
   </div>
 </section>
+<section
+  style={{
+    maxWidth: 1120,
+    margin: "0 auto",
+    padding: "0 24px 96px",
+  }}
+>
+  <div
+    style={{
+      background: "white",
+      border: `1px solid ${PUB.border}`,
+      borderRadius: 34,
+      padding: "42px 36px",
+      boxShadow: "0 22px 60px rgba(15,23,42,.07)",
+      display: "grid",
+      gridTemplateColumns: "minmax(260px, .9fr) minmax(280px, 1.1fr)",
+      gap: 34,
+      alignItems: "center",
+    }}
+  >
+    <div>
+      <p
+        style={{
+          margin: "0 0 14px",
+          color: PUB.teal,
+          fontWeight: 800,
+          letterSpacing: ".08em",
+          textTransform: "uppercase",
+          fontSize: 13,
+        }}
+      >
+        Eerste stap
+      </p>
 
+      <h2
+        style={{
+          margin: 0,
+          fontSize: "clamp(30px, 4vw, 48px)",
+          lineHeight: 1.05,
+          letterSpacing: "-0.05em",
+        }}
+      >
+        De teamscan maakt zichtbaar waar het gesprek echt over moet gaan.
+      </h2>
+
+      <p
+        style={{
+          color: PUB.muted,
+          lineHeight: 1.65,
+          fontSize: 17,
+          marginTop: 18,
+        }}
+      >
+        Veel teams weten dat er iets schuurt, maar vinden het lastig om scherp te
+        maken wat dat precies is. De teamscan brengt signalen samen tot een
+        gedeeld beeld, zodat een vervolgstap niet op gevoel maar op inzicht wordt
+        gekozen.
+      </p>
+
+      <a
+        href="/teamscan"
+        style={{
+          display: "inline-flex",
+          marginTop: 22,
+          background: PUB.teal,
+          color: "white",
+          padding: "14px 20px",
+          borderRadius: 999,
+          textDecoration: "none",
+          fontWeight: 900,
+          boxShadow: "0 14px 35px rgba(15,118,110,.20)",
+        }}
+      >
+        Start met de teamscan
+      </a>
+    </div>
+
+    <div
+      style={{
+        display: "grid",
+        gap: 14,
+      }}
+    >
+      {[
+        {
+          label: "Samenwerking",
+          tekst: "Waar loopt het soepel en waar ontstaan misverstanden?",
+        },
+        {
+          label: "Veiligheid en leiderschap",
+          tekst: "Wordt er open gesproken en ervaren mensen voldoende richting?",
+        },
+        {
+          label: "Energie en motivatie",
+          tekst: "Wat geeft energie en wat kost op dit moment het meeste?",
+        },
+        {
+          label: "Leren en verbeteren",
+          tekst: "Hoe goed lukt het om samen te leren van de dagelijkse praktijk?",
+        },
+      ].map((item) => (
+        <div
+          key={item.label}
+          style={{
+            border: `1px solid ${PUB.border}`,
+            borderRadius: 22,
+            padding: 20,
+            background: "rgba(248,250,252,.9)",
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 900,
+              color: PUB.navy,
+              marginBottom: 6,
+              fontSize: 17,
+            }}
+          >
+            {item.label}
+          </div>
+          <div
+            style={{
+              color: PUB.muted,
+              lineHeight: 1.55,
+              fontSize: 15,
+            }}
+          >
+            {item.tekst}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
 <section
   style={{
     maxWidth: 1120,
