@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
@@ -102,6 +102,8 @@ export default function TeamscanDigitaal() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const aanvraagRef = useRef(null);
+  const pageViewTrackedRef = useRef(false);
+  const formStartTrackedRef = useRef(false);
 
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
@@ -119,6 +121,38 @@ export default function TeamscanDigitaal() {
   });
 
   const [collegaEmails, setCollegaEmails] = useState([""]);
+
+  async function trackTeamscanEvent(event, extra = {}) {
+    try {
+      await addDoc(collection(db, "teamscanEvents"), {
+        event,
+        bron: "website_teamscan_digitaal",
+        path: typeof window !== "undefined" ? window.location.pathname : "/teamscan",
+        hash: typeof window !== "undefined" ? window.location.hash : "",
+        teamSize: Number(form.teamGrootte || 0),
+        bedrijf: form.bedrijf?.trim?.() || "",
+        afdeling: form.afdeling?.trim?.() || "",
+        timestamp: serverTimestamp(),
+        ...extra,
+      });
+    } catch (trackError) {
+      console.warn("Teamscan funnel-event kon niet worden opgeslagen", trackError);
+    }
+  }
+
+  function trackFormStartOnce(extra = {}) {
+    if (formStartTrackedRef.current) return;
+    formStartTrackedRef.current = true;
+    trackTeamscanEvent("start_form", extra);
+  }
+
+  useEffect(() => {
+    if (pageViewTrackedRef.current) return;
+    pageViewTrackedRef.current = true;
+    trackTeamscanEvent("view_teamscan_page");
+    // Deze effect mag maar één keer draaien bij het openen van de teamscanpagina.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const teamGrootteNummer = Number(form.teamGrootte || 0);
 
@@ -194,12 +228,17 @@ export default function TeamscanDigitaal() {
 
   function goToStepTwo() {
     setError("");
+    trackFormStartOnce({ trigger: "go_to_step_two" });
     const missing = validateStepOne();
     if (missing.length > 0) {
       setError(`Vul eerst deze gegevens aan: ${missing.join(", ")}.`);
       scrollToAanvraag();
       return;
     }
+    trackTeamscanEvent("step1_completed", {
+      teamSize: teamGrootteNummer,
+      managerEmail: form.managerEmail.trim().toLowerCase(),
+    });
     setStep(2);
     scrollToAanvraag();
   }
@@ -217,7 +256,7 @@ export default function TeamscanDigitaal() {
     setSubmitting(true);
 
     try {
-      await addDoc(collection(db, "teamscanSelfserviceAanvragen"), {
+      const requestRef = await addDoc(collection(db, "teamscanSelfserviceAanvragen"), {
         type: "digitale_teamscan_selfservice",
         status: "nieuw",
         bron: "website_teamscan_digitaal",
@@ -234,6 +273,21 @@ export default function TeamscanDigitaal() {
         opvolgingNodig: true,
         gewensteVervolgactie: skipTeamEmails ? "manager_benaderen_voor_teamleden" : "scan_klaarzetten_en_mailen",
         aangemaaktOp: serverTimestamp(),
+      });
+
+      await trackTeamscanEvent("step2_completed", {
+        requestId: requestRef.id,
+        teamSize: teamGrootteNummer,
+        colleagueEmailsProvided: skipTeamEmails ? 0 : ingevuldeEmails.length,
+        emailsLaterToevoegen: skipTeamEmails,
+      });
+
+      await trackTeamscanEvent("submit_teamscan", {
+        requestId: requestRef.id,
+        teamSize: teamGrootteNummer,
+        managerEmail: form.managerEmail.trim().toLowerCase(),
+        colleagueEmailsProvided: skipTeamEmails ? 0 : ingevuldeEmails.length,
+        emailsLaterToevoegen: skipTeamEmails,
       });
 
       setSuccess(true);
@@ -325,7 +379,13 @@ export default function TeamscanDigitaal() {
                 Binnen 2 minuten geregeld. Jouw team ontvangt een korte vragenlijst en jij krijgt inzicht in wat er speelt, waar energie zit en welke vervolgstappen logisch zijn.
               </p>
               <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 26 }}>
-                <a href="#aanvraag" style={{ ...buttonBase, display: "inline-flex", alignItems: "center", justifyContent: "center", textDecoration: "none", background: C.blauw, color: C.wit }}>Start de aanvraag</a>
+                <a
+                  href="#aanvraag"
+                  onClick={() => trackFormStartOnce({ trigger: "hero_button" })}
+                  style={{ ...buttonBase, display: "inline-flex", alignItems: "center", justifyContent: "center", textDecoration: "none", background: C.blauw, color: C.wit }}
+                >
+                  Start de aanvraag
+                </a>
                 <button onClick={() => navigate("/verkennen")} style={{ ...buttonBase, background: "rgba(255,255,255,0.06)", color: C.wit, border: "1px solid rgba(255,255,255,0.22)" }}>Liever persoonlijk starten</button>
               </div>
             </div>
