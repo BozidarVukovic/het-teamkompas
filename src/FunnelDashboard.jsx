@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { collection, getDocs, orderBy, query, limit } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, limit, doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 const cardStyle = {
@@ -27,6 +27,30 @@ const eventLabels = {
   teamontwikkeling_home_click: "Klik naar home",
 };
 
+const statusOptions = [
+  { value: "nieuw", label: "Nieuw" },
+  { value: "bekeken", label: "Bekeken" },
+  { value: "contact_opgenomen", label: "Contact opgenomen" },
+  { value: "intake_gepland", label: "Intake gepland" },
+  { value: "teamscan_uitgezet", label: "Teamscan uitgezet" },
+  { value: "afgerond", label: "Afgerond" },
+  { value: "niet_passend", label: "Niet passend" },
+];
+
+const statusStyleMap = {
+  nieuw: { background: "#ECFDF5", color: "#047857", border: "1px solid #A7F3D0" },
+  bekeken: { background: "#EFF6FF", color: "#1D4ED8", border: "1px solid #BFDBFE" },
+  contact_opgenomen: { background: "#FEF3C7", color: "#92400E", border: "1px solid #FDE68A" },
+  intake_gepland: { background: "#F5F3FF", color: "#6D28D9", border: "1px solid #DDD6FE" },
+  teamscan_uitgezet: { background: "#E0F2FE", color: "#0369A1", border: "1px solid #BAE6FD" },
+  afgerond: { background: "#F0FDF4", color: "#166534", border: "1px solid #BBF7D0" },
+  niet_passend: { background: "#F8FAFC", color: "#475569", border: "1px solid #CBD5E1" },
+};
+
+function getStatusLabel(value) {
+  return statusOptions.find((item) => item.value === value)?.label || "Nieuw";
+}
+
 function percentage(part, total) {
   if (!total || total === 0) return "0%";
   return `${Math.round((part / total) * 100)}%`;
@@ -47,6 +71,8 @@ export default function FunnelDashboard() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [statusFilter, setStatusFilter] = useState("alle");
+  const [updatingStatusId, setUpdatingStatusId] = useState("");
 
   async function loadDashboardData() {
     setLoading(true);
@@ -91,6 +117,31 @@ export default function FunnelDashboard() {
   useEffect(() => {
     loadDashboardData();
   }, []);
+
+  async function handleStatusChange(requestId, newStatus) {
+    setUpdatingStatusId(requestId);
+    setError("");
+
+    try {
+      await updateDoc(doc(db, "teamscanSelfserviceAanvragen", requestId), {
+        status: newStatus,
+        statusBijgewerktOp: new Date(),
+      });
+
+      setRequests((currentRequests) =>
+        currentRequests.map((request) =>
+          request.id === requestId
+            ? { ...request, status: newStatus, statusBijgewerktOp: new Date() }
+            : request
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      setError("Status kon niet worden bijgewerkt. Controleer of je schrijfrechten in Firestore goed staan.");
+    } finally {
+      setUpdatingStatusId("");
+    }
+  }
 
   const metrics = useMemo(() => {
     const count = (name) => events.filter((item) => item.event === name).length;
@@ -138,6 +189,23 @@ export default function FunnelDashboard() {
     if (!sizes.length) return 0;
     return Math.round(sizes.reduce((sum, size) => sum + size, 0) / sizes.length);
   }, [requests]);
+
+  const statusCounts = useMemo(() => {
+    return requests.reduce(
+      (acc, request) => {
+        const status = request.status || "nieuw";
+        acc[status] = (acc[status] || 0) + 1;
+        acc.alle += 1;
+        return acc;
+      },
+      { alle: 0 }
+    );
+  }, [requests]);
+
+  const filteredRequests = useMemo(() => {
+    if (statusFilter === "alle") return requests;
+    return requests.filter((request) => (request.status || "nieuw") === statusFilter);
+  }, [requests, statusFilter]);
 
   if (loading) {
     return (
@@ -345,7 +413,45 @@ export default function FunnelDashboard() {
         </div>
 
         <section style={{ ...cardStyle, marginTop: "22px" }}>
-          <h2 style={{ marginTop: 0 }}>nieuwe teamscan aanvragen</h2>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              gap: "18px",
+              marginBottom: "18px",
+              flexWrap: "wrap",
+            }}
+          >
+            <div>
+              <h2 style={{ marginTop: 0, marginBottom: "6px" }}>teamscan aanvragen</h2>
+              <p style={{ ...muted, margin: 0 }}>
+                Volg per aanvraag de opvolging van nieuw tot afgerond.
+              </p>
+            </div>
+            <label style={{ display: "grid", gap: "6px", minWidth: "220px", fontWeight: 800 }}>
+              Status filter
+              <select
+                value={statusFilter}
+                onChange={(event) => setStatusFilter(event.target.value)}
+                style={{
+                  border: "1px solid #CBD5E1",
+                  borderRadius: "12px",
+                  padding: "11px 12px",
+                  background: "#FFFFFF",
+                  color: "#0F172A",
+                  fontWeight: 700,
+                }}
+              >
+                <option value="alle">Alle statussen ({statusCounts.alle || 0})</option>
+                {statusOptions.map((status) => (
+                  <option key={status.value} value={status.value}>
+                    {status.label} ({statusCounts[status.value] || 0})
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
 
           <div style={{ overflowX: "auto" }}>
             <table
@@ -367,7 +473,7 @@ export default function FunnelDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {requests.map((request) => (
+                {filteredRequests.map((request) => (
                   <tr key={request.id} style={{ borderBottom: "1px solid #EEF2F7" }}>
                     <td style={{ padding: "12px" }}>
                       {request.companyName || request.bedrijfsnaam || request.bedrijf || "-"}
@@ -385,19 +491,28 @@ export default function FunnelDashboard() {
                       {request.teamSize || request.teamGrootte || request.aantalCollegas || request.aantalTeamleden || "-"}
                     </td>
                     <td style={{ padding: "12px" }}>
-                      <span
+                      <select
+                        value={request.status || "nieuw"}
+                        disabled={updatingStatusId === request.id}
+                        onChange={(event) => handleStatusChange(request.id, event.target.value)}
+                        title={getStatusLabel(request.status || "nieuw")}
                         style={{
-                          display: "inline-flex",
-                          padding: "6px 10px",
+                          minWidth: "170px",
                           borderRadius: "999px",
-                          background: "#ECFDF5",
-                          color: "#047857",
+                          padding: "7px 10px",
                           fontSize: "13px",
-                          fontWeight: 700,
+                          fontWeight: 800,
+                          cursor: updatingStatusId === request.id ? "wait" : "pointer",
+                          outline: "none",
+                          ...(statusStyleMap[request.status || "nieuw"] || statusStyleMap.nieuw),
                         }}
                       >
-                        {request.status || "nieuw"}
-                      </span>
+                        {statusOptions.map((status) => (
+                          <option key={status.value} value={status.value}>
+                            {status.label}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                     <td style={{ padding: "12px" }}>{formatDate(request.createdAt || request.aangemaaktOp)}</td>
                   </tr>
@@ -408,6 +523,10 @@ export default function FunnelDashboard() {
 
           {!requests.length && (
             <p style={muted}>Nog geen selfservice-aanvragen ontvangen.</p>
+          )}
+
+          {requests.length > 0 && !filteredRequests.length && (
+            <p style={muted}>Geen aanvragen gevonden voor deze status.</p>
           )}
         </section>
       </div>
