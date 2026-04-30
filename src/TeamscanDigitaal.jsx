@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import { sendTeamscanConfirmationEmail } from "./email";
 
 const C = {
   donker: "#0D1B2A",
@@ -290,6 +291,40 @@ export default function TeamscanDigitaal() {
         emailsLaterToevoegen: skipTeamEmails,
       });
 
+      try {
+        await sendTeamscanConfirmationEmail({
+          bedrijf: form.bedrijf.trim(),
+          afdeling: form.afdeling.trim(),
+          managerNaam: form.managerNaam.trim(),
+          managerEmail: form.managerEmail.trim().toLowerCase(),
+          teamGrootte: teamGrootteNummer,
+          toelichting: form.toelichting.trim(),
+          requestId: requestRef.id,
+        });
+
+        await updateDoc(requestRef, {
+          bevestigingsmailVerzonden: true,
+          bevestigingsmailVerzondenOp: serverTimestamp(),
+        });
+
+        await trackTeamscanEvent("confirmation_email_sent", {
+          requestId: requestRef.id,
+          managerEmail: form.managerEmail.trim().toLowerCase(),
+        });
+      } catch (mailError) {
+        console.warn("Bevestigingsmail kon niet worden verstuurd", mailError);
+        await updateDoc(requestRef, {
+          bevestigingsmailVerzonden: false,
+          bevestigingsmailFout: mailError?.message || "Onbekende mailfout",
+          bevestigingsmailFoutOp: serverTimestamp(),
+        });
+
+        await trackTeamscanEvent("confirmation_email_failed", {
+          requestId: requestRef.id,
+          managerEmail: form.managerEmail.trim().toLowerCase(),
+        });
+      }
+
       setSuccess(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (submitError) {
@@ -324,7 +359,7 @@ export default function TeamscanDigitaal() {
             <div style={{ width: 58, height: 58, borderRadius: "50%", background: C.groen, color: C.wit, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 900, marginBottom: 22 }}>✓</div>
             <h1 style={{ fontSize: isMobile ? 32 : 46, lineHeight: 1.08, margin: "0 0 12px" }}>Je aanvraag is ontvangen.</h1>
             <p style={{ fontSize: 17, lineHeight: 1.75, color: C.sub, margin: "0 0 28px" }}>
-              We nemen je aanvraag in behandeling. Je ontvangt een bevestiging en daarna zorgen we dat de teamscan zorgvuldig wordt klaargezet.
+              We nemen je aanvraag in behandeling. Je ontvangt direct een bevestiging op het opgegeven e-mailadres. Daarna zorgen we dat de teamscan zorgvuldig wordt klaargezet.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 14, marginBottom: 28 }}>
               {[
