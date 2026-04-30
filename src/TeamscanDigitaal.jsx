@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
@@ -101,6 +101,7 @@ function StepBadge({ active, done, number, label }) {
 export default function TeamscanDigitaal() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const aanvraagRef = useRef(null);
 
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
@@ -182,15 +183,25 @@ export default function TeamscanDigitaal() {
     return missing;
   }
 
+  function scrollToAanvraag() {
+    setTimeout(() => {
+      aanvraagRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 80);
+  }
+
   function goToStepTwo() {
     setError("");
     const missing = validateStepOne();
     if (missing.length > 0) {
       setError(`Vul eerst deze gegevens aan: ${missing.join(", ")}.`);
+      scrollToAanvraag();
       return;
     }
     setStep(2);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToAanvraag();
   }
 
   async function handleSubmit(event) {
@@ -349,7 +360,7 @@ export default function TeamscanDigitaal() {
           </div>
         </section>
 
-        <section id="aanvraag" style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit }}>
+        <section id="aanvraag" ref={aanvraagRef} style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit, scrollMarginTop: 86 }}>
           <div style={{ maxWidth: 1040, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.8fr 1.2fr", gap: 34, alignItems: "start" }}>
             <aside style={{ background: C.licht, border: `1px solid ${C.lijn}`, borderRadius: 24, padding: 24 }}>
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Leadgenerator</div>
@@ -428,7 +439,7 @@ export default function TeamscanDigitaal() {
                   {error ? <div style={{ marginTop: 18, color: C.rood, fontWeight: 800 }}>{error}</div> : null}
 
                   <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 24 }}>
-                    <button type="button" onClick={() => { setError(""); setStep(1); }} style={{ ...buttonBase, flex: 1, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Terug</button>
+                    <button type="button" onClick={() => { setError(""); setStep(1); scrollToAanvraag(); }} style={{ ...buttonBase, flex: 1, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Terug</button>
                     <button type="submit" disabled={submitting} style={{ ...buttonBase, flex: 2, background: submitting ? C.sub : C.groen, color: C.wit, opacity: submitting ? 0.75 : 1 }}>
                       {submitting ? "Aanvraag versturen..." : "Start aanvraag teamscan"}
                     </button>
