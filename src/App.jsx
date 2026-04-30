@@ -591,8 +591,8 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
 
             <Fade delay={isMobile ? 0 : 0.1}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&q=80&fit=crop&crop=center" alt="Collega's in overleg over samenwerking en teamontwikkeling" style={{ width: "100%", height: isMobile ? 170 : 250, objectFit: "cover", borderRadius: 12, boxShadow: "0 18px 44px rgba(13,27,42,0.14)" }} />
-                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=80&fit=crop&crop=center" alt="Leidinggevende in gesprek over gedrag en communicatie in teams" style={{ width: "100%", height: isMobile ? 170 : 250, objectFit: "cover", borderRadius: 12, boxShadow: "0 18px 44px rgba(13,27,42,0.14)" }} />
+                <img src="/teamkompas-workshop-hero.jpg" alt="Collega's in overleg over samenwerking en teamontwikkeling" style={{ width: "100%", height: isMobile ? 170 : 250, objectFit: "cover", borderRadius: 12, boxShadow: "0 18px 44px rgba(13,27,42,0.14)" }} />
+                <img src="/teamkompas-intakegesprek.jpg" alt="Leidinggevende in gesprek over gedrag en communicatie in teams" style={{ width: "100%", height: isMobile ? 170 : 250, objectFit: "cover", borderRadius: 12, boxShadow: "0 18px 44px rgba(13,27,42,0.14)" }} />
                 <div style={{ gridColumn: "1 / -1", background: PUB.donker, borderRadius: 14, padding: isMobile ? "18px 18px" : "22px 24px", boxShadow: "0 18px 44px rgba(13,27,42,0.18)" }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: PUB.teal, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>Waarom dit werkt</div>
                   <div style={{ fontSize: isMobile ? 15 : 17, fontWeight: 700, color: PUB.wit, lineHeight: 1.45, marginBottom: 8 }}>
@@ -732,7 +732,7 @@ function ThemeDeepDiveSection({ isMobile, openModal }) {
         'De leidinggevende blijft de belangrijkste bron van richting en initiatief.'
       ],
       opbrengst: 'Meer openheid, meer eigenaarschap en gesprekken die sneller tot beweging leiden.',
-      image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=80&fit=crop&crop=center',
+      image: '/teamkompas-intakegesprek.jpg',
       alt: 'Teamoverleg waarin collega\'s actief luisteren en samenwerken.'
     },
     {
@@ -747,7 +747,7 @@ function ThemeDeepDiveSection({ isMobile, openModal }) {
         'Werkdruk is structureel gespreksonderwerp geworden.'
       ],
       opbrengst: 'Meer grip op energielekken, scherpere prioriteiten en meer duurzame bevlogenheid.',
-      image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80&fit=crop&crop=center',
+      image: '/teamkompas-workshop-hero.jpg',
       alt: 'Collega\'s werken samen aan een tafel in een nuchtere werkomgeving.'
     },
     {
@@ -777,7 +777,7 @@ function ThemeDeepDiveSection({ isMobile, openModal }) {
         'Teams bespreken knelpunten, maar veranderen hun routines nog onvoldoende.'
       ],
       opbrengst: 'Meer leervermogen, betere opvolging en een cultuur waarin verbeteren werkbaar blijft.',
-      image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&q=80&fit=crop&crop=center',
+      image: '/teamkompas-samen-richting.jpg',
       alt: 'Team bij een verbeterbord in gesprek over volgende stappen.'
     }
   ];
@@ -843,19 +843,19 @@ function DiverseWorkplacesSection({ isMobile }) {
     {
       titel: 'Niet alleen voor kantooromgevingen',
       tekst: 'Onze aanpak werkt juist ook in organisaties waar het werk snel, praktisch en onder druk is. Denk aan zorg, publieke dienstverlening, onderwijs en uitvoerende teams.',
-      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80&fit=crop&crop=center',
+      image: '/teamkompas-intakegesprek.jpg',
       alt: 'Professionals in een zorgomgeving in overleg.'
     },
     {
       titel: 'Ook waar dagelijks werk leidend is',
       tekst: 'Samenwerking verbeteren moet aansluiten op hoe mensen echt werken. Daarom past Mijn Teamkompas net zo goed bij operationele teams en werkvloeren als bij managementteams.',
-      image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1200&q=80&fit=crop&crop=center',
+      image: '/teamkompas-samen-richting.jpg',
       alt: 'Collega\'s overleggen op een praktische werkvloer.'
     },
     {
       titel: 'Menselijk, nuchter en toepasbaar',
       tekst: 'Geen gelikte theorie voor alleen luxe boardrooms, maar begeleiding die werkt in echte organisaties met echte druk, echte verschillen en echte verantwoordelijkheden.',
-      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80&fit=crop&crop=center',
+      image: '/teamkompas-workshop-hero.jpg',
       alt: 'Divers team werkt samen aan een tafel in een alledaagse werkomgeving.'
     }
   ];
@@ -962,14 +962,15 @@ function PublicSite({ onLoginClick }) {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
               <span style={ctaStyle} onClick={openModal}>Plan een verkennende kennismaking</span>
+              <span style={{ ...ghostStyle, background: "rgba(255,255,255,0.10)" }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
               <span style={ghostStyle} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
             </div>
             <div style={{ marginTop: 24, color: "rgba(255,255,255,0.48)", fontSize: 13 }}>
-              Geen verplichting. Eerst samen scherp krijgen of en hoe Mijn Teamkompas kan helpen.
+              Kies voor persoonlijk contact of start laagdrempelig met de digitale teamscan.
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 320 : "86vh", position: "relative", zIndex: 1 }}>
-            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=1600&q=80&fit=crop&crop=center" alt="Team in begeleide sessie rondom samenwerking" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: .82 }} />
+            <img src="/teamkompas-workshop-hero.jpg" alt="Teamworkshop van Mijn Teamkompas met kompaswerkvorm en gezamenlijke dialoog" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: .82 }} />
             <div style={{ position: "absolute", inset: 0, background: isMobile ? "linear-gradient(to top, rgba(13,27,42,0.88), rgba(13,27,42,0.18))" : "linear-gradient(to right, rgba(13,27,42,0.92), rgba(13,27,42,0.10))" }} />
             <div style={{ position: "absolute", left: isMobile ? 22 : 44, right: isMobile ? 22 : 44, bottom: isMobile ? 24 : 44, background: "rgba(255,255,255,0.92)", borderRadius: 18, padding: 22, boxShadow: "0 24px 70px rgba(0,0,0,0.28)" }}>
               <div style={{ fontSize: 13, fontWeight: 800, color: PUB.teal, marginBottom: 8 }}>De eerste stap</div>
@@ -990,6 +991,43 @@ function PublicSite({ onLoginClick }) {
           </div>
         </section>
 
+
+        <section id="beelden-aanpak" style={{ background: PUB.wit, padding: isMobile ? "52px 20px" : "74px 60px", borderBottom: `1px solid ${PUB.lijn}` }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <Fade>
+              <div style={{ maxWidth: 760, marginBottom: 28 }}>
+                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Van inzicht naar beweging</div>
+                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>Teamontwikkeling begint met zien wat er echt speelt.</h2>
+                <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>
+                  Mijn Teamkompas combineert een digitale teamscan met begeleide dialoog, zodat signalen niet blijven hangen in losse indrukken maar worden vertaald naar richting, eigenaarschap en concrete vervolgstappen.
+                </p>
+              </div>
+            </Fade>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 18 }}>
+              {[
+                ["Eerst begrijpen", "Een verkennend gesprek maakt helder wat zichtbaar is, wat onder de oppervlakte speelt en welke vraag echt centraal staat.", "/teamkompas-intakegesprek.jpg", "Verkennend gesprek over leiderschap, samenwerking en teamontwikkeling"],
+                ["Samen betekenis geven", "De teamscan en gedragsinzichten helpen om patronen bespreekbaar te maken zonder oordeel of ingewikkelde taal.", "/teamkompas-workshop-hero.jpg", "Teamworkshop met kompaswerkvorm en dialoog over samenwerking"],
+                ["Richting kiezen", "In een teamsessie vertalen we inzicht naar concrete afspraken, beter samenspel en haalbare vervolgstappen.", "/teamkompas-samen-richting.jpg", "Teamsessie waarin deelnemers samen richting geven aan verbetering"]
+              ].map(([titel, tekst, image, alt], i) => (
+                <Fade key={titel} delay={i * 0.06} style={{ height: "100%" }}>
+                  <div style={{ height: "100%", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, overflow: "hidden", boxShadow: "0 18px 44px rgba(13,27,42,0.08)" }}>
+                    <img src={image} alt={alt} loading="lazy" style={{ width: "100%", height: isMobile ? 220 : 230, objectFit: "cover", display: "block" }} />
+                    <div style={{ padding: 22 }}>
+                      <div style={{ fontSize: 18, fontWeight: 800, color: PUB.donker, marginBottom: 8 }}>{titel}</div>
+                      <div style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub }}>{tekst}</div>
+                    </div>
+                  </div>
+                </Fade>
+              ))}
+            </div>
+            <Fade delay={0.12}>
+              <div style={{ marginTop: 26, display: "flex", flexWrap: "wrap", gap: 12 }}>
+                <span style={{ ...ctaStyle, display: "inline-block" }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
+                <span style={{ border: `1px solid ${PUB.lijn}`, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", background: PUB.wit }} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
+              </div>
+            </Fade>
+          </div>
+        </section>
         <KlantreisKeuze />
 
         <section id="voor-wie" style={{ padding: isMobile ? "54px 20px" : "82px 60px", background: PUB.licht }}>
