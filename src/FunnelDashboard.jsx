@@ -317,9 +317,13 @@ export default function FunnelDashboard() {
     const email = getManagerEmail(request);
     if (!email) return "#";
 
-    const subject = encodeURIComponent("Vervolg op je teamscan-aanvraag");
+    const managerName = getManagerName(request);
+    const company = getCompany(request);
+    const department = getDepartment(request);
+
+    const subject = encodeURIComponent("Vervolgstap digitale teamscan Mijn Teamkompas");
     const body = encodeURIComponent(
-      `Beste ${getManagerName(request)},\n\nDank voor je aanvraag voor de digitale teamscan van ${getCompany(request)} / ${getDepartment(request)}.\n\nIk neem graag kort contact met je op om de aanvraag goed af te stemmen en de teamscan zorgvuldig klaar te zetten.\n\nMet vriendelijke groet,\nMijn Teamkompas`
+      `Beste ${managerName},\n\nDank voor je aanvraag voor de digitale teamscan van Mijn Teamkompas voor ${company} / ${department}.\n\nIk stel voor om kort af te stemmen over:\n1. het doel van de teamscan;\n2. de samenstelling van het team;\n3. de communicatie richting de deelnemers;\n4. de planning van het uitzetten en terugkoppelen van de uitkomsten.\n\nZou je enkele momenten kunnen doorgeven waarop een korte online intake van 20 minuten past?\n\nHartelijke groet,\n\nBozidar Vukovic\nMijn Teamkompas\ninfo@mijnteamkompas.nl\nwww.mijnteamkompas.nl`
     );
 
     return `mailto:${email}?subject=${subject}&body=${body}`;
