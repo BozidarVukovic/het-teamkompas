@@ -59,19 +59,25 @@ export default function FunnelDashboard() {
         limit(500)
       );
 
-      const requestsQuery = query(
-        collection(db, "teamscanSelfserviceAanvragen"),
-        orderBy("createdAt", "desc"),
-        limit(100)
-      );
+      const requestsQuery = collection(db, "teamscanSelfserviceAanvragen");
 
       const [eventSnap, requestSnap] = await Promise.all([
         getDocs(eventsQuery),
         getDocs(requestsQuery),
       ]);
 
-      setEvents(eventSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-      setRequests(requestSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      const loadedEvents = eventSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const loadedRequests = requestSnap.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .sort((a, b) => {
+          const dateA = a.createdAt?.toDate?.() || a.aangemaaktOp?.toDate?.() || new Date(a.createdAt || a.aangemaaktOp || 0);
+          const dateB = b.createdAt?.toDate?.() || b.aangemaaktOp?.toDate?.() || new Date(b.createdAt || b.aangemaaktOp || 0);
+          return dateB - dateA;
+        })
+        .slice(0, 100);
+
+      setEvents(loadedEvents);
+      setRequests(loadedRequests);
     } catch (err) {
       console.error(err);
       setError(
@@ -126,7 +132,7 @@ export default function FunnelDashboard() {
 
   const averageTeamSize = useMemo(() => {
     const sizes = requests
-      .map((item) => Number(item.teamSize || item.aantalCollegas || item.aantalTeamleden || 0))
+      .map((item) => Number(item.teamSize || item.teamGrootte || item.aantalCollegas || item.aantalTeamleden || 0))
       .filter((size) => size > 0);
 
     if (!sizes.length) return 0;
@@ -152,7 +158,8 @@ export default function FunnelDashboard() {
       }}
     >
       <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "34px" }}>
+        <div style={{ marginBottom: "34px", display: "flex", justifyContent: "space-between", gap: "18px", alignItems: "flex-start" }}>
+          <div>
           <p
             style={{
               color: "#0F766E",
@@ -171,6 +178,8 @@ export default function FunnelDashboard() {
           <p style={{ ...muted, maxWidth: "760px", fontSize: "17px" }}>
             Volg hoeveel bezoekers de teamscanpagina bekijken, hoeveel mensen het formulier starten en hoeveel aanvragen daadwerkelijk binnenkomen.
           </p>
+          </div>
+          <button type="button" onClick={loadDashboardData} style={{ border: "1px solid #CBD5E1", background: "#FFFFFF", color: "#0F172A", borderRadius: "12px", padding: "12px 16px", fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" }}>Vernieuwen</button>
         </div>
 
         {error && (
@@ -361,19 +370,19 @@ export default function FunnelDashboard() {
                 {requests.map((request) => (
                   <tr key={request.id} style={{ borderBottom: "1px solid #EEF2F7" }}>
                     <td style={{ padding: "12px" }}>
-                      {request.companyName || request.bedrijfsnaam || "-"}
+                      {request.companyName || request.bedrijfsnaam || request.bedrijf || "-"}
                     </td>
                     <td style={{ padding: "12px" }}>
-                      {request.departmentName || request.afdeling || "-"}
+                      {request.departmentName || request.afdeling || request.team || "-"}
                     </td>
                     <td style={{ padding: "12px" }}>
-                      {request.managerName || request.naamManager || "-"}
+                      {request.managerName || request.naamManager || request.managerNaam || "-"}
                     </td>
                     <td style={{ padding: "12px" }}>
                       {request.managerEmail || request.emailManager || "-"}
                     </td>
                     <td style={{ padding: "12px" }}>
-                      {request.teamSize || request.aantalCollegas || request.aantalTeamleden || "-"}
+                      {request.teamSize || request.teamGrootte || request.aantalCollegas || request.aantalTeamleden || "-"}
                     </td>
                     <td style={{ padding: "12px" }}>
                       <span
@@ -390,7 +399,7 @@ export default function FunnelDashboard() {
                         {request.status || "nieuw"}
                       </span>
                     </td>
-                    <td style={{ padding: "12px" }}>{formatDate(request.createdAt)}</td>
+                    <td style={{ padding: "12px" }}>{formatDate(request.createdAt || request.aangemaaktOp)}</td>
                   </tr>
                 ))}
               </tbody>
