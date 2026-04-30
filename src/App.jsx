@@ -1090,56 +1090,6 @@ function PublicSite({ onLoginClick }) {
         </section>
         <KlantreisKeuze />
 
-        <section id="teamscan-teamontwikkeling" style={{ padding: isMobile ? "54px 20px" : "82px 60px", background: PUB.licht, borderBottom: `1px solid ${PUB.lijn}` }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", gap: 32, alignItems: "stretch" }}>
-            <Fade>
-              <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 22, padding: isMobile ? 24 : 34, boxShadow: "0 18px 48px rgba(13,27,42,0.06)", height: "100%" }}>
-                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Teamscan en teamontwikkeling</div>
-                <h2 style={{ fontSize: isMobile ? 29 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>
-                  Teamscan en teamontwikkeling voor teams die vastlopen of willen groeien.
-                </h2>
-                <p style={{ fontSize: 16, lineHeight: 1.85, color: PUB.sub, marginBottom: 16 }}>
-                  Mijn Teamkompas helpt teams en leidinggevenden om zichtbaar te maken wat samenwerking versterkt en wat ontwikkeling belemmert. Met een teamscan, analyse en gerichte begeleiding ontstaat een gedeeld beeld van veiligheid, verandering, energie en leren in het team.
-                </p>
-                <p style={{ fontSize: 16, lineHeight: 1.85, color: PUB.sub, marginBottom: 24 }}>
-                  De aanpak is geschikt voor teams die willen werken aan psychologische veiligheid, betere communicatie, meer eigenaarschap, samenwerking onder druk of een teamdag met echte opbrengst. Niet met standaardoplossingen, maar met inzicht, richting en concrete vervolgstappen.
-                </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                  <span style={{ ...ctaStyle, display: "inline-block" }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
-                  <span style={{ border: `1px solid ${PUB.lijn}`, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", background: PUB.wit }} onClick={openModal}>Plan kennismaking</span>
-                </div>
-              </div>
-            </Fade>
-            <Fade delay={0.08}>
-              <div style={{ background: PUB.donker, color: PUB.wit, borderRadius: 22, padding: isMobile ? 24 : 32, height: "100%", boxSizing: "border-box", position: "relative", overflow: "hidden", boxShadow: "0 18px 48px rgba(13,27,42,0.10)" }}>
-                <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(0,168,150,0.18), transparent 38%)" }} />
-                <div style={{ position: "relative", zIndex: 1 }}>
-                  <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 18 }}>Geschikt voor teams die:</div>
-                  <div style={{ display: "grid", gap: 13 }}>
-                    {[
-                      "samenwerking willen verbeteren",
-                      "een teamscan willen inzetten",
-                      "een teamdag voorbereiden",
-                      "psychologische veiligheid bespreekbaar willen maken",
-                      "meer eigenaarschap en motivatie willen ontwikkelen"
-                    ].map((item) => (
-                      <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", borderBottom: "1px solid rgba(255,255,255,0.10)", paddingBottom: 13 }}>
-                        <div style={{ width: 10, height: 10, borderRadius: "50%", background: PUB.teal, marginTop: 7, flexShrink: 0 }} />
-                        <div style={{ fontSize: 15, lineHeight: 1.65, color: "rgba(255,255,255,0.76)" }}>{item}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ marginTop: 22, padding: 18, borderRadius: 16, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)" }}>
-                    <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.70)" }}>
-                      Zoek je teamcoaching, een teamsessie of een praktische aanpak voor teamontwikkeling? Dan begint Mijn Teamkompas bij zichtbaar maken wat er werkelijk speelt.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Fade>
-          </div>
-        </section>
-
         <section id="voor-wie" style={{ padding: isMobile ? "54px 20px" : "82px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 42, alignItems: "center" }}>
             <Fade>
@@ -1223,6 +1173,66 @@ function PublicSite({ onLoginClick }) {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section id="voorbeeldrapport" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.wit, borderTop: `1px solid ${PUB.lijn}`, borderBottom: `1px solid ${PUB.lijn}` }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <Fade>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".88fr 1.12fr", gap: 34, alignItems: "end", marginBottom: 30 }}>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Voorbeeld van de opbrengst</div>
+                  <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>Wat zie je terug na een teamscan?</h2>
+                  <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>
+                    Een teamscan levert geen losse cijfers op, maar een helder beeld van wat het team ervaart, waar perceptieverschillen zitten en welke vervolgstappen logisch zijn. Hieronder zie je enkele fictieve voorbeeldpagina’s uit een rapport van Mijn Teamkompas.
+                  </p>
+                </div>
+                <div style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: isMobile ? 20 : 24 }}>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: PUB.donker, marginBottom: 8 }}>Bewust als preview getoond</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub }}>
+                    We tonen alleen voorbeeld-output met fictieve data. De volledige vragenlijst, scoringslogica en methodische uitwerking blijven onderdeel van het begeleide traject.
+                  </div>
+                </div>
+              </div>
+            </Fade>
+
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16, alignItems: "stretch" }}>
+              {[
+                ["1", "Overzicht", "Een compact totaalbeeld van het team, inclusief kernscores en eerste duiding.", "/teamkompas-voorbeeldrapport-overzicht.jpg", "Fictieve voorbeeldpagina van een Mijn Teamkompas adviesrapport met overzicht en inleiding"],
+                ["2", "Leidende inzichten", "De belangrijkste patronen, sterke punten en perceptiegaps in één oogopslag.", "/teamkompas-voorbeeldrapport-inzichten.jpg", "Fictieve voorbeeldpagina met leidende inzichten en domeinoverzicht uit een teamscan"],
+                ["3", "Domeinanalyse", "Per domein wordt zichtbaar wat de data zegt en wat dit betekent voor team en leidinggevende.", "/teamkompas-voorbeeldrapport-domeinanalyse.jpg", "Fictieve voorbeeldpagina met domeinanalyse veiligheid en leiderschap uit een teamscanrapport"],
+                ["4", "Vervolgstappen", "De uitkomsten worden vertaald naar prioriteiten, eerste acties en een 90-dagen richting.", "/teamkompas-voorbeeldrapport-conclusie.jpg", "Fictieve voorbeeldpagina met conclusie prioriteiten en vervolgstappen na een teamscan"]
+              ].map(([nr, titel, tekst, image, alt], i) => (
+                <Fade key={titel} delay={i * 0.05} style={{ height: "100%" }}>
+                  <div style={{ height: "100%", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, overflow: "hidden", boxShadow: "0 18px 44px rgba(13,27,42,0.08)", display: "flex", flexDirection: "column" }}>
+                    <div style={{ position: "relative", background: PUB.licht }}>
+                      <img src={image} alt={alt} loading="lazy" style={{ width: "100%", height: isMobile ? 340 : 300, objectFit: "cover", objectPosition: "top center", display: "block", filter: "saturate(0.96)" }} />
+                      <div style={{ position: "absolute", left: 12, top: 12, background: "rgba(255,255,255,0.92)", color: PUB.tealDark, border: `1px solid ${PUB.lijn}`, borderRadius: 999, padding: "7px 10px", fontSize: 11, fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                        Fictief voorbeeld
+                      </div>
+                    </div>
+                    <div style={{ padding: 20, flex: 1 }}>
+                      <div style={{ color: PUB.teal, fontWeight: 900, fontSize: 14, marginBottom: 8 }}>0{nr}</div>
+                      <div style={{ fontSize: 18, fontWeight: 800, color: PUB.donker, marginBottom: 8 }}>{titel}</div>
+                      <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub }}>{tekst}</div>
+                    </div>
+                  </div>
+                </Fade>
+              ))}
+            </div>
+
+            <Fade delay={0.12}>
+              <div style={{ marginTop: 28, display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", gap: 16, alignItems: isMobile ? "stretch" : "center", background: PUB.donker, color: PUB.wit, borderRadius: 18, padding: isMobile ? 22 : 26 }}>
+                <div>
+                  <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 6 }}>Wil je dit voor je eigen team zichtbaar maken?</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)" }}>Start laagdrempelig met de digitale teamscan of plan eerst een verkennende kennismaking.</div>
+                </div>
+                <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 10, flexShrink: 0 }}>
+                  <span style={{ ...ctaStyle, display: "inline-block", background: PUB.teal }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
+                  <span style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center" }} onClick={openModal}>Plan kennismaking</span>
+                </div>
+              </div>
+            </Fade>
           </div>
         </section>
 
