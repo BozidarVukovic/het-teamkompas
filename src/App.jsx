@@ -891,6 +891,7 @@ function DiverseWorkplacesSection({ isMobile }) {
 }
 
 function PublicSite({ onLoginClick }) {
+  const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const isMobile = useIsMobile();
 
@@ -7041,7 +7042,8 @@ export default function App() {
           return;
         }
 
-        setView((v) => (v === "login" ? "admin" : v));
+        const isAdminPath = window.location.pathname.startsWith("/beheer") || window.location.pathname.startsWith("/admin");
+        setView((v) => (v === "login" || isAdminPath ? "admin" : v));
       }
 
       setAuthReady(true);
@@ -7127,6 +7129,30 @@ export default function App() {
     </HelmetProvider>
   );
 
+
+  const beheerElement = (
+    <HelmetProvider>
+      {(() => {
+        if (!authReady) {
+          return (
+            <div style={{ minHeight: "100vh", background: "#0D1B2A", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ textAlign: "center", color: "#8fa3bb" }}>
+                <div style={{ fontSize: 32, marginBottom: 12 }}>🧭</div>
+                <div style={{ fontSize: 15 }}>Laden...</div>
+              </div>
+            </div>
+          );
+        }
+
+        if (view === "admin") {
+          return <AdminDashboard onLogout={() => setView("public")} />;
+        }
+
+        return <LoginScreen onLogin={() => setView("admin")} onBack={() => setView("public")} />;
+      })()}
+    </HelmetProvider>
+  );
+
   return (
     <HelmetProvider>
       <Routes>
@@ -7135,8 +7161,8 @@ export default function App() {
         <Route path="/verkennen" element={<Verkennen />} />
         <Route path="/teamscan" element={<TeamscanDigitaal />} />
         <Route path="/teamontwikkeling" element={<Teamontwikkeling />} />
-        <Route path="/admin/funnel" element={<FunnelDashboard />} />
-        <Route path="/beheer" element={<FunnelDashboard />} />
+        <Route path="/admin/funnel" element={beheerElement} />
+        <Route path="/beheer" element={beheerElement} />
       </Routes>
     </HelmetProvider>
   );
