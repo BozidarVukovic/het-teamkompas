@@ -66,6 +66,47 @@ function formatDate(value) {
   }
 }
 
+
+function getCompany(request) {
+  return request?.companyName || request?.bedrijfsnaam || request?.bedrijf || "-";
+}
+
+function getDepartment(request) {
+  return request?.departmentName || request?.afdeling || request?.team || "-";
+}
+
+function getManagerName(request) {
+  return request?.managerName || request?.naamManager || request?.managerNaam || "-";
+}
+
+function getManagerEmail(request) {
+  return request?.managerEmail || request?.emailManager || "";
+}
+
+function getTeamSize(request) {
+  return request?.teamSize || request?.teamGrootte || request?.aantalCollegas || request?.aantalTeamleden || "-";
+}
+
+function getColleagueEmails(request) {
+  const emails = request?.collegaEmails || request?.teamledenEmails || request?.teamEmails || [];
+  if (Array.isArray(emails)) return emails.filter(Boolean);
+  if (typeof emails === "string") {
+    return emails
+      .split(/[;,\n]/)
+      .map((email) => email.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
+function getToelichting(request) {
+  return request?.toelichting || request?.opmerking || request?.context || "Geen toelichting ingevuld.";
+}
+
+function getInternalNote(request) {
+  return request?.interneNotitie || request?.opvolgnotitie || "";
+}
+
 export default function FunnelDashboard() {
   const [events, setEvents] = useState([]);
   const [requests, setRequests] = useState([]);
@@ -73,6 +114,10 @@ export default function FunnelDashboard() {
   const [error, setError] = useState("");
   const [statusFilter, setStatusFilter] = useState("alle");
   const [updatingStatusId, setUpdatingStatusId] = useState("");
+  const [selectedRequestId, setSelectedRequestId] = useState("");
+  const [internalNoteDraft, setInternalNoteDraft] = useState("");
+  const [savingNoteId, setSavingNoteId] = useState("");
+  const [copyFeedback, setCopyFeedback] = useState("");
 
   async function loadDashboardData() {
     setLoading(true);
@@ -206,6 +251,79 @@ export default function FunnelDashboard() {
     if (statusFilter === "alle") return requests;
     return requests.filter((request) => (request.status || "nieuw") === statusFilter);
   }, [requests, statusFilter]);
+
+  const selectedRequest = useMemo(() => {
+    return requests.find((request) => request.id === selectedRequestId) || null;
+  }, [requests, selectedRequestId]);
+
+  function handleOpenRequest(request) {
+    setSelectedRequestId(request.id);
+    setInternalNoteDraft(getInternalNote(request));
+    setCopyFeedback("");
+  }
+
+  function handleCloseDetail() {
+    setSelectedRequestId("");
+    setInternalNoteDraft("");
+    setCopyFeedback("");
+  }
+
+  async function handleSaveInternalNote() {
+    if (!selectedRequest) return;
+    setSavingNoteId(selectedRequest.id);
+    setError("");
+
+    try {
+      await updateDoc(doc(db, "teamscanSelfserviceAanvragen", selectedRequest.id), {
+        interneNotitie: internalNoteDraft,
+        interneNotitieBijgewerktOp: new Date(),
+      });
+
+      setRequests((currentRequests) =>
+        currentRequests.map((request) =>
+          request.id === selectedRequest.id
+            ? { ...request, interneNotitie: internalNoteDraft, interneNotitieBijgewerktOp: new Date() }
+            : request
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      setError("Interne notitie kon niet worden opgeslagen. Controleer of je schrijfrechten in Firestore goed staan.");
+    } finally {
+      setSavingNoteId("");
+    }
+  }
+
+  async function handleCopyColleagueEmails() {
+    if (!selectedRequest) return;
+    const emails = getColleagueEmails(selectedRequest);
+
+    if (!emails.length) {
+      setCopyFeedback("Er zijn nog geen e-mailadressen van teamleden ingevuld.");
+      return;
+    }
+
+    const value = emails.join(", ");
+
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopyFeedback("E-mailadressen gekopieerd.");
+    } catch {
+      setCopyFeedback(value);
+    }
+  }
+
+  function getManagerMailto(request) {
+    const email = getManagerEmail(request);
+    if (!email) return "#";
+
+    const subject = encodeURIComponent("Vervolg op je teamscan-aanvraag");
+    const body = encodeURIComponent(
+      `Beste ${getManagerName(request)},\n\nDank voor je aanvraag voor de digitale teamscan van ${getCompany(request)} / ${getDepartment(request)}.\n\nIk neem graag kort contact met je op om de aanvraag goed af te stemmen en de teamscan zorgvuldig klaar te zetten.\n\nMet vriendelijke groet,\nMijn Teamkompas`
+    );
+
+    return `mailto:${email}?subject=${subject}&body=${body}`;
+  }
 
   if (loading) {
     return (
@@ -470,26 +588,17 @@ export default function FunnelDashboard() {
                   <th style={{ padding: "12px" }}>team</th>
                   <th style={{ padding: "12px" }}>status</th>
                   <th style={{ padding: "12px" }}>datum</th>
+                  <th style={{ padding: "12px" }}>actie</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredRequests.map((request) => (
                   <tr key={request.id} style={{ borderBottom: "1px solid #EEF2F7" }}>
-                    <td style={{ padding: "12px" }}>
-                      {request.companyName || request.bedrijfsnaam || request.bedrijf || "-"}
-                    </td>
-                    <td style={{ padding: "12px" }}>
-                      {request.departmentName || request.afdeling || request.team || "-"}
-                    </td>
-                    <td style={{ padding: "12px" }}>
-                      {request.managerName || request.naamManager || request.managerNaam || "-"}
-                    </td>
-                    <td style={{ padding: "12px" }}>
-                      {request.managerEmail || request.emailManager || "-"}
-                    </td>
-                    <td style={{ padding: "12px" }}>
-                      {request.teamSize || request.teamGrootte || request.aantalCollegas || request.aantalTeamleden || "-"}
-                    </td>
+                    <td style={{ padding: "12px" }}>{getCompany(request)}</td>
+                    <td style={{ padding: "12px" }}>{getDepartment(request)}</td>
+                    <td style={{ padding: "12px" }}>{getManagerName(request)}</td>
+                    <td style={{ padding: "12px" }}>{getManagerEmail(request) || "-"}</td>
+                    <td style={{ padding: "12px" }}>{getTeamSize(request)}</td>
                     <td style={{ padding: "12px" }}>
                       <select
                         value={request.status || "nieuw"}
@@ -515,11 +624,209 @@ export default function FunnelDashboard() {
                       </select>
                     </td>
                     <td style={{ padding: "12px" }}>{formatDate(request.createdAt || request.aangemaaktOp)}</td>
+                    <td style={{ padding: "12px" }}>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenRequest(request)}
+                        style={{
+                          border: "1px solid #CBD5E1",
+                          background: selectedRequestId === request.id ? "#0F766E" : "#FFFFFF",
+                          color: selectedRequestId === request.id ? "#FFFFFF" : "#0F172A",
+                          borderRadius: "999px",
+                          padding: "8px 12px",
+                          fontWeight: 800,
+                          cursor: "pointer",
+                        }}
+                      >
+                        Bekijken
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+
+          {selectedRequest && (
+            <div
+              style={{
+                marginTop: "24px",
+                border: "1px solid #DDE4ED",
+                borderRadius: "18px",
+                background: "#F8FAFC",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  padding: "20px 22px",
+                  borderBottom: "1px solid #E2E8F0",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: "16px",
+                  alignItems: "flex-start",
+                  flexWrap: "wrap",
+                }}
+              >
+                <div>
+                  <p
+                    style={{
+                      margin: "0 0 6px",
+                      color: "#0F766E",
+                      fontSize: "12px",
+                      fontWeight: 900,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Aanvraagdetail
+                  </p>
+                  <h3 style={{ margin: 0, fontSize: "24px" }}>
+                    {getCompany(selectedRequest)} · {getDepartment(selectedRequest)}
+                  </h3>
+                  <p style={{ ...muted, margin: "8px 0 0" }}>
+                    Aangevraagd op {formatDate(selectedRequest.createdAt || selectedRequest.aangemaaktOp)} door {getManagerName(selectedRequest)}.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCloseDetail}
+                  style={{
+                    border: "1px solid #CBD5E1",
+                    background: "#FFFFFF",
+                    color: "#0F172A",
+                    borderRadius: "12px",
+                    padding: "10px 14px",
+                    fontWeight: 800,
+                    cursor: "pointer",
+                  }}
+                >
+                  Sluiten
+                </button>
+              </div>
+
+              <div style={{ padding: "22px", display: "grid", gap: "22px" }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+                    gap: "14px",
+                  }}
+                >
+                  {[
+                    ["Organisatie", getCompany(selectedRequest)],
+                    ["Afdeling/team", getDepartment(selectedRequest)],
+                    ["Aanvrager", getManagerName(selectedRequest)],
+                    ["E-mailadres", getManagerEmail(selectedRequest) || "-"],
+                    ["Aantal teamleden", getTeamSize(selectedRequest)],
+                    ["Status", getStatusLabel(selectedRequest.status || "nieuw")],
+                  ].map(([label, value]) => (
+                    <div key={label} style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "14px", padding: "14px" }}>
+                      <div style={{ color: "#64748B", fontSize: "12px", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "6px" }}>{label}</div>
+                      <div style={{ fontWeight: 800, wordBreak: "break-word" }}>{value}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                    gap: "18px",
+                    alignItems: "start",
+                  }}
+                >
+                  <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "14px", padding: "16px" }}>
+                    <h4 style={{ margin: "0 0 10px" }}>teamleden</h4>
+                    {getColleagueEmails(selectedRequest).length ? (
+                      <div style={{ display: "grid", gap: "8px" }}>
+                        {getColleagueEmails(selectedRequest).map((email) => (
+                          <div key={email} style={{ padding: "9px 10px", borderRadius: "10px", background: "#F8FAFC", border: "1px solid #E2E8F0", fontSize: "14px" }}>
+                            {email}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p style={muted}>De aanvrager wil de teamleden later toevoegen of er zijn nog geen e-mailadressen ingevuld.</p>
+                    )}
+                  </div>
+
+                  <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "14px", padding: "16px" }}>
+                    <h4 style={{ margin: "0 0 10px" }}>toelichting</h4>
+                    <p style={{ ...muted, margin: 0 }}>{getToelichting(selectedRequest)}</p>
+                  </div>
+                </div>
+
+                <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "14px", padding: "16px" }}>
+                  <h4 style={{ margin: "0 0 10px" }}>interne opvolgnotitie</h4>
+                  <textarea
+                    value={internalNoteDraft}
+                    onChange={(event) => setInternalNoteDraft(event.target.value)}
+                    placeholder="Bijvoorbeeld: manager bellen, intake plannen, teamleden controleren, voorstel maken..."
+                    rows={4}
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      border: "1px solid #CBD5E1",
+                      borderRadius: "12px",
+                      padding: "12px",
+                      fontFamily: "Roboto, Arial, sans-serif",
+                      fontSize: "14px",
+                      resize: "vertical",
+                    }}
+                  />
+                  <div style={{ marginTop: "12px", display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "center" }}>
+                    <button
+                      type="button"
+                      onClick={handleSaveInternalNote}
+                      disabled={savingNoteId === selectedRequest.id}
+                      style={{
+                        border: "none",
+                        background: "#0F766E",
+                        color: "#FFFFFF",
+                        borderRadius: "12px",
+                        padding: "11px 14px",
+                        fontWeight: 900,
+                        cursor: savingNoteId === selectedRequest.id ? "wait" : "pointer",
+                      }}
+                    >
+                      {savingNoteId === selectedRequest.id ? "Opslaan..." : "Notitie opslaan"}
+                    </button>
+                    <a
+                      href={getManagerMailto(selectedRequest)}
+                      style={{
+                        border: "1px solid #CBD5E1",
+                        background: "#FFFFFF",
+                        color: "#0F172A",
+                        borderRadius: "12px",
+                        padding: "10px 14px",
+                        fontWeight: 900,
+                        textDecoration: "none",
+                      }}
+                    >
+                      Mail manager
+                    </a>
+                    <button
+                      type="button"
+                      onClick={handleCopyColleagueEmails}
+                      style={{
+                        border: "1px solid #CBD5E1",
+                        background: "#FFFFFF",
+                        color: "#0F172A",
+                        borderRadius: "12px",
+                        padding: "11px 14px",
+                        fontWeight: 900,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Kopieer teamleden
+                    </button>
+                    {copyFeedback && <span style={{ ...muted, fontWeight: 700 }}>{copyFeedback}</span>}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {!requests.length && (
             <p style={muted}>Nog geen selfservice-aanvragen ontvangen.</p>
