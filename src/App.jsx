@@ -426,6 +426,14 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             </span>
 
             <span
+              onClick={() => navigate("/teamscan")}
+              style={{background:"#00A896",color:"#ffffff",fontWeight:800,padding:"10px 18px",
+                borderRadius:999,fontSize:12,cursor:"pointer",boxShadow:"0 8px 22px rgba(0,168,150,0.24)"}}
+            >
+              Start teamscan
+            </span>
+
+            <span
               onClick={openModal}
               style={{background:"#F4F7F9",color:"#0D1B2A",fontWeight:700,padding:"10px 18px",
                 borderRadius:999,fontSize:12,cursor:"pointer",boxShadow:"0 8px 22px rgba(0,0,0,0.18)"}}
@@ -474,6 +482,12 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
           >
             Onze aanpak
+          </div>
+          <div
+            onClick={()=>{navigate("/teamscan");setMenuOpen(false);}}
+            style={{padding:"14px 24px",color:"#ffffff",fontSize:15,cursor:"pointer",fontWeight:800,background:"rgba(0,168,150,0.18)",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
+          >
+            Start teamscan
           </div>
           <div onClick={()=>{openModal();setMenuOpen(false);}}
             style={{padding:"14px 24px",color:"#ffffff",fontSize:15,cursor:"pointer",fontWeight:700,
@@ -962,10 +976,11 @@ function PublicSite({ onLoginClick }) {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
               <span style={ctaStyle} onClick={openModal}>Plan een verkennende kennismaking</span>
+              <span style={{ ...ctaStyle, background: "#1E6FD9", boxShadow: "0 12px 28px rgba(30,111,217,0.24)" }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
               <span style={ghostStyle} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
             </div>
             <div style={{ marginTop: 24, color: "rgba(255,255,255,0.48)", fontSize: 13 }}>
-              Geen verplichting. Eerst samen scherp krijgen of en hoe Mijn Teamkompas kan helpen.
+              Kies voor persoonlijk contact of start laagdrempelig met de digitale teamscan.
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 320 : "86vh", position: "relative", zIndex: 1 }}>
