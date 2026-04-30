@@ -426,14 +426,6 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             </span>
 
             <span
-              onClick={() => navigate("/teamscan")}
-              style={{background:"#00A896",color:"#ffffff",fontWeight:800,padding:"10px 18px",
-                borderRadius:999,fontSize:12,cursor:"pointer",boxShadow:"0 8px 22px rgba(0,168,150,0.24)"}}
-            >
-              Start teamscan
-            </span>
-
-            <span
               onClick={openModal}
               style={{background:"#F4F7F9",color:"#0D1B2A",fontWeight:700,padding:"10px 18px",
                 borderRadius:999,fontSize:12,cursor:"pointer",boxShadow:"0 8px 22px rgba(0,0,0,0.18)"}}
@@ -482,12 +474,6 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
           >
             Onze aanpak
-          </div>
-          <div
-            onClick={()=>{navigate("/teamscan");setMenuOpen(false);}}
-            style={{padding:"14px 24px",color:"#ffffff",fontSize:15,cursor:"pointer",fontWeight:800,background:"rgba(0,168,150,0.18)",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
-          >
-            Start teamscan
           </div>
           <div onClick={()=>{openModal();setMenuOpen(false);}}
             style={{padding:"14px 24px",color:"#ffffff",fontSize:15,cursor:"pointer",fontWeight:700,
@@ -976,11 +962,10 @@ function PublicSite({ onLoginClick }) {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
               <span style={ctaStyle} onClick={openModal}>Plan een verkennende kennismaking</span>
-              <span style={{ ...ctaStyle, background: "#1E6FD9", boxShadow: "0 12px 28px rgba(30,111,217,0.24)" }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
               <span style={ghostStyle} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
             </div>
             <div style={{ marginTop: 24, color: "rgba(255,255,255,0.48)", fontSize: 13 }}>
-              Kies voor persoonlijk contact of start laagdrempelig met de digitale teamscan.
+              Geen verplichting. Eerst samen scherp krijgen of en hoe Mijn Teamkompas kan helpen.
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 320 : "86vh", position: "relative", zIndex: 1 }}>
@@ -6609,6 +6594,7 @@ function DashboardHome() {
               ["Rapportages", "Gebaseerd op vragenlijsten en antwoorden"],
               ["Prullenbak", "Zacht verwijderde items"],
               ["Contactaanvragen", "Nieuwe leads en intake"],
+              ["Teamscan aanvragen", "Selfservice aanvragen vanuit de website"],
             ].map(([titel, sub], i) => (
               <div key={i} style={{background:"rgba(255,255,255,0.03)",borderRadius:10,padding:"12px 14px"}}>
                 <div style={{fontSize:14,fontWeight:700,color:ADM.white,marginBottom:3}}>{titel}</div>
@@ -6888,6 +6874,7 @@ function PageInstellingen() {
             ["💬 Antwoorden",      "Alle ingevulde scanantwoorden per respondent, inclusief open vragen en rol (medewerker/manager)."],
             ["📊 Metingen",        "Alle meetmomenten met scores per domein en respondentenaantal."],
             ["📬 Contactaanvragen","Alle binnengekomen contactformulieren van de website."],
+            ["🧭 Teamscan aanvragen","Alle selfservice-aanvragen vanuit de digitale teamscan-funnel."],
             ["🗑️ Prullenbak",      "Eerder verwijderde items — volledigheidshalve meegenomen in de JSON back-up."],
           ].map(([titel, tekst]) => (
             <div key={titel} style={{background:"rgba(255,255,255,0.03)",borderRadius:8,padding:"12px 14px"}}>
@@ -6911,15 +6898,23 @@ function AdminDashboard({ onLogout }) {
   const isMobile = useIsMobile();
 
   const [nieuwAanvragenCount, setNieuwAanvragenCount] = useState(0);
+  const [nieuwTeamscanCount, setNieuwTeamscanCount] = useState(0);
 
   useEffect(() => {
     const laadNieuwAantal = async () => {
       try {
-        const snap = await getDocs(collection(db, "contactaanvragen"));
-        const count = snap.docs.filter(d => (d.data().status || "Nieuw") === "Nieuw").length;
-        setNieuwAanvragenCount(count);
+        const [contactSnap, teamscanSnap] = await Promise.all([
+          getDocs(collection(db, "contactaanvragen")).catch(() => ({ docs: [] })),
+          getDocs(collection(db, "teamscanSelfserviceAanvragen")).catch(() => ({ docs: [] })),
+        ]);
+
+        const contactCount = contactSnap.docs.filter(d => (d.data().status || "Nieuw") === "Nieuw").length;
+        const teamscanCount = teamscanSnap.docs.filter(d => (d.data().status || "nieuw").toLowerCase() === "nieuw").length;
+
+        setNieuwAanvragenCount(contactCount);
+        setNieuwTeamscanCount(teamscanCount);
       } catch (err) {
-        console.error("Fout bij laden aantal contactaanvragen:", err);
+        console.error("Fout bij laden aantal aanvragen:", err);
       }
     };
 
@@ -6929,6 +6924,7 @@ function AdminDashboard({ onLogout }) {
   const navItems = [
     { label:"Dashboard",        icon:"📊", section:"Overzicht" },
     { label:"Contactaanvragen", icon:"📬", badge: nieuwAanvragenCount > 0 ? String(nieuwAanvragenCount) : null, section:null },
+    { label:"Teamscan aanvragen", icon:"🧭", badge: nieuwTeamscanCount > 0 ? String(nieuwTeamscanCount) : null, section:null },
     { label:"Klanten",          icon:"🏢", section:null },
     { label:"Scans",            icon:"📝", section:"Trajecten" },
     { label:"Metingen",         icon:"📋", section:null },
@@ -6939,6 +6935,7 @@ function AdminDashboard({ onLogout }) {
 
   const renderPage = () => {
     if (activeNav === "Contactaanvragen") return <PageContactaanvragen />;
+    if (activeNav === "Teamscan aanvragen") return <FunnelDashboard />;
     if (activeNav === "Klanten")          return <PageKlanten />;
     if (activeNav === "Scans")            return <PageScans
   ScanResultaten={ScanResultaten}
@@ -7016,14 +7013,14 @@ function AdminDashboard({ onLogout }) {
         <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:200,
           background:ADM.navy,borderTop:`1px solid ${ADM.border}`,
           display:"flex",justifyContent:"space-around",padding:"8px 0"}}>
-          {[["📊","Dashboard"],["📬","Contactaanvragen"],["📝","Scans"],["📋","Metingen"],["📈","Rapportages"],["🗑️","Prullenbak"]].map(([icon,label])=>(
+          {[["📊","Dashboard"],["📬","Contactaanvragen"],["🧭","Teamscan aanvragen"],["📝","Scans"],["📋","Metingen"],["📈","Rapportages"],["🗑️","Prullenbak"]].map(([icon,label])=>(
             <div key={label} onClick={()=>setActiveNav(label)}
               style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"6px 8px",cursor:"pointer",
                 color:activeNav===label?ADM.teal:ADM.muted,
                 borderTop:`2px solid ${activeNav===label?ADM.teal:"transparent"}`,minWidth:52}}>
               <span style={{fontSize:18}}>{icon}</span>
               <span style={{fontSize:9,fontWeight:activeNav===label?700:400,whiteSpace:"nowrap"}}>
-                {label==="Contactaanvragen"?"Aanvragen":label==="Rapportages"?"Rapporten":label==="Prullenbak"?"Prullenbak":label}
+                {label==="Contactaanvragen"?"Aanvragen":label==="Teamscan aanvragen"?"Teamscan":label==="Rapportages"?"Rapporten":label==="Prullenbak"?"Prullenbak":label}
               </span>
             </div>
           ))}
