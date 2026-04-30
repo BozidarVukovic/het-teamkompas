@@ -714,6 +714,72 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
   );
 }
 
+
+function SeoHead({ page = "home" }) {
+  const pages = {
+    home: {
+      title: "Mijn Teamkompas | teamscan, teamontwikkeling en teamcoaching",
+      description: "Mijn Teamkompas helpt teams zichtbaar maken wat samenwerking belemmert. Met teamscan, analyse, Insights Discovery en begeleiding naar concrete vervolgstappen.",
+      url: "https://www.mijnteamkompas.nl/",
+      image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
+    },
+    onzeAanpak: {
+      title: "Onze aanpak | van teamscan naar teamontwikkeling",
+      description: "Ontdek hoe Mijn Teamkompas teams begeleidt van eerste vraag naar teamscan, analyse, dialoog, teamdag en borging in het dagelijks werk.",
+      url: "https://www.mijnteamkompas.nl/onze-aanpak",
+      image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
+    },
+    teamscan: {
+      title: "Teamscan starten | inzicht in samenwerking, energie en veiligheid",
+      description: "Start laagdrempelig een digitale teamscan. Krijg inzicht in samenwerking, psychologische veiligheid, energie, motivatie en verbeterkracht in je team.",
+      url: "https://www.mijnteamkompas.nl/teamscan",
+      image: "https://www.mijnteamkompas.nl/teamkompas-vier-domeinen.jpg",
+    },
+    teamontwikkeling: {
+      title: "Teamontwikkeling | samenwerken met meer richting en eigenaarschap",
+      description: "Mijn Teamkompas ondersteunt teamontwikkeling met een mensgerichte aanpak voor vertrouwen, leiderschap, motivatie, verandering en continu verbeteren.",
+      url: "https://www.mijnteamkompas.nl/teamontwikkeling",
+      image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
+    },
+    verkennen: {
+      title: "Verkennend gesprek | bespreek je teamvraag met Mijn Teamkompas",
+      description: "Plan een vrijblijvend verkennend gesprek over teamontwikkeling, teamscan, samenwerking, psychologische veiligheid of leiderschapsbegeleiding.",
+      url: "https://www.mijnteamkompas.nl/verkennen",
+      image: "https://www.mijnteamkompas.nl/teamkompas-intakegesprek.jpg",
+    },
+    beheer: {
+      title: "Beheeromgeving | Mijn Teamkompas",
+      description: "Beheeromgeving van Mijn Teamkompas.",
+      url: "https://www.mijnteamkompas.nl/beheer",
+      image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
+      noindex: true,
+    },
+  };
+
+  const seo = pages[page] || pages.home;
+
+  return (
+    <Helmet>
+      <html lang="nl" />
+      <title>{seo.title}</title>
+      <meta name="description" content={seo.description} />
+      {seo.noindex && <meta name="robots" content="noindex,nofollow" />}
+      <link rel="canonical" href={seo.url} />
+      <meta property="og:type" content="website" />
+      <meta property="og:locale" content="nl_NL" />
+      <meta property="og:site_name" content="Mijn Teamkompas" />
+      <meta property="og:title" content={seo.title} />
+      <meta property="og:description" content={seo.description} />
+      <meta property="og:url" content={seo.url} />
+      <meta property="og:image" content={seo.image} />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={seo.title} />
+      <meta name="twitter:description" content={seo.description} />
+      <meta name="twitter:image" content={seo.image} />
+    </Helmet>
+  );
+}
+
 // ─────────────────────────────────────────────
 // PUBLIC SITE
 // ─────────────────────────────────────────────
@@ -938,13 +1004,7 @@ function PublicSite({ onLoginClick }) {
 
   return (
     <>
-      <Helmet>
-        <title>Mijn Teamkompas | teamontwikkeling, teamscan en begeleiding op maat</title>
-        <meta name="description" content="Mijn Teamkompas helpt teams zichtbaar maken wat samenwerking belemmert en vertaalt dit naar teamscan, analyse, Insights Discovery en begeleiding op maat." />
-        <meta property="og:title" content="Mijn Teamkompas | teamontwikkeling, teamscan en begeleiding op maat" />
-        <meta property="og:description" content="Van eerste contact naar inzicht, maatwerkadvies, teamdag en borging. Mijn Teamkompas maakt zichtbaar wat teams vaak niet uitspreken." />
-        <meta property="og:type" content="website" />
-      </Helmet>
+      <SeoHead page="home" />
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, overflowX: "hidden", paddingTop: 64, background: PUB.wit }}>
         <NavBar isMobile={isMobile} onLoginClick={onLoginClick} openModal={openModal} />
@@ -7207,12 +7267,12 @@ export default function App() {
     <HelmetProvider>
       <Routes>
         <Route path="/" element={homeElement} />
-        <Route path="/onze-aanpak" element={<OnzeAanpak />} />
-        <Route path="/verkennen" element={<Verkennen />} />
-        <Route path="/teamscan" element={<TeamscanDigitaal />} />
-        <Route path="/teamontwikkeling" element={<Teamontwikkeling />} />
-        <Route path="/admin/funnel" element={beheerElement} />
-        <Route path="/beheer" element={beheerElement} />
+        <Route path="/onze-aanpak" element={<><SeoHead page="onzeAanpak" /><OnzeAanpak /></>} />
+        <Route path="/verkennen" element={<><SeoHead page="verkennen" /><Verkennen /></>} />
+        <Route path="/teamscan" element={<><SeoHead page="teamscan" /><TeamscanDigitaal /></>} />
+        <Route path="/teamontwikkeling" element={<><SeoHead page="teamontwikkeling" /><Teamontwikkeling /></>} />
+        <Route path="/admin/funnel" element={<><SeoHead page="beheer" />{beheerElement}</>} />
+        <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
       </Routes>
     </HelmetProvider>
   );
