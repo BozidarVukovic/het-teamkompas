@@ -22,6 +22,9 @@ const eventLabels = {
   step1_completed: "Stap 1 afgerond",
   step2_completed: "Stap 2 afgerond",
   submit_teamscan: "Aanvraag ingediend",
+  teamontwikkeling_bekeken: "Teamontwikkeling bekeken",
+  teamontwikkeling_teamscan_click: "Klik naar teamscan",
+  teamontwikkeling_home_click: "Klik naar home",
 };
 
 function percentage(part, total) {
@@ -102,6 +105,22 @@ export default function FunnelDashboard() {
       submitRate: percentage(submits, pageViews),
       step1Drop: percentage(formStarts - step1, formStarts),
       step2Drop: percentage(step1 - submits, step1),
+    };
+  }, [events]);
+
+  const teamontwikkelingMetrics = useMemo(() => {
+    const count = (name) => events.filter((item) => item.event === name).length;
+
+    const bekeken = count("teamontwikkeling_bekeken");
+    const teamscanClicks = count("teamontwikkeling_teamscan_click");
+    const homeClicks = count("teamontwikkeling_home_click");
+
+    return {
+      bekeken,
+      teamscanClicks,
+      homeClicks,
+      teamscanClickRate: percentage(teamscanClicks, bekeken),
+      homeClickRate: percentage(homeClicks, bekeken),
     };
   }, [events]);
 
@@ -200,7 +219,31 @@ export default function FunnelDashboard() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1.2fr 0.8fr",
+            gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
+            gap: "18px",
+            marginBottom: "28px",
+          }}
+        >
+          <div style={cardStyle}>
+            <p style={muted}>Teamontwikkeling bekeken</p>
+            <strong style={{ fontSize: "34px" }}>{teamontwikkelingMetrics.bekeken}</strong>
+          </div>
+          <div style={cardStyle}>
+            <p style={muted}>Klik naar teamscan</p>
+            <strong style={{ fontSize: "34px" }}>{teamontwikkelingMetrics.teamscanClicks}</strong>
+            <p style={muted}>Clickrate: {teamontwikkelingMetrics.teamscanClickRate}</p>
+          </div>
+          <div style={cardStyle}>
+            <p style={muted}>Klik naar home</p>
+            <strong style={{ fontSize: "34px" }}>{teamontwikkelingMetrics.homeClicks}</strong>
+            <p style={muted}>Clickrate: {teamontwikkelingMetrics.homeClickRate}</p>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1.2fr) minmax(280px, 0.8fr)",
             gap: "22px",
             alignItems: "start",
           }}
@@ -282,7 +325,7 @@ export default function FunnelDashboard() {
                 >
                   <strong>{eventLabels[event.event] || event.event}</strong>
                   <p style={{ ...muted, margin: "4px 0 0" }}>
-                    {formatDate(event.timestamp)}
+                    {formatDate(event.timestamp || event.createdAt)}
                     {event.teamSize ? ` · teamgrootte ${event.teamSize}` : ""}
                   </p>
                 </div>
@@ -330,7 +373,7 @@ export default function FunnelDashboard() {
                       {request.managerEmail || request.emailManager || "-"}
                     </td>
                     <td style={{ padding: "12px" }}>
-                      {request.teamSize || request.aantalCollegas || "-"}
+                      {request.teamSize || request.aantalCollegas || request.aantalTeamleden || "-"}
                     </td>
                     <td style={{ padding: "12px" }}>
                       <span
