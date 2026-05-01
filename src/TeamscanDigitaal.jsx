@@ -428,7 +428,7 @@ export default function TeamscanDigitaal() {
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr 0.95fr", gap: 42, alignItems: "center" }}>
             <div>
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", textTransform: "uppercase", color: "#7DB7FF", marginBottom: 14 }}>Digitale teamscan</div>
-              <h1 style={{ fontSize: isMobile ? 36 : 58, lineHeight: 1.04, margin: "0 0 18px", letterSpacing: "-0.03em" }}>Teamscan voor betere samenwerking, veiligheid en teamontwikkeling.</h1>
+              <h1 style={{ fontSize: isMobile ? 36 : 58, lineHeight: 1.04, margin: "0 0 18px", letterSpacing: "-0.03em" }}>Teamscan voor betere samenwerking, veiligheid en teamontwikkeling</h1>
               <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 680 }}>
                 De teamscan van Mijn Teamkompas maakt zichtbaar waar samenwerking energie geeft, waar spanning ontstaat en welke vervolgstappen logisch zijn. Je start laagdrempelig en krijgt een praktisch beeld van wat er in het team speelt.
               </p>
@@ -459,7 +459,7 @@ export default function TeamscanDigitaal() {
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.95fr 1.05fr", gap: 34, alignItems: "center" }}>
             <div>
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Wat is een teamscan?</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, margin: "0 0 16px" }}>Een teamscan maakt zichtbaar wat in de samenwerking vaak onbesproken blijft.</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, margin: "0 0 16px" }}>Een teamscan maakt zichtbaar wat in de samenwerking vaak onbesproken blijft</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub, margin: "0 0 14px" }}>
                 Een teamscan is een korte vragenlijst waarmee teamleden en leidinggevenden hun beeld geven van samenwerking, veiligheid, verandering, energie en leren. De uitkomsten laten zien waar het team sterk staat, waar frictie ontstaat en waar het verschil in beleving aandacht vraagt.
               </p>
@@ -490,7 +490,7 @@ export default function TeamscanDigitaal() {
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ textAlign: "center", maxWidth: 780, margin: "0 auto 30px" }}>
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Vier domeinen</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 12px" }}>De teamscan kijkt naar de condities waaronder samenwerking groeit.</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 12px" }}>De teamscan kijkt naar de condities waaronder samenwerking groeit</h2>
               <p style={{ fontSize: 16, lineHeight: 1.75, color: C.sub, margin: 0 }}>
                 De scan brengt niet alleen meningen in kaart, maar ordent signalen rond vier herkenbare domeinen. Daardoor wordt sneller duidelijk waar de meeste ontwikkeling mogelijk is.
               </p>
@@ -512,7 +512,7 @@ export default function TeamscanDigitaal() {
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.82fr 1.18fr", gap: 34, alignItems: "start", marginBottom: 28 }}>
               <div>
                 <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Voorbeeldrapport</div>
-                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>Bekijk enkele voorbeeldpagina’s zonder de volledige methode prijs te geven.</h2>
+                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>Bekijk enkele voorbeeldpagina’s zonder de volledige methode prijs te geven</h2>
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub, margin: "0 0 18px" }}>
                   Na de teamscan ontvang je geen losse cijfers, maar een praktisch rapport met duiding en vervolgstappen. De voorbeelden hieronder gebruiken fictieve data en laten alleen een beperkte preview zien. De vragenlijst, scoringslogica en volledige methodiek blijven onderdeel van het traject.
                 </p>
@@ -546,7 +546,7 @@ export default function TeamscanDigitaal() {
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 28px" }}>
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Hoe het werkt</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 12px" }}>Een eenvoudige route naar teaminzicht.</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 12px" }}>Een eenvoudige route naar teaminzicht</h2>
               <p style={{ fontSize: 16, lineHeight: 1.75, color: C.sub }}>Geen ingewikkeld traject vooraf. Je start met een compacte aanvraag, daarna zorgen wij dat het proces zorgvuldig wordt ingericht.</p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4,1fr)", gap: 14 }}>
@@ -565,7 +565,7 @@ export default function TeamscanDigitaal() {
           <div style={{ maxWidth: 1040, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.8fr 1.2fr", gap: 34, alignItems: "start" }}>
             <aside style={{ background: C.licht, border: `1px solid ${C.lijn}`, borderRadius: 24, padding: 24 }}>
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Leadgenerator</div>
-              <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, margin: "0 0 12px" }}>Start zonder verplichting.</h2>
+              <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, margin: "0 0 12px" }}>Start zonder verplichting</h2>
               <p style={{ color: C.sub, lineHeight: 1.75, margin: "0 0 20px" }}>
                 In deze fase gebruiken we de digitale teamscan om teams laagdrempelig te helpen en te leren waar de meeste behoefte zit. Er zijn nu geen kosten verbonden aan deze aanvraag.
               </p>

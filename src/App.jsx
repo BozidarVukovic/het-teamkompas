@@ -541,12 +541,12 @@ function SeoFaqItem({ vraag, antwoord, isMobile }) {
 
 function InsightDiscoveryLandingSection({ isMobile, openModal }) {
   const voordelen = [
-    "meer begrip voor verschillen in communicatiestijl en werkvoorkeur",
+    "Meer begrip voor verschillen in communicatiestijl en werkvoorkeur.",
     "betere samenwerking binnen teams",
-    "sterkere feedback en constructievere gesprekken",
-    "meer psychologische veiligheid en openheid",
-    "leiderschap dat beter aansluit op wat het team nodig heeft",
-    "meer focus op kwaliteiten, complementariteit en teamdynamiek",
+    "Sterkere feedback en constructievere gesprekken.",
+    "Meer psychologische veiligheid en openheid.",
+    "Leiderschap dat beter aansluit op wat het team nodig heeft.",
+    "Meer focus op kwaliteiten, complementariteit en teamdynamiek.",
   ];
 
   const toepassingen = [
@@ -570,7 +570,7 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
             <Fade>
               <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.15em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Insights Discovery en teamontwikkeling</div>
               <h2 style={{ fontSize: isMobile ? 29 : 42, fontWeight: 700, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>
-                Inzicht in gedrag als <em style={{ fontStyle: "italic", color: PUB.teal }}>versneller van teamontwikkeling</em>
+                Inzicht in gedrag versnelt teamontwikkeling
               </h2>
               <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, marginBottom: 16, maxWidth: 620 }}>
                 Veel teams lopen niet vast door een gebrek aan inzet of expertise, maar doordat verschillen in gedrag, communicatie en tempo onzichtbaar blijven.
@@ -862,7 +862,7 @@ function ThemeDeepDiveSection({ isMobile, openModal }) {
         <Fade>
           <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.15em', color: PUB.teal, textTransform: 'uppercase', marginBottom: 12 }}>Vier thema's</div>
           <h2 style={{ fontSize: isMobile ? 28 : 40, fontWeight: 700, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>
-            Vier invalshoeken die samen zichtbaar maken <em style={{ fontStyle: 'italic', color: PUB.teal }}>wat teams vooruithelpt</em>
+            Vier invalshoeken maken zichtbaar wat teams vooruithelpt
           </h2>
           <p style={{ fontSize: 15, lineHeight: 1.78, color: PUB.sub, maxWidth: 760, marginBottom: 34 }}>
             Elk thema belicht een belangrijk onderdeel van sterke samenwerking. Samen geven deze vier thema's richting aan gesprekken over leiderschap, motivatie, verandering en ontwikkeling binnen teams.
@@ -940,7 +940,7 @@ function DiverseWorkplacesSection({ isMobile }) {
         <Fade>
           <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.15em', color: PUB.teal, textTransform: 'uppercase', marginBottom: 12 }}>In diverse werkomgevingen</div>
           <h2 style={{ fontSize: isMobile ? 28 : 40, fontWeight: 700, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>
-            Van zorg en uitvoering tot kantoor en projectteam: <em style={{ fontStyle: 'italic', color: PUB.teal }}>samenwerking vraagt overal iets anders</em>
+            Samenwerking vraagt overal iets anders, van zorg en uitvoering tot kantoor en projectteam
           </h2>
           <p style={{ fontSize: 15, lineHeight: 1.78, color: PUB.sub, maxWidth: 780, marginBottom: 30 }}>
             Niet iedereen werkt in een strak directiekantoor. Juist de dagelijkse context bepaalt hoe leiderschap, communicatie en teamontwikkeling vorm krijgen.
@@ -1416,10 +1416,10 @@ function exporteerScanAlsCsv(lijst, antwoorden) {
     });
     const avg = arr => arr && arr.length ? Math.round((arr.reduce((a,b)=>a+b,0) / arr.length) * 100) / 100 : null;
     const pijlerLabels = {
-      0: "Veiligheid & Leiderschap",
-      1: "Beleving van Verandering",
-      2: "Energie & Motivatie",
-      3: "Verbeteren & Leren",
+      0: "Veiligheid en leiderschap",
+      1: "Beleving van verandering",
+      2: "Energie en motivatie",
+      3: "Verbeteren en leren",
       4: "Gedrag (centraal)",
     };
     const result = {};
@@ -1784,10 +1784,10 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
         )}
 
         <div style={{display:"grid",gridTemplateColumns:"1fr",gap:10}}>
-          {verdiepingKaart({ key:"veiligheid_leiderschap", titel:"Veiligheid & Leiderschap", beschrijving:"9 Secure Base Leadership-dimensies — beschikbaarheid, empathie, vertrouwen, uitdagen en meer.", infoKey:"veiligheid", maakFn:maakVerdiependeScan, score:veiligheidScoreTeam, kleur:"#5A8C3C" })}
-          {verdiepingKaart({ key:"beleving_verandering",   titel:"Beleving van Verandering", beschrijving:"Neuromanagement-verdieping op breinvriendelijk leiderschap en SCARF-dimensies.", infoKey:"belevingVerandering", maakFn:maakVerdiepingBelevingVerandering, score:belevingVeranderingScoreTeam, kleur:"#3A7DBF" })}
-          {verdiepingKaart({ key:"energie_motivatie",      titel:"Energie & Motivatie", beschrijving:"JD-R verdieping op taakeisen, hulpbronnen, bevlogenheid en uitputting.", infoKey:"energieMotivatie", maakFn:maakVerdiepingEnergieMotivatie, score:energieMotivatieScoreTeam, kleur:"#E8821A" })}
-          {verdiepingKaart({ key:"verbeteren_leren",       titel:"Verbeteren & Leren", beschrijving:"Lean- en Agile-volwassenheid vanuit twee perspectieven: leidinggevende en teamspiegel.", infoKey:"verbeterenLeren", maakFn:maakVerdiepingVerbeterenLeren, score:verbeterenLerenScoreTeam, kleur:"#6B4E9E" })}
+          {verdiepingKaart({ key:"veiligheid_leiderschap", titel:"Veiligheid en leiderschap", beschrijving:"9 Secure Base Leadership-dimensies — beschikbaarheid, empathie, vertrouwen, uitdagen en meer.", infoKey:"veiligheid", maakFn:maakVerdiependeScan, score:veiligheidScoreTeam, kleur:"#5A8C3C" })}
+          {verdiepingKaart({ key:"beleving_verandering",   titel:"Beleving van verandering", beschrijving:"Neuromanagement-verdieping op breinvriendelijk leiderschap en SCARF-dimensies.", infoKey:"belevingVerandering", maakFn:maakVerdiepingBelevingVerandering, score:belevingVeranderingScoreTeam, kleur:"#3A7DBF" })}
+          {verdiepingKaart({ key:"energie_motivatie",      titel:"Energie en motivatie", beschrijving:"JD-R verdieping op taakeisen, hulpbronnen, bevlogenheid en uitputting.", infoKey:"energieMotivatie", maakFn:maakVerdiepingEnergieMotivatie, score:energieMotivatieScoreTeam, kleur:"#E8821A" })}
+          {verdiepingKaart({ key:"verbeteren_leren",       titel:"Verbeteren en leren", beschrijving:"Lean- en Agile-volwassenheid vanuit twee perspectieven: leidinggevende en teamspiegel.", infoKey:"verbeterenLeren", maakFn:maakVerdiepingVerbeterenLeren, score:verbeterenLerenScoreTeam, kleur:"#6B4E9E" })}
         </div>
       </div>
     );
@@ -2406,7 +2406,7 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
           <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7,marginBottom:20,
             background:"rgba(0,168,150,0.06)",padding:"12px 16px",borderRadius:10,
             borderLeft:`3px solid ${ADM.teal}`}}>
-            De <strong style={{color:ADM.white}}>gap-analyse</strong> toont het verschil tussen hoe het{" "}
+            De <strong style={{color:ADM.white}}>Gap-analyse</strong> toont het verschil tussen hoe het{" "}
             <strong style={{color:"#86efac"}}>team</strong> en het{" "}
             <strong style={{color:"#a78bfa"}}>management</strong> de situatie beleeft.
           </div>
@@ -2674,7 +2674,7 @@ function PageKlanten() {
     scores:{}
   });
 
-  const pijlerNamenMeting = ["Veiligheid & Leiderschap","Beleving van Verandering","Energie & Motivatie","Verbeteren & Leren","Gedrag (centraal)"];
+  const pijlerNamenMeting = ["Veiligheid en leiderschap","Beleving van verandering","Energie en motivatie","Verbeteren en leren","Gedrag (centraal)"];
 
   const parseDateFlexible = (val) => {
     if (!val) return null;
@@ -3054,7 +3054,7 @@ function PageKlanten() {
     <div class="content">
       <div class="section">
         <div class="section-title">Samenvatting per domein</div>
-        ${["Veiligheid & Leiderschap","Beleving van Verandering","Energie & Motivatie","Verbeteren & Leren","Gedrag (centraal)"].map((naam, i) => `
+        ${["Veiligheid en leiderschap","Beleving van verandering","Energie en motivatie","Verbeteren en leren","Gedrag (centraal)"].map((naam, i) => `
           <div class="card">
             <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
               <div style="font-size:16px;font-weight:700;color:#0D1B2A">${naam}</div>
@@ -3598,10 +3598,10 @@ function PageKlanten() {
                               );
 
                               const VERDIEP_CONFIG = [
-                                { key:"veiligheid_leiderschap", type:"verdieping_veiligheid_leiderschap", label:"Veiligheid & Leiderschap", kleur:"#5A8C3C", stellingen: VEILIGHEID_LEIDERSCHAP_STELLINGEN },
-                                { key:"beleving_verandering",   type:"verdieping_beleving_verandering",   label:"Beleving van Verandering", kleur:"#3A7DBF", stellingen: BELEVING_VERANDERING_STELLINGEN },
-                                { key:"energie_motivatie",      type:"verdieping_energie_motivatie",      label:"Energie & Motivatie",      kleur:"#E8821A", stellingen: ENERGIE_MOTIVATIE_STELLINGEN },
-                                { key:"verbeteren_leren",       type:"verdieping_verbeteren_leren",       label:"Verbeteren & Leren",       kleur:"#6B4E9E", stellingen: VERBETEREN_LEREN_STELLINGEN },
+                                { key:"veiligheid_leiderschap", type:"verdieping_veiligheid_leiderschap", label:"Veiligheid en leiderschap", kleur:"#5A8C3C", stellingen: VEILIGHEID_LEIDERSCHAP_STELLINGEN },
+                                { key:"beleving_verandering",   type:"verdieping_beleving_verandering",   label:"Beleving van verandering", kleur:"#3A7DBF", stellingen: BELEVING_VERANDERING_STELLINGEN },
+                                { key:"energie_motivatie",      type:"verdieping_energie_motivatie",      label:"Energie en motivatie",      kleur:"#E8821A", stellingen: ENERGIE_MOTIVATIE_STELLINGEN },
+                                { key:"verbeteren_leren",       type:"verdieping_verbeteren_leren",       label:"Verbeteren en leren",       kleur:"#6B4E9E", stellingen: VERBETEREN_LEREN_STELLINGEN },
                               ];
 
                               const maakVerdieping = async (config) => {
@@ -3805,7 +3805,7 @@ function PageKlanten() {
 }
 
 function PageMetingen() {
-  const pijlerNamen = ["Veiligheid & Leiderschap","Beleving van Verandering","Energie & Motivatie","Verbeteren & Leren","Gedrag (centraal)"];
+  const pijlerNamen = ["Veiligheid en leiderschap","Beleving van verandering","Energie en motivatie","Verbeteren en leren","Gedrag (centraal)"];
   const [metingen, setMetingen] = useState([]);
   const [vragenlijsten, setVragenlijsten] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -4831,7 +4831,7 @@ function PageRapportages() {
   };
 
   const pijlerKleuren = ["#5A8C3C", "#3A7DBF", "#E8821A", "#6B4E9E"];
-  const pijlerNamen   = ["Veiligheid & Leiderschap", "Beleving van Verandering", "Energie & Motivatie", "Verbeteren & Leren"];
+  const pijlerNamen   = ["Veiligheid en leiderschap", "Beleving van verandering", "Energie en motivatie", "Verbeteren en leren"];
 
 
   const verplaatsNaarPrullenbak = async (lijst) => {
@@ -4895,14 +4895,14 @@ function PageRapportages() {
     const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
 
     const DOMEINEN = [
-      { naam: "Veiligheid & Leiderschap", kleur: "#5A8C3C", pijler: 0, mwIds: null, mgIds: null },
-      { naam: "Beleving van Verandering", kleur: "#3A7DBF", pijler: 1, mwIds: null, mgIds: null },
-      { naam: "Energie & Motivatie",      kleur: "#E8821A", pijler: 2, mwIds: null, mgIds: null },
-      { naam: "Verbeteren & Leren",       kleur: "#6B4E9E", pijler: 3, mwIds: null, mgIds: null },
+      { naam: "Veiligheid en leiderschap", kleur: "#5A8C3C", pijler: 0, mwIds: null, mgIds: null },
+      { naam: "Beleving van verandering", kleur: "#3A7DBF", pijler: 1, mwIds: null, mgIds: null },
+      { naam: "Energie en motivatie",      kleur: "#E8821A", pijler: 2, mwIds: null, mgIds: null },
+      { naam: "Verbeteren en leren",       kleur: "#6B4E9E", pijler: 3, mwIds: null, mgIds: null },
       // Pijler 4 opgesplitst in twee domeinen
-      { naam: "Samenwerking & Communicatie", kleur: "#0F766E", pijler: 4,
+      { naam: "Samenwerking en communicatie", kleur: "#0F766E", pijler: 4,
         mwIds: [1001,1002,1003,1004], mgIds: [2001,2002,2003,2004] },
-      { naam: "Richting & Betrokkenheid",    kleur: "#8B5CF6", pijler: 4,
+      { naam: "Richting en betrokkenheid",    kleur: "#8B5CF6", pijler: 4,
         mwIds: [1027,1028], mgIds: [2027,2028] },
     ];
 
@@ -4925,8 +4925,8 @@ function PageRapportages() {
     // Open antwoorden per domein — medewerkers en manager apart
     // Expliciete open vraag-id mapping per domein
     const openIdsMap = {
-      "Samenwerking & Communicatie": { mw: [1005], mg: [2005] },
-      "Richting & Betrokkenheid":    { mw: [1029], mg: [2029, 2030] },
+      "Samenwerking en communicatie": { mw: [1005], mg: [2005] },
+      "Richting en betrokkenheid":    { mw: [1029], mg: [2029, 2030] },
     };
 
     const openPerDomein = DOMEINEN.map(d => {
@@ -5157,10 +5157,10 @@ function PageRapportages() {
       const vResp = antwoordenVoor(v.id);
       const isJDR = v.type === "verdieping_energie_motivatie";
       const vLabel = {
-        verdieping_veiligheid_leiderschap: "Veiligheid & Leiderschap — Secure Base",
-        verdieping_beleving_verandering:   "Beleving van Verandering — SCARF",
-        verdieping_energie_motivatie:      "Energie & Motivatie — JD-R model",
-        verdieping_verbeteren_leren:       "Verbeteren & Leren — Lean/Agile",
+        verdieping_veiligheid_leiderschap: "Veiligheid en leiderschap — Secure Base",
+        verdieping_beleving_verandering:   "Beleving van verandering — SCARF",
+        verdieping_energie_motivatie:      "Energie en motivatie — JD-R model",
+        verdieping_verbeteren_leren:       "Verbeteren en leren — Lean/Agile",
         verdieping_gecombineerd:           "Gecombineerde verdieping",
       }[v.type] || v.naam;
       const vKleur = {
@@ -5260,7 +5260,7 @@ function PageRapportages() {
 
     const DOMEINEN = [
       {
-        naam: "Veiligheid & Leiderschap", kleur: "#5A8C3C", lichtKleur: "#f0f6ec", pijler: 0,
+        naam: "Veiligheid en leiderschap", kleur: "#5A8C3C", lichtKleur: "#f0f6ec", pijler: 0,
         icon: "🛡",
         theorie: "Psychologische veiligheid is de belangrijkste voorspeller van teamprestaties, zoals Amy Edmondson van Harvard aantoonde: teams die fouten durven benoemen leren sneller en presteren structureel beter. Het gaat niet om harmonie, maar om de bereidheid risico te nemen in interpersoonlijke situaties — een mening geven, een idee opperen, een zorg uitspreken. Wanneer deze veiligheid ontbreekt, trekken mensen zich terug in zelfbescherming. Initiatief droogt op. Innovatie stokt. De leidinggevende speelt hierin een cruciale rol: psychologische veiligheid wordt niet geïnstalleerd via een workshop, maar dagelijks opgebouwd of afgebroken door klein gedrag — hoe gereageerd wordt op een vraag, hoe omgegaan wordt met een fout, of ruimte werkelijk genomen mag worden.",
         gapDuiding: "De gap tussen uw waarneming en de beleving van het team wijst op een blinde vlek in het leiderschap. U ervaart de sfeer als opener dan medewerkers die doen. Dit is een veelvoorkomend patroon: leidinggevenden zien de deur als open; medewerkers ervaren drempels die voor de leidinggevende onzichtbaar zijn. Deze drempels zijn zelden bedoeld, maar altijd voelbaar.",
@@ -5278,7 +5278,7 @@ function PageRapportages() {
         ],
       },
       {
-        naam: "Beleving van Verandering", kleur: "#3A7DBF", lichtKleur: "#edf4fb", pijler: 1,
+        naam: "Beleving van verandering", kleur: "#3A7DBF", lichtKleur: "#edf4fb", pijler: 1,
         icon: "🔄",
         theorie: "Mensen zijn van nature geen tegenstanders van verandering — ze zijn tegenstanders van onduidelijkheid, verlies van controle en het gevoel niet gehoord te worden. De neurowetenschapper David Rock beschrijft dit met het SCARF-model: Status, Certainty, Autonomy, Relatedness en Fairness zijn vijf domeinen die het brein actief monitort op dreiging. Verandering raakt al deze domeinen tegelijk. Zonder bewuste begeleiding activeert verandering een dreigingsrespons — het brein gaat in overlevingsmodus. Wat leidinggevenden daarin overschatten is de kracht van uitleggen. Begrijpen is niet hetzelfde als accepteren. Mensen hebben ruimte nodig om hun eigen betekenis te geven aan verandering, inclusief de weerstand en het verlies.",
         gapDuiding: "Dit is de grootste kloof in uw scan. U ervaart de veranderingen als helder en begrijpelijk; het team ervaart onduidelijkheid, onvoldoende tempo, en onvoldoende ruimte voor emoties en zorgen. Dit verschil is kenmerkend voor leidinggevenden die verandering inhoudelijk goed begeleiden maar de menselijke dimensie onderschatten. De boodschap is overgebracht — de betekenis is nog niet geland.",
@@ -5296,7 +5296,7 @@ function PageRapportages() {
         ],
       },
       {
-        naam: "Energie & Motivatie", kleur: "#E8821A", lichtKleur: "#fef5ec", pijler: 2,
+        naam: "Energie en motivatie", kleur: "#E8821A", lichtKleur: "#fef5ec", pijler: 2,
         icon: "⚡",
         theorie: "Het Job Demands-Resources model (Bakker & Demerouti) toont aan dat bevlogenheid ontstaat op het snijvlak van betekenisvol werk en voldoende hulpbronnen om dat werk te doen. Wanneer taakeisen structureel de beschikbare hulpbronnen overtreffen, ontstaat uitputting. Wanneer hulpbronnen taakeisen overtreffen zonder voldoende uitdaging, ontstaat verveling. De zone van bevlogenheid is smal en vereist actief onderhoud. Motivatie is geen vaste eigenschap van een medewerker — het is de uitkomst van de relatie tussen de persoon, het werk, de context en het leiderschap. Leidinggevenden die motivatieproblemen individualiseren ('hij heeft geen drive') missen de systeemvraag: welke context produceren wij die dit gedrag oproept?",
         gapDuiding: "De gap op dit domein is kleiner dan op verandering en verbeteren, maar significant. U ziet meer energie en voldoening dan medewerkers rapporteren. Dit kan wijzen op een selectieve zichtbaarheid: u ziet de positieve momenten, medewerkers dragen ook de onderstroom van dagelijkse frustraties die niet altijd de weg naar boven vinden.",
@@ -5314,7 +5314,7 @@ function PageRapportages() {
         ],
       },
       {
-        naam: "Verbeteren & Leren", kleur: "#6B4E9E", lichtKleur: "#f3f0f9", pijler: 3,
+        naam: "Verbeteren en leren", kleur: "#6B4E9E", lichtKleur: "#f3f0f9", pijler: 3,
         icon: "📈",
         theorie: "Organisaties die leren zijn niet organisaties die trainingen organiseren — het zijn organisaties waar leren ingebed is in de dagelijkse praktijk. Chris Argyris onderscheidde single-loop leren (problemen oplossen binnen bestaande aannames) van double-loop leren (het bevragen van de aannames zelf). De meeste teams zijn vaardig in het eerste, maar schieten tekort in het tweede. Eigenaarschap over verbetering — het gevoel dat ik invloed heb op hoe mijn werk beter kan — is de kern van een leercultuur. Wanneer medewerkers verbeterideeën inbrengen die niet worden opgepakt, of wanneer verbeteren als extra taak voelt bovenop de reguliere werkdruk, trekt dit eigenaarschap zich terug. Het resultaat is een team dat uitvoert maar niet evolueert.",
         gapDuiding: "Dit domein laat een van de grootste gaps zien. U ervaart een cultuur van verbeteren en leren; het team ervaart dat verbeterideeën niet landen en dat verbeteren als last voelt. Dit is een kritisch signaal: de infrastructuur van leren is mogelijk aanwezig, maar de cultuur nog niet. Ideeën worden wellicht ontvangen maar niet merkbaar opgepakt — wat het inbrengen ervan geleidelijk ontmoedigt.",
@@ -5332,7 +5332,7 @@ function PageRapportages() {
         ],
       },
       {
-        naam: "Samenwerking & Communicatie", kleur: "#0F766E", lichtKleur: "#f0faf9", pijler: 4,
+        naam: "Samenwerking en communicatie", kleur: "#0F766E", lichtKleur: "#f0faf9", pijler: 4,
         icon: "🤝",
         mwIds: [1001,1002,1003,1004], mgIds: [2001,2002,2003,2004],
         mwOpenIds: [1005], mgOpenIds: [2005],
@@ -5349,7 +5349,7 @@ function PageRapportages() {
         ],
       },
       {
-        naam: "Richting & Betrokkenheid", kleur: "#8B5CF6", lichtKleur: "#f5f3ff", pijler: 4,
+        naam: "Richting en betrokkenheid", kleur: "#8B5CF6", lichtKleur: "#f5f3ff", pijler: 4,
         icon: "🧭",
         mwIds: [1027,1028], mgIds: [2027,2028],
         mwOpenIds: [1029], mgOpenIds: [2029, 2030],
@@ -5597,7 +5597,7 @@ function PageRapportages() {
       Voor u ligt het adviesrapport op basis van de Teamscan van Het Teamkompas. Dit rapport combineert de resultaten van de medewerkerscan en de managementscan tot één geïntegreerd beeld van hoe uw team functioneert — en waar de grootste kansen liggen voor ontwikkeling.
     </p>
     <p style="font-size:14px;color:#3d4555;line-height:1.85;margin-bottom:20px;">
-      Het rapport is opgebouwd langs vier domeinen: <strong>Veiligheid &amp; Leiderschap</strong>, <strong>Beleving van Verandering</strong>, <strong>Energie &amp; Motivatie</strong> en <strong>Verbeteren &amp; Leren</strong>. Deze domeinen vormen samen het fundament van een goed functionerend team. Ze zijn niet los van elkaar te zien — veiligheid beïnvloedt energie, energie beïnvloedt het vermogen tot verandering, en verandering vraagt om een cultuur van leren.
+      Het rapport is opgebouwd langs vier domeinen: <strong>Veiligheid &amp; Leiderschap</strong>, <strong>Beleving van verandering</strong>, <strong>Energie &amp; Motivatie</strong> en <strong>Verbeteren &amp; Leren</strong>. Deze domeinen vormen samen het fundament van een goed functionerend team. Ze zijn niet los van elkaar te zien — veiligheid beïnvloedt energie, energie beïnvloedt het vermogen tot verandering, en verandering vraagt om een cultuur van leren.
     </p>
     <p style="font-size:14px;color:#3d4555;line-height:1.85;">
       Bijzonder aan dit rapport is de <strong>perceptiegap</strong>: het verschil tussen hoe de leidinggevende het team ervaart en hoe het team zichzelf ervaart. Waar deze gap groot is, ligt niet een schuldvraag maar een ontwikkelkans. De adviezen in dit rapport zijn direct toepasbaar, zonder grote reorganisaties of extra budgetten.
@@ -5771,10 +5771,10 @@ function PageRapportages() {
       const vResp = antwoordenVoor(v.id);
       const isJDR = v.type === "verdieping_energie_motivatie";
       const vLabelMap = {
-        verdieping_veiligheid_leiderschap: { label: "Veiligheid & Leiderschap", sub: "Gebaseerd op de 9 kenmerken van Secure Base Leadership (Kohlrieser, Goldsworthy & Cooke)", kleur: "#5A8C3C", licht: "#f0f6ec" },
-        verdieping_beleving_verandering:   { label: "Beleving van Verandering", sub: "Gebaseerd op het SCARF-model (Rock, 2008) — neurowetenschappelijke inzichten over breinvriendelijk leiderschap", kleur: "#3A7DBF", licht: "#edf4fb" },
-        verdieping_energie_motivatie:      { label: "Energie & Motivatie", sub: "Gebaseerd op het JD-R model (Bakker & Demerouti) — taakeisen (laag = gunstig), hulpbronnen & bevlogenheid (hoog = gunstig), uitputting (laag = gunstig)", kleur: "#E8821A", licht: "#fef5ec" },
-        verdieping_verbeteren_leren:       { label: "Verbeteren & Leren", sub: "Gebaseerd op Lean- en Agile-principes — zelfreflectie leidinggevende en teamspiegel", kleur: "#6B4E9E", licht: "#f3f0f9" },
+        verdieping_veiligheid_leiderschap: { label: "Veiligheid en leiderschap", sub: "Gebaseerd op de 9 kenmerken van Secure Base Leadership (Kohlrieser, Goldsworthy & Cooke)", kleur: "#5A8C3C", licht: "#f0f6ec" },
+        verdieping_beleving_verandering:   { label: "Beleving van verandering", sub: "Gebaseerd op het SCARF-model (Rock, 2008) — neurowetenschappelijke inzichten over breinvriendelijk leiderschap", kleur: "#3A7DBF", licht: "#edf4fb" },
+        verdieping_energie_motivatie:      { label: "Energie en motivatie", sub: "Gebaseerd op het JD-R model (Bakker & Demerouti) — taakeisen (laag = gunstig), hulpbronnen & bevlogenheid (hoog = gunstig), uitputting (laag = gunstig)", kleur: "#E8821A", licht: "#fef5ec" },
+        verdieping_verbeteren_leren:       { label: "Verbeteren en leren", sub: "Gebaseerd op Lean- en Agile-principes — zelfreflectie leidinggevende en teamspiegel", kleur: "#6B4E9E", licht: "#f3f0f9" },
         verdieping_gecombineerd:           { label: "Gecombineerde verdieping", sub: "Meerdere domeinen in één verdiepende meting gecombineerd", kleur: "#0F766E", licht: "#f0faf9" },
       };
       const meta = vLabelMap[v.type] || { label: v.naam, sub: "", kleur: "#0F766E", licht: "#f4f7f9" };
@@ -6073,7 +6073,7 @@ function PageRapportages() {
         <div class="sum-card" style="background:${s.kleur}18;border:1px solid ${s.kleur}33;">
           <div style="font-size:11px;font-weight:700;color:${s.kleur};letter-spacing:1px;text-transform:uppercase;">${s.naam}</div>
           <div class="sum-score" style="color:${s.totaal ? scoreKleurHex(s.totaal) : '#aaa'};">${s.totaal ? s.totaal.toFixed(1) : "—"}</div>
-          <div class="sum-label" style="color:${s.kleur};">gemiddeld (schaal 1–5)</div>
+          <div class="sum-label" style="color:${s.kleur};">Gemiddeld (schaal 1–5)</div>
         </div>`).join("")}
       </div>
     </div>
@@ -6229,10 +6229,10 @@ function PageRapportages() {
                 l.parentVragenlijstId === mg.id
               );
               const verdiepingTypes = {
-                verdieping_veiligheid_leiderschap: { label: "Veiligheid & Leiderschap", kleur: "#5A8C3C" },
-                verdieping_beleving_verandering:   { label: "Beleving van Verandering", kleur: "#3A7DBF" },
-                verdieping_energie_motivatie:      { label: "Energie & Motivatie",       kleur: "#E8821A" },
-                verdieping_verbeteren_leren:       { label: "Verbeteren & Leren",        kleur: "#6B4E9E" },
+                verdieping_veiligheid_leiderschap: { label: "Veiligheid en leiderschap", kleur: "#5A8C3C" },
+                verdieping_beleving_verandering:   { label: "Beleving van verandering", kleur: "#3A7DBF" },
+                verdieping_energie_motivatie:      { label: "Energie en motivatie",       kleur: "#E8821A" },
+                verdieping_verbeteren_leren:       { label: "Verbeteren en leren",        kleur: "#6B4E9E" },
                 verdieping_gecombineerd:           { label: "Gecombineerde verdieping",  kleur: "#0F766E" },
               };
 

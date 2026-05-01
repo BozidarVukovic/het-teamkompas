@@ -54,10 +54,10 @@ export default function OnzeAanpakPage() {
   const closeModal = () => setModalOpen(false);
 
   const domeinen = [
-    ["Veiligheid & leiderschap", PUB.groen, "We kijken of mensen zich vrij voelen om eerlijk te zijn, vragen te stellen en initiatief te nemen. Zonder veiligheid ontstaat weinig echte beweging."],
-    ["Energie & motivatie", PUB.oranje, "We onderzoeken waar het werk energie geeft en waar het team structureel leegloopt. Kleine dagelijkse frustraties zijn vaak groter dan ze lijken."],
+    ["Veiligheid en leiderschap", PUB.groen, "We kijken of mensen zich vrij voelen om eerlijk te zijn, vragen te stellen en initiatief te nemen. Zonder veiligheid ontstaat weinig echte beweging."],
+    ["Energie en motivatie", PUB.oranje, "We onderzoeken waar het werk energie geeft en waar het team structureel leegloopt. Kleine dagelijkse frustraties zijn vaak groter dan ze lijken."],
     ["Verandering & betekenis", PUB.teal, "We kijken hoe verandering wordt ervaren. Begrijpen mensen waarom iets nodig is, voelt het haalbaar en sluit het aan bij wat vertrouwd is?"],
-    ["Verbeteren & leren", PUB.paars, "We kijken of verbeterideeën zichtbaar worden, besproken worden en landen in dagelijks gedrag. Leren wordt pas waardevol als het praktisch wordt."],
+    ["Verbeteren en leren", PUB.paars, "We kijken of verbeterideeën zichtbaar worden, besproken worden en landen in dagelijks gedrag. Leren wordt pas waardevol als het praktisch wordt."],
   ];
 
   const stappen = [
@@ -68,12 +68,12 @@ export default function OnzeAanpakPage() {
   ];
 
   const insightsToepassingen = [
-    "teamdag of teamsessie met Insights Discovery voorbereiden",
-    "teamcoaching met gedragsprofielen verdiepen",
-    "communicatie, feedback en samenwerking bespreekbaar maken",
-    "nieuwe of samengestelde teams sneller op elkaar afstemmen",
-    "leiderschap, rolverdeling en besluitvorming concreter maken",
-    "bestaande Insights Discovery profielen opnieuw praktisch toepassen",
+    "Teamdag of teamsessie met Insights Discovery voorbereiden.",
+    "Teamcoaching met gedragsprofielen verdiepen.",
+    "Communicatie, feedback en samenwerking bespreekbaar maken.",
+    "Nieuwe of samengestelde teams sneller op elkaar afstemmen.",
+    "Leiderschap, rolverdeling en besluitvorming concreter maken.",
+    "Bestaande Insights Discovery profielen opnieuw praktisch toepassen.",
   ];
 
   const insightsWaarde = [
@@ -112,7 +112,7 @@ export default function OnzeAanpakPage() {
         <section style={{ background: `linear-gradient(135deg, ${PUB.donker} 0%, ${PUB.navy} 62%, #10253A 100%)`, minHeight: "72vh", display: "grid", gridTemplateColumns: "1.05fr .95fr", alignItems: "center", overflow: "hidden" }}>
           <div style={{ padding: "78px 58px 78px 72px", position: "relative", zIndex: 2 }}>
             <SectionLabel>Onze aanpak</SectionLabel>
-            <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>We maken zichtbaar wat samenwerking helpt of belemmert.</h1>
+            <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>We maken zichtbaar wat samenwerking helpt of belemmert</h1>
             <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. De teamscan brengt vier domeinen in beeld. Insights Discovery gebruiken we als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en samenwerkt.</p>
             <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Bespreek jullie situatie</button>
@@ -134,7 +134,7 @@ export default function OnzeAanpakPage() {
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: ".9fr 1.1fr", gap: 42, alignItems: "center" }}>
             <div>
               <SectionLabel>Waarom deze aanpak</SectionLabel>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Teams lopen zelden vast op één oorzaak.</h2>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Teams lopen zelden vast op één oorzaak</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>In teams spelen meerdere lagen tegelijk. Veiligheid, motivatie, veranderbeleving en dagelijkse verbeterkracht beïnvloeden elkaar. Daarom kijken we niet naar één losse score, maar naar de samenhang tussen wat mensen ervaren, nodig hebben en bespreekbaar durven maken.</p>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De kracht zit in het combineren van data met menselijk gesprek. De teamscan geeft richting, de begeleiding zorgt dat inzichten worden vertaald naar concreet gedrag.</p>
             </div>
@@ -146,7 +146,7 @@ export default function OnzeAanpakPage() {
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ textAlign: "center", maxWidth: 800, margin: "0 auto 38px" }}>
               <SectionLabel>Vier domeinen en één gedragslens</SectionLabel>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 14px" }}>De teamscan laat zien wat er speelt. Insights Discovery helpt begrijpen hoe het team daarmee omgaat.</h2>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 14px" }}>De teamscan laat zien wat er speelt. Insights Discovery helpt begrijpen hoe het team daarmee omgaat</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De teamscan brengt vier domeinen in beeld: veiligheid en leiderschap, energie en motivatie, verandering en betekenis, en verbeteren en leren. De gedragsvoorkeuren uit Insights Discovery gebruiken we als verdiepende lens om te begrijpen hoe mensen binnen deze domeinen communiceren, reageren en samenwerken.</p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 18 }}>
@@ -165,7 +165,7 @@ export default function OnzeAanpakPage() {
             <div style={{ display: "grid", gridTemplateColumns: "1.05fr .95fr", gap: 42, alignItems: "start" }}>
               <div>
                 <SectionLabel>Insights Discovery en teamontwikkeling</SectionLabel>
-                <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Een herkenbare taal voor gedrag, communicatie en samenwerking.</h2>
+                <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Een herkenbare taal voor gedrag, communicatie en samenwerking</h2>
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
                   Veel teams kennen Insights Discovery al als instrument om gedragsvoorkeuren en communicatie bespreekbaar te maken. Mijn Teamkompas gebruikt Insights Discovery niet als losse profieltraining, maar als onderdeel van een bredere teamaanpak.
                 </p>
@@ -210,7 +210,7 @@ export default function OnzeAanpakPage() {
             <img src={images.workshop} alt="Workshop waarin mensen samen inzichten vertalen naar actie" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: 440, boxShadow: "0 24px 70px rgba(0,0,0,0.34)" }} />
             <div>
               <SectionLabel>Van inzicht naar gedrag</SectionLabel>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>De aanpak blijft pas waardevol als het team er iets mee gaat doen.</h2>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>De aanpak blijft pas waardevol als het team er iets mee gaat doen</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)" }}>Daarom eindigt de teamscan niet bij een score. We gebruiken de uitkomsten om het juiste gesprek te voeren, patronen te herkennen en kleine stappen te kiezen die passen bij het team.</p>
               <div style={{ display: "grid", gap: 12, marginTop: 24 }}>
                 {stappen.map(([nr, titel, tekst]) => (
@@ -231,7 +231,7 @@ export default function OnzeAanpakPage() {
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: ".95fr 1.05fr", gap: 42, alignItems: "center" }}>
             <div>
               <SectionLabel>Wat we bewust niet doen</SectionLabel>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Geen modelshow. Geen standaardtraject. Geen rapport dat in een la verdwijnt.</h2>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Geen modelshow, geen standaardtraject en geen rapport dat in een la verdwijnt</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>We geven voldoende uitleg om vertrouwen te bouwen, maar houden de echte waarde in de begeleiding: het scherp duiden van jullie specifieke context, de teamscanuitkomsten en de gedragsvoorkeuren van het team.</p>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een verkennend gesprek</button>
             </div>
