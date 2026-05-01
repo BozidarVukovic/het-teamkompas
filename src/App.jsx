@@ -7415,7 +7415,249 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
     </>
   );
 }
+function TeamdagPage() {
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
 
+  const ctaStyle = {
+    background: PUB.teal,
+    color: PUB.wit,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    boxShadow: "0 12px 28px rgba(15,118,110,0.24)",
+    border: "none",
+  };
+
+  const ghostStyle = {
+    background: PUB.wit,
+    color: PUB.donker,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    border: `1px solid ${PUB.lijn}`,
+  };
+
+  const signalen = [
+    "Er is behoefte aan betere samenwerking, maar het echte gesprek komt niet goed op gang.",
+    "Het team wil vooruit, maar mist richting, eigenaarschap of vertrouwen.",
+    "Er zijn spanningen of patronen die in het dagelijks werk terug blijven komen.",
+    "Een teamdag is gepland, maar de vraag is nog niet scherp genoeg.",
+  ];
+
+  const stappen = [
+    ["1", "Vraag scherp maken", "We starten niet met werkvormen, maar met de vraag: waar moet deze teamdag echt aan bijdragen?"],
+    ["2", "Teamscan of intake", "We halen gericht signalen op over veiligheid, samenwerking, energie, verandering en leren."],
+    ["3", "Teamdag ontwerpen", "We vertalen de inzichten naar een programma dat past bij het team, de leidinggevende en de context."],
+    ["4", "In beweging brengen", "Tijdens de teamdag werken we aan gesprek, inzicht, gedrag en concrete afspraken."],
+    ["5", "Borgen", "Na de teamdag zorgen we dat inzichten terugkomen in werkafspraken, ritme en opvolging."],
+  ];
+
+  const programma = [
+    ["Start en veiligheid", "Een duidelijke opening waarin doel, context en spelregels helder worden."],
+    ["Inzicht in het team", "Bespreken wat uit de teamscan, intake of voorbereidende gesprekken naar voren komt."],
+    ["Gedrag en samenwerking", "Werken met patronen in communicatie, feedback, rolverdeling en besluitvorming."],
+    ["Insights Discovery", "Wanneer passend gebruiken we Insights Discovery profielen om gedragsvoorkeuren zichtbaar en bespreekbaar te maken."],
+    ["Afspraken en vervolg", "Afronden met concrete keuzes, eerste acties en eigenaarschap voor de vervolgstappen."],
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Teamdag organiseren | teamdag met impact en Insights Discovery | Mijn Teamkompas</title>
+        <meta
+          name="description"
+          content="Organiseer een teamdag die verder gaat dan een leuke sessie. Mijn Teamkompas helpt met teamscan, teamcoaching, Insights Discovery en concrete vervolgstappen."
+        />
+        <link rel="canonical" href="https://www.mijnteamkompas.nl/teamdag" />
+        <meta property="og:title" content="Teamdag organiseren met impact | Mijn Teamkompas" />
+        <meta
+          property="og:description"
+          content="Een teamdag voor betere samenwerking, psychologische veiligheid, eigenaarschap en teamontwikkeling. Met teamscan en eventueel Insights Discovery."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.mijnteamkompas.nl/teamdag" />
+      </Helmet>
+
+      <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
+        <NavBar isMobile={false} onLoginClick={() => {}} openModal={openModal} />
+
+        <section
+          style={{
+            background: PUB.donker,
+            minHeight: "74vh",
+            display: "grid",
+            gridTemplateColumns: "1.05fr .95fr",
+            alignItems: "center",
+            overflow: "hidden",
+            paddingTop: 64,
+          }}
+        >
+          <div style={{ padding: "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+              Teamdag organiseren
+            </div>
+            <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
+              Een teamdag die meer oplevert dan een leuke dag.
+            </h1>
+            <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>
+              Mijn Teamkompas helpt teams een teamdag organiseren die begint bij wat er echt speelt. Met een teamscan, intake en eventueel Insights Discovery maken we zichtbaar waar samenwerking vastloopt en wat nodig is om in beweging te komen.
+            </p>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>
+                Plan een kennismaking
+              </button>
+              <a href="/teamscan" style={{ ...ghostStyle, background: "rgba(255,255,255,0.08)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.22)" }}>
+                Start met de teamscan
+              </a>
+            </div>
+          </div>
+
+          <div style={{ minHeight: "74vh", position: "relative" }}>
+            <img
+              src="/teamkompas-samen-richting.jpg"
+              alt="Teamdag waarin een team samen richting geeft aan samenwerking en ontwikkeling"
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.9 }}
+            />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.96), rgba(13,27,42,0.12))" }} />
+          </div>
+        </section>
+
+        <section style={{ padding: "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: ".9fr 1.1fr", gap: 42, alignItems: "start" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+                Waarom veel teamdagen weinig veranderen
+              </div>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Zonder scherpe vraag blijft een teamdag vaak bij goede energie.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Een teamdag kan energie geven, maar heeft pas blijvend effect als duidelijk is waar het team aan werkt. Gaat het om vertrouwen, communicatie, eigenaarschap, samenwerking onder druk of het verwerken van verandering? Daarom starten wij met scherp krijgen wat de echte ontwikkelvraag is.
+              </p>
+            </div>
+
+            <div style={{ display: "grid", gap: 14 }}>
+              {signalen.map((item, index) => (
+                <div key={item} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 20, boxShadow: "0 12px 30px rgba(13,27,42,0.05)" }}>
+                  <div style={{ fontSize: 13, fontWeight: 900, color: PUB.teal, marginBottom: 6 }}>Signaal {index + 1}</div>
+                  <div style={{ fontSize: 15, lineHeight: 1.7, color: PUB.donker }}>{item}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 34 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+                Onze aanpak voor een teamdag
+              </div>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Van losse signalen naar een programma dat past bij het team.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                We ontwerpen een teamdag niet vanuit standaardwerkvormen, maar vanuit de ontwikkelvraag. De teamscan, intake of voorbereidende gesprekken bepalen wat nodig is.
+              </p>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 14 }}>
+              {stappen.map(([nr, titel, tekst]) => (
+                <div key={nr} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, marginBottom: 14 }}>
+                    {nr}
+                  </div>
+                  <h3 style={{ fontSize: 18, margin: "0 0 8px", color: PUB.donker }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 42, alignItems: "center" }}>
+            <img
+              src="/teamkompas-workshop-hero.jpg"
+              alt="Teamdag met teamcoaching en samenwerking rond de Mijn Teamkompas-aanpak"
+              style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: 460, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }}
+            />
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+                Teamdag met Insights Discovery
+              </div>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Gedragsvoorkeuren maken samenwerking concreet bespreekbaar.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Veel teams kennen Insights Discovery al. Tijdens een teamdag kan dit instrument helpen om communicatie, feedback, samenwerking en reacties onder druk concreet te maken. Mijn Teamkompas gebruikt Insights Discovery niet als losse profieltraining, maar als onderdeel van een bredere aanpak rond teamontwikkeling.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Zo ontstaat een teamdag waarin mensen niet alleen elkaar beter begrijpen, maar ook afspraken maken over hoe ze effectiever samenwerken in de praktijk.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 34 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+                Voorbeeldopbouw
+              </div>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Een teamdag met structuur, veiligheid en duidelijke vervolgstappen.
+              </h2>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 14 }}>
+              {programma.map(([titel, tekst]) => (
+                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}>
+                  <h3 style={{ fontSize: 18, margin: "0 0 8px", color: PUB.donker }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
+          <div style={{ maxWidth: 820, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+              Klaar voor een teamdag met meer effect?
+            </div>
+            <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
+              Begin met scherp krijgen wat jullie team echt nodig heeft.
+            </h2>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", marginBottom: 26 }}>
+              Plan een verkennend gesprek of start laagdrempelig met de teamscan. Dan bepalen we samen welke teamdag of teamsessie passend is.
+            </p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>
+                Plan een kennismaking
+              </button>
+              <a href="/teamscan" style={{ ...ghostStyle, background: "rgba(255,255,255,0.08)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.22)" }}>
+                Start met de teamscan
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamdag" />
+    </>
+  );
+}
 export default function App() {
   const [view, setView] = useState("public");
   const [scanId, setScanId] = useState(null);
@@ -7553,6 +7795,7 @@ export default function App() {
         <Route path="/teamscan" element={<><SeoHead page="teamscan" /><TeamscanDigitaal /></>} />
         <Route path="/teamontwikkeling" element={<><SeoHead page="teamontwikkeling" /><TeamontwikkelingSeoLandingspagina onLoginClick={() => setView("login")} /></>} />
         <Route path="/admin/funnel" element={<><SeoHead page="beheer" />{beheerElement}</>} />
+        <Route path="/teamdag" element={<TeamdagPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
       </Routes>
     </HelmetProvider>
