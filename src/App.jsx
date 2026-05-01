@@ -294,6 +294,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
     ["Eerste stap", "eerste-stap"],
     ["Traject", "traject"],
     ["Teamscan", "teamscan"],
+    ["Teamdag", "teamdag"],
     ["Contact", "contact"]
   ];
 
@@ -413,6 +414,15 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
               onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.72)"; }}
             >
               Teamontwikkeling
+            </span>
+
+            <span
+              onClick={() => navigate("/teamdag")}
+              style={{...navLinkStyle("teamdag"), color:"rgba(255,255,255,0.78)"}}
+              onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.78)"; }}
+            >
+              Teamdag
             </span>
 
             <span
