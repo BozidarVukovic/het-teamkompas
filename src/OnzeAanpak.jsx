@@ -2,6 +2,19 @@ import React, { useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import ContactModal from "./ContactModal";
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  React.useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 820);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return isMobile;
+}
+
 const PUB = {
   donker: "#0D1B2A",
   navy: "#1A2E4A",
@@ -46,6 +59,7 @@ function Card({ children, topColor }) {
 }
 
 export default function OnzeAanpakPage() {
+  const isMobile = useIsMobile();
   const ctaStyle = { background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", boxShadow: "0 12px 28px rgba(15,118,110,0.24)", border: "none" };
   const secondaryCtaStyle = { background: PUB.wit, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", border: `1px solid ${PUB.lijn}` };
 
@@ -54,10 +68,10 @@ export default function OnzeAanpakPage() {
   const closeModal = () => setModalOpen(false);
 
   const domeinen = [
-    ["Veiligheid en leiderschap", PUB.groen, "We kijken of mensen zich vrij voelen om eerlijk te zijn, vragen te stellen en initiatief te nemen. Zonder veiligheid ontstaat weinig echte beweging."],
-    ["Energie en motivatie", PUB.oranje, "We onderzoeken waar het werk energie geeft en waar het team structureel leegloopt. Kleine dagelijkse frustraties zijn vaak groter dan ze lijken."],
+    ["Veiligheid & leiderschap", PUB.groen, "We kijken of mensen zich vrij voelen om eerlijk te zijn, vragen te stellen en initiatief te nemen. Zonder veiligheid ontstaat weinig echte beweging."],
+    ["Energie & motivatie", PUB.oranje, "We onderzoeken waar het werk energie geeft en waar het team structureel leegloopt. Kleine dagelijkse frustraties zijn vaak groter dan ze lijken."],
     ["Verandering & betekenis", PUB.teal, "We kijken hoe verandering wordt ervaren. Begrijpen mensen waarom iets nodig is, voelt het haalbaar en sluit het aan bij wat vertrouwd is?"],
-    ["Verbeteren en leren", PUB.paars, "We kijken of verbeterideeën zichtbaar worden, besproken worden en landen in dagelijks gedrag. Leren wordt pas waardevol als het praktisch wordt."],
+    ["Verbeteren & leren", PUB.paars, "We kijken of verbeterideeën zichtbaar worden, besproken worden en landen in dagelijks gedrag. Leren wordt pas waardevol als het praktisch wordt."],
   ];
 
   const stappen = [
@@ -68,12 +82,12 @@ export default function OnzeAanpakPage() {
   ];
 
   const insightsToepassingen = [
-    "Teamdag of teamsessie met Insights Discovery voorbereiden.",
-    "Teamcoaching met gedragsprofielen verdiepen.",
-    "Communicatie, feedback en samenwerking bespreekbaar maken.",
-    "Nieuwe of samengestelde teams sneller op elkaar afstemmen.",
-    "Leiderschap, rolverdeling en besluitvorming concreter maken.",
-    "Bestaande Insights Discovery profielen opnieuw praktisch toepassen.",
+    "teamdag of teamsessie met Insights Discovery voorbereiden",
+    "teamcoaching met gedragsprofielen verdiepen",
+    "communicatie, feedback en samenwerking bespreekbaar maken",
+    "nieuwe of samengestelde teams sneller op elkaar afstemmen",
+    "leiderschap, rolverdeling en besluitvorming concreter maken",
+    "bestaande Insights Discovery profielen opnieuw praktisch toepassen",
   ];
 
   const insightsWaarde = [
@@ -95,12 +109,12 @@ export default function OnzeAanpakPage() {
       </Helmet>
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
-        <header style={{ position: "sticky", top: 0, zIndex: 20, background: "rgba(13,27,42,0.97)", borderBottom: "1px solid rgba(0,168,150,0.2)", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 40px" }}>
+        <header style={{ position: "sticky", top: 0, zIndex: 20, background: "rgba(13,27,42,0.97)", borderBottom: "1px solid rgba(0,168,150,0.2)", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", padding: isMobile ? "0 20px" : "0 40px" }}>
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
             <KompasDot />
             <span style={{ color: PUB.wit, fontWeight: 700, fontSize: 18 }}>Mijn Teamkompas</span>
           </a>
-          <nav style={{ display: "flex", alignItems: "center", gap: 22 }}>
+          <nav style={{ display: isMobile ? "none" : "flex", alignItems: "center", gap: 22 }}>
             <a href="/" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Home</a>
             <a href="/teamscan" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Teamscan</a>
             <a href="/teamontwikkeling" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Teamontwikkeling</a>
@@ -109,18 +123,18 @@ export default function OnzeAanpakPage() {
           </nav>
         </header>
 
-        <section style={{ background: `linear-gradient(135deg, ${PUB.donker} 0%, ${PUB.navy} 62%, #10253A 100%)`, minHeight: "72vh", display: "grid", gridTemplateColumns: "1.05fr .95fr", alignItems: "center", overflow: "hidden" }}>
-          <div style={{ padding: "78px 58px 78px 72px", position: "relative", zIndex: 2 }}>
+        <section style={{ background: `linear-gradient(135deg, ${PUB.donker} 0%, ${PUB.navy} 62%, #10253A 100%)`, minHeight: isMobile ? "auto" : "72vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", alignItems: "center", overflow: "hidden" }}>
+          <div style={{ padding: isMobile ? "54px 22px 34px" : "78px 58px 78px 72px", position: "relative", zIndex: 2 }}>
             <SectionLabel>Onze aanpak</SectionLabel>
-            <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>We maken zichtbaar wat samenwerking helpt of belemmert</h1>
-            <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. De teamscan brengt vier domeinen in beeld. Insights Discovery gebruiken we als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en samenwerkt.</p>
-            <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
+            <h1 style={{ fontSize: isMobile ? 36 : 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>We maken zichtbaar wat samenwerking helpt of belemmert.</h1>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. De teamscan brengt vier domeinen in beeld. Insights Discovery gebruiken we als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en samenwerkt.</p>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 14, alignItems: isMobile ? "stretch" : "center", flexWrap: "wrap" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Bespreek jullie situatie</button>
               <a href="/teamscan" style={{ ...ctaStyle, background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.22)", boxShadow: "none" }}>Start teamscan</a>
               <span style={{ color: "rgba(255,255,255,0.58)", fontSize: 14 }}>Van teamscan naar gesprek, duiding en concrete beweging.</span>
             </div>
           </div>
-          <div style={{ minHeight: "72vh", position: "relative" }}>
+          <div style={{ minHeight: isMobile ? 320 : "72vh", position: "relative" }}>
             <img src={images.hero} alt="Teamcoaching sessie waarin teamleden in gesprek zijn over samenwerking en leiderschap" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block", opacity: 0.92, filter: "saturate(0.94) contrast(1.04)" }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94) 0%, rgba(13,27,42,0.54) 38%, rgba(13,27,42,0.06) 100%)" }} />
             <div style={{ position: "absolute", left: 34, bottom: 34, maxWidth: 340, background: "rgba(13,27,42,0.72)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 18, padding: "18px 20px", backdropFilter: "blur(8px)", boxShadow: "0 22px 50px rgba(0,0,0,0.26)" }}>
@@ -130,26 +144,26 @@ export default function OnzeAanpakPage() {
           </div>
         </section>
 
-        <section style={{ padding: "86px 60px", background: PUB.licht }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: ".9fr 1.1fr", gap: 42, alignItems: "center" }}>
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 42, alignItems: "center" }}>
             <div>
               <SectionLabel>Waarom deze aanpak</SectionLabel>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Teams lopen zelden vast op één oorzaak</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Teams lopen zelden vast op één oorzaak.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>In teams spelen meerdere lagen tegelijk. Veiligheid, motivatie, veranderbeleving en dagelijkse verbeterkracht beïnvloeden elkaar. Daarom kijken we niet naar één losse score, maar naar de samenhang tussen wat mensen ervaren, nodig hebben en bespreekbaar durven maken.</p>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De kracht zit in het combineren van data met menselijk gesprek. De teamscan geeft richting, de begeleiding zorgt dat inzichten worden vertaald naar concreet gedrag.</p>
             </div>
-            <img src={images.team} alt="Professioneel team dat samenwerkt aan een vraagstuk" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
+            <img src={images.team} alt="Professioneel team dat samenwerkt aan een vraagstuk" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
           </div>
         </section>
 
-        <section style={{ padding: "86px 60px", background: PUB.wit }}>
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ textAlign: "center", maxWidth: 800, margin: "0 auto 38px" }}>
               <SectionLabel>Vier domeinen en één gedragslens</SectionLabel>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 14px" }}>De teamscan laat zien wat er speelt. Insights Discovery helpt begrijpen hoe het team daarmee omgaat</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>De teamscan laat zien wat er speelt. Insights Discovery helpt begrijpen hoe het team daarmee omgaat.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De teamscan brengt vier domeinen in beeld: veiligheid en leiderschap, energie en motivatie, verandering en betekenis, en verbeteren en leren. De gedragsvoorkeuren uit Insights Discovery gebruiken we als verdiepende lens om te begrijpen hoe mensen binnen deze domeinen communiceren, reageren en samenwerken.</p>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 18 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 18 }}>
               {domeinen.map(([titel, kleur, tekst]) => (
                 <Card key={titel} topColor={kleur}>
                   <h3 style={{ fontSize: 20, margin: "0 0 10px", color: PUB.donker }}>{titel}</h3>
@@ -160,12 +174,12 @@ export default function OnzeAanpakPage() {
           </div>
         </section>
 
-        <section id="insights-discovery" style={{ padding: "86px 60px", background: PUB.licht }}>
+        <section id="insights-discovery" style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1.05fr .95fr", gap: 42, alignItems: "start" }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", gap: 42, alignItems: "start" }}>
               <div>
                 <SectionLabel>Insights Discovery en teamontwikkeling</SectionLabel>
-                <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Een herkenbare taal voor gedrag, communicatie en samenwerking</h2>
+                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Een herkenbare taal voor gedrag, communicatie en samenwerking.</h2>
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
                   Veel teams kennen Insights Discovery al als instrument om gedragsvoorkeuren en communicatie bespreekbaar te maken. Mijn Teamkompas gebruikt Insights Discovery niet als losse profieltraining, maar als onderdeel van een bredere teamaanpak.
                 </p>
@@ -175,7 +189,7 @@ export default function OnzeAanpakPage() {
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
                   Zo helpt Mijn Teamkompas teams die zoeken naar een <strong style={{ color: PUB.donker }}>teamdag met Insights Discovery</strong>, <strong style={{ color: PUB.donker }}>teamcoaching met gedragsprofielen</strong> of een praktische <strong style={{ color: PUB.donker }}>teamsessie over communicatie en samenwerking</strong>.
                 </p>
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 24 }}>
+                <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", marginTop: 24 }}>
                   <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
                   <a href="/teamscan" style={secondaryCtaStyle}>Start met de teamscan</a>
                 </div>
@@ -194,7 +208,7 @@ export default function OnzeAanpakPage() {
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: 28 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 18, marginTop: 28 }}>
               {insightsWaarde.map(([titel, tekst]) => (
                 <Card key={titel} topColor={PUB.teal}>
                   <h3 style={{ fontSize: 19, margin: "0 0 10px", color: PUB.donker }}>{titel}</h3>
@@ -205,12 +219,12 @@ export default function OnzeAanpakPage() {
           </div>
         </section>
 
-        <section style={{ padding: "86px 60px", background: PUB.donker, color: PUB.wit }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 42, alignItems: "center" }}>
-            <img src={images.workshop} alt="Workshop waarin mensen samen inzichten vertalen naar actie" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: 440, boxShadow: "0 24px 70px rgba(0,0,0,0.34)" }} />
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 42, alignItems: "center" }}>
+            <img src={images.workshop} alt="Workshop waarin mensen samen inzichten vertalen naar actie" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 440, boxShadow: "0 24px 70px rgba(0,0,0,0.34)" }} />
             <div>
               <SectionLabel>Van inzicht naar gedrag</SectionLabel>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>De aanpak blijft pas waardevol als het team er iets mee gaat doen</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>De aanpak blijft pas waardevol als het team er iets mee gaat doen.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)" }}>Daarom eindigt de teamscan niet bij een score. We gebruiken de uitkomsten om het juiste gesprek te voeren, patronen te herkennen en kleine stappen te kiezen die passen bij het team.</p>
               <div style={{ display: "grid", gap: 12, marginTop: 24 }}>
                 {stappen.map(([nr, titel, tekst]) => (
@@ -227,15 +241,15 @@ export default function OnzeAanpakPage() {
           </div>
         </section>
 
-        <section style={{ padding: "86px 60px", background: PUB.licht }}>
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: ".95fr 1.05fr", gap: 42, alignItems: "center" }}>
             <div>
               <SectionLabel>Wat we bewust niet doen</SectionLabel>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Geen modelshow, geen standaardtraject en geen rapport dat in een la verdwijnt</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Geen modelshow. Geen standaardtraject. Geen rapport dat in een la verdwijnt.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>We geven voldoende uitleg om vertrouwen te bouwen, maar houden de echte waarde in de begeleiding: het scherp duiden van jullie specifieke context, de teamscanuitkomsten en de gedragsvoorkeuren van het team.</p>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een verkennend gesprek</button>
             </div>
-            <img src={images.zorg} alt="Samenwerking in een professionele zorgcontext" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
+            <img src={images.zorg} alt="Samenwerking in een professionele zorgcontext" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
           </div>
         </section>
       </div>
