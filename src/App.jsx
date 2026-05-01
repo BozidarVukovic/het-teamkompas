@@ -448,6 +448,15 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             </span>
 
             <span
+              onClick={() => navigate("/teamcoaching")}
+              style={{...navLinkStyle("teamcoaching"), color:"rgba(255,255,255,0.72)"}}
+              onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.72)"; }}
+            >
+              Teamcoaching
+            </span>
+
+            <span
               onClick={() => navigate("/teamdag")}
               style={{...navLinkStyle("teamdag"), color:"rgba(255,255,255,0.78)"}}
               onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
@@ -508,6 +517,12 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
           >
             Teamontwikkeling
+          </div>
+          <div
+            onClick={()=>{navigate("/teamcoaching");setMenuOpen(false);}}
+            style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
+          >
+            Teamcoaching
           </div>
           <div
             onClick={()=>{navigate("/teamdag");setMenuOpen(false);}}
@@ -7462,6 +7477,262 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
     </>
   );
 }
+
+function TeamcoachingPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
+  const ctaStyle = {
+    background: PUB.teal,
+    color: PUB.wit,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    boxShadow: "0 12px 28px rgba(15,118,110,0.24)",
+    border: "none",
+  };
+
+  const ghostStyle = {
+    background: PUB.wit,
+    color: PUB.donker,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    border: `1px solid ${PUB.lijn}`,
+  };
+
+  const signalen = [
+    "De samenwerking loopt niet slecht, maar kost meer energie dan nodig is.",
+    "Het team spreekt elkaar nog onvoldoende aan op gedrag, afspraken of verwachtingen.",
+    "Er zijn terugkerende patronen in communicatie, besluitvorming of eigenaarschap.",
+    "De leidinggevende wil het team verder brengen, maar zoekt taal, structuur en begeleiding.",
+  ];
+
+  const aanpak = [
+    ["1", "Teamvraag scherp maken", "We starten met de vraag achter de vraag: wat vraagt dit team nu echt van zichzelf en van de leidinggevende?"],
+    ["2", "Inzicht ophalen", "We gebruiken intake, teamscan of bestaande inzichten om zichtbaar te maken waar samenwerking helpt of schuurt."],
+    ["3", "Gedrag bespreekbaar maken", "We begeleiden gesprekken over communicatie, feedback, rolverdeling, vertrouwen en eigenaarschap."],
+    ["4", "Oefenen in de praktijk", "Teamcoaching werkt pas als inzichten worden vertaald naar kleine gedragskeuzes in het dagelijks werk."],
+    ["5", "Borgen en opvolgen", "We helpen het team ritme, afspraken en vervolgstappen vast te houden na de eerste interventie."],
+  ];
+
+  const themaCards = [
+    ["Samenwerking verbeteren", "Teamleden leren scherper benoemen wat zij van elkaar nodig hebben om beter samen te werken."],
+    ["Psychologische veiligheid", "We maken bespreekbaar wat mensen nodig hebben om zich uit te spreken, vragen te stellen en feedback te geven."],
+    ["Eigenaarschap en motivatie", "We kijken waar verantwoordelijkheid blijft liggen en hoe het team meer beweging kan creëren."],
+    ["Communicatie en feedback", "We oefenen met taal die duidelijk is zonder onnodig hard te worden en eerlijk zonder onveilig te worden."],
+  ];
+
+  const insights = [
+    "Teamcoaching met Insights Discovery profielen.",
+    "Communicatie en voorkeursgedrag zichtbaar maken.",
+    "Samenwerking onder druk beter begrijpen.",
+    "Verschillen in tempo, stijl en besluitvorming bespreekbaar maken.",
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Teamcoaching | coaching van teams en samenwerking verbeteren | Mijn Teamkompas</title>
+        <meta
+          name="description"
+          content="Teamcoaching voor teams die samenwerking, communicatie, eigenaarschap en psychologische veiligheid willen verbeteren. Met teamscan en eventueel Insights Discovery."
+        />
+        <link rel="canonical" href="https://www.mijnteamkompas.nl/teamcoaching" />
+        <meta property="og:title" content="Teamcoaching voor betere samenwerking | Mijn Teamkompas" />
+        <meta
+          property="og:description"
+          content="Mijn Teamkompas begeleidt teams met teamcoaching, teamscan en Insights Discovery om gedrag, samenwerking en eigenaarschap concreet te verbeteren."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.mijnteamkompas.nl/teamcoaching" />
+      </Helmet>
+
+      <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
+        <NavBar isMobile={false} onLoginClick={() => {}} openModal={openModal} />
+
+        <section
+          style={{
+            background: PUB.donker,
+            minHeight: "74vh",
+            display: "grid",
+            gridTemplateColumns: "1.05fr .95fr",
+            alignItems: "center",
+            overflow: "hidden",
+            paddingTop: 64,
+          }}
+        >
+          <div style={{ padding: "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+              Teamcoaching
+            </div>
+            <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
+              Teamcoaching voor teams die beter willen samenwerken.
+            </h1>
+            <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 700, marginBottom: 26 }}>
+              Mijn Teamkompas begeleidt teams die willen groeien in samenwerking, communicatie, eigenaarschap en psychologische veiligheid. Niet met losse inspiratie, maar met gerichte teamcoaching die zichtbaar maakt wat er speelt en wat het team anders kan doen.
+            </p>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>
+                Plan een kennismaking
+              </button>
+              <a href="/teamscan" style={{ ...ghostStyle, background: "rgba(255,255,255,0.08)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.22)" }}>
+                Start met de teamscan
+              </a>
+            </div>
+          </div>
+
+          <div style={{ minHeight: "74vh", position: "relative" }}>
+            <img
+              src="/teamkompas-intakegesprek.jpg"
+              alt="Teamcoaching gesprek over samenwerking, communicatie en leiderschap"
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.9 }}
+            />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.96), rgba(13,27,42,0.12))" }} />
+          </div>
+        </section>
+
+        <section style={{ padding: "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: ".9fr 1.1fr", gap: 42, alignItems: "start" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+                Wanneer teamcoaching helpt
+              </div>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Teamcoaching helpt wanneer het team niet harder, maar anders moet leren samenwerken.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Veel teams hebben voldoende kennis en inzet. Toch blijft ontwikkeling soms hangen omdat gesprekken niet scherp genoeg worden gevoerd, afspraken niet worden nageleefd of verschillen in gedrag en communicatie onbesproken blijven.
+              </p>
+            </div>
+
+            <div style={{ display: "grid", gap: 14 }}>
+              {signalen.map((item, index) => (
+                <div key={item} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 20, boxShadow: "0 12px 30px rgba(13,27,42,0.05)" }}>
+                  <div style={{ fontSize: 13, fontWeight: 900, color: PUB.teal, marginBottom: 6 }}>Signaal {index + 1}</div>
+                  <div style={{ fontSize: 15, lineHeight: 1.7, color: PUB.donker }}>{item}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 840, marginBottom: 34 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+                Onze aanpak voor teamcoaching
+              </div>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Van inzicht naar gedrag in het dagelijks werk.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Teamcoaching is geen eenmalige reflectie, maar een begeleid proces waarin het team leert kijken naar patronen, keuzes en gedrag. De teamscan helpt om de juiste thema’s scherp te maken.
+              </p>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 14 }}>
+              {aanpak.map(([nr, titel, tekst]) => (
+                <div key={nr} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, marginBottom: 14 }}>
+                    {nr}
+                  </div>
+                  <h3 style={{ fontSize: 18, margin: "0 0 8px", color: PUB.donker }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 42, alignItems: "center" }}>
+            <img
+              src="/teamkompas-workshop-hero.jpg"
+              alt="Teamcoaching met Insights Discovery en teamscan voor betere samenwerking"
+              style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: 460, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }}
+            />
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+                Teamcoaching met Insights Discovery
+              </div>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Gedragsprofielen helpen om communicatie concreet te maken.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Wanneer passend gebruiken we Insights Discovery profielen binnen de teamcoaching. Daarmee ontstaat een herkenbare taal voor voorkeuren, communicatie, samenwerking onder druk en verschillen in tempo of besluitvorming.
+              </p>
+              <div style={{ display: "grid", gap: 12, marginTop: 20 }}>
+                {insights.map((item) => (
+                  <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 14, padding: 14 }}>
+                    <div style={{ width: 9, height: 9, borderRadius: "50%", background: PUB.teal, marginTop: 7, flexShrink: 0 }} />
+                    <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.donker }}>{item}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 840, marginBottom: 34 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+                Thema’s in teamcoaching
+              </div>
+              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+                De inhoud volgt de ontwikkelvraag van het team.
+              </h2>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+              {themaCards.map(([titel, tekst]) => (
+                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}>
+                  <h3 style={{ fontSize: 18, margin: "0 0 8px", color: PUB.donker }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
+          <div style={{ maxWidth: 820, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+              Klaar om samenwerking concreet te verbeteren?
+            </div>
+            <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
+              Begin met een scherp beeld van wat er in het team speelt.
+            </h2>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", marginBottom: 26 }}>
+              Plan een verkennend gesprek of start laagdrempelig met de teamscan. Dan bepalen we samen of teamcoaching, een teamdag of een andere interventie passend is.
+            </p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>
+                Plan een kennismaking
+              </button>
+              <a href="/teamscan" style={{ ...ghostStyle, background: "rgba(255,255,255,0.08)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.22)" }}>
+                Start met de teamscan
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamcoaching" />
+    </>
+  );
+}
+
 function TeamdagPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
@@ -7842,6 +8113,7 @@ export default function App() {
         <Route path="/teamscan" element={<><SeoHead page="teamscan" /><TeamscanDigitaal /></>} />
         <Route path="/teamontwikkeling" element={<><SeoHead page="teamontwikkeling" /><TeamontwikkelingSeoLandingspagina onLoginClick={() => setView("login")} /></>} />
         <Route path="/admin/funnel" element={<><SeoHead page="beheer" />{beheerElement}</>} />
+        <Route path="/teamcoaching" element={<TeamcoachingPage />} />
         <Route path="/teamdag" element={<TeamdagPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
       </Routes>
