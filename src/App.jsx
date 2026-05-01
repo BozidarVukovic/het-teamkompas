@@ -294,7 +294,6 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
     ["Eerste stap", "eerste-stap"],
     ["Traject", "traject"],
     ["Teamscan", "teamscan"],
-    ["Teamdag", "teamdag"],
     ["Contact", "contact"]
   ];
 
