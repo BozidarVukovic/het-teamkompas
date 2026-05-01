@@ -47,9 +47,10 @@ function Card({ children, topColor }) {
 
 export default function OnzeAanpakPage() {
   const ctaStyle = { background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", boxShadow: "0 12px 28px rgba(15,118,110,0.24)", border: "none" };
+  const secondaryCtaStyle = { background: PUB.wit, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", border: `1px solid ${PUB.lijn}` };
+
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
-
   const closeModal = () => setModalOpen(false);
 
   const domeinen = [
@@ -66,11 +67,31 @@ export default function OnzeAanpakPage() {
     ["4", "Borgen", "We zorgen dat inzichten niet verdwijnen, maar terugkomen in werkafspraken en gedrag."],
   ];
 
+  const insightsToepassingen = [
+    "teamdag of teamsessie met Insights Discovery voorbereiden",
+    "teamcoaching met gedragsprofielen verdiepen",
+    "communicatie, feedback en samenwerking bespreekbaar maken",
+    "nieuwe of samengestelde teams sneller op elkaar afstemmen",
+    "leiderschap, rolverdeling en besluitvorming concreter maken",
+    "bestaande Insights Discovery profielen opnieuw praktisch toepassen",
+  ];
+
+  const insightsWaarde = [
+    ["Gedrag zichtbaar maken", "Teamleden herkennen sneller hun eigen voorkeuren, communicatiestijl en reactie onder druk."],
+    ["Verschillen benutten", "Het team leert verschillen niet als lastig te zien, maar als bron voor betere afstemming en samenwerking."],
+    ["Vertalen naar afspraken", "De inzichten worden gekoppeld aan concrete werkafspraken, feedback en gedrag in het dagelijks werk."],
+  ];
+
   return (
     <HelmetProvider>
       <Helmet>
-        <title>Onze aanpak | Mijn Teamkompas</title>
-        <meta name="description" content="Ontdek hoe Mijn Teamkompas teamontwikkeling benadert via vier teamscandomeinen en Insights Discovery als gedragslens." />
+        <title>Onze aanpak | teamcoaching, teamdag en Insights Discovery | Mijn Teamkompas</title>
+        <meta name="description" content="Ontdek hoe Mijn Teamkompas teams helpt met teamscan, teamcoaching, teamdag en Insights Discovery profielen als gedragslens voor betere samenwerking." />
+        <link rel="canonical" href="https://www.mijnteamkompas.nl/onze-aanpak" />
+        <meta property="og:title" content="Onze aanpak | teamcoaching, teamdag en Insights Discovery" />
+        <meta property="og:description" content="Mijn Teamkompas combineert teamscan, veranderkundige duiding en Insights Discovery profielen om samenwerking concreet te verbeteren." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.mijnteamkompas.nl/onze-aanpak" />
       </Helmet>
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
@@ -81,9 +102,10 @@ export default function OnzeAanpakPage() {
           </a>
           <nav style={{ display: "flex", alignItems: "center", gap: 22 }}>
             <a href="/" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Home</a>
-            <a href="/#teamscan" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Teamscan</a>
+            <a href="/teamscan" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Teamscan</a>
+            <a href="/teamontwikkeling" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Teamontwikkeling</a>
             <button type="button" onClick={openModal} style={{ background: "transparent", border: "none", padding: 0, color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>Contact</button>
-            <button type="button" onClick={openModal} style={{ background: PUB.licht, color: PUB.donker, padding: "10px 18px", borderRadius: 999, fontSize: 12, fontWeight: 800, textDecoration: "none", border: "none", cursor: "pointer" }}>Neem contact op</button>
+            <a href="/teamscan" style={{ background: PUB.licht, color: PUB.donker, padding: "10px 18px", borderRadius: 999, fontSize: 12, fontWeight: 800, textDecoration: "none" }}>Start teamscan</a>
           </nav>
         </header>
 
@@ -94,6 +116,7 @@ export default function OnzeAanpakPage() {
             <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. De teamscan brengt vier domeinen in beeld. Insights Discovery gebruiken we als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en samenwerkt.</p>
             <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Bespreek jullie situatie</button>
+              <a href="/teamscan" style={{ ...ctaStyle, background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.22)", boxShadow: "none" }}>Start teamscan</a>
               <span style={{ color: "rgba(255,255,255,0.58)", fontSize: 14 }}>Van teamscan naar gesprek, duiding en concrete beweging.</span>
             </div>
           </div>
@@ -134,19 +157,50 @@ export default function OnzeAanpakPage() {
                 </Card>
               ))}
             </div>
-            <div style={{ marginTop: 18 }}>
-              <Card topColor={PUB.blauw}>
-                <div style={{ display: "grid", gridTemplateColumns: "0.9fr 1.1fr", gap: 22, alignItems: "center" }}>
-                  <div>
-                    <h3 style={{ fontSize: 24, margin: "0 0 10px", color: PUB.donker }}>Insights Discovery als gedragslens</h3>
-                    <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>Insights Discovery is geen vijfde teamscandomein, maar een lens op het team. Het laat zien welke gedragsvoorkeuren aanwezig zijn en hoe die invloed hebben op communicatie, besluitvorming, spanning en verandering.</p>
-                  </div>
-                  <div style={{ background: PUB.licht, borderRadius: 16, padding: 22, border: `1px solid ${PUB.lijn}` }}>
-                    <div style={{ fontSize: 13, fontWeight: 800, color: PUB.teal, marginBottom: 8 }}>Kort gezegd</div>
-                    <div style={{ fontSize: 18, lineHeight: 1.55, color: PUB.donker, fontWeight: 700 }}>De teamscan laat zien wat er speelt. Insights Discovery helpt begrijpen hoe dit team daarmee omgaat.</div>
-                  </div>
+          </div>
+        </section>
+
+        <section id="insights-discovery" style={{ padding: "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1.05fr .95fr", gap: 42, alignItems: "start" }}>
+              <div>
+                <SectionLabel>Insights Discovery en teamontwikkeling</SectionLabel>
+                <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>Een herkenbare taal voor gedrag, communicatie en samenwerking.</h2>
+                <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                  Veel teams kennen Insights Discovery al als instrument om gedragsvoorkeuren en communicatie bespreekbaar te maken. Mijn Teamkompas gebruikt Insights Discovery niet als losse profieltraining, maar als onderdeel van een bredere teamaanpak.
+                </p>
+                <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                  De profielen helpen teamleden om zichzelf en elkaar beter te begrijpen. In combinatie met de teamscan ontstaat een rijker beeld: wat speelt er in het team, welk gedrag versterkt of belemmert samenwerking en welke afspraken zijn nodig om als team effectiever te worden?
+                </p>
+                <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                  Zo helpt Mijn Teamkompas teams die zoeken naar een <strong style={{ color: PUB.donker }}>teamdag met Insights Discovery</strong>, <strong style={{ color: PUB.donker }}>teamcoaching met gedragsprofielen</strong> of een praktische <strong style={{ color: PUB.donker }}>teamsessie over communicatie en samenwerking</strong>.
+                </p>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 24 }}>
+                  <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+                  <a href="/teamscan" style={secondaryCtaStyle}>Start met de teamscan</a>
                 </div>
-              </Card>
+              </div>
+
+              <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 22, padding: 28, boxShadow: "0 18px 46px rgba(13,27,42,0.08)" }}>
+                <div style={{ fontSize: 13, fontWeight: 900, color: PUB.teal, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 18 }}>Wanneer zetten we het in?</div>
+                <div style={{ display: "grid", gap: 12 }}>
+                  {insightsToepassingen.map((item) => (
+                    <div key={item} style={{ display: "grid", gridTemplateColumns: "22px 1fr", gap: 10, alignItems: "start" }}>
+                      <div style={{ width: 10, height: 10, borderRadius: "50%", background: PUB.teal, marginTop: 7 }} />
+                      <div style={{ fontSize: 15, lineHeight: 1.65, color: PUB.donker }}>{item}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: 28 }}>
+              {insightsWaarde.map(([titel, tekst]) => (
+                <Card key={titel} topColor={PUB.teal}>
+                  <h3 style={{ fontSize: 19, margin: "0 0 10px", color: PUB.donker }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
@@ -187,7 +241,6 @@ export default function OnzeAanpakPage() {
       </div>
 
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Onze aanpak" />
-
     </HelmetProvider>
   );
 }
