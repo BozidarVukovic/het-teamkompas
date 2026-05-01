@@ -348,6 +348,20 @@ export default function TeamscanDigitaal() {
     ["4", "Inzicht", "De uitkomsten worden samengebracht in een helder overzicht."],
   ];
 
+  const domeinen = [
+    ["Veiligheid en leiderschap", C.groen, "Kunnen mensen zich uitspreken, fouten bespreken en elkaar aanspreken op een manier die vertrouwen bouwt?"],
+    ["Beleving van verandering", C.blauw, "Begrijpen mensen waarom iets verandert, wat dit van hen vraagt en waar zij invloed op hebben?"],
+    ["Energie en motivatie", C.teal, "Waar geeft het werk energie en waar ontstaan juist belasting, frustratie of terugtrekgedrag?"],
+    ["Verbeteren en leren", "#7C3AED", "Hoe leert het team van ervaringen en hoe worden verbeteringen ook echt vastgehouden?"],
+  ];
+
+  const reportPreviews = [
+    ["Overzicht", "/teamkompas-voorbeeldrapport-overzicht.jpg", "Een compact totaalbeeld van teamscore, managerscore, perceptiegap en eerste signalen."],
+    ["Leidende inzichten", "/teamkompas-voorbeeldrapport-inzichten.jpg", "De belangrijkste patronen uit de data vertaald naar betekenis voor het team."],
+    ["Domeinanalyse", "/teamkompas-voorbeeldrapport-domeinanalyse.jpg", "Verdieping per domein met duiding, voorbeelden en aandachtspunten voor leidinggevende en team."],
+    ["Vervolgstappen", "/teamkompas-voorbeeldrapport-conclusie.jpg", "Concrete prioriteiten en eerste acties voor de komende periode."],
+  ];
+
   if (success) {
     return (
       <HelmetProvider>
@@ -387,11 +401,16 @@ export default function TeamscanDigitaal() {
   return (
     <HelmetProvider>
       <Helmet>
-        <title>Digitale teamscan aanvragen | Mijn Teamkompas</title>
+        <title>Teamscan voor teamontwikkeling en samenwerking | Mijn Teamkompas</title>
         <meta
           name="description"
-          content="Vraag eenvoudig een digitale teamscan aan voor jouw team. Binnen enkele minuten geregeld, veilig voor teamleden en gericht op praktische vervolgstappen."
+          content="Ontdek wat een teamscan is en hoe Mijn Teamkompas samenwerking, veiligheid, energie en leren zichtbaar maakt. Start laagdrempelig met een digitale teamscan."
         />
+        <link rel="canonical" href="https://www.mijnteamkompas.nl/teamscan" />
+        <meta property="og:title" content="Teamscan voor teamontwikkeling en samenwerking | Mijn Teamkompas" />
+        <meta property="og:description" content="Een teamscan maakt zichtbaar waar samenwerking sterk is, waar spanning ontstaat en welke vervolgstappen logisch zijn." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.mijnteamkompas.nl/teamscan" />
       </Helmet>
 
       <div style={{ fontFamily: "Roboto, sans-serif", background: C.wit, color: C.donker, minHeight: "100vh" }}>
@@ -409,9 +428,9 @@ export default function TeamscanDigitaal() {
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr 0.95fr", gap: 42, alignItems: "center" }}>
             <div>
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", textTransform: "uppercase", color: "#7DB7FF", marginBottom: 14 }}>Digitale teamscan</div>
-              <h1 style={{ fontSize: isMobile ? 36 : 58, lineHeight: 1.04, margin: "0 0 18px", letterSpacing: "-0.03em" }}>Start de teamscan voor jouw team.</h1>
+              <h1 style={{ fontSize: isMobile ? 36 : 58, lineHeight: 1.04, margin: "0 0 18px", letterSpacing: "-0.03em" }}>Teamscan voor betere samenwerking, veiligheid en teamontwikkeling.</h1>
               <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 680 }}>
-                Binnen 2 minuten geregeld. Jouw team ontvangt een korte vragenlijst en jij krijgt inzicht in wat er speelt, waar energie zit en welke vervolgstappen logisch zijn.
+                De teamscan van Mijn Teamkompas maakt zichtbaar waar samenwerking energie geeft, waar spanning ontstaat en welke vervolgstappen logisch zijn. Je start laagdrempelig en krijgt een praktisch beeld van wat er in het team speelt.
               </p>
               <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 26 }}>
                 <a
@@ -432,6 +451,93 @@ export default function TeamscanDigitaal() {
                   <div style={{ fontSize: 14, lineHeight: 1.6, color: "rgba(255,255,255,0.72)" }}>{tekst}</div>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.95fr 1.05fr", gap: 34, alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Wat is een teamscan?</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, margin: "0 0 16px" }}>Een teamscan maakt zichtbaar wat in de samenwerking vaak onbesproken blijft.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub, margin: "0 0 14px" }}>
+                Een teamscan is een korte vragenlijst waarmee teamleden en leidinggevenden hun beeld geven van samenwerking, veiligheid, verandering, energie en leren. De uitkomsten laten zien waar het team sterk staat, waar frictie ontstaat en waar het verschil in beleving aandacht vraagt.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub, margin: 0 }}>
+                Mijn Teamkompas gebruikt de scan niet als oordeel, maar als startpunt voor dialoog, teamontwikkeling en concrete vervolgstappen. Zo ontstaat richting voordat je een teamdag, coachingstraject of verbeteractie inzet.
+              </p>
+            </div>
+            <div style={{ background: C.licht, border: `1px solid ${C.lijn}`, borderRadius: 24, padding: isMobile ? 20 : 26, boxShadow: "0 18px 50px rgba(13,27,42,0.08)" }}>
+              <h3 style={{ margin: "0 0 16px", fontSize: 24 }}>Wat levert het op?</h3>
+              <div style={{ display: "grid", gap: 12 }}>
+                {[
+                  "Een gedeeld beeld van hoe het team functioneert.",
+                  "Inzicht in verschillen tussen team en leidinggevende.",
+                  "Aanknopingspunten voor psychologische veiligheid en betere communicatie.",
+                  "Prioriteiten voor een teamdag, workshop of vervolginterventie.",
+                ].map((item) => (
+                  <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                    <span style={{ width: 24, height: 24, borderRadius: "50%", background: C.teal, color: C.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, flexShrink: 0 }}>✓</span>
+                    <span style={{ color: C.donker, lineHeight: 1.6, fontWeight: 700 }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: isMobile ? "48px 22px" : "70px 60px", background: C.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ textAlign: "center", maxWidth: 780, margin: "0 auto 30px" }}>
+              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Vier domeinen</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 12px" }}>De teamscan kijkt naar de condities waaronder samenwerking groeit.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.75, color: C.sub, margin: 0 }}>
+                De scan brengt niet alleen meningen in kaart, maar ordent signalen rond vier herkenbare domeinen. Daardoor wordt sneller duidelijk waar de meeste ontwikkeling mogelijk is.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4,1fr)", gap: 14 }}>
+              {domeinen.map(([titel, kleur, tekst]) => (
+                <div key={titel} style={{ background: C.wit, border: `1px solid ${C.lijn}`, borderRadius: 20, padding: 20, boxShadow: "0 14px 34px rgba(13,27,42,0.06)", minHeight: 190 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: "50%", border: `2px solid ${kleur}`, color: kleur, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, marginBottom: 14 }}>●</div>
+                  <h3 style={{ fontSize: 18, lineHeight: 1.25, margin: "0 0 10px", color: C.donker }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.65, color: C.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.82fr 1.18fr", gap: 34, alignItems: "start", marginBottom: 28 }}>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Voorbeeldrapport</div>
+                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>Bekijk enkele voorbeeldpagina’s zonder de volledige methode prijs te geven.</h2>
+                <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub, margin: "0 0 18px" }}>
+                  Na de teamscan ontvang je geen losse cijfers, maar een praktisch rapport met duiding en vervolgstappen. De voorbeelden hieronder gebruiken fictieve data en laten alleen een beperkte preview zien. De vragenlijst, scoringslogica en volledige methodiek blijven onderdeel van het traject.
+                </p>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "9px 12px", borderRadius: 999, background: "#EEF7F3", color: C.teal, fontSize: 13, fontWeight: 900 }}>
+                  Fictief voorbeeld · geen klantdata
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
+                {reportPreviews.map(([titel, src, tekst]) => (
+                  <div key={titel} style={{ border: `1px solid ${C.lijn}`, borderRadius: 18, overflow: "hidden", background: C.wit, boxShadow: "0 14px 34px rgba(13,27,42,0.07)" }}>
+                    <div style={{ position: "relative", height: isMobile ? 260 : 220, background: C.licht, overflow: "hidden" }}>
+                      <img src={src} alt={`Fictieve voorbeeldpagina uit teamscanrapport: ${titel}`} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block" }} />
+                      <div style={{ position: "absolute", top: 10, left: 10, background: "rgba(255,255,255,0.92)", color: C.teal, borderRadius: 999, padding: "6px 10px", fontSize: 12, fontWeight: 900 }}>Preview</div>
+                    </div>
+                    <div style={{ padding: 16 }}>
+                      <h3 style={{ margin: "0 0 6px", fontSize: 18 }}>{titel}</h3>
+                      <p style={{ margin: 0, color: C.sub, fontSize: 14, lineHeight: 1.6 }}>{tekst}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", marginTop: 22 }}>
+              <a href="#aanvraag" onClick={() => trackFormStartOnce({ trigger: "rapport_preview_cta" })} style={{ ...buttonBase, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", background: C.blauw, color: C.wit }}>Start de teamscan</a>
+              <button onClick={() => navigate("/verkennen")} style={{ ...buttonBase, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Plan een kennismaking</button>
             </div>
           </div>
         </section>
