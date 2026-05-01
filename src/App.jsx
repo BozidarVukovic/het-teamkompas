@@ -296,7 +296,39 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
     ["Teamscan", "teamscan"],
     ["Contact", "contact"]
   ];
+  const handleNavClick = (id) => {
+    setMenuOpen(false);
 
+    if (id === "contact") {
+      openModal();
+      return;
+    }
+
+    if (id === "teamscan") {
+      navigate("/teamscan");
+      return;
+    }
+
+    if (id === "teamdag") {
+      navigate("/teamdag");
+      return;
+    }
+
+    const scrollToTarget = () => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+
+    if (window.location.pathname !== "/") {
+      navigate(`/#${id}`);
+      setTimeout(scrollToTarget, 300);
+      return;
+    }
+
+    scrollToTarget();
+  };
   useEffect(() => {
     const observers = [];
     const ids = ["voor-wie", "eerste-stap", "traject", "teamscan", "contact"];
@@ -384,7 +416,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
         ) : (
           <div style={{display:"flex",alignItems:"center",gap:22}}>
             <span
-              onClick={()=>scrollTo("home")}
+              onClick={() => handleNavClick("home")}
               aria-current={activeSection==="home" ? "page" : undefined}
               style={navLinkStyle("home")}
             >
@@ -395,7 +427,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             {navLinks.map(([l,id])=>(
               <span
                 key={l}
-                onClick={()=>scrollTo(id)}
+                onClick={() => handleNavClick(id)}
                 aria-current={activeSection===id ? "page" : undefined}
                 style={navLinkStyle(id)}
                 onMouseEnter={e=>{ if (activeSection!==id) e.target.style.color="#00A896"; }}
@@ -453,7 +485,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
           background:"rgba(13,27,42,0.98)",borderBottom:"1px solid rgba(0,168,150,0.2)",
           padding:"12px 0"}}>
           <div
-            onClick={()=>scrollTo("home")}
+            onClick={() => handleNavClick("home")}
             aria-current={activeSection==="home" ? "page" : undefined}
             style={{padding:"14px 24px",color:activeSection==="home" ? "#00A896" : "rgba(255,255,255,0.75)",
               fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
@@ -463,7 +495,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
           {navLinks.map(([l,id])=>(
             <div
               key={l}
-              onClick={()=>scrollTo(id)}
+              onClick={() => handleNavClick(id)}
               aria-current={activeSection===id ? "page" : undefined}
               style={{padding:"14px 24px",color:activeSection===id ? "#00A896" : "rgba(255,255,255,0.75)",
                 fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
@@ -476,6 +508,12 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
           >
             Teamontwikkeling
+          </div>
+          <div
+            onClick={()=>{navigate("/teamdag");setMenuOpen(false);}}
+            style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
+          >
+            Teamdag
           </div>
           <div
             onClick={()=>{navigate("/onze-aanpak");setMenuOpen(false);}}
