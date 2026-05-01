@@ -7480,6 +7480,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
 
 function TeamcoachingPage() {
   const [modalOpen, setModalOpen] = useState(false);
+  const isMobile = useIsMobile();
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
@@ -7558,30 +7559,30 @@ function TeamcoachingPage() {
       </Helmet>
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
-        <NavBar isMobile={false} onLoginClick={() => {}} openModal={openModal} />
+        <NavBar isMobile={isMobile} onLoginClick={() => {}} openModal={openModal} />
 
         <section
           style={{
             background: PUB.donker,
-            minHeight: "74vh",
+            minHeight: isMobile ? "auto" : "74vh",
             display: "grid",
-            gridTemplateColumns: "1.05fr .95fr",
+            gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr",
             alignItems: "center",
             overflow: "hidden",
             paddingTop: 64,
           }}
         >
-          <div style={{ padding: "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
+          <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
             <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
               Teamcoaching
             </div>
-            <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
+            <h1 style={{ fontSize: isMobile ? 36 : 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
               Teamcoaching voor teams die beter willen samenwerken.
             </h1>
-            <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 700, marginBottom: 26 }}>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 700, marginBottom: 26 }}>
               Mijn Teamkompas begeleidt teams die willen groeien in samenwerking, communicatie, eigenaarschap en psychologische veiligheid. Niet met losse inspiratie, maar met gerichte teamcoaching die zichtbaar maakt wat er speelt en wat het team anders kan doen.
             </p>
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>
                 Plan een kennismaking
               </button>
@@ -7591,7 +7592,7 @@ function TeamcoachingPage() {
             </div>
           </div>
 
-          <div style={{ minHeight: "74vh", position: "relative" }}>
+          <div style={{ minHeight: isMobile ? 320 : "74vh", position: "relative" }}>
             <img
               src="/teamkompas-intakegesprek.jpg"
               alt="Teamcoaching gesprek over samenwerking, communicatie en leiderschap"
@@ -7601,13 +7602,13 @@ function TeamcoachingPage() {
           </div>
         </section>
 
-        <section style={{ padding: "86px 60px", background: PUB.licht }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: ".9fr 1.1fr", gap: 42, alignItems: "start" }}>
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 42, alignItems: "start" }}>
             <div>
               <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
                 Wanneer teamcoaching helpt
               </div>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>
                 Teamcoaching helpt wanneer het team niet harder, maar anders moet leren samenwerken.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
@@ -7626,13 +7627,13 @@ function TeamcoachingPage() {
           </div>
         </section>
 
-        <section style={{ padding: "86px 60px", background: PUB.wit }}>
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ maxWidth: 840, marginBottom: 34 }}>
               <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
                 Onze aanpak voor teamcoaching
               </div>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>
                 Van inzicht naar gedrag in het dagelijks werk.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
@@ -7640,7 +7641,7 @@ function TeamcoachingPage() {
               </p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 14 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(5, 1fr)", gap: 14 }}>
               {aanpak.map(([nr, titel, tekst]) => (
                 <div key={nr} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}>
                   <div style={{ width: 36, height: 36, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, marginBottom: 14 }}>
@@ -7654,18 +7655,18 @@ function TeamcoachingPage() {
           </div>
         </section>
 
-        <section style={{ padding: "86px 60px", background: PUB.licht }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 42, alignItems: "center" }}>
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 42, alignItems: "center" }}>
             <img
               src="/teamkompas-workshop-hero.jpg"
               alt="Teamcoaching met Insights Discovery en teamscan voor betere samenwerking"
-              style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: 460, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }}
+              style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 460, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }}
             />
             <div>
               <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
                 Teamcoaching met Insights Discovery
               </div>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>
                 Gedragsprofielen helpen om communicatie concreet te maken.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
@@ -7683,18 +7684,18 @@ function TeamcoachingPage() {
           </div>
         </section>
 
-        <section style={{ padding: "86px 60px", background: PUB.wit }}>
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ maxWidth: 840, marginBottom: 34 }}>
               <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
                 Thema’s in teamcoaching
               </div>
-              <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>
                 De inhoud volgt de ontwikkelvraag van het team.
               </h2>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
               {themaCards.map(([titel, tekst]) => (
                 <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}>
                   <h3 style={{ fontSize: 18, margin: "0 0 8px", color: PUB.donker }}>{titel}</h3>
@@ -7705,18 +7706,18 @@ function TeamcoachingPage() {
           </div>
         </section>
 
-        <section style={{ padding: "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
           <div style={{ maxWidth: 820, margin: "0 auto" }}>
             <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
               Klaar om samenwerking concreet te verbeteren?
             </div>
-            <h2 style={{ fontSize: 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
+            <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
               Begin met een scherp beeld van wat er in het team speelt.
             </h2>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", marginBottom: 26 }}>
               Plan een verkennend gesprek of start laagdrempelig met de teamscan. Dan bepalen we samen of teamcoaching, een teamdag of een andere interventie passend is.
             </p>
-            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>
                 Plan een kennismaking
               </button>
