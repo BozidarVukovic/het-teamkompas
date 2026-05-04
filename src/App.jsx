@@ -2751,14 +2751,32 @@ function PageKlanten() {
 
   const laadData = async () => {
     setLoading(true);
+
+    const veiligeGetDocs = async (collectieNaam) => {
+      try {
+        return await getDocs(collection(db, collectieNaam));
+      } catch (err) {
+        console.error(`Firestore laden mislukt: ${collectieNaam}`, err);
+        return { docs: [] };
+      }
+    };
+
     try {
       const [klantenSnap, vragenlijstenSnap, metingenSnap, antwoordenSnap, contactSnap] = await Promise.all([
-        getDocs(collection(db, "klanten")).catch(() => ({ docs: [] })),
-        getDocs(collection(db, "vragenlijsten")).catch(() => ({ docs: [] })),
-        getDocs(collection(db, "metingen")).catch(() => ({ docs: [] })),
-        getDocs(collection(db, "antwoorden")).catch(() => ({ docs: [] })),
-        getDocs(collection(db, "contactaanvragen")).catch(() => ({ docs: [] })),
+        veiligeGetDocs("klanten"),
+        veiligeGetDocs("vragenlijsten"),
+        veiligeGetDocs("metingen"),
+        veiligeGetDocs("antwoorden"),
+        veiligeGetDocs("contactaanvragen"),
       ]);
+
+      console.log("Firestore aantallen PageKlanten", {
+        klanten: klantenSnap.docs.length,
+        vragenlijsten: vragenlijstenSnap.docs.length,
+        metingen: metingenSnap.docs.length,
+        antwoorden: antwoordenSnap.docs.length,
+        contactaanvragen: contactSnap.docs.length,
+      });
 
       const klantenDb = klantenSnap.docs
         .map(d => ({ id: d.id, ...d.data() }))
@@ -4199,13 +4217,25 @@ function PageMetingen() {
 
 
 function downloadHtmlRapport(filename, html) {
-  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+  const pdfNaam = filename.replace(/\.html$/i, ".pdf");
+
+  const printHtml = html.replace(
+    "</body>",
+    `
+      <script>
+        window.addEventListener("load", function () {
+          document.title = ${JSON.stringify(pdfNaam)};
+          setTimeout(function () {
+            window.print();
+          }, 500);
+        });
+      </script>
+    </body>`
+  );
+
+  const blob = new Blob([printHtml], { type: "text/html;charset=utf-8" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+  window.open(url, "_blank", "noopener,noreferrer");
 }
 
 function standaardRapportHeader({ titel, klant, instrument, respondenten, datum }) {
@@ -5971,13 +6001,10 @@ function PageRapportages() {
 </body>
 </html>`;
 
-    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement("a");
-    a.href     = url;
-    a.download = `adviesrapport-${mwLijst.klant.toLowerCase().replace(/\s+/g, "-")}-${mwLijst.naam.toLowerCase().replace(/\s+/g, "-")}.html`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadHtmlRapport(
+      `adviesrapport-${mwLijst.klant.toLowerCase().replace(/\s+/g, "-")}-${mwLijst.naam.toLowerCase().replace(/\s+/g, "-")}.html`,
+      html
+    );
     setGenererend(null);
   };
 
