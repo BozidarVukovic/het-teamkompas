@@ -808,6 +808,18 @@ function SeoHead({ page = "home" }) {
       url: "https://www.mijnteamkompas.nl/verkennen",
       image: "https://www.mijnteamkompas.nl/teamkompas-intakegesprek.jpg",
     },
+    teamcoaching: {
+      title: "Teamcoaching | begeleiding bij samenwerking en leiderschap",
+      description: "Teamcoaching van Mijn Teamkompas: praktische begeleiding bij samenwerking, communicatie, psychologische veiligheid en eigenaarschap binnen het team.",
+      url: "https://www.mijnteamkompas.nl/teamcoaching",
+      image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
+    },
+    teamdag: {
+      title: "Teamdag organiseren | dialoog en concrete afspraken",
+      description: "Een teamdag van Mijn Teamkompas: gestructureerde dialoog op basis van de teamscan, met heldere uitkomsten, gedeelde afspraken en concrete vervolgstappen.",
+      url: "https://www.mijnteamkompas.nl/teamdag",
+      image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
+    },
     beheer: {
       title: "Beheeromgeving | Mijn Teamkompas",
       description: "Beheeromgeving van Mijn Teamkompas.",
@@ -8142,8 +8154,8 @@ export default function App() {
         <Route path="/teamscan" element={<><SeoHead page="teamscan" /><TeamscanDigitaal /></>} />
         <Route path="/teamontwikkeling" element={<><SeoHead page="teamontwikkeling" /><TeamontwikkelingSeoLandingspagina onLoginClick={() => setView("login")} /></>} />
         <Route path="/admin/funnel" element={<><SeoHead page="beheer" />{beheerElement}</>} />
-        <Route path="/teamcoaching" element={<TeamcoachingPage />} />
-        <Route path="/teamdag" element={<TeamdagPage />} />
+        <Route path="/teamcoaching" element={<><SeoHead page="teamcoaching" /><TeamcoachingPage /></>} />
+        <Route path="/teamdag" element={<><SeoHead page="teamdag" /><TeamdagPage /></>} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
       </Routes>
     </HelmetProvider>
