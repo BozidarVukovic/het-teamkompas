@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 
 // Centrale Firebase-configuratie voor Mijn Teamkompas.
 const firebaseConfig = {
-  apiKey: "AIzaSyDyl6gj1LmOZ-1Mcin1JnfkkZg82c2Jtz0",
+  apiKey: "AIzaSyDgl6gj1LmOZ-1Mcin1jNfkkZg82c2Jtz0",
   authDomain: "mijn-teamkompas-6de84.firebaseapp.com",
   projectId: "mijn-teamkompas-6de84",
   storageBucket: "mijn-teamkompas-6de84.firebasestorage.app",
