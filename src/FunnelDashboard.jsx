@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { collection, getDocs, orderBy, query, limit, doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import GenerateAdvicePanel from "./components/admin/GenerateAdvicePanel";
 
 const cardStyle = {
   background: "#FFFFFF",
@@ -386,6 +387,10 @@ export default function FunnelDashboard() {
             {error}
           </div>
         )}
+
+        <div style={{ marginBottom: "28px" }}>
+          <GenerateAdvicePanel scanId="test-scan-001" />
+        </div>
 
         <div
           style={{

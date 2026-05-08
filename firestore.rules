@@ -1,0 +1,56 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email in [
+          "bozidar@mijnteamkompas.nl",
+          "edmond@mijnteamkompas.nl"
+        ];
+    }
+
+    // Backoffice: beheerders mogen alles lezen en beheren
+    match /klanten/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /vragenlijsten/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /metingen/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /contactaanvragen/{docId} {
+      allow read, write: if isAdmin();
+      allow create: if true;
+    }
+
+    match /teamscanSelfserviceAanvragen/{docId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if true;
+    }
+
+    match /antwoorden/{docId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if true;
+    }
+
+    match /teamscanEvents/{docId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if true;
+    }
+
+    match /prullenbak/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Alles wat niet expliciet hierboven staat, blijft dicht
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
