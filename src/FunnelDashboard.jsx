@@ -389,7 +389,7 @@ export default function FunnelDashboard() {
         )}
 
         <div style={{ marginBottom: "28px" }}>
-          <GenerateAdvicePanel scanId="2DEinhO516khWktsUO2z" />
+          <GenerateAdvicePanel scanId="2DEinhO516khWktsuO2z" />
         </div>
 
         <div

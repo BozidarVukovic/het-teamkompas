@@ -11,6 +11,7 @@ setGlobalOptions({ maxInstances: 10 });
 exports.generateTeamAdvice = onCall(async (request) => {
   try {
     console.log("generateTeamAdvice aangeroepen", request.data);
+    console.log("Firebase projectId:", process.env.GCLOUD_PROJECT);
 
     const { scanId } = request.data || {};
 
@@ -18,18 +19,18 @@ exports.generateTeamAdvice = onCall(async (request) => {
       throw new HttpsError("invalid-argument", "scanId ontbreekt.");
     }
 
-    const scanRef = db
-      .collection("teamscanZelfserviceAanvragen")
-      .doc(scanId);
+    const collectionName = "teamscanSelfserviceAanvragen";
 
-    const scanDoc = await scanRef.get();
+    const scanRef = db.collection(collectionName).doc(scanId);
 
-    if (!scanDoc.exists) {
-      throw new HttpsError(
-        "not-found",
-        `Geen teamscanaanvraag gevonden met id: ${scanId}`
-      );
-    }
+    await scanRef.set(
+      {
+        debugFunctionReached: true,
+        debugLastScanId: scanId,
+        debugUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
 
     await scanRef.collection("aiAdvice").doc("latest").set({
       status: "concept",
@@ -41,17 +42,9 @@ exports.generateTeamAdvice = onCall(async (request) => {
         "De volgende stap is om deze functie te koppelen aan echte teamscandata en daarna aan AI.",
     });
 
-    await scanRef.set(
-      {
-        status: "conceptadvies_test_gereed",
-        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
-
     return {
       success: true,
-      message: "Testadvies is opgeslagen in Firestore.",
+      message: `Testadvies is opgeslagen bij ${collectionName}/${scanId}.`,
     };
   } catch (error) {
     console.error("generateTeamAdvice error:", error);
