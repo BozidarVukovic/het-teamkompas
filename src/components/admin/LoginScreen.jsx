@@ -18,9 +18,12 @@ export default function LoginScreen({ onLogin, onBack }) {
     setError("");
 
     try {
-      const cred = await signInWithEmailAndPassword(auth, email, pass);
+      const cleanEmail = email.trim().toLowerCase();
+      const cred = await signInWithEmailAndPassword(auth, cleanEmail, pass);
+      const userEmail = (cred.user.email || "").trim().toLowerCase();
+      const allowedAdmins = ADMIN_EMAILS.map((adminEmail) => adminEmail.trim().toLowerCase());
 
-      if (!ADMIN_EMAILS.includes(cred.user.email || "")) {
+      if (!allowedAdmins.includes(userEmail)) {
         await signOut(auth);
         setError("Je hebt geen toegang tot de beheeromgeving.");
         return;
@@ -28,15 +31,14 @@ export default function LoginScreen({ onLogin, onBack }) {
 
       onLogin();
     } catch (err) {
-      const code = err?.code || "";
+      const code = err?.code || "onbekende-fout";
+      const message = err?.message || "Geen extra foutmelding beschikbaar.";
 
-      setError(
-        code === "auth/invalid-credential" || code === "auth/wrong-password"
-          ? "Onjuist e-mailadres of wachtwoord."
-          : code === "auth/too-many-requests"
-          ? "Te veel pogingen. Probeer later opnieuw."
-          : "Inloggen mislukt. Probeer opnieuw."
-      );
+      console.error("Login error code:", code);
+      console.error("Login error message:", message);
+      console.error("Login error full:", err);
+
+      setError(`${code}: ${message}`);
     } finally {
       setLoading(false);
     }
