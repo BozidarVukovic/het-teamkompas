@@ -17,6 +17,7 @@ import { PUB, ADM } from "./styles/tokens";
 import { useInView, useIsMobile } from "./components/shared/hooks";
 import Fade from "./components/shared/Fade";
 import LoginScreen from "./components/admin/LoginScreen";
+import GenerateAdvicePanel from "./components/admin/GenerateAdvicePanel";
 import KompasDot from "./components/shared/KompasDot";
 import ScanInvullen from "./pages/public/ScanInvullen";
 import PageScans from "./pages/admin/PageScans";
@@ -6267,6 +6268,28 @@ function PageRapportages() {
         Klik op <strong style={{color:ADM.white}}>Genereer rapport</strong> om een HTML-rapportage te downloaden. 
         Open het bestand in je browser en gebruik <strong style={{color:ADM.white}}>Ctrl+P / Cmd+P</strong> om het als PDF op te slaan.
       </div>
+
+      <section
+        style={{
+          background: ADM.navy,
+          border: `1px solid ${ADM.teal}33`,
+          borderRadius: 14,
+          padding: "22px 24px",
+          marginBottom: 20,
+          boxShadow: "0 18px 48px rgba(0,0,0,0.18)",
+        }}
+      >
+        <div style={{ fontSize: 11, color: ADM.teal, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 8 }}>
+          Stap 8
+        </div>
+        <h2 style={{ margin: "0 0 10px", color: ADM.white, fontSize: 24, lineHeight: 1.2 }}>
+          AI stelt maatwerkadvies op
+        </h2>
+        <p style={{ margin: "0 0 18px", color: ADM.muted, fontSize: 13, lineHeight: 1.7, maxWidth: 820 }}>
+          Genereer een conceptadvies op basis van de geselecteerde teamscanaanvraag. Deze testversie controleert de koppeling tussen de beheeromgeving, Firebase Functions en Firestore.
+        </p>
+        <GenerateAdvicePanel scanId="2DEinhO516khWktsuO2z" />
+      </section>
       {rapportError && (
         <div style={{fontSize:12,color:ADM.red,marginBottom:20,lineHeight:1.6,
           background:"rgba(231,76,60,0.10)",padding:"12px 16px",borderRadius:10,
