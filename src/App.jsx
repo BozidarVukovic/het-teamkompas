@@ -4897,6 +4897,7 @@ function PageRapportages() {
   const [adviesMelding, setAdviesMelding] = useState("");
   const [adviesFout, setAdviesFout] = useState("");
   const [adviesrapporten, setAdviesrapporten] = useState([]);
+  const [geselecteerdAdviesrapportId, setGeselecteerdAdviesrapportId] = useState(null);
 
   useEffect(() => {
     const laadData = async () => {
@@ -5120,6 +5121,20 @@ function PageRapportages() {
   const korteTekst = (tekst, max = 260) => {
     if (!tekst) return "Nog geen samenvatting beschikbaar.";
     return tekst.length > max ? `${tekst.slice(0, max)}...` : tekst;
+  };
+
+  const geselecteerdAdviesrapport =
+    adviesrapporten.find((rapport) => rapport.id === geselecteerdAdviesrapportId) || null;
+
+  const domeinScoreItems = (rapport) =>
+    Object.values(rapport?.domainScores || {}).filter(Boolean);
+
+  const scoreKleur = (score) => {
+    if (score === null || score === undefined) return ADM.muted;
+    if (score >= 4.2) return ADM.green;
+    if (score >= 3.5) return ADM.teal;
+    if (score >= 2.8) return ADM.orange;
+    return ADM.red;
   };
 
   const gemPijler = (pijlerIdx, subset, stellingen) => {
@@ -6671,18 +6686,43 @@ function PageRapportages() {
                       {rapport.klantNaam || "Onbekende klant"} · {formatAdviesDatum(rapport.generatedAt)}
                     </div>
                   </div>
-                  <span style={{
-                    alignSelf: "flex-start",
-                    fontSize: 11,
-                    fontWeight: 900,
-                    padding: "5px 9px",
-                    borderRadius: 999,
-                    background: "rgba(20,184,166,0.12)",
-                    color: ADM.teal,
-                    border: `1px solid ${ADM.teal}33`,
-                  }}>
-                    {rapport.status || "concept"}
-                  </span>
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                    <span style={{
+                      alignSelf: "flex-start",
+                      fontSize: 11,
+                      fontWeight: 900,
+                      padding: "5px 9px",
+                      borderRadius: 999,
+                      background: "rgba(20,184,166,0.12)",
+                      color: ADM.teal,
+                      border: `1px solid ${ADM.teal}33`,
+                    }}>
+                      {rapport.status || "concept"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setGeselecteerdAdviesrapportId(rapport.id)}
+                      style={{
+                        border: `1px solid ${ADM.teal}55`,
+                        borderRadius: 999,
+                        padding: "7px 11px",
+                        background:
+                          geselecteerdAdviesrapportId === rapport.id
+                            ? ADM.teal
+                            : "rgba(20,184,166,0.10)",
+                        color:
+                          geselecteerdAdviesrapportId === rapport.id
+                            ? "#0F172A"
+                            : ADM.teal,
+                        fontSize: 11,
+                        fontWeight: 900,
+                        cursor: "pointer",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Bekijk adviesrapport
+                    </button>
+                  </div>
                 </div>
 
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 10, marginBottom: 14 }}>
@@ -6725,6 +6765,121 @@ function PageRapportages() {
           </div>
         )}
       </section>
+
+      {geselecteerdAdviesrapport && (
+        <section
+          style={{
+            background: "#F8FAFC",
+            border: `1px solid ${ADM.border}`,
+            borderRadius: 16,
+            padding: "24px",
+            marginBottom: 22,
+            color: "#0F172A",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 18 }}>
+            <div>
+              <div style={{ fontSize: 11, color: "#0F766E", fontWeight: 900, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 8 }}>
+                Detailweergave adviesrapport
+              </div>
+              <h2 style={{ margin: 0, fontSize: 26, lineHeight: 1.2, color: "#0F172A" }}>
+                {geselecteerdAdviesrapport.rapportageNaam || "Conceptadvies"}
+              </h2>
+              <p style={{ margin: "8px 0 0", color: "#475569", fontSize: 14, lineHeight: 1.6 }}>
+                {geselecteerdAdviesrapport.klantNaam || "Onbekende klant"} · {formatAdviesDatum(geselecteerdAdviesrapport.generatedAt)} · {geselecteerdAdviesrapport.status || "concept"}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setGeselecteerdAdviesrapportId(null)}
+              style={{
+                alignSelf: "flex-start",
+                border: "1px solid #CBD5E1",
+                borderRadius: 999,
+                padding: "8px 12px",
+                background: "#FFFFFF",
+                color: "#334155",
+                fontSize: 12,
+                fontWeight: 900,
+                cursor: "pointer",
+              }}
+            >
+              Sluit detail
+            </button>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 20 }}>
+            <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 12, padding: 14 }}>
+              <div style={{ color: "#64748B", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Antwoorden</div>
+              <div style={{ color: "#0F172A", fontWeight: 900, fontSize: 22 }}>{geselecteerdAdviesrapport.dataQuality?.answerCount ?? 0}</div>
+            </div>
+            <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 12, padding: 14 }}>
+              <div style={{ color: "#64748B", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Sterkste domein</div>
+              <div style={{ color: "#15803D", fontWeight: 900, fontSize: 14 }}>{geselecteerdAdviesrapport.highestDomain?.label || "Nog niet bekend"}</div>
+            </div>
+            <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 12, padding: 14 }}>
+              <div style={{ color: "#64748B", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Belangrijkste aandachtspunt</div>
+              <div style={{ color: "#C2410C", fontWeight: 900, fontSize: 14 }}>{geselecteerdAdviesrapport.lowestDomain?.label || "Nog niet bekend"}</div>
+            </div>
+          </div>
+
+          <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18, marginBottom: 16 }}>
+            <h3 style={{ margin: "0 0 8px", color: "#0F172A", fontSize: 18 }}>Samenvatting</h3>
+            <p style={{ margin: 0, color: "#334155", fontSize: 14, lineHeight: 1.75 }}>
+              {geselecteerdAdviesrapport.executiveSummary || "Nog geen samenvatting beschikbaar."}
+            </p>
+          </div>
+
+          <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18, marginBottom: 16 }}>
+            <h3 style={{ margin: "0 0 14px", color: "#0F172A", fontSize: 18 }}>Domeinscores</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+              {domeinScoreItems(geselecteerdAdviesrapport).map((domein) => (
+                <div key={domein.label} style={{ border: "1px solid #E2E8F0", borderRadius: 12, padding: 14, background: "#F8FAFC" }}>
+                  <div style={{ color: "#0F172A", fontWeight: 900, fontSize: 14, marginBottom: 8 }}>{domein.label}</div>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 8 }}>
+                    <span style={{ color: scoreKleur(domein.score), fontWeight: 950, fontSize: 24 }}>
+                      {domein.score ?? "-"}
+                    </span>
+                    <span style={{ color: "#64748B", fontSize: 12 }}>{domein.status || "geen status"}</span>
+                  </div>
+                  <p style={{ margin: 0, color: "#475569", fontSize: 13, lineHeight: 1.6 }}>
+                    {domein.advice || "Nog geen domeinadvies beschikbaar."}
+                  </p>
+                </div>
+              ))}
+              {domeinScoreItems(geselecteerdAdviesrapport).length === 0 && (
+                <div style={{ color: "#64748B", fontSize: 13 }}>Nog geen domeinscores beschikbaar.</div>
+              )}
+            </div>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14, marginBottom: 16 }}>
+            <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18 }}>
+              <h3 style={{ margin: "0 0 8px", color: "#0F172A", fontSize: 17 }}>Advies voor de leidinggevende</h3>
+              <p style={{ margin: 0, color: "#334155", fontSize: 14, lineHeight: 1.7 }}>
+                {geselecteerdAdviesrapport.reportSections?.leadershipAdvice || "Nog geen leiderschapsadvies beschikbaar."}
+              </p>
+            </div>
+            <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18 }}>
+              <h3 style={{ margin: "0 0 8px", color: "#0F172A", fontSize: 17 }}>Advies voor het team</h3>
+              <p style={{ margin: 0, color: "#334155", fontSize: 14, lineHeight: 1.7 }}>
+                {geselecteerdAdviesrapport.reportSections?.teamAdvice || "Nog geen teamadvies beschikbaar."}
+              </p>
+            </div>
+          </div>
+
+          {Array.isArray(geselecteerdAdviesrapport.recommendedNextSteps) && geselecteerdAdviesrapport.recommendedNextSteps.length > 0 && (
+            <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18 }}>
+              <h3 style={{ margin: "0 0 10px", color: "#0F172A", fontSize: 18 }}>Aanbevolen vervolgstappen</h3>
+              <ol style={{ margin: 0, paddingLeft: 20, color: "#334155", fontSize: 14, lineHeight: 1.8 }}>
+                {geselecteerdAdviesrapport.recommendedNextSteps.map((stap, index) => (
+                  <li key={index}>{stap}</li>
+                ))}
+              </ol>
+            </div>
+          )}
+        </section>
+      )}
 
       {rapportError && (
         <div style={{fontSize:12,color:ADM.red,marginBottom:20,lineHeight:1.6,
