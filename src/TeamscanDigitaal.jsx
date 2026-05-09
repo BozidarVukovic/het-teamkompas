@@ -512,7 +512,7 @@ export default function TeamscanDigitaal() {
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.82fr 1.18fr", gap: 34, alignItems: "start", marginBottom: 28 }}>
               <div>
                 <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Voorbeeldrapport</div>
-                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>Bekijk enkele voorbeeldpagina’s zonder de volledige methode prijs te geven</h2>
+                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>Bekijk enkele voorbeeldpagina’s en krijg een indruk van hoe de teamscan wordt vertaald naar inzicht, duiding en praktisch advies.</h2>
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub, margin: "0 0 18px" }}>
                   Na de teamscan ontvang je geen losse cijfers, maar een praktisch rapport met duiding en vervolgstappen. De voorbeelden hieronder gebruiken fictieve data en laten alleen een beperkte preview zien. De vragenlijst, scoringslogica en volledige methodiek blijven onderdeel van het traject.
                 </p>
