@@ -4896,16 +4896,18 @@ function PageRapportages() {
   const [adviesLoadingId, setAdviesLoadingId] = useState(null);
   const [adviesMelding, setAdviesMelding] = useState("");
   const [adviesFout, setAdviesFout] = useState("");
+  const [adviesrapporten, setAdviesrapporten] = useState([]);
 
   useEffect(() => {
     const laadData = async () => {
       setLoading(true);
       try {
-        const [vlSnap, antSnap, metSnap, aanvraagSnap] = await Promise.all([
+        const [vlSnap, antSnap, metSnap, aanvraagSnap, adviesSnap] = await Promise.all([
           getDocs(collection(db, "vragenlijsten")),
           getDocs(collection(db, "antwoorden")),
           getDocs(collection(db, "metingen")).catch(() => ({ docs: [] })),
           getDocs(collection(db, "teamscanSelfserviceAanvragen")).catch(() => ({ docs: [] })),
+          getDocs(collection(db, "adviesrapporten")).catch(() => ({ docs: [] })),
         ]);
         setLijsten(
           vlSnap.docs
@@ -4915,6 +4917,16 @@ function PageRapportages() {
         setAntwoorden(antSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(a => !a.verwijderd));
         setMetingen(metSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(item => !item.verwijderd && item.status !== "Verwijderd"));
         setAanvragen(aanvraagSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(item => !item.verwijderd && item.status !== "Verwijderd"));
+        setAdviesrapporten(
+          adviesSnap.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .filter(item => !item.verwijderd && item.status !== "Verwijderd")
+            .sort((a, b) => {
+              const aTime = a.generatedAt?.toMillis ? a.generatedAt.toMillis() : 0;
+              const bTime = b.generatedAt?.toMillis ? b.generatedAt.toMillis() : 0;
+              return bTime - aTime;
+            })
+        );
       } catch (err) {
         console.error("Laden mislukt:", err);
       } finally {
@@ -5066,6 +5078,18 @@ function PageRapportages() {
         data.message ||
           `Conceptadvies is gegenereerd voor ${rapportage.naam || "de rapportage"}.`
       );
+
+      const adviesSnap = await getDocs(collection(db, "adviesrapporten"));
+      setAdviesrapporten(
+        adviesSnap.docs
+          .map(d => ({ id: d.id, ...d.data() }))
+          .filter(item => !item.verwijderd && item.status !== "Verwijderd")
+          .sort((a, b) => {
+            const aTime = a.generatedAt?.toMillis ? a.generatedAt.toMillis() : 0;
+            const bTime = b.generatedAt?.toMillis ? b.generatedAt.toMillis() : 0;
+            return bTime - aTime;
+          })
+      );
     } catch (error) {
       console.error("Fout bij genereren conceptadvies:", error);
       setAdviesFout(
@@ -5075,6 +5099,27 @@ function PageRapportages() {
     } finally {
       setAdviesLoadingId(null);
     }
+  };
+
+  const formatAdviesDatum = (value) => {
+    if (!value) return "Onbekend";
+    try {
+      const date = value.toDate ? value.toDate() : new Date(value);
+      return date.toLocaleString("nl-NL", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (error) {
+      return "Onbekend";
+    }
+  };
+
+  const korteTekst = (tekst, max = 260) => {
+    if (!tekst) return "Nog geen samenvatting beschikbaar.";
+    return tekst.length > max ? `${tekst.slice(0, max)}...` : tekst;
   };
 
   const gemPijler = (pijlerIdx, subset, stellingen) => {
@@ -6413,16 +6458,27 @@ function PageRapportages() {
           onClick={async () => {
             setLoading(true);
             try {
-              const [vlSnap, antSnap, metSnap, aanvraagSnap] = await Promise.all([
+              const [vlSnap, antSnap, metSnap, aanvraagSnap, adviesSnap] = await Promise.all([
                 getDocs(collection(db, "vragenlijsten")),
                 getDocs(collection(db, "antwoorden")),
                 getDocs(collection(db, "metingen")).catch(() => ({ docs: [] })),
                 getDocs(collection(db, "teamscanSelfserviceAanvragen")).catch(() => ({ docs: [] })),
+                getDocs(collection(db, "adviesrapporten")).catch(() => ({ docs: [] })),
               ]);
               setLijsten(vlSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(item => !item.verwijderd && item.status !== "Verwijderd"));
               setAntwoorden(antSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(a => !a.verwijderd));
               setMetingen(metSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(item => !item.verwijderd && item.status !== "Verwijderd"));
               setAanvragen(aanvraagSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(item => !item.verwijderd && item.status !== "Verwijderd"));
+              setAdviesrapporten(
+                adviesSnap.docs
+                  .map(d => ({ id: d.id, ...d.data() }))
+                  .filter(item => !item.verwijderd && item.status !== "Verwijderd")
+                  .sort((a, b) => {
+                    const aTime = a.generatedAt?.toMillis ? a.generatedAt.toMillis() : 0;
+                    const bTime = b.generatedAt?.toMillis ? b.generatedAt.toMillis() : 0;
+                    return bTime - aTime;
+                  })
+              );
             } catch (err) { console.error(err); }
             finally { setLoading(false); }
           }}
@@ -6562,6 +6618,112 @@ function PageRapportages() {
             </tbody>
           </table>
         </div>
+      </section>
+
+      <section
+        style={{
+          background: ADM.navy,
+          border: `1px solid ${ADM.border}`,
+          borderRadius: 14,
+          padding: "22px 24px",
+          marginBottom: 20,
+        }}
+      >
+        <div style={{ fontSize: 11, color: ADM.teal, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 8 }}>
+          Gegenereerde adviesrapporten
+        </div>
+        <h2 style={{ margin: "0 0 10px", color: ADM.white, fontSize: 22, lineHeight: 1.2 }}>
+          Conceptadviezen
+        </h2>
+        <p style={{ margin: "0 0 16px", color: ADM.muted, fontSize: 13, lineHeight: 1.7, maxWidth: 860 }}>
+          Hier zie je de conceptadviezen die automatisch zijn gegenereerd op basis van gecombineerde medewerkers- en managementdata. Dit blok leest alleen bestaande adviesrapporten en past geen data aan.
+        </p>
+
+        {adviesrapporten.length === 0 ? (
+          <div style={{
+            padding: "16px",
+            borderRadius: 10,
+            background: "rgba(255,255,255,0.04)",
+            border: `1px solid ${ADM.border}`,
+            color: ADM.muted,
+            fontSize: 13,
+          }}>
+            Er zijn nog geen gegenereerde adviesrapporten gevonden. Gebruik de knop <strong style={{ color: ADM.white }}>Genereer advies</strong> in de datacontrole om het eerste conceptadvies aan te maken.
+          </div>
+        ) : (
+          <div style={{ display: "grid", gap: 14 }}>
+            {adviesrapporten.map((rapport) => (
+              <article
+                key={rapport.id}
+                style={{
+                  border: `1px solid ${ADM.border}`,
+                  borderRadius: 12,
+                  padding: "18px",
+                  background: "rgba(255,255,255,0.035)",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap", marginBottom: 12 }}>
+                  <div>
+                    <div style={{ color: ADM.white, fontWeight: 900, fontSize: 16, marginBottom: 4 }}>
+                      {rapport.rapportageNaam || "Conceptadvies zonder rapportagenaam"}
+                    </div>
+                    <div style={{ color: ADM.muted, fontSize: 12 }}>
+                      {rapport.klantNaam || "Onbekende klant"} · {formatAdviesDatum(rapport.generatedAt)}
+                    </div>
+                  </div>
+                  <span style={{
+                    alignSelf: "flex-start",
+                    fontSize: 11,
+                    fontWeight: 900,
+                    padding: "5px 9px",
+                    borderRadius: 999,
+                    background: "rgba(20,184,166,0.12)",
+                    color: ADM.teal,
+                    border: `1px solid ${ADM.teal}33`,
+                  }}>
+                    {rapport.status || "concept"}
+                  </span>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 10, marginBottom: 14 }}>
+                  <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: 12 }}>
+                    <div style={{ color: ADM.muted, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 5 }}>Antwoorden</div>
+                    <div style={{ color: ADM.white, fontWeight: 900, fontSize: 18 }}>{rapport.dataQuality?.answerCount ?? 0}</div>
+                  </div>
+                  <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: 12 }}>
+                    <div style={{ color: ADM.muted, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 5 }}>Sterkste domein</div>
+                    <div style={{ color: ADM.green, fontWeight: 800, fontSize: 13 }}>{rapport.highestDomain?.label || "Nog niet bekend"}</div>
+                  </div>
+                  <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: 12 }}>
+                    <div style={{ color: ADM.muted, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 5 }}>Aandachtspunt</div>
+                    <div style={{ color: ADM.orange, fontWeight: 800, fontSize: 13 }}>{rapport.lowestDomain?.label || "Nog niet bekend"}</div>
+                  </div>
+                  <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: 12 }}>
+                    <div style={{ color: ADM.muted, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 5 }}>Bron</div>
+                    <div style={{ color: ADM.muted, fontWeight: 700, fontSize: 11, wordBreak: "break-all" }}>{rapport.source || "onbekend"}</div>
+                  </div>
+                </div>
+
+                <div style={{ color: ADM.muted, fontSize: 13, lineHeight: 1.7, marginBottom: 14 }}>
+                  {korteTekst(rapport.executiveSummary)}
+                </div>
+
+                {Array.isArray(rapport.recommendedNextSteps) && rapport.recommendedNextSteps.length > 0 && (
+                  <div style={{ borderTop: `1px solid ${ADM.border}`, paddingTop: 12 }}>
+                    <div style={{ color: ADM.white, fontSize: 12, fontWeight: 900, marginBottom: 8 }}>
+                      Aanbevolen vervolgstappen
+                    </div>
+                    <ol style={{ margin: 0, paddingLeft: 18, color: ADM.muted, fontSize: 12, lineHeight: 1.7 }}>
+                      {rapport.recommendedNextSteps.slice(0, 5).map((stap, index) => (
+                        <li key={index}>{stap}</li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       {rapportError && (
