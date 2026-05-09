@@ -6767,16 +6767,53 @@ function PageRapportages() {
       </section>
 
       {geselecteerdAdviesrapport && (
-        <section
-          style={{
-            background: "#F8FAFC",
-            border: `1px solid ${ADM.border}`,
-            borderRadius: 16,
-            padding: "24px",
-            marginBottom: 22,
-            color: "#0F172A",
-          }}
-        >
+        <>
+          <style>{`
+            @media print {
+              body * {
+                visibility: hidden !important;
+              }
+
+              .adviesrapport-print-area,
+              .adviesrapport-print-area * {
+                visibility: visible !important;
+              }
+
+              .adviesrapport-print-area {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 28px !important;
+                border: 0 !important;
+                border-radius: 0 !important;
+                background: #FFFFFF !important;
+                color: #0F172A !important;
+                box-shadow: none !important;
+              }
+
+              .adviesrapport-print-controls {
+                display: none !important;
+              }
+
+              @page {
+                size: A4;
+                margin: 16mm;
+              }
+            }
+          `}</style>
+          <section
+            className="adviesrapport-print-area"
+            style={{
+              background: "#F8FAFC",
+              border: `1px solid ${ADM.border}`,
+              borderRadius: 16,
+              padding: "24px",
+              marginBottom: 22,
+              color: "#0F172A",
+            }}
+          >
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 18 }}>
             <div>
               <div style={{ fontSize: 11, color: "#0F766E", fontWeight: 900, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 8 }}>
@@ -6789,23 +6826,40 @@ function PageRapportages() {
                 {geselecteerdAdviesrapport.klantNaam || "Onbekende klant"} · {formatAdviesDatum(geselecteerdAdviesrapport.generatedAt)} · {geselecteerdAdviesrapport.status || "concept"}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => setGeselecteerdAdviesrapportId(null)}
-              style={{
-                alignSelf: "flex-start",
-                border: "1px solid #CBD5E1",
-                borderRadius: 999,
-                padding: "8px 12px",
-                background: "#FFFFFF",
-                color: "#334155",
-                fontSize: 12,
-                fontWeight: 900,
-                cursor: "pointer",
-              }}
-            >
-              Sluit detail
-            </button>
+            <div className="adviesrapport-print-controls" style={{ display: "flex", gap: 10, alignItems: "flex-start", flexWrap: "wrap" }}>
+              <button
+                type="button"
+                onClick={() => window.print()}
+                style={{
+                  border: "0",
+                  borderRadius: 999,
+                  padding: "9px 14px",
+                  background: "#14B8A6",
+                  color: "#0F172A",
+                  fontSize: 12,
+                  fontWeight: 900,
+                  cursor: "pointer",
+                }}
+              >
+                Download als pdf
+              </button>
+              <button
+                type="button"
+                onClick={() => setGeselecteerdAdviesrapportId(null)}
+                style={{
+                  border: "1px solid #CBD5E1",
+                  borderRadius: 999,
+                  padding: "8px 12px",
+                  background: "#FFFFFF",
+                  color: "#334155",
+                  fontSize: 12,
+                  fontWeight: 900,
+                  cursor: "pointer",
+                }}
+              >
+                Sluit detail
+              </button>
+            </div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 20 }}>
@@ -6878,7 +6932,8 @@ function PageRapportages() {
               </ol>
             </div>
           )}
-        </section>
+          </section>
+        </>
       )}
 
       {rapportError && (
