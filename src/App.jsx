@@ -3256,7 +3256,6 @@ function PageKlanten() {
       .sort((a,b) => (b.sortDate?.getTime() || 0) - (a.sortDate?.getTime() || 0));
   };
 
-  const datacontroleRijen = bouwDatacontroleRijen();
 
   if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
 
@@ -4030,8 +4029,6 @@ function PageMetingen() {
       setVerwijderen(false);
     }
   };
-
-  const datacontroleRijen = bouwDatacontroleRijen();
 
   if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
 
@@ -7226,7 +7223,6 @@ function PagePrullenbak() {
     }
   };
 
-  const datacontroleRijen = bouwDatacontroleRijen();
 
   if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
 
