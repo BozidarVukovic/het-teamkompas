@@ -17,7 +17,6 @@ import { PUB, ADM } from "./styles/tokens";
 import { useInView, useIsMobile } from "./components/shared/hooks";
 import Fade from "./components/shared/Fade";
 import LoginScreen from "./components/admin/LoginScreen";
-import GenerateAdvicePanel from "./components/admin/GenerateAdvicePanel";
 import KompasDot from "./components/shared/KompasDot";
 import ScanInvullen from "./pages/public/ScanInvullen";
 import PageScans from "./pages/admin/PageScans";
@@ -56,6 +55,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import {
   collection,
   doc,
@@ -3256,6 +3256,8 @@ function PageKlanten() {
       .sort((a,b) => (b.sortDate?.getTime() || 0) - (a.sortDate?.getTime() || 0));
   };
 
+  const datacontroleRijen = bouwDatacontroleRijen();
+
   if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
 
   return (
@@ -4028,6 +4030,8 @@ function PageMetingen() {
       setVerwijderen(false);
     }
   };
+
+  const datacontroleRijen = bouwDatacontroleRijen();
 
   if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
 
@@ -4889,6 +4893,9 @@ function PageRapportages() {
   const [genererend, setGenererend] = useState(null);
   const [rapportError, setRapportError] = useState("");
   const [verwijderenId, setVerwijderenId] = useState(null);
+  const [adviesLoadingId, setAdviesLoadingId] = useState(null);
+  const [adviesMelding, setAdviesMelding] = useState("");
+  const [adviesFout, setAdviesFout] = useState("");
 
   useEffect(() => {
     const laadData = async () => {
@@ -4979,6 +4986,7 @@ function PageRapportages() {
             klant: lijst.klant || mgLijst.klant || "Onbekend",
             type: "Medewerkers + management",
             vragenlijstIds: `${lijst.id} + ${mgLijst.id}`,
+            vragenlijstIdsArray: [lijst.id, mgLijst.id],
             aantalAntwoorden: mwResp.length + mgResp.length,
             metingId: meting?.id || "Nog niet gekoppeld",
             aanvraagId: aanvraag?.id ? `${aanvraag.id}${aanvraag.statusLabel ? ` (${aanvraag.statusLabel})` : ""}` : "Nog niet gekoppeld",
@@ -5002,6 +5010,7 @@ function PageRapportages() {
             klant: mwLijst.klant || lijst.klant || "Onbekend",
             type: "Medewerkers + management",
             vragenlijstIds: `${mwLijst.id} + ${lijst.id}`,
+            vragenlijstIdsArray: [mwLijst.id, lijst.id],
             aantalAntwoorden: mwResp.length + mgResp.length,
             metingId: meting?.id || "Nog niet gekoppeld",
             aanvraagId: aanvraag?.id ? `${aanvraag.id}${aanvraag.statusLabel ? ` (${aanvraag.statusLabel})` : ""}` : "Nog niet gekoppeld",
@@ -5019,6 +5028,7 @@ function PageRapportages() {
         klant: lijst.klant || "Onbekend",
         type: labelVoorVragenlijstType(lijst),
         vragenlijstIds: lijst.id,
+        vragenlijstIdsArray: [lijst.id],
         aantalAntwoorden: antwoordenVoor(lijst.id).length,
         metingId: meting?.id || "Nog niet gekoppeld",
         aanvraagId: aanvraag?.id ? `${aanvraag.id}${aanvraag.statusLabel ? ` (${aanvraag.statusLabel})` : ""}` : "Nog niet gekoppeld",
@@ -5027,6 +5037,44 @@ function PageRapportages() {
     });
 
     return rijen;
+  };
+
+  const genereerConceptadviesVoorRapportage = async (rapportage) => {
+    try {
+      setAdviesLoadingId(rapportage.id);
+      setAdviesMelding("");
+      setAdviesFout("");
+
+      const vragenlijstIds = rapportage.vragenlijstIdsArray || [];
+
+      if (!Array.isArray(vragenlijstIds) || vragenlijstIds.length < 2) {
+        throw new Error("Deze rapportage heeft nog geen twee gekoppelde vragenlijsten.");
+      }
+
+      const functions = getFunctions(undefined, "us-central1");
+      const generateTeamAdvice = httpsCallable(functions, "generateTeamAdvice");
+
+      const result = await generateTeamAdvice({
+        vragenlijstIds,
+        rapportageNaam: rapportage.naam || "Rapportage",
+        klantNaam: rapportage.klant || "",
+      });
+
+      const data = result.data || {};
+
+      setAdviesMelding(
+        data.message ||
+          `Conceptadvies is gegenereerd voor ${rapportage.naam || "de rapportage"}.`
+      );
+    } catch (error) {
+      console.error("Fout bij genereren conceptadvies:", error);
+      setAdviesFout(
+        error.message ||
+          "Er ging iets mis bij het genereren van het conceptadvies."
+      );
+    } finally {
+      setAdviesLoadingId(null);
+    }
   };
 
   const gemPijler = (pijlerIdx, subset, stellingen) => {
@@ -6351,6 +6399,8 @@ function PageRapportages() {
     setGenererend(null);
   };
 
+  const datacontroleRijen = bouwDatacontroleRijen();
+
   if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
 
   return (
@@ -6410,11 +6460,47 @@ function PageRapportages() {
           Controleer hier of elke rapportage gekoppeld is aan de juiste vragenlijst, meting en eventuele selfservice-aanvraag. Dit blok schrijft geen data weg en is bedoeld om te voorkomen dat adviesrapporten straks onder de verkeerde meting worden opgeslagen.
         </p>
 
+        {adviesMelding && (
+          <div
+            style={{
+              marginBottom: "16px",
+              padding: "12px 14px",
+              borderRadius: 10,
+              background: "rgba(20, 184, 166, 0.12)",
+              border: `1px solid ${ADM.teal}33`,
+              color: ADM.teal,
+              fontSize: 12,
+              fontWeight: 800,
+              lineHeight: 1.5,
+            }}
+          >
+            {adviesMelding}
+          </div>
+        )}
+
+        {adviesFout && (
+          <div
+            style={{
+              marginBottom: "16px",
+              padding: "12px 14px",
+              borderRadius: 10,
+              background: "rgba(231,76,60,0.10)",
+              border: `1px solid ${ADM.red}33`,
+              color: ADM.red,
+              fontSize: 12,
+              fontWeight: 800,
+              lineHeight: 1.5,
+            }}
+          >
+            {adviesFout}
+          </div>
+        )}
+
         <div style={{ overflowX: "auto", border: `1px solid ${ADM.border}`, borderRadius: 10 }}>
           <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 900 }}>
             <thead>
               <tr style={{ background: "rgba(255,255,255,0.04)" }}>
-                {["Rapportage", "Type", "Vragenlijst-id", "Antwoorden", "Meting-id", "Aanvraag-id", "Status"].map(h => (
+                {["Rapportage", "Type", "Vragenlijst-id", "Antwoorden", "Meting-id", "Aanvraag-id", "Status", "Advies"].map(h => (
                   <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: ADM.muted, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", borderBottom: `1px solid ${ADM.border}` }}>
                     {h}
                   </th>
@@ -6422,7 +6508,7 @@ function PageRapportages() {
               </tr>
             </thead>
             <tbody>
-              {bouwDatacontroleRijen().map((rij) => (
+              {datacontroleRijen.map((rij) => (
                 <tr key={rij.id}>
                   <td style={{ padding: "11px 12px", borderBottom: `1px solid ${ADM.border}`, color: ADM.white, fontSize: 13, fontWeight: 700 }}>
                     {rij.naam}
@@ -6438,11 +6524,37 @@ function PageRapportages() {
                       {rij.status}
                     </span>
                   </td>
+                  <td style={{ padding: "11px 12px", borderBottom: `1px solid ${ADM.border}` }}>
+                    {Array.isArray(rij.vragenlijstIdsArray) && rij.vragenlijstIdsArray.length >= 2 ? (
+                      <button
+                        type="button"
+                        onClick={() => genereerConceptadviesVoorRapportage(rij)}
+                        disabled={adviesLoadingId === rij.id}
+                        style={{
+                          border: "0",
+                          borderRadius: 999,
+                          padding: "8px 11px",
+                          background: adviesLoadingId === rij.id ? "#64748B" : ADM.teal,
+                          color: "#0F172A",
+                          fontSize: 11,
+                          fontWeight: 900,
+                          cursor: adviesLoadingId === rij.id ? "not-allowed" : "pointer",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {adviesLoadingId === rij.id ? "Bezig..." : "Genereer advies"}
+                      </button>
+                    ) : (
+                      <span style={{ color: ADM.orange, fontSize: 11, fontWeight: 800 }}>
+                        Eerst koppelen
+                      </span>
+                    )}
+                  </td>
                 </tr>
               ))}
-              {bouwDatacontroleRijen().length === 0 && (
+              {datacontroleRijen.length === 0 && (
                 <tr>
-                  <td colSpan={7} style={{ padding: "16px 12px", color: ADM.muted, fontSize: 13, textAlign: "center" }}>
+                  <td colSpan={8} style={{ padding: "16px 12px", color: ADM.muted, fontSize: 13, textAlign: "center" }}>
                     Nog geen rapportages beschikbaar voor datacontrole.
                   </td>
                 </tr>
@@ -6452,27 +6564,6 @@ function PageRapportages() {
         </div>
       </section>
 
-      <section
-        style={{
-          background: ADM.navy,
-          border: `1px solid ${ADM.teal}33`,
-          borderRadius: 14,
-          padding: "22px 24px",
-          marginBottom: 20,
-          boxShadow: "0 18px 48px rgba(0,0,0,0.18)",
-        }}
-      >
-        <div style={{ fontSize: 11, color: ADM.teal, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 8 }}>
-          Stap 8
-        </div>
-        <h2 style={{ margin: "0 0 10px", color: ADM.white, fontSize: 24, lineHeight: 1.2 }}>
-          AI stelt maatwerkadvies op
-        </h2>
-        <p style={{ margin: "0 0 18px", color: ADM.muted, fontSize: 13, lineHeight: 1.7, maxWidth: 820 }}>
-          Genereer een conceptadvies op basis van de geselecteerde teamscanaanvraag. Deze testversie controleert de koppeling tussen de beheeromgeving, Firebase Functions en Firestore.
-        </p>
-        <GenerateAdvicePanel scanId="2DEinhO516khWktsuO2z" />
-      </section>
       {rapportError && (
         <div style={{fontSize:12,color:ADM.red,marginBottom:20,lineHeight:1.6,
           background:"rgba(231,76,60,0.10)",padding:"12px 16px",borderRadius:10,
@@ -6762,6 +6853,8 @@ function PagePrullenbak() {
       setVerwijderenId(null);
     }
   };
+
+  const datacontroleRijen = bouwDatacontroleRijen();
 
   if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
 
