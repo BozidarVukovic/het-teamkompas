@@ -1262,9 +1262,9 @@ function PublicSite({ onLoginClick }) {
                   </p>
                 </div>
                 <div style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: isMobile ? 20 : 24 }}>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: PUB.donker, marginBottom: 8 }}>Bewust als preview getoond</div>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: PUB.donker, marginBottom: 8 }}>Een eerste indruk van het adviesrapport</div>
                   <div style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub }}>
-                    We tonen alleen voorbeeld-output met fictieve data. De volledige vragenlijst, scoringslogica en methodische uitwerking blijven onderdeel van het begeleide traject.
+                    De voorbeeldpagina’s werken met fictieve data. Ze laten zien hoe de teamscan wordt vertaald naar inzicht, duiding en praktisch advies, zonder persoonsgegevens of klantspecifieke informatie te tonen.
                   </div>
                 </div>
               </div>
