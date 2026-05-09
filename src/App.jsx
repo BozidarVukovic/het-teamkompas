@@ -4883,6 +4883,8 @@ function genereerRapportGecombineerdeVerdieping(lijst, antwoorden) {
 function PageRapportages() {
   const [lijsten,    setLijsten]    = useState([]);
   const [antwoorden, setAntwoorden] = useState([]);
+  const [metingen,   setMetingen]   = useState([]);
+  const [aanvragen,  setAanvragen]  = useState([]);
   const [loading,    setLoading]    = useState(true);
   const [genererend, setGenererend] = useState(null);
   const [rapportError, setRapportError] = useState("");
@@ -4892,16 +4894,20 @@ function PageRapportages() {
     const laadData = async () => {
       setLoading(true);
       try {
-        const [vlSnap, antSnap] = await Promise.all([
+        const [vlSnap, antSnap, metSnap, aanvraagSnap] = await Promise.all([
           getDocs(collection(db, "vragenlijsten")),
           getDocs(collection(db, "antwoorden")),
+          getDocs(collection(db, "metingen")).catch(() => ({ docs: [] })),
+          getDocs(collection(db, "teamscanSelfserviceAanvragen")).catch(() => ({ docs: [] })),
         ]);
         setLijsten(
           vlSnap.docs
             .map(d => ({ id: d.id, ...d.data() }))
             .filter(item => !item.verwijderd && item.status !== "Verwijderd")
         );
-        setAntwoorden(antSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setAntwoorden(antSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(a => !a.verwijderd));
+        setMetingen(metSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(item => !item.verwijderd && item.status !== "Verwijderd"));
+        setAanvragen(aanvraagSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(item => !item.verwijderd && item.status !== "Verwijderd"));
       } catch (err) {
         console.error("Laden mislukt:", err);
       } finally {
@@ -4912,6 +4918,116 @@ function PageRapportages() {
   }, []);
 
   const antwoordenVoor = (id) => antwoorden.filter(a => a.vragenlijstId === id);
+
+
+  const labelVoorVragenlijstType = (lijst) => {
+    if (!lijst) return "Onbekend";
+    if (lijst.trajectRol === "medewerkers") return "Medewerkersscan";
+    if (lijst.trajectRol === "management") return "Managerscan";
+    if (String(lijst.type || "").startsWith("verdieping_")) return "Verdiepende scan";
+    return lijst.type || lijst.doelgroep || "Losse scan";
+  };
+
+  const directeMetingIdVoor = (lijst) => lijst?.metingId || lijst?.measurementId || lijst?.meting_id || null;
+  const directeAanvraagIdVoor = (lijst) => lijst?.aanvraagId || lijst?.selfserviceAanvraagId || lijst?.teamscanAanvraagId || lijst?.aanvraag_id || null;
+
+  const vindMetingVoorVragenlijst = (lijst) => {
+    if (!lijst) return null;
+    const directeId = directeMetingIdVoor(lijst);
+    if (directeId) return metingen.find(m => m.id === directeId) || { id: directeId, statusLabel: "direct veld, document niet geladen" };
+
+    return metingen.find(m =>
+      (m.trajectId && m.trajectId === lijst.id) ||
+      (m.vragenlijstId && m.vragenlijstId === lijst.id) ||
+      (m.trajectNaam && m.trajectNaam === lijst.naam && m.klant === lijst.klant)
+    ) || null;
+  };
+
+  const vindAanvraagVoorVragenlijst = (lijst) => {
+    if (!lijst) return null;
+    const directeId = directeAanvraagIdVoor(lijst);
+    if (directeId) return aanvragen.find(a => a.id === directeId) || { id: directeId, statusLabel: "direct veld, document niet geladen" };
+
+    const mogelijkeMatch = aanvragen.find(a => {
+      const bedrijf = a.bedrijf || a.organisatie || a.klant || "";
+      const afdeling = a.afdeling || a.team || a.teamNaam || "";
+      return bedrijf && lijst.klant && bedrijf === lijst.klant && (!afdeling || afdeling === lijst.naam);
+    });
+
+    return mogelijkeMatch ? { ...mogelijkeMatch, statusLabel: "mogelijke match" } : null;
+  };
+
+  const bouwDatacontroleRijen = () => {
+    const gepaard = new Set();
+    const rijen = [];
+
+    lijsten.forEach(lijst => {
+      if (gepaard.has(lijst.id)) return;
+      gepaard.add(lijst.id);
+
+      if (lijst.trajectRol === "medewerkers" && lijst.managementScanId) {
+        const mgLijst = lijsten.find(l => l.id === lijst.managementScanId);
+        if (mgLijst) {
+          gepaard.add(mgLijst.id);
+          const mwResp = antwoordenVoor(lijst.id);
+          const mgResp = antwoordenVoor(mgLijst.id);
+          const meting = vindMetingVoorVragenlijst(lijst) || vindMetingVoorVragenlijst(mgLijst);
+          const aanvraag = vindAanvraagVoorVragenlijst(lijst) || vindAanvraagVoorVragenlijst(mgLijst);
+          rijen.push({
+            id: `paar_${lijst.id}_${mgLijst.id}`,
+            naam: lijst.naam || mgLijst.naam || "Naamloos rapport",
+            klant: lijst.klant || mgLijst.klant || "Onbekend",
+            type: "Medewerkers + management",
+            vragenlijstIds: `${lijst.id} + ${mgLijst.id}`,
+            aantalAntwoorden: mwResp.length + mgResp.length,
+            metingId: meting?.id || "Nog niet gekoppeld",
+            aanvraagId: aanvraag?.id ? `${aanvraag.id}${aanvraag.statusLabel ? ` (${aanvraag.statusLabel})` : ""}` : "Nog niet gekoppeld",
+            status: meting?.id ? "Meting gevonden" : "Koppeling controleren",
+          });
+          return;
+        }
+      }
+
+      if (lijst.trajectRol === "management" && lijst.medewerkersScanId) {
+        const mwLijst = lijsten.find(l => l.id === lijst.medewerkersScanId);
+        if (mwLijst) {
+          gepaard.add(mwLijst.id);
+          const mwResp = antwoordenVoor(mwLijst.id);
+          const mgResp = antwoordenVoor(lijst.id);
+          const meting = vindMetingVoorVragenlijst(mwLijst) || vindMetingVoorVragenlijst(lijst);
+          const aanvraag = vindAanvraagVoorVragenlijst(mwLijst) || vindAanvraagVoorVragenlijst(lijst);
+          rijen.push({
+            id: `paar_${mwLijst.id}_${lijst.id}`,
+            naam: mwLijst.naam || lijst.naam || "Naamloos rapport",
+            klant: mwLijst.klant || lijst.klant || "Onbekend",
+            type: "Medewerkers + management",
+            vragenlijstIds: `${mwLijst.id} + ${lijst.id}`,
+            aantalAntwoorden: mwResp.length + mgResp.length,
+            metingId: meting?.id || "Nog niet gekoppeld",
+            aanvraagId: aanvraag?.id ? `${aanvraag.id}${aanvraag.statusLabel ? ` (${aanvraag.statusLabel})` : ""}` : "Nog niet gekoppeld",
+            status: meting?.id ? "Meting gevonden" : "Koppeling controleren",
+          });
+          return;
+        }
+      }
+
+      const meting = vindMetingVoorVragenlijst(lijst);
+      const aanvraag = vindAanvraagVoorVragenlijst(lijst);
+      rijen.push({
+        id: `enkel_${lijst.id}`,
+        naam: lijst.naam || "Naamloze scan",
+        klant: lijst.klant || "Onbekend",
+        type: labelVoorVragenlijstType(lijst),
+        vragenlijstIds: lijst.id,
+        aantalAntwoorden: antwoordenVoor(lijst.id).length,
+        metingId: meting?.id || "Nog niet gekoppeld",
+        aanvraagId: aanvraag?.id ? `${aanvraag.id}${aanvraag.statusLabel ? ` (${aanvraag.statusLabel})` : ""}` : "Nog niet gekoppeld",
+        status: meting?.id ? "Meting gevonden" : "Koppeling controleren",
+      });
+    });
+
+    return rijen;
+  };
 
   const gemPijler = (pijlerIdx, subset, stellingen) => {
     const ids  = stellingen.filter(s => s.pijler === pijlerIdx && s.type === "schaal").map(s => s.id);
@@ -6247,12 +6363,16 @@ function PageRapportages() {
           onClick={async () => {
             setLoading(true);
             try {
-              const [vlSnap, antSnap] = await Promise.all([
+              const [vlSnap, antSnap, metSnap, aanvraagSnap] = await Promise.all([
                 getDocs(collection(db, "vragenlijsten")),
                 getDocs(collection(db, "antwoorden")),
+                getDocs(collection(db, "metingen")).catch(() => ({ docs: [] })),
+                getDocs(collection(db, "teamscanSelfserviceAanvragen")).catch(() => ({ docs: [] })),
               ]);
               setLijsten(vlSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(item => !item.verwijderd && item.status !== "Verwijderd"));
               setAntwoorden(antSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(a => !a.verwijderd));
+              setMetingen(metSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(item => !item.verwijderd && item.status !== "Verwijderd"));
+              setAanvragen(aanvraagSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(item => !item.verwijderd && item.status !== "Verwijderd"));
             } catch (err) { console.error(err); }
             finally { setLoading(false); }
           }}
@@ -6268,6 +6388,69 @@ function PageRapportages() {
         Klik op <strong style={{color:ADM.white}}>Genereer rapport</strong> om een HTML-rapportage te downloaden. 
         Open het bestand in je browser en gebruik <strong style={{color:ADM.white}}>Ctrl+P / Cmd+P</strong> om het als PDF op te slaan.
       </div>
+
+
+
+      <section
+        style={{
+          background: ADM.navy,
+          border: `1px solid ${ADM.border}`,
+          borderRadius: 14,
+          padding: "22px 24px",
+          marginBottom: 20,
+        }}
+      >
+        <div style={{ fontSize: 11, color: ADM.teal, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 8 }}>
+          Datacontrole
+        </div>
+        <h2 style={{ margin: "0 0 10px", color: ADM.white, fontSize: 22, lineHeight: 1.2 }}>
+          Koppeling per rapportage
+        </h2>
+        <p style={{ margin: "0 0 16px", color: ADM.muted, fontSize: 13, lineHeight: 1.7, maxWidth: 860 }}>
+          Controleer hier of elke rapportage gekoppeld is aan de juiste vragenlijst, meting en eventuele selfservice-aanvraag. Dit blok schrijft geen data weg en is bedoeld om te voorkomen dat adviesrapporten straks onder de verkeerde meting worden opgeslagen.
+        </p>
+
+        <div style={{ overflowX: "auto", border: `1px solid ${ADM.border}`, borderRadius: 10 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 900 }}>
+            <thead>
+              <tr style={{ background: "rgba(255,255,255,0.04)" }}>
+                {["Rapportage", "Type", "Vragenlijst-id", "Antwoorden", "Meting-id", "Aanvraag-id", "Status"].map(h => (
+                  <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: ADM.muted, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", borderBottom: `1px solid ${ADM.border}` }}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {bouwDatacontroleRijen().map((rij) => (
+                <tr key={rij.id}>
+                  <td style={{ padding: "11px 12px", borderBottom: `1px solid ${ADM.border}`, color: ADM.white, fontSize: 13, fontWeight: 700 }}>
+                    {rij.naam}
+                    <div style={{ color: ADM.muted, fontSize: 11, fontWeight: 500, marginTop: 3 }}>{rij.klant}</div>
+                  </td>
+                  <td style={{ padding: "11px 12px", borderBottom: `1px solid ${ADM.border}`, color: ADM.muted, fontSize: 12 }}>{rij.type}</td>
+                  <td style={{ padding: "11px 12px", borderBottom: `1px solid ${ADM.border}`, color: ADM.muted, fontSize: 11, fontFamily: "monospace", maxWidth: 240, overflow: "hidden", textOverflow: "ellipsis" }}>{rij.vragenlijstIds}</td>
+                  <td style={{ padding: "11px 12px", borderBottom: `1px solid ${ADM.border}`, color: ADM.white, fontSize: 13, fontWeight: 700 }}>{rij.aantalAntwoorden}</td>
+                  <td style={{ padding: "11px 12px", borderBottom: `1px solid ${ADM.border}`, color: rij.metingId === "Nog niet gekoppeld" ? ADM.orange : ADM.teal, fontSize: 11, fontFamily: "monospace" }}>{rij.metingId}</td>
+                  <td style={{ padding: "11px 12px", borderBottom: `1px solid ${ADM.border}`, color: rij.aanvraagId === "Nog niet gekoppeld" ? ADM.orange : ADM.teal, fontSize: 11, fontFamily: "monospace" }}>{rij.aanvraagId}</td>
+                  <td style={{ padding: "11px 12px", borderBottom: `1px solid ${ADM.border}` }}>
+                    <span style={{ fontSize: 11, fontWeight: 800, padding: "4px 8px", borderRadius: 999, background: rij.status === "Meting gevonden" ? "rgba(46,204,113,0.12)" : "rgba(243,156,18,0.12)", color: rij.status === "Meting gevonden" ? ADM.green : ADM.orange }}>
+                      {rij.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+              {bouwDatacontroleRijen().length === 0 && (
+                <tr>
+                  <td colSpan={7} style={{ padding: "16px 12px", color: ADM.muted, fontSize: 13, textAlign: "center" }}>
+                    Nog geen rapportages beschikbaar voor datacontrole.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <section
         style={{
