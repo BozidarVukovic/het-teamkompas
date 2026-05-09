@@ -20,27 +20,41 @@ exports.generateTeamAdvice = onCall(async (request) => {
     }
 
     const collectionName = "teamscanSelfserviceAanvragen";
-
     const scanRef = db.collection(collectionName).doc(scanId);
+    const scanDoc = await scanRef.get();
 
-    await scanRef.set(
-      {
-        debugFunctionReached: true,
-        debugLastScanId: scanId,
-        debugUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
+    if (!scanDoc.exists) {
+      throw new HttpsError(
+        "not-found",
+        `Geen teamscanaanvraag gevonden met id: ${scanId}.`
+      );
+    }
+
+    const scanData = scanDoc.data() || {};
 
     await scanRef.collection("aiAdvice").doc("latest").set({
       status: "concept",
       generatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      source: "firebase_function_test",
+      scanId,
+      bedrijf: scanData.bedrijf || "",
+      afdeling: scanData.afdeling || "",
+      managerNaam: scanData.managerNaam || "",
+      managerEmail: scanData.managerEmail || "",
       summary: "Dit is een eerste testadvies vanuit Firebase Functions.",
       mainPattern:
-        "De technische koppeling werkt als dit bericht zichtbaar wordt in Firestore.",
+        "De technische koppeling werkt. Het advies wordt nu opgeslagen onder de juiste teamscanaanvraag.",
       firstAdvice:
-        "De volgende stap is om deze functie te koppelen aan echte teamscandata en daarna aan AI.",
+        "De volgende stap is om deze functie te koppelen aan echte teamscandata, antwoorden en AI-analyse.",
     });
+
+    await scanRef.set(
+      {
+        status: "conceptadvies_test_gereed",
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
 
     return {
       success: true,
