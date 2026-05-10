@@ -1,7 +1,9 @@
 const { setGlobalOptions } = require("firebase-functions");
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { defineSecret } = require("firebase-functions/params");
 const admin = require("firebase-admin");
 const { FieldValue } = require("firebase-admin/firestore");
+const OpenAI = require("openai");
 
 admin.initializeApp();
 
@@ -9,11 +11,15 @@ const db = admin.firestore();
 
 setGlobalOptions({ maxInstances: 10 });
 
+const OPENAI_API_KEY = defineSecret("OPENAI_API_KEY");
+
 const COLLECTION_VRAGENLIJSTEN = "vragenlijsten";
 const COLLECTION_ANTWOORDEN = "antwoorden";
 const COLLECTION_ADVIESRAPPORTEN = "adviesrapporten";
 const COLLECTION_AANVRAGEN = "teamscanSelfserviceAanvragen";
 const COLLECTION_TEAMWIELEN = "teamwielen";
+
+const AI_MODEL = "gpt-4.1-mini";
 
 function isNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
@@ -262,6 +268,239 @@ function buildRecommendedNextSteps(domainScores) {
   ];
 }
 
+function collectOpenAnswers(answerDocs) {
+  const openAnswers = [];
+
+  for (const doc of answerDocs) {
+    const data = doc.data() || {};
+    const answers = getAnswersObject(data);
+
+    for (const [key, value] of Object.entries(answers)) {
+      if (typeof value === "string" && value.trim().length > 0) {
+        openAnswers.push({
+          vraagId: key,
+          antwoord: value.trim(),
+        });
+      }
+    }
+  }
+
+  return openAnswers.slice(0, 30);
+}
+
+function buildAiInput({
+  rapportageNaam,
+  klantNaam,
+  vragenlijstIds,
+  vragenlijstDocs,
+  answerDocs,
+  domainScores,
+  lowestDomain,
+  highestDomain,
+  teamwielInsights,
+  teamwielSummary,
+  openAnswersSample,
+}) {
+  return {
+    rapportageNaam: rapportageNaam || "",
+    klantNaam: klantNaam || "",
+    vragenlijstIds,
+    aantalVragenlijsten: vragenlijstDocs.length,
+    aantalAntwoorden: answerDocs.length,
+    hoogsteDomein: highestDomain || null,
+    laagsteDomein: lowestDomain || null,
+    domeinscores: domainScores,
+    teamwielBeschikbaar: Boolean(teamwielInsights?.beschikbaar),
+    teamwielSummary,
+    teamwielInsights,
+    openAnswersSample,
+  };
+}
+
+function buildAiPrompt(aiInput) {
+  return `
+Je bent een senior organisatieadviseur, teamcoach en veranderkundige.
+
+Je schrijft een professioneel adviesrapport voor Mijn Teamkompas. Het rapport is bedoeld voor de leidinggevende en het team. Gebruik ontwikkeltaal, geen beoordelende taal. Schrijf concreet, warm, scherp en toepasbaar.
+
+Gebruik de volgende bronnen:
+1. Teamscanresultaten van medewerkers en management.
+2. Domeinscores op veiligheid en leiderschap, beleving van verandering, energie en motivatie, en verbeteren en leren.
+3. Het laagste en hoogste domein.
+4. Aantal respondenten.
+5. Open antwoorden, als die beschikbaar zijn.
+6. Teamwielinzichten vanuit Insights Discovery, als die beschikbaar zijn.
+
+Belangrijke uitgangspunten:
+- Gebruik het teamwiel als voorkeursgedrag, niet als diagnose.
+- Vermijd labels zoals “het team is rood/geel”.
+- Schrijf liever: “Het team lijkt relatief veel voorkeur te hebben voor tempo, interactie en resultaat.”
+- Benoem dat minder dominante voorkeuren bewust georganiseerd moeten worden.
+- Geef adviezen die passen bij het voorkeursgedrag van het team.
+- Maak vervolgstappen klein, herkenbaar en uitvoerbaar.
+- Gebruik geen medische, psychologische of beoordelende taal.
+- Het advies is bedoeld voor ontwikkeling, teamreflectie en samenwerking.
+- Schrijf in het Nederlands.
+
+Geef je antwoord terug als geldige JSON met exact deze structuur:
+{
+  "kernobservatie": "",
+  "belangrijkstePatroon": "",
+  "perceptiegap": "",
+  "teamwielDuiding": "",
+  "risicoAlsNietsVerandert": "",
+  "adviesVoorLeidinggevende": "",
+  "adviesVoorTeam": "",
+  "vervolgstappen": [
+    ""
+  ],
+  "voorstelTeamsessie": {
+    "doel": "",
+    "duur": "",
+    "opbouw": [
+      {
+        "onderdeel": "",
+        "tijd": "",
+        "werkvorm": "",
+        "doel": ""
+      }
+    ]
+  },
+  "toonEnGebruik": ""
+}
+
+Data:
+${JSON.stringify(aiInput, null, 2)}
+`;
+}
+
+function buildFallbackAiAdvice({
+  executiveSummary,
+  lowestDomain,
+  highestDomain,
+  teamwielSummary,
+  recommendedNextSteps,
+}) {
+  return {
+    beschikbaar: false,
+    fallback: true,
+    foutmelding: "",
+    inhoud: {
+      kernobservatie: executiveSummary,
+      belangrijkstePatroon: lowestDomain
+        ? `Het belangrijkste aandachtspunt ligt bij ${lowestDomain.label.toLowerCase()}, terwijl ${highestDomain ? highestDomain.label.toLowerCase() : "een ander domein"} relatief sterker naar voren komt.`
+        : "Er is nog onvoldoende data beschikbaar voor een scherpe patroonduiding.",
+      perceptiegap:
+        "De perceptiegap tussen manager en medewerkers wordt in deze versie nog niet afzonderlijk berekend. Dit wordt in een volgende versie toegevoegd.",
+      teamwielDuiding: teamwielSummary,
+      risicoAlsNietsVerandert:
+        "Als de uitkomsten niet worden besproken, bestaat het risico dat het team de scores als losse meting ziet in plaats van als startpunt voor eigenaarschap en verbetering.",
+      adviesVoorLeidinggevende: lowestDomain
+        ? `Begin met luisteren en onderzoeken wat er onder de score op ${lowestDomain.label.toLowerCase()} ligt. Maak daarna één concreet gedrag zichtbaar dat je zelf anders gaat doen.`
+        : "Zorg eerst dat de datakoppeling compleet is voordat er conclusies worden getrokken.",
+      adviesVoorTeam:
+        "Gebruik de uitkomsten als gezamenlijke spiegel. Bespreek wat herkenbaar is, wat ontbreekt en welke kleine stap het team zelf wil zetten.",
+      vervolgstappen: recommendedNextSteps,
+      voorstelTeamsessie: {
+        doel:
+          "De teamscan en het teamwiel vertalen naar herkenbare patronen, gedeeld eigenaarschap en concrete vervolgafspraken.",
+        duur: "2 tot 4 uur",
+        opbouw: [
+          {
+            onderdeel: "Opening en bedoeling",
+            tijd: "15 minuten",
+            werkvorm: "leidinggevende deelt waarom deze teamscan belangrijk is",
+            doel: "veiligheid en richting creëren",
+          },
+          {
+            onderdeel: "Herkennen van de uitkomsten",
+            tijd: "45 minuten",
+            werkvorm: "teamgesprek in kleine groepen",
+            doel: "scores verbinden aan voorbeelden uit het dagelijks werk",
+          },
+          {
+            onderdeel: "Teamwiel en voorkeursgedrag",
+            tijd: "45 minuten",
+            werkvorm: "reflectie op sterke voorkeuren en blinde vlekken",
+            doel: "vervolgstappen laten aansluiten bij het voorkeursgedrag",
+          },
+          {
+            onderdeel: "Gedragsexperiment kiezen",
+            tijd: "45 minuten",
+            werkvorm: "gezamenlijk kiezen van één concrete vervolgstap",
+            doel: "van inzicht naar actie gaan",
+          },
+        ],
+      },
+      toonEnGebruik:
+        "Dit advies is bedoeld voor ontwikkeling, teamreflectie en samenwerking. Het is niet bedoeld voor beoordeling, selectie of psychologische diagnostiek.",
+    },
+  };
+}
+
+async function generateAiAdvice({
+  executiveSummary,
+  lowestDomain,
+  highestDomain,
+  teamwielSummary,
+  recommendedNextSteps,
+  aiInput,
+}) {
+  const fallback = buildFallbackAiAdvice({
+    executiveSummary,
+    lowestDomain,
+    highestDomain,
+    teamwielSummary,
+    recommendedNextSteps,
+  });
+
+  try {
+    if (!process.env.OPENAI_API_KEY) {
+      return {
+        ...fallback,
+        foutmelding: "OPENAI_API_KEY ontbreekt.",
+      };
+    }
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    const completion = await openai.chat.completions.create({
+      model: AI_MODEL,
+      temperature: 0.25,
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content:
+            "Je bent een ervaren Nederlandse organisatieadviseur en teamcoach. Je schrijft veilig, concreet en ontwikkelingsgericht.",
+        },
+        {
+          role: "user",
+          content: buildAiPrompt(aiInput),
+        },
+      ],
+    });
+
+    const rawContent = completion.choices?.[0]?.message?.content || "{}";
+    const parsed = JSON.parse(rawContent);
+
+    return {
+      beschikbaar: true,
+      fallback: false,
+      inhoud: parsed,
+    };
+  } catch (error) {
+    console.error("AI-advies genereren mislukt:", error);
+
+    return {
+      ...fallback,
+      foutmelding: error.message || "AI-advies kon niet worden gegenereerd.",
+    };
+  }
+}
+
 async function generateAdviceForVragenlijstIds({
   vragenlijstIds,
   rapportageNaam,
@@ -301,11 +540,36 @@ async function generateAdviceForVragenlijstIds({
     );
   }
 
+  const openAnswersSample = collectOpenAnswers(answerDocs);
+
+  const aiInput = buildAiInput({
+    rapportageNaam,
+    klantNaam,
+    vragenlijstIds,
+    vragenlijstDocs,
+    answerDocs,
+    domainScores,
+    lowestDomain,
+    highestDomain,
+    teamwielInsights,
+    teamwielSummary,
+    openAnswersSample,
+  });
+
+  const aiAdvice = await generateAiAdvice({
+    executiveSummary,
+    lowestDomain,
+    highestDomain,
+    teamwielSummary,
+    recommendedNextSteps,
+    aiInput,
+  });
+
   const adviesRef = db.collection(COLLECTION_ADVIESRAPPORTEN).doc();
 
   await adviesRef.set({
     status: "concept",
-    source: "firebase_function_vragenlijst_analysis_v1",
+    source: "firebase_function_vragenlijst_analysis_v2_ai",
     generatedAt: FieldValue.serverTimestamp(),
 
     rapportageNaam: rapportageNaam || "",
@@ -321,6 +585,8 @@ async function generateAdviceForVragenlijstIds({
       hasVragenlijsten: vragenlijstDocs.length > 0,
       hasAnswers: answerDocs.length > 0,
       hasTeamwiel: Boolean(teamwielInsights.beschikbaar),
+      openAnswersSampleCount: openAnswersSample.length,
+      hasAiAdvice: Boolean(aiAdvice.beschikbaar),
     },
 
     vragenlijsten: vragenlijstDocs.map((doc) => {
@@ -340,6 +606,11 @@ async function generateAdviceForVragenlijstIds({
     lowestDomain: lowestDomain || null,
     domainScores,
     recommendedNextSteps,
+    openAnswersSample,
+
+    aiAdvice,
+    aiModel: AI_MODEL,
+    aiAdviceGeneratedAt: FieldValue.serverTimestamp(),
 
     reportSections: {
       opening:
@@ -364,6 +635,7 @@ async function generateAdviceForVragenlijstIds({
     vragenlijstCount: vragenlijstDocs.length,
     answerCount: answerDocs.length,
     hasTeamwiel: Boolean(teamwielInsights.beschikbaar),
+    hasAiAdvice: Boolean(aiAdvice.beschikbaar),
     teamwielId: teamwielId || "",
     lowestDomain: lowestDomain ? lowestDomain.label : null,
     highestDomain: highestDomain ? highestDomain.label : null,
@@ -414,41 +686,44 @@ async function generateAdviceForScanAanvraag(scanId) {
   };
 }
 
-exports.generateTeamAdvice = onCall(async (request) => {
-  try {
-    console.log("generateTeamAdvice aangeroepen", request.data);
-    console.log("Firebase projectId:", process.env.GCLOUD_PROJECT);
+exports.generateTeamAdvice = onCall(
+  { secrets: [OPENAI_API_KEY] },
+  async (request) => {
+    try {
+      console.log("generateTeamAdvice aangeroepen", request.data);
+      console.log("Firebase projectId:", process.env.GCLOUD_PROJECT);
 
-    const { vragenlijstIds, rapportageNaam, klantNaam, teamwielId, scanId } =
-      request.data || {};
+      const { vragenlijstIds, rapportageNaam, klantNaam, teamwielId, scanId } =
+        request.data || {};
 
-    if (vragenlijstIds) {
-      return await generateAdviceForVragenlijstIds({
-        vragenlijstIds,
-        rapportageNaam,
-        klantNaam,
-        teamwielId,
-      });
+      if (vragenlijstIds) {
+        return await generateAdviceForVragenlijstIds({
+          vragenlijstIds,
+          rapportageNaam,
+          klantNaam,
+          teamwielId,
+        });
+      }
+
+      if (scanId) {
+        return await generateAdviceForScanAanvraag(scanId);
+      }
+
+      throw new HttpsError(
+        "invalid-argument",
+        "vragenlijstIds of scanId ontbreekt."
+      );
+    } catch (error) {
+      console.error("generateTeamAdvice error:", error);
+
+      if (error instanceof HttpsError) {
+        throw error;
+      }
+
+      throw new HttpsError(
+        "internal",
+        error.message || "Er ging iets mis bij het maken van het advies."
+      );
     }
-
-    if (scanId) {
-      return await generateAdviceForScanAanvraag(scanId);
-    }
-
-    throw new HttpsError(
-      "invalid-argument",
-      "vragenlijstIds of scanId ontbreekt."
-    );
-  } catch (error) {
-    console.error("generateTeamAdvice error:", error);
-
-    if (error instanceof HttpsError) {
-      throw error;
-    }
-
-    throw new HttpsError(
-      "internal",
-      error.message || "Er ging iets mis bij het maken van het advies."
-    );
   }
-});
+);

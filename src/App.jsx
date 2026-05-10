@@ -5151,6 +5151,43 @@ function PageRapportages() {
   const teamwielKleurItems = (rapport, veld) =>
     Object.entries(rapport?.teamwielInsights?.[veld] || {}).map(([kleur, waarde]) => ({ kleur, waarde }));
 
+
+  const aiInhoudVoor = (rapport) =>
+    rapport?.aiAdvice?.inhoud && typeof rapport.aiAdvice.inhoud === "object"
+      ? rapport.aiAdvice.inhoud
+      : null;
+
+  const heeftAiAdvies = (rapport) =>
+    Boolean(rapport?.aiAdvice?.beschikbaar && aiInhoudVoor(rapport));
+
+  const aiTekstVoor = (rapport, veld, fallback = "") => {
+    const inhoud = aiInhoudVoor(rapport);
+    const waarde = inhoud?.[veld];
+    return typeof waarde === "string" && waarde.trim() ? waarde.trim() : fallback;
+  };
+
+  const aiVervolgstappenVoor = (rapport) => {
+    const inhoud = aiInhoudVoor(rapport);
+    if (Array.isArray(inhoud?.vervolgstappen) && inhoud.vervolgstappen.length > 0) {
+      return inhoud.vervolgstappen.filter(Boolean);
+    }
+    return Array.isArray(rapport?.recommendedNextSteps) ? rapport.recommendedNextSteps : [];
+  };
+
+  const aiTeamsessieOpbouwVoor = (rapport) => {
+    const inhoud = aiInhoudVoor(rapport);
+    return Array.isArray(inhoud?.voorstelTeamsessie?.opbouw)
+      ? inhoud.voorstelTeamsessie.opbouw.filter(Boolean)
+      : [];
+  };
+
+  const teamwielMomentopnameTekst = (rapport) => {
+    if (!heeftTeamwiel(rapport)) return "";
+    const aantal = rapport?.teamwielInsights?.aantalTeamleden;
+    const bron = rapport?.teamwielInsights?.bron || "teamwieldata";
+    return `Dit teamwiel is als momentopname opgeslagen in dit adviesrapport${aantal ? ` op basis van ${aantal} teamleden` : ""}. Als collega’s later alsnog hun Insights Discovery-vragenlijst invullen, werk dan het teamwiel-document bij en genereer daarna een nieuw adviesrapport. De bestaande rapporten blijven als historische versie bewaard. Bron: ${bron}.`;
+  };
+
   const scoreKleur = (score) => {
     if (score === null || score === undefined) return ADM.muted;
     if (score >= 4.2) return ADM.green;
@@ -6787,7 +6824,7 @@ function PageRapportages() {
                 </div>
 
                 <div style={{ color: ADM.muted, fontSize: 13, lineHeight: 1.7, marginBottom: 14 }}>
-                  {korteTekst(rapport.executiveSummary)}
+                  {korteTekst(aiTekstVoor(rapport, "kernobservatie", rapport.executiveSummary))}
                 </div>
 
                 {Array.isArray(rapport.recommendedNextSteps) && rapport.recommendedNextSteps.length > 0 && (
@@ -6920,18 +6957,56 @@ function PageRapportages() {
           </div>
 
           <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18, marginBottom: 16 }}>
-            <h3 style={{ margin: "0 0 8px", color: "#0F172A", fontSize: 18 }}>Samenvatting</h3>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
+              <h3 style={{ margin: 0, color: "#0F172A", fontSize: 18 }}>Kernobservatie</h3>
+              {heeftAiAdvies(geselecteerdAdviesrapport) && (
+                <span style={{ borderRadius: 999, padding: "5px 9px", background: "rgba(20,184,166,0.12)", color: "#0F766E", fontSize: 11, fontWeight: 900 }}>
+                  AI-maatwerkadvies
+                </span>
+              )}
+            </div>
             <p style={{ margin: 0, color: "#334155", fontSize: 14, lineHeight: 1.75 }}>
-              {geselecteerdAdviesrapport.executiveSummary || "Nog geen samenvatting beschikbaar."}
+              {aiTekstVoor(geselecteerdAdviesrapport, "kernobservatie", geselecteerdAdviesrapport.executiveSummary || "Nog geen samenvatting beschikbaar.")}
             </p>
+            {geselecteerdAdviesrapport.aiAdvice?.fallback && (
+              <p style={{ margin: "10px 0 0", color: "#C2410C", fontSize: 12, lineHeight: 1.6, fontWeight: 800 }}>
+                Let op: dit rapport gebruikt nog fallback-advies omdat de AI-aanroep niet beschikbaar was tijdens het genereren.
+              </p>
+            )}
           </div>
+
+          {heeftAiAdvies(geselecteerdAdviesrapport) && (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14, marginBottom: 16 }}>
+              <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18 }}>
+                <h3 style={{ margin: "0 0 8px", color: "#0F172A", fontSize: 17 }}>Belangrijkste patroon</h3>
+                <p style={{ margin: 0, color: "#334155", fontSize: 14, lineHeight: 1.7 }}>
+                  {aiTekstVoor(geselecteerdAdviesrapport, "belangrijkstePatroon", "Nog geen patroonduiding beschikbaar.")}
+                </p>
+              </div>
+              <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18 }}>
+                <h3 style={{ margin: "0 0 8px", color: "#0F172A", fontSize: 17 }}>Perceptiegap</h3>
+                <p style={{ margin: 0, color: "#334155", fontSize: 14, lineHeight: 1.7 }}>
+                  {aiTekstVoor(geselecteerdAdviesrapport, "perceptiegap", "Nog geen afzonderlijke duiding van de perceptiegap beschikbaar.")}
+                </p>
+              </div>
+              <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18 }}>
+                <h3 style={{ margin: "0 0 8px", color: "#0F172A", fontSize: 17 }}>Risico als niets verandert</h3>
+                <p style={{ margin: 0, color: "#334155", fontSize: 14, lineHeight: 1.7 }}>
+                  {aiTekstVoor(geselecteerdAdviesrapport, "risicoAlsNietsVerandert", "Nog geen risicoduiding beschikbaar.")}
+                </p>
+              </div>
+            </div>
+          )}
 
           {heeftTeamwiel(geselecteerdAdviesrapport) && (
             <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18, marginBottom: 16 }}>
               <h3 style={{ margin: "0 0 8px", color: "#0F172A", fontSize: 18 }}>Teamwielinzichten</h3>
               <p style={{ margin: "0 0 14px", color: "#334155", fontSize: 14, lineHeight: 1.75 }}>
-                {geselecteerdAdviesrapport.teamwielSummary || geselecteerdAdviesrapport.reportSections?.teamwielInterpretation || "Er is teamwieldata gekoppeld aan dit adviesrapport."}
+                {aiTekstVoor(geselecteerdAdviesrapport, "teamwielDuiding", geselecteerdAdviesrapport.teamwielSummary || geselecteerdAdviesrapport.reportSections?.teamwielInterpretation || "Er is teamwieldata gekoppeld aan dit adviesrapport.")}
               </p>
+              <div style={{ margin: "0 0 14px", border: "1px solid #BAE6FD", background: "#F0F9FF", color: "#075985", borderRadius: 12, padding: "11px 13px", fontSize: 12, lineHeight: 1.6, fontWeight: 700 }}>
+                {teamwielMomentopnameTekst(geselecteerdAdviesrapport)}
+              </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
                 <div style={{ border: "1px solid #E2E8F0", borderRadius: 12, padding: 14, background: "#F8FAFC" }}>
@@ -7051,25 +7126,61 @@ function PageRapportages() {
             <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18 }}>
               <h3 style={{ margin: "0 0 8px", color: "#0F172A", fontSize: 17 }}>Advies voor de leidinggevende</h3>
               <p style={{ margin: 0, color: "#334155", fontSize: 14, lineHeight: 1.7 }}>
-                {geselecteerdAdviesrapport.reportSections?.leadershipAdvice || "Nog geen leiderschapsadvies beschikbaar."}
+                {aiTekstVoor(geselecteerdAdviesrapport, "adviesVoorLeidinggevende", geselecteerdAdviesrapport.reportSections?.leadershipAdvice || "Nog geen leiderschapsadvies beschikbaar.")}
               </p>
             </div>
             <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18 }}>
               <h3 style={{ margin: "0 0 8px", color: "#0F172A", fontSize: 17 }}>Advies voor het team</h3>
               <p style={{ margin: 0, color: "#334155", fontSize: 14, lineHeight: 1.7 }}>
-                {geselecteerdAdviesrapport.reportSections?.teamAdvice || "Nog geen teamadvies beschikbaar."}
+                {aiTekstVoor(geselecteerdAdviesrapport, "adviesVoorTeam", geselecteerdAdviesrapport.reportSections?.teamAdvice || "Nog geen teamadvies beschikbaar.")}
               </p>
             </div>
           </div>
 
-          {Array.isArray(geselecteerdAdviesrapport.recommendedNextSteps) && geselecteerdAdviesrapport.recommendedNextSteps.length > 0 && (
-            <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18 }}>
+          {aiVervolgstappenVoor(geselecteerdAdviesrapport).length > 0 && (
+            <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18, marginBottom: 16 }}>
               <h3 style={{ margin: "0 0 10px", color: "#0F172A", fontSize: 18 }}>Aanbevolen vervolgstappen</h3>
               <ol style={{ margin: 0, paddingLeft: 20, color: "#334155", fontSize: 14, lineHeight: 1.8 }}>
-                {geselecteerdAdviesrapport.recommendedNextSteps.map((stap, index) => (
+                {aiVervolgstappenVoor(geselecteerdAdviesrapport).map((stap, index) => (
                   <li key={index}>{stap}</li>
                 ))}
               </ol>
+            </div>
+          )}
+
+          {heeftAiAdvies(geselecteerdAdviesrapport) && geselecteerdAdviesrapport.aiAdvice?.inhoud?.voorstelTeamsessie && (
+            <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18, marginBottom: 16 }}>
+              <h3 style={{ margin: "0 0 10px", color: "#0F172A", fontSize: 18 }}>Voorstel teamsessie</h3>
+              <p style={{ margin: "0 0 10px", color: "#334155", fontSize: 14, lineHeight: 1.7 }}>
+                <strong>Doel:</strong> {geselecteerdAdviesrapport.aiAdvice.inhoud.voorstelTeamsessie.doel || "Nog geen doel geformuleerd."}
+              </p>
+              <p style={{ margin: "0 0 14px", color: "#334155", fontSize: 14, lineHeight: 1.7 }}>
+                <strong>Duur:</strong> {geselecteerdAdviesrapport.aiAdvice.inhoud.voorstelTeamsessie.duur || "Nog niet bepaald."}
+              </p>
+              {aiTeamsessieOpbouwVoor(geselecteerdAdviesrapport).length > 0 && (
+                <div style={{ display: "grid", gap: 10 }}>
+                  {aiTeamsessieOpbouwVoor(geselecteerdAdviesrapport).map((onderdeel, index) => (
+                    <div key={index} style={{ border: "1px solid #E2E8F0", borderRadius: 12, padding: 14, background: "#F8FAFC" }}>
+                      <div style={{ color: "#0F172A", fontWeight: 900, fontSize: 14, marginBottom: 6 }}>
+                        {onderdeel.onderdeel || `Onderdeel ${index + 1}`} · {onderdeel.tijd || "tijd nog te bepalen"}
+                      </div>
+                      <div style={{ color: "#475569", fontSize: 13, lineHeight: 1.6 }}>
+                        <strong>Werkvorm:</strong> {onderdeel.werkvorm || "Nog niet ingevuld"}<br />
+                        <strong>Doel:</strong> {onderdeel.doel || "Nog niet ingevuld"}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {heeftAiAdvies(geselecteerdAdviesrapport) && aiTekstVoor(geselecteerdAdviesrapport, "toonEnGebruik") && (
+            <div style={{ background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 14, padding: 18 }}>
+              <h3 style={{ margin: "0 0 8px", color: "#9A3412", fontSize: 17 }}>Gebruik van dit advies</h3>
+              <p style={{ margin: 0, color: "#7C2D12", fontSize: 14, lineHeight: 1.7 }}>
+                {aiTekstVoor(geselecteerdAdviesrapport, "toonEnGebruik")}
+              </p>
             </div>
           )}
           </section>
