@@ -13,6 +13,7 @@ const COLLECTION_VRAGENLIJSTEN = "vragenlijsten";
 const COLLECTION_ANTWOORDEN = "antwoorden";
 const COLLECTION_ADVIESRAPPORTEN = "adviesrapporten";
 const COLLECTION_AANVRAGEN = "teamscanSelfserviceAanvragen";
+const COLLECTION_TEAMWIELEN = "teamwielen";
 
 function isNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
@@ -110,14 +111,22 @@ function calculateDomainScores(answerDocs) {
 }
 
 function getLowestDomain(domainScores) {
-  const domains = Object.values(domainScores).filter((domain) => domain.score !== null);
+  const domains = Object.values(domainScores).filter(
+    (domain) => domain.score !== null
+  );
+
   if (!domains.length) return null;
+
   return domains.sort((a, b) => a.score - b.score)[0];
 }
 
 function getHighestDomain(domainScores) {
-  const domains = Object.values(domainScores).filter((domain) => domain.score !== null);
+  const domains = Object.values(domainScores).filter(
+    (domain) => domain.score !== null
+  );
+
   if (!domains.length) return null;
+
   return domains.sort((a, b) => b.score - a.score)[0];
 }
 
@@ -154,6 +163,63 @@ async function getAntwoordenForVragenlijsten(vragenlijstIds) {
   }
 
   return allAnswerDocs;
+}
+
+async function getTeamwielInsights(teamwielId) {
+  if (!teamwielId) {
+    return {
+      beschikbaar: false,
+      teamwielId: "",
+      melding: "Er is geen teamwiel gekoppeld aan dit adviesrapport.",
+    };
+  }
+
+  const teamwielRef = db.collection(COLLECTION_TEAMWIELEN).doc(teamwielId);
+  const teamwielDoc = await teamwielRef.get();
+
+  if (!teamwielDoc.exists) {
+    throw new HttpsError(
+      "not-found",
+      `Geen teamwiel gevonden met id: ${teamwielId}.`
+    );
+  }
+
+  const data = teamwielDoc.data() || {};
+
+  return {
+    beschikbaar: true,
+    teamwielId,
+    klantNaam: data.klantNaam || "",
+    teamNaam: data.teamNaam || "",
+    rapportageNaam: data.rapportageNaam || "",
+    bron: data.bron || "",
+    aantalTeamleden: data.aantalTeamleden || null,
+    status: data.status || "",
+    kleurGemiddelden: data.kleurGemiddelden || {},
+    kleurVerdeling: data.kleurVerdeling || {},
+    dominanteVoorkeuren: data.dominanteVoorkeuren || [],
+    ondervertegenwoordigdeVoorkeuren:
+      data.ondervertegenwoordigdeVoorkeuren || [],
+    teamwielDuiding: data.teamwielDuiding || [],
+    adviesVoorVervolgstappen: data.adviesVoorVervolgstappen || [],
+  };
+}
+
+function buildTeamwielSummary(teamwielInsights) {
+  if (!teamwielInsights || !teamwielInsights.beschikbaar) {
+    return "Er is nog geen teamwiel gekoppeld. Het advies is daarom uitsluitend gebaseerd op de teamscanresultaten.";
+  }
+
+  const dominant = (teamwielInsights.dominanteVoorkeuren || []).join(" en ");
+  const ondervertegenwoordigd = (
+    teamwielInsights.ondervertegenwoordigdeVoorkeuren || []
+  ).join(" en ");
+
+  if (!dominant) {
+    return "Er is teamwieldata gekoppeld, maar dominante voorkeuren zijn nog niet vastgelegd.";
+  }
+
+  return `Het gekoppelde teamwiel laat zien dat ${dominant} relatief dominant aanwezig zijn in het voorkeursgedrag van het team. Houd in de vervolgstappen bewust rekening met minder dominante voorkeuren${ondervertegenwoordigd ? `, zoals ${ondervertegenwoordigd}` : ""}, zodat tempo en actie worden gecombineerd met luisteren, reflectie en borging.`;
 }
 
 function buildExecutiveSummary({
@@ -200,6 +266,7 @@ async function generateAdviceForVragenlijstIds({
   vragenlijstIds,
   rapportageNaam,
   klantNaam,
+  teamwielId,
 }) {
   if (!Array.isArray(vragenlijstIds) || vragenlijstIds.length < 2) {
     throw new HttpsError(
@@ -210,6 +277,8 @@ async function generateAdviceForVragenlijstIds({
 
   const vragenlijstDocs = await getVragenlijstDocs(vragenlijstIds);
   const answerDocs = await getAntwoordenForVragenlijsten(vragenlijstIds);
+  const teamwielInsights = await getTeamwielInsights(teamwielId);
+  const teamwielSummary = buildTeamwielSummary(teamwielInsights);
 
   const domainScores = calculateDomainScores(answerDocs);
   const lowestDomain = getLowestDomain(domainScores);
@@ -224,6 +293,14 @@ async function generateAdviceForVragenlijstIds({
 
   const recommendedNextSteps = buildRecommendedNextSteps(domainScores);
 
+  if (teamwielInsights.beschikbaar) {
+    recommendedNextSteps.push(
+      ...((teamwielInsights.adviesVoorVervolgstappen || []).map(
+        (stap) => `Teamwiel: ${stap}`
+      ))
+    );
+  }
+
   const adviesRef = db.collection(COLLECTION_ADVIESRAPPORTEN).doc();
 
   await adviesRef.set({
@@ -234,12 +311,16 @@ async function generateAdviceForVragenlijstIds({
     rapportageNaam: rapportageNaam || "",
     klantNaam: klantNaam || "",
     vragenlijstIds,
+    teamwielId: teamwielId || "",
+    teamwielInsights,
+    teamwielSummary,
 
     dataQuality: {
       vragenlijstCount: vragenlijstDocs.length,
       answerCount: answerDocs.length,
       hasVragenlijsten: vragenlijstDocs.length > 0,
       hasAnswers: answerDocs.length > 0,
+      hasTeamwiel: Boolean(teamwielInsights.beschikbaar),
     },
 
     vragenlijsten: vragenlijstDocs.map((doc) => {
@@ -265,6 +346,7 @@ async function generateAdviceForVragenlijstIds({
         "Dit conceptadvies is automatisch opgesteld op basis van de gecombineerde teamscandata van medewerkers en management.",
       interpretation:
         "De scores geven een eerste beeld van hoe het team samenwerking, verandering, energie en verbeterkracht ervaart. De uitkomst moet altijd worden besproken met de leidinggevende en het team, zodat cijfers worden verbonden aan concrete voorbeelden uit de praktijk.",
+      teamwielInterpretation: teamwielSummary,
       leadershipAdvice: lowestDomain
         ? `Voor de leidinggevende ligt de eerste opgave bij ${lowestDomain.label.toLowerCase()}. Begin met luisteren, ordenen en het expliciet maken van wat mensen nodig hebben om eigenaarschap te nemen.`
         : "Voor de leidinggevende is het advies om eerst te zorgen voor een complete datakoppeling.",
@@ -281,6 +363,8 @@ async function generateAdviceForVragenlijstIds({
     adviesrapportId: adviesRef.id,
     vragenlijstCount: vragenlijstDocs.length,
     answerCount: answerDocs.length,
+    hasTeamwiel: Boolean(teamwielInsights.beschikbaar),
+    teamwielId: teamwielId || "",
     lowestDomain: lowestDomain ? lowestDomain.label : null,
     highestDomain: highestDomain ? highestDomain.label : null,
   };
@@ -335,7 +419,7 @@ exports.generateTeamAdvice = onCall(async (request) => {
     console.log("generateTeamAdvice aangeroepen", request.data);
     console.log("Firebase projectId:", process.env.GCLOUD_PROJECT);
 
-    const { vragenlijstIds, rapportageNaam, klantNaam, scanId } =
+    const { vragenlijstIds, rapportageNaam, klantNaam, teamwielId, scanId } =
       request.data || {};
 
     if (vragenlijstIds) {
@@ -343,6 +427,7 @@ exports.generateTeamAdvice = onCall(async (request) => {
         vragenlijstIds,
         rapportageNaam,
         klantNaam,
+        teamwielId,
       });
     }
 

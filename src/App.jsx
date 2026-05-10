@@ -5049,6 +5049,22 @@ function PageRapportages() {
     return rijen;
   };
 
+  const bepaalTeamwielIdVoorRapportage = (rapportage) => {
+    const tekst = `${rapportage?.klant || ""} ${rapportage?.naam || ""}`.toLowerCase();
+
+    // Voor nu is er één handmatige koppeling:
+    // teamwiel Evides HR Beleid en Business hoort bij de HR-rapportage, niet bij Evides infra.
+    if (
+      tekst.includes("evides") &&
+      tekst.includes("hr") &&
+      (tekst.includes("beleid") || tekst.includes("business"))
+    ) {
+      return "evides-hr-teamwiel-2026-01";
+    }
+
+    return "";
+  };
+
   const genereerConceptadviesVoorRapportage = async (rapportage) => {
     try {
       setAdviesLoadingId(rapportage.id);
@@ -5063,18 +5079,21 @@ function PageRapportages() {
 
       const functions = getFunctions(undefined, "us-central1");
       const generateTeamAdvice = httpsCallable(functions, "generateTeamAdvice");
+      const teamwielId = bepaalTeamwielIdVoorRapportage(rapportage);
 
       const result = await generateTeamAdvice({
         vragenlijstIds,
         rapportageNaam: rapportage.naam || "Rapportage",
         klantNaam: rapportage.klant || "",
+        ...(teamwielId ? { teamwielId } : {}),
       });
 
       const data = result.data || {};
 
       setAdviesMelding(
-        data.message ||
-          `Conceptadvies is gegenereerd voor ${rapportage.naam || "de rapportage"}.`
+        data.message
+          ? `${data.message}${data.hasTeamwiel ? " Teamwielinzichten zijn meegenomen." : ""}`
+          : `Conceptadvies is gegenereerd voor ${rapportage.naam || "de rapportage"}${data.hasTeamwiel ? " met teamwielinzichten" : ""}.`
       );
 
       const adviesSnap = await getDocs(collection(db, "adviesrapporten"));
@@ -5125,6 +5144,12 @@ function PageRapportages() {
 
   const domeinScoreItems = (rapport) =>
     Object.values(rapport?.domainScores || {}).filter(Boolean);
+
+  const heeftTeamwiel = (rapport) =>
+    Boolean(rapport?.dataQuality?.hasTeamwiel || rapport?.teamwielInsights?.beschikbaar || rapport?.teamwielId);
+
+  const teamwielKleurItems = (rapport, veld) =>
+    Object.entries(rapport?.teamwielInsights?.[veld] || {}).map(([kleur, waarde]) => ({ kleur, waarde }));
 
   const scoreKleur = (score) => {
     if (score === null || score === undefined) return ADM.muted;
@@ -6696,6 +6721,20 @@ function PageRapportages() {
                     }}>
                       {rapport.status || "concept"}
                     </span>
+                    {heeftTeamwiel(rapport) && (
+                      <span style={{
+                        alignSelf: "flex-start",
+                        fontSize: 11,
+                        fontWeight: 900,
+                        padding: "5px 9px",
+                        borderRadius: 999,
+                        background: "rgba(245,158,11,0.14)",
+                        color: ADM.orange,
+                        border: `1px solid ${ADM.orange}33`,
+                      }}>
+                        Teamwiel gekoppeld
+                      </span>
+                    )}
                     <button
                       type="button"
                       onClick={() => setGeselecteerdAdviesrapportId(rapport.id)}
@@ -6738,6 +6777,12 @@ function PageRapportages() {
                   <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: 12 }}>
                     <div style={{ color: ADM.muted, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 5 }}>Bron</div>
                     <div style={{ color: ADM.muted, fontWeight: 700, fontSize: 11, wordBreak: "break-all" }}>{rapport.source || "onbekend"}</div>
+                  </div>
+                  <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: 12 }}>
+                    <div style={{ color: ADM.muted, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 5 }}>Teamwiel</div>
+                    <div style={{ color: heeftTeamwiel(rapport) ? ADM.orange : ADM.muted, fontWeight: 800, fontSize: 13 }}>
+                      {heeftTeamwiel(rapport) ? "Meegenomen" : "Niet gekoppeld"}
+                    </div>
                   </div>
                 </div>
 
@@ -6880,6 +6925,68 @@ function PageRapportages() {
               {geselecteerdAdviesrapport.executiveSummary || "Nog geen samenvatting beschikbaar."}
             </p>
           </div>
+
+          {heeftTeamwiel(geselecteerdAdviesrapport) && (
+            <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18, marginBottom: 16 }}>
+              <h3 style={{ margin: "0 0 8px", color: "#0F172A", fontSize: 18 }}>Teamwielinzichten</h3>
+              <p style={{ margin: "0 0 14px", color: "#334155", fontSize: 14, lineHeight: 1.75 }}>
+                {geselecteerdAdviesrapport.teamwielSummary || geselecteerdAdviesrapport.reportSections?.teamwielInterpretation || "Er is teamwieldata gekoppeld aan dit adviesrapport."}
+              </p>
+
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
+                <div style={{ border: "1px solid #E2E8F0", borderRadius: 12, padding: 14, background: "#F8FAFC" }}>
+                  <div style={{ color: "#64748B", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Dominante voorkeuren</div>
+                  <div style={{ color: "#0F172A", fontWeight: 900, fontSize: 14 }}>
+                    {(geselecteerdAdviesrapport.teamwielInsights?.dominanteVoorkeuren || []).join(" en ") || "Nog niet bekend"}
+                  </div>
+                </div>
+                <div style={{ border: "1px solid #E2E8F0", borderRadius: 12, padding: 14, background: "#F8FAFC" }}>
+                  <div style={{ color: "#64748B", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Minder dominante voorkeuren</div>
+                  <div style={{ color: "#0F172A", fontWeight: 900, fontSize: 14 }}>
+                    {(geselecteerdAdviesrapport.teamwielInsights?.ondervertegenwoordigdeVoorkeuren || []).join(" en ") || "Nog niet bekend"}
+                  </div>
+                </div>
+                <div style={{ border: "1px solid #E2E8F0", borderRadius: 12, padding: 14, background: "#F8FAFC" }}>
+                  <div style={{ color: "#64748B", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Aantal teamleden</div>
+                  <div style={{ color: "#0F172A", fontWeight: 900, fontSize: 18 }}>
+                    {geselecteerdAdviesrapport.teamwielInsights?.aantalTeamleden ?? "-"}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginBottom: 14 }}>
+                <div style={{ border: "1px solid #E2E8F0", borderRadius: 12, padding: 14, background: "#F8FAFC" }}>
+                  <div style={{ color: "#64748B", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Kleurgemiddelden</div>
+                  {teamwielKleurItems(geselecteerdAdviesrapport, "kleurGemiddelden").map((item) => (
+                    <div key={item.kleur} style={{ display: "flex", justifyContent: "space-between", gap: 12, color: "#334155", fontSize: 13, lineHeight: 1.8 }}>
+                      <span style={{ textTransform: "capitalize" }}>{item.kleur}</span>
+                      <strong>{item.waarde}</strong>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ border: "1px solid #E2E8F0", borderRadius: 12, padding: 14, background: "#F8FAFC" }}>
+                  <div style={{ color: "#64748B", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Kleurverdeling</div>
+                  {teamwielKleurItems(geselecteerdAdviesrapport, "kleurVerdeling").map((item) => (
+                    <div key={item.kleur} style={{ display: "flex", justifyContent: "space-between", gap: 12, color: "#334155", fontSize: 13, lineHeight: 1.8 }}>
+                      <span style={{ textTransform: "capitalize" }}>{item.kleur}</span>
+                      <strong>{item.waarde}</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {Array.isArray(geselecteerdAdviesrapport.teamwielInsights?.teamwielDuiding) && geselecteerdAdviesrapport.teamwielInsights.teamwielDuiding.length > 0 && (
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ color: "#0F172A", fontWeight: 900, fontSize: 14, marginBottom: 8 }}>Duiding van het voorkeursgedrag</div>
+                  <ul style={{ margin: 0, paddingLeft: 18, color: "#334155", fontSize: 13, lineHeight: 1.7 }}>
+                    {geselecteerdAdviesrapport.teamwielInsights.teamwielDuiding.map((regel, index) => (
+                      <li key={index}>{regel}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
 
           <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 18, marginBottom: 16 }}>
             <h3 style={{ margin: "0 0 14px", color: "#0F172A", fontSize: 18 }}>Domeinscores</h3>
