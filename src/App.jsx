@@ -6976,12 +6976,48 @@ function PageRapportages() {
               </div>
 
               {Array.isArray(geselecteerdAdviesrapport.teamwielInsights?.teamwielDuiding) && geselecteerdAdviesrapport.teamwielInsights.teamwielDuiding.length > 0 && (
-                <div style={{ marginBottom: 12 }}>
+                <div
+                  style={{
+                    marginBottom: 12,
+                    overflow: "visible",
+                  }}
+                >
                   <div style={{ color: "#0F172A", fontWeight: 900, fontSize: 14, marginBottom: 8 }}>Duiding van het voorkeursgedrag</div>
-                  <ul style={{ margin: 0, paddingLeft: 18, color: "#334155", fontSize: 13, lineHeight: 1.7 }}>
-                    {geselecteerdAdviesrapport.teamwielInsights.teamwielDuiding.map((regel, index) => (
-                      <li key={index}>{regel}</li>
-                    ))}
+                  <ul
+                    style={{
+                      margin: "10px 0 0",
+                      paddingLeft: 22,
+                      color: "#334155",
+                      fontSize: 13,
+                      lineHeight: 1.75,
+                      overflow: "visible",
+                      whiteSpace: "normal",
+                      wordBreak: "normal",
+                    }}
+                  >
+                    {geselecteerdAdviesrapport.teamwielInsights.teamwielDuiding.map((regel, index) => {
+                      const volledigeRegel =
+                        typeof regel === "string" &&
+                        regel.startsWith("Blauw en groen zijn minder dominant aanwezig") &&
+                        !regel.includes("georganiseerd")
+                          ? "Blauw en groen zijn minder dominant aanwezig, waardoor vertraging, zorgvuldige analyse, borging en relationele afstemming bewust georganiseerd moeten worden."
+                          : regel;
+
+                      return (
+                        <li
+                          key={index}
+                          style={{
+                            marginBottom: 8,
+                            whiteSpace: "normal",
+                            overflow: "visible",
+                            textOverflow: "unset",
+                            display: "list-item",
+                          }}
+                        >
+                          {volledigeRegel}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
