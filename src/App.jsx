@@ -5183,9 +5183,19 @@ function PageRapportages() {
 
   const teamwielMomentopnameTekst = (rapport) => {
     if (!heeftTeamwiel(rapport)) return "";
-    const aantal = rapport?.teamwielInsights?.aantalTeamleden;
+
+    const aantal = Number(rapport?.teamwielInsights?.aantalTeamleden || 0);
+    const antwoordAantal = Number(rapport?.dataQuality?.answerCount || 0);
     const bron = rapport?.teamwielInsights?.bron || "teamwieldata";
-    return `Dit teamwiel is als momentopname opgeslagen in dit adviesrapport${aantal ? ` op basis van ${aantal} teamleden` : ""}. Als collega’s later alsnog hun Insights Discovery-vragenlijst invullen, werk dan het teamwiel-document bij en genereer daarna een nieuw adviesrapport. De bestaande rapporten blijven als historische versie bewaard. Bron: ${bron}.`;
+
+    const aantalTekst = aantal ? ` op basis van ${aantal} teamleden` : "";
+
+    const verschilTekst =
+      aantal && antwoordAantal && aantal !== antwoordAantal
+        ? ` Let op: de teamscan is gebaseerd op ${antwoordAantal} antwoorden. Het Insights Discovery-teamwiel is gebaseerd op ${aantal} teamleden. Daardoor kunnen beide aantallen bewust van elkaar verschillen.`
+        : "";
+
+    return `Dit teamwiel is als momentopname opgeslagen in dit adviesrapport${aantalTekst}.${verschilTekst} Als collega’s later alsnog hun Insights Discovery-vragenlijst invullen, werk dan het teamwiel-document bij en genereer daarna een nieuw adviesrapport. De bestaande rapporten blijven als historische versie bewaard. Bron: ${bron}.`;
   };
 
   const scoreKleur = (score) => {
@@ -6848,6 +6858,14 @@ function PageRapportages() {
       {geselecteerdAdviesrapport && (
         <>
           <style>{`
+            .adviesrapport-print-area,
+            .adviesrapport-print-area * {
+              font-family: Arial, Helvetica, sans-serif !important;
+              font-variant-ligatures: none !important;
+              font-feature-settings: "liga" 0, "clig" 0, "calt" 0 !important;
+              text-rendering: optimizeLegibility;
+            }
+
             @media print {
               body * {
                 visibility: hidden !important;
