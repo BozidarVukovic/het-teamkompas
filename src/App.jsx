@@ -780,8 +780,8 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
 function SeoHead({ page = "home" }) {
   const pages = {
     home: {
-      title: "Mijn Teamkompas | teamscan, teamontwikkeling en teamcoaching",
-      description: "Mijn Teamkompas helpt teams zichtbaar maken wat samenwerking belemmert. Met teamscan, analyse, Insights Discovery en begeleiding naar concrete vervolgstappen.",
+      title: "Mijn Teamkompas | teamscan, workshops en coaching",
+      description: "Mijn Teamkompas begeleidt teams en leiders bij gedragsverandering en organisatieontwikkeling met teamscan, workshops, teamdagen en coaching.",
       url: "https://www.mijnteamkompas.nl/",
       image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
     },
@@ -1053,17 +1053,34 @@ function PublicSite({ onLoginClick }) {
     ["9", "Borging / follow-up", "Zorgen dat inzichten blijven landen in het dagelijks werk."],
   ];
 
-  const trustItems = [
-    ["Menselijk", "we kijken naar gedrag, veiligheid, energie en samenwerking achter de cijfers."],
-    ["Onderbouwd", "teamscan, Insights Discovery en bewezen veranderkundige principes versterken elkaar."],
-    ["Praktisch", "geen standaardrapport, maar concrete stappen die passen bij jullie dagelijkse realiteit."],
+  const aanbodItems = [
+    [
+      "Teamscan",
+      "We maken zichtbaar wat er speelt in het team.",
+      "Met de teamscan brengen we gedrag, samenwerking, veiligheid, energie en veranderkracht in kaart. Zo ontstaat een scherp beeld van wat helpt, wat belemmert en waar het gesprek over moet gaan.",
+      PUB.blauw,
+    ],
+    [
+      "Workshops en teamdagen",
+      "We begeleiden het echte gesprek in het team.",
+      "In workshops en teamdagen helpen we teams om patronen te herkennen, verschillen bespreekbaar te maken en concrete afspraken te maken over samenwerking en gedrag.",
+      PUB.groen,
+    ],
+    [
+      "Coaching van leiders en teams",
+      "We helpen leiders en teams ander gedrag vol te houden.",
+      "Met coaching vertalen we inzichten naar dagelijks leiderschap, eigenaarschap en betere gesprekken in de praktijk.",
+      PUB.oranje,
+    ],
   ];
 
   const vragen = [
-    "Er wordt veel besproken, maar weinig echt uitgesproken.",
-    "Samenwerking kost meer energie dan nodig is.",
-    "Verandering roept twijfel, afwachten of weerstand op.",
-    "Leidinggevenden zoeken taal en richting om het team verder te brengen.",
+    "Als samenwerking veel energie kost.",
+    "Als gesprekken niet gevoerd worden.",
+    "Als verandering blijft hangen in plannen.",
+    "Als leiders meer eigenaarschap willen in het team.",
+    "Als spanning, onduidelijkheid of weerstand onder de oppervlakte blijft.",
+    "Als teams beter willen leren omgaan met gedrag, verschil en verantwoordelijkheid.",
   ];
 
   const pijlerCards = [
@@ -1087,41 +1104,59 @@ function PublicSite({ onLoginClick }) {
           <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.035) 1px,transparent 1px)", backgroundSize: "30px 30px" }} />
           <Strepen />
           <div style={{ padding: isMobile ? "58px 24px 36px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 16 }}>Teamontwikkeling met teamscan, analyse en begeleiding</div>
+            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 16 }}>Teamscan, workshops en coaching</div>
             <h1 style={{ fontSize: isMobile ? 34 : 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, marginBottom: 20, letterSpacing: "-0.03em" }}>
-              Waarom verandert er niets in je team, terwijl iedereen voelt dat het beter kan?
+              Teams en leiders begeleiden bij gedragsverandering en organisatieontwikkeling
             </h1>
-            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 640, marginBottom: 16 }}>
-              Mijn Teamkompas maakt zichtbaar wat er onder de oppervlakte speelt en vertaalt dat naar concrete begeleiding, een zorgvuldig trajectontwerp en een teamdag die past bij jullie dagelijkse werkelijkheid.
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 680, marginBottom: 16 }}>
+              Mijn Teamkompas helpt teams beter samenwerken als gedrag, verandering of leiderschap vastloopt. Met een teamscan, workshops en coaching maken we zichtbaar wat er speelt en begeleiden we teams en leiders naar ander gedrag in de praktijk.
             </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 20 }}>
+              {["Teamscan", "Workshops en teamdagen", "Coaching van leiders en teams"].map((label) => (
+                <span key={label} style={{ border: "1px solid rgba(255,255,255,0.24)", color: "rgba(255,255,255,0.86)", borderRadius: 999, padding: "8px 12px", fontSize: 13, fontWeight: 800, background: "rgba(255,255,255,0.08)" }}>{label}</span>
+              ))}
+            </div>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
-              <span style={ctaStyle} onClick={openModal}>Plan een verkennende kennismaking</span>
-              <span style={{ ...ghostStyle, background: "rgba(255,255,255,0.10)" }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
+              <span style={ctaStyle} onClick={openModal}>Plan een kennismaking</span>
               <span style={ghostStyle} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
             </div>
-            <div style={{ marginTop: 24, color: "rgba(255,255,255,0.48)", fontSize: 13 }}>
-              Kies voor persoonlijk contact of start laagdrempelig met de digitale teamscan.
+            <div style={{ marginTop: 24, color: "rgba(255,255,255,0.58)", fontSize: 13, lineHeight: 1.65, maxWidth: 660 }}>
+              Voor teams die vastlopen in samenwerking, verandering of onderlinge communicatie, en voor leiders die beweging willen zonder harder te trekken.
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 320 : "86vh", position: "relative", zIndex: 1 }}>
             <img src="/teamkompas-workshop-hero.jpg" alt="Teamworkshop van Mijn Teamkompas met kompaswerkvorm en gezamenlijke dialoog" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: .82 }} />
             <div style={{ position: "absolute", inset: 0, background: isMobile ? "linear-gradient(to top, rgba(13,27,42,0.88), rgba(13,27,42,0.18))" : "linear-gradient(to right, rgba(13,27,42,0.92), rgba(13,27,42,0.10))" }} />
             <div style={{ position: "absolute", left: isMobile ? 22 : 44, right: isMobile ? 22 : 44, bottom: isMobile ? 24 : 44, background: "rgba(255,255,255,0.92)", borderRadius: 18, padding: 22, boxShadow: "0 24px 70px rgba(0,0,0,0.28)" }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: PUB.teal, marginBottom: 8 }}>De eerste stap</div>
-              <div style={{ fontSize: isMobile ? 20 : 24, fontWeight: 800, color: PUB.donker, lineHeight: 1.2, marginBottom: 8 }}>Van losse signalen naar een gedeeld beeld.</div>
-              <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.sub }}>Een kennismaking geeft rust, taal en richting voordat er een traject wordt gestart.</div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: PUB.teal, marginBottom: 8 }}>Wanneer schakel je ons in?</div>
+              <div style={{ fontSize: isMobile ? 20 : 24, fontWeight: 800, color: PUB.donker, lineHeight: 1.2, marginBottom: 8 }}>Als samenwerking stroef loopt of verandering onvoldoende landt.</div>
+              <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.sub }}>We maken gedrag, spanning en verantwoordelijkheid bespreekbaar en vertalen dit naar concrete beweging.</div>
             </div>
           </div>
         </section>
 
-        <section style={{ background: PUB.wit, padding: isMobile ? "28px 20px" : "34px 60px", borderBottom: `1px solid ${PUB.lijn}` }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
-            {trustItems.map(([titel, tekst]) => (
-              <div key={titel} style={{ border: `1px solid ${PUB.lijn}`, borderRadius: 14, padding: 18, background: "#fff" }}>
-                <div style={{ fontSize: 16, fontWeight: 800, color: PUB.donker, marginBottom: 6 }}>{titel}</div>
-                <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.sub }}>{tekst}</div>
+        <section id="wat-we-bieden" style={{ background: PUB.wit, padding: isMobile ? "44px 20px" : "58px 60px", borderBottom: `1px solid ${PUB.lijn}` }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <Fade>
+              <div style={{ maxWidth: 820, marginBottom: 28 }}>
+                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wat we bieden</div>
+                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>In één oogopslag: teamscan, workshops en coaching.</h2>
+                <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>
+                  Je schakelt Mijn Teamkompas in als samenwerking stroef loopt, verandering onvoldoende landt of leiders en teams beter willen leren omgaan met gedrag, spanning en verantwoordelijkheid.
+                </p>
               </div>
-            ))}
+            </Fade>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 18 }}>
+              {aanbodItems.map(([titel, kernzin, tekst, kleur], i) => (
+                <Fade key={titel} delay={i * 0.06} style={{ height: "100%" }}>
+                  <div style={{ height: "100%", border: `1px solid ${PUB.lijn}`, borderTop: `5px solid ${kleur}`, borderRadius: 18, padding: 24, background: PUB.wit, boxShadow: "0 18px 44px rgba(13,27,42,0.08)", boxSizing: "border-box" }}>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: PUB.donker, marginBottom: 10 }}>{titel}</div>
+                    <div style={{ fontSize: 15, fontWeight: 800, color: PUB.tealDark, lineHeight: 1.55, marginBottom: 10 }}>{kernzin}</div>
+                    <div style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub }}>{tekst}</div>
+                  </div>
+                </Fade>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -1130,18 +1165,18 @@ function PublicSite({ onLoginClick }) {
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <Fade>
               <div style={{ maxWidth: 760, marginBottom: 28 }}>
-                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Van inzicht naar beweging</div>
-                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>Teamontwikkeling begint met zien wat er echt speelt.</h2>
+                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Hoe we werken</div>
+                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>Eerst meten, dan begrijpen, daarna bewegen.</h2>
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>
-                  Mijn Teamkompas combineert een digitale teamscan met begeleide dialoog, zodat signalen niet blijven hangen in losse indrukken maar worden vertaald naar richting, eigenaarschap en concrete vervolgstappen.
+                  De methode komt pas na de vraag. We starten bij wat het team ervaart, geven samen betekenis aan de patronen en vertalen dit naar gedrag, afspraken en vervolgstappen.
                 </p>
               </div>
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 18 }}>
               {[
-                ["Eerst begrijpen", "Een verkennend gesprek maakt helder wat zichtbaar is, wat onder de oppervlakte speelt en welke vraag echt centraal staat.", "/teamkompas-intakegesprek.jpg", "Verkennend gesprek over leiderschap, samenwerking en teamontwikkeling"],
-                ["Samen betekenis geven", "De teamscan en gedragsinzichten helpen om patronen bespreekbaar te maken zonder oordeel of ingewikkelde taal.", "/teamkompas-workshop-hero.jpg", "Teamworkshop met kompaswerkvorm en dialoog over samenwerking"],
-                ["Richting kiezen", "In een teamsessie vertalen we inzicht naar concrete afspraken, beter samenspel en haalbare vervolgstappen.", "/teamkompas-samen-richting.jpg", "Teamsessie waarin deelnemers samen richting geven aan verbetering"]
+                ["Meten", "Met de teamscan, intake of voorbereidende gesprekken maken we zichtbaar wat het team ervaart en waar samenwerking schuurt.", "/teamkompas-intakegesprek.jpg", "Verkennend gesprek over leiderschap, samenwerking en teamontwikkeling"],
+                ["Begrijpen", "We geven samen betekenis aan patronen, verschillen en onderstroom, zodat het gesprek concreet en veilig wordt.", "/teamkompas-workshop-hero.jpg", "Teamworkshop met kompaswerkvorm en dialoog over samenwerking"],
+                ["Bewegen", "In workshops, teamdagen en coaching vertalen we inzicht naar ander gedrag, duidelijke afspraken en eigenaarschap.", "/teamkompas-samen-richting.jpg", "Teamsessie waarin deelnemers samen richting geven aan verbetering"]
               ].map(([titel, tekst, image, alt], i) => (
                 <Fade key={titel} delay={i * 0.06} style={{ height: "100%" }}>
                   <div style={{ height: "100%", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, overflow: "hidden", boxShadow: "0 18px 44px rgba(13,27,42,0.08)" }}>
@@ -1156,7 +1191,7 @@ function PublicSite({ onLoginClick }) {
             </div>
             <Fade delay={0.12}>
               <div style={{ marginTop: 26, display: "flex", flexWrap: "wrap", gap: 12 }}>
-                <span style={{ ...ctaStyle, display: "inline-block" }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
+                <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Plan een kennismaking</span>
                 <span style={{ border: `1px solid ${PUB.lijn}`, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", background: PUB.wit }} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
               </div>
             </Fade>
@@ -1167,9 +1202,9 @@ function PublicSite({ onLoginClick }) {
         <section id="voor-wie" style={{ padding: isMobile ? "54px 20px" : "82px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 42, alignItems: "center" }}>
             <Fade>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Herkenbare aanleiding</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Als het team wel wil, maar nog niet in beweging komt.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>Misschien loopt het in je team niet slecht, maar ook niet zoals je zou willen. Dingen blijven liggen, gesprekken worden niet gevoerd of verandering blijft hangen in goede intenties. Dan helpt het om eerst helder te krijgen wat er echt speelt.</p>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wanneer schakel je ons in?</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Als gedrag, verandering of leiderschap vastloopt.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>Mijn Teamkompas helpt als de inhoud wel besproken wordt, maar het echte gesprek over samenwerking, spanning en verantwoordelijkheid nog onvoldoende op tafel komt.</p>
               <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Bespreek jullie situatie</span>
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14, alignItems: "stretch" }}>
@@ -1312,9 +1347,9 @@ function PublicSite({ onLoginClick }) {
 
         <section style={{ padding: isMobile ? "46px 20px" : "70px 60px", background: PUB.teal }}>
           <div style={{ maxWidth: 1040, margin: "0 auto", textAlign: "center", color: PUB.wit }}>
-            <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.14, marginBottom: 14 }}>Wil je weten wat er in jouw team onder de oppervlakte speelt?</h2>
-            <p style={{ fontSize: 16, lineHeight: 1.75, opacity: .9, maxWidth: 720, margin: "0 auto 26px" }}>Begin met een korte verkenning. Daarna bepalen we samen of een teamscan, analyse of teamdag logisch is.</p>
-            <span onClick={openModal} style={{ display: "inline-block", background: PUB.wit, color: PUB.tealDark, padding: "14px 24px", borderRadius: 8, fontWeight: 800, cursor: "pointer" }}>Plan een verkennende kennismaking</span>
+            <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.14, marginBottom: 14 }}>Wil je samenwerking, leiderschap of verandering concreet verbeteren?</h2>
+            <p style={{ fontSize: 16, lineHeight: 1.75, opacity: .9, maxWidth: 720, margin: "0 auto 26px" }}>Begin met een korte kennismaking. Daarna bepalen we samen of een teamscan, workshop, teamdag of coachingtraject logisch is.</p>
+            <span onClick={openModal} style={{ display: "inline-block", background: PUB.wit, color: PUB.tealDark, padding: "14px 24px", borderRadius: 8, fontWeight: 800, cursor: "pointer" }}>Plan een kennismaking</span>
           </div>
         </section>
 
