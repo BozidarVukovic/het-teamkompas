@@ -439,41 +439,45 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
               </span>
             ))}
 
-            <span
-              onClick={() => navigate("/teamontwikkeling")}
-              style={{...navLinkStyle("teamontwikkeling"), color:"rgba(255,255,255,0.72)"}}
+            <a
+              href="/teamontwikkeling"
+              onClick={e=>{ e.preventDefault(); navigate("/teamontwikkeling"); }}
+              style={{...navLinkStyle("teamontwikkeling"), color:"rgba(255,255,255,0.72)", textDecoration:"none"}}
               onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
               onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.72)"; }}
             >
               Teamontwikkeling
-            </span>
+            </a>
 
-            <span
-              onClick={() => navigate("/teamcoaching")}
-              style={{...navLinkStyle("teamcoaching"), color:"rgba(255,255,255,0.72)"}}
+            <a
+              href="/teamcoaching"
+              onClick={e=>{ e.preventDefault(); navigate("/teamcoaching"); }}
+              style={{...navLinkStyle("teamcoaching"), color:"rgba(255,255,255,0.72)", textDecoration:"none"}}
               onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
               onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.72)"; }}
             >
               Teamcoaching
-            </span>
+            </a>
 
-            <span
-              onClick={() => navigate("/teamdag")}
-              style={{...navLinkStyle("teamdag"), color:"rgba(255,255,255,0.78)"}}
+            <a
+              href="/teamdag"
+              onClick={e=>{ e.preventDefault(); navigate("/teamdag"); }}
+              style={{...navLinkStyle("teamdag"), color:"rgba(255,255,255,0.78)", textDecoration:"none"}}
               onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
               onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.78)"; }}
             >
               Teamdag
-            </span>
+            </a>
 
-            <span
-              onClick={() => navigate("/onze-aanpak")}
-              style={{...navLinkStyle("onze-aanpak"), color:"rgba(255,255,255,0.72)"}}
+            <a
+              href="/onze-aanpak"
+              onClick={e=>{ e.preventDefault(); navigate("/onze-aanpak"); }}
+              style={{...navLinkStyle("onze-aanpak"), color:"rgba(255,255,255,0.72)", textDecoration:"none"}}
               onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
               onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.72)"; }}
             >
               Onze aanpak
-            </span>
+            </a>
 
             <span
               onClick={openModal}
@@ -513,30 +517,34 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
               {l}
             </div>
           ))}
-          <div
-            onClick={()=>{navigate("/teamontwikkeling");setMenuOpen(false);}}
-            style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
+          <a
+            href="/teamontwikkeling"
+            onClick={e=>{ e.preventDefault(); navigate("/teamontwikkeling"); setMenuOpen(false); }}
+            style={{display:"block",padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)",textDecoration:"none"}}
           >
             Teamontwikkeling
-          </div>
-          <div
-            onClick={()=>{navigate("/teamcoaching");setMenuOpen(false);}}
-            style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
+          </a>
+          <a
+            href="/teamcoaching"
+            onClick={e=>{ e.preventDefault(); navigate("/teamcoaching"); setMenuOpen(false); }}
+            style={{display:"block",padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)",textDecoration:"none"}}
           >
             Teamcoaching
-          </div>
-          <div
-            onClick={()=>{navigate("/teamdag");setMenuOpen(false);}}
-            style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
+          </a>
+          <a
+            href="/teamdag"
+            onClick={e=>{ e.preventDefault(); navigate("/teamdag"); setMenuOpen(false); }}
+            style={{display:"block",padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)",textDecoration:"none"}}
           >
             Teamdag
-          </div>
-          <div
-            onClick={()=>{navigate("/onze-aanpak");setMenuOpen(false);}}
-            style={{padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)"}}
+          </a>
+          <a
+            href="/onze-aanpak"
+            onClick={e=>{ e.preventDefault(); navigate("/onze-aanpak"); setMenuOpen(false); }}
+            style={{display:"block",padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)",textDecoration:"none"}}
           >
             Onze aanpak
-          </div>
+          </a>
           <div onClick={()=>{openModal();setMenuOpen(false);}}
             style={{padding:"14px 24px",color:"#ffffff",fontSize:15,cursor:"pointer",fontWeight:700,
               borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
@@ -8806,19 +8814,98 @@ function TeamdagPage() {
   return (
     <>
       <Helmet>
-        <title>Teamdag organiseren | teamdag met impact en Insights Discovery | Mijn Teamkompas</title>
+        <title>Teamdag organiseren voor betere samenwerking | Mijn Teamkompas</title>
         <meta
           name="description"
-          content="Organiseer een teamdag die verder gaat dan een leuke sessie. Mijn Teamkompas helpt met teamscan, teamcoaching, Insights Discovery en concrete vervolgstappen."
+          content="Organiseer een teamdag die verder gaat dan een leuke sessie. Mijn Teamkompas helpt met teamscan, Insights Discovery en concrete vervolgstappen voor duurzame samenwerking."
         />
         <link rel="canonical" href="https://www.mijnteamkompas.nl/teamdag" />
-        <meta property="og:title" content="Teamdag organiseren met impact | Mijn Teamkompas" />
+        <meta property="og:title" content="Teamdag organiseren voor betere samenwerking | Mijn Teamkompas" />
         <meta
           property="og:description"
           content="Een teamdag voor betere samenwerking, psychologische veiligheid, eigenaarschap en teamontwikkeling. Met teamscan en eventueel Insights Discovery."
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/teamdag" />
+        <meta property="og:image" content="https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Teamdag organiseren voor betere samenwerking | Mijn Teamkompas" />
+        <meta name="twitter:description" content="Organiseer een teamdag die verder gaat dan een leuke sessie. Mijn Teamkompas helpt met teamscan, Insights Discovery en concrete vervolgstappen." />
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Service",
+                "name": "Teamdag organiseren",
+                "description": "Een teamdag van Mijn Teamkompas die begint bij wat er echt speelt in het team. Met teamscan, intake en eventueel Insights Discovery maken we zichtbaar waar samenwerking vastloopt.",
+                "provider": {
+                  "@type": "LocalBusiness",
+                  "name": "Mijn Teamkompas",
+                  "url": "https://www.mijnteamkompas.nl",
+                  "email": "info@mijnteamkompas.nl",
+                  "areaServed": "NL"
+                },
+                "serviceType": "Teamdag, teamcoaching, teamscan",
+                "url": "https://www.mijnteamkompas.nl/teamdag"
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "Hoe organiseer je een effectieve teamdag?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Een effectieve teamdag begint met een scherpe ontwikkelvraag. Mijn Teamkompas gebruikt een teamscan en intake om te bepalen waar de teamdag echt aan moet bijdragen, zodat de dag verder gaat dan losse werkvormen."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Wat maakt een teamdag bij Mijn Teamkompas anders?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Wij ontwerpen een teamdag niet vanuit standaardwerkvormen, maar vanuit de ontwikkelvraag van het team. Teamscan, intake en eventueel Insights Discovery bepalen wat nodig is voor duurzame verandering."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Kan Insights Discovery onderdeel zijn van de teamdag?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Ja. Mijn Teamkompas gebruikt Insights Discovery niet als losse profieltraining, maar als onderdeel van een bredere aanpak rond teamontwikkeling, communicatie en samenwerking."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Voor welke organisaties is een teamdag geschikt?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Een teamdag is geschikt voor teams in zakelijke dienstverlening, gemeenten, onderwijs en industrie — overal waar samenwerking, communicatie of eigenaarschap versterkt moet worden."
+                    }
+                  }
+                ]
+              },
+              {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://www.mijnteamkompas.nl/"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Teamdag",
+                    "item": "https://www.mijnteamkompas.nl/teamdag"
+                  }
+                ]
+              }
+            ]
+          }
+        `}</script>
       </Helmet>
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
@@ -9129,7 +9216,7 @@ export default function App() {
         <Route path="/teamontwikkeling" element={<><SeoHead page="teamontwikkeling" /><TeamontwikkelingSeoLandingspagina onLoginClick={() => setView("login")} /></>} />
         <Route path="/admin/funnel" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/teamcoaching" element={<><SeoHead page="teamcoaching" /><TeamcoachingPage /></>} />
-        <Route path="/teamdag" element={<><SeoHead page="teamdag" /><TeamdagPage /></>} />
+        <Route path="/teamdag" element={<TeamdagPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
       </Routes>
     </HelmetProvider>
