@@ -6,7 +6,7 @@ description: Psychologische veiligheid bepaalt of mensen durven spreken, fouten
   vergroot.
 image: /blog/images/edd3c51abe20856798a8ad559c2dd7c8b49fb7ae3e0ab6b659697a75f026640f.png
 ---
-Psychologische veiligheid is een van de sterkste voorspellers van teamprestaties. Google onderzocht honderden teams en ontdekte dat het de belangrijkste factor was — belangrijker dan de samenstelling van het team of de intelligentie van de leden.
+Psychologische veiligheid is een van de sterkste voorspellers van teamprestaties. Google onderzocht honderden teams en ontdekte dat het de belangrijkste factor was, belangrijker dan de samenstelling van het team of de intelligentie van de leden.
 
 Maar wat is het precies, en hoe vergroot je het in de praktijk?
 
