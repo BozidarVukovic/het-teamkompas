@@ -1838,7 +1838,7 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
           )}
           <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>{beschrijving}</div>
           {info ? (
-            <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${info.id}`); } catch {} }}
+            <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}/deelnemen/${info.id}`); } catch {} }}
               style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 14px",fontWeight:700,fontSize:12,cursor:"pointer"}}>
               🔗 Kopieer deelnemerslink
             </button>
@@ -1879,7 +1879,7 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
               Combineert alle aanbevolen domeinen in één link: {aanbevolenOnderdelen.map((k) => VERDIEPING_BLOKKEN[k]?.titel).filter(Boolean).join(" + ")}
             </div>
             {verdiepingInfo?.gecombineerd ? (
-              <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}?scan=${verdiepingInfo.gecombineerd.id}`); } catch {} }}
+              <button onClick={async()=>{ try { await navigator.clipboard.writeText(`${window.location.origin}/deelnemen/${verdiepingInfo.gecombineerd.id}`); } catch {} }}
                 style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
                 🔗 Kopieer gecombineerde deelnemerslink
               </button>
@@ -3620,8 +3620,8 @@ function PageKlanten() {
                           ...(mgId ? antwoorden.filter(a => a.vragenlijstId === mgId) : []),
                         ];
                         const baseUrl = window.location.origin;
-                        const medewerkersLink = mwId ? `${baseUrl}?scan=${mwId}` : null;
-                        const managerLink     = mgId ? `${baseUrl}?scan=${mgId}` : null;
+                        const medewerkersLink = mwId ? `${baseUrl}/deelnemen/${mwId}` : null;
+                        const managerLink     = mgId ? `${baseUrl}/deelnemen/${mgId}` : null;
                         const kopieerId_mw = `mw_${mwId}`;
                         const kopieerId_mg = `mg_${mgId}`;
                         const trajectRef = g.mwT || g.mgT;
@@ -3767,7 +3767,7 @@ function PageKlanten() {
                                           </div>
                                           {bestaand ? (
                                             <button
-                                              onClick={async()=>{try{await navigator.clipboard.writeText(`${window.location.origin}?scan=${bestaand.id}`);}catch{}}}
+                                              onClick={async()=>{try{await navigator.clipboard.writeText(`${window.location.origin}/deelnemen/${bestaand.id}`);}catch{}}}
                                               style={{background:`${config.kleur}18`,color:config.kleur,border:`1px solid ${config.kleur}33`,borderRadius:6,padding:"4px 10px",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}
                                             >
                                               🔗 Kopieer link
@@ -9106,9 +9106,16 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    // Nieuw: /deelnemen/:scanId pad (firewall-vriendelijk)
+    const deelnemenMatch = window.location.pathname.match(/^\/deelnemen\/([^/]+)/);
+    if (deelnemenMatch) {
+      setScanId(deelnemenMatch[1]);
+      setView("scan");
+      return;
+    }
+    // Oud: ?scan=xxx (backward compatibility)
     const params = new URLSearchParams(window.location.search);
     const s = params.get("scan");
-
     if (s) {
       setScanId(s);
       setView("scan");

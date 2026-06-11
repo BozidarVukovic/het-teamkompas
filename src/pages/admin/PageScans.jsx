@@ -114,7 +114,7 @@ export default function PageScans({ ScanResultaten, exporteerScanAlsCsv }) {
   };
 
   const kopieerLink = async (id, rolParam) => {
-    const url = `${window.location.origin}?scan=${id}&rol=${rolParam}`;
+    const url = `${window.location.origin}/deelnemen/${id}?rol=${rolParam}`;
     try {
       await navigator.clipboard.writeText(url);
       setGekopieerd(`${id}_${rolParam}`);

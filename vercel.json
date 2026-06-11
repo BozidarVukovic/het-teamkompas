@@ -6,6 +6,7 @@
     { "source": "/teamontwikkeling", "destination": "/teamontwikkeling/index.html" },
     { "source": "/onze-aanpak", "destination": "/onze-aanpak/index.html" },
     { "source": "/verkennen", "destination": "/verkennen/index.html" },
+    { "source": "/deelnemen/:scanId", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
