@@ -21,6 +21,7 @@ import KompasDot from "./components/shared/KompasDot";
 import ScanInvullen from "./pages/public/ScanInvullen";
 import Blog from "./pages/public/Blog";
 import BlogPost from "./pages/public/BlogPost";
+import BlogTeaser from "./components/shared/BlogTeaser";
 import PageScans from "./pages/admin/PageScans";
 import {
   berekenScanScoresVoorMeting,
@@ -481,6 +482,16 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
               Onze aanpak
             </a>
 
+            <a
+              href="/blog"
+              onClick={e=>{ e.preventDefault(); navigate("/blog"); }}
+              style={{...navLinkStyle("blog"), color:"rgba(255,255,255,0.72)", textDecoration:"none"}}
+              onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.72)"; }}
+            >
+              Blog
+            </a>
+
             <span
               onClick={openModal}
               style={{background:"#F4F7F9",color:"#0D1B2A",fontWeight:700,padding:"10px 18px",
@@ -546,6 +557,13 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             style={{display:"block",padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)",textDecoration:"none"}}
           >
             Onze aanpak
+          </a>
+          <a
+            href="/blog"
+            onClick={e=>{ e.preventDefault(); navigate("/blog"); setMenuOpen(false); }}
+            style={{display:"block",padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)",textDecoration:"none"}}
+          >
+            Blog
           </a>
           <div onClick={()=>{openModal();setMenuOpen(false);}}
             style={{padding:"14px 24px",color:"#ffffff",fontSize:15,cursor:"pointer",fontWeight:700,
@@ -1362,6 +1380,8 @@ function PublicSite({ onLoginClick }) {
             <span onClick={openModal} style={{ display: "inline-block", background: PUB.wit, color: PUB.tealDark, padding: "14px 24px", borderRadius: 8, fontWeight: 800, cursor: "pointer" }}>Plan een kennismaking</span>
           </div>
         </section>
+
+        <BlogTeaser isMobile={isMobile} />
 
         <section id="contact" style={{ padding: isMobile ? "48px 20px" : "70px 60px", background: PUB.donker }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
