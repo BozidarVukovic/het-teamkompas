@@ -80,7 +80,7 @@ export default function Blog({ onLoginClick }) {
             <Link
               key={post.slug}
               to={`/blog/${post.slug}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+              style={{ textDecoration: "none", color: "inherit", display: "flex" }}
             >
               <article style={{
                 background: "#fff",
@@ -88,19 +88,20 @@ export default function Blog({ onLoginClick }) {
                 overflow: "hidden",
                 boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
                 transition: "transform 0.2s, box-shadow 0.2s",
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
               }}
                 onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(0,0,0,0.12)"; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)"; }}
               >
-                {post.image && (
-                  <img src={post.image} alt={post.title} style={{ width: "100%", height: 180, objectFit: "cover" }} />
-                )}
-                {!post.image && (
-                  <div style={{ height: 120, background: "linear-gradient(135deg, #0D1B2A 0%, #1e3a5f 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontSize: 40 }}>🧭</span>
-                  </div>
-                )}
-                <div style={{ padding: "20px 24px 24px" }}>
+                <div style={{ height: 180, overflow: "hidden", flexShrink: 0 }}>
+                  {post.image
+                    ? <img src={post.image} alt={post.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    : <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #0D1B2A 0%, #1e3a5f 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ fontSize: 40 }}>🧭</span></div>
+                  }
+                </div>
+                <div style={{ padding: "20px 24px 24px", display: "flex", flexDirection: "column", flex: 1 }}>
                   {post.date && (
                     <p style={{ color: "#8fa3bb", fontSize: 13, margin: "0 0 8px" }}>
                       {new Date(post.date).toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" })}
@@ -110,7 +111,7 @@ export default function Blog({ onLoginClick }) {
                     {post.title}
                   </h2>
                   {post.description && (
-                    <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6, margin: 0 }}>
+                    <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6, margin: "0 0 auto" }}>
                       {post.description}
                     </p>
                   )}
