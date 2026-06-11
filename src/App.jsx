@@ -22,6 +22,7 @@ import ScanInvullen from "./pages/public/ScanInvullen";
 import Blog from "./pages/public/Blog";
 import BlogPost from "./pages/public/BlogPost";
 import BlogTeaser from "./components/shared/BlogTeaser";
+import { Analytics } from "@vercel/analytics/react";
 import PageScans from "./pages/admin/PageScans";
 import {
   berekenScanScoresVoorMeting,
