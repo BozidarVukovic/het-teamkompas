@@ -92,6 +92,8 @@ export default function BlogTeaser({ isMobile }) {
                 cursor: "pointer",
                 border: "1px solid #e8eff5",
                 transition: "box-shadow 0.2s, transform 0.2s",
+                display: "flex",
+                flexDirection: "column",
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.boxShadow = "0 8px 32px rgba(13,27,42,0.12)";
@@ -102,21 +104,13 @@ export default function BlogTeaser({ isMobile }) {
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              {post.image && (
-                <div style={{ height: 200, overflow: "hidden", background: "#1a2a3a" }}>
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                  />
-                </div>
-              )}
-              {!post.image && (
-                <div style={{ height: 120, background: "linear-gradient(135deg, #0D1B2A 0%, #1e3a5f 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontSize: 36 }}>🧭</span>
-                </div>
-              )}
-              <div style={{ padding: "22px 24px 26px" }}>
+              <div style={{ height: 200, overflow: "hidden", background: "#1a2a3a", flexShrink: 0 }}>
+                {post.image
+                  ? <img src={post.image} alt={post.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  : <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #0D1B2A 0%, #1e3a5f 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ fontSize: 36 }}>🧭</span></div>
+                }
+              </div>
+              <div style={{ padding: "22px 24px 26px", flex: 1, display: "flex", flexDirection: "column" }}>
                 {post.date && (
                   <p style={{ color: "#8fa3bb", fontSize: 12, margin: "0 0 8px" }}>
                     {new Date(post.date).toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" })}
@@ -125,10 +119,10 @@ export default function BlogTeaser({ isMobile }) {
                 <h3 style={{ color: "#0D1B2A", fontSize: 18, fontWeight: 700, margin: "0 0 10px", lineHeight: 1.3 }}>
                   {post.title}
                 </h3>
-                <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.65, margin: "0 0 18px" }}>
+                <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.65, margin: "0 0 18px", flex: 1 }}>
                   {post.lead.length > 120 ? post.lead.slice(0, 120) + "…" : post.lead}
                 </p>
-                <span style={{ color: "#00A896", fontSize: 14, fontWeight: 600 }}>
+                <span style={{ color: "#00A896", fontSize: 14, fontWeight: 600, marginTop: "auto" }}>
                   Lees artikel →
                 </span>
               </div>
