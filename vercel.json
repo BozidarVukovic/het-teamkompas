@@ -7,7 +7,6 @@
     { "source": "/onze-aanpak", "destination": "/onze-aanpak/index.html" },
     { "source": "/verkennen", "destination": "/verkennen/index.html" },
     { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/admin/(.*)", "destination": "/admin/index.html" },
     { "source": "/deelnemen/:scanId", "destination": "/index.html" },
     { "source": "/blog", "destination": "/blog/index.html" },
     { "source": "/blog/:slug", "destination": "/blog/:slug/index.html" },
