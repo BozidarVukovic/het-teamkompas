@@ -19,6 +19,8 @@ import Fade from "./components/shared/Fade";
 import LoginScreen from "./components/admin/LoginScreen";
 import KompasDot from "./components/shared/KompasDot";
 import ScanInvullen from "./pages/public/ScanInvullen";
+import Blog from "./pages/public/Blog";
+import BlogPost from "./pages/public/BlogPost";
 import PageScans from "./pages/admin/PageScans";
 import {
   berekenScanScoresVoorMeting,
@@ -9225,6 +9227,8 @@ export default function App() {
         <Route path="/teamcoaching" element={<><SeoHead page="teamcoaching" /><TeamcoachingPage /></>} />
         <Route path="/teamdag" element={<TeamdagPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
       </Routes>
     </HelmetProvider>
   );
