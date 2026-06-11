@@ -19,6 +19,11 @@ function parseFrontmatter(raw) {
   return { data: frontmatter, content: raw.slice(match[0].length).trim() };
 }
 
+function calcReadTime(text) {
+  const words = text.trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
 export default function BlogPost() {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
@@ -55,7 +60,8 @@ export default function BlogPost() {
     );
   }
 
-  const canonicalUrl = `https://www.mijnteamkompas.nl/blog/${slug}`;
+  const readTime = post.readtime || calcReadTime(post.content);
+  const author = post.author || "Mijn Teamkompas";
 
   return (
     <div style={{ minHeight: "100vh", background: "#f9f7f4" }}>
@@ -70,6 +76,8 @@ export default function BlogPost() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        position: "relative",
+        zIndex: 10,
       }}>
         <Link to="/" style={{ color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 18 }}>
           🧭 Mijn Teamkompas
@@ -81,60 +89,159 @@ export default function BlogPost() {
         </div>
       </nav>
 
-      {/* Article */}
-      <article style={{ maxWidth: 740, margin: "0 auto", padding: "48px 24px 80px" }}>
-        <Link to="/blog" style={{ color: "#8fa3bb", textDecoration: "none", fontSize: 14, display: "inline-block", marginBottom: 32 }}>
-          ← Terug naar blog
-        </Link>
-
-        {post.image && (
+      {/* Hero image — full width */}
+      {post.image && (
+        <div style={{ width: "100%", height: 420, overflow: "hidden", background: "#1a2a3a" }}>
           <img
             src={post.image}
             alt={post.title}
-            style={{ width: "100%", borderRadius: 12, marginBottom: 32, maxHeight: 400, objectFit: "cover" }}
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           />
-        )}
+        </div>
+      )}
 
-        {post.date && (
-          <p style={{ color: "#8fa3bb", fontSize: 14, margin: "0 0 12px" }}>
-            {new Date(post.date).toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" })}
-          </p>
-        )}
+      {/* Article */}
+      <article style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 96px" }}>
 
-        <h1 style={{ color: "#0D1B2A", fontSize: 32, fontWeight: 800, lineHeight: 1.2, margin: "0 0 32px" }}>
+        {/* Back link */}
+        <Link to="/blog" style={{ color: "#8fa3bb", textDecoration: "none", fontSize: 13, display: "inline-block", marginBottom: 32, letterSpacing: "0.02em" }}>
+          ← Alle artikelen
+        </Link>
+
+        {/* Title */}
+        <h1 style={{
+          color: "#0D1B2A",
+          fontSize: "clamp(26px, 5vw, 36px)",
+          fontWeight: 800,
+          lineHeight: 1.2,
+          margin: "0 0 20px",
+          letterSpacing: "-0.02em",
+        }}>
           {post.title}
         </h1>
 
-        {/* Markdown content */}
+        {/* Lead paragraph */}
+        {post.lead && (
+          <p style={{
+            fontSize: 19,
+            color: "#1a2a3a",
+            fontStyle: "italic",
+            lineHeight: 1.75,
+            margin: "0 0 28px",
+            paddingLeft: 18,
+            borderLeft: "3px solid #4FC3F7",
+          }}>
+            {post.lead}
+          </p>
+        )}
+
+        {/* Author / date / readtime */}
         <div style={{
-          color: "#2d3748",
-          fontSize: 17,
-          lineHeight: 1.8,
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 44,
+          paddingBottom: 28,
+          borderBottom: "1px solid #e2e8f0",
+          flexWrap: "wrap",
         }}>
+          <div style={{
+            width: 36,
+            height: 36,
+            borderRadius: "50%",
+            background: "#0D1B2A",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#4FC3F7",
+            fontWeight: 800,
+            fontSize: 12,
+            flexShrink: 0,
+            letterSpacing: "0.05em",
+          }}>
+            MT
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <span style={{ fontSize: 14, fontWeight: 600, color: "#0D1B2A" }}>{author}</span>
+            {post.date && (
+              <>
+                <span style={{ color: "#c8d8e8", fontSize: 13 }}>·</span>
+                <span style={{ fontSize: 13, color: "#8fa3bb" }}>
+                  {new Date(post.date).toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" })}
+                </span>
+              </>
+            )}
+          </div>
+          <div style={{ marginLeft: "auto", fontSize: 13, color: "#8fa3bb", whiteSpace: "nowrap" }}>
+            {readTime} min lezen
+          </div>
+        </div>
+
+        {/* Markdown content */}
+        <div style={{ color: "#2d3748", fontSize: 17, lineHeight: 1.85 }}>
           <ReactMarkdown
             components={{
               h2: ({ children }) => (
-                <h2 style={{ color: "#0D1B2A", fontSize: 22, fontWeight: 700, margin: "40px 0 16px", borderBottom: "2px solid #e2e8f0", paddingBottom: 8 }}>{children}</h2>
+                <h2 style={{
+                  color: "#0D1B2A",
+                  fontSize: 22,
+                  fontWeight: 700,
+                  margin: "52px 0 18px",
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.3,
+                }}>
+                  {children}
+                </h2>
               ),
               h3: ({ children }) => (
-                <h3 style={{ color: "#0D1B2A", fontSize: 18, fontWeight: 700, margin: "28px 0 12px" }}>{children}</h3>
+                <h3 style={{
+                  color: "#0D1B2A",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  margin: "36px 0 14px",
+                }}>
+                  {children}
+                </h3>
               ),
               p: ({ children }) => (
-                <p style={{ margin: "0 0 20px", lineHeight: 1.8 }}>{children}</p>
+                <p style={{ margin: "0 0 22px", lineHeight: 1.85 }}>{children}</p>
               ),
               ul: ({ children }) => (
-                <ul style={{ margin: "0 0 20px", paddingLeft: 24 }}>{children}</ul>
+                <ul style={{ margin: "0 0 22px", paddingLeft: 24 }}>{children}</ul>
+              ),
+              ol: ({ children }) => (
+                <ol style={{ margin: "0 0 22px", paddingLeft: 24 }}>{children}</ol>
               ),
               li: ({ children }) => (
-                <li style={{ margin: "0 0 8px", lineHeight: 1.7 }}>{children}</li>
+                <li style={{ margin: "0 0 10px", lineHeight: 1.75 }}>{children}</li>
               ),
               strong: ({ children }) => (
                 <strong style={{ color: "#0D1B2A", fontWeight: 700 }}>{children}</strong>
               ),
+              em: ({ children }) => (
+                <em style={{ color: "#3a4a5a", fontStyle: "italic" }}>{children}</em>
+              ),
               a: ({ href, children }) => (
                 <a href={href} style={{ color: "#4FC3F7", textDecoration: "underline" }}>{children}</a>
               ),
-              hr: () => <hr style={{ border: "none", borderTop: "1px solid #e2e8f0", margin: "32px 0" }} />,
+              hr: () => (
+                <hr style={{ border: "none", borderTop: "1px solid #e2e8f0", margin: "44px 0" }} />
+              ),
+              blockquote: ({ children }) => (
+                <blockquote style={{
+                  margin: "36px 0",
+                  padding: "20px 24px",
+                  background: "#eef6fb",
+                  borderLeft: "4px solid #4FC3F7",
+                  borderRadius: "0 8px 8px 0",
+                  fontStyle: "italic",
+                  color: "#2d3748",
+                  fontSize: 16,
+                  lineHeight: 1.75,
+                }}>
+                  {children}
+                </blockquote>
+              ),
             }}
           >
             {post.content}
@@ -145,20 +252,20 @@ export default function BlogPost() {
         <div style={{
           background: "#0D1B2A",
           borderRadius: 12,
-          padding: "32px",
-          marginTop: 48,
+          padding: "36px 32px",
+          marginTop: 56,
           textAlign: "center",
         }}>
           <h2 style={{ color: "#fff", fontSize: 20, fontWeight: 700, margin: "0 0 10px" }}>
             Hoe staat het met jouw team?
           </h2>
-          <p style={{ color: "#8fa3bb", marginBottom: 20, fontSize: 15 }}>
+          <p style={{ color: "#8fa3bb", marginBottom: 24, fontSize: 15, lineHeight: 1.6 }}>
             Maak inzichtelijk wat er speelt met een teamscan.
           </p>
           <Link to="/verkennen" style={{
             background: "#4FC3F7",
             color: "#0D1B2A",
-            padding: "10px 24px",
+            padding: "12px 28px",
             borderRadius: 8,
             textDecoration: "none",
             fontWeight: 700,
