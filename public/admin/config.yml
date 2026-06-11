@@ -3,7 +3,7 @@ backend:
   repo: BozidarVukovic/het-teamkompas
   branch: main
   auth_type: implicit
-  app_id: JOUW_GITHUB_OAUTH_APP_CLIENT_ID
+  app_id: Ov23liDoa9x35Ne3SMES
 
 locale: nl
 
