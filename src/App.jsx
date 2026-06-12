@@ -8832,6 +8832,8 @@ function PsychologischeVeiligheidPage() {
     "Fouten worden vermeden of weggestopt. Niemand wil de rekening betalen, dus blijft het stil totdat het te laat is.",
     "Vragen stellen voelt riskant. Wie zich kwetsbaar opstelt, riskeert gezichtsverlies. Dus vraagt niemand meer iets.",
     "De leidinggevende wil openheid, maar ziet dat mensen zich toch inhouden. Vertrouwen is er in theorie, maar in de praktijk niet.",
+    "In overleggen spreekt altijd dezelfde groep. De rest luistert, knikt en houdt de echte mening voor zich.",
+    "Feedback geven is iets wat mensen liever omzeilen of indirect doen. Direct en eerlijk een spiegel voorhouden voelt te risicovol.",
   ];
 
   const waaromNietGenoeg = [
@@ -8892,12 +8894,14 @@ function PsychologischeVeiligheidPage() {
   ];
 
   const faqs = [
-    ["Wat is psychologische veiligheid precies?", "Psychologische veiligheid is de overtuiging dat je geen straf of vernedering riskeert als je een vraag stelt, een fout toegeeft, een idee opppert of je zorgen deelt. Het gaat niet om harmonie of aardigheid, maar om de bereidheid om interpersoonlijke risico's te nemen. Amy Edmondson van Harvard beschreef het als de belangrijkste voorspeller van teamprestaties."],
+    ["Wat is psychologische veiligheid precies?", "Psychologische veiligheid is de overtuiging dat je geen straf of vernedering riskeert als je een vraag stelt, een fout toegeeft, een idee deelt of je zorgen uitspreekt. Het gaat niet om harmonie of aardigheid, maar om de bereidheid om interpersoonlijke risico's te nemen. Amy Edmondson van Harvard beschreef het als de belangrijkste voorspeller van teamprestaties."],
     ["Is psychologische veiligheid hetzelfde als vriendelijkheid of gezelligheid?", "Nee. Een team kan prettig omgaan met elkaar en toch onveilig zijn als niemand durft te zeggen wat ze echt denken. Psychologische veiligheid gaat over de bereidheid om eerlijk te zijn, ook als dat lastig is. Het is eerder een kwaliteit van gesprek dan van sfeer."],
-    ["Hoe lang duurt het om psychologische veiligheid te verbeteren?", "Er is geen vaste tijdlijn. Kleine gedragsveranderingen zijn soms al snel merkbaar. Een duurzame cultuurverandering vraagt consistentie over langere tijd. Wij werken niet met eenmalige interventies, maar met een aanpak die borging meeneemt."],
+    ["Hoe lang duurt het om psychologische veiligheid in teams te verbeteren?", "Er is geen vaste tijdlijn. Kleine gedragsveranderingen zijn soms al snel merkbaar. Een duurzame cultuurverandering vraagt consistentie over langere tijd. Wij werken niet met eenmalige interventies, maar met een aanpak die borging meeneemt."],
     ["Kunnen we beginnen zonder teamscan?", "Ja, dat is mogelijk. We kunnen ook starten met een verkennend gesprek of intake om te bepalen wat past. De teamscan biedt wel een duidelijker vertrekpunt omdat het de perceptiekloof tussen leidinggevende en team zichtbaar maakt."],
     ["Werkt dit ook bij een team dat weerstand heeft?", "Ja, maar dan is het des te belangrijker om de aanpak goed te ontwerpen. We beginnen altijd anoniem en richten het gesprek op patronen, niet op personen. Dat verlaagt de drempel ook voor teams die sceptisch zijn."],
     ["Wat is het verschil met teambuilding?", "Teambuilding richt zich op verbinding en plezier. Dat heeft waarde, maar verandert zelden structurele patronen in veiligheid, feedback of aanspreekbaarheid. Onze aanpak richt zich op concreet gedrag en de mechanismes achter veiligheid, niet op een leuke dag samen."],
+    ["Wat is het verschil met een vertrouwenspersoon of klachtenbeleid?", "Een vertrouwenspersoon en een klachtenbeleid zijn belangrijk voor individuele situaties. Psychologische veiligheid gaat over de collectieve dynamiek in het team: durft iedereen dagelijks bij te dragen, ideeën te delen en elkaar aan te spreken? Dat is een teameigenschap, geen individuele kwestie."],
+    ["Hoe merkt een leidinggevende dat psychologische veiligheid verbetert?", "Meetbare signalen zijn: meer vragen in overleggen, meer initiatief buiten vaste kaders, eerder benoemen van fouten of twijfels en feedback die direct en constructief wordt gegeven. De teamscan maakt dit kwantificeerbaar: zo zie je over tijd of het veilig teamklimaat daadwerkelijk is verbeterd."],
   ];
 
   const domeinen = [
@@ -8913,13 +8917,88 @@ function PsychologischeVeiligheidPage() {
         <title>Psychologische veiligheid in teams verbeteren | Mijn Teamkompas</title>
         <meta
           name="description"
-          content="Psychologische veiligheid in teams verbeteren. Mijn Teamkompas meet wat er speelt, begeleidt het gesprek en verankert nieuw gedrag. Niet met een workshop, maar met een aanpak die werkt."
+          content="Psychologische veiligheid in teams verbeteren. Mijn Teamkompas meet het veilig teamklimaat, begeleidt het gesprek en verankert nieuw gedrag met teamscan en teamcoaching."
         />
         <link rel="canonical" href="https://www.mijnteamkompas.nl/psychologische-veiligheid" />
         <meta property="og:title" content="Psychologische veiligheid in teams verbeteren | Mijn Teamkompas" />
-        <meta property="og:description" content="Mijn Teamkompas helpt teams om psychologische veiligheid niet alleen te begrijpen, maar ook concreet te verbeteren. Met teamscan, begeleiding en gedrag als uitgangspunt." />
+        <meta property="og:description" content="Mijn Teamkompas helpt teams een veilig teamklimaat te ontwikkelen: van meten naar open communicatie, van inzicht naar aanspreekcultuur. Met teamscan en teamcoaching." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/psychologische-veiligheid" />
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Service",
+                "name": "Psychologische veiligheid in teams verbeteren",
+                "description": "Mijn Teamkompas meet psychologische veiligheid via een teamscan, begeleidt het gesprek en verankert nieuw gedrag. Praktisch, mensgericht en duurzaam.",
+                "provider": {
+                  "@type": "LocalBusiness",
+                  "name": "Mijn Teamkompas",
+                  "url": "https://www.mijnteamkompas.nl",
+                  "email": "info@mijnteamkompas.nl",
+                  "areaServed": "NL"
+                },
+                "serviceType": "Teamcoaching, teamscan, psychologische veiligheid",
+                "url": "https://www.mijnteamkompas.nl/psychologische-veiligheid"
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "Wat is psychologische veiligheid precies?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Psychologische veiligheid is de overtuiging dat je geen straf of vernedering riskeert als je een vraag stelt, een fout toegeeft, een idee deelt of je zorgen uitspreekt. Amy Edmondson van Harvard beschreef het als de belangrijkste voorspeller van teamprestaties."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Hoe lang duurt het om psychologische veiligheid in teams te verbeteren?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Er is geen vaste tijdlijn. Kleine gedragsveranderingen zijn soms al snel merkbaar. Een duurzame cultuurverandering vraagt consistentie over langere tijd. Mijn Teamkompas werkt niet met eenmalige interventies, maar met een aanpak die borging meeneemt."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Wat is het verschil met teambuilding?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Teambuilding richt zich op verbinding en plezier. Psychologische veiligheid vraagt om concreet gedrag en structurele verandering in aanspreekcultuur, feedback en open communicatie."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Kunnen we beginnen zonder teamscan?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Ja. We kunnen ook starten met een verkennend gesprek of intake. De teamscan biedt wel een duidelijker vertrekpunt omdat het de perceptiekloof tussen leidinggevende en team zichtbaar maakt."
+                    }
+                  }
+                ]
+              },
+              {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://www.mijnteamkompas.nl/"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Psychologische veiligheid in teams verbeteren",
+                    "item": "https://www.mijnteamkompas.nl/psychologische-veiligheid"
+                  }
+                ]
+              }
+            ]
+          }
+        `}</script>
       </Helmet>
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
@@ -8929,17 +9008,20 @@ function PsychologischeVeiligheidPage() {
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
           <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
             <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
-              Psychologische veiligheid
+              Psychologische veiligheid in teams
             </div>
             <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
-              Psychologische veiligheid in teams verbeteren: concreet en duurzaam.
+              Van stilte naar een echte aanspreekcultuur.
             </h1>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 14 }}>
+              Veel teams begrijpen het belang van psychologische veiligheid. Toch blijven dezelfde patronen bestaan: mensen houden zich in, fouten worden vermeden en het echte gesprek wordt nooit gevoerd.
+            </p>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>
-              Veel teams begrijpen het belang van psychologische veiligheid. Toch blijven dezelfde patronen bestaan: mensen houden zich in, fouten worden vermeden en het echte gesprek wordt nooit gevoerd. Wij helpen dat te doorbreken, niet met een workshop, maar met een aanpak die meet wat er speelt, het gesprek veilig maakt en gedrag duurzaam verandert.
+              Mijn Teamkompas helpt teams psychologische veiligheid concreet te verbeteren. Met een teamscan die meet wat er speelt, begeleide gesprekken die open communicatie op gang brengen en gedragsafspraken die blijven hangen.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Start met de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
@@ -8963,7 +9045,7 @@ function PsychologischeVeiligheidPage() {
                 Amy Edmondson van Harvard toonde aan dat dit de belangrijkste voorspeller is van teamprestaties. Teams die psychologisch veilig zijn, leren sneller, presteren beter en passen zich soepeler aan verandering aan.
               </p>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
-                Psychologische veiligheid is geen gevoel. Het is zichtbaar gedrag: wordt er gevraagd als iemand iets niet begrijpt? Worden fouten besproken of verstopt? Durft iemand het oneens te zijn met de leidinggevende?
+                Psychologische veiligheid is geen gevoel. Het is zichtbaar gedrag: wordt er gevraagd als iemand iets niet begrijpt? Worden fouten besproken of verstopt? Durft iemand het oneens te zijn met de leidinggevende? En durft het team elkaar echt aanspreken in plaats van om de hete brij heen te lopen? Dat laatste noemen we aanspreekcultuur, en die groeit alleen in een omgeving waar vertrouwen en open communicatie de norm zijn.
               </p>
             </div>
             <div style={{ background: PUB.licht, borderRadius: 22, padding: isMobile ? 24 : 36, border: `1px solid ${PUB.lijn}` }}>
@@ -8993,8 +9075,11 @@ function PsychologischeVeiligheidPage() {
               <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
                 Psychologische onveiligheid is zelden luid. Het is stil.
               </h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 16 }}>
                 Niet de ruzie of het conflict maakt een team onveilig. Het is de afwezigheid van eerlijkheid: de zin die niet wordt afgemaakt, de vraag die niemand durft te stellen. Dat is de onderstroom die samenwerking langzaam uitholt.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Herken je een van deze signalen? Dan is er waarschijnlijk meer aan de hand dan zichtbaar is op de oppervlakte.
               </p>
             </div>
             <div style={{ display: "grid", gap: 14 }}>
@@ -9039,8 +9124,11 @@ function PsychologischeVeiligheidPage() {
               <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
                 Van meten naar gesprek, en van gesprek naar gedrag.
               </h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 16 }}>
                 Wij werken met een aanpak die begint bij data, doorgaat met duiding en eindigt bij nieuw gedrag, zichtbaar in het dagelijks werk van het team.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Onze aanpak is gebaseerd op drie stappen: luisteren naar wat er speelt, meten via de teamscan en bewegen via begeleide gesprekken en teamdagen. Die combinatie maakt het mogelijk om psychologische veiligheid in teams structureel te verbeteren, niet als eenmalig project maar als duurzame kwaliteit van samenwerking.
               </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
@@ -9055,16 +9143,49 @@ function PsychologischeVeiligheidPage() {
           </div>
         </section>
 
-        {/* 6. Rol van de teamscan */}
+        {/* 6. Opbrengsten */}
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wat het oplevert</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Waarom teams en organisaties investeren in een veilig teamklimaat.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Psychologische veiligheid is geen zachte waarde. Het heeft directe invloed op prestaties, leren en betrokkenheid. Organisaties die hierin investeren, zien het terug in teamontwikkeling, kwaliteit van beslissingen en het dagelijks functioneren van hun mensen.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+              {[
+                ["Betere beslissingen", "Als iedereen durft bij te dragen, komen meer perspectieven op tafel. Dat leidt tot scherpere afwegingen en minder blinde vlekken."],
+                ["Sneller leren van fouten", "Teams met een veilig teamklimaat bespreken fouten openlijk en leren er sneller van. Dat verkort de tijd van fout naar verbetering aanzienlijk."],
+                ["Meer eigenaarschap", "Mensen die zich veilig voelen, nemen meer initiatief. Ze wachten niet op instructies, maar handelen vanuit betrokkenheid en verantwoordelijkheid."],
+                ["Stevige aanspreekcultuur", "Open communicatie en psychologische veiligheid zorgen samen voor een cultuur waarin mensen elkaar aanspreken op gedrag, niet op personen."],
+                ["Minder verloop en uitval", "Psychologische onveiligheid is een van de grootste verborgen oorzaken van stress en uitval. Een veiliger team is ook een gezonder team."],
+                ["Duurzame samenwerking", "Vertrouwen dat is opgebouwd op basis van eerlijkheid en helderheid is weerbaarder dan vertrouwen gebaseerd op aardigheid. Dat maakt samenwerking duurzaam."],
+              ].map(([titel, tekst]) => (
+                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24 }}>
+                  <h3 style={{ fontSize: 16, margin: "0 0 8px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 7. Rol van de teamscan */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 48, alignItems: "center" }}>
             <div>
               <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>De rol van de teamscan</div>
               <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
                 De teamscan geeft iedereen een stem, zonder iemand te exposeren.
               </h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 16 }}>
                 Praten over psychologische veiligheid kan in zichzelf onveilig aanvoelen. De teamscan lost dat op door anoniem te meten wat er speelt, zodat patronen zichtbaar worden zonder dat individuen blootgesteld worden.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>
+                De scan vergelijkt ook hoe de leidinggevende de veiligheid ervaart met hoe teamleden dat doen. Die perceptiekloof is vaak het meest waardevolle startpunt voor teamontwikkeling.
               </p>
               <a href="/teamscan" style={{ color: PUB.teal, fontWeight: 700, fontSize: 15, textDecoration: "none" }}>Bekijk hoe de teamscan werkt →</a>
             </div>
@@ -9088,7 +9209,7 @@ function PsychologischeVeiligheidPage() {
                 Inzicht is pas waardevol als het leidt tot ander gedrag.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
-                Na de teamscan begeleiden we het team en de leidinggevende bij het vertalen van uitkomsten naar concrete afspraken. Niet als inspiratie, maar als werkbare stappen die het team de volgende dag al kan toepassen.
+                Na de teamscan begeleiden we het team en de leidinggevende bij het vertalen van uitkomsten naar concrete afspraken. Niet als inspiratie, maar als werkbare stappen die het team de volgende dag al kan toepassen. De teamdag is hierin een krachtig moment: een veilige setting om patronen bespreekbaar te maken, nieuw gedrag te oefenen en echte afspraken te maken over open communicatie en aanspreekcultuur.
               </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
@@ -9134,6 +9255,9 @@ function PsychologischeVeiligheidPage() {
               <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
                 Psychologische veiligheid is relevant voor elk team, maar elke situatie vraagt een andere ingang.
               </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                We werken met teams in zakelijke dienstverlening, gemeenten, onderwijs en industrie. Wat al deze teams gemeen hebben: de bereidheid om het gesprek te voeren dat tot nu toe niet gevoerd werd.
+              </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
               {voorWelkeTeams.map(([titel, tekst]) => (
@@ -9151,7 +9275,7 @@ function PsychologischeVeiligheidPage() {
           <div style={{ maxWidth: 860, margin: "0 auto" }}>
             <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Veelgestelde vragen</div>
             <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 32px" }}>
-              Vragen over psychologische veiligheid
+              Veelgestelde vragen over psychologische veiligheid in teams
             </h2>
             <div style={{ display: "grid", gap: 10 }}>
               {faqs.map(([vraag, antwoord], i) => (
@@ -9187,9 +9311,10 @@ function PsychologischeVeiligheidPage() {
             <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", marginBottom: 28 }}>
               Begin met een teamscan of plan een verkennend gesprek. Dan kijken we samen welke aanpak past bij wat er in jouw team speelt.
             </p>
-            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Start met de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/onze-aanpak" style={{ color: "rgba(255,255,255,0.72)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over onze aanpak →</a>
             </div>
           </div>
         </section>
