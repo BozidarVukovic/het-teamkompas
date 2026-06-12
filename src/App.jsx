@@ -1305,9 +1305,14 @@ function PublicSite({ onLoginClick }) {
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
               {pijlerCards.map(([titel, kleur, tekst]) => (
-                <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderTop: `5px solid ${kleur}`, borderRadius: 18, padding: 22, boxShadow: "0 14px 34px rgba(13,27,42,0.06)" }}>
+                <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderTop: `5px solid ${kleur}`, borderRadius: 18, padding: 22, boxShadow: "0 14px 34px rgba(13,27,42,0.06)", display: "flex", flexDirection: "column" }}>
                   <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 10 }}>{titel}</div>
-                  <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub }}>{tekst}</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, flex: 1 }}>{tekst}</div>
+                  {titel === "Veiligheid & leiderschap" && (
+                    <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: kleur, textDecoration: "none" }}>
+                      Meer over psychologische veiligheid →
+                    </a>
+                  )}
                 </div>
               ))}
             </div>
