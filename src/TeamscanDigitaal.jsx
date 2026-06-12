@@ -350,8 +350,8 @@ export default function TeamscanDigitaal() {
 
   const domeinen = [
     ["Veiligheid en leiderschap", C.groen, "Kunnen mensen zich uitspreken, fouten bespreken en elkaar aanspreken op een manier die vertrouwen bouwt?"],
-    ["Beleving van verandering", C.blauw, "Begrijpen mensen waarom iets verandert, wat dit van hen vraagt en waar zij invloed op hebben?"],
     ["Energie en motivatie", C.teal, "Waar geeft het werk energie en waar ontstaan juist belasting, frustratie of terugtrekgedrag?"],
+    ["Verandering en betekenis", C.blauw, "Begrijpen mensen waarom iets verandert, wat dit van hen vraagt en waar zij invloed op hebben?"],
     ["Verbeteren en leren", "#7C3AED", "Hoe leert het team van ervaringen en hoe worden verbeteringen ook echt vastgehouden?"],
   ];
 
@@ -471,10 +471,11 @@ export default function TeamscanDigitaal() {
               <h3 style={{ margin: "0 0 16px", fontSize: 24 }}>Wat levert het op?</h3>
               <div style={{ display: "grid", gap: 12 }}>
                 {[
-                  "Een gedeeld beeld van hoe het team functioneert.",
-                  "Inzicht in verschillen tussen team en leidinggevende.",
-                  "Aanknopingspunten voor psychologische veiligheid en betere communicatie.",
-                  "Prioriteiten voor een teamdag, workshop of vervolginterventie.",
+                  "Een gedeeld beeld van hoe het team samenwerking en veiligheid ervaart.",
+                  "Inzicht in het verschil tussen de beleving van teamleden en leidinggevende.",
+                  "Zicht op welke domeinen energie geven en waar spanning of onduidelijkheid ontstaat.",
+                  "Concrete aanknopingspunten voor een teamdag, workshop of coachingstraject.",
+                  "Een startpunt voor het gesprek dat al lang in de lucht hing maar nog niet gevoerd werd.",
                 ].map((item) => (
                   <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                     <span style={{ width: 24, height: 24, borderRadius: "50%", background: C.teal, color: C.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, flexShrink: 0 }}>✓</span>
@@ -489,10 +490,10 @@ export default function TeamscanDigitaal() {
         <section style={{ padding: isMobile ? "48px 22px" : "70px 60px", background: C.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ textAlign: "center", maxWidth: 780, margin: "0 auto 30px" }}>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Vier domeinen</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 12px" }}>De teamscan kijkt naar de condities waaronder samenwerking groeit</h2>
+              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Wat meten we?</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 12px" }}>Vier domeinen die bepalen of samenwerking werkt</h2>
               <p style={{ fontSize: 16, lineHeight: 1.75, color: C.sub, margin: 0 }}>
-                De scan brengt niet alleen meningen in kaart, maar ordent signalen rond vier herkenbare domeinen. Daardoor wordt sneller duidelijk waar de meeste ontwikkeling mogelijk is.
+                De teamscan ordent signalen rond vier herkenbare domeinen. Zo wordt snel duidelijk waar de meeste ontwikkeling mogelijk is — en waar team en leidinggevende een ander beeld hebben.
               </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4,1fr)", gap: 14 }}>
@@ -503,6 +504,79 @@ export default function TeamscanDigitaal() {
                   <p style={{ fontSize: 14, lineHeight: 1.65, color: C.sub, margin: 0 }}>{tekst}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Wanneer inzetten */}
+        <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Wanneer zetten we de teamscan in?</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>De teamscan werkt het best als startpunt, niet als sluitstuk</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub }}>
+                De teamscan is geen eindproduct, maar een spiegel die ruimte maakt voor het echte gesprek. Hij werkt het best als er iets speelt dat nog niet goed benoemd is — en als team en leidinggevende bereid zijn om dat samen te onderzoeken.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 14 }}>
+              {[
+                ["Voor een teamdag of traject", "De scan bepaalt welke thema's echt aandacht verdienen. Zo ontwerp je een dag die aansluit bij wat er speelt, in plaats van een standaardprogramma."],
+                ["Bij een nieuwe leidinggevende", "Een nieuwe manager krijgt snel inzicht in hoe het team zichzelf ervaart — en waar het beeld van de leidinggevende afwijkt van de rest."],
+                ["Bij reorganisatie of verandering", "Veranderingen vragen altijd iets van vertrouwen, energie en richting. De scan maakt zichtbaar welke domeinen onder druk staan."],
+                ["Bij terugkerende spanningen", "Wanneer dezelfde thema's steeds terugkomen, maakt de scan het patroon zichtbaar en geeft taal aan wat er onder water speelt."],
+                ["Als meting in een ontwikkeltraject", "De scan wordt ook ingezet als nulmeting of tussenmeting in een langere begeleidingstraject, om voortgang zichtbaar te maken."],
+                ["Als het goed gaat én het beter kan", "Een sterke samenwerking verdient ook onderhoud. De scan helpt om te benoemen wat je wilt vasthouden — en wat beter kan."],
+              ].map(([titel, tekst]) => (
+                <div key={titel} style={{ background: C.licht, border: `1px solid ${C.lijn}`, borderRadius: 18, padding: 22 }}>
+                  <h3 style={{ fontSize: 17, fontWeight: 900, margin: "0 0 10px", color: C.donker }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: C.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Verschil met MTO */}
+        <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Teamscan vs. medewerkerstevredenheidsonderzoek</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>Wat is het verschil met een MTO?</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub }}>
+                Een MTO geeft een beeld van tevredenheid op organisatieniveau. Een teamscan gaat dieper in op de samenwerking binnen één specifiek team — en maakt het verschil zichtbaar tussen hoe team en leidinggevende de situatie ervaren.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 20 }}>
+              <div style={{ background: C.wit, border: `1px solid ${C.lijn}`, borderRadius: 20, padding: 28 }}>
+                <div style={{ fontWeight: 900, fontSize: 16, color: C.sub, marginBottom: 18, letterSpacing: "0.04em", textTransform: "uppercase", fontSize: 12 }}>Medewerkerstevredenheidsonderzoek</div>
+                {[
+                  "Meet tevredenheid over arbeidsomstandigheden, beloning en beleid",
+                  "Organisatieniveau: grote groepen, statistische uitkomsten",
+                  "Anoniem, geen directe koppeling aan teamdialoog",
+                  "Cyclisch ingezet, resultaten komen laat terug",
+                  "Beperkte vertaling naar concrete actie op teamniveau",
+                ].map((item) => (
+                  <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 12 }}>
+                    <span style={{ color: C.sub, fontWeight: 700, flexShrink: 0, marginTop: 2 }}>–</span>
+                    <span style={{ fontSize: 15, lineHeight: 1.65, color: C.sub }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: C.donker, border: `1px solid ${C.donker}`, borderRadius: 20, padding: 28 }}>
+                <div style={{ fontWeight: 900, fontSize: 12, color: "#7DB7FF", marginBottom: 18, letterSpacing: "0.04em", textTransform: "uppercase" }}>Teamscan Mijn Teamkompas</div>
+                {[
+                  "Meet veiligheid, energie, verandering en leren binnen één team",
+                  "Teamniveau: inzicht in wat er speelt bij dit team",
+                  "Vergelijkt het beeld van teamleden én leidinggevende",
+                  "Snel inzetbaar, uitkomsten direct bruikbaar voor dialoog",
+                  "Directe koppeling aan teamdag, coaching of vervolginterventie",
+                ].map((item) => (
+                  <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 12 }}>
+                    <span style={{ color: C.teal, fontWeight: 900, flexShrink: 0, marginTop: 2 }}>✓</span>
+                    <span style={{ fontSize: 15, lineHeight: 1.65, color: "rgba(255,255,255,0.82)" }}>{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>

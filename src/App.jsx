@@ -8347,8 +8347,8 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
 
   const domeinen = [
     ["Veiligheid en leiderschap", "Durven mensen zich uit te spreken en geeft leiderschap genoeg richting, steun en begrenzing?"],
-    ["Beleving van verandering", "Hoe komt verandering binnen en waar ontstaat verlies van grip, duidelijkheid of vertrouwen?"],
     ["Energie en motivatie", "Waar krijgt het team energie van en waar lopen motivatie, aandacht en initiatief weg?"],
+    ["Verandering en betekenis", "Hoe komt verandering binnen en waar ontstaat verlies van grip, duidelijkheid of vertrouwen?"],
     ["Verbeteren en leren", "Worden verbeterideeën zichtbaar, besproken en vertaald naar nieuw gedrag in het dagelijks werk?"],
   ];
 
