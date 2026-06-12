@@ -9229,7 +9229,7 @@ function TeamdagPage() {
   };
 
   const signalen = [
-    "Iedereen ziet wat er speelt, maar niemand benoemt het — en de vergadering eindigt zoals hij begon.",
+    "Iedereen ziet wat er speelt, maar niemand benoemt het. De vergadering eindigt zoals hij begon.",
     "Er is een dag gepland, maar de echte vraag is nog niet scherp. De agenda staat vol, maar de onderstroom blijft onbesproken.",
     "Het team wil vooruit, maar loopt steeds vast op dezelfde patronen: rolverdeling, overlegdruk, verwachtingen die niet worden uitgesproken.",
     "Na een teamdag is er energie, maar twee weken later is er weinig veranderd. De afspraken zijn er, de opvolging niet.",
@@ -9321,7 +9321,7 @@ function TeamdagPage() {
                     "name": "Voor welke organisaties is een teamdag geschikt?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "Een teamdag is geschikt voor teams in zakelijke dienstverlening, gemeenten, onderwijs en industrie — overal waar samenwerking, communicatie of eigenaarschap versterkt moet worden."
+                      "text": "Een teamdag is geschikt voor teams in zakelijke dienstverlening, gemeenten, onderwijs en industrie, overal waar samenwerking, communicatie of eigenaarschap versterkt moet worden."
                     }
                   }
                 ]
@@ -9402,7 +9402,7 @@ function TeamdagPage() {
                 Herken je dit in jouw team?
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
-                Veel teamdagen beginnen met goede energie — en eindigen met een lijst afspraken die twee weken later niet meer leven. Niet omdat de wil er niet is, maar omdat de echte vraag nooit scherp was. Wij beginnen altijd met wat er echt speelt: boven de oppervlakte én eronder.
+                Veel teamdagen beginnen met goede energie, maar eindigen met een lijst afspraken die twee weken later niet meer leven. Niet omdat de wil er niet is, maar omdat de echte vraag nooit scherp was. Wij beginnen altijd met wat er echt speelt: boven de oppervlakte én eronder.
               </p>
             </div>
 
@@ -9455,7 +9455,7 @@ function TeamdagPage() {
                 Gedragsvoorkeuren als gedeelde taal voor betere samenwerking.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
-                Insights Discovery geeft het team een gemeenschappelijke taal om te begrijpen waarom mensen reageren zoals ze reageren — op een rustige dag én onder druk. Niet om mensen in een hokje te plaatsen, maar om bewust te organiseren wat het team nodig heeft: tempo én vertraging, ideeën én borging, resultaat én verbinding.
+                Insights Discovery geeft het team een gemeenschappelijke taal om te begrijpen waarom mensen reageren zoals ze reageren, op een rustige dag én onder druk. Niet om mensen in een hokje te plaatsen, maar om bewust te organiseren wat het team nodig heeft: tempo én vertraging, ideeën én borging, resultaat én verbinding.
               </p>
             </div>
 

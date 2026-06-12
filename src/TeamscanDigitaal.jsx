@@ -493,7 +493,7 @@ export default function TeamscanDigitaal() {
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Wat meten we?</div>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 12px" }}>Vier domeinen die bepalen of samenwerking werkt</h2>
               <p style={{ fontSize: 16, lineHeight: 1.75, color: C.sub, margin: 0 }}>
-                De teamscan ordent signalen rond vier herkenbare domeinen. Zo wordt snel duidelijk waar de meeste ontwikkeling mogelijk is — en waar team en leidinggevende een ander beeld hebben.
+                De teamscan ordent signalen rond vier herkenbare domeinen. Zo wordt snel duidelijk waar de meeste ontwikkeling mogelijk is en waar team en leidinggevende een ander beeld hebben.
               </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4,1fr)", gap: 14 }}>
@@ -520,17 +520,17 @@ export default function TeamscanDigitaal() {
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Wanneer zetten we de teamscan in?</div>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>De teamscan werkt het best als startpunt, niet als sluitstuk</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub }}>
-                De teamscan is geen eindproduct, maar een spiegel die ruimte maakt voor het echte gesprek. Hij werkt het best als er iets speelt dat nog niet goed benoemd is — en als team en leidinggevende bereid zijn om dat samen te onderzoeken.
+                De teamscan is geen eindproduct, maar een spiegel die ruimte maakt voor het echte gesprek. Hij werkt het best als er iets speelt dat nog niet goed benoemd is, en als team en leidinggevende bereid zijn om dat samen te onderzoeken.
               </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 14 }}>
               {[
                 ["Voor een teamdag of traject", "De scan bepaalt welke thema's echt aandacht verdienen. Zo ontwerp je een dag die aansluit bij wat er speelt, in plaats van een standaardprogramma."],
-                ["Bij een nieuwe leidinggevende", "Een nieuwe manager krijgt snel inzicht in hoe het team zichzelf ervaart — en waar het beeld van de leidinggevende afwijkt van de rest."],
+                ["Bij een nieuwe leidinggevende", "Een nieuwe manager krijgt snel inzicht in hoe het team zichzelf ervaart en waar het beeld van de leidinggevende afwijkt van de rest."],
                 ["Bij reorganisatie of verandering", "Veranderingen vragen altijd iets van vertrouwen, energie en richting. De scan maakt zichtbaar welke domeinen onder druk staan."],
                 ["Bij terugkerende spanningen", "Wanneer dezelfde thema's steeds terugkomen, maakt de scan het patroon zichtbaar en geeft taal aan wat er onder water speelt."],
                 ["Als meting in een ontwikkeltraject", "De scan wordt ook ingezet als nulmeting of tussenmeting in een langere begeleidingstraject, om voortgang zichtbaar te maken."],
-                ["Als het goed gaat én het beter kan", "Een sterke samenwerking verdient ook onderhoud. De scan helpt om te benoemen wat je wilt vasthouden — en wat beter kan."],
+                ["Als het goed gaat én het beter kan", "Een sterke samenwerking verdient ook onderhoud. De scan helpt om te benoemen wat je wilt vasthouden en wat beter kan."],
               ].map(([titel, tekst]) => (
                 <div key={titel} style={{ background: C.licht, border: `1px solid ${C.lijn}`, borderRadius: 18, padding: 22 }}>
                   <h3 style={{ fontSize: 17, fontWeight: 900, margin: "0 0 10px", color: C.donker }}>{titel}</h3>
@@ -548,7 +548,7 @@ export default function TeamscanDigitaal() {
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Teamscan vs. medewerkerstevredenheidsonderzoek</div>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>Wat is het verschil met een MTO?</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub }}>
-                Een MTO geeft een beeld van tevredenheid op organisatieniveau. Een teamscan gaat dieper in op de samenwerking binnen één specifiek team — en maakt het verschil zichtbaar tussen hoe team en leidinggevende de situatie ervaren.
+                Een MTO geeft een beeld van tevredenheid op organisatieniveau. Een teamscan gaat dieper in op de samenwerking binnen één specifiek team en maakt het verschil zichtbaar tussen hoe team en leidinggevende de situatie ervaren.
               </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 20 }}>
