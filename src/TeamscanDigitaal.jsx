@@ -498,10 +498,15 @@ export default function TeamscanDigitaal() {
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4,1fr)", gap: 14 }}>
               {domeinen.map(([titel, kleur, tekst]) => (
-                <div key={titel} style={{ background: C.wit, border: `1px solid ${C.lijn}`, borderRadius: 20, padding: 20, boxShadow: "0 14px 34px rgba(13,27,42,0.06)", minHeight: 190 }}>
+                <div key={titel} style={{ background: C.wit, border: `1px solid ${C.lijn}`, borderRadius: 20, padding: 20, boxShadow: "0 14px 34px rgba(13,27,42,0.06)", minHeight: 190, display: "flex", flexDirection: "column" }}>
                   <div style={{ width: 44, height: 44, borderRadius: "50%", border: `2px solid ${kleur}`, color: kleur, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, marginBottom: 14 }}>●</div>
                   <h3 style={{ fontSize: 18, lineHeight: 1.25, margin: "0 0 10px", color: C.donker }}>{titel}</h3>
-                  <p style={{ fontSize: 14, lineHeight: 1.65, color: C.sub, margin: 0 }}>{tekst}</p>
+                  <p style={{ fontSize: 14, lineHeight: 1.65, color: C.sub, margin: 0, flex: 1 }}>{tekst}</p>
+                  {titel === "Veiligheid en leiderschap" && (
+                    <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: C.teal, textDecoration: "none" }}>
+                      Meer over psychologische veiligheid →
+                    </a>
+                  )}
                 </div>
               ))}
             </div>

@@ -168,6 +168,11 @@ export default function OnzeAanpakPage() {
                 <Card key={titel} topColor={kleur}>
                   <h3 style={{ fontSize: 20, margin: "0 0 10px", color: PUB.donker }}>{titel}</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                  {(titel === "Veiligheid & leiderschap") && (
+                    <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: kleur, textDecoration: "none" }}>
+                      Meer over psychologische veiligheid →
+                    </a>
+                  )}
                 </Card>
               ))}
             </div>

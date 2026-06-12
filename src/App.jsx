@@ -8467,6 +8467,11 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
                 </Fade>
               ))}
             </div>
+            <div style={{ textAlign: "center", marginTop: 20 }}>
+              <a href="/psychologische-veiligheid" style={{ color: "rgba(255,255,255,0.55)", fontSize: 14, textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.22)", paddingBottom: 2 }}>
+                Meer over psychologische veiligheid in teams →
+              </a>
+            </div>
           </div>
         </section>
 
@@ -8741,9 +8746,14 @@ function TeamcoachingPage() {
 
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
               {themaCards.map(([titel, tekst]) => (
-                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}>
+                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22, display: "flex", flexDirection: "column" }}>
                   <h3 style={{ fontSize: 18, margin: "0 0 8px", color: PUB.donker }}>{titel}</h3>
-                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0, flex: 1 }}>{tekst}</p>
+                  {titel === "Psychologische veiligheid" && (
+                    <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: PUB.teal, textDecoration: "none" }}>
+                      Meer lezen →
+                    </a>
+                  )}
                 </div>
               ))}
             </div>
@@ -8774,6 +8784,413 @@ function TeamcoachingPage() {
       </div>
 
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamcoaching" />
+    </>
+  );
+}
+
+function PsychologischeVeiligheidPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState(null);
+  const isMobile = useIsMobile();
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
+  const ctaStyle = {
+    background: PUB.teal,
+    color: PUB.wit,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    boxShadow: "0 12px 28px rgba(15,118,110,0.24)",
+    border: "none",
+  };
+
+  const ghostStyle = {
+    background: "rgba(255,255,255,0.08)",
+    color: PUB.wit,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    border: "1px solid rgba(255,255,255,0.22)",
+  };
+
+  const signalen = [
+    "Mensen zeggen ja in de vergadering, maar denken nee. De bezwaren komen achteraf — in de wandelgangen of helemaal niet.",
+    "Fouten worden vermeden of weggestopt. Niemand wil de rekening betalen, dus blijft het stil totdat het te laat is.",
+    "Vragen stellen voelt riskant. Wie zich kwetsbaar opstelt, riskeert gezichtsverlies. Dus vraagt niemand meer iets.",
+    "De leidinggevende wil openheid, maar ziet dat mensen zich toch inhouden. Vertrouwen is er in theorie, maar in de praktijk niet.",
+  ];
+
+  const waaromNietGenoeg = [
+    {
+      titel: "Een workshop lost het niet op",
+      tekst: "Eén sessie over veiligheid geeft bewustzijn, maar verandert geen patroon. Gedrag wordt gevormd door dagelijkse micro-momenten: hoe reageert de leidinggevende op een fout? Wat gebeurt er als iemand het oneens is? Die patronen veranderen langzaam en alleen door consistent ander gedrag.",
+    },
+    {
+      titel: "Begrip is niet hetzelfde als vertrouwen",
+      tekst: "Teams die uitleggen krijgen waarom veiligheid belangrijk is, begrijpen het — maar vertrouwen elkaar daarom nog niet meer. Vertrouwen bouw je op door het te ervaren, niet door erover te praten.",
+    },
+    {
+      titel: "De leidinggevende ziet de drempel niet",
+      tekst: "Leidinggevenden die psychologische veiligheid willen bevorderen, zien de deur als open. Teamleden ervaren drempels die voor de leidinggevende onzichtbaar zijn. Dat verschil in beleving is precies wat we meten — en bespreekbaar maken.",
+    },
+    {
+      titel: "Veiligheid is geen project",
+      tekst: "Psychologische veiligheid is geen eenmalig resultaat dat je behaalt. Het is een kwaliteit die dagelijks wordt opgebouwd of afgebroken — door klein gedrag, reacties op kwetsbaarheid en de manier waarop fouten worden besproken.",
+    },
+  ];
+
+  const hoeZichtbaar = [
+    ["1", "Meten via de teamscan", "We brengen in kaart hoe veiligheid en leiderschap werkelijk worden beleefd — door teamleden én de leidinggevende. De perceptiekloof tussen beiden is vaak de meest waardevolle informatie."],
+    ["2", "Patronen duiden", "We laten zien welke situaties veiligheid wegnemen en welke gedragingen — ook onbedoeld — bijdragen aan onveiligheid of terughoudendheid in het team."],
+    ["3", "Gesprek faciliteren", "We begeleiden het gesprek op een manier die zelf ook veilig is: anoniem waar nodig, gericht op patronen en gedrag in plaats van op personen of schuld."],
+    ["4", "Gedrag verankeren", "We vertalen inzichten naar concrete, kleine gedragsafspraken die het team de volgende dag al kan toepassen. Niet als regels, maar als nieuwe gewoontes."],
+  ];
+
+  const rolTeamscan = [
+    {
+      titel: "Anonieme input van iedereen",
+      tekst: "De teamscan geeft elk teamlid een stem zonder dat individuen zichtbaar worden. Dat maakt het veilig om eerlijk te zijn over wat er speelt — ook als dat ongemakkelijk is.",
+    },
+    {
+      titel: "Perceptiekloof zichtbaar maken",
+      tekst: "De scan vergelijkt hoe de leidinggevende de veiligheid ervaart met hoe teamleden dat doen. Die kloof is geen verwijt — het is informatie die het gesprek mogelijk maakt.",
+    },
+    {
+      titel: "Concreet genoeg om over te praten",
+      tekst: "In plaats van 'voelt het veilig?' meten we of mensen fouten durven benoemen, vragen durven stellen en feedback durven geven. Dat maakt de uitkomst direct bespreekbaar.",
+    },
+  ];
+
+  const vanInzichtNaarGedrag = [
+    ["Patroon benoemen", "We benoemen samen wat er in het team gebeurt — niet wie het doet, maar welke situaties steeds terugkomen en welk gedrag die in stand houdt."],
+    ["Gedragsafspraken maken", "We vertalen inzicht naar iets concreets: welk gedrag willen we meer zien, van wie, in welke situaties? Klein en haalbaar."],
+    ["Leidinggevende als modeller", "Veiligheid begint bij de leidinggevende die zelf kwetsbaar durft te zijn, fouten erkent en actief ruimte geeft aan afwijkende meningen."],
+    ["Terugkijken en bijstellen", "We bouwen een moment in om te bespreken wat anders is geworden — en wat nog steeds schuurt. Zo wordt leren een gewoonte in plaats van een incident."],
+  ];
+
+  const voorWelkeTeams = [
+    ["Teams met terugkerende spanning", "Teams waar dezelfde discussies steeds opnieuw gevoerd worden, waar niemand het échte gesprek wil openen."],
+    ["Teams in verandering", "Teams die te maken hebben met een reorganisatie, nieuwe leidinggevende of nieuwe werkwijze — en waarbij onzekerheid en terughoudendheid toenemen."],
+    ["Teams met hoge werkdruk", "Teams waar de druk zo hoog is dat fouten vermijden veiliger voelt dan fouten bespreken — en waar leren daardoor stagneert."],
+    ["Nieuwe of samengestelde teams", "Teams die nog geen gedeelde taal of vertrouwen hebben opgebouwd en daarin een vliegende start willen maken."],
+    ["Teams die al goed draaien", "Teams die bewust willen investeren in de kwaliteit van hun samenwerking — niet omdat het slecht gaat, maar omdat ze het duurzaam goed willen houden."],
+    ["Leidinggevenden die twijfelen", "Leidinggevenden die merken dat mensen zich inhouden of dat openheid eenzijdig is — en willen begrijpen wat hun eigen rol daarin is."],
+  ];
+
+  const faqs = [
+    ["Wat is psychologische veiligheid precies?", "Psychologische veiligheid is de overtuiging dat je geen straf of vernedering riskeert als je een vraag stelt, een fout toegeeft, een idee opppert of je zorgen deelt. Het gaat niet om harmonie of aardigheid, maar om de bereidheid om interpersoonlijke risico's te nemen. Amy Edmondson van Harvard beschreef het als de belangrijkste voorspeller van teamprestaties."],
+    ["Is psychologische veiligheid hetzelfde als vriendelijkheid of gezelligheid?", "Nee. Een team kan prettig omgaan met elkaar en toch onveilig zijn — als niemand durft te zeggen wat ze echt denken. Psychologische veiligheid gaat over de bereidheid om eerlijk te zijn, ook als dat lastig is. Het is eerder een kwaliteit van gesprek dan van sfeer."],
+    ["Hoe lang duurt het om psychologische veiligheid te verbeteren?", "Er is geen vaste tijdlijn. Kleine gedragsveranderingen zijn soms al snel merkbaar. Een duurzame cultuurverandering vraagt consistentie over langere tijd. Wij werken niet met eenmalige interventies, maar met een aanpak die borging meeneemt."],
+    ["Kunnen we beginnen zonder teamscan?", "Ja, dat is mogelijk. We kunnen ook starten met een verkennend gesprek of intake om te bepalen wat past. De teamscan biedt wel een duidelijker vertrekpunt omdat het de perceptiekloof tussen leidinggevende en team zichtbaar maakt."],
+    ["Werkt dit ook bij een team dat weerstand heeft?", "Ja — maar dan is het des te belangrijker om de aanpak goed te ontwerpen. We beginnen altijd anoniem en richten het gesprek op patronen, niet op personen. Dat verlaagt de drempel ook voor teams die sceptisch zijn."],
+    ["Wat is het verschil met teambuilding?", "Teambuilding richt zich op verbinding en plezier. Dat heeft waarde, maar verandert zelden structurele patronen in veiligheid, feedback of aanspreekbaarheid. Onze aanpak richt zich op concreet gedrag en de mechanismes achter veiligheid — niet op een leuke dag samen."],
+  ];
+
+  const domeinen = [
+    { naam: "Veiligheid en leiderschap", kleur: PUB.groen, uitleg: "Het kerndomein. We meten of mensen zich durven uit te spreken, fouten bespreekbaar kunnen maken en elkaar kunnen aanspreken. Psychologische veiligheid is hier direct zichtbaar." },
+    { naam: "Energie en motivatie", kleur: PUB.teal, uitleg: "Onveiligheid kost energie. Wanneer mensen voortdurend op hun woorden letten of zich moeten indekken, neemt belasting toe en motivatie af." },
+    { naam: "Verandering en betekenis", kleur: PUB.blauw, uitleg: "Verandering vraagt vertrouwen. Psychologisch veilige teams stellen eerder vragen, benoemen twijfels en dragen bij aan verandering die klopt." },
+    { naam: "Verbeteren en leren", kleur: "#7C3AED", uitleg: "Leren vereist het durven bespreken van fouten. In veilige teams wordt geëxperimenteerd, worden lessen gedeeld en worden verbeteringen vastgehouden." },
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Psychologische veiligheid in teams verbeteren | Mijn Teamkompas</title>
+        <meta
+          name="description"
+          content="Psychologische veiligheid in teams verbeteren. Mijn Teamkompas meet wat er speelt, begeleidt het gesprek en verankert nieuw gedrag. Niet met een workshop, maar met een aanpak die werkt."
+        />
+        <link rel="canonical" href="https://www.mijnteamkompas.nl/psychologische-veiligheid" />
+        <meta property="og:title" content="Psychologische veiligheid in teams verbeteren | Mijn Teamkompas" />
+        <meta property="og:description" content="Mijn Teamkompas helpt teams om psychologische veiligheid niet alleen te begrijpen, maar ook concreet te verbeteren. Met teamscan, begeleiding en gedrag als uitgangspunt." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.mijnteamkompas.nl/psychologische-veiligheid" />
+      </Helmet>
+
+      <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
+        <NavBar isMobile={isMobile} onLoginClick={() => {}} openModal={openModal} />
+
+        {/* 1. Hero */}
+        <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
+          <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+              Psychologische veiligheid
+            </div>
+            <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
+              Psychologische veiligheid in teams verbeteren — concreet en duurzaam.
+            </h1>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>
+              Veel teams begrijpen het belang van psychologische veiligheid. Toch blijven dezelfde patronen bestaan: mensen houden zich in, fouten worden vermeden en het echte gesprek wordt nooit gevoerd. Wij helpen dat te doorbreken — niet met een workshop, maar met een aanpak die meet wat er speelt, het gesprek veilig maakt en gedrag duurzaam verandert.
+            </p>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <a href="/teamscan" style={ghostStyle}>Start met de teamscan</a>
+            </div>
+          </div>
+          <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
+            <img src="/teamkompas-intakegesprek.jpg" alt="Gesprek over psychologische veiligheid in teams" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.85 }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94), rgba(13,27,42,0.08))" }} />
+          </div>
+        </section>
+
+        {/* 2. Wat is psychologische veiligheid */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 56, alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wat is het?</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Psychologische veiligheid is niet hetzelfde als aardig zijn.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 18 }}>
+                Psychologische veiligheid is de overtuiging dat je geen straf of vernedering riskeert als je een vraag stelt, een fout toegeeft, een idee opppert of je zorgen deelt. Het gaat niet over harmonie of prettige sfeer, maar over de bereidheid om interpersoonlijke risico's te nemen.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 18 }}>
+                Amy Edmondson van Harvard toonde aan dat dit de belangrijkste voorspeller is van teamprestaties. Teams die psychologisch veilig zijn, leren sneller, presteren beter en passen zich soepeler aan verandering aan.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Psychologische veiligheid is geen gevoel. Het is zichtbaar gedrag: wordt er gevraagd als iemand iets niet begrijpt? Worden fouten besproken of verstopt? Durft iemand het oneens te zijn met de leidinggevende?
+              </p>
+            </div>
+            <div style={{ background: PUB.licht, borderRadius: 22, padding: isMobile ? 24 : 36, border: `1px solid ${PUB.lijn}` }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: PUB.donker, marginBottom: 20 }}>Psychologische veiligheid is aanwezig als mensen:</div>
+              {[
+                "Fouten durven benoemen zonder angst voor consequenties",
+                "Vragen durven stellen ook als ze zichzelf daarmee kwetsbaar maken",
+                "Ideeën opperen ook als ze de minderheid zijn",
+                "Het oneens durven zijn met de leidinggevende",
+                "Om hulp vragen zonder dat dit als zwakte wordt gezien",
+                "Feedback geven en ontvangen zonder defensiviteit",
+              ].map((item) => (
+                <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 14 }}>
+                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 900, flexShrink: 0, marginTop: 1 }}>✓</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.donker }}>{item}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 3. Waaraan merk je dat het ontbreekt */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 48, alignItems: "start" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wanneer het ontbreekt</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Psychologische onveiligheid is zelden luid. Het is stil.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Niet de ruzie of het conflict maakt een team onveilig. Het is de afwezigheid van eerlijkheid — de zin die niet wordt afgemaakt, de vraag die niemand durft te stellen. Dat is de onderstroom die samenwerking langzaam uitholt.
+              </p>
+            </div>
+            <div style={{ display: "grid", gap: 14 }}>
+              {signalen.map((s, i) => (
+                <div key={i} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 20, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
+                  <div style={{ fontSize: 13, fontWeight: 900, color: PUB.teal, marginBottom: 6 }}>Signaal {i + 1}</div>
+                  <div style={{ fontSize: 15, lineHeight: 1.7, color: PUB.donker }}>{s}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Waarom goede bedoelingen niet genoeg zijn */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Waarom goede bedoelingen niet genoeg zijn</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                De meeste leidinggevenden willen openheid. Toch blijft het stil.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Psychologische veiligheid staat hoog op de agenda van veel teams. Toch verandert er weinig. Dat komt niet door gebrek aan intentie, maar doordat de aanpak vaak niet aansluit bij hoe patronen echt veranderen.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 18 }}>
+              {waaromNietGenoeg.map(({ titel, tekst }) => (
+                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 26 }}>
+                  <h3 style={{ fontSize: 17, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Hoe Mijn Teamkompas het zichtbaar maakt */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Hoe wij het aanpakken</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Van meten naar gesprek — en van gesprek naar gedrag.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Wij werken met een aanpak die begint bij data, doorgaat met duiding en eindigt bij nieuw gedrag — zichtbaar in het dagelijks werk van het team.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
+              {hoeZichtbaar.map(([nr, titel, tekst]) => (
+                <div key={nr} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
+                  <div style={{ width: 38, height: 38, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 16, marginBottom: 16 }}>{nr}</div>
+                  <h3 style={{ fontSize: 17, margin: "0 0 8px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Rol van de teamscan */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 48, alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>De rol van de teamscan</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                De teamscan geeft iedereen een stem — zonder iemand te exposeren.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>
+                Praten over psychologische veiligheid kan in zichzelf onveilig aanvoelen. De teamscan lost dat op door anoniem te meten wat er speelt — zodat patronen zichtbaar worden zonder dat individuen blootgesteld worden.
+              </p>
+              <a href="/teamscan" style={{ color: PUB.teal, fontWeight: 700, fontSize: 15, textDecoration: "none" }}>Bekijk hoe de teamscan werkt →</a>
+            </div>
+            <div style={{ display: "grid", gap: 16 }}>
+              {rolTeamscan.map(({ titel, tekst }) => (
+                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 22 }}>
+                  <h3 style={{ fontSize: 16, margin: "0 0 8px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 7. Van inzicht naar gedrag */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Van inzicht naar gedrag</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Inzicht is pas waardevol als het leidt tot ander gedrag.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Na de teamscan begeleiden we het team en de leidinggevende bij het vertalen van uitkomsten naar concrete afspraken. Niet als inspiratie, maar als werkbare stappen die het team de volgende dag al kan toepassen.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
+              {vanInzichtNaarGedrag.map(([titel, tekst]) => (
+                <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
+                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: PUB.teal, marginBottom: 14 }} />
+                  <h3 style={{ fontSize: 16, margin: "0 0 8px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 8. Vier domeinen */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vier domeinen</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Veiligheid raakt alle vier domeinen van samenwerking.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Psychologische veiligheid is de basis van het eerste domein, maar heeft directe invloed op alle vier. Wie onveiligheid aanpakt, versterkt tegelijk energie, veranderingsvermogen en lerend vermogen.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
+              {domeinen.map(({ naam, kleur, uitleg }) => (
+                <div key={naam} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22, borderTop: `4px solid ${kleur}` }}>
+                  <h3 style={{ fontSize: 16, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{naam}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{uitleg}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 9. Voor welke teams */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Voor welke teams</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Psychologische veiligheid is relevant voor elk team — maar elke situatie vraagt een andere ingang.
+              </h2>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+              {voorWelkeTeams.map(([titel, tekst]) => (
+                <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
+                  <h3 style={{ fontSize: 16, margin: "0 0 8px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 10. FAQ */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 860, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Veelgestelde vragen</div>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 32px" }}>
+              Vragen over psychologische veiligheid
+            </h2>
+            <div style={{ display: "grid", gap: 10 }}>
+              {faqs.map(([vraag, antwoord], i) => (
+                <div key={i} style={{ border: `1px solid ${PUB.lijn}`, borderRadius: 16, overflow: "hidden" }}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    style={{ width: "100%", background: openFaq === i ? PUB.licht : PUB.wit, border: "none", padding: "18px 22px", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, cursor: "pointer", fontFamily: "inherit" }}
+                  >
+                    <span style={{ fontSize: 16, fontWeight: 700, color: PUB.donker, lineHeight: 1.4 }}>{vraag}</span>
+                    <span style={{ fontSize: 20, color: PUB.teal, fontWeight: 700, flexShrink: 0, transform: openFaq === i ? "rotate(45deg)" : "none", transition: "transform 0.2s" }}>+</span>
+                  </button>
+                  {openFaq === i && (
+                    <div style={{ padding: "6px 22px 20px", background: PUB.licht }}>
+                      <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>{antwoord}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 11. CTA */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
+          <div style={{ maxWidth: 780, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+              Psychologische veiligheid verbeteren
+            </div>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
+              Wil je weten waar jouw team staat?
+            </h2>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", marginBottom: 28 }}>
+              Begin met een teamscan of plan een verkennend gesprek. Dan kijken we samen welke aanpak past bij wat er in jouw team speelt.
+            </p>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <a href="/teamscan" style={ghostStyle}>Start met de teamscan</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Psychologische veiligheid" />
     </>
   );
 }
@@ -9261,6 +9678,7 @@ export default function App() {
         <Route path="/admin/funnel" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/teamcoaching" element={<><SeoHead page="teamcoaching" /><TeamcoachingPage /></>} />
         <Route path="/teamdag" element={<TeamdagPage />} />
+        <Route path="/psychologische-veiligheid" element={<PsychologischeVeiligheidPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
