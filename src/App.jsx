@@ -8459,18 +8459,18 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
               {domeinen.map(([titel, tekst], i) => (
                 <Fade key={titel} delay={i * 0.05}>
-                  <div style={{ height: "100%", background: "rgba(255,255,255,0.055)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 18, padding: 22 }}>
+                  <div style={{ height: "100%", background: "rgba(255,255,255,0.055)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 18, padding: 22, display: "flex", flexDirection: "column" }}>
                     <div style={{ fontSize: 13, fontWeight: 850, color: PUB.teal, marginBottom: 10 }}>0{i + 1}</div>
                     <div style={{ fontSize: 18, fontWeight: 850, color: PUB.wit, marginBottom: 10 }}>{titel}</div>
-                    <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)" }}>{tekst}</div>
+                    <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)", flex: 1 }}>{tekst}</div>
+                    {titel === "Veiligheid en leiderschap" && (
+                      <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: PUB.teal, textDecoration: "none" }}>
+                        Meer over psychologische veiligheid →
+                      </a>
+                    )}
                   </div>
                 </Fade>
               ))}
-            </div>
-            <div style={{ textAlign: "center", marginTop: 20 }}>
-              <a href="/psychologische-veiligheid" style={{ color: "rgba(255,255,255,0.55)", fontSize: 14, textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.22)", paddingBottom: 2 }}>
-                Meer over psychologische veiligheid in teams →
-              </a>
             </div>
           </div>
         </section>
