@@ -76,7 +76,7 @@ export default function Blog({ onLoginClick }) {
         {posts.length === 0 && (
           <p style={{ color: "#666", textAlign: "center" }}>Nog geen artikelen gepubliceerd.</p>
         )}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 32 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 24 }}>
           {posts.map((post) => (
             <Link
               key={post.slug}
