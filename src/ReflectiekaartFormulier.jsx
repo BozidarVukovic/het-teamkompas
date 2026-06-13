@@ -173,7 +173,7 @@ export default function ReflectiekaartFormulier({ bronPagina = "Website", varian
         from_name:   "Mijn Teamkompas",
         reply_to:    CONTACT_TO_EMAIL,
         pdf_url:     "https://www.mijnteamkompas.nl/reflectiekaart-mijn-teamkompas.pdf",
-        message: `Beste ${form.voornaam.trim()},\nDankjewel voor je aanvraag.\nVia onderstaande link vind je de reflectiekaart "Maak samenwerking bespreekbaar in je team":\nhttps://www.mijnteamkompas.nl/reflectiekaart-mijn-teamkompas.pdf\nDe kaart helpt je om op een laagdrempelige manier het gesprek te voeren over vertrouwen, eigenaarschap, energie en psychologische veiligheid. Gebruik de kaart bijvoorbeeld in een teamoverleg, bila, heidag of reflectiemoment.\nWil je naar aanleiding hiervan eens sparren over je team? Neem dan contact op via www.mijnteamkompas.nl.\nHartelijke groet,\nBozidar Vukovic\nMijn Teamkompas`,
+        message: `Beste ${form.voornaam.trim()},\nDankjewel voor je aanvraag.\nVia onderstaande link vind je de reflectiekaart "Maak samenwerking bespreekbaar in je team":\nhttps://www.mijnteamkompas.nl/reflectiekaart-mijn-teamkompas.pdf\nDe kaart helpt je om op een laagdrempelige manier het gesprek te voeren over vertrouwen, eigenaarschap, energie en psychologische veiligheid. Gebruik de kaart bijvoorbeeld in een teamoverleg, bila, heidag of reflectiemoment.\nWil je naar aanleiding hiervan eens sparren over je team? Neem dan contact op via www.mijnteamkompas.nl.\nHartelijke groet,\nMijn Teamkompas\ninfo@mijnteamkompas.nl`,
       });
 
       /* 3. Melding naar beheerder */
