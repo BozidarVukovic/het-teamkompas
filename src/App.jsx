@@ -1410,7 +1410,7 @@ function PublicSite({ onLoginClick }) {
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
               <div>
-                <div style={{ fontSize: 22, fontWeight: 800, color: PUB.wit, marginBottom: 4 }}>Mijn Teamkompas</div>
+                <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ fontSize: 22, fontWeight: 800, color: PUB.wit, marginBottom: 4, cursor: "pointer" }}>Mijn Teamkompas</div>
                 <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)" }}>Organisatie · groei · richting</div>
               </div>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
