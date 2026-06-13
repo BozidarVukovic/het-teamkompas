@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import ContactModal from "./ContactModal";
+import KompasDot from "./components/shared/KompasDot";
 
 const C = { donker: "#0D1B2A", navy: "#1A2E4A", teal: "#0F766E", groen: "#2F8F3A", blauw: "#3A7DBF", oranje: "#E8821A", paars: "#6B4E9E", wit: "#FFFFFF", licht: "#F4F7F9", lijn: "#DDE4ED", sub: "#5F6B7A" };
 function useIsMobile(){ const [m,setM]=React.useState(false); React.useEffect(()=>{const f=()=>setM(window.innerWidth<820); f(); window.addEventListener("resize",f); return()=>window.removeEventListener("resize",f);},[]); return m; }
@@ -27,7 +28,7 @@ export default function Verkennen(){
       <div style={{fontFamily:"Roboto, sans-serif", background:C.wit, color:C.donker, minHeight:"100vh"}}>
         <header style={{position:"sticky", top:0, zIndex:10, background:"rgba(255,255,255,0.92)", backdropFilter:"blur(10px)", borderBottom:`1px solid ${C.lijn}`}}>
           <div style={{maxWidth:1180, margin:"0 auto", padding:"16px 22px", display:"flex", justifyContent:"space-between", alignItems:"center", gap:16}}>
-            <div onClick={()=>navigate("/")} style={{fontWeight:900, fontSize:20, cursor:"pointer", color:C.donker}}>Mijn Teamkompas</div>
+            <div onClick={()=>navigate("/")} style={{fontWeight:900, fontSize:20, cursor:"pointer", color:C.donker, display:"flex", alignItems:"center", gap:9}}><KompasDot size={22}/>Mijn Teamkompas</div>
             <div style={{display:"flex", gap:10, alignItems:"center"}}>
               <button onClick={()=>navigate("/teamscan")} style={{background:"transparent", border:`1px solid ${C.lijn}`, color:C.donker, borderRadius:10, padding:"10px 14px", fontWeight:800, cursor:"pointer"}}>Digitale teamscan</button>
               <button onClick={()=>setOpen(true)} style={{background:C.teal, border:"none", color:C.wit, borderRadius:10, padding:"10px 16px", fontWeight:900, cursor:"pointer"}}>Plan gesprek</button>
