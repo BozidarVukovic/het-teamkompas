@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import ContactModal from "./ContactModal";
+import KompasDot from "./components/shared/KompasDot";
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
@@ -38,13 +39,6 @@ const images = {
   zorg: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80&fit=crop&crop=center",
 };
 
-function KompasDot({ size = 26 }) {
-  return (
-    <div style={{ width: size, height: size, borderRadius: "50%", background: `conic-gradient(${PUB.groen}, ${PUB.blauw}, ${PUB.oranje}, ${PUB.paars}, ${PUB.groen})`, padding: 3 }}>
-      <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: PUB.donker }} />
-    </div>
-  );
-}
 
 function SectionLabel({ children }) {
   return <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>{children}</div>;
