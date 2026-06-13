@@ -40,7 +40,7 @@ export default function BlogTeaser({ isMobile }) {
         };
       })
       .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 2);
+      .slice(0, 3);
     setPosts(parsed);
   }, []);
 
@@ -51,7 +51,7 @@ export default function BlogTeaser({ isMobile }) {
       padding: isMobile ? "56px 20px" : "80px 60px",
       background: "#f9f7f4",
     }}>
-      <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         <div style={{
           display: "flex",
           alignItems: "flex-end",
@@ -78,7 +78,7 @@ export default function BlogTeaser({ isMobile }) {
 
         <div style={{
           display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+          gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
           gap: 24,
         }}>
           {posts.map((post) => (
