@@ -44,6 +44,11 @@ service cloud.firestore {
       allow create: if true;
     }
 
+    match /reflectiekaartLeads/{docId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if true;
+    }
+
     match /prullenbak/{docId} {
       allow read, write: if isAdmin();
     }
