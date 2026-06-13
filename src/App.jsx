@@ -403,7 +403,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
         borderBottom:"1px solid rgba(0,168,150,0.2)",height:64,
         display:"flex",alignItems:"center",justifyContent:"space-between",
         padding:isMobile?"0 20px":"0 40px",backdropFilter:"blur(10px)"}}>
-        <div onClick={() => navigate("/")} style={{display:"flex",alignItems:"center",gap:9,cursor:"pointer"}}>
+        <div onClick={() => { if (window.location.pathname === "/") { window.scrollTo({ top: 0, behavior: "smooth" }); } else { navigate("/"); } }} style={{display:"flex",alignItems:"center",gap:9,cursor:"pointer"}}>
           <KompasDot size={22}/>
           <span style={{fontSize:18,fontWeight:600,color:"#ffffff"}}>Mijn Teamkompas</span>
         </div>
