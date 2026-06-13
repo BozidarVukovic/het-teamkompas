@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import KompasDot from "../../components/shared/KompasDot";
 
 // Vite glob import: alle markdown-bestanden in src/content/blog als raw tekst
 const rawPosts = import.meta.glob("../../content/blog/*.md", {
@@ -52,8 +53,8 @@ export default function Blog({ onLoginClick }) {
         alignItems: "center",
         justifyContent: "space-between",
       }}>
-        <Link to="/" style={{ color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 18 }}>
-          🧭 Mijn Teamkompas
+        <Link to="/" style={{ color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 18, display: "flex", alignItems: "center", gap: 9 }}>
+          <KompasDot size={22} /> Mijn Teamkompas
         </Link>
         <div style={{ display: "flex", gap: 24 }}>
           <Link to="/teamscan" style={{ color: "#c8d8e8", textDecoration: "none", fontSize: 14 }}>Teamscan</Link>

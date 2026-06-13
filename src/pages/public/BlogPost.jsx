@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import KompasDot from "../../components/shared/KompasDot";
 
 const rawPosts = import.meta.glob("../../content/blog/*.md", {
   eager: true,
@@ -79,8 +80,8 @@ export default function BlogPost() {
         position: "relative",
         zIndex: 10,
       }}>
-        <Link to="/" style={{ color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 18 }}>
-          🧭 Mijn Teamkompas
+        <Link to="/" style={{ color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 18, display: "flex", alignItems: "center", gap: 9 }}>
+          <KompasDot size={22} /> Mijn Teamkompas
         </Link>
         <div style={{ display: "flex", gap: 24 }}>
           <Link to="/blog" style={{ color: "#c8d8e8", textDecoration: "none", fontSize: 14 }}>Blog</Link>
