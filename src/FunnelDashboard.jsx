@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { collection, getDocs, orderBy, query, limit, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, limit, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 const cardStyle = {
@@ -291,6 +291,18 @@ export default function FunnelDashboard() {
       setError("Interne notitie kon niet worden opgeslagen. Controleer of je schrijfrechten in Firestore goed staan.");
     } finally {
       setSavingNoteId("");
+    }
+  }
+
+  async function handleDeleteRequest(requestId) {
+    if (!window.confirm("Weet je zeker dat je deze aanvraag wilt verwijderen? Dit kan niet ongedaan worden gemaakt.")) return;
+    try {
+      await deleteDoc(doc(db, "teamscanSelfserviceAanvragen", requestId));
+      setRequests((current) => current.filter((r) => r.id !== requestId));
+      if (selectedRequestId === requestId) handleCloseDetail();
+    } catch (err) {
+      console.error(err);
+      setError("Verwijderen mislukt. Controleer je Firestore-rechten.");
     }
   }
 
@@ -628,21 +640,37 @@ export default function FunnelDashboard() {
                     </td>
                     <td style={{ padding: "12px" }}>{formatDate(request.createdAt || request.aangemaaktOp)}</td>
                     <td style={{ padding: "12px" }}>
-                      <button
-                        type="button"
-                        onClick={() => handleOpenRequest(request)}
-                        style={{
-                          border: "1px solid #CBD5E1",
-                          background: selectedRequestId === request.id ? "#0F766E" : "#FFFFFF",
-                          color: selectedRequestId === request.id ? "#FFFFFF" : "#0F172A",
-                          borderRadius: "999px",
-                          padding: "8px 12px",
-                          fontWeight: 800,
-                          cursor: "pointer",
-                        }}
-                      >
-                        Bekijken
-                      </button>
+                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                        <button
+                          type="button"
+                          onClick={() => handleOpenRequest(request)}
+                          style={{
+                            border: "1px solid #CBD5E1",
+                            background: selectedRequestId === request.id ? "#0F766E" : "#FFFFFF",
+                            color: selectedRequestId === request.id ? "#FFFFFF" : "#0F172A",
+                            borderRadius: "999px",
+                            padding: "8px 12px",
+                            fontWeight: 800,
+                            cursor: "pointer",
+                          }}
+                        >
+                          Bekijken
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteRequest(request.id)}
+                          title="Verwijder aanvraag"
+                          style={{
+                            border: "1px solid #FECACA",
+                            background: "#FEF2F2",
+                            color: "#DC2626",
+                            borderRadius: "999px",
+                            padding: "8px 10px",
+                            fontSize: "13px",
+                            cursor: "pointer",
+                          }}
+                        >🗑️</button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -691,21 +719,38 @@ export default function FunnelDashboard() {
                     Aangevraagd op {formatDate(selectedRequest.createdAt || selectedRequest.aangemaaktOp)} door {getManagerName(selectedRequest)}.
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={handleCloseDetail}
-                  style={{
-                    border: "1px solid #CBD5E1",
-                    background: "#FFFFFF",
-                    color: "#0F172A",
-                    borderRadius: "12px",
-                    padding: "10px 14px",
-                    fontWeight: 800,
-                    cursor: "pointer",
-                  }}
-                >
-                  Sluiten
-                </button>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteRequest(selectedRequest.id)}
+                    style={{
+                      border: "1px solid #FECACA",
+                      background: "#FEF2F2",
+                      color: "#DC2626",
+                      borderRadius: "12px",
+                      padding: "10px 14px",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                    }}
+                  >
+                    🗑️ Verwijder
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCloseDetail}
+                    style={{
+                      border: "1px solid #CBD5E1",
+                      background: "#FFFFFF",
+                      color: "#0F172A",
+                      borderRadius: "12px",
+                      padding: "10px 14px",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Sluiten
+                  </button>
+                </div>
               </div>
 
               <div style={{ padding: "22px", display: "grid", gap: "22px" }}>

@@ -8247,6 +8247,15 @@ function PageReflectieLeads() {
     } catch (e) { console.error(e); }
   };
 
+  const verwijderLead = async (id) => {
+    if (!window.confirm("Weet je zeker dat je dit lead wilt verwijderen? Dit kan niet ongedaan worden gemaakt.")) return;
+    try {
+      await deleteDoc(doc(db, "reflectiekaartLeads", id));
+      setLeads(ls => ls.filter(l => l.id !== id));
+      if (selected?.id === id) setSelected(null);
+    } catch (e) { console.error(e); }
+  };
+
   const openDetail = (lead) => {
     setSelected(lead);
     setNotitieText(lead.notities || "");
@@ -8371,6 +8380,7 @@ function PageReflectieLeads() {
                       {label} {sortKey === key ? (sortDir === "asc" ? "↑" : "↓") : ""}
                     </th>
                   ))}
+                  <th style={{ padding: "12px 16px", color: ADM.muted, fontWeight: 700 }}></th>
                 </tr>
               </thead>
               <tbody>
@@ -8403,6 +8413,13 @@ function PageReflectieLeads() {
                       >
                         {STATUSSEN.map(s => <option key={s} value={s} style={{ color: "#fff", background: "#1A2E4A" }}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
                       </select>
+                    </td>
+                    <td style={{ padding: "12px 16px" }} onClick={e => e.stopPropagation()}>
+                      <button
+                        onClick={() => verwijderLead(lead.id)}
+                        title="Verwijder lead"
+                        style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#f87171", borderRadius: 6, padding: "4px 10px", fontSize: 13, cursor: "pointer" }}
+                      >🗑️</button>
                     </td>
                   </tr>
                 ))}
@@ -8465,6 +8482,15 @@ function PageReflectieLeads() {
                 style={{ marginTop: 8, background: ADM.teal, color: "#fff", border: "none", borderRadius: 8, padding: "8px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}
               >
                 {notitieOpgeslagen ? "Opgeslagen ✓" : "Sla notitie op"}
+              </button>
+            </div>
+
+            <div style={{ marginTop: 32, paddingTop: 20, borderTop: `1px solid ${ADM.border}` }}>
+              <button
+                onClick={() => verwijderLead(selected.id)}
+                style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.4)", color: "#f87171", borderRadius: 8, padding: "8px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer", width: "100%" }}
+              >
+                🗑️ Verwijder lead
               </button>
             </div>
           </div>
