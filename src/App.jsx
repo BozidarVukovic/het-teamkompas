@@ -1142,8 +1142,12 @@ function PublicSite({ onLoginClick }) {
               Mijn Teamkompas helpt teams beter samenwerken als gedrag, verandering of leiderschap vastloopt. Met een teamscan, workshops en coaching maken we zichtbaar wat er speelt en begeleiden we teams en leiders naar ander gedrag in de praktijk.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 20 }}>
-              {["Teamscan", "Workshops en teamdagen", "Coaching van leiders en teams"].map((label) => (
-                <span key={label} style={{ border: "1px solid rgba(255,255,255,0.24)", color: "rgba(255,255,255,0.86)", borderRadius: 999, padding: "8px 12px", fontSize: 13, fontWeight: 800, background: "rgba(255,255,255,0.08)" }}>{label}</span>
+              {[
+                { label: "Teamscan", href: "/teamscan" },
+                { label: "Workshops en teamdagen", href: "/teamontwikkeling" },
+                { label: "Coaching van leiders en teams", href: "/teamcoaching" },
+              ].map(({ label, href }) => (
+                <span key={label} onClick={() => navigate(href)} style={{ border: "1px solid rgba(255,255,255,0.24)", color: "rgba(255,255,255,0.86)", borderRadius: 999, padding: "8px 12px", fontSize: 13, fontWeight: 800, background: "rgba(255,255,255,0.08)", cursor: "pointer" }}>{label}</span>
               ))}
             </div>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
