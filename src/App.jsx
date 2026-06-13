@@ -22,6 +22,7 @@ import ScanInvullen from "./pages/public/ScanInvullen";
 import Blog from "./pages/public/Blog";
 import BlogPost from "./pages/public/BlogPost";
 import BlogTeaser from "./components/shared/BlogTeaser";
+import ReflectiekaartFormulier from "./ReflectiekaartFormulier";
 import { Analytics } from "@vercel/analytics/react";
 import PageScans from "./pages/admin/PageScans";
 import {
@@ -1375,6 +1376,15 @@ function PublicSite({ onLoginClick }) {
                   <span style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center" }} onClick={openModal}>Plan kennismaking</span>
                 </div>
               </div>
+            </Fade>
+          </div>
+        </section>
+
+        {/* ── Reflectiekaart leadblok ──────────────────────────────────── */}
+        <section style={{ padding: isMobile ? "52px 20px" : "80px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+            <Fade>
+              <ReflectiekaartFormulier bronPagina="Homepage" variant="block" />
             </Fade>
           </div>
         </section>
@@ -8161,26 +8171,333 @@ function PageInstellingen() {
   );
 }
 
+// ─────────────────────────────────────────────
+// ADMIN: REFLECTIEKAART LEADS
+// ─────────────────────────────────────────────
+function PageReflectieLeads() {
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [zoekterm, setZoekterm] = useState("");
+  const [sortKey, setSortKey] = useState("aangemeldOp");
+  const [sortDir, setSortDir] = useState("desc");
+  const [filterStatus, setFilterStatus] = useState("alle");
+  const [selected, setSelected] = useState(null);
+  const [notitieText, setNotitieText] = useState("");
+  const [notitieOpgeslagen, setNotitieOpgeslagen] = useState(false);
+
+  const STATUSSEN = ["nieuw","interessant","opvolgen","kennismaking gepland","klant geworden","niet relevant","uitgeschreven"];
+
+  useEffect(() => {
+    const laad = async () => {
+      try {
+        const snap = await getDocs(collection(db, "reflectiekaartLeads"));
+        const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setLeads(data);
+      } catch (e) {
+        console.error("Fout laden reflectiekaartLeads:", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    laad();
+  }, []);
+
+  const gefilterd = leads
+    .filter(l => {
+      const naam = `${l.voornaam || ""} ${l.achternaam || ""}`.toLowerCase();
+      const q = zoekterm.toLowerCase();
+      const matchZoek = !q || naam.includes(q) || (l.organisatie||"").toLowerCase().includes(q) || (l.email||"").toLowerCase().includes(q);
+      const matchStatus = filterStatus === "alle" || (l.status || "nieuw") === filterStatus;
+      return matchZoek && matchStatus;
+    })
+    .sort((a, b) => {
+      let va = a[sortKey] ?? "";
+      let vb = b[sortKey] ?? "";
+      if (sortKey === "aangemeldOp") {
+        va = a.aangemeldOp?.seconds ?? 0;
+        vb = b.aangemeldOp?.seconds ?? 0;
+      }
+      if (va < vb) return sortDir === "asc" ? -1 : 1;
+      if (va > vb) return sortDir === "asc" ? 1 : -1;
+      return 0;
+    });
+
+  const wisselSort = (key) => {
+    if (sortKey === key) setSortDir(d => d === "asc" ? "desc" : "asc");
+    else { setSortKey(key); setSortDir("asc"); }
+  };
+
+  const updateStatus = async (id, newStatus) => {
+    try {
+      const ref = doc(db, "reflectiekaartLeads", id);
+      await updateDoc(ref, { status: newStatus });
+      setLeads(ls => ls.map(l => l.id === id ? { ...l, status: newStatus } : l));
+      if (selected?.id === id) setSelected(s => ({ ...s, status: newStatus }));
+    } catch (e) { console.error(e); }
+  };
+
+  const slaNotitieOp = async () => {
+    if (!selected) return;
+    try {
+      const ref = doc(db, "reflectiekaartLeads", selected.id);
+      await updateDoc(ref, { notities: notitieText });
+      setLeads(ls => ls.map(l => l.id === selected.id ? { ...l, notities: notitieText } : l));
+      setNotitieOpgeslagen(true);
+      setTimeout(() => setNotitieOpgeslagen(false), 2000);
+    } catch (e) { console.error(e); }
+  };
+
+  const openDetail = (lead) => {
+    setSelected(lead);
+    setNotitieText(lead.notities || "");
+    setNotitieOpgeslagen(false);
+  };
+
+  const exporteerCsv = () => {
+    const header = ["Voornaam","Achternaam","E-mail","Organisatie","Functie","Thema","Status","Bronpagina","UTM source","UTM medium","UTM campaign","Aangemeld op","Notities"];
+    const rijen = gefilterd.map(l => [
+      l.voornaam, l.achternaam, l.email, l.organisatie, l.functie, l.thema,
+      l.status, l.bronPagina, l.utm_source, l.utm_medium, l.utm_campaign,
+      l.aangemeldOp ? new Date(l.aangemeldOp.seconds * 1000).toLocaleDateString("nl-NL") : "",
+      (l.notities || "").replace(/\n/g, " "),
+    ]);
+    const csv = [header, ...rijen].map(r => r.map(c => `"${(c||"").toString().replace(/"/g,'""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "reflectiekaart-leads.csv"; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Stats
+  const totaal = leads.length;
+  const dezeMaand = leads.filter(l => {
+    if (!l.aangemeldOp?.seconds) return false;
+    const d = new Date(l.aangemeldOp.seconds * 1000);
+    const nu = new Date();
+    return d.getMonth() === nu.getMonth() && d.getFullYear() === nu.getFullYear();
+  }).length;
+  const opvolgenAantal = leads.filter(l => l.status === "opvolgen").length;
+  const nieuwAantal = leads.filter(l => (l.status || "nieuw") === "nieuw").length;
+  const themaTelling = leads.reduce((acc, l) => { if (l.thema) acc[l.thema] = (acc[l.thema]||0)+1; return acc; }, {});
+  const topThema = Object.entries(themaTelling).sort((a,b)=>b[1]-a[1])[0]?.[0] || "-";
+
+  const statusKleur = {
+    "nieuw":               ADM.teal,
+    "interessant":         "#8b5cf6",
+    "opvolgen":            "#f59e0b",
+    "kennismaking gepland":"#3b82f6",
+    "klant geworden":      "#22c55e",
+    "niet relevant":       ADM.muted,
+    "uitgeschreven":       ADM.muted,
+  };
+
+  const fmt = (ts) => ts?.seconds ? new Date(ts.seconds*1000).toLocaleDateString("nl-NL") : "-";
+
+  return (
+    <div style={{ padding: "32px 28px", maxWidth: 1200 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 }}>
+        <div>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: ADM.white, margin: 0 }}>Reflectiekaart leads</h1>
+          <p style={{ fontSize: 13, color: ADM.muted, margin: "4px 0 0" }}>Aanvragen via het gratis reflectiekaart-formulier</p>
+        </div>
+        <button onClick={exporteerCsv} style={{ background: "rgba(0,168,150,0.15)", color: ADM.teal, border: `1px solid ${ADM.teal}`, borderRadius: 8, padding: "9px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+          ↓ Exporteer CSV
+        </button>
+      </div>
+
+      {/* Stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 28 }}>
+        {[
+          { label: "Totaal", waarde: totaal },
+          { label: "Deze maand", waarde: dezeMaand },
+          { label: "Nieuw", waarde: nieuwAantal, highlight: true },
+          { label: "Opvolgen", waarde: opvolgenAantal },
+        ].map(({ label, waarde, highlight }) => (
+          <div key={label} style={{ background: ADM.navy, border: `1px solid ${highlight && waarde > 0 ? ADM.teal : ADM.border}`, borderRadius: 12, padding: "18px 20px" }}>
+            <div style={{ fontSize: 28, fontWeight: 800, color: highlight && waarde > 0 ? ADM.teal : ADM.white }}>{waarde}</div>
+            <div style={{ fontSize: 12, color: ADM.muted, marginTop: 2 }}>{label}</div>
+          </div>
+        ))}
+      </div>
+
+      {topThema !== "-" && (
+        <div style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.3)", borderRadius: 10, padding: "12px 18px", marginBottom: 20, fontSize: 13, color: ADM.muted }}>
+          Meest gekozen thema: <strong style={{ color: ADM.white }}>{topThema}</strong>
+        </div>
+      )}
+
+      {/* Zoek + filter */}
+      <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+        <input
+          placeholder="Zoek op naam, organisatie of e-mail..."
+          value={zoekterm}
+          onChange={e => setZoekterm(e.target.value)}
+          style={{ flex: 1, minWidth: 220, background: ADM.navy, border: `1px solid ${ADM.border}`, borderRadius: 8, padding: "9px 14px", color: ADM.white, fontSize: 13, outline: "none" }}
+        />
+        <select
+          value={filterStatus}
+          onChange={e => setFilterStatus(e.target.value)}
+          style={{ background: ADM.navy, border: `1px solid ${ADM.border}`, borderRadius: 8, padding: "9px 14px", color: ADM.white, fontSize: 13, outline: "none" }}
+        >
+          <option value="alle">Alle statussen</option>
+          {STATUSSEN.map(s => <option key={s} value={s} style={{ textTransform: "capitalize" }}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+        </select>
+      </div>
+
+      {loading && <div style={{ color: ADM.muted, fontSize: 14 }}>Laden...</div>}
+
+      {!loading && gefilterd.length === 0 && (
+        <div style={{ color: ADM.muted, fontSize: 14, padding: "24px 0" }}>Geen leads gevonden.</div>
+      )}
+
+      {/* Tabel */}
+      {!loading && gefilterd.length > 0 && (
+        <div style={{ background: ADM.navy, border: `1px solid ${ADM.border}`, borderRadius: 12, overflow: "hidden" }}>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+              <thead>
+                <tr style={{ background: ADM.navyDeep }}>
+                  {[
+                    ["naam", "Naam"],
+                    ["organisatie", "Organisatie"],
+                    ["functie", "Functie"],
+                    ["thema", "Thema"],
+                    ["bronPagina", "Bron"],
+                    ["aangemeldOp", "Datum"],
+                    ["status", "Status"],
+                  ].map(([key, label]) => (
+                    <th key={key} onClick={() => wisselSort(key)} style={{ textAlign: "left", padding: "12px 16px", color: ADM.muted, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap", userSelect: "none" }}>
+                      {label} {sortKey === key ? (sortDir === "asc" ? "↑" : "↓") : ""}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {gefilterd.map((lead, i) => (
+                  <tr key={lead.id} onClick={() => openDetail(lead)} style={{ borderTop: `1px solid ${ADM.border}`, cursor: "pointer", background: i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.02)" }}>
+                    <td style={{ padding: "12px 16px", color: ADM.white, fontWeight: 600, whiteSpace: "nowrap" }}>
+                      {lead.voornaam} {lead.achternaam}
+                      <div style={{ fontSize: 11, color: ADM.muted, fontWeight: 400 }}>{lead.email}</div>
+                    </td>
+                    <td style={{ padding: "12px 16px", color: ADM.text }}>{lead.organisatie || "-"}</td>
+                    <td style={{ padding: "12px 16px", color: ADM.text }}>{lead.functie || "-"}</td>
+                    <td style={{ padding: "12px 16px", color: ADM.text, maxWidth: 160 }}>
+                      <span style={{ background: "rgba(139,92,246,0.15)", color: "#c4b5fd", borderRadius: 6, padding: "2px 8px", fontSize: 11 }}>
+                        {lead.thema || "niet opgegeven"}
+                      </span>
+                    </td>
+                    <td style={{ padding: "12px 16px", color: ADM.muted, fontSize: 12 }}>{lead.bronPagina || "-"}</td>
+                    <td style={{ padding: "12px 16px", color: ADM.muted, fontSize: 12, whiteSpace: "nowrap" }}>{fmt(lead.aangemeldOp)}</td>
+                    <td style={{ padding: "12px 16px" }}>
+                      <select
+                        value={lead.status || "nieuw"}
+                        onClick={e => e.stopPropagation()}
+                        onChange={e => { e.stopPropagation(); updateStatus(lead.id, e.target.value); }}
+                        style={{
+                          background: "rgba(0,0,0,0.2)",
+                          border: `1px solid ${statusKleur[lead.status||"nieuw"] || ADM.border}`,
+                          color: statusKleur[lead.status||"nieuw"] || ADM.white,
+                          borderRadius: 6, padding: "4px 10px", fontSize: 12, cursor: "pointer", outline: "none",
+                        }}
+                      >
+                        {STATUSSEN.map(s => <option key={s} value={s} style={{ color: "#fff", background: "#1A2E4A" }}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Detail-panel */}
+      {selected && (
+        <div onClick={() => setSelected(null)} style={{ position: "fixed", inset: 0, background: "rgba(13,27,42,0.85)", backdropFilter: "blur(4px)", zIndex: 500, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: 440, maxWidth: "100vw", height: "100vh", background: ADM.navy, borderLeft: `1px solid ${ADM.border}`, overflowY: "auto", padding: "28px 24px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+              <div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: ADM.white }}>{selected.voornaam} {selected.achternaam}</div>
+                <div style={{ fontSize: 13, color: ADM.muted }}>{selected.email}</div>
+              </div>
+              <button onClick={() => setSelected(null)} style={{ background: "none", border: "none", color: ADM.muted, fontSize: 22, cursor: "pointer" }}>×</button>
+            </div>
+
+            {[
+              ["Organisatie", selected.organisatie],
+              ["Functie", selected.functie],
+              ["Thema", selected.thema || "niet opgegeven"],
+              ["Bronpagina", selected.bronPagina],
+              ["Datum", fmt(selected.aangemeldOp)],
+              ["UTM source", selected.utm_source || "-"],
+              ["UTM medium", selected.utm_medium || "-"],
+              ["UTM campaign", selected.utm_campaign || "-"],
+            ].map(([k, v]) => (
+              <div key={k} style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 10, color: ADM.muted, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700, marginBottom: 3 }}>{k}</div>
+                <div style={{ fontSize: 14, color: ADM.white }}>{v || "-"}</div>
+              </div>
+            ))}
+
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 10, color: ADM.muted, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700, marginBottom: 6 }}>Status</div>
+              <select
+                value={selected.status || "nieuw"}
+                onChange={e => updateStatus(selected.id, e.target.value)}
+                style={{ background: ADM.navyDeep, border: `1px solid ${ADM.border}`, color: ADM.white, borderRadius: 8, padding: "8px 12px", fontSize: 13, outline: "none", width: "100%" }}
+              >
+                {STATUSSEN.map(s => <option key={s} value={s} style={{ color: "#fff", background: "#0D1B2A" }}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+              </select>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 10, color: ADM.muted, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700, marginBottom: 6 }}>Notities</div>
+              <textarea
+                value={notitieText}
+                onChange={e => { setNotitieText(e.target.value); setNotitieOpgeslagen(false); }}
+                rows={5}
+                placeholder="Voeg notities toe over dit lead..."
+                style={{ width: "100%", background: ADM.navyDeep, border: `1px solid ${ADM.border}`, borderRadius: 8, padding: "10px 12px", color: ADM.white, fontSize: 13, outline: "none", resize: "vertical", boxSizing: "border-box" }}
+              />
+              <button
+                onClick={slaNotitieOp}
+                style={{ marginTop: 8, background: ADM.teal, color: "#fff", border: "none", borderRadius: 8, padding: "8px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}
+              >
+                {notitieOpgeslagen ? "Opgeslagen ✓" : "Sla notitie op"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AdminDashboard({ onLogout }) {
   const [activeNav, setActiveNav] = useState("Dashboard");
   const isMobile = useIsMobile();
 
   const [nieuwAanvragenCount, setNieuwAanvragenCount] = useState(0);
   const [nieuwTeamscanCount, setNieuwTeamscanCount] = useState(0);
+  const [nieuwReflectieCount, setNieuwReflectieCount] = useState(0);
 
   useEffect(() => {
     const laadNieuwAantal = async () => {
       try {
-        const [contactSnap, teamscanSnap] = await Promise.all([
+        const [contactSnap, teamscanSnap, reflectieSnap] = await Promise.all([
           getDocs(collection(db, "contactaanvragen")).catch(() => ({ docs: [] })),
           getDocs(collection(db, "teamscanSelfserviceAanvragen")).catch(() => ({ docs: [] })),
+          getDocs(collection(db, "reflectiekaartLeads")).catch(() => ({ docs: [] })),
         ]);
 
         const contactCount = contactSnap.docs.filter(d => (d.data().status || "Nieuw") === "Nieuw").length;
         const teamscanCount = teamscanSnap.docs.filter(d => (d.data().status || "nieuw").toLowerCase() === "nieuw").length;
+        const reflectieCount = reflectieSnap.docs.filter(d => (d.data().status || "nieuw") === "nieuw").length;
 
         setNieuwAanvragenCount(contactCount);
         setNieuwTeamscanCount(teamscanCount);
+        setNieuwReflectieCount(reflectieCount);
       } catch (err) {
         console.error("Fout bij laden aantal aanvragen:", err);
       }
@@ -8190,29 +8507,31 @@ function AdminDashboard({ onLogout }) {
   }, []);
 
   const navItems = [
-    { label:"Dashboard",        icon:"📊", section:"Overzicht" },
-    { label:"Contactaanvragen", icon:"📬", badge: nieuwAanvragenCount > 0 ? String(nieuwAanvragenCount) : null, section:null },
+    { label:"Dashboard",          icon:"📊", section:"Overzicht" },
+    { label:"Contactaanvragen",   icon:"📬", badge: nieuwAanvragenCount > 0 ? String(nieuwAanvragenCount) : null, section:null },
     { label:"Teamscan aanvragen", icon:"🧭", badge: nieuwTeamscanCount > 0 ? String(nieuwTeamscanCount) : null, section:null },
-    { label:"Klanten",          icon:"🏢", section:null },
-    { label:"Scans",            icon:"📝", section:"Trajecten" },
-    { label:"Metingen",         icon:"📋", section:null },
-    { label:"Rapportages",      icon:"📈", section:null },
-    { label:"Prullenbak",       icon:"🗑️", section:null },
-    { label:"Instellingen",     icon:"⚙",  section:"Systeem" },
+    { label:"Reflectiekaart leads", icon:"📥", badge: nieuwReflectieCount > 0 ? String(nieuwReflectieCount) : null, section:null },
+    { label:"Klanten",            icon:"🏢", section:null },
+    { label:"Scans",              icon:"📝", section:"Trajecten" },
+    { label:"Metingen",           icon:"📋", section:null },
+    { label:"Rapportages",        icon:"📈", section:null },
+    { label:"Prullenbak",         icon:"🗑️", section:null },
+    { label:"Instellingen",       icon:"⚙",  section:"Systeem" },
   ];
 
   const renderPage = () => {
-    if (activeNav === "Contactaanvragen") return <PageContactaanvragen />;
-    if (activeNav === "Teamscan aanvragen") return <FunnelDashboard />;
-    if (activeNav === "Klanten")          return <PageKlanten />;
-    if (activeNav === "Scans")            return <PageScans
-  ScanResultaten={ScanResultaten}
-  exporteerScanAlsCsv={exporteerScanAlsCsv}
-/>
-    if (activeNav === "Metingen")         return <PageMetingen />;
-    if (activeNav === "Rapportages")      return <PageRapportages />;
-    if (activeNav === "Prullenbak")       return <PagePrullenbak />;
-    if (activeNav === "Instellingen")     return <PageInstellingen />;
+    if (activeNav === "Contactaanvragen")     return <PageContactaanvragen />;
+    if (activeNav === "Teamscan aanvragen")   return <FunnelDashboard />;
+    if (activeNav === "Reflectiekaart leads") return <PageReflectieLeads />;
+    if (activeNav === "Klanten")              return <PageKlanten />;
+    if (activeNav === "Scans")                return <PageScans
+      ScanResultaten={ScanResultaten}
+      exporteerScanAlsCsv={exporteerScanAlsCsv}
+    />;
+    if (activeNav === "Metingen")             return <PageMetingen />;
+    if (activeNav === "Rapportages")          return <PageRapportages />;
+    if (activeNav === "Prullenbak")           return <PagePrullenbak />;
+    if (activeNav === "Instellingen")         return <PageInstellingen />;
     return <DashboardHome />;
   };
 
@@ -8509,6 +8828,15 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
                   <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none", flex: 1 }} onClick={openModal}>Plan kennismaking</span>
                 </div>
               </div>
+            </Fade>
+          </div>
+        </section>
+
+        {/* ── Reflectiekaart leadblok ──────────────────────────────────── */}
+        <section style={{ padding: isMobile ? "52px 20px" : "80px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+            <Fade>
+              <ReflectiekaartFormulier bronPagina="Teamontwikkeling" variant="block" />
             </Fade>
           </div>
         </section>
@@ -9296,6 +9624,15 @@ function PsychologischeVeiligheidPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ── Reflectiekaart leadblok ──────────────────────────────────── */}
+        <section style={{ padding: isMobile ? "52px 22px" : "80px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+            <Fade>
+              <ReflectiekaartFormulier bronPagina="Psychologische veiligheid" variant="block" />
+            </Fade>
           </div>
         </section>
 

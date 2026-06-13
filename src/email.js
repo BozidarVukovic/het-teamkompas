@@ -6,6 +6,11 @@ export const EMAILJS_TEMPLATE_ID = "pysvu9a";
 export const EMAILJS_PUBLIC_KEY = "aXtk48FJxZBI-fBNQ";
 export const CONTACT_TO_EMAIL = "info@mijnteamkompas.nl";
 
+// Template-ID's voor de reflectiekaart (stel in via EmailJS-dashboard)
+// Gebruik dezelfde template als contactaanvragen totdat aparte templates zijn aangemaakt.
+export const EMAILJS_REFLECTIE_TEMPLATE_ID = "pysvu9a";
+export const EMAILJS_ADMIN_TEMPLATE_ID = "pysvu9a";
+
 export async function sendContactEmail(params) {
   return emailjs.send(
     EMAILJS_SERVICE_ID,
