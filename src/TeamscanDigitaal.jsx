@@ -3,6 +3,7 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { collection, addDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import KompasDot from "./components/shared/KompasDot";
 import { sendTeamscanConfirmationEmail } from "./email";
 
 const C = {
@@ -416,7 +417,7 @@ export default function TeamscanDigitaal() {
       <div style={{ fontFamily: "Roboto, sans-serif", background: C.wit, color: C.donker, minHeight: "100vh" }}>
         <header style={{ position: "sticky", top: 0, zIndex: 10, background: "rgba(255,255,255,0.94)", backdropFilter: "blur(10px)", borderBottom: `1px solid ${C.lijn}` }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", padding: "16px 22px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
-            <div onClick={() => navigate("/")} style={{ fontWeight: 900, fontSize: 20, cursor: "pointer", color: C.donker }}>Mijn Teamkompas</div>
+            <div onClick={() => navigate("/")} style={{ fontWeight: 900, fontSize: 20, cursor: "pointer", color: C.donker, display: "flex", alignItems: "center", gap: 9 }}><KompasDot size={22} />Mijn Teamkompas</div>
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
               <button onClick={() => navigate("/verkennen")} style={{ background: "transparent", border: `1px solid ${C.lijn}`, color: C.donker, borderRadius: 10, padding: "10px 14px", fontWeight: 800, cursor: "pointer" }}>Persoonlijk starten</button>
               <button onClick={() => navigate("/")} style={{ background: C.blauw, border: "none", color: C.wit, borderRadius: 10, padding: "10px 16px", fontWeight: 900, cursor: "pointer" }}>Terug naar home</button>
