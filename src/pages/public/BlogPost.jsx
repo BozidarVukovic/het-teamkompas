@@ -25,6 +25,59 @@ function calcReadTime(text) {
   return Math.max(1, Math.round(words / 200));
 }
 
+function ShareButtons({ title }) {
+  const [copied, setCopied] = useState(false);
+  const url = typeof window !== "undefined" ? window.location.href : "";
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const shareLinkedIn = () => {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, "_blank");
+  };
+
+  const shareEmail = () => {
+    window.open(`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`, "_self");
+  };
+
+  const downloadPdf = () => {
+    window.print();
+  };
+
+  const btnStyle = {
+    display: "inline-flex", alignItems: "center", gap: 6,
+    background: "#f0f4f8", border: "1px solid #e2e8f0",
+    borderRadius: 8, padding: "8px 14px", fontSize: 13,
+    fontWeight: 600, color: "#0D1B2A", cursor: "pointer",
+    textDecoration: "none",
+  };
+
+  return (
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "0 0 36px" }}>
+      <button onClick={shareLinkedIn} style={btnStyle}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+        LinkedIn
+      </button>
+      <button onClick={shareEmail} style={btnStyle}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0D1B2A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+        E-mail
+      </button>
+      <button onClick={copyLink} style={{ ...btnStyle, background: copied ? "#e6f9f5" : "#f0f4f8", color: copied ? "#0F766E" : "#0D1B2A" }}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        {copied ? "Gekopieerd!" : "Kopieer link"}
+      </button>
+      <button onClick={downloadPdf} style={{ ...btnStyle, background: "#0D1B2A", color: "#fff", border: "1px solid #0D1B2A" }}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+    </div>
+  );
+}
+
 export default function BlogPost() {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
@@ -135,6 +188,9 @@ export default function BlogPost() {
             {post.lead}
           </p>
         )}
+
+        {/* Delen + Download */}
+        <ShareButtons title={post.title} />
 
         {/* Author / date / readtime */}
         <div style={{
