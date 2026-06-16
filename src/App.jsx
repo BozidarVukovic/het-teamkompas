@@ -22,6 +22,7 @@ import ScanInvullen from "./pages/public/ScanInvullen";
 import Blog from "./pages/public/Blog";
 import BlogPost from "./pages/public/BlogPost";
 import BlogTeaser from "./components/shared/BlogTeaser";
+import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
 import ReflectiekaartFormulier from "./ReflectiekaartFormulier";
 import { Analytics } from "@vercel/analytics/react";
 import PageScans from "./pages/admin/PageScans";
@@ -1405,6 +1406,9 @@ function PublicSite({ onLoginClick }) {
 
         <section id="contact" style={{ padding: isMobile ? "48px 20px" : "70px 60px", background: PUB.donker }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 560, marginBottom: 40 }}>
+              <NieuwsbriefFormulier variant="footer" />
+            </div>
             <div style={{ height: 3, display: "flex", marginBottom: 18 }}>
               {[PUB.groen, PUB.blauw, PUB.oranje, PUB.paars].map((c, i) => <div key={i} style={{ flex: 1, background: c }} />)}
             </div>
@@ -8504,6 +8508,112 @@ function PageReflectieLeads() {
   );
 }
 
+function PageNieuwsbrief() {
+  const [aanmeldingen, setAanmeldingen] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [zoek, setZoek] = useState("");
+
+  useEffect(() => {
+    const laad = async () => {
+      try {
+        const snap = await getDocs(collection(db, "nieuwsbriefAanmeldingen"));
+        const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        items.sort((a, b) => {
+          const ta = a.aangemeld_op?.seconds || 0;
+          const tb = b.aangemeld_op?.seconds || 0;
+          return tb - ta;
+        });
+        setAanmeldingen(items);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    laad();
+  }, []);
+
+  const gefilterd = aanmeldingen.filter(a =>
+    !zoek || a.email?.toLowerCase().includes(zoek.toLowerCase())
+  );
+
+  const exportCsv = () => {
+    const rows = [
+      ["E-mail", "Bron", "Aangemeld op"],
+      ...gefilterd.map(a => [
+        a.email || "",
+        a.bron || "",
+        a.aangemeld_op?.seconds
+          ? new Date(a.aangemeld_op.seconds * 1000).toLocaleString("nl-NL")
+          : "",
+      ]),
+    ];
+    const csv = rows.map(r => r.map(c => `"${c}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `nieuwsbrief-aanmeldingen-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div style={{ padding: "32px 28px", maxWidth: 860, margin: "0 auto" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800 }}>Nieuwsbrief aanmeldingen</h2>
+          <p style={{ margin: "4px 0 0", fontSize: 13, color: "#8fa3bb" }}>
+            {aanmeldingen.length} aanmeld{aanmeldingen.length === 1 ? "ing" : "ingen"} in totaal
+          </p>
+        </div>
+        <button
+          onClick={exportCsv}
+          style={{ background: "#0F766E", color: "#fff", border: "none", borderRadius: 8, padding: "9px 16px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
+        >
+          ↓ Exporteer CSV
+        </button>
+      </div>
+
+      <input
+        placeholder="Zoek op e-mailadres..."
+        value={zoek}
+        onChange={e => setZoek(e.target.value)}
+        style={{ width: "100%", padding: "10px 14px", borderRadius: 8, border: "1px solid #2d3f52", background: "#162433", color: "#fff", fontSize: 14, marginBottom: 20, boxSizing: "border-box" }}
+      />
+
+      {loading ? (
+        <p style={{ color: "#8fa3bb" }}>Laden...</p>
+      ) : gefilterd.length === 0 ? (
+        <p style={{ color: "#8fa3bb" }}>Geen aanmeldingen gevonden.</p>
+      ) : (
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+          <thead>
+            <tr style={{ borderBottom: "1px solid #2d3f52" }}>
+              {["E-mail", "Bron", "Aangemeld op"].map(h => (
+                <th key={h} style={{ textAlign: "left", padding: "8px 12px", color: "#8fa3bb", fontWeight: 700, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {gefilterd.map((a, i) => (
+              <tr key={a.id} style={{ borderBottom: "1px solid #1e2f3f", background: i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.02)" }}>
+                <td style={{ padding: "10px 12px", color: "#e2e8f0" }}>{a.email}</td>
+                <td style={{ padding: "10px 12px", color: "#8fa3bb" }}>{a.bron || "—"}</td>
+                <td style={{ padding: "10px 12px", color: "#8fa3bb" }}>
+                  {a.aangemeld_op?.seconds
+                    ? new Date(a.aangemeld_op.seconds * 1000).toLocaleString("nl-NL")
+                    : "—"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
+
 function AdminDashboard({ onLogout }) {
   const [activeNav, setActiveNav] = useState("Dashboard");
   const isMobile = useIsMobile();
@@ -8541,6 +8651,7 @@ function AdminDashboard({ onLogout }) {
     { label:"Contactaanvragen",   icon:"📬", badge: nieuwAanvragenCount > 0 ? String(nieuwAanvragenCount) : null, section:null },
     { label:"Teamscan aanvragen", icon:"🧭", badge: nieuwTeamscanCount > 0 ? String(nieuwTeamscanCount) : null, section:null },
     { label:"Reflectiekaart leads", icon:"📥", badge: nieuwReflectieCount > 0 ? String(nieuwReflectieCount) : null, section:null },
+    { label:"Nieuwsbrief",        icon:"📧", section:null },
     { label:"Klanten",            icon:"🏢", section:null },
     { label:"Scans",              icon:"📝", section:"Trajecten" },
     { label:"Metingen",           icon:"📋", section:null },
@@ -8553,6 +8664,7 @@ function AdminDashboard({ onLogout }) {
     if (activeNav === "Contactaanvragen")     return <PageContactaanvragen />;
     if (activeNav === "Teamscan aanvragen")   return <FunnelDashboard />;
     if (activeNav === "Reflectiekaart leads") return <PageReflectieLeads />;
+    if (activeNav === "Nieuwsbrief")          return <PageNieuwsbrief />;
     if (activeNav === "Klanten")              return <PageKlanten />;
     if (activeNav === "Scans")                return <PageScans
       ScanResultaten={ScanResultaten}

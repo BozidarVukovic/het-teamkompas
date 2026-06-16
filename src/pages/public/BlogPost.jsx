@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import KompasDot from "../../components/shared/KompasDot";
+import NieuwsbriefFormulier from "../../components/shared/NieuwsbriefFormulier";
 
 const rawPosts = import.meta.glob("../../content/blog/*.md", {
   eager: true,
@@ -303,6 +304,11 @@ export default function BlogPost() {
           >
             {post.content}
           </ReactMarkdown>
+        </div>
+
+        {/* Nieuwsbrief */}
+        <div style={{ margin: "48px 0 0" }}>
+          <NieuwsbriefFormulier variant="blog" />
         </div>
 
         {/* CTA */}
