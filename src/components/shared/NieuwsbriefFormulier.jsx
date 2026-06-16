@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase";
+import emailjs from "@emailjs/browser";
+
+const EMAILJS_SERVICE_ID = "service_eytet3a";
+const EMAILJS_TEMPLATE_ID = "template_h1umkgj";
+const EMAILJS_PUBLIC_KEY = "aXtk48FJxZBI-fBNQ";
 
 export default function NieuwsbriefFormulier({ variant = "blog" }) {
   const [email, setEmail] = useState("");
@@ -21,6 +26,26 @@ export default function NieuwsbriefFormulier({ variant = "blog" }) {
         aangemeld_op: serverTimestamp(),
         bron: variant,
       });
+
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          to_email: email,
+          subject: "Bevestiging aanmelding nieuwsbrief Mijn Teamkompas",
+          message: `Hallo,
+
+Bedankt voor je aanmelding bij de nieuwsbrief van Mijn Teamkompas.
+
+Je ontvangt voortaan nieuwe artikelen over teamontwikkeling, psychologische veiligheid en leiderschap direct in je inbox.
+
+Met vriendelijke groet,
+Mijn Teamkompas
+www.mijnteamkompas.nl`,
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+
       setStatus("sent");
     } catch (err) {
       console.error(err);
