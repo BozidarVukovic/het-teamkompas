@@ -23,6 +23,7 @@ import Blog from "./pages/public/Blog";
 import BlogPost from "./pages/public/BlogPost";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
+import CookieBanner from "./components/shared/CookieBanner";
 import ReflectiekaartFormulier from "./ReflectiekaartFormulier";
 import { Analytics } from "@vercel/analytics/react";
 import PageScans from "./pages/admin/PageScans";
@@ -1420,6 +1421,7 @@ function PublicSite({ onLoginClick }) {
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => window.open("/privacyverklaring_mijnteamkompas.pdf", "_blank")}>Privacyverklaring</span>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => window.open("/algemene_voorwaarden_mijnteamkompas.pdf", "_blank")}>Algemene voorwaarden</span>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => cookieBannerRef.current?.open()}>Cookie-instellingen</span>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={onLoginClick}>Beheer</span>
               </div>
             </div>
@@ -1428,6 +1430,7 @@ function PublicSite({ onLoginClick }) {
       </div>
 
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Homepage" />
+      <CookieBanner ref={cookieBannerRef} />
     </>
   );
 }
@@ -10142,6 +10145,7 @@ function TeamdagPage() {
   );
 }
 export default function App() {
+  const cookieBannerRef = useRef(null);
   const [view, setView] = useState("public");
   const [scanId, setScanId] = useState(null);
   const [authReady, setAuthReady] = useState(false);
