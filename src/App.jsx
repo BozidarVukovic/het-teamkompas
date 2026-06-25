@@ -1063,6 +1063,7 @@ function DiverseWorkplacesSection({ isMobile }) {
 }
 
 function PublicSite({ onLoginClick }) {
+  const cookieBannerRef = useRef(null);
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -10145,7 +10146,6 @@ function TeamdagPage() {
   );
 }
 export default function App() {
-  const cookieBannerRef = useRef(null);
   const [view, setView] = useState("public");
   const [scanId, setScanId] = useState(null);
   const [authReady, setAuthReady] = useState(false);
