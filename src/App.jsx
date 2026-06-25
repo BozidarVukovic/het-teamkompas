@@ -1287,19 +1287,20 @@ function PublicSite({ onLoginClick }) {
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)" }}>Geen enkel team is hetzelfde. Daarom kijken we altijd eerst naar jullie situatie en stemmen we de aanpak daarop af. Zo ontstaat een traject dat past bij jullie team, in plaats van een standaardoplossing.</p>
               </div>
             </Fade>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
-              {funnelSteps.map(([nr, titel, tekst], i) => (
-                <Fade key={titel} delay={(i % 3) * .04}>
-                  <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 18, padding: 22, minHeight: 150 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                      <div style={{ width: 34, height: 34, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>{nr}</div>
-                      <div style={{ fontSize: 17, fontWeight: 800 }}>{titel}</div>
-                    </div>
-                    <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.62)" }}>{tekst}</div>
-                  </div>
-                </Fade>
-              ))}
-            </div>
+            <Fade>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <img
+                  src="/processtappen.png"
+                  alt="Van eerste contact tot inzicht, teamdag en borging — 9 stappen"
+                  style={{
+                    maxWidth: isMobile ? "100%" : 540,
+                    width: "100%",
+                    borderRadius: 18,
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.35)",
+                  }}
+                />
+              </div>
+            </Fade>
           </div>
         </section>
 
