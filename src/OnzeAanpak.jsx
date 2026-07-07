@@ -54,7 +54,7 @@ function Card({ children, topColor }) {
 
 export default function OnzeAanpakPage() {
   const isMobile = useIsMobile();
-  const ctaStyle = { background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", boxShadow: "0 12px 28px rgba(15,118,110,0.24)", border: "none" };
+  const ctaStyle = { background: PUB.oranje, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", boxShadow: "0 12px 28px rgba(232,130,26,0.28)", border: "none" };
   const secondaryCtaStyle = { background: PUB.wit, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textDecoration: "none", display: "inline-block", border: `1px solid ${PUB.lijn}` };
 
   const [modalOpen, setModalOpen] = useState(false);

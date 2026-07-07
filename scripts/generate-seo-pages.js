@@ -61,23 +61,44 @@ const pages = [
   },
   {
     route: "teamdag",
-    title: "Teamdag organiseren | dialoog en concrete afspraken",
+    title: "Teamdag organiseren voor betere samenwerking | Mijn Teamkompas",
     description:
-      "Een teamdag van Mijn Teamkompas: gestructureerde dialoog op basis van de teamscan, met heldere uitkomsten, gedeelde afspraken en concrete vervolgstappen.",
+      "Organiseer een teamdag die verder gaat dan een leuke sessie. Mijn Teamkompas helpt met teamscan, Insights Discovery en concrete vervolgstappen voor duurzame samenwerking.",
     url: "https://www.mijnteamkompas.nl/teamdag",
     image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
     content: `
       <main>
-        <h1>Teamdag organiseren — dialoog, inzicht en concrete afspraken</h1>
-        <p>Een teamdag van Mijn Teamkompas is geen standaard teambuilding. Het is een gestructureerde dag die voortbouwt op de uitkomsten van de teamscan. Het team bespreekt wat er speelt, trekt conclusies en maakt samen afspraken die de volgende dag al uitvoerbaar zijn.</p>
-        <h2>Hoe ziet een teamdag eruit?</h2>
+        <h1>Een teamdag die meer oplevert dan een leuke dag</h1>
+        <p>Mijn Teamkompas helpt teams een teamdag organiseren die begint bij wat er echt speelt. Met een teamscan, intake en eventueel Insights Discovery maken we zichtbaar waar samenwerking vastloopt en wat nodig is om in beweging te komen.</p>
+
+        <h2>Herken je dit in jouw team?</h2>
         <ul>
-          <li>Presentatie van de teamscanresultaten aan het team.</li>
-          <li>Gestructureerde dialoog over thema's die eruit springen.</li>
-          <li>Gezamenlijk formuleren van verbeterpunten en acties.</li>
-          <li>Heldere afspraken die direct toepasbaar zijn in de praktijk.</li>
+          <li>Iedereen ziet wat er speelt, maar niemand benoemt het. De vergadering eindigt zoals hij begon.</li>
+          <li>Er is een dag gepland, maar de echte vraag is nog niet scherp. De agenda staat vol, maar de onderstroom blijft onbesproken.</li>
+          <li>Het team wil vooruit, maar loopt steeds vast op dezelfde patronen: rolverdeling, overlegdruk, verwachtingen die niet worden uitgesproken.</li>
+          <li>Na een teamdag is er energie, maar twee weken later is er weinig veranderd. De afspraken zijn er, de opvolging niet.</li>
         </ul>
-        <p>Plan een vrijblijvend kennismakingsgesprek via <a href="mailto:info@mijnteamkompas.nl">info@mijnteamkompas.nl</a>.</p>
+
+        <h2>Onze aanpak voor een teamdag</h2>
+        <ol>
+          <li><strong>Vraag scherp maken.</strong> We starten niet met werkvormen, maar met de vraag: waar moet deze dag echt aan bijdragen?</li>
+          <li><strong>Teamscan als spiegel.</strong> De teamscan brengt in kaart hoe het team veiligheid, energie, verandering en samenwerking ervaart.</li>
+          <li><strong>Programma op maat.</strong> We ontwerpen geen standaarddag, maar een dag die past bij het team, de leidinggevende en de specifieke ontwikkelvraag.</li>
+          <li><strong>Van inzicht naar gedrag.</strong> Onderstroom bespreekbaar maken, gedrag ervaren in oefeningen, reflecteren en concrete afspraken maken.</li>
+          <li><strong>Eigenaarschap en borging.</strong> We ronden af met persoonlijk eigenaarschap: wie neemt wat mee, wat doet het team morgen anders?</li>
+        </ol>
+
+        <h2>Teamdag met Insights Discovery</h2>
+        <p>Insights Discovery geeft het team een gemeenschappelijke taal om te begrijpen waarom mensen reageren zoals ze reageren, op een rustige dag én onder druk. Ieder teamlid ontvangt na de dag een individueel profiel.</p>
+
+        <h2>Veelgestelde vragen</h2>
+        <p><strong>Hoe organiseer je een effectieve teamdag?</strong><br />Een effectieve teamdag begint met een scherpe ontwikkelvraag. Mijn Teamkompas gebruikt een teamscan en intake om te bepalen waar de teamdag echt aan moet bijdragen, zodat de dag verder gaat dan losse werkvormen.</p>
+        <p><strong>Wat maakt een teamdag bij Mijn Teamkompas anders?</strong><br />Wij ontwerpen een teamdag niet vanuit standaardwerkvormen, maar vanuit de ontwikkelvraag van het team. Teamscan, intake en eventueel Insights Discovery bepalen wat nodig is voor duurzame verandering.</p>
+        <p><strong>Kan Insights Discovery onderdeel zijn van de teamdag?</strong><br />Ja. Mijn Teamkompas gebruikt Insights Discovery niet als losse profieltraining, maar als onderdeel van een bredere aanpak rond teamontwikkeling, communicatie en samenwerking.</p>
+        <p><strong>Voor welke organisaties is een teamdag geschikt?</strong><br />Een teamdag is geschikt voor teams in zakelijke dienstverlening, gemeenten, onderwijs en industrie, overal waar samenwerking, communicatie of eigenaarschap versterkt moet worden.</p>
+
+        <h2>Een dag die begint bij wat er echt speelt</h2>
+        <p>Plan een vrijblijvend kennismakingsgesprek. Dan kijken we samen wat jullie team nu het meest nodig heeft: een teamscan, een teamdag, of een combinatie. Mail naar <a href="mailto:info@mijnteamkompas.nl">info@mijnteamkompas.nl</a> of start met een <a href="/verkennen">verkennend gesprek</a>.</p>
         <nav><a href="/">Home</a> <a href="/teamscan">Teamscan</a> <a href="/teamcoaching">Teamcoaching</a> <a href="/verkennen">Verkennend gesprek</a></nav>
       </main>`,
   },

@@ -667,7 +667,7 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
                 Niet als losse teamsessie, maar als onderdeel van een bredere aanpak om samenwerking daadwerkelijk te verbeteren.
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
-                <span onClick={openModal} style={{ background: PUB.teal, color: PUB.donker, padding: "13px 22px", borderRadius: 4, fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                <span onClick={openModal} style={{ background: PUB.oranje, color: PUB.donker, padding: "13px 22px", borderRadius: 4, fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
                   Plan een kennismaking
                 </span>
                 <span onClick={() => document.getElementById("insights-faq")?.scrollIntoView({ behavior: "smooth", block: "start" })} style={{ border: `1px solid ${PUB.lijn}`, color: PUB.donker, padding: "13px 22px", borderRadius: 4, fontSize: 14, cursor: "pointer", background: PUB.wit }}>
@@ -794,7 +794,7 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
           </div>
           <Fade delay={0.1}>
             <div style={{ marginTop: 30, display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 12 }}>
-              <span onClick={openModal} style={{ background: PUB.teal, color: PUB.donker, padding: "13px 22px", borderRadius: 4, fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+              <span onClick={openModal} style={{ background: PUB.oranje, color: PUB.donker, padding: "13px 22px", borderRadius: 4, fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
                 Bespreek jouw teamvraag
               </span>
               <span onClick={() => document.getElementById("werkwijze")?.scrollIntoView({ behavior: "smooth", block: "start" })} style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "13px 22px", borderRadius: 4, fontSize: 14, cursor: "pointer" }}>
@@ -1123,7 +1123,7 @@ function PublicSite({ onLoginClick }) {
     ["Verbeteren & leren", PUB.paars, "of verbeterideeën zichtbaar worden, besproken worden en landen in gedrag."],
   ];
 
-  const ctaStyle = { background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center", boxShadow: "0 12px 28px rgba(15,118,110,0.24)" };
+  const ctaStyle = { background: PUB.oranje, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center", boxShadow: "0 12px 28px rgba(232,130,26,0.28)" };
   const ghostStyle = { border: "1px solid rgba(255,255,255,0.30)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: "pointer", textAlign: "center", background: "rgba(255,255,255,0.04)" };
 
   return (
@@ -8780,8 +8780,8 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
   const closeModal = () => setModalOpen(false);
 
   const ctaStyle = {
-    background: PUB.teal,
-    color: PUB.wit,
+    background: PUB.oranje,
+    color: PUB.donker,
     padding: "14px 22px",
     borderRadius: 8,
     fontWeight: 800,
@@ -8790,7 +8790,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0 14px 32px rgba(0,168,150,0.24)",
+    boxShadow: "0 14px 32px rgba(232,130,26,0.28)",
   };
 
   const ghostStyle = {
@@ -9014,8 +9014,8 @@ function TeamcoachingPage() {
   const closeModal = () => setModalOpen(false);
 
   const ctaStyle = {
-    background: PUB.teal,
-    color: PUB.wit,
+    background: PUB.oranje,
+    color: PUB.donker,
     padding: "14px 22px",
     borderRadius: 8,
     fontWeight: 700,
@@ -9023,7 +9023,7 @@ function TeamcoachingPage() {
     cursor: "pointer",
     textDecoration: "none",
     display: "inline-block",
-    boxShadow: "0 12px 28px rgba(15,118,110,0.24)",
+    boxShadow: "0 12px 28px rgba(232,130,26,0.28)",
     border: "none",
   };
 
@@ -9276,8 +9276,8 @@ function PsychologischeVeiligheidPage() {
   const closeModal = () => setModalOpen(false);
 
   const ctaStyle = {
-    background: PUB.teal,
-    color: PUB.wit,
+    background: PUB.oranje,
+    color: PUB.donker,
     padding: "14px 22px",
     borderRadius: 8,
     fontWeight: 700,
@@ -9285,7 +9285,7 @@ function PsychologischeVeiligheidPage() {
     cursor: "pointer",
     textDecoration: "none",
     display: "inline-block",
-    boxShadow: "0 12px 28px rgba(15,118,110,0.24)",
+    boxShadow: "0 12px 28px rgba(232,130,26,0.28)",
     border: "none",
   };
 
@@ -9816,8 +9816,8 @@ function TeamdagPage() {
   const closeModal = () => setModalOpen(false);
 
   const ctaStyle = {
-    background: PUB.teal,
-    color: PUB.wit,
+    background: PUB.oranje,
+    color: PUB.donker,
     padding: "14px 22px",
     borderRadius: 8,
     fontWeight: 700,
@@ -9825,7 +9825,7 @@ function TeamdagPage() {
     cursor: "pointer",
     textDecoration: "none",
     display: "inline-block",
-    boxShadow: "0 12px 28px rgba(15,118,110,0.24)",
+    boxShadow: "0 12px 28px rgba(232,130,26,0.28)",
     border: "none",
   };
 
