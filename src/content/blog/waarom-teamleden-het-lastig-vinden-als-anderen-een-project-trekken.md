@@ -2,7 +2,7 @@
 title: Waarom teamleden het lastig vinden als anderen een project trekken
 date: 2026-07-11
 description: Als een collega een project trekt, verandert er iets in de onderstroom. Over erkenning, invloed, eigenaarschap en het gesprek dat teams durven voeren.
-image: /blog/images/projectrol.png
+image: /blog/images/projectrol.jpg
 lead: In veel teams gebeurt iets interessants zodra er een nieuw project, initiatief of verbeterpunt ontstaat. Iedereen vindt dat er beweging nodig is. Iedereen ziet dat er iets moet gebeuren. En vaak is er ook brede steun voor het idee. Totdat duidelijk wordt wie het project gaat trekken.
 author: Mijn Teamkompas
 ---

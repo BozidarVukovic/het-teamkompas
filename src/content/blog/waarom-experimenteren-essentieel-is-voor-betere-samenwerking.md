@@ -2,7 +2,7 @@
 title: Waarom experimenteren essentieel is voor betere samenwerking
 date: 2026-07-10
 description: Experimenteren helpt teams om niet eindeloos te praten over verbetering, maar om klein, concreet en leergericht te ontdekken wat werkt.
-image: /blog/images/experimenteren.png
+image: /blog/images/experimenteren.jpg
 lead: In veel organisaties wordt verandering vaak groot gemaakt. Er komt een programma, een projectgroep, een planning, een stuurgroep en een set doelen. Dat kan waardevol zijn, zeker als de richting helder moet worden. Maar in de praktijk ontstaat daardoor ook iets anders. Verandering wordt zwaar, spannend en soms zelfs verlammend.
 author: Mijn Teamkompas
 ---
