@@ -108,4 +108,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/waarom-teamleden-het-lastig-vinden-als-anderen-een-project-trekken</loc>
+    <lastmod>2026-07-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
 </urlset>
