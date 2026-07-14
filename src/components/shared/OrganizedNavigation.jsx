@@ -17,6 +17,10 @@ const kennis = [
   ["Psychologische veiligheid", "/psychologische-veiligheid"],
 ];
 
+function isStaticPage(path) {
+  return path === "/sprekers" || path.startsWith("/sprekers/");
+}
+
 function Dropdown({ label, items }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef(null);
@@ -78,7 +82,11 @@ function Dropdown({ label, items }) {
               onClick={(event) => {
                 event.preventDefault();
                 setOpen(false);
-                navigate(path);
+                if (isStaticPage(path)) {
+                  window.location.assign(path);
+                } else {
+                  navigate(path);
+                }
               }}
               style={{
                 display: "block",
@@ -168,7 +176,11 @@ export default function OrganizedNavigation() {
 
   const go = (path) => {
     setMenuOpen(false);
-    navigate(path);
+    if (isStaticPage(path)) {
+      window.location.assign(path);
+    } else {
+      navigate(path);
+    }
   };
 
   const simpleLink = {
