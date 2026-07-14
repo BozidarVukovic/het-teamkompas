@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edmond Lam als spreker over storytelling | Mijn Teamkompas</title>
+  <meta name="description" content="Edmond Lam helpt leiders, teams en professionals om complexe ideeën te vertalen naar verhalen die raken, richting geven en mensen in beweging brengen." />
+  <link rel="canonical" href="https://www.mijnteamkompas.nl/sprekers/edmond-lam" />
+  <meta property="og:title" content="Edmond Lam als spreker over storytelling | Mijn Teamkompas" />
+  <meta property="og:description" content="Storytelling die niet alleen inspireert, maar mensen helpt begrijpen, onthouden en bewegen." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.mijnteamkompas.nl/sprekers/edmond-lam" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    :root {
+      --navy: #0d1b2a;
+      --navy-light: #14293d;
+      --teal: #2aa8a1;
+      --orange: #e8821a;
+      --white: #ffffff;
+      --muted: rgba(255,255,255,.68);
+      --line: rgba(255,255,255,.13);
+      --card: rgba(255,255,255,.055);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Roboto, Arial, sans-serif;
+      color: var(--white);
+      background: var(--navy);
+      line-height: 1.65;
+    }
+    a { color: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: rgba(13,27,42,.88);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand {
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      font-size: 20px;
+    }
+    .brand span { color: var(--teal); }
+    .back {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 110px 24px 90px;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 620px;
+      height: 620px;
+      border-radius: 50%;
+      right: -230px;
+      top: -250px;
+      background: radial-gradient(circle, rgba(42,168,161,.24), rgba(42,168,161,0) 68%);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 440px;
+      height: 440px;
+      border-radius: 50%;
+      left: -250px;
+      bottom: -290px;
+      background: radial-gradient(circle, rgba(232,130,26,.18), rgba(232,130,26,0) 70%);
+    }
+    .wrap {
+      position: relative;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .eyebrow {
+      color: var(--teal);
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .18em;
+      margin-bottom: 18px;
+    }
+    h1 {
+      max-width: 900px;
+      font-size: clamp(44px, 7vw, 82px);
+      line-height: 1.02;
+      letter-spacing: -.045em;
+      margin: 0 0 26px;
+    }
+    .lead {
+      max-width: 760px;
+      font-size: clamp(19px, 2.2vw, 25px);
+      line-height: 1.55;
+      color: var(--muted);
+      margin: 0 0 38px;
+    }
+    .buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 800;
+      border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--orange); color: white; }
+    .btn-secondary { border-color: rgba(255,255,255,.25); color: white; background: rgba(255,255,255,.05); }
+    section { padding: 88px 24px; }
+    .light { background: #f4f7f8; color: #102334; }
+    .light .muted { color: #5f6d78; }
+    h2 {
+      font-size: clamp(32px, 4.5vw, 52px);
+      line-height: 1.12;
+      letter-spacing: -.035em;
+      margin: 0 0 24px;
+    }
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 70px;
+      align-items: start;
+    }
+    .quote-card {
+      padding: 36px;
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(42,168,161,.18), rgba(255,255,255,.04));
+      border: 1px solid var(--line);
+      font-size: 23px;
+      line-height: 1.5;
+    }
+    .quote-card strong { color: var(--orange); }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 42px;
+    }
+    .card {
+      padding: 30px;
+      border: 1px solid #dce4e8;
+      border-radius: 16px;
+      background: white;
+      box-shadow: 0 12px 35px rgba(16,35,52,.06);
+    }
+    .card .nr {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #e5f5f3;
+      color: #16736e;
+      font-weight: 900;
+      margin-bottom: 20px;
+    }
+    .card h3 { margin: 0 0 10px; font-size: 22px; line-height: 1.25; }
+    .card p { margin: 0; color: #63717c; }
+    .formats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 38px;
+    }
+    .format {
+      padding: 28px 30px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--card);
+    }
+    .format h3 { margin: 0 0 10px; font-size: 22px; }
+    .format p { margin: 0; color: var(--muted); }
+    .statement {
+      padding: 110px 24px;
+      text-align: center;
+      background: linear-gradient(135deg, #17354b, #0d1b2a 68%);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .statement p {
+      max-width: 880px;
+      margin: 0 auto;
+      font-size: clamp(28px, 4.6vw, 54px);
+      line-height: 1.22;
+      letter-spacing: -.035em;
+      font-weight: 700;
+    }
+    .statement span { color: var(--teal); }
+    .cta { text-align: center; }
+    .cta p { max-width: 700px; margin: 0 auto 30px; color: var(--muted); font-size: 18px; }
+    footer {
+      padding: 30px 24px;
+      border-top: 1px solid var(--line);
+      color: rgba(255,255,255,.5);
+      font-size: 13px;
+    }
+    footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    @media (max-width: 800px) {
+      .intro-grid, .cards, .formats { grid-template-columns: 1fr; }
+      .hero { padding-top: 78px; }
+      section { padding: 66px 22px; }
+      .quote-card { padding: 28px; }
+      .back { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav" aria-label="Hoofdnavigatie">
+      <a class="brand" href="/">Mijn <span>Teamkompas</span></a>
+      <a class="back" href="/">← terug naar de website</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Spreker en storyteller</div>
+        <h1>Edmond Lam brengt verhalen tot leven.</h1>
+        <p class="lead">Een goed verhaal maakt ingewikkelde ideeën begrijpelijk, geeft betekenis aan verandering en helpt mensen om te onthouden wat er werkelijk toe doet. Edmond laat zien hoe je dat doet.</p>
+        <div class="buttons">
+          <a class="btn btn-primary" href="mailto:info@mijnteamkompas.nl?subject=Aanvraag%20Edmond%20Lam%20als%20spreker">Informeer naar de mogelijkheden</a>
+          <a class="btn btn-secondary" href="#bijdrage">Bekijk zijn bijdrage</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="bijdrage">
+      <div class="wrap intro-grid">
+        <div>
+          <div class="eyebrow">Waarom storytelling werkt</div>
+          <h2>Mensen onthouden zelden een opsomming. Ze onthouden wat hen raakte.</h2>
+          <p class="lead" style="font-size:19px;margin-bottom:0">In organisaties is veel informatie correct, maar nog niet betekenisvol. Strategieën, plannen en veranderingen blijven abstract zolang mensen niet voelen waar het werkelijk over gaat. Edmond helpt leiders en professionals om de kern te vinden en die te vertalen naar een verhaal dat helder, geloofwaardig en menselijk is.</p>
+        </div>
+        <aside class="quote-card">“Storytelling gaat niet over een mooier verhaal vertellen. Het gaat over <strong>zichtbaar maken waarom iets ertoe doet.</strong>”</aside>
+      </div>
+    </section>
+
+    <section class="light">
+      <div class="wrap">
+        <div class="eyebrow">Wat deelnemers meenemen</div>
+        <h2>Van losse informatie naar een verhaal dat richting geeft.</h2>
+        <p class="muted" style="max-width:760px;font-size:18px">Edmond combineert inspiratie met praktische toepasbaarheid. Deelnemers ervaren wat een verhaal krachtig maakt en vertalen dit direct naar hun eigen werkpraktijk.</p>
+        <div class="cards">
+          <article class="card"><div class="nr">1</div><h3>De kern vinden</h3><p>Wat wil je dat mensen begrijpen, voelen en uiteindelijk anders gaan doen?</p></article>
+          <article class="card"><div class="nr">2</div><h3>Spanning opbouwen</h3><p>Hoe maak je een boodschap herkenbaar zonder haar groter of mooier te maken dan zij is?</p></article>
+          <article class="card"><div class="nr">3</div><h3>Menselijk vertellen</h3><p>Hoe geef je voorbeelden, ervaringen en emoties een plek zonder de inhoud te verliezen?</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="eyebrow">Mogelijke vormen</div>
+        <h2>Een bijdrage die past bij het moment.</h2>
+        <div class="formats">
+          <article class="format"><h3>Inspirerende lezing</h3><p>Een energieke en herkenbare bijdrage over de kracht van verhalen in leiderschap, verandering en samenwerking.</p></article>
+          <article class="format"><h3>Interactieve workshop</h3><p>Deelnemers onderzoeken hun eigen boodschap en oefenen met het ontwikkelen en vertellen van een krachtig verhaal.</p></article>
+          <article class="format"><h3>Onderdeel van een teamdag</h3><p>Storytelling als middel om ervaringen te delen, de bedoeling scherper te maken en de verbinding in het team te versterken.</p></article>
+          <article class="format"><h3>Bijdrage aan een training</h3><p>Een verdiepend blok waarin deelnemers leren hoe zij verhalen bewust inzetten in presentaties, leiderschap en verandering.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="statement">
+      <div class="wrap"><p>Een verhaal is pas krachtig wanneer mensen zichzelf erin herkennen en denken: <span>dit gaat ook over ons.</span></p></div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="eyebrow">Edmond uitnodigen</div>
+        <h2>Benieuwd wat Edmond voor jullie bijeenkomst kan betekenen?</h2>
+        <p>We denken graag mee over het doel, de doelgroep en de vorm die het beste aansluit bij jullie organisatie of team.</p>
+        <a class="btn btn-primary" href="mailto:info@mijnteamkompas.nl?subject=Aanvraag%20Edmond%20Lam%20als%20spreker">Neem contact op</a>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="wrap"><span>© 2026 Mijn Teamkompas</span><span>Luisteren · Meten · Bewegen</span></div></footer>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Edmond Lam als spreker over storytelling",
+    "url": "https://www.mijnteamkompas.nl/sprekers/edmond-lam",
+    "description": "Edmond Lam helpt leiders, teams en professionals om complexe ideeën te vertalen naar verhalen die raken, richting geven en mensen in beweging brengen.",
+    "isPartOf": { "@type": "WebSite", "name": "Mijn Teamkompas", "url": "https://www.mijnteamkompas.nl" }
+  }
+  </script>
+</body>
+</html>
