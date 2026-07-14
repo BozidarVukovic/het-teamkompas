@@ -84,4 +84,34 @@
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/innovatie-loopt-vast-op-gedrag</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/teambuilding-werkt-niet-zonder-basis</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/werkdruk-of-onduidelijkheid</loc>
+    <lastmod>2026-06-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/waarom-experimenteren-essentieel-is-voor-betere-samenwerking</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/waarom-teamleden-het-lastig-vinden-als-anderen-een-project-trekken</loc>
+    <lastmod>2026-07-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
 </urlset>
