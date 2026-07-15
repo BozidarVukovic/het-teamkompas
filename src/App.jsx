@@ -1131,7 +1131,6 @@ function PublicSite({ onLoginClick }) {
       <SeoHead page="home" />
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, overflowX: "hidden", paddingTop: 64, background: PUB.wit }}>
-        <NavBar isMobile={isMobile} onLoginClick={onLoginClick} openModal={openModal} />
 
         <section id="home" style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "86vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", alignItems: "center", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.035) 1px,transparent 1px)", backgroundSize: "30px 30px" }} />
@@ -8841,7 +8840,6 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
   return (
     <>
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, overflowX: "hidden", paddingTop: 64, background: PUB.wit }}>
-        <NavBar isMobile={isMobile} onLoginClick={onLoginClick} openModal={openModal} />
 
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "78vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", alignItems: "center", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.035) 1px,transparent 1px)", backgroundSize: "30px 30px" }} />
@@ -9088,7 +9086,6 @@ function TeamcoachingPage() {
       </Helmet>
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
-        <NavBar isMobile={isMobile} onLoginClick={() => {}} openModal={openModal} />
 
         <section
           style={{
@@ -9477,7 +9474,6 @@ function PsychologischeVeiligheidPage() {
       </Helmet>
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
-        <NavBar isMobile={isMobile} onLoginClick={() => {}} openModal={openModal} />
 
         {/* 1. Hero */}
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
@@ -9963,7 +9959,6 @@ function TeamdagPage() {
       </Helmet>
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
-        <NavBar isMobile={isMobile} onLoginClick={() => {}} openModal={openModal} />
 
         <section
           style={{

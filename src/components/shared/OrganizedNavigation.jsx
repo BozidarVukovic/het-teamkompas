@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import KompasDot from "./KompasDot";
 
 const NAVY = "#0D1B2A";
 const TEAL = "#00A896";
@@ -193,14 +194,10 @@ export default function OrganizedNavigation() {
 
   return (
     <>
-      <style>{`
-        body > #root > div > div[style*="position: fixed"][style*="top: 0px"],
-        body > #root > div > div[style*="position:fixed"][style*="top:0"] { visibility: hidden !important; }
-      `}</style>
       <header style={{ position: "fixed", inset: "0 0 auto 0", height: 64, zIndex: 1000, background: "rgba(13,27,42,0.985)", borderBottom: "1px solid rgba(0,168,150,0.2)", backdropFilter: "blur(12px)" }}>
         <nav style={{ height: "100%", padding: mobile ? "0 20px" : "0 40px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 22 }} aria-label="Hoofdnavigatie">
           <a href="/" onClick={(event) => { event.preventDefault(); go("/"); }} style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none", color: "#fff", fontSize: 18, fontWeight: 650, whiteSpace: "nowrap" }}>
-            <span aria-hidden="true" style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${TEAL}`, display: "grid", placeItems: "center", color: TEAL, fontSize: 11 }}>◆</span>
+            <KompasDot size={22} />
             Mijn Teamkompas
           </a>
 
@@ -214,7 +211,7 @@ export default function OrganizedNavigation() {
               <Dropdown label="Diensten" items={diensten} />
               <a href="/onze-aanpak" onClick={(event) => { event.preventDefault(); go("/onze-aanpak"); }} style={simpleLink}>Onze aanpak</a>
               <Dropdown label="Kennis" items={kennis} />
-              <a href="/#over-ons" onClick={(event) => { event.preventDefault(); window.location.href = "/#over-ons"; }} style={simpleLink}>Over ons</a>
+              <a href="/#over-ons" onClick={(event) => { event.preventDefault(); if (window.location.pathname === "/") { const el = document.getElementById("over-ons"); if (el) { el.scrollIntoView({ behavior: "smooth" }); } else { window.location.href = "/#over-ons"; } } else { window.location.href = "/#over-ons"; } }} style={simpleLink}>Over ons</a>
               <a href="/verkennen" onClick={(event) => { event.preventDefault(); go("/verkennen"); }} style={{ background: "#F4F7F9", color: NAVY, fontWeight: 800, padding: "10px 17px", borderRadius: 999, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap" }}>Plan een kennismaking</a>
               <a href="/beheer" onClick={(event) => { event.preventDefault(); go("/beheer"); }} style={{ ...simpleLink, color: "rgba(255,255,255,0.48)", fontSize: 12 }}>Inloggen</a>
             </div>
