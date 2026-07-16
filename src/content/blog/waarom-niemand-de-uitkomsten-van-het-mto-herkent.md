@@ -1,57 +1,69 @@
 ---
 title: Waarom herkent niemand de uitkomsten van het medewerkerstevredenheidsonderzoek?
 date: 2026-07-16
-description: Iedereen vulde het onderzoek in, niemand herkende de uitkomst. Over wat er gebeurt tussen het invullen en het bespreken van een MTO.
+description: Iedereen vulde het onderzoek in, niemand herkent de uitkomst. Over wat er gebeurt tussen het invullen en het bespreken van een MTO.
 image: /blog/images/mto.jpg
-lead: De resultaten zijn binnen, zei de manager. Ze keek de vergaderruimte rond. Het team had het medewerkerstevredenheidsonderzoek een paar weken eerder ingevuld en de scores vielen tegen, vooral op communicatie, samenwerking en vertrouwen.
+lead: De resultaten zijn binnen. De manager kijkt de vergaderruimte rond. Het team heeft het medewerkerstevredenheidsonderzoek enkele weken geleden ingevuld en de scores vallen tegen, vooral op onderwerpen als communicatie, samenwerking en vertrouwen.
 author: Mijn Teamkompas
 ---
 
-Ik schrok er eerlijk gezegd van, zei ze. Ik wil graag begrijpen wat er speelt. Wie herkent deze uitkomsten?
+"Ik schrok eerlijk gezegd van de resultaten," zegt de manager. "Ik wil graag begrijpen wat er speelt. Wie herkent deze uitkomsten?"
 
-Het bleef stil.
+Het blijft stil.
 
-Na een paar seconden zei iemand: ik eigenlijk niet. Een ander knikte. Volgens mij gaat het best goed. Een derde vulde aan: misschien hebben een paar collega's heel laag gescoord.
+Na een paar seconden zegt iemand: "Ik eigenlijk niet." Een ander knikt. "Nee, volgens mij gaat het best goed." Weer iemand anders vult aan: "Misschien hebben een paar collega's heel laag gescoord."
 
-Ik zat achterin en keek naar een team dat deze cijfers een paar weken eerder zelf had ingevuld. Iedereen had meegedaan. En niemand herkende de uitkomst.
+En zo ontstaat een bijzondere situatie. Iedereen heeft het onderzoek ingevuld, maar niemand lijkt de resultaten te herkennen.
 
-Daar heb ik de rest van de dag over nagedacht.
+Hoe kan dat?
 
-## Twee momenten, twee werkelijkheden
+## Twee verschillende momenten
 
-Mijn eerste gedachte was: dan zijn mensen bij het invullen dus niet eerlijk geweest. Maar hoe langer ik erover nadacht, hoe minder dat klopte. Volgens mij waren ze op beide momenten eerlijk. Alleen waren het twee heel verschillende momenten.
+Het lijkt misschien alsof medewerkers niet eerlijk zijn geweest, maar meestal ligt het genuanceerder. Ze waren op beide momenten eerlijk. Alleen waren het twee heel verschillende momenten.
 
-Het invullen gebeurt alleen, op een rustig moment, zonder collega's in de buurt. Iemand denkt aan die reorganisatie die nog steeds naschuurt. Aan het overleg waarin haar voorstel werd weggewuifd. Iemand geeft een lage score in de hoop dat er dan eindelijk iets gebeurt.
+Een medewerkerstevredenheidsonderzoek wordt individueel ingevuld, op een rustig moment, zonder collega's of leidinggevende in de buurt. Mensen beantwoorden de vragen vanuit hun gevoel van dat moment. Ze denken aan een gebeurtenis die al maanden naschuurt. Aan het overleg waarin hun voorstel werd weggewuifd. Sommigen geven een lagere score in de hoop dat er eindelijk iets verandert.
 
-De bespreking is een ander moment. Nu zit iedereen aan tafel, met de manager erbij. Wie nu zegt dat hij de lage scores herkent, zegt daarmee bijna: die 3 bij vertrouwen, die was van mij. En dan kijkt iedereen jouw kant op.
+Zodra de resultaten gezamenlijk besproken worden, verandert de context volledig. Nu zit iedereen aan tafel, met de leidinggevende erbij. Wie hardop zegt de lage scores te herkennen, zegt daarmee bijna: die 3 bij vertrouwen, die was van mij. En dan kijkt iedereen jouw kant op.
 
-Dus zei niemand het.
+Niemand wil degene zijn die de sfeer verpest. Niemand wil collega's afvallen. Niemand weet zeker of zijn ervaring gedeeld wordt. En soms is er de angst dat openheid later tegen je gebruikt kan worden.
 
-## Wie is het gemiddelde?
+Dus blijft het stil.
 
-Er speelde nog iets, en dat zag ik pas later. Op de sheet stond een 6 voor samenwerking. Het team besprak die 6 alsof er iemand bestond die een 6 had gegeven.
+## Een gemiddelde is geen persoon
 
-Maar een gemiddelde is geen persoon. Achter die 6 kan een 9 zitten van iemand die net een goede periode heeft, en een 3 van iemand die zich al maanden buitengesloten voelt. Die twee ervaringen bestaan allebei echt. Het gemiddelde bestaat niet.
+Er speelt nog iets. Op de sheet staat een 6 voor samenwerking, en het team bespreekt die 6 alsof er iemand bestaat die een 6 heeft gegeven.
 
-Ieder teamlid legde de 6 naast zijn eigen ervaring, vond het verschil te groot en concludeerde: dit klopt niet. Terwijl niemand de vraag stelde wiens ervaring er dan wel achter zou kunnen zitten.
+Maar een gemiddelde bestaat niet uit één waarheid. Achter die 6 kan een 9 zitten van iemand die net een goede periode heeft, en een 3 van iemand die zich al maanden buitengesloten voelt. Die twee ervaringen bestaan allebei echt. Het gemiddelde bestaat niet.
 
-## De vraag die het gesprek dichtzette
+Tijdens de bespreking legt ieder teamlid de score naast de eigen ervaring, vindt het verschil te groot en concludeert: dit klopt niet. De reactie "dat herken ik eigenlijk niet" is dan volkomen oprecht. Het betekent alleen niet dat de uitkomst onjuist is. Het betekent dat er verschillende werkelijkheden naast elkaar bestaan in hetzelfde team.
 
-Ik denk niet dat de manager iets verkeerd wilde doen. Haar vraag klonk open: wie herkent deze uitkomsten?
+## De vraag die het gesprek dichtzet
 
-Maar als je erop let, vraagt die zin iets anders. Hij vraagt wie zich wil melden. Wie durft te zeggen: dat was ik. En dat durfde, begrijpelijk, niemand.
+De manager in de vergaderruimte wilde het goed doen. Haar vraag klonk open: wie herkent deze uitkomsten?
 
-Ik vroeg me af hoe hetzelfde gesprek was gelopen met een andere vraag. Wat zou iemand meegemaakt moeten hebben om deze score te geven? Welke situaties zouden hierbij kunnen horen? Wanneer hebben we daar zelf iets van gezien?
+Maar wie goed luistert, hoort dat die zin iets anders vraagt. Hij vraagt wie zich wil melden. Wie durft te zeggen: dat was ik. En dat durft, heel begrijpelijk, niemand.
 
-Bij die vragen hoeft niemand zich te melden. Het team mag samen raden, zoeken, zich verplaatsen in een collega. De lage score verandert van een beschuldiging in een raadsel. En over een raadsel praat een team makkelijker dan over een verwijt.
+Er bestaan vragen die hetzelfde onderzoeken zonder dat iemand zich hoeft bloot te geven. Wat zou iemand moeten meemaken om deze score te geven? Welke situaties zouden hierbij kunnen horen? Wanneer hebben we daar zelf weleens iets van gezien? Wat kunnen wij doen waardoor iemand deze ervaring volgend jaar waarschijnlijk niet meer heeft?
 
-## Het onderzoek verbetert niets
+Bij die vragen hoeft niemand te bekennen. Het team mag samen zoeken en zich verplaatsen in een collega. De lage score verandert van een verwijt in een raadsel. En over een raadsel praat een team makkelijker dan over een beschuldiging.
 
-Wat mij van die middag vooral is bijgebleven: het team had het onderzoek keurig afgerond, de respons was hoog, het rapport zag er verzorgd uit. En al dat werk dreigde te eindigen in één stilte en drie keer "ik herken het niet".
+## Van verdedigen naar onderzoeken
 
-Een enquête verandert geen team. Het gesprek erna kan dat wel. Maar dan moet dat gesprek ergens anders over gaan dan over de vraag of de cijfers kloppen.
+Een lage score is geen probleem dat verdedigd moet worden. Het is informatie. Een signaal dat er ergens ervaringen bestaan die nog niet voldoende bespreekbaar zijn.
 
-De volgende keer dat jouw team een uitkomst niet herkent: durven jullie dan te onderzoeken wat iemand zou moeten meemaken om hem wél zo te ervaren?
+Teams die dat begrijpen, voeren een ander gesprek. Ze zoeken niet naar wie gelijk heeft, maar naar wat ze nog niet zien. Ze behandelen de cijfers als uitnodiging om nieuwsgierig te worden, niet als rapportcijfer waar het team op wordt afgerekend.
+
+> **Niet de enquête zorgt voor verbetering. Het gesprek dat erop volgt doet dat.**
+
+Een team dat het onderzoek keurig invult, een hoge respons haalt en een verzorgd rapport ontvangt, heeft daarmee nog niets veranderd. Al dat werk kan zomaar eindigen in één stilte en drie keer "ik herken het niet". Wat er daarna gebeurt, bepaalt of het onderzoek iets waard was.
+
+## Tot slot
+
+Dat een team de uitkomsten van een medewerkerstevredenheidsonderzoek niet herkent, is geen teken dat het onderzoek mislukt is. Het is vaak het eerste eerlijke inzicht dat het onderzoek oplevert: blijkbaar bestaan er in dit team ervaringen die aan tafel niet worden uitgesproken.
+
+De vraag voor de volgende bespreking is dan ook niet of de cijfers kloppen.
+
+De vraag is: wanneer jouw team een uitkomst niet herkent, durven jullie dan te onderzoeken waarom iemand hem misschien wél zo heeft ervaren?
 
 - - -
 
