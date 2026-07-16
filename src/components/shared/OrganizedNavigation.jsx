@@ -16,6 +16,7 @@ const diensten = [
 const kennis = [
   ["Blog", "/blog"],
   ["Psychologische veiligheid", "/psychologische-veiligheid"],
+  ["Sociale veiligheid", "/sociale-veiligheid"],
 ];
 
 function isStaticPage(path) {

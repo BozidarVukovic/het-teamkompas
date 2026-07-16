@@ -9805,6 +9805,409 @@ function PsychologischeVeiligheidPage() {
   );
 }
 
+function SocialeVeiligheidPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState(null);
+  const isMobile = useIsMobile();
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
+  const ctaStyle = {
+    background: PUB.oranje,
+    color: PUB.donker,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    boxShadow: "0 12px 28px rgba(232,130,26,0.28)",
+    border: "none",
+  };
+
+  const ghostStyle = {
+    background: "rgba(255,255,255,0.08)",
+    color: PUB.wit,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    border: "1px solid rgba(255,255,255,0.22)",
+  };
+
+  const signalen = [
+    "Grapjes met een scherp randje gaan steeds over dezelfde persoon. Wie er iets van zegt, kan zogenaamd niet tegen een geintje.",
+    "Er zijn subgroepen ontstaan. Informatie, gezelligheid en steun bereiken sommige collega's wel en anderen structureel niet.",
+    "Bepaalde collega's worden vermeden. Mensen plannen om iemand heen, of melden zich af als een specifieke collega aanwezig is.",
+    "Ongewenste opmerkingen worden weggelachen of genegeerd. Iedereen voelt het ongemak, niemand benoemt het.",
+    "Signalen en meldingen verdwijnen. Wie iets aankaart, merkt dat er niets mee gebeurt en houdt het de volgende keer voor zich.",
+    "Er is verzuim of vertrek zonder duidelijk verhaal. Pas in het exitgesprek, of daarna, blijkt wat er werkelijk speelde.",
+  ];
+
+  const verschilBlokken = [
+    {
+      titel: "Sociale veiligheid is de ondergrens",
+      tekst: "Sociale veiligheid betekent dat mensen op hun werk gevrijwaard zijn van pesten, intimidatie, discriminatie, uitsluiting en ander ongewenst gedrag. Het is de basis: niemand hoort zich onveilig te voelen door hoe collega's of leidinggevenden zich gedragen. In Nederland is dit ook een wettelijke verplichting van de werkgever.",
+    },
+    {
+      titel: "Psychologische veiligheid is de bovengrens",
+      tekst: "Psychologische veiligheid gaat een stap verder: durven mensen bij te dragen, fouten te benoemen, vragen te stellen en het oneens te zijn? Dat is de kwaliteit die teams laat leren en presteren. Zonder sociale veiligheid als fundament komt een team daar nooit aan toe.",
+    },
+    {
+      titel: "Een gedragscode is niet genoeg",
+      tekst: "Veel organisaties hebben een gedragscode, een vertrouwenspersoon en een meldprocedure. Belangrijk, maar papier verandert geen dagelijkse omgang. Sociale veiligheid wordt gemaakt of gebroken in kleine momenten: de grap die wel of niet wordt gecorrigeerd, de collega die wel of niet wordt betrokken.",
+    },
+    {
+      titel: "De leidinggevende bepaalt de norm",
+      tekst: "Wat de leidinggevende toelaat, wordt de norm. Wie wegkijkt bij een kleinerende opmerking, maakt die opmerking normaal. Wie ingrijpt, ook als het ongemakkelijk is, laat zien waar de grens ligt. Teams kijken hierin scherper naar gedrag dan naar woorden.",
+    },
+  ];
+
+  const aanpak = [
+    ["1", "Meten via de teamscan", "We brengen anoniem in kaart hoe veilig het team zich werkelijk voelt, ook op de aspecten waar mensen niet hardop over praten. Het verschil tussen de beleving van teamleden en die van de leidinggevende is vaak de belangrijkste informatie."],
+    ["2", "Patronen duiden", "We laten zien welke situaties en gedragingen onveiligheid in stand houden. Niet om schuldigen aan te wijzen, maar om zichtbaar te maken wat er werkelijk gebeurt in de dagelijkse omgang."],
+    ["3", "Gesprek faciliteren", "We begeleiden het gesprek op een manier die zelf veilig is: anoniem waar nodig, gericht op gedrag en patronen in plaats van op personen. Zo kan het team bespreken wat tot nu toe onbespreekbaar was."],
+    ["4", "Afspraken verankeren", "We vertalen het gesprek naar concrete afspraken over omgangsvormen en over wat het team doet als een grens wordt overschreden. Met een vast moment om terug te kijken of het ook echt anders gaat."],
+  ];
+
+  const domeinen = [
+    { naam: "Veiligheid en leiderschap", kleur: PUB.groen, uitleg: "Het kerndomein. Sociale veiligheid begint bij leiderschap dat grenzen bewaakt en zelf het goede voorbeeld geeft in hoe mensen met elkaar omgaan." },
+    { naam: "Energie en motivatie", kleur: PUB.teal, uitleg: "Sociale onveiligheid vreet energie. Wie zich moet wapenen tegen opmerkingen of uitsluiting, heeft weinig ruimte over voor het werk zelf." },
+    { naam: "Verandering en betekenis", kleur: PUB.blauw, uitleg: "Verandering vraagt vertrouwen in elkaar. In een team waar mensen zich onveilig voelen, wordt elke verandering eerst als bedreiging gewogen." },
+    { naam: "Verbeteren en leren", kleur: "#7C3AED", uitleg: "Leren vraagt dat mensen zich durven laten zien. In een sociaal onveilig team houdt iedereen zijn hoofd omlaag, en stopt de ontwikkeling." },
+  ];
+
+  const faqs = [
+    ["Wat is sociale veiligheid precies?", "Sociale veiligheid betekent dat medewerkers op hun werk beschermd zijn tegen ongewenst gedrag: pesten, (seksuele) intimidatie, agressie, discriminatie en uitsluiting. Het gaat om de basisvraag of mensen zich veilig voelen bij hoe collega's en leidinggevenden met hen omgaan. In de Arbowet valt dit onder psychosociale arbeidsbelasting, waar werkgevers beleid op moeten voeren."],
+    ["Wat is het verschil tussen sociale veiligheid en psychologische veiligheid?", "Sociale veiligheid is de ondergrens: vrij zijn van ongewenst gedrag. Psychologische veiligheid is de bovengrens: durven bijdragen, fouten benoemen en het oneens zijn. Een team kan sociaal veilig zijn en toch psychologisch onveilig, bijvoorbeeld als niemand wordt gepest maar ook niemand zich uitspreekt. Andersom kan het niet: zonder sociale veiligheid is psychologische veiligheid onbereikbaar."],
+    ["Is sociale veiligheid niet vooral een zaak van HR en de vertrouwenspersoon?", "Een vertrouwenspersoon en een meldprocedure zijn onmisbaar voor individuele situaties. Maar sociale veiligheid wordt dagelijks gemaakt in het team zelf: in hoe mensen elkaar aanspreken, wie wordt betrokken en wat wordt toegelaten. Dat teamniveau is waar wij mee werken, aanvullend op wat HR organiseert."],
+    ["Wat zegt de wet over sociale veiligheid?", "De Arbowet verplicht werkgevers om beleid te voeren tegen psychosociale arbeidsbelasting, waaronder pesten, intimidatie, agressie en discriminatie. Werkgevers moeten risico's inventariseren en maatregelen nemen. Een teamscan kan onderdeel zijn van die inventarisatie, maar onze focus ligt op wat er daarna gebeurt: het gesprek en het gedrag in het team."],
+    ["Hoe maak je sociale onveiligheid bespreekbaar zonder mensen te beschadigen?", "Door te beginnen met anonieme input, zodat patronen zichtbaar worden zonder dat individuen worden blootgesteld. En door het gesprek te richten op situaties en gedrag in plaats van op schuld. Onze begeleiding is erop gericht dat het gesprek zelf veilig verloopt, ook voor degenen om wie het gaat."],
+    ["Wat als het ongewenste gedrag van de leidinggevende zelf komt?", "Dat komt voor, en dan is een teamtraject alleen niet de oplossing. De teamscan maakt het verschil tussen de beleving van het team en die van de leidinggevende zichtbaar, en dat kan een eerlijk startpunt zijn. Soms adviseren we daarnaast een individueel traject of betrekken we de opdrachtgever boven de leidinggevende."],
+    ["Kan de teamscan sociale veiligheid meten?", "De teamscan meet hoe veilig teamleden zich voelen in het team en bij de leidinggevende, anoniem en concreet. De scan vervangt geen formeel onderzoek naar grensoverschrijdend gedrag, maar maakt wel zichtbaar of er signalen zijn en waar het gesprek moet beginnen."],
+    ["Werkt dit ook als er al een incident is geweest?", "Ja, maar de volgorde luistert dan nauw. Eerst moet de formele kant goed zijn afgehandeld. Daarna helpt een begeleid traject het team om het vertrouwen te herstellen en nieuwe omgangsvormen op te bouwen. Juist na een incident is zorgvuldige begeleiding belangrijk."],
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Sociale veiligheid in teams verbeteren | Mijn Teamkompas</title>
+        <meta
+          name="description"
+          content="Sociale veiligheid in teams verbeteren. Mijn Teamkompas maakt ongewenst gedrag en uitsluiting bespreekbaar en helpt teams bouwen aan veilige omgangsvormen."
+        />
+        <link rel="canonical" href="https://www.mijnteamkompas.nl/sociale-veiligheid" />
+        <meta property="og:title" content="Sociale veiligheid in teams verbeteren | Mijn Teamkompas" />
+        <meta property="og:description" content="Mijn Teamkompas helpt teams sociale veiligheid te versterken: van anoniem meten naar een veilig gesprek, van signalen naar concrete afspraken over omgangsvormen." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.mijnteamkompas.nl/sociale-veiligheid" />
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Service",
+                "name": "Sociale veiligheid in teams verbeteren",
+                "description": "Mijn Teamkompas meet sociale veiligheid via een teamscan, maakt ongewenst gedrag en uitsluiting bespreekbaar en verankert veilige omgangsvormen in het team.",
+                "provider": {
+                  "@type": "LocalBusiness",
+                  "name": "Mijn Teamkompas",
+                  "url": "https://www.mijnteamkompas.nl",
+                  "email": "info@mijnteamkompas.nl",
+                  "areaServed": "NL"
+                },
+                "serviceType": "Teamcoaching, teamscan, sociale veiligheid",
+                "url": "https://www.mijnteamkompas.nl/sociale-veiligheid"
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "Wat is sociale veiligheid precies?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Sociale veiligheid betekent dat medewerkers op hun werk beschermd zijn tegen ongewenst gedrag: pesten, intimidatie, agressie, discriminatie en uitsluiting. In de Arbowet valt dit onder psychosociale arbeidsbelasting, waar werkgevers beleid op moeten voeren."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Wat is het verschil tussen sociale veiligheid en psychologische veiligheid?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Sociale veiligheid is de ondergrens: vrij zijn van ongewenst gedrag. Psychologische veiligheid is de bovengrens: durven bijdragen, fouten benoemen en het oneens zijn. Zonder sociale veiligheid is psychologische veiligheid onbereikbaar."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Kan de teamscan sociale veiligheid meten?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "De teamscan meet anoniem hoe veilig teamleden zich voelen in het team en bij de leidinggevende. De scan vervangt geen formeel onderzoek naar grensoverschrijdend gedrag, maar maakt zichtbaar of er signalen zijn en waar het gesprek moet beginnen."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Werkt dit ook als er al een incident is geweest?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Ja, maar de volgorde luistert dan nauw. Eerst moet de formele kant goed zijn afgehandeld. Daarna helpt een begeleid traject het team om vertrouwen te herstellen en nieuwe omgangsvormen op te bouwen."
+                    }
+                  }
+                ]
+              },
+              {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://www.mijnteamkompas.nl/"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Sociale veiligheid in teams verbeteren",
+                    "item": "https://www.mijnteamkompas.nl/sociale-veiligheid"
+                  }
+                ]
+              }
+            ]
+          }
+        `}</script>
+      </Helmet>
+
+      <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
+
+        {/* 1. Hero */}
+        <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
+          <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+              Sociale veiligheid in teams
+            </div>
+            <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
+              De basis waarop elk team moet kunnen rekenen.
+            </h1>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 14 }}>
+              Pesten, uitsluiting, kleinerende grapjes of intimidatie: sociale onveiligheid is zelden zichtbaar in de vergadering, maar altijd voelbaar in het team. Mensen wapenen zich, vermijden elkaar en houden hun hoofd omlaag.
+            </p>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>
+              Mijn Teamkompas helpt teams sociale veiligheid te versterken. Met een anonieme teamscan die zichtbaar maakt wat er speelt, een begeleid gesprek dat zelf veilig verloopt en concrete afspraken over hoe het team met elkaar omgaat.
+            </p>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+            </div>
+          </div>
+          <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
+            <img src="/teamkompas-samen-richting.jpg" alt="Team in gesprek over sociale veiligheid en omgangsvormen" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.85 }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94), rgba(13,27,42,0.08))" }} />
+          </div>
+        </section>
+
+        {/* 2. Wat is sociale veiligheid */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 56, alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wat is het?</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Sociale veiligheid is de ondergrens van samenwerking.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 18 }}>
+                Sociale veiligheid betekent dat mensen op hun werk gevrijwaard zijn van ongewenst gedrag: pesten, intimidatie, agressie, discriminatie en uitsluiting. Het gaat om de vraag of je je veilig voelt bij hoe collega's en leidinggevenden met je omgaan.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 18 }}>
+                Daarmee is het iets anders dan psychologische veiligheid, al worden de begrippen vaak door elkaar gebruikt. Sociale veiligheid is de ondergrens: niemand wordt beschadigd. Psychologische veiligheid is de bovengrens: iedereen durft bij te dragen. Een team heeft beide nodig, en de volgorde ligt vast. Zonder ondergrens geen bovengrens.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>
+                Sociale veiligheid is bovendien geen vrijblijvende ambitie. De Arbowet verplicht werkgevers om beleid te voeren tegen deze vormen van psychosociale arbeidsbelasting. Maar beleid op papier maakt een team nog niet veilig. Dat gebeurt in de dagelijkse omgang.
+              </p>
+              <a href="/psychologische-veiligheid" style={{ color: PUB.teal, fontWeight: 700, fontSize: 15, textDecoration: "none" }}>Lees ook: psychologische veiligheid in teams →</a>
+            </div>
+            <div style={{ background: PUB.licht, borderRadius: 22, padding: isMobile ? 24 : 36, border: `1px solid ${PUB.lijn}` }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: PUB.donker, marginBottom: 20 }}>Sociale veiligheid is aanwezig als:</div>
+              {[
+                "Grappen niet steeds ten koste gaan van dezelfde persoon",
+                "Niemand structureel wordt buitengesloten van overleg, informatie of gezelligheid",
+                "Verschillen in achtergrond, mening of stijl niet leiden tot uitsluiting",
+                "Ongewenst gedrag wordt benoemd en gestopt, ook als het ongemakkelijk is",
+                "Iets melden veilig is en zichtbaar opvolging krijgt",
+                "De leidinggevende ingrijpt wanneer een grens wordt overschreden",
+              ].map((item) => (
+                <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 14 }}>
+                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 900, flexShrink: 0, marginTop: 1 }}>✓</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.donker }}>{item}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 3. Signalen */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 48, alignItems: "start" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wanneer het ontbreekt</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Sociale onveiligheid verstopt zich in gewoontes.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 16 }}>
+                Grensoverschrijdend gedrag begint zelden groot. Het begint met een grap waar niemand iets van zegt, een collega die net niet wordt uitgenodigd, een opmerking die wordt weggelachen. Omdat elk moment op zichzelf klein lijkt, went het team eraan.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Herken je een van deze signalen? Dan is het tijd om te onderzoeken wat er werkelijk speelt.
+              </p>
+            </div>
+            <div style={{ display: "grid", gap: 14 }}>
+              {signalen.map((s, i) => (
+                <div key={i} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 20, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
+                  <div style={{ fontSize: 13, fontWeight: 900, color: PUB.teal, marginBottom: 6 }}>Signaal {i + 1}</div>
+                  <div style={{ fontSize: 15, lineHeight: 1.7, color: PUB.donker }}>{s}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Ondergrens en bovengrens */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Ondergrens en bovengrens</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Waarom sociale en psychologische veiligheid twee verschillende gesprekken zijn.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Wie de twee begrippen door elkaar haalt, voert al snel het verkeerde gesprek. Een team dat last heeft van pesten of uitsluiting is niet geholpen met een sessie over je uitspreken. En een team waar niemand zich uitspreekt, heeft niet per se een probleem met ongewenst gedrag. Daarom beginnen we altijd met de vraag: over welke laag gaat het hier?
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 18 }}>
+              {verschilBlokken.map(({ titel, tekst }) => (
+                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 26 }}>
+                  <h3 style={{ fontSize: 17, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Aanpak */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Hoe wij het aanpakken</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Van signalen naar een gesprek dat zelf veilig is.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Praten over sociale veiligheid is spannend, omdat het al snel over personen lijkt te gaan. Onze aanpak is er daarom op gericht dat het gesprek zelf veilig verloopt: anoniem waar nodig, gericht op patronen en met duidelijke afspraken over wat er met de uitkomsten gebeurt.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
+              {aanpak.map(([nr, titel, tekst]) => (
+                <div key={nr} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
+                  <div style={{ width: 38, height: 38, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 16, marginBottom: 16 }}>{nr}</div>
+                  <h3 style={{ fontSize: 17, margin: "0 0 8px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Vier domeinen */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vier domeinen</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Sociale veiligheid raakt alle vier domeinen van samenwerking.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                In het Teamkompas is veiligheid de basis van het eerste domein, maar de gevolgen van sociale onveiligheid zijn in alle vier zichtbaar. Wie de basis herstelt, ziet het team op elk domein terugveren.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
+              {domeinen.map(({ naam, kleur, uitleg }) => (
+                <div key={naam} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22, borderTop: `4px solid ${kleur}` }}>
+                  <h3 style={{ fontSize: 16, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{naam}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{uitleg}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 7. FAQ */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 860, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Veelgestelde vragen</div>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 32px" }}>
+              Veelgestelde vragen over sociale veiligheid in teams
+            </h2>
+            <div style={{ display: "grid", gap: 10 }}>
+              {faqs.map(([vraag, antwoord], i) => (
+                <div key={i} style={{ border: `1px solid ${PUB.lijn}`, borderRadius: 16, overflow: "hidden" }}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    style={{ width: "100%", background: openFaq === i ? PUB.wit : PUB.licht, border: "none", padding: "18px 22px", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, cursor: "pointer", fontFamily: "inherit" }}
+                  >
+                    <span style={{ fontSize: 16, fontWeight: 700, color: PUB.donker, lineHeight: 1.4 }}>{vraag}</span>
+                    <span style={{ fontSize: 20, color: PUB.teal, fontWeight: 700, flexShrink: 0, transform: openFaq === i ? "rotate(45deg)" : "none", transition: "transform 0.2s" }}>+</span>
+                  </button>
+                  {openFaq === i && (
+                    <div style={{ padding: "6px 22px 20px", background: PUB.wit }}>
+                      <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>{antwoord}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Reflectiekaart leadblok */}
+        <section style={{ padding: isMobile ? "52px 22px" : "80px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+            <Fade>
+              <ReflectiekaartFormulier bronPagina="Sociale veiligheid" variant="block" />
+            </Fade>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
+          <div style={{ maxWidth: 780, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+              Sociale veiligheid versterken
+            </div>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
+              Wil je weten hoe veilig jouw team zich werkelijk voelt?
+            </h2>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", marginBottom: 28 }}>
+              Begin met een anonieme teamscan of plan een verkennend gesprek. Dan kijken we samen wat er speelt en welke aanpak daarbij past.
+            </p>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/psychologische-veiligheid" style={{ color: "rgba(255,255,255,0.72)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over psychologische veiligheid →</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Sociale veiligheid" />
+    </>
+  );
+}
+
 function TeamdagPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -10288,6 +10691,7 @@ export default function App() {
         <Route path="/teamcoaching" element={<><SeoHead page="teamcoaching" /><TeamcoachingPage /></>} />
         <Route path="/teamdag" element={<TeamdagPage />} />
         <Route path="/psychologische-veiligheid" element={<PsychologischeVeiligheidPage />} />
+        <Route path="/sociale-veiligheid" element={<SocialeVeiligheidPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
