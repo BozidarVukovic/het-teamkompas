@@ -10211,6 +10211,7 @@ function SocialeVeiligheidPage() {
 function BovenOnderstroomPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const isMobile = useIsMobile();
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -10480,8 +10481,12 @@ function BovenOnderstroomPage() {
             <img
               src="/bovenstroom-onderstroom-ijsberg.jpg"
               alt="Infographic van het ijsbergmodel: de bovenstroom met strategie, structuur, processen en afspraken boven water, en de onderstroom met vertrouwen, psychologische veiligheid, emoties, motivatie en groepsdynamiek onder water"
-              style={{ width: "100%", height: "auto", borderRadius: 22, border: `1px solid ${PUB.lijn}`, boxShadow: "0 16px 44px rgba(13,27,42,0.10)", display: "block" }}
+              onClick={() => setLightboxOpen(true)}
+              style={{ width: "100%", height: "auto", borderRadius: 22, border: `1px solid ${PUB.lijn}`, boxShadow: "0 16px 44px rgba(13,27,42,0.10)", display: "block", cursor: "zoom-in" }}
             />
+            <div style={{ fontSize: 13, color: PUB.sub, marginTop: 10 }}>
+              {isMobile ? "Tik op de afbeelding om te vergroten" : "Klik op de afbeelding om te vergroten"}
+            </div>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.7, color: PUB.donker, fontWeight: 700, maxWidth: 720, margin: "28px auto 0" }}>
               Teams veranderen niet door betere afspraken alleen, maar door aandacht voor wat onder de oppervlakte speelt.
             </p>
@@ -10647,6 +10652,34 @@ function BovenOnderstroomPage() {
           </div>
         </section>
       </div>
+
+      {lightboxOpen && (
+        <div
+          onClick={() => setLightboxOpen(false)}
+          role="dialog"
+          aria-label="Vergrote weergave van het ijsbergmodel"
+          style={{ position: "fixed", inset: 0, zIndex: 10000, background: "rgba(13,27,42,0.97)", overflow: "auto", WebkitOverflowScrolling: "touch", cursor: "zoom-out" }}
+        >
+          <button
+            type="button"
+            onClick={() => setLightboxOpen(false)}
+            aria-label="Sluiten"
+            style={{ position: "fixed", top: 16, right: 16, zIndex: 10001, width: 44, height: 44, borderRadius: "50%", border: "none", background: "rgba(255,255,255,0.14)", color: PUB.wit, fontSize: 24, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+          >
+            ×
+          </button>
+          <img
+            src="/bovenstroom-onderstroom-ijsberg.jpg"
+            alt="Infographic van het ijsbergmodel, vergroot weergegeven"
+            style={{ width: isMobile ? "280%" : "94%", maxWidth: isMobile ? "none" : 1500, height: "auto", display: "block", margin: isMobile ? "70px 0 30px" : "70px auto 40px" }}
+          />
+          {isMobile && (
+            <div style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, textAlign: "center", padding: "0 22px 34px" }}>
+              Scroll opzij en omlaag om alles te bekijken. Tik op het kruisje om te sluiten.
+            </div>
+          )}
+        </div>
+      )}
 
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Boven- en onderstroom" />
     </>
