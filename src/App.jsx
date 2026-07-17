@@ -500,11 +500,11 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             <a
               href="/klantenportaal"
               onClick={e=>{ e.preventDefault(); navigate("/klantenportaal"); }}
-              style={{...navLinkStyle("klantenportaal"), color:"rgba(255,255,255,0.72)", textDecoration:"none"}}
+              style={{background:"rgba(0,168,150,0.16)",color:"#00A896",border:"1px solid rgba(0,168,150,0.35)",fontWeight:800,padding:"10px 16px",borderRadius:999,fontSize:13,textDecoration:"none",whiteSpace:"nowrap"}}
               onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
               onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.72)"; }}
             >
-              Klantenportaal
+              Klantportaal
             </a>
 
             <span
@@ -2847,6 +2847,9 @@ function PageKlanten() {
   const [selectedTrajectId, setSelectedTrajectId] = useState(null);
   const [selectedMetingId, setSelectedMetingId] = useState(null);
   const [gekopieerd, setGekopieerd] = useState(null);
+  const [portalNotitie, setPortalNotitie] = useState("");
+  const [portalOpslaan, setPortalOpslaan] = useState(false);
+  const [portalLinkBezig, setPortalLinkBezig] = useState(false);
   const [nieuw, setNieuw] = useState({ naam:"", sector:"", contact:"", email:"", status:"Actief" });
   const [nieuwTraject, setNieuwTraject] = useState({ naam:"", status:"Actief", scanType:"medewerkers" });
   const [nieuweMeting, setNieuweMeting] = useState({
@@ -2954,6 +2957,9 @@ function PageKlanten() {
           sector: basis.sector || "",
           contact: basis.contact || "",
           email: basis.email || "",
+          portalToken: basis.portalToken || "",
+          portalWelkom: basis.portalWelkom || "",
+          portalMaterialen: Array.isArray(basis.portalMaterialen) ? basis.portalMaterialen : [],
           status: basis.status || (klantTrajecten.length ? "Actief" : "In gesprek"),
           score,
           fase: klantTrajecten.length ? `${klantTrajecten.length} traject(en)` : "Intake",
@@ -3213,6 +3219,58 @@ function PageKlanten() {
       trajectId,
       trajectNaam: traject?.naam || "",
     }));
+  };
+
+  const maakPortalToken = () => {
+    const bytes = new Uint8Array(24);
+    window.crypto.getRandomValues(bytes);
+    return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+  };
+
+  const getPortalLink = (klant = selectedKlant) => klant?.portalToken ? `${window.location.origin}/klantenportaal/${klant.portalToken}` : "";
+
+  const activeerOfKopieerPortalLink = async () => {
+    if (!selectedKlant || !isEchteKlantRecord) return;
+    setPortalLinkBezig(true);
+    try {
+      let token = selectedKlant.portalToken;
+      if (!token) {
+        token = maakPortalToken();
+        await updateDoc(doc(db, "klanten", selectedKlant.id), {
+          portalToken: token,
+          portalTokenAangemaakt: serverTimestamp(),
+        });
+        await laadData();
+      }
+      const link = `${window.location.origin}/klantenportaal/${token}`;
+      await navigator.clipboard.writeText(link);
+      setGekopieerd("portal_link");
+      setTimeout(() => setGekopieerd(null), 2000);
+    } catch (err) {
+      console.error("Klantportaal-link maken/kopiëren mislukt:", err);
+    } finally {
+      setPortalLinkBezig(false);
+    }
+  };
+
+  const slaPortalNotitieOp = async () => {
+    if (!selectedKlant || !isEchteKlantRecord) return;
+    setPortalOpslaan(true);
+    try {
+      const materiaal = portalNotitie.trim();
+      const bestaand = selectedKlant.portalMaterialen || [];
+      await updateDoc(doc(db, "klanten", selectedKlant.id), {
+        portalWelkom: bewerkData.portalWelkom || selectedKlant.portalWelkom || "",
+        portalMaterialen: materiaal ? [...bestaand, { titel: materiaal, type: "notitie", aangemaakt: new Date().toISOString() }] : bestaand,
+        portalBijgewerkt: serverTimestamp(),
+      });
+      setPortalNotitie("");
+      await laadData();
+    } catch (err) {
+      console.error("Klantportaal bijwerken mislukt:", err);
+    } finally {
+      setPortalOpslaan(false);
+    }
   };
 
   const voegMetingToe = async () => {
@@ -3540,6 +3598,36 @@ function PageKlanten() {
                   + Nieuwe meting
                 </button>
               </div>
+
+
+              {isEchteKlantRecord && (
+                <div style={{background:"rgba(0,168,150,0.08)",border:`1px solid rgba(0,168,150,0.24)`,borderRadius:10,padding:"14px 14px",marginBottom:16}}>
+                  <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>Klantportaal</div>
+                  <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
+                    Maak en kopieer een persoonlijke portaal-link. De link bevat een lange, willekeurige toegangscode en toont alleen gegevens van deze klant. Beheerders kunnen hetzelfde portaal via deze link controleren.
+                  </div>
+                  <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center",marginBottom:10}}>
+                    <button onClick={activeerOfKopieerPortalLink} disabled={portalLinkBezig}
+                      style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 12px",fontWeight:800,fontSize:12,cursor:portalLinkBezig?"wait":"pointer"}}>
+                      {portalLinkBezig ? "Bezig..." : gekopieerd==="portal_link" ? "✓ Link gekopieerd" : selectedKlant.portalToken ? "Kopieer portaal-link" : "Maak portaal-link"}
+                    </button>
+                    {selectedKlant.portalToken && <span style={{fontSize:11,color:ADM.muted,fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:360}}>{getPortalLink()}</span>}
+                  </div>
+                  <textarea
+                    value={portalNotitie}
+                    onChange={e=>setPortalNotitie(e.target.value)}
+                    placeholder="Voeg materiaal, afspraak of notitie toe aan het klantportaal..."
+                    style={{width:"100%",minHeight:68,background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box",resize:"vertical"}}
+                  />
+                  <div style={{display:"flex",justifyContent:"space-between",gap:10,alignItems:"center",marginTop:8,flexWrap:"wrap"}}>
+                    <div style={{fontSize:11,color:ADM.muted}}>{(selectedKlant.portalMaterialen || []).length} item(s) zichtbaar in dit klantportaal.</div>
+                    <button onClick={slaPortalNotitieOp} disabled={portalOpslaan}
+                      style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"8px 12px",fontWeight:700,fontSize:12,cursor:portalOpslaan?"wait":"pointer"}}>
+                      {portalOpslaan ? "Opslaan..." : "Toevoegen aan portaal"}
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {showTrajectForm && (
                 <div style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"16px 16px",marginBottom:16}}>
@@ -11198,6 +11286,7 @@ export default function App() {
         <Route path="/boven-en-onderstroom" element={<BovenOnderstroomPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
+        <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
       </Routes>
