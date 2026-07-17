@@ -21,6 +21,7 @@ import KompasDot from "./components/shared/KompasDot";
 import ScanInvullen from "./pages/public/ScanInvullen";
 import Blog from "./pages/public/Blog";
 import BlogPost from "./pages/public/BlogPost";
+import Klantenportaal from "./pages/public/Klantenportaal";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
 import CookieBanner from "./components/shared/CookieBanner";
@@ -851,6 +852,12 @@ function SeoHead({ page = "home" }) {
       title: "Teamdag organiseren | dialoog en concrete afspraken",
       description: "Een teamdag van Mijn Teamkompas: gestructureerde dialoog op basis van de teamscan, met heldere uitkomsten, gedeelde afspraken en concrete vervolgstappen.",
       url: "https://www.mijnteamkompas.nl/teamdag",
+      image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
+    },
+    klantenportaal: {
+      title: "Klantenportaal | Mijn Teamkompas",
+      description: "Toegang tot scanlinks, voorbereiding, documenten en contactinformatie voor klanten en deelnemers van Mijn Teamkompas.",
+      url: "https://www.mijnteamkompas.nl/klantenportaal",
       image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
     },
     beheer: {
@@ -11172,6 +11179,7 @@ export default function App() {
         <Route path="/sociale-veiligheid" element={<SocialeVeiligheidPage />} />
         <Route path="/boven-en-onderstroom" element={<BovenOnderstroomPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
+        <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
       </Routes>
