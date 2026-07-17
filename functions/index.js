@@ -727,3 +727,58 @@ exports.generateTeamAdvice = onCall(
     }
   }
 );
+function isAdminRequest(request) {
+  const email = request.auth && request.auth.token && request.auth.token.email;
+  return ["bozidar@mijnteamkompas.nl", "edmond@mijnteamkompas.nl"].includes(email || "");
+}
+
+exports.getCustomerPortal = onCall(async (request) => {
+  const token = String((request.data && request.data.token) || "").trim();
+  const klantId = String((request.data && request.data.klantId) || "").trim();
+
+  let klantDoc = null;
+
+  if (klantId && isAdminRequest(request)) {
+    const byId = await db.collection("klanten").doc(klantId).get();
+    if (byId.exists) klantDoc = byId;
+  } else {
+    if (!token || token.length < 32 || !/^[a-f0-9]+$/i.test(token)) {
+      throw new HttpsError("permission-denied", "Ongeldige klantportaal-token.");
+    }
+    const snap = await db.collection("klanten").where("portalToken", "==", token).limit(1).get();
+    if (!snap.empty) klantDoc = snap.docs[0];
+  }
+
+  if (!klantDoc || !klantDoc.exists) {
+    throw new HttpsError("not-found", "Klantportaal niet gevonden.");
+  }
+
+  const klant = klantDoc.data() || {};
+  if (klant.verwijderd || klant.status === "Verwijderd") {
+    throw new HttpsError("permission-denied", "Dit klantportaal is niet actief.");
+  }
+
+  const vragenSnap = await db.collection("vragenlijsten").where("klant", "==", klant.naam || "").get();
+  const trajecten = vragenSnap.docs
+    .map((doc) => ({ id: doc.id, ...(doc.data() || {}) }))
+    .filter((v) => !v.verwijderd && v.status !== "Verwijderd")
+    .map((v) => ({
+      id: v.id,
+      naam: v.naam || "Teamkompas-traject",
+      status: v.status || "Actief",
+      doelgroep: v.doelgroep || v.trajectRol || "",
+      scanLink: v.status === "Actief" ? `https://www.mijnteamkompas.nl/deelnemen/${v.id}` : "",
+    }));
+
+  return {
+    klant: {
+      id: klantDoc.id,
+      naam: klant.naam || "",
+      contact: klant.contact || "",
+      sector: klant.sector || "",
+    },
+    welkom: klant.portalWelkom || "",
+    materialen: Array.isArray(klant.portalMaterialen) ? klant.portalMaterialen : [],
+    trajecten,
+  };
+});
