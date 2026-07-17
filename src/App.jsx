@@ -10208,6 +10208,451 @@ function SocialeVeiligheidPage() {
   );
 }
 
+function BovenOnderstroomPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState(null);
+  const isMobile = useIsMobile();
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
+  const ctaStyle = {
+    background: PUB.oranje,
+    color: PUB.donker,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    boxShadow: "0 12px 28px rgba(232,130,26,0.28)",
+    border: "none",
+  };
+
+  const ghostStyle = {
+    background: "rgba(255,255,255,0.08)",
+    color: PUB.wit,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    border: "1px solid rgba(255,255,255,0.22)",
+  };
+
+  const bovenstroomItems = ["Doelstellingen en KPI's", "Processen en systemen", "Rollen en verantwoordelijkheden", "Planningen en projectplannen", "Werkafspraken", "Overlegstructuren"];
+  const onderstroomItems = ["Vertrouwen en onzekerheid", "Motivatie en energie", "Emoties en eerdere ervaringen", "Irritaties en loyaliteit", "Onuitgesproken verwachtingen", "Onderlinge verhoudingen en groepsdynamiek"];
+
+  const signalen = [
+    "Er worden goede besluiten genomen, maar niemand voert ze echt uit. Twee maanden later staat hetzelfde punt weer op de agenda.",
+    "Teamleden zeggen tijdens het overleg weinig, maar praten er daarna uitgebreid over. Het echte gesprek vindt plaats bij de koffieautomaat.",
+    "De samenwerking voelt stroef zonder dat iemand kan uitleggen waarom. Iedereen doet aardig, maar het voelt niet goed.",
+    "Een verandering lijkt logisch en iedereen stemt in, maar draagvlak blijft uit. Mensen bewegen niet mee.",
+    "Cynische humor en steeds dezelfde discussies. Grapjes over het management, discussies die nooit tot een besluit leiden.",
+    "Uitspraken als 'er hangt iets in het team' of 'ik kan mijn vinger er niet op leggen'. Iedereen voelt het, niemand benoemt het.",
+  ];
+
+  const waaromBovenstroom = [
+    {
+      titel: "De bovenstroom voelt veilig",
+      tekst: "Een nieuw proces maken, een werkgroep starten, een projectplan schrijven: het geeft het gevoel dat er iets gebeurt. Het is concreet, zichtbaar en niemand hoeft zich kwetsbaar op te stellen. Praten over vertrouwen of irritaties is spannender dan praten over een planning.",
+    },
+    {
+      titel: "Nieuwe afspraken lossen oude patronen niet op",
+      tekst: "Als de onderlinge dynamiek hetzelfde blijft, verandert gedrag nauwelijks. Het team krijgt een nieuwe overlegstructuur, maar de stiltes verhuizen gewoon mee naar het nieuwe overleg. De afspraak was niet het probleem.",
+    },
+    {
+      titel: "De onderstroom is ook de kracht van het team",
+      tekst: "De onderstroom is niet alleen de plek van irritaties en onzekerheid. Daar zitten ook vertrouwen, betrokkenheid, plezier, loyaliteit en verbinding. Teams die hun onderstroom leren zien, ontdekken vaak meer energie dan ze verwachtten.",
+    },
+    {
+      titel: "Beide lagen hebben elkaar nodig",
+      tekst: "De bovenstroom zorgt voor richting, de onderstroom voor verbinding. Zonder duidelijke afspraken ontstaat chaos, zonder aandacht voor wat er onder de oppervlakte speelt, ontstaat stilstand. Duurzame samenwerking vraagt balans tussen beide.",
+    },
+  ];
+
+  const aanpak = [
+    ["1", "Meten via de teamscan", "De teamscan maakt anoniem zichtbaar wat er in de onderstroom speelt: hoe veilig voelt het team zich, waar zit energie en waar lekt die weg? Zo wordt bespreekbaar wat tot nu toe alleen voelbaar was."],
+    ["2", "Patronen duiden", "We laten zien welke patronen er onder de oppervlakte spelen en hoe die het dagelijkse gedrag sturen. Niet wie het doet, maar wat er steeds opnieuw gebeurt."],
+    ["3", "Onderstroom bespreekbaar maken", "Tijdens teamdagen en begeleiding onderzoeken we nieuwsgierig wat er speelt, zonder mensen te confronteren. Met reflectievragen, teamdialogen en waar passend Insights Discovery."],
+    ["4", "Afspraken die gedragen worden", "Pas daarna maken we nieuwe afspraken in de bovenstroom. Want afspraken werken pas echt wanneer mensen zich eraan willen verbinden."],
+  ];
+
+  const fundament = [
+    {
+      titel: "Psychologische veiligheid",
+      tekst: "Durven mensen zich uitspreken, fouten benoemen en het oneens zijn? De bovengrens van teamveiligheid.",
+      link: "/psychologische-veiligheid",
+      label: "Lees over psychologische veiligheid →",
+    },
+    {
+      titel: "Sociale veiligheid",
+      tekst: "Gaan mensen respectvol met elkaar om, zonder pesten, uitsluiting of intimidatie? De ondergrens die elk team nodig heeft.",
+      link: "/sociale-veiligheid",
+      label: "Lees over sociale veiligheid →",
+    },
+    {
+      titel: "Boven- en onderstroom",
+      tekst: "Begrijpen waarom teams soms toch vastlopen, ook als de afspraken kloppen. Het denkmodel achter onze aanpak.",
+      link: null,
+      label: "Je bent op deze pagina",
+    },
+  ];
+
+  const faqs = [
+    ["Wat is de onderstroom van een team precies?", "De onderstroom is alles wat het gedrag in een team beïnvloedt maar niet direct zichtbaar is: vertrouwen, onzekerheid, motivatie, emoties, eerdere ervaringen, loyaliteit, onuitgesproken verwachtingen en onderlinge verhoudingen. Deze factoren bepalen vaak sterker hoe mensen samenwerken dan de afspraken die op papier staan."],
+    ["Is de onderstroom altijd negatief?", "Nee. De onderstroom bevat ook de kracht van een team: vertrouwen, betrokkenheid, plezier, motivatie, loyaliteit en verbinding. Wanneer die zichtbaar worden gemaakt, ontstaat vaak veel meer energie in een team. De onderstroom is geen probleem dat opgelost moet worden, maar een laag die aandacht verdient."],
+    ["Hoe herken je dat er iets in de onderstroom speelt?", "Aan gedrag: stiltes tijdens vergaderingen, veel gesprekken na het overleg, besluiten die niet worden uitgevoerd, terughoudendheid, defensief reageren, eilandvorming, cynische humor of steeds dezelfde discussies. En aan uitspraken als 'er hangt iets' of 'we zeggen nooit waar het echt over gaat'."],
+    ["Kun je de onderstroom meten?", "Deels. De teamscan maakt anoniem zichtbaar hoe teamleden veiligheid, energie, verandering en samenwerking ervaren, ook op punten waar in het team niet hardop over gesproken wordt. De cijfers zijn geen eindpunt maar een startpunt: ze maken bespreekbaar wat eerst alleen voelbaar was."],
+    ["Wat is het verschil met psychologische veiligheid?", "Psychologische veiligheid is een van de belangrijkste onderdelen van de onderstroom: durven mensen zich uitspreken? Boven- en onderstroom is het bredere denkmodel: het verklaart waarom teams kunnen vastlopen terwijl de plannen en afspraken op orde zijn. De begrippen horen bij elkaar, maar zijn niet hetzelfde."],
+    ["Hoe maak je de onderstroom bespreekbaar zonder dat het zweverig of confronterend wordt?", "Door te beginnen bij concreet gedrag en anonieme input, en door nieuwsgierig te onderzoeken in plaats van te confronteren. We gebruiken reflectievragen, teamdialogen, de teamscan en waar passend Insights Discovery. Het gesprek gaat over patronen en situaties, niet over schuld."],
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Boven- en onderstroom in teams | Mijn Teamkompas</title>
+        <meta
+          name="description"
+          content="Waarom lopen teams vast terwijl de plannen kloppen? Over de bovenstroom en onderstroom in teams, en hoe je bespreekbaar maakt wat onder de oppervlakte speelt."
+        />
+        <link rel="canonical" href="https://www.mijnteamkompas.nl/boven-en-onderstroom" />
+        <meta property="og:title" content="Boven- en onderstroom in teams | Mijn Teamkompas" />
+        <meta property="og:description" content="Veel organisaties investeren alleen in de bovenstroom: processen, afspraken en KPI's. De meeste problemen ontstaan in de onderstroom. Mijn Teamkompas maakt beide lagen bespreekbaar." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.mijnteamkompas.nl/boven-en-onderstroom" />
+        <meta property="og:image" content="https://www.mijnteamkompas.nl/bovenstroom-onderstroom-ijsberg.jpg" />
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Service",
+                "name": "Boven- en onderstroom in teams bespreekbaar maken",
+                "description": "Mijn Teamkompas helpt teams begrijpen waarom samenwerking vastloopt terwijl de afspraken kloppen: door de onderstroom zichtbaar en bespreekbaar te maken met teamscan, teamdialogen en begeleiding.",
+                "provider": {
+                  "@type": "LocalBusiness",
+                  "name": "Mijn Teamkompas",
+                  "url": "https://www.mijnteamkompas.nl",
+                  "email": "info@mijnteamkompas.nl",
+                  "areaServed": "NL"
+                },
+                "serviceType": "Teamcoaching, teamscan, teamontwikkeling",
+                "url": "https://www.mijnteamkompas.nl/boven-en-onderstroom"
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "Wat is de onderstroom van een team precies?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "De onderstroom is alles wat het gedrag in een team beïnvloedt maar niet direct zichtbaar is: vertrouwen, onzekerheid, motivatie, emoties, eerdere ervaringen, loyaliteit, onuitgesproken verwachtingen en onderlinge verhoudingen."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Is de onderstroom altijd negatief?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Nee. De onderstroom bevat ook de kracht van een team: vertrouwen, betrokkenheid, plezier, motivatie, loyaliteit en verbinding. Wanneer die zichtbaar worden gemaakt, ontstaat vaak veel meer energie in een team."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Kun je de onderstroom meten?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Deels. De teamscan maakt anoniem zichtbaar hoe teamleden veiligheid, energie, verandering en samenwerking ervaren. De cijfers zijn een startpunt: ze maken bespreekbaar wat eerst alleen voelbaar was."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Hoe herken je dat er iets in de onderstroom speelt?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Aan gedrag: stiltes tijdens vergaderingen, veel gesprekken na het overleg, besluiten die niet worden uitgevoerd, eilandvorming, cynische humor of steeds dezelfde discussies."
+                    }
+                  }
+                ]
+              },
+              {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://www.mijnteamkompas.nl/"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Boven- en onderstroom in teams",
+                    "item": "https://www.mijnteamkompas.nl/boven-en-onderstroom"
+                  }
+                ]
+              }
+            ]
+          }
+        `}</script>
+      </Helmet>
+
+      <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
+
+        {/* 1. Hero */}
+        <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
+          <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+              Boven- en onderstroom in teams
+            </div>
+            <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
+              De plannen kloppen. Waarom loopt het team dan toch vast?
+            </h1>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 14 }}>
+              Goede besluiten die niemand uitvoert. Overleggen waar het stil blijft, terwijl het gesprek daarna bij de koffieautomaat losbarst. Samenwerking die stroef voelt zonder dat iemand kan uitleggen waarom.
+            </p>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>
+              Dan ligt de oorzaak zelden in de bovenstroom van plannen, processen en afspraken. Dan speelt er iets in de onderstroom. Mijn Teamkompas maakt beide lagen zichtbaar en bespreekbaar.
+            </p>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+            </div>
+          </div>
+          <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
+            <img src="/teamkompas-vier-domeinen.jpg" alt="Team onderzoekt samen wat er onder de oppervlakte van de samenwerking speelt" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.85 }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94), rgba(13,27,42,0.08))" }} />
+          </div>
+        </section>
+
+        {/* 2. Twee lagen */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 56, alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Twee lagen</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Elke samenwerking heeft een bovenstroom en een onderstroom.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 18 }}>
+                De bovenstroom is alles wat zichtbaar, bespreekbaar en meetbaar is: doelstellingen, processen, rollen, planningen, werkafspraken en overlegstructuren. Daar gaat dagelijks veel aandacht naartoe, en terecht. Zonder duidelijke afspraken ontstaat chaos.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 18 }}>
+                Maar duidelijke afspraken alleen zorgen nog niet voor goede samenwerking. Onder de oppervlakte spelen vertrouwen, onzekerheid, motivatie, emoties, eerdere ervaringen en onderlinge verhoudingen. Die factoren bepalen vaak sterker hoe mensen samenwerken dan wat er op papier staat.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Net als bij een ijsberg bevindt het grootste gedeelte zich onder water. Je ziet het niet direct, maar het bepaalt wel de koers.
+              </p>
+            </div>
+            <div style={{ display: "grid", gap: 18 }}>
+              <div style={{ background: PUB.licht, borderRadius: 22, padding: isMobile ? 22 : 30, border: `1px solid ${PUB.lijn}`, borderTop: `4px solid ${PUB.groen}` }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: PUB.donker, marginBottom: 14 }}>In de bovenstroom: zichtbaar en meetbaar</div>
+                {bovenstroomItems.map((item) => (
+                  <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 10 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: PUB.groen, flexShrink: 0, marginTop: 7 }} />
+                    <div style={{ fontSize: 14, lineHeight: 1.6, color: PUB.donker }}>{item}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: PUB.licht, borderRadius: 22, padding: isMobile ? 22 : 30, border: `1px solid ${PUB.lijn}`, borderTop: "4px solid #6B4E9E" }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: PUB.donker, marginBottom: 14 }}>In de onderstroom: minder zichtbaar, wel bepalend</div>
+                {onderstroomItems.map((item) => (
+                  <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 10 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#6B4E9E", flexShrink: 0, marginTop: 7 }} />
+                    <div style={{ fontSize: 14, lineHeight: 1.6, color: PUB.donker }}>{item}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. Infographic */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto", textAlign: "center" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Het ijsbergmodel</div>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 28px" }}>
+              Wat zichtbaar is, is zelden het hele verhaal.
+            </h2>
+            <img
+              src="/bovenstroom-onderstroom-ijsberg.jpg"
+              alt="Infographic van het ijsbergmodel: de bovenstroom met strategie, structuur, processen en afspraken boven water, en de onderstroom met vertrouwen, psychologische veiligheid, emoties, motivatie en groepsdynamiek onder water"
+              style={{ width: "100%", height: "auto", borderRadius: 22, border: `1px solid ${PUB.lijn}`, boxShadow: "0 16px 44px rgba(13,27,42,0.10)", display: "block" }}
+            />
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.7, color: PUB.donker, fontWeight: 700, maxWidth: 720, margin: "28px auto 0" }}>
+              Teams veranderen niet door betere afspraken alleen, maar door aandacht voor wat onder de oppervlakte speelt.
+            </p>
+          </div>
+        </section>
+
+        {/* 4. Signalen */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 48, alignItems: "start" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Signalen</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Zo merk je dat er iets in de onderstroom speelt.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 16 }}>
+                Mensen nemen dagelijks duizenden beslissingen, en maar een klein deel daarvan gebeurt bewust. Een team kan tijdens een overleg volledig instemmen met een besluit, terwijl meerdere collega's zich zorgen maken. Niemand zegt iets. Na afloop ontstaan de gesprekken bij de koffieautomaat.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                De signalen hieronder zijn zelden het echte probleem. Het zijn aanwijzingen van iets dat dieper ligt.
+              </p>
+            </div>
+            <div style={{ display: "grid", gap: 14 }}>
+              {signalen.map((s, i) => (
+                <div key={i} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 20 }}>
+                  <div style={{ fontSize: 13, fontWeight: 900, color: PUB.teal, marginBottom: 6 }}>Signaal {i + 1}</div>
+                  <div style={{ fontSize: 15, lineHeight: 1.7, color: PUB.donker }}>{s}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Waarom vooral de bovenstroom aandacht krijgt */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Waarom de bovenstroom altijd wint</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Organisaties pakken het liefst aan wat zichtbaar is.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Als samenwerking stroef loopt, is de reflex bijna altijd een oplossing in de bovenstroom: een nieuw proces, een extra overleg, een aangescherpt plan. Begrijpelijk, want dat is concreet. Maar wie alleen daar blijft, ziet dezelfde patronen steeds terugkomen.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 18 }}>
+              {waaromBovenstroom.map(({ titel, tekst }) => (
+                <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 26, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
+                  <h3 style={{ fontSize: 17, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Aanpak */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Hoe wij hiermee werken</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Eerst begrijpen wat er speelt, dan pas nieuwe afspraken.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Tijdens teamdagen, begeleiding en teamontwikkeling maken we de onderstroom op een veilige manier bespreekbaar. Niet door mensen te confronteren, maar door nieuwsgierig te onderzoeken wat er speelt. Zo ontstaat inzicht in patronen die vaak al jaren aanwezig zijn.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
+              {aanpak.map(([nr, titel, tekst]) => (
+                <div key={nr} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24 }}>
+                  <div style={{ width: 38, height: 38, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 16, marginBottom: 16 }}>{nr}</div>
+                  <h3 style={{ fontSize: 17, margin: "0 0 8px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 7. Kennisfundament */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Drie concepten, één fundament</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Boven- en onderstroom, psychologische en sociale veiligheid horen bij elkaar.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Sociale veiligheid is de ondergrens: respectvol met elkaar omgaan. Psychologische veiligheid is de bovengrens: durven uitspreken. En de onderstroom is de laag waarin beide zichtbaar worden. Samen vormen ze het fundament van hoe wij naar teams kijken.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+              {fundament.map(({ titel, tekst, link, label }) => (
+                <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
+                  <h3 style={{ fontSize: 17, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: "0 0 14px" }}>{tekst}</p>
+                  {link ? (
+                    <a href={link} style={{ color: PUB.teal, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>{label}</a>
+                  ) : (
+                    <span style={{ color: PUB.sub, fontWeight: 700, fontSize: 14 }}>{label}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 8. FAQ */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 860, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Veelgestelde vragen</div>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 32px" }}>
+              Veelgestelde vragen over boven- en onderstroom
+            </h2>
+            <div style={{ display: "grid", gap: 10 }}>
+              {faqs.map(([vraag, antwoord], i) => (
+                <div key={i} style={{ border: `1px solid ${PUB.lijn}`, borderRadius: 16, overflow: "hidden" }}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    style={{ width: "100%", background: openFaq === i ? PUB.licht : PUB.wit, border: "none", padding: "18px 22px", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, cursor: "pointer", fontFamily: "inherit" }}
+                  >
+                    <span style={{ fontSize: 16, fontWeight: 700, color: PUB.donker, lineHeight: 1.4 }}>{vraag}</span>
+                    <span style={{ fontSize: 20, color: PUB.teal, fontWeight: 700, flexShrink: 0, transform: openFaq === i ? "rotate(45deg)" : "none", transition: "transform 0.2s" }}>+</span>
+                  </button>
+                  {openFaq === i && (
+                    <div style={{ padding: "6px 22px 20px", background: PUB.licht }}>
+                      <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>{antwoord}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Reflectiekaart leadblok */}
+        <section style={{ padding: isMobile ? "52px 22px" : "80px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+            <Fade>
+              <ReflectiekaartFormulier bronPagina="Boven- en onderstroom" variant="block" />
+            </Fade>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
+          <div style={{ maxWidth: 780, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+              De onderstroom bespreekbaar maken
+            </div>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
+              Benieuwd wat er in jouw team onder de oppervlakte speelt?
+            </h2>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", marginBottom: 28 }}>
+              Begin met een teamscan of plan een verkennend gesprek. Dan kijken we samen naar beide lagen: wat er gebeurt, en waarom het gebeurt.
+            </p>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/onze-aanpak" style={{ color: "rgba(255,255,255,0.72)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over onze aanpak →</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Boven- en onderstroom" />
+    </>
+  );
+}
+
 function TeamdagPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -10692,6 +11137,7 @@ export default function App() {
         <Route path="/teamdag" element={<TeamdagPage />} />
         <Route path="/psychologische-veiligheid" element={<PsychologischeVeiligheidPage />} />
         <Route path="/sociale-veiligheid" element={<SocialeVeiligheidPage />} />
+        <Route path="/boven-en-onderstroom" element={<BovenOnderstroomPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />

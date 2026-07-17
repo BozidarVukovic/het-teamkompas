@@ -17,6 +17,7 @@ const kennis = [
   ["Blog", "/blog"],
   ["Psychologische veiligheid", "/psychologische-veiligheid"],
   ["Sociale veiligheid", "/sociale-veiligheid"],
+  ["Boven- en onderstroom", "/boven-en-onderstroom"],
 ];
 
 function isStaticPage(path) {
