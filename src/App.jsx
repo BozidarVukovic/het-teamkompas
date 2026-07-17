@@ -1179,6 +1179,7 @@ function PublicSite({ onLoginClick }) {
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
               <span style={ctaStyle} onClick={openModal}>Plan een kennismaking</span>
               <span style={ghostStyle} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
+              <span style={{ ...ghostStyle, borderColor: "rgba(0,168,150,0.55)", color: PUB.teal, background: "rgba(0,168,150,0.10)" }} onClick={() => navigate("/klantenportaal")}>Naar klantportaal</span>
             </div>
             <div style={{ marginTop: 24, color: "rgba(255,255,255,0.58)", fontSize: 13, lineHeight: 1.65, maxWidth: 660 }}>
               Voor teams die vastlopen in samenwerking, verandering of onderlinge communicatie, en voor leiders die beweging willen zonder harder te trekken.
