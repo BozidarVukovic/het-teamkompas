@@ -497,6 +497,16 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
               Blog
             </a>
 
+            <a
+              href="/klantenportaal"
+              onClick={e=>{ e.preventDefault(); navigate("/klantenportaal"); }}
+              style={{...navLinkStyle("klantenportaal"), color:"rgba(255,255,255,0.72)", textDecoration:"none"}}
+              onMouseEnter={e=>{ e.currentTarget.style.color="#00A896"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.color="rgba(255,255,255,0.72)"; }}
+            >
+              Klantenportaal
+            </a>
+
             <span
               onClick={openModal}
               style={{background:"#F4F7F9",color:"#0D1B2A",fontWeight:700,padding:"10px 18px",
@@ -569,6 +579,13 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
             style={{display:"block",padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)",textDecoration:"none"}}
           >
             Blog
+          </a>
+          <a
+            href="/klantenportaal"
+            onClick={e=>{ e.preventDefault(); navigate("/klantenportaal"); setMenuOpen(false); }}
+            style={{display:"block",padding:"14px 24px",color:"rgba(255,255,255,0.75)",fontSize:15,cursor:"pointer",borderBottom:"1px solid rgba(255,255,255,0.05)",textDecoration:"none"}}
+          >
+            Klantenportaal
           </a>
           <div onClick={()=>{openModal();setMenuOpen(false);}}
             style={{padding:"14px 24px",color:"#ffffff",fontSize:15,cursor:"pointer",fontWeight:700,
@@ -1429,6 +1446,7 @@ function PublicSite({ onLoginClick }) {
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => window.open("/privacyverklaring_mijnteamkompas.pdf", "_blank")}>Privacyverklaring</span>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => window.open("/algemene_voorwaarden_mijnteamkompas.pdf", "_blank")}>Algemene voorwaarden</span>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => navigate("/klantenportaal")}>Klantenportaal</span>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => cookieBannerRef.current?.open()}>Cookie-instellingen</span>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={onLoginClick}>Beheer</span>
               </div>
