@@ -827,11 +827,77 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
 }
 
 
+
+function LeadTrustBar({ isMobile = false, tone = "light" }) {
+  const dark = tone === "dark";
+  const items = [
+    ["Reactie binnen 1 werkdag", "Geen verkoopgesprek, wel scherpte op jullie vraag"],
+    ["Vrijblijvend en concreet", "In 30 minuten helder of teamscan, teamdag of coaching past"],
+    ["Anonieme teaminput", "Veilig inzicht in patronen zonder individuen bloot te leggen"],
+  ];
+
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 12, marginTop: 22 }}>
+      {items.map(([titel, tekst]) => (
+        <div key={titel} style={{ background: dark ? "rgba(255,255,255,0.08)" : PUB.wit, border: `1px solid ${dark ? "rgba(255,255,255,0.14)" : PUB.lijn}`, borderRadius: 14, padding: "14px 16px" }}>
+          <div style={{ fontSize: 13, fontWeight: 850, color: dark ? PUB.wit : PUB.donker, marginBottom: 4 }}>✓ {titel}</div>
+          <div style={{ fontSize: 12, lineHeight: 1.55, color: dark ? "rgba(255,255,255,0.66)" : PUB.sub }}>{tekst}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StickyLeadCta({ onClick, isMobile = false }) {
+  return (
+    <div style={{ position: "fixed", left: isMobile ? 14 : "auto", right: 14, bottom: 14, zIndex: 900, maxWidth: isMobile ? "calc(100% - 28px)" : 360 }}>
+      <button type="button" onClick={onClick} style={{ width: "100%", border: 0, borderRadius: 999, padding: isMobile ? "12px 16px" : "14px 18px", background: PUB.oranje, color: PUB.donker, fontWeight: 900, fontSize: 14, cursor: "pointer", boxShadow: "0 18px 50px rgba(13,27,42,0.28)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+        Plan vrijblijvende kennismaking <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  );
+}
+
+function ConversionImpactReport({ isMobile = false, onCta }) {
+  const verbeteringen = [
+    ["Hoog", "Eén dominante CTA naar kennismaking", "Minder keuze-stress: elke pagina stuurt naar een veilig eerste gesprek."],
+    ["Hoog", "Trustproof direct bij hero en formulier", "Reactietijd, vrijblijvendheid en anonimiteit verlagen drempels."],
+    ["Middel", "SEO-intent gekoppeld aan aanbod", "Bezoekers vanuit thema-pagina’s zien sneller welke dienst logisch is."],
+    ["Middel", "Korter formulier met betere microcopy", "Minder frictie, duidelijk wat er na verzenden gebeurt."],
+  ];
+
+  return (
+    <section style={{ background: PUB.licht, padding: isMobile ? "52px 20px" : "76px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 24, alignItems: "start" }}>
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 850, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Conversie-analyse</div>
+          <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, margin: "0 0 14px" }}>Grootste impact richting 10 adviesgesprekken per maand.</h2>
+          <p style={{ fontSize: 16, lineHeight: 1.78, color: PUB.sub, margin: "0 0 22px" }}>
+            De website is ingericht als leadfunnel: herkennen van het probleem, vertrouwen opbouwen, bewijs tonen, risico verlagen en consequent uitnodigen voor een vrijblijvende kennismaking.
+          </p>
+          <button type="button" onClick={onCta} style={{ background: PUB.donker, color: PUB.wit, border: 0, borderRadius: 8, padding: "14px 20px", fontWeight: 850, cursor: "pointer" }}>Bespreek jullie teamvraag</button>
+        </div>
+        <div style={{ display: "grid", gap: 12 }}>
+          {verbeteringen.map(([impact, titel, tekst]) => (
+            <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 18, boxShadow: "0 12px 32px rgba(13,27,42,0.05)" }}>
+              <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 6 }}>
+                <span style={{ background: impact === "Hoog" ? PUB.oranje : PUB.teal, color: impact === "Hoog" ? PUB.donker : PUB.wit, borderRadius: 999, padding: "4px 9px", fontSize: 11, fontWeight: 900 }}>{impact} impact</span>
+                <strong style={{ color: PUB.donker }}>{titel}</strong>
+              </div>
+              <div style={{ color: PUB.sub, fontSize: 14, lineHeight: 1.65 }}>{tekst}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function SeoHead({ page = "home" }) {
   const pages = {
     home: {
       title: "Mijn Teamkompas | teamscan, workshops en coaching",
-      description: "Mijn Teamkompas begeleidt teams en leiders bij gedragsverandering en organisatieontwikkeling met teamscan, workshops, teamdagen en coaching.",
+      description: "Plan een vrijblijvend adviesgesprek over teamontwikkeling. Mijn Teamkompas helpt met teamscan, workshops, teamdagen en coaching bij betere samenwerking en leiderschap.",
       url: "https://www.mijnteamkompas.nl/",
       image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
     },
@@ -1242,7 +1308,8 @@ function PublicSite({ onLoginClick }) {
               <span style={ghostStyle} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
               <span style={{ ...ghostStyle, borderColor: "rgba(0,168,150,0.55)", color: PUB.teal, background: "rgba(0,168,150,0.10)" }} onClick={() => navigate("/klantenportaal")}>Naar klantportaal</span>
             </div>
-            <div style={{ marginTop: 24, color: "rgba(255,255,255,0.58)", fontSize: 13, lineHeight: 1.65, maxWidth: 660 }}>
+            <LeadTrustBar isMobile={isMobile} tone="dark" />
+            <div style={{ marginTop: 18, color: "rgba(255,255,255,0.58)", fontSize: 13, lineHeight: 1.65, maxWidth: 660 }}>
               Voor teams die vastlopen in samenwerking, verandering of onderlinge communicatie, en voor leiders die beweging willen zonder harder te trekken.
             </div>
           </div>
@@ -1517,6 +1584,7 @@ function PublicSite({ onLoginClick }) {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Homepage" />
       <CookieBanner ref={cookieBannerRef} />
     </>
@@ -9484,6 +9552,8 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           </div>
         </section>
 
+        <ConversionImpactReport isMobile={isMobile} onCta={openModal} />
+
         <section style={{ background: PUB.wit, padding: isMobile ? "50px 20px" : "72px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
           <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
             <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Volgende stap</div>
@@ -9498,6 +9568,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           </div>
         </section>
       </div>
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamontwikkeling" />
     </>
   );
@@ -9758,6 +9829,7 @@ function TeamcoachingPage() {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamcoaching" />
     </>
   );
@@ -10298,6 +10370,7 @@ function PsychologischeVeiligheidPage() {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Psychologische veiligheid" />
     </>
   );
@@ -10701,6 +10774,7 @@ function SocialeVeiligheidPage() {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Sociale veiligheid" />
     </>
   );
@@ -11185,6 +11259,7 @@ function BovenOnderstroomPage() {
         </div>
       )}
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Boven- en onderstroom" />
     </>
   );
@@ -11612,6 +11687,7 @@ function BreinEnSamenwerkingPage() {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Brein en samenwerking" />
     </>
   );
@@ -11949,6 +12025,7 @@ function TeamdagPage() {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamdag" />
     </>
   );

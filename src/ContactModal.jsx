@@ -11,9 +11,9 @@ import {
 const emptyForm = {
   naam: "",
   organisatie: "",
-  teamgrootte: "",
   email: "",
   telefoon: "",
+  teamgrootte: "",
   gewensteStap: "Kennismaking",
   bericht: "",
 };
@@ -82,7 +82,7 @@ export default function ContactModal({ isOpen, onClose, bron = "Website" }) {
           <div>
             <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.15em", color: "#00A896", textTransform: "uppercase", marginBottom: 6 }}>Verkennende kennismaking</div>
             <div style={{ fontSize: 22, fontWeight: 800, color: "#ffffff" }}>Plan een verkennende kennismaking</div>
-            <div style={{ fontSize: 13, color: "#8fa3bb", marginTop: 4 }}>We reageren zo snel mogelijk en gebruiken je gegevens alleen voor deze aanvraag.</div>
+            <div style={{ fontSize: 13, color: "#8fa3bb", marginTop: 4 }}>Binnen 1 werkdag reactie. Vrijblijvend, concreet en zonder verkoopdruk.</div>
           </div>
           <div onClick={onClose} style={{ cursor: "pointer", color: "#8fa3bb", fontSize: 22, lineHeight: 1, padding: "4px 8px", marginTop: -4 }}>×</div>
         </div>
@@ -95,7 +95,7 @@ export default function ContactModal({ isOpen, onClose, bron = "Website" }) {
           </div>
         ) : (
           <div style={{ padding: "24px 32px 32px" }}>
-            {[["naam", "Naam *", "Je volledige naam", "text"], ["organisatie", "Organisatie", "Naam van de organisatie", "text"], ["teamgrootte", "Teamgrootte", "Bijvoorbeeld 8 of 25", "text"], ["email", "E-mailadres *", "naam@organisatie.nl", "email"], ["telefoon", "Telefoonnummer", "+31 6 ...", "tel"]].map(([key, label, ph, type]) => (
+            {[["naam", "Naam *", "Je volledige naam", "text"], ["email", "E-mailadres *", "naam@organisatie.nl", "email"], ["organisatie", "Organisatie", "Naam van de organisatie", "text"], ["telefoon", "Telefoonnummer", "+31 6 ...", "tel"], ["teamgrootte", "Teamgrootte", "Bijvoorbeeld 8 of 25", "text"]].map(([key, label, ph, type]) => (
               <div key={key} style={{ marginBottom: 14 }}>
                 <div style={{ fontSize: 11, color: "#8fa3bb", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>{label}</div>
                 <input type={type} placeholder={ph} value={form[key]} onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: `1px solid ${status === "error" && !form[key] && (key === "naam" || key === "email") ? "#e74c3c" : "rgba(255,255,255,0.1)"}`, borderRadius: 8, padding: "10px 14px", color: "#ffffff", fontSize: 14, outline: "none", boxSizing: "border-box" }} />
@@ -113,7 +113,7 @@ export default function ContactModal({ isOpen, onClose, bron = "Website" }) {
             </div>
             {status === "error" && <div style={{ fontSize: 12, color: "#e74c3c", marginBottom: 12 }}>Vul minimaal naam en e-mailadres in.</div>}
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-              <button onClick={handleSubmit} disabled={status === "sending"} style={{ flex: 1, background: status === "sending" ? "#007d70" : "#00A896", color: "#0D1B2A", border: "none", borderRadius: 8, padding: "13px", fontWeight: 800, fontSize: 15, cursor: status === "sending" ? "wait" : "pointer" }}>{status === "sending" ? "Versturen..." : "Verstuur verkenning"}</button>
+              <button type="button" onClick={handleSubmit} disabled={status === "sending"} style={{ flex: 1, background: status === "sending" ? "#007d70" : "#00A896", color: "#0D1B2A", border: "none", borderRadius: 8, padding: "13px", fontWeight: 800, fontSize: 15, cursor: status === "sending" ? "wait" : "pointer" }}>{status === "sending" ? "Versturen..." : "Plan mijn vrijblijvende kennismaking"}</button>
               <span onClick={onClose} style={{ fontSize: 13, color: "#8fa3bb", cursor: "pointer" }}>Annuleer</span>
             </div>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginTop: 12, textAlign: "center" }}>Je gegevens worden uitsluitend gebruikt om deze aanvraag zorgvuldig op te volgen.</div>
