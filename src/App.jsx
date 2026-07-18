@@ -11345,6 +11345,7 @@ export default function App() {
     <HelmetProvider>
       <Routes>
         <Route path="/" element={homeElement} />
+        <Route path="/deelnemen/:deelnameId" element={homeElement} />
         <Route path="/onze-aanpak" element={<><SeoHead page="onzeAanpak" /><OnzeAanpak /></>} />
         <Route path="/verkennen" element={<><SeoHead page="verkennen" /><Verkennen /></>} />
         <Route path="/teamscan" element={<><SeoHead page="teamscan" /><TeamscanDigitaal /></>} />
