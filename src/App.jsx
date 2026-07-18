@@ -3284,6 +3284,21 @@ function PageKlanten() {
     }
   };
 
+  const zetTrajectStatus = async (groep, nieuweStatus) => {
+    const ids = [groep.mwT?.id, groep.mgT?.id].filter(Boolean);
+    if (ids.length === 0) return;
+    if (nieuweStatus === "Afgerond" && !window.confirm(`Traject "${groep.naam}" afronden? Het traject telt dan niet meer mee als open traject.`)) return;
+    try {
+      await Promise.all(ids.map((id) => updateDoc(doc(db, "vragenlijsten", id), {
+        status: nieuweStatus,
+        statusGewijzigd: serverTimestamp(),
+      })));
+      await laadData();
+    } catch (err) {
+      console.error("Trajectstatus wijzigen mislukt:", err);
+    }
+  };
+
   const verwijderPortalItem = async (index) => {
     if (!selectedKlant || !isEchteKlantRecord) return;
     const bestaand = selectedKlant.portalMaterialen || [];
@@ -3859,13 +3874,32 @@ function PageKlanten() {
                         const kopieerId_mw = `mw_${mwId}`;
                         const kopieerId_mg = `mg_${mgId}`;
                         const trajectRef = g.mwT || g.mgT;
+                        const trajectStatus = trajectRef?.status || "Actief";
+                        const isAfgerond = trajectStatus.toLowerCase() === "afgerond";
 
                         return (
-                          <div key={gi} style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px"}}>
+                          <div key={gi} style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"12px 14px",opacity:isAfgerond?0.75:1}}>
                             {/* Header */}
                             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap",marginBottom:10}}>
-                              <div style={{fontSize:14,fontWeight:700,color:ADM.white}}>{g.naam}</div>
+                              <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",minWidth:0}}>
+                                <div style={{fontSize:14,fontWeight:700,color:ADM.white}}>{g.naam}</div>
+                                <span style={{fontSize:10,fontWeight:800,textTransform:"uppercase",letterSpacing:"1px",
+                                  color:isAfgerond?ADM.green:ADM.orange,
+                                  background:isAfgerond?"rgba(46,204,113,0.12)":"rgba(243,156,18,0.12)",
+                                  border:`1px solid ${isAfgerond?"rgba(46,204,113,0.3)":"rgba(243,156,18,0.3)"}`,
+                                  borderRadius:999,padding:"3px 8px"}}>
+                                  {isAfgerond ? "Afgerond" : trajectStatus}
+                                </span>
+                              </div>
                               <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                                {trajectRef && (
+                                  <button
+                                    onClick={() => zetTrajectStatus(g, isAfgerond ? "Actief" : "Afgerond")}
+                                    style={{background:isAfgerond?"rgba(255,255,255,0.06)":"rgba(46,204,113,0.12)",color:isAfgerond?ADM.white:ADM.green,border:`1px solid ${isAfgerond?ADM.border:"rgba(46,204,113,0.3)"}`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}
+                                  >
+                                    {isAfgerond ? "Heropenen" : "✓ Afronden"}
+                                  </button>
+                                )}
                                 {trajectRef && (
                                   <button
                                     onClick={() => openTraject(trajectRef.id)}
