@@ -2849,6 +2849,12 @@ function PageKlanten() {
   const [selectedMetingId, setSelectedMetingId] = useState(null);
   const [gekopieerd, setGekopieerd] = useState(null);
   const [portalItem, setPortalItem] = useState({ titel: "", url: "", categorie: "Rapport", datum: "", doelgroep: "" });
+  const [portalBewerkIndex, setPortalBewerkIndex] = useState(null);
+
+  useEffect(() => {
+    setPortalBewerkIndex(null);
+    setPortalItem({ titel: "", url: "", categorie: "Rapport", datum: "", doelgroep: "" });
+  }, [selectedKlant?.id]);
   const [portalOpslaan, setPortalOpslaan] = useState(false);
   const [portalLinkBezig, setPortalLinkBezig] = useState(false);
   const [nieuw, setNieuw] = useState({ naam:"", sector:"", contact:"", email:"", status:"Actief" });
@@ -3269,13 +3275,16 @@ function PageKlanten() {
         categorie: url ? portalItem.categorie : "",
         datum: portalItem.datum || "",
         doelgroep: portalItem.doelgroep || "",
-        aangemaakt: new Date().toISOString(),
       };
+      const nieuweLijst = portalBewerkIndex !== null
+        ? bestaand.map((it, i) => (i === portalBewerkIndex ? { ...it, ...nieuwItem, bijgewerkt: new Date().toISOString() } : it))
+        : [...bestaand, { ...nieuwItem, aangemaakt: new Date().toISOString() }];
       await updateDoc(doc(db, "klanten", selectedKlant.id), {
         portalWelkom: bewerkData.portalWelkom || selectedKlant.portalWelkom || "",
-        portalMaterialen: [...bestaand, nieuwItem],
+        portalMaterialen: nieuweLijst,
         portalBijgewerkt: serverTimestamp(),
       });
+      setPortalBewerkIndex(null);
       setPortalItem({ titel: "", url: "", categorie: "Rapport", datum: "", doelgroep: "" });
       await laadData();
     } catch (err) {
@@ -3694,10 +3703,18 @@ function PageKlanten() {
                   </div>
                   <div style={{display:"flex",justifyContent:"space-between",gap:10,alignItems:"center",marginBottom:10,flexWrap:"wrap"}}>
                     <div style={{fontSize:11,color:ADM.muted}}>{(selectedKlant.portalMaterialen || []).length} item(s) zichtbaar in dit klantportaal.</div>
-                    <button onClick={slaPortalItemOp} disabled={portalOpslaan || !portalItem.titel.trim()}
-                      style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"8px 12px",fontWeight:700,fontSize:12,cursor:portalOpslaan?"wait":"pointer",opacity:!portalItem.titel.trim()?0.5:1}}>
-                      {portalOpslaan ? "Opslaan..." : "Toevoegen aan portaal"}
-                    </button>
+                    <div style={{display:"flex",gap:8}}>
+                      {portalBewerkIndex !== null && (
+                        <button onClick={()=>{setPortalBewerkIndex(null);setPortalItem({ titel:"", url:"", categorie:"Rapport", datum:"", doelgroep:"" });}}
+                          style={{background:"none",color:ADM.muted,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"8px 12px",fontSize:12,cursor:"pointer"}}>
+                          Annuleren
+                        </button>
+                      )}
+                      <button onClick={slaPortalItemOp} disabled={portalOpslaan || !portalItem.titel.trim()}
+                        style={{background:portalBewerkIndex!==null?ADM.teal:"rgba(255,255,255,0.06)",color:portalBewerkIndex!==null?ADM.navyDeep:ADM.white,border:`1px solid ${portalBewerkIndex!==null?ADM.teal:ADM.border}`,borderRadius:8,padding:"8px 12px",fontWeight:700,fontSize:12,cursor:portalOpslaan?"wait":"pointer",opacity:!portalItem.titel.trim()?0.5:1}}>
+                        {portalOpslaan ? "Opslaan..." : portalBewerkIndex !== null ? "Wijzigingen opslaan" : "Toevoegen aan portaal"}
+                      </button>
+                    </div>
                   </div>
                   {(selectedKlant.portalMaterialen || []).length > 0 && (
                     <div style={{display:"grid",gap:6}}>
@@ -3711,6 +3728,10 @@ function PageKlanten() {
                           </div>
                           <div style={{display:"flex",gap:6,flexShrink:0}}>
                             {item.url && <a href={item.url} target="_blank" rel="noopener noreferrer" style={{fontSize:11,color:ADM.teal,fontWeight:700,textDecoration:"none",border:`1px solid ${ADM.border}`,borderRadius:6,padding:"5px 9px"}}>Openen</a>}
+                            <button onClick={()=>{setPortalBewerkIndex(index);setPortalItem({ titel:item.titel||"", url:item.url||"", categorie:item.categorie||"Rapport", datum:item.datum||"", doelgroep:item.doelgroep||"" });}}
+                              style={{background:portalBewerkIndex===index?"rgba(15,118,110,0.18)":"transparent",color:ADM.teal,border:"1px solid rgba(15,118,110,0.4)",borderRadius:6,padding:"5px 9px",fontSize:11,fontWeight:700,cursor:"pointer"}}>
+                              {portalBewerkIndex===index?"Bezig...":"Bewerken"}
+                            </button>
                             <button onClick={()=>verwijderPortalItem(index)}
                               style={{background:"transparent",color:ADM.red,border:"1px solid rgba(231,76,60,0.4)",borderRadius:6,padding:"5px 9px",fontSize:11,fontWeight:700,cursor:"pointer"}}>
                               Verwijderen
@@ -5603,15 +5624,21 @@ function PageRapportages() {
     const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
 
     const DOMEINEN = [
-      { naam: "Veiligheid en leiderschap", kleur: "#5A8C3C", pijler: 0, mwIds: null, mgIds: null },
-      { naam: "Beleving van verandering", kleur: "#3A7DBF", pijler: 1, mwIds: null, mgIds: null },
-      { naam: "Energie en motivatie",      kleur: "#E8821A", pijler: 2, mwIds: null, mgIds: null },
-      { naam: "Verbeteren en leren",       kleur: "#6B4E9E", pijler: 3, mwIds: null, mgIds: null },
+      { naam: "Veiligheid en leiderschap", kleur: "#5A8C3C", pijler: 0, mwIds: null, mgIds: null,
+        omschrijving: "Meet of teamleden zich durven uitspreken, fouten bespreekbaar kunnen maken en zich gesteund voelen door de leidinggevende." },
+      { naam: "Beleving van verandering", kleur: "#3A7DBF", pijler: 1, mwIds: null, mgIds: null,
+        omschrijving: "Meet hoe het team veranderingen ervaart: is er duidelijkheid over het waarom, voelt het team zich meegenomen en is er vertrouwen in de richting?" },
+      { naam: "Energie en motivatie",      kleur: "#E8821A", pijler: 2, mwIds: null, mgIds: null,
+        omschrijving: "Meet waar het team energie van krijgt en wat energie kost: werkplezier, motivatie, werkdruk en de balans daartussen." },
+      { naam: "Verbeteren en leren",       kleur: "#6B4E9E", pijler: 3, mwIds: null, mgIds: null,
+        omschrijving: "Meet of het team leert van fouten, ruimte ervaart om te experimenteren en verbeteringen ook echt vasthoudt." },
       // Pijler 4 opgesplitst in twee domeinen
       { naam: "Samenwerking en communicatie", kleur: "#0F766E", pijler: 4,
-        mwIds: [1001,1002,1003,1004], mgIds: [2001,2002,2003,2004] },
+        mwIds: [1001,1002,1003,1004], mgIds: [2001,2002,2003,2004],
+        omschrijving: "Meet hoe teamleden samenwerken en elkaar helpen, en of het onderlinge gesprek open en direct is." },
       { naam: "Richting en betrokkenheid",    kleur: "#8B5CF6", pijler: 4,
-        mwIds: [1027,1028], mgIds: [2027,2028] },
+        mwIds: [1027,1028], mgIds: [2027,2028],
+        omschrijving: "Meet of het team de koers kent, zich daarbij betrokken voelt en weet welke bijdrage van ieder wordt verwacht." },
     ];
 
     // Score per pijler berekenen op basis van de juiste vragenlijst
@@ -5706,7 +5733,12 @@ function PageRapportages() {
     /* Samenvatting kompas-grid */
     .kompas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .kompas-card { border-radius: 10px; padding: 20px 22px; }
-    .kompas-naam { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .kompas-naam { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .kompas-oms { font-size: 12px; color: #5b6775; line-height: 1.55; margin-bottom: 12px; }
+    .bijlage-domein { margin-bottom: 26px; }
+    .bijlage-groep { margin-bottom: 14px; }
+    .bijlage-lijst { margin: 6px 0 0; padding-left: 22px; }
+    .bijlage-lijst li { font-size: 12.5px; color: #444; line-height: 1.7; margin-bottom: 4px; }
     .kompas-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
     .kompas-rolabel { font-size: 12px; font-weight: 600; width: 110px; flex-shrink: 0; }
 
@@ -5762,6 +5794,7 @@ function PageRapportages() {
       ${scores.map(s => `
       <div class="kompas-card" style="background:${s.kleur}0f;border:1px solid ${s.kleur}28;">
         <div class="kompas-naam" style="color:${s.kleur};">${s.naam}</div>
+        <div class="kompas-oms">${s.omschrijving || ""}</div>
         <div class="kompas-row">
           <div class="kompas-rolabel" style="color:#5A8C3C;">👥 Medewerkers</div>
           ${balk(s.mw, scoreKleur(s.mw), 160)}
@@ -5923,6 +5956,53 @@ function PageRapportages() {
       </div>`;
     }).join("")}
   </div>` : ""}
+
+  <!-- ═══ BIJLAGE: DE GESTELDE VRAGEN ═══ -->
+  <div class="section" style="page-break-before: always;">
+    <div class="section-label">Bijlage — De gestelde vragen</div>
+    <p style="font-size:13px;color:#6B7A8D;line-height:1.7;margin-bottom:20px;">
+      Hieronder staan per domein de stellingen zoals ze aan het team en de leidinggevende zijn voorgelegd.
+      Elke stelling is beantwoord op een schaal van 1 (helemaal oneens) tot 5 (helemaal eens).
+      Vragen gemarkeerd met <em>(open vraag)</em> zijn met eigen woorden beantwoord; die antwoorden staan eerder in dit rapport.
+    </p>
+    ${DOMEINEN.map(d => {
+      const mwS = d.mwIds
+        ? mwStellingen.filter(s => d.mwIds.includes(s.id))
+        : mwStellingen.filter(s => s.pijler === d.pijler && s.type === "schaal");
+      const mgS = d.mgIds
+        ? mgStellingen.filter(s => d.mgIds.includes(s.id))
+        : mgStellingen.filter(s => s.pijler === d.pijler && s.type === "schaal");
+      const openIds = openIdsMap[d.naam];
+      const mwO = openIds
+        ? mwStellingen.filter(s => openIds.mw.includes(s.id))
+        : mwStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+      const mgO = openIds
+        ? mgStellingen.filter(s => openIds.mg.includes(s.id))
+        : mgStellingen.filter(s => s.pijler === d.pijler && s.type === "open");
+      if (!mwS.length && !mgS.length && !mwO.length && !mgO.length) return "";
+      return `
+      <div class="bijlage-domein">
+        <div class="open-domein" style="color:${d.kleur};">${d.naam}</div>
+        <div style="font-size:12px;color:#6B7A8D;line-height:1.6;margin-bottom:10px;">${d.omschrijving || ""}</div>
+        ${(mwS.length || mwO.length) ? `
+        <div class="bijlage-groep">
+          <div class="open-roltitel">👥 Vragen aan medewerkers</div>
+          <ol class="bijlage-lijst">
+            ${mwS.map(s => `<li>${s.tekst}</li>`).join("")}
+            ${mwO.map(s => `<li><em>${s.tekst}</em> <span style="color:#999;">(open vraag)</span></li>`).join("")}
+          </ol>
+        </div>` : ""}
+        ${(mgS.length || mgO.length) ? `
+        <div class="bijlage-groep">
+          <div class="open-roltitel">👔 Vragen aan de leidinggevende</div>
+          <ol class="bijlage-lijst">
+            ${mgS.map(s => `<li>${s.tekst}</li>`).join("")}
+            ${mgO.map(s => `<li><em>${s.tekst}</em> <span style="color:#999;">(open vraag)</span></li>`).join("")}
+          </ol>
+        </div>` : ""}
+      </div>`;
+    }).join("")}
+  </div>
 
 </div>
 <div class="footer">
