@@ -1,0 +1,60 @@
+:root {
+  color-scheme: light;
+  --tk-color-ink: #0d1b2a;
+  --tk-color-navy: #1a2e4a;
+  --tk-color-teal: #0f766e;
+  --tk-color-teal-dark: #0b5f5a;
+  --tk-color-green: #5a8c3c;
+  --tk-color-blue: #3a7dbf;
+  --tk-color-purple: #6b4e9e;
+  --tk-color-orange: #e8821a;
+  --tk-color-sand: #f7f3ea;
+  --tk-color-bg: #f4f7f9;
+  --tk-color-surface: #ffffff;
+  --tk-color-muted: #637083;
+  --tk-color-border: #dde4ed;
+  --tk-font-sans: Inter, Roboto, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --tk-radius-sm: 10px;
+  --tk-radius-md: 16px;
+  --tk-radius-lg: 22px;
+  --tk-radius-pill: 999px;
+  --tk-shadow-sm: 0 8px 22px rgba(13, 27, 42, 0.06);
+  --tk-shadow-md: 0 18px 46px rgba(13, 27, 42, 0.09);
+  --tk-shadow-lg: 0 28px 80px rgba(13, 27, 42, 0.15);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--tk-font-sans);
+  background: var(--tk-color-bg);
+  color: var(--tk-color-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button, input, textarea, select { font: inherit; }
+a { color: inherit; }
+::selection { background: rgba(15, 118, 110, 0.18); }
+:focus-visible { outline: 3px solid rgba(15, 118, 110, 0.36); outline-offset: 3px; }
+
+.tk-page { min-height: 100vh; background: var(--tk-color-bg); color: var(--tk-color-ink); }
+.tk-section { padding: clamp(56px, 8vw, 96px) 24px; }
+.tk-container { width: min(1120px, 100%); margin: 0 auto; }
+.tk-eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 18px; color: var(--tk-color-teal); font-size: 13px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+.tk-heading-xl { margin: 0; max-width: 920px; font-size: clamp(42px, 7vw, 76px); line-height: .98; letter-spacing: -.055em; }
+.tk-heading-lg { margin: 0; font-size: clamp(30px, 4.5vw, 46px); line-height: 1.08; letter-spacing: -.04em; }
+.tk-lead { max-width: 820px; margin: 24px 0 0; color: var(--tk-color-muted); font-size: clamp(18px, 2vw, 22px); line-height: 1.6; }
+.tk-grid { display: grid; gap: 18px; }
+.tk-grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.tk-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 34px; }
+.tk-button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 14px 22px; border-radius: var(--tk-radius-pill); border: 1px solid transparent; text-decoration: none; font-weight: 850; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; }
+.tk-button:hover { transform: translateY(-1px); }
+.tk-button-primary { color: white; background: linear-gradient(135deg, var(--tk-color-teal), var(--tk-color-teal-dark)); box-shadow: 0 14px 35px rgba(15,118,110,.22); }
+.tk-button-secondary { color: var(--tk-color-ink); background: white; border-color: var(--tk-color-border); box-shadow: var(--tk-shadow-sm); }
+.tk-card { position: relative; overflow: hidden; height: 100%; padding: 26px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: var(--tk-color-surface); box-shadow: var(--tk-shadow-sm); }
+.tk-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: var(--tk-accent, var(--tk-color-teal)); }
+.tk-card h3 { margin: 0 0 10px; font-size: 20px; line-height: 1.25; }
+.tk-card p { margin: 0; color: var(--tk-color-muted); line-height: 1.7; }
+.tk-input { width: 100%; min-height: 48px; padding: 13px 15px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-sm); background: #fff; color: var(--tk-color-ink); }
+.tk-input::placeholder { color: #98a4b3; }
