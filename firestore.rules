@@ -58,6 +58,12 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // Rapportages voor het klantportaal: alleen beheerders schrijven/lezen direct;
+    // klanten krijgen ze via de Cloud Function (admin SDK).
+    match /portalRapporten/{docId} {
+      allow read, write: if isAdmin();
+    }
+
     // Alles wat niet expliciet hierboven staat, blijft dicht
     match /{document=**} {
       allow read, write: if false;

@@ -735,6 +735,7 @@ function isAdminRequest(request) {
 exports.getCustomerPortal = onCall(async (request) => {
   const token = String((request.data && request.data.token) || "").trim();
   const klantId = String((request.data && request.data.klantId) || "").trim();
+  const rapportId = String((request.data && request.data.rapportId) || "").trim();
 
   let klantDoc = null;
 
@@ -758,6 +759,16 @@ exports.getCustomerPortal = onCall(async (request) => {
     throw new HttpsError("permission-denied", "Dit klantportaal is niet actief.");
   }
 
+  // Detailmodus: één specifieke rapportage ophalen (alleen van deze klant)
+  if (rapportId) {
+    const rapDoc = await db.collection("portalRapporten").doc(rapportId).get();
+    const rap = rapDoc.exists ? rapDoc.data() || {} : null;
+    if (!rap || (rap.klantNaam || "") !== (klant.naam || "")) {
+      throw new HttpsError("not-found", "Rapportage niet gevonden.");
+    }
+    return { rapportHtml: rap.html || "", titel: rap.titel || "Rapportage" };
+  }
+
   const vragenSnap = await db.collection("vragenlijsten").where("klant", "==", klant.naam || "").get();
   const trajecten = vragenSnap.docs
     .map((doc) => ({ id: doc.id, ...(doc.data() || {}) }))
@@ -770,6 +781,25 @@ exports.getCustomerPortal = onCall(async (request) => {
       scanLink: v.status === "Actief" ? `https://www.mijnteamkompas.nl/deelnemen/${v.id}` : "",
     }));
 
+  let rapporten = [];
+  try {
+    const rapSnap = await db.collection("portalRapporten").where("klantNaam", "==", klant.naam || "").get();
+    rapporten = rapSnap.docs
+      .map((d) => {
+        const r = d.data() || {};
+        return {
+          id: d.id,
+          titel: r.titel || "Rapportage",
+          rol: r.rol || "",
+          trajectNaam: r.trajectNaam || "",
+          datum: r.aangemaaktIso ? r.aangemaaktIso.slice(0, 10) : "",
+        };
+      })
+      .sort((a, b) => String(b.datum).localeCompare(String(a.datum)));
+  } catch (err) {
+    rapporten = [];
+  }
+
   return {
     klant: {
       id: klantDoc.id,
@@ -780,5 +810,6 @@ exports.getCustomerPortal = onCall(async (request) => {
     welkom: klant.portalWelkom || "",
     materialen: Array.isArray(klant.portalMaterialen) ? klant.portalMaterialen : [],
     trajecten,
+    rapporten,
   };
 });

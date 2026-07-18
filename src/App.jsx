@@ -3295,14 +3295,39 @@ function PageKlanten() {
   };
 
   const zetTrajectStatus = async (groep, nieuweStatus) => {
-    const ids = [groep.mwT?.id, groep.mgT?.id].filter(Boolean);
-    if (ids.length === 0) return;
-    if (nieuweStatus === "Afgerond" && !window.confirm(`Traject "${groep.naam}" afronden? Het traject telt dan niet meer mee als open traject.`)) return;
+    const lijstenInGroep = [groep.mwT, groep.mgT].filter(Boolean);
+    if (lijstenInGroep.length === 0) return;
+    if (nieuweStatus === "Afgerond" && !window.confirm(`Traject "${groep.naam}" afronden? De rapportages verschijnen dan automatisch in het klantportaal.`)) return;
     try {
-      await Promise.all(ids.map((id) => updateDoc(doc(db, "vragenlijsten", id), {
+      await Promise.all(lijstenInGroep.map((l) => updateDoc(doc(db, "vragenlijsten", l.id), {
         status: nieuweStatus,
         statusGewijzigd: serverTimestamp(),
       })));
+
+      if (nieuweStatus === "Afgerond") {
+        // Rapportages genereren en publiceren naar het klantportaal
+        for (const lijst of lijstenInGroep) {
+          const resp = antwoorden.filter(a => a.vragenlijstId === lijst.id && !a.verwijderd);
+          if (!resp.length) continue;
+          const { html, scanLabel } = bouwBasisscanRapportHtml(lijst, resp);
+          await setDoc(doc(db, "portalRapporten", lijst.id), {
+            klantNaam: selectedKlant?.naam || lijst.klant || "",
+            trajectId: lijst.id,
+            trajectNaam: lijst.naam || "",
+            rol: lijst.trajectRol || "",
+            titel: `${scanLabel || "Rapportage"} — ${lijst.naam || ""}`,
+            html,
+            aangemaaktIso: new Date().toISOString(),
+            aangemaakt: serverTimestamp(),
+          });
+        }
+      } else {
+        // Heropend: rapportages weer uit het portaal halen
+        for (const lijst of lijstenInGroep) {
+          await deleteDoc(doc(db, "portalRapporten", lijst.id)).catch(() => {});
+        }
+      }
+
       await laadData();
     } catch (err) {
       console.error("Trajectstatus wijzigen mislukt:", err);
@@ -3354,32 +3379,8 @@ function PageKlanten() {
   };
 
   const downloadBasisRapport = (traj, resp) => {
-    const now = new Date();
-    const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
-    const averages = [0,1,2,3,4].map(pi => {
-      const ids = (traj.stellingen || DEFAULT_STELLINGEN).filter(s => s.pijler === pi && s.type === "schaal").map(s => s.id);
-      const vals = resp.flatMap(a => ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null));
-      return vals.length ? (vals.reduce((s,v)=>s+parseFloat(v),0) / vals.length) : null;
-    });
-
-    const html = `<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Rapportage — ${traj.naam}</title>${standaardRapportCss()}</head><body>
-    ${standaardRapportHeader({ titel: traj.naam, klant: traj.klant, instrument: "Basisscan", respondenten: resp.length, datum })}
-    <div class="content">
-      <div class="section">
-        <div class="section-title">Samenvatting per domein</div>
-        ${["Veiligheid en leiderschap","Beleving van verandering","Energie en motivatie","Verbeteren en leren","Gedrag (centraal)"].map((naam, i) => `
-          <div class="card">
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-              <div style="font-size:16px;font-weight:700;color:#0D1B2A">${naam}</div>
-              <div style="font-size:24px;font-weight:700;color:${averages[i] !== null ? (averages[i] >= 4 ? "#2ecc71" : averages[i] >= 3 ? "#f39c12" : "#e74c3c") : "#6B7A8D"}">
-                ${averages[i] !== null ? averages[i].toFixed(1) : "—"}
-              </div>
-            </div>
-          </div>`).join("")}
-      </div>
-    </div>
-    <div class="footer">© ${now.getFullYear()} Mijn Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik</div></body></html>`;
-    downloadHtmlRapport(`rapportage-basisscan-${traj.klant.toLowerCase().replace(/\s+/g, "-")}-${traj.naam.toLowerCase().replace(/\s+/g, "-")}.html`, html);
+    const { html } = bouwBasisscanRapportHtml(traj, resp);
+    openRapportAlsPdf(html);
   };
 
   const openRapportageVoorTraject = (traj) => {
@@ -4569,6 +4570,239 @@ function PageMetingen() {
   );
 }
 
+
+const BASISSCAN_DOMEIN_UITLEG = {
+  "Veiligheid en leiderschap": "Meet of teamleden zich durven uitspreken, fouten bespreekbaar kunnen maken en zich gesteund voelen door de leidinggevende.",
+  "Beleving van verandering": "Meet hoe het team veranderingen ervaart: is er duidelijkheid over het waarom, voelt het team zich meegenomen en is er vertrouwen in de richting?",
+  "Energie en motivatie": "Meet waar het team energie van krijgt en wat energie kost: werkplezier, motivatie, werkdruk en de balans daartussen.",
+  "Verbeteren en leren": "Meet of het team leert van fouten, ruimte ervaart om te experimenteren en verbeteringen ook echt vasthoudt.",
+};
+
+// Gedeelde rapportbouwer voor de basisscan: gebruikt door de Rapportages-tab,
+// de Klanten-tab en het automatisch publiceren naar het klantportaal.
+function bouwBasisscanRapportHtml(lijst, resp) {
+  const pijlerKleuren = ["#5A8C3C", "#3A7DBF", "#E8821A", "#6B4E9E"];
+  const pijlerNamen   = ["Veiligheid en leiderschap", "Beleving van verandering", "Energie en motivatie", "Verbeteren en leren"];
+  const stellingen  = lijst.stellingen || DEFAULT_STELLINGEN;
+  const teamleden   = resp.filter(a => a.rol === "Teamlid");
+  const management  = resp.filter(a => a.rol === "Leidinggevende");
+
+  const gemVoor = (pi, subset) => {
+    const ids = stellingen.filter(s => s.pijler === pi && s.type === "schaal").map(s => s.id);
+    const vals = subset.flatMap(a => ids.map(id => a.antwoorden?.[id]).filter(v => v !== undefined && v !== null && v !== ""));
+    return vals.length ? vals.reduce((s, v) => s + parseFloat(v), 0) / vals.length : null;
+  };
+  const scoreKleurHex = s => !s || isNaN(s) ? "#aaa" : s >= 4 ? "#2ecc71" : s >= 3 ? "#f39c12" : "#e74c3c";
+
+  const scores = pijlerNamen.map((naam, i) => {
+    const totaal = gemVoor(i, resp);
+    const team   = gemVoor(i, teamleden);
+    const mgmt   = gemVoor(i, management);
+    const gap    = (team !== null && mgmt !== null) ? (mgmt - team) : null;
+    return { naam, kleur: pijlerKleuren[i], totaal, team, mgmt, gap };
+  });
+
+  const openAntwoorden = pijlerNamen.map((naam, pi) => {
+    const openStellingen = stellingen.filter(s => s.pijler === pi && s.type === "open");
+    const antw = openStellingen.flatMap(s =>
+      resp.map(a => a.antwoorden?.[s.id]).filter(v => v && v.trim().length > 3)
+    );
+    return { naam, kleur: pijlerKleuren[pi], vraag: openStellingen[0]?.tekst || "", antwoorden: antw };
+  });
+
+  const scanLabel = lijst.trajectRol === "medewerkers" ? "Medewerkersscan"
+    : lijst.trajectRol === "management" ? "Managerscan" : "";
+  const rolSlug = lijst.trajectRol === "medewerkers" ? "medewerkers"
+    : lijst.trajectRol === "management" ? "manager" : "";
+
+  const now   = new Date();
+  const datum = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+  const slug  = t => String(t || "").toLowerCase().replace(/\s+/g, "-");
+  const bestandsnaam = ["rapportage", rolSlug, slug(lijst.klant), slug(lijst.naam)].filter(Boolean).join("-");
+
+  const scoreRij = (label, score, kleur) => score !== null ? `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+      <div style="font-size:12px;color:${kleur};font-weight:600;width:130px;flex-shrink:0;">${label}</div>
+      <div style="flex:1;height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden;">
+        <div style="height:100%;border-radius:5px;background:${kleur};width:${(score/5)*100}%;"></div>
+      </div>
+      <div style="font-size:14px;font-weight:700;color:${kleur};width:32px;text-align:right;">${score.toFixed(1)}</div>
+    </div>` : "";
+
+  const html = `<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>${bestandsnaam}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f9fc; color: #1a1a2e; }
+    .header { background: #0D1B2A; color: white; padding: 40px 60px; position: relative; overflow: hidden; }
+    .header-bar { display: flex; height: 6px; margin-bottom: 32px; }
+    .header-bar div { flex: 1; }
+    .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+    .header p  { font-size: 14px; color: rgba(255,255,255,0.6); }
+    .header .meta { display: flex; gap: 32px; margin-top: 20px; flex-wrap: wrap; }
+    .header .meta-item { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+    .header .meta-item span { display: block; font-size: 15px; color: white; font-weight: 600; margin-top: 2px; text-transform: none; letter-spacing: 0; }
+    .content { max-width: 900px; margin: 0 auto; padding: 40px 40px; }
+    .section { background: white; border-radius: 12px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #00A896; margin-bottom: 18px; }
+    .pijler-card { border-radius: 10px; padding: 22px; margin-bottom: 16px; border: 1px solid #eee; }
+    .pijler-naam { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+    .gap-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-left: 10px; }
+    .open-item { background: #f7f9fc; border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; font-size: 13px; line-height: 1.6; color: #444; border-left: 3px solid; }
+    .samenvatting-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .sum-card { border-radius: 10px; padding: 20px; text-align: center; }
+    .sum-score { font-size: 36px; font-weight: 700; margin: 8px 0 4px; }
+    .sum-label { font-size: 12px; opacity: 0.75; }
+    .footer { text-align: center; padding: 32px; color: #aaa; font-size: 12px; }
+    @media print { body { background: white; } .content { padding: 20px; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-bar">
+      <div style="background:#5A8C3C;"></div>
+      <div style="background:#3A7DBF;"></div>
+      <div style="background:#E8821A;"></div>
+      <div style="background:#6B4E9E;"></div>
+    </div>
+    <div style="font-size:11px;color:#00A896;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">
+      Het Teamkompas — Rapportage${scanLabel ? ` ${scanLabel.toLowerCase()}` : ""}
+    </div>
+    <h1>${lijst.naam}</h1>
+    <p>${lijst.klant}${scanLabel ? ` · ${scanLabel}` : ""}</p>
+    <div class="meta">
+      <div class="meta-item">Datum<span>${datum}</span></div>
+      ${scanLabel ? `<div class="meta-item">Scantype<span>${scanLabel}</span></div>` : ""}
+      <div class="meta-item">Respondenten<span>${resp.length}</span></div>
+      <div class="meta-item">Teamleden<span>${teamleden.length}</span></div>
+      <div class="meta-item">Leidinggevenden<span>${management.length}</span></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SAMENVATTING -->
+    <div class="section">
+      <div class="section-title">Samenvatting per domein</div>
+      <div class="samenvatting-grid">
+        ${scores.map(s => `
+        <div class="sum-card" style="background:${s.kleur}18;border:1px solid ${s.kleur}33;">
+          <div style="font-size:11px;font-weight:700;color:${s.kleur};letter-spacing:1px;text-transform:uppercase;">${s.naam}</div>
+          <div style="font-size:11.5px;color:#5b6775;line-height:1.55;margin-top:6px;text-align:left;">${BASISSCAN_DOMEIN_UITLEG[s.naam] || ""}</div>
+          <div class="sum-score" style="color:${s.totaal ? scoreKleurHex(s.totaal) : '#aaa'};">${s.totaal ? s.totaal.toFixed(1) : "—"}</div>
+          <div class="sum-label" style="color:${s.kleur};">Gemiddeld (schaal 1–5)</div>
+        </div>`).join("")}
+      </div>
+    </div>
+
+    <!-- GAP ANALYSE -->
+    ${teamleden.length > 0 && management.length > 0 ? `
+    <div class="section">
+      <div class="section-title">Gap-analyse: team vs. leidinggevenden</div>
+      ${scores.map(s => {
+        const gap = s.gap;
+        const gapKleur = gap === null ? "#aaa" : Math.abs(gap) >= 1.5 ? "#e74c3c" : Math.abs(gap) >= 0.8 ? "#f39c12" : "#2ecc71";
+        const gapLabel = gap === null ? "" : Math.abs(gap) >= 1.5 ? "Grote kloof" : Math.abs(gap) >= 0.8 ? "Merkbaar verschil" : "Kleine kloof";
+        return `
+        <div class="pijler-card">
+          <div class="pijler-naam" style="color:${s.kleur};">
+            ${s.naam}
+            ${gap !== null ? `<span class="gap-badge" style="background:${gapKleur}22;color:${gapKleur};">
+              ${gap > 0 ? "+" : ""}${gap.toFixed(1)} — ${gapLabel}
+            </span>` : ""}
+          </div>
+          ${scoreRij("👥 Team", s.team, "#5A8C3C")}
+          ${scoreRij("👔 Leidinggevenden", s.mgmt, "#6B4E9E")}
+        </div>`;
+      }).join("")}
+    </div>` : ""}
+
+    <!-- OPEN ANTWOORDEN -->
+    <div class="section">
+      <div class="section-title">Open antwoorden per domein</div>
+      ${openAntwoorden.map(p => p.antwoorden.length > 0 ? `
+      <div style="margin-bottom:24px;">
+        <div style="font-size:14px;font-weight:700;color:${p.kleur};margin-bottom:6px;">${p.naam}</div>
+        <div style="font-size:12px;color:#888;margin-bottom:10px;font-style:italic;">${p.vraag}</div>
+        ${p.antwoorden.map(a => `
+        <div class="open-item" style="border-color:${p.kleur};">${a}</div>`).join("")}
+      </div>` : "").join("")}
+      ${openAntwoorden.every(p => p.antwoorden.length === 0) ?
+        `<div style="color:#aaa;font-size:13px;">Nog geen open antwoorden beschikbaar.</div>` : ""}
+    </div>
+
+    <div class="section" style="background:#0D1B2A;color:white;">
+      <div style="font-size:11px;color:#00A896;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Over deze rapportage</div>
+      <p style="font-size:13px;line-height:1.7;color:rgba(255,255,255,0.65);">
+        Deze rapportage is gegenereerd op basis van de ingevulde teamscans via Het Teamkompas.
+        Individuele antwoorden zijn anoniem verwerkt. Scores zijn gebaseerd op een schaal van 1 tot 5.
+        Een score van 4 of hoger duidt op een sterke positie; tussen 3 en 4 is er ruimte voor verbetering;
+        onder de 3 verdient het domein prioritaire aandacht.
+      </p>
+    </div>
+
+    <!-- BIJLAGE: DE GESTELDE VRAGEN -->
+    <div class="section" style="page-break-before: always;">
+      <div class="section-title">Bijlage — De gestelde vragen</div>
+      <p style="font-size:13px;color:#6B7A8D;line-height:1.7;margin-bottom:20px;">
+        Hieronder staan per domein de stellingen zoals ze in deze scan zijn voorgelegd.
+        Elke stelling is beantwoord op een schaal van 1 (helemaal oneens) tot 5 (helemaal eens).
+        Vragen gemarkeerd met <em>(open vraag)</em> zijn met eigen woorden beantwoord; die antwoorden staan eerder in dit rapport.
+      </p>
+      ${pijlerNamen.map((naam, pi) => {
+        const schaal = stellingen.filter(s => s.pijler === pi && s.type === "schaal");
+        const open   = stellingen.filter(s => s.pijler === pi && s.type === "open");
+        if (!schaal.length && !open.length) return "";
+        return `
+        <div style="margin-bottom:24px;">
+          <div style="font-size:14px;font-weight:700;color:${pijlerKleuren[pi]};margin-bottom:4px;">${naam}</div>
+          <div style="font-size:12px;color:#6B7A8D;line-height:1.6;margin-bottom:8px;">${BASISSCAN_DOMEIN_UITLEG[naam] || ""}</div>
+          <ol style="margin:0;padding-left:22px;">
+            ${schaal.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;">${s.tekst}</li>`).join("")}
+            ${open.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;"><em>${s.tekst}</em> <span style="color:#999;">(open vraag)</span></li>`).join("")}
+          </ol>
+        </div>`;
+      }).join("")}
+      ${(() => {
+        const rest = stellingen.filter(s => s.pijler > 3);
+        if (!rest.length) return "";
+        const restSchaal = rest.filter(s => s.type === "schaal");
+        const restOpen   = rest.filter(s => s.type === "open");
+        return `
+        <div style="margin-bottom:8px;">
+          <div style="font-size:14px;font-weight:700;color:#0F766E;margin-bottom:4px;">Samenwerking, communicatie en richting</div>
+          <div style="font-size:12px;color:#6B7A8D;line-height:1.6;margin-bottom:8px;">Meet hoe teamleden samenwerken, of het onderlinge gesprek open is, en of het team de koers kent en zich daarbij betrokken voelt.</div>
+          <ol style="margin:0;padding-left:22px;">
+            ${restSchaal.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;">${s.tekst}</li>`).join("")}
+            ${restOpen.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;"><em>${s.tekst}</em> <span style="color:#999;">(open vraag)</span></li>`).join("")}
+          </ol>
+        </div>`;
+      })()}
+    </div>
+
+  </div>
+  <div class="footer">
+    © ${now.getFullYear()} Het Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik
+  </div>
+</body>
+</html>`;
+
+  return { html, bestandsnaam, scanLabel };
+}
+
+// Opent een rapport in een nieuw venster en start automatisch de printdialoog,
+// zodat de gebruiker het direct als PDF kan opslaan (bestandsnaam = documenttitel).
+function openRapportAlsPdf(html) {
+  const printHtml = html.replace("</body>", `<script>window.addEventListener('load',function(){setTimeout(function(){window.print();},600);});</` + `script></body>`);
+  const blob = new Blob([printHtml], { type: "text/html;charset=utf-8" });
+  const url  = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
 
 function downloadHtmlRapport(filename, html) {
   const pdfNaam = filename.replace(/\.html$/i, ".pdf");
@@ -6011,13 +6245,7 @@ function PageRapportages() {
 </body>
 </html>`;
 
-    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement("a");
-    a.href     = url;
-    a.download = `totaalrapportage-${mwLijst.klant.toLowerCase().replace(/\s+/g, "-")}-${mwLijst.naam.toLowerCase().replace(/\s+/g, "-")}.html`;
-    a.click();
-    URL.revokeObjectURL(url);
+    openRapportAlsPdf(html);
     setGenererend(null);
   };
 
@@ -6763,214 +6991,8 @@ function PageRapportages() {
       return;
     }
 
-    const teamleden  = resp.filter(a => a.rol === "Teamlid");
-    const management = resp.filter(a => a.rol === "Leidinggevende");
-    const stellingen = lijst.stellingen || DEFAULT_STELLINGEN;
-
-    // Bereken scores
-    const scores = pijlerNamen.map((naam, i) => {
-      const totaal = gemPijler(i, resp, stellingen);
-      const team   = gemPijler(i, teamleden, stellingen);
-      const mgmt   = gemPijler(i, management, stellingen);
-      const gap    = (team !== null && mgmt !== null) ? (mgmt - team) : null;
-      return { naam, kleur: pijlerKleuren[i], totaal, team, mgmt, gap };
-    });
-
-    // Open antwoorden per pijler
-    const openAntwoorden = pijlerNamen.map((naam, pi) => {
-      const openStellingen = stellingen.filter(s => s.pijler === pi && s.type === "open");
-      const antw = openStellingen.flatMap(s =>
-        resp.map(a => a.antwoorden?.[s.id]).filter(v => v && v.trim().length > 3)
-      );
-      return { naam, kleur: pijlerKleuren[pi], vraag: openStellingen[0]?.tekst || "", antwoorden: antw };
-    });
-
-    const now    = new Date();
-    const datum  = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
-
-    const domeinUitleg = {
-      "Veiligheid en leiderschap": "Meet of teamleden zich durven uitspreken, fouten bespreekbaar kunnen maken en zich gesteund voelen door de leidinggevende.",
-      "Beleving van verandering": "Meet hoe het team veranderingen ervaart: is er duidelijkheid over het waarom, voelt het team zich meegenomen en is er vertrouwen in de richting?",
-      "Energie en motivatie": "Meet waar het team energie van krijgt en wat energie kost: werkplezier, motivatie, werkdruk en de balans daartussen.",
-      "Verbeteren en leren": "Meet of het team leert van fouten, ruimte ervaart om te experimenteren en verbeteringen ook echt vasthoudt.",
-    };
-
-    const scoreRij = (label, score, kleur) => score !== null ? `
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
-        <div style="font-size:12px;color:${kleur};font-weight:600;width:130px;flex-shrink:0;">${label}</div>
-        <div style="flex:1;height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden;">
-          <div style="height:100%;border-radius:5px;background:${kleur};width:${(score/5)*100}%;"></div>
-        </div>
-        <div style="font-size:14px;font-weight:700;color:${kleur};width:32px;text-align:right;">${score.toFixed(1)}</div>
-      </div>` : "";
-
-    const html = `<!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Rapportage — ${lijst.naam}</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f9fc; color: #1a1a2e; }
-    .header { background: #0D1B2A; color: white; padding: 40px 60px; position: relative; overflow: hidden; }
-    .header-bar { display: flex; height: 6px; margin-bottom: 32px; }
-    .header-bar div { flex: 1; }
-    .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
-    .header p  { font-size: 14px; color: rgba(255,255,255,0.6); }
-    .header .meta { display: flex; gap: 32px; margin-top: 20px; }
-    .header .meta-item { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
-    .header .meta-item span { display: block; font-size: 15px; color: white; font-weight: 600; margin-top: 2px; text-transform: none; letter-spacing: 0; }
-    .content { max-width: 900px; margin: 0 auto; padding: 40px 40px; }
-    .section { background: white; border-radius: 12px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #00A896; margin-bottom: 18px; }
-    .pijler-card { border-radius: 10px; padding: 22px; margin-bottom: 16px; border: 1px solid #eee; }
-    .pijler-naam { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
-    .gap-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-left: 10px; }
-    .open-item { background: #f7f9fc; border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; font-size: 13px; line-height: 1.6; color: #444; border-left: 3px solid; }
-    .samenvatting-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .sum-card { border-radius: 10px; padding: 20px; text-align: center; }
-    .sum-score { font-size: 36px; font-weight: 700; margin: 8px 0 4px; }
-    .sum-label { font-size: 12px; opacity: 0.75; }
-    .footer { text-align: center; padding: 32px; color: #aaa; font-size: 12px; }
-    @media print { body { background: white; } .content { padding: 20px; } }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <div class="header-bar">
-      <div style="background:#5A8C3C;"></div>
-      <div style="background:#3A7DBF;"></div>
-      <div style="background:#E8821A;"></div>
-      <div style="background:#6B4E9E;"></div>
-    </div>
-    <div style="font-size:11px;color:#00A896;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Het Teamkompas — Rapportage</div>
-    <h1>${lijst.naam}</h1>
-    <p>${lijst.klant}</p>
-    <div class="meta">
-      <div class="meta-item">Datum<span>${datum}</span></div>
-      <div class="meta-item">Respondenten<span>${resp.length}</span></div>
-      <div class="meta-item">Teamleden<span>${teamleden.length}</span></div>
-      <div class="meta-item">Leidinggevenden<span>${management.length}</span></div>
-    </div>
-  </div>
-
-  <div class="content">
-
-    <!-- SAMENVATTING -->
-    <div class="section">
-      <div class="section-title">Samenvatting per domein</div>
-      <div class="samenvatting-grid">
-        ${scores.map(s => `
-        <div class="sum-card" style="background:${s.kleur}18;border:1px solid ${s.kleur}33;">
-          <div style="font-size:11px;font-weight:700;color:${s.kleur};letter-spacing:1px;text-transform:uppercase;">${s.naam}</div>
-          <div style="font-size:11.5px;color:#5b6775;line-height:1.55;margin-top:6px;text-align:left;">${domeinUitleg[s.naam] || ""}</div>
-          <div class="sum-score" style="color:${s.totaal ? scoreKleurHex(s.totaal) : '#aaa'};">${s.totaal ? s.totaal.toFixed(1) : "—"}</div>
-          <div class="sum-label" style="color:${s.kleur};">Gemiddeld (schaal 1–5)</div>
-        </div>`).join("")}
-      </div>
-    </div>
-
-    <!-- GAP ANALYSE -->
-    ${teamleden.length > 0 && management.length > 0 ? `
-    <div class="section">
-      <div class="section-title">Gap-analyse: team vs. leidinggevenden</div>
-      ${scores.map(s => {
-        const gap = s.gap;
-        const gapKleur = gap === null ? "#aaa" : Math.abs(gap) >= 1.5 ? "#e74c3c" : Math.abs(gap) >= 0.8 ? "#f39c12" : "#2ecc71";
-        const gapLabel = gap === null ? "" : Math.abs(gap) >= 1.5 ? "Grote kloof" : Math.abs(gap) >= 0.8 ? "Merkbaar verschil" : "Kleine kloof";
-        return `
-        <div class="pijler-card">
-          <div class="pijler-naam" style="color:${s.kleur};">
-            ${s.naam}
-            ${gap !== null ? `<span class="gap-badge" style="background:${gapKleur}22;color:${gapKleur};">
-              ${gap > 0 ? "+" : ""}${gap.toFixed(1)} — ${gapLabel}
-            </span>` : ""}
-          </div>
-          ${scoreRij("👥 Team", s.team, "#5A8C3C")}
-          ${scoreRij("👔 Leidinggevenden", s.mgmt, "#6B4E9E")}
-        </div>`;
-      }).join("")}
-    </div>` : ""}
-
-    <!-- OPEN ANTWOORDEN -->
-    <div class="section">
-      <div class="section-title">Open antwoorden per domein</div>
-      ${openAntwoorden.map(p => p.antwoorden.length > 0 ? `
-      <div style="margin-bottom:24px;">
-        <div style="font-size:14px;font-weight:700;color:${p.kleur};margin-bottom:6px;">${p.naam}</div>
-        <div style="font-size:12px;color:#888;margin-bottom:10px;font-style:italic;">${p.vraag}</div>
-        ${p.antwoorden.map(a => `
-        <div class="open-item" style="border-color:${p.kleur};">${a}</div>`).join("")}
-      </div>` : "").join("")}
-      ${openAntwoorden.every(p => p.antwoorden.length === 0) ?
-        `<div style="color:#aaa;font-size:13px;">Nog geen open antwoorden beschikbaar.</div>` : ""}
-    </div>
-
-    <div class="section" style="background:#0D1B2A;color:white;">
-      <div style="font-size:11px;color:#00A896;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Over deze rapportage</div>
-      <p style="font-size:13px;line-height:1.7;color:rgba(255,255,255,0.65);">
-        Deze rapportage is gegenereerd op basis van de ingevulde teamscans via Het Teamkompas.
-        Individuele antwoorden zijn anoniem verwerkt. Scores zijn gebaseerd op een schaal van 1 tot 5.
-        Een score van 4 of hoger duidt op een sterke positie; tussen 3 en 4 is er ruimte voor verbetering;
-        onder de 3 verdient het domein prioritaire aandacht.
-      </p>
-    </div>
-
-    <!-- BIJLAGE: DE GESTELDE VRAGEN -->
-    <div class="section" style="page-break-before: always;">
-      <div class="section-title">Bijlage — De gestelde vragen</div>
-      <p style="font-size:13px;color:#6B7A8D;line-height:1.7;margin-bottom:20px;">
-        Hieronder staan per domein de stellingen zoals ze in deze scan zijn voorgelegd.
-        Elke stelling is beantwoord op een schaal van 1 (helemaal oneens) tot 5 (helemaal eens).
-        Vragen gemarkeerd met <em>(open vraag)</em> zijn met eigen woorden beantwoord; die antwoorden staan eerder in dit rapport.
-      </p>
-      ${pijlerNamen.map((naam, pi) => {
-        const schaal = stellingen.filter(s => s.pijler === pi && s.type === "schaal");
-        const open   = stellingen.filter(s => s.pijler === pi && s.type === "open");
-        if (!schaal.length && !open.length) return "";
-        return `
-        <div style="margin-bottom:24px;">
-          <div style="font-size:14px;font-weight:700;color:${pijlerKleuren[pi]};margin-bottom:4px;">${naam}</div>
-          <div style="font-size:12px;color:#6B7A8D;line-height:1.6;margin-bottom:8px;">${domeinUitleg[naam] || ""}</div>
-          <ol style="margin:0;padding-left:22px;">
-            ${schaal.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;">${s.tekst}</li>`).join("")}
-            ${open.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;"><em>${s.tekst}</em> <span style="color:#999;">(open vraag)</span></li>`).join("")}
-          </ol>
-        </div>`;
-      }).join("")}
-      ${(() => {
-        const rest = stellingen.filter(s => s.pijler > 3);
-        if (!rest.length) return "";
-        const restSchaal = rest.filter(s => s.type === "schaal");
-        const restOpen   = rest.filter(s => s.type === "open");
-        return `
-        <div style="margin-bottom:8px;">
-          <div style="font-size:14px;font-weight:700;color:#0F766E;margin-bottom:4px;">Samenwerking, communicatie en richting</div>
-          <div style="font-size:12px;color:#6B7A8D;line-height:1.6;margin-bottom:8px;">Meet hoe teamleden samenwerken, of het onderlinge gesprek open is, en of het team de koers kent en zich daarbij betrokken voelt.</div>
-          <ol style="margin:0;padding-left:22px;">
-            ${restSchaal.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;">${s.tekst}</li>`).join("")}
-            ${restOpen.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;"><em>${s.tekst}</em> <span style="color:#999;">(open vraag)</span></li>`).join("")}
-          </ol>
-        </div>`;
-      })()}
-    </div>
-
-  </div>
-  <div class="footer">
-    © ${now.getFullYear()} Het Teamkompas · mijnteamkompas.nl · Vertrouwelijk — alleen voor intern gebruik
-  </div>
-</body>
-</html>`;
-
-    // Download als HTML-bestand
-    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement("a");
-    a.href     = url;
-    a.download = `rapportage-${lijst.klant.toLowerCase().replace(/\s+/g, "-")}-${lijst.naam.toLowerCase().replace(/\s+/g, "-")}.html`;
-    a.click();
-    URL.revokeObjectURL(url);
+    const { html } = bouwBasisscanRapportHtml(lijst, resp);
+    openRapportAlsPdf(html);
     setGenererend(null);
   };
 
