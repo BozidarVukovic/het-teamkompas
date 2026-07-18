@@ -18,6 +18,7 @@ const kennis = [
   ["Psychologische veiligheid", "/psychologische-veiligheid"],
   ["Sociale veiligheid", "/sociale-veiligheid"],
   ["Boven- en onderstroom", "/boven-en-onderstroom"],
+  ["Brein en samenwerking", "/brein-en-samenwerking"],
 ];
 
 function isStaticPage(path) {

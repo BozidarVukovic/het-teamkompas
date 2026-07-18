@@ -10658,6 +10658,12 @@ function BovenOnderstroomPage() {
 
   const fundament = [
     {
+      titel: "Brein en samenwerking",
+      tekst: "Waarom ons brein reageert zoals het reageert, en waarom veiligheid daarin de sleutel is.",
+      link: "/brein-en-samenwerking",
+      label: "Lees over brein en samenwerking →",
+    },
+    {
       titel: "Psychologische veiligheid",
       tekst: "Durven mensen zich uitspreken, fouten benoemen en het oneens zijn? De bovengrens van teamveiligheid.",
       link: "/psychologische-veiligheid",
@@ -10945,15 +10951,15 @@ function BovenOnderstroomPage() {
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ maxWidth: 820, marginBottom: 36 }}>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Drie concepten, één fundament</div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vier lagen, één fundament</div>
               <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
-                Boven- en onderstroom, psychologische en sociale veiligheid horen bij elkaar.
+                Brein, veiligheid en onderstroom horen bij elkaar.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
-                Sociale veiligheid is de ondergrens: respectvol met elkaar omgaan. Psychologische veiligheid is de bovengrens: durven uitspreken. En de onderstroom is de laag waarin beide zichtbaar worden. Samen vormen ze het fundament van hoe wij naar teams kijken.
+                Ons brein verklaart waarom mensen reageren zoals ze reageren. Sociale veiligheid is de ondergrens: respectvol met elkaar omgaan. Psychologische veiligheid is de bovengrens: durven uitspreken. En de onderstroom is de laag waarin dit alles zichtbaar wordt. Samen vormen ze het fundament van hoe wij naar teams kijken.
               </p>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
               {fundament.map(({ titel, tekst, link, label }) => (
                 <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
                   <h3 style={{ fontSize: 17, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
@@ -11057,6 +11063,432 @@ function BovenOnderstroomPage() {
       )}
 
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Boven- en onderstroom" />
+    </>
+  );
+}
+
+function BreinEnSamenwerkingPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState(null);
+  const isMobile = useIsMobile();
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
+  const ctaStyle = {
+    background: PUB.oranje,
+    color: PUB.donker,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    boxShadow: "0 12px 28px rgba(232,130,26,0.28)",
+    border: "none",
+  };
+
+  const ghostStyle = {
+    background: "rgba(255,255,255,0.08)",
+    color: PUB.wit,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    border: "1px solid rgba(255,255,255,0.22)",
+  };
+
+  const breinBlokken = [
+    {
+      titel: "Het snelle brein",
+      tekst: "Werkt razendsnel en grotendeels onbewust. Het scant elke situatie voortdurend op veiligheid: ben ik veilig, hoor ik erbij, kan ik deze persoon vertrouwen, loop ik risico? Pas als het antwoord geruststellend is, komt er ruimte voor de rest.",
+    },
+    {
+      titel: "Het denkende brein",
+      tekst: "Hier ontstaan creativiteit, samenwerking, nieuwsgierigheid, reflectie en goede besluiten. Maar dit deel krijgt pas de regie wanneer het snelle brein voldoende veiligheid ervaart. Voelt een situatie onveilig, dan neemt het snelle brein het over.",
+    },
+    {
+      titel: "Waarom mensen verschillend reageren",
+      tekst: "Ons brein vergelijkt elke situatie met eerdere ervaringen. Waar de één een open vraag hoort, hoort de ander kritiek. Waar de één verandering ziet, ervaart de ander verlies. Dezelfde vergadering, twee totaal verschillende ervaringen.",
+    },
+    {
+      titel: "Gedrag is zelden onwil",
+      tekst: "Sociale pijn, zoals genegeerd worden of kritiek krijgen, activeert grotendeels dezelfde systemen in het brein als fysieke pijn. Defensief gedrag, stilte of felheid is daarom vaak een automatische beschermingsreactie, geen karakterfout.",
+    },
+  ];
+
+  const scarf = [
+    { letter: "S", naam: "Status", vraag: "Voel ik mij gewaardeerd?", kleur: PUB.groen },
+    { letter: "C", naam: "Zekerheid", vraag: "Weet ik waar ik aan toe ben?", kleur: PUB.blauw },
+    { letter: "A", naam: "Autonomie", vraag: "Heb ik invloed op mijn werk?", kleur: PUB.oranje },
+    { letter: "R", naam: "Verbondenheid", vraag: "Hoor ik erbij?", kleur: PUB.paars },
+    { letter: "F", naam: "Rechtvaardigheid", vraag: "Word ik eerlijk behandeld?", kleur: PUB.teal },
+  ];
+
+  const fundament = [
+    {
+      titel: "Brein en samenwerking",
+      tekst: "Waarom ons brein reageert zoals het reageert, en waarom veiligheid daarin de sleutel is.",
+      link: null,
+      label: "Je bent op deze pagina",
+    },
+    {
+      titel: "Psychologische veiligheid",
+      tekst: "Wat mensen nodig hebben om zich uit te spreken, fouten te delen en eerlijk te zijn.",
+      link: "/psychologische-veiligheid",
+      label: "Lees verder →",
+    },
+    {
+      titel: "Sociale veiligheid",
+      tekst: "Welke normen en omgangsvormen nodig zijn als basis waarop veiligheid kan groeien.",
+      link: "/sociale-veiligheid",
+      label: "Lees verder →",
+    },
+    {
+      titel: "Boven- en onderstroom",
+      tekst: "Wat er gebeurt wanneer gevoelens en behoeften wel of niet besproken worden.",
+      link: "/boven-en-onderstroom",
+      label: "Lees verder →",
+    },
+  ];
+
+  const faqs = [
+    ["Wat is neuromanagement?", "Neuromanagement past inzichten uit de neurowetenschap en gedragswetenschap toe op leidinggeven en samenwerken. Het helpt begrijpen waarom mensen reageren zoals ze reageren: ons brein beoordeelt elke sociale situatie eerst op veiligheid, en pas daarna komt er ruimte voor luisteren, nadenken en samenwerken."],
+    ["Is dit wetenschappelijk onderbouwd?", "De kern is goed onderbouwd: sociale pijn en fysieke pijn delen deels dezelfde hersensystemen, en onder dreiging schakelt het brein over op snelle, beschermende reacties. Het SCARF-model van neurowetenschapper David Rock vat vijf sociale behoeften samen die hierin steeds terugkomen. Wij gebruiken deze modellen als praktisch hulpmiddel om gedrag te begrijpen, niet als exacte kaart van het brein."],
+    ["Waarom reageren collega's zo verschillend op dezelfde situatie?", "Ons brein vergelijkt elke situatie met eerdere ervaringen. Wie ooit werd afgerekend op een fout, hoort in een kritische vraag iets anders dan wie altijd ruimte kreeg om te leren. Dezelfde opmerking kan daardoor bij de één nieuwsgierigheid oproepen en bij de ander een verdedigingsreactie."],
+    ["Wat heeft dit met psychologische veiligheid te maken?", "Alles. Psychologische veiligheid is de toestand waarin het snelle brein tot rust komt en het denkende brein ruimte krijgt. Pas dan stellen mensen vragen, delen ze fouten en geven ze eerlijke feedback. Zonder die veiligheid blijft het brein in de beschermstand staan, hoe goed de afspraken op papier ook zijn."],
+    ["Kun je hier als team iets aan veranderen?", "Ja. Het brein verandert niet, maar de omstandigheden wel. Teams kunnen leren herkennen wanneer het snelle brein de regie neemt, bij zichzelf en bij elkaar, en kunnen afspraken maken die de vijf sociale behoeften beschermen: duidelijkheid geven, invloed laten, eerlijk verdelen, waarderen en verbinden."],
+    ["Gebruiken jullie dit in teamdagen en begeleiding?", "Ja. We gebruiken deze inzichten om gedrag te duiden zonder te oordelen: niet 'waarom doet iemand zo moeilijk?', maar 'wat maakt dat iemand zich zo voelt?'. In verdiepende scans werken we onder meer met het SCARF-model om de beleving van verandering concreet te maken."],
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Waarom ons brein samenwerken soms moeilijk maakt | Mijn Teamkompas</title>
+        <meta
+          name="description"
+          content="Wat gebeurt er in ons brein tijdens samenwerking? Over neuromanagement, het SCARF-model en waarom veiligheid de basis is van elk goed functionerend team."
+        />
+        <link rel="canonical" href="https://www.mijnteamkompas.nl/brein-en-samenwerking" />
+        <meta property="og:title" content="Waarom ons brein samenwerken soms moeilijk maakt | Mijn Teamkompas" />
+        <meta property="og:description" content="Ons brein beoordeelt elke situatie eerst op veiligheid, en pas daarna luisteren we. Over neuromanagement, sociale pijn en de vijf behoeften van het SCARF-model." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.mijnteamkompas.nl/brein-en-samenwerking" />
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Service",
+                "name": "Neuromanagement en samenwerking in teams",
+                "description": "Mijn Teamkompas gebruikt inzichten uit neuromanagement en gedragswetenschap om teams te helpen begrijpen waar gedrag vandaan komt, met teamscan, teamdagen en begeleiding.",
+                "provider": {
+                  "@type": "LocalBusiness",
+                  "name": "Mijn Teamkompas",
+                  "url": "https://www.mijnteamkompas.nl",
+                  "email": "info@mijnteamkompas.nl",
+                  "areaServed": "NL"
+                },
+                "serviceType": "Teamcoaching, teamscan, neuromanagement",
+                "url": "https://www.mijnteamkompas.nl/brein-en-samenwerking"
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "Wat is neuromanagement?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Neuromanagement past inzichten uit de neurowetenschap en gedragswetenschap toe op leidinggeven en samenwerken. Ons brein beoordeelt elke sociale situatie eerst op veiligheid; pas daarna komt er ruimte voor luisteren, nadenken en samenwerken."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Wat is het SCARF-model?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Het SCARF-model van neurowetenschapper David Rock beschrijft vijf sociale behoeften die ons brein voortdurend beoordeelt: status, zekerheid, autonomie, verbondenheid en rechtvaardigheid. Wordt een van deze behoeften bedreigd, dan ontstaat sneller spanning of defensief gedrag."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Wat heeft het brein met psychologische veiligheid te maken?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Psychologische veiligheid is de toestand waarin het snelle, beschermende deel van het brein tot rust komt en het denkende brein ruimte krijgt. Pas dan stellen mensen vragen, delen ze fouten en geven ze eerlijke feedback."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Waarom reageren collega's zo verschillend op dezelfde situatie?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Ons brein vergelijkt elke situatie met eerdere ervaringen. Dezelfde opmerking kan daardoor bij de één nieuwsgierigheid oproepen en bij de ander een verdedigingsreactie."
+                    }
+                  }
+                ]
+              },
+              {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://www.mijnteamkompas.nl/"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Waarom ons brein samenwerken soms moeilijk maakt",
+                    "item": "https://www.mijnteamkompas.nl/brein-en-samenwerking"
+                  }
+                ]
+              }
+            ]
+          }
+        `}</script>
+      </Helmet>
+
+      <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
+
+        {/* 1. Hero */}
+        <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
+          <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+              Brein en samenwerking
+            </div>
+            <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
+              Waarom ons brein samenwerken soms moeilijk maakt.
+            </h1>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 14 }}>
+              Je stelt een vraag in het overleg en het blijft stil. Een collega reageert onverwacht fel op een opmerking die zo niet bedoeld was. Een logische verandering stuit toch op weerstand. Vaak denken we dan dat het om communicatie gaat.
+            </p>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>
+              Maar communicatie begint niet bij woorden. Ons brein bepaalt binnen een fractie van een seconde of een situatie veilig voelt. Pas daarna luisteren we, denken we na en reageren we. Dat verklaart waarom samenwerken soms ingewikkelder is dan het lijkt.
+            </p>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+            </div>
+          </div>
+          <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
+            <img src="/teamkompas-workshop-hero.jpg" alt="Team in gesprek over hoe het brein samenwerking beinvloedt" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.85 }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94), rgba(13,27,42,0.08))" }} />
+          </div>
+        </section>
+
+        {/* 2. Gebouwd om te overleven */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 56, alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Hoe ons brein werkt</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Ons brein is niet gebouwd om samen te werken. Het is gebouwd om te overleven.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 18 }}>
+                Duizenden jaren geleden betekende buitengesloten worden vaak letterlijk levensgevaar. Daarom reageert ons brein vandaag nog steeds sterk op sociale situaties. Kritiek krijgen, genegeerd worden, geen invloed ervaren of onzeker zijn over je positie: het activeert grotendeels dezelfde systemen als fysieke pijn.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Dat gebeurt automatisch. Niet omdat iemand zwak is, maar omdat ons brein zo werkt. Wie dat begrijpt, kijkt anders naar een stil overleg, een felle reactie of hardnekkige weerstand tegen verandering. Dit vakgebied wordt ook wel neuromanagement genoemd.
+              </p>
+            </div>
+            <div style={{ background: PUB.licht, borderRadius: 22, padding: isMobile ? 24 : 36, border: `1px solid ${PUB.lijn}` }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: PUB.donker, marginBottom: 20 }}>Het snelle brein scant voortdurend:</div>
+              {[
+                "Ben ik hier veilig?",
+                "Hoor ik erbij?",
+                "Kan ik deze mensen vertrouwen?",
+                "Loop ik risico als ik iets zeg?",
+                "Word ik gewaardeerd om wat ik doe?",
+                "Moet ik mezelf beschermen?",
+              ].map((item) => (
+                <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 14 }}>
+                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 900, flexShrink: 0, marginTop: 1 }}>?</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.donker }}>{item}</div>
+                </div>
+              ))}
+              <div style={{ fontSize: 13, lineHeight: 1.6, color: PUB.sub, marginTop: 6 }}>
+                Dit gebeurt grotendeels onbewust, nog vóór er één woord is gezegd.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. Twee systemen */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Twee systemen</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Eerst veiligheid, dan pas denken.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Het brein is complexer dan twee onderdelen, maar het onderscheid tussen een snel, beschermend systeem en een langzamer, denkend systeem helpt om teamgedrag te begrijpen. Wat wij dagelijks in teams zien, is dit samenspel in de praktijk.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 18 }}>
+              {breinBlokken.map(({ titel, tekst }) => (
+                <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 26, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
+                  <h3 style={{ fontSize: 17, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 4. SCARF */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Het SCARF-model</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                De vijf sociale behoeften van ons brein.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Neurowetenschapper David Rock beschreef vijf sociale behoeften die ons brein voortdurend beoordeelt. Wordt aan deze behoeften voldaan, dan ervaren mensen veiligheid. Wordt er één bedreigd, dan ontstaat sneller spanning of defensief gedrag. Wij gebruiken dit model in onze begeleiding om gedrag te begrijpen zonder direct te oordelen.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(5, 1fr)", gap: 16 }}>
+              {scarf.map(({ letter, naam, vraag, kleur }) => (
+                <div key={naam} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22, borderTop: `4px solid ${kleur}` }}>
+                  <div style={{ width: 38, height: 38, borderRadius: "50%", background: kleur, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 16, marginBottom: 14 }}>{letter}</div>
+                  <h3 style={{ fontSize: 16, margin: "0 0 6px", color: PUB.donker, fontWeight: 700 }}>{naam}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.6, color: PUB.sub, margin: 0 }}>{vraag}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Wat betekent dit voor teams */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 56, alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wat betekent dit voor teams?</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Van oordelen naar begrijpen.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 18 }}>
+                Wanneer je begrijpt hoe het brein werkt, kijk je anders naar gedrag. Je vraagt minder snel "waarom doet iemand zo moeilijk?" en vaker "wat maakt dat iemand zich zo voelt?". Dat kleine verschil verandert vaak het hele gesprek.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 18 }}>
+                Voelen mensen zich veilig, dan stellen ze vragen, geven ze feedback, delen ze fouten en leren ze sneller. Ontbreekt die veiligheid, dan zeggen mensen minder, houden ze ideeën voor zichzelf, gaan ze harder controleren of trekken ze zich terug. Aan de buitenkant lijkt alles rustig, terwijl onder de oppervlakte irritaties en aannames groeien.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Daarom combineren wij inzichten uit de gedragswetenschap en het neuromanagement met onze aanpak rond veiligheid en de onderstroom. Niet als losse theorieën, maar als één samenhangend fundament. Want pas wanneer je begrijpt waar gedrag vandaan komt, kun je het samen veranderen.
+              </p>
+            </div>
+            <div style={{ background: PUB.donker, borderRadius: 22, padding: isMobile ? 24 : 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 16 }}>Herkenbaar in de praktijk</div>
+              {[
+                ["Het blijft stil na een open vraag", "Het snelle brein weegt af: is antwoorden hier riskant? Stilte is vaak bescherming, geen desinteresse."],
+                ["Een felle reactie op een neutrale opmerking", "Een bedreigde sociale behoefte (status, zekerheid, rechtvaardigheid) kan een reactie triggeren die groter is dan de aanleiding."],
+                ["Weerstand tegen een logische verandering", "Verandering raakt zekerheid en autonomie. Het brein ervaart eerst het verlies, pas later de logica."],
+                ["Na het overleg barst het gesprek los", "Bij de koffieautomaat voelt het brein zich veilig genoeg om te zeggen wat in de vergadering te riskant voelde."],
+              ].map(([kop, tekst]) => (
+                <div key={kop} style={{ marginBottom: 18 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: PUB.wit, marginBottom: 4 }}>{kop}</div>
+                  <div style={{ fontSize: 13, lineHeight: 1.65, color: "rgba(255,255,255,0.65)" }}>{tekst}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Kennisfundament */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vier lagen, één fundament</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Zo hangt alles samen.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Het brein verklaart waarom mensen reageren zoals ze reageren. Psychologische veiligheid beschrijft wat mensen nodig hebben om zich uit te spreken. Sociale veiligheid legt de normen die daarvoor nodig zijn. En de boven- en onderstroom laat zien wat er gebeurt als gevoelens en behoeften wel of niet besproken worden.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
+              {fundament.map(({ titel, tekst, link, label }) => (
+                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24 }}>
+                  <h3 style={{ fontSize: 16, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: "0 0 14px" }}>{tekst}</p>
+                  {link ? (
+                    <a href={link} style={{ color: PUB.teal, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>{label}</a>
+                  ) : (
+                    <span style={{ color: PUB.sub, fontWeight: 700, fontSize: 14 }}>{label}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 7. FAQ */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 860, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Veelgestelde vragen</div>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 32px" }}>
+              Veelgestelde vragen over brein en samenwerking
+            </h2>
+            <div style={{ display: "grid", gap: 10 }}>
+              {faqs.map(([vraag, antwoord], i) => (
+                <div key={i} style={{ border: `1px solid ${PUB.lijn}`, borderRadius: 16, overflow: "hidden" }}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    style={{ width: "100%", background: openFaq === i ? PUB.wit : PUB.licht, border: "none", padding: "18px 22px", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, cursor: "pointer", fontFamily: "inherit" }}
+                  >
+                    <span style={{ fontSize: 16, fontWeight: 700, color: PUB.donker, lineHeight: 1.4 }}>{vraag}</span>
+                    <span style={{ fontSize: 20, color: PUB.teal, fontWeight: 700, flexShrink: 0, transform: openFaq === i ? "rotate(45deg)" : "none", transition: "transform 0.2s" }}>+</span>
+                  </button>
+                  {openFaq === i && (
+                    <div style={{ padding: "6px 22px 20px", background: PUB.wit }}>
+                      <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>{antwoord}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Reflectiekaart leadblok */}
+        <section style={{ padding: isMobile ? "52px 22px" : "80px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+            <Fade>
+              <ReflectiekaartFormulier bronPagina="Brein en samenwerking" variant="block" />
+            </Fade>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
+          <div style={{ maxWidth: 780, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+              Gedrag begrijpen in jouw team
+            </div>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
+              Benieuwd wat er in jouw team onder het gedrag zit?
+            </h2>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", marginBottom: 28 }}>
+              Begin met een teamscan of plan een verkennend gesprek. Dan kijken we samen wat het gedrag in jouw team vertelt, en wat het nodig heeft.
+            </p>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/psychologische-veiligheid" style={{ color: "rgba(255,255,255,0.72)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over psychologische veiligheid →</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Brein en samenwerking" />
     </>
   );
 }
@@ -11547,6 +11979,7 @@ export default function App() {
         <Route path="/psychologische-veiligheid" element={<PsychologischeVeiligheidPage />} />
         <Route path="/sociale-veiligheid" element={<SocialeVeiligheidPage />} />
         <Route path="/boven-en-onderstroom" element={<BovenOnderstroomPage />} />
+        <Route path="/brein-en-samenwerking" element={<BreinEnSamenwerkingPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />

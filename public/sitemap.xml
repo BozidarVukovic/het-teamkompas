@@ -73,6 +73,12 @@
     <priority>0.82</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/brein-en-samenwerking</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/klantenportaal</loc>
     <lastmod>2026-07-17</lastmod>
     <changefreq>monthly</changefreq>
