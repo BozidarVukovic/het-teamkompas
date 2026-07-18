@@ -11177,6 +11177,7 @@ function BreinEnSamenwerkingPage() {
         <meta property="og:description" content="Ons brein beoordeelt elke situatie eerst op veiligheid, en pas daarna luisteren we. Over neuromanagement, sociale pijn en de vijf behoeften van het SCARF-model." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/brein-en-samenwerking" />
+        <meta property="og:image" content="https://www.mijnteamkompas.nl/brein-en-samenwerking.jpg" />
         <script type="application/ld+json">{`
           {
             "@context": "https://schema.org",
@@ -11277,7 +11278,7 @@ function BreinEnSamenwerkingPage() {
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
-            <img src="/teamkompas-workshop-hero.jpg" alt="Team in gesprek over hoe het brein samenwerking beinvloedt" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.85 }} />
+            <img src="/brein-en-samenwerking.jpg" alt="Team in gesprek over hoe het brein samenwerking beinvloedt" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.85 }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94), rgba(13,27,42,0.08))" }} />
           </div>
         </section>
