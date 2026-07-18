@@ -128,6 +128,11 @@ export default function Klantenportaal() {
                         <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: PUB.teal, background: "rgba(15,118,110,0.08)", padding: "3px 10px", borderRadius: 999 }}>
                           {item.url ? (item.categorie || "Document") : "Notitie"}
                         </span>
+                        {item.doelgroep && (
+                          <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: PUB.paars, background: "rgba(107,78,158,0.08)", padding: "3px 10px", borderRadius: 999 }}>
+                            {item.doelgroep}
+                          </span>
+                        )}
                         {item.datum && <span style={{ fontSize: 13, color: PUB.sub }}>{item.datum}</span>}
                       </div>
                       <div style={{ fontSize: 15, fontWeight: 700, color: PUB.donker, lineHeight: 1.5 }}>{item.titel}</div>

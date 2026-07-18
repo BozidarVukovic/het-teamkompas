@@ -2848,7 +2848,7 @@ function PageKlanten() {
   const [selectedTrajectId, setSelectedTrajectId] = useState(null);
   const [selectedMetingId, setSelectedMetingId] = useState(null);
   const [gekopieerd, setGekopieerd] = useState(null);
-  const [portalItem, setPortalItem] = useState({ titel: "", url: "", categorie: "Rapport", datum: "" });
+  const [portalItem, setPortalItem] = useState({ titel: "", url: "", categorie: "Rapport", datum: "", doelgroep: "" });
   const [portalOpslaan, setPortalOpslaan] = useState(false);
   const [portalLinkBezig, setPortalLinkBezig] = useState(false);
   const [nieuw, setNieuw] = useState({ naam:"", sector:"", contact:"", email:"", status:"Actief" });
@@ -3268,6 +3268,7 @@ function PageKlanten() {
         url,
         categorie: url ? portalItem.categorie : "",
         datum: portalItem.datum || "",
+        doelgroep: portalItem.doelgroep || "",
         aangemaakt: new Date().toISOString(),
       };
       await updateDoc(doc(db, "klanten", selectedKlant.id), {
@@ -3275,7 +3276,7 @@ function PageKlanten() {
         portalMaterialen: [...bestaand, nieuwItem],
         portalBijgewerkt: serverTimestamp(),
       });
-      setPortalItem({ titel: "", url: "", categorie: "Rapport", datum: "" });
+      setPortalItem({ titel: "", url: "", categorie: "Rapport", datum: "", doelgroep: "" });
       await laadData();
     } catch (err) {
       console.error("Klantportaal bijwerken mislukt:", err);
@@ -3669,12 +3670,19 @@ function PageKlanten() {
                       placeholder="Link naar document (OneDrive/SharePoint) — leeg laten voor een notitie"
                       style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
                     />
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
                       <select
                         value={portalItem.categorie}
                         onChange={e=>setPortalItem(p=>({...p, categorie:e.target.value}))}
                         style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}>
                         {["Rapport","Verslag","Presentatie","Overig"].map(c => <option key={c} value={c} style={{color:"#0D1B2A"}}>{c}</option>)}
+                      </select>
+                      <select
+                        value={portalItem.doelgroep}
+                        onChange={e=>setPortalItem(p=>({...p, doelgroep:e.target.value}))}
+                        style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}>
+                        <option value="" style={{color:"#0D1B2A"}}>Voor wie? (optioneel)</option>
+                        {["Hele team","Medewerkers","Leidinggevende"].map(dg => <option key={dg} value={dg} style={{color:"#0D1B2A"}}>{dg}</option>)}
                       </select>
                       <input
                         type="date"
@@ -3698,7 +3706,7 @@ function PageKlanten() {
                           <div style={{minWidth:0}}>
                             <span style={{fontSize:13,fontWeight:700,color:ADM.white}}>{item.titel}</span>
                             <span style={{fontSize:11,color:ADM.muted,marginLeft:8}}>
-                              {[item.url ? (item.categorie || "Document") : "Notitie", item.datum].filter(Boolean).join(" · ")}
+                              {[item.url ? (item.categorie || "Document") : "Notitie", item.doelgroep, item.datum].filter(Boolean).join(" · ")}
                             </span>
                           </div>
                           <div style={{display:"flex",gap:6,flexShrink:0}}>
