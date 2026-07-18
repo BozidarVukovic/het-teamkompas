@@ -12,6 +12,7 @@ const C = {
   teal: "#0F766E",
   groen: "#2F8F3A",
   blauw: "#0F66D0",
+  oranje: "#E8821A",
   wit: "#FFFFFF",
   licht: "#F4F7F9",
   lijn: "#DDE4ED",
@@ -56,11 +57,18 @@ const labelStyle = {
 
 const buttonBase = {
   border: "none",
-  borderRadius: 12,
-  padding: "15px 18px",
-  fontWeight: 900,
+  borderRadius: 8,
+  padding: "14px 22px",
+  fontWeight: 700,
   cursor: "pointer",
   minHeight: 52,
+};
+
+const primaryCtaStyle = {
+  ...buttonBase,
+  background: C.oranje,
+  color: C.donker,
+  boxShadow: "0 12px 28px rgba(232,130,26,0.28)",
 };
 
 function Field({ label, children, help }) {
@@ -390,7 +398,7 @@ export default function TeamscanDigitaal() {
               ))}
             </div>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12 }}>
-              <button onClick={() => navigate("/verkennen")} style={{ ...buttonBase, background: C.teal, color: C.wit }}>Plan ook een verkennend gesprek</button>
+              <button onClick={() => navigate("/verkennen")} style={primaryCtaStyle}>Plan ook een verkennend gesprek</button>
               <button onClick={() => navigate("/")} style={{ ...buttonBase, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Terug naar home</button>
             </div>
           </div>
@@ -420,7 +428,7 @@ export default function TeamscanDigitaal() {
             <div onClick={() => navigate("/")} style={{ fontWeight: 900, fontSize: 20, cursor: "pointer", color: C.donker, display: "flex", alignItems: "center", gap: 9 }}><KompasDot size={22} />Mijn Teamkompas</div>
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
               <button onClick={() => navigate("/verkennen")} style={{ background: "transparent", border: `1px solid ${C.lijn}`, color: C.donker, borderRadius: 10, padding: "10px 14px", fontWeight: 800, cursor: "pointer" }}>Persoonlijk starten</button>
-              <button onClick={() => navigate("/")} style={{ background: C.blauw, border: "none", color: C.wit, borderRadius: 10, padding: "10px 16px", fontWeight: 900, cursor: "pointer" }}>Terug naar home</button>
+              <button onClick={() => navigate("/")} style={{ background: C.oranje, border: "none", color: C.donker, borderRadius: 8, padding: "10px 16px", fontWeight: 700, cursor: "pointer", boxShadow: "0 12px 28px rgba(232,130,26,0.22)" }}>Terug naar home</button>
             </div>
           </div>
         </header>
@@ -437,7 +445,7 @@ export default function TeamscanDigitaal() {
                 <a
                   href="#aanvraag"
                   onClick={() => trackFormStartOnce({ trigger: "hero_button" })}
-                  style={{ ...buttonBase, display: "inline-flex", alignItems: "center", justifyContent: "center", textDecoration: "none", background: C.blauw, color: C.wit }}
+                  style={{ ...primaryCtaStyle, display: "inline-flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
                 >
                   Start de aanvraag
                 </a>
@@ -616,7 +624,7 @@ export default function TeamscanDigitaal() {
               </div>
             </div>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", marginTop: 22 }}>
-              <a href="#aanvraag" onClick={() => trackFormStartOnce({ trigger: "rapport_preview_cta" })} style={{ ...buttonBase, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", background: C.blauw, color: C.wit }}>Start de teamscan</a>
+              <a href="#aanvraag" onClick={() => trackFormStartOnce({ trigger: "rapport_preview_cta" })} style={{ ...primaryCtaStyle, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Start de teamscan</a>
               <button onClick={() => navigate("/verkennen")} style={{ ...buttonBase, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Plan een kennismaking</button>
             </div>
           </div>
@@ -684,7 +692,7 @@ export default function TeamscanDigitaal() {
 
                   {error ? <div style={{ marginTop: 18, color: C.rood, fontWeight: 800 }}>{error}</div> : null}
 
-                  <button type="button" onClick={goToStepTwo} style={{ ...buttonBase, width: "100%", marginTop: 24, background: C.blauw, color: C.wit }}>Ga verder →</button>
+                  <button type="button" onClick={goToStepTwo} style={{ ...primaryCtaStyle, width: "100%", marginTop: 24 }}>Ga verder →</button>
                 </div>
               ) : (
                 <div>
@@ -721,7 +729,7 @@ export default function TeamscanDigitaal() {
 
                   <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 24 }}>
                     <button type="button" onClick={() => { setError(""); setStep(1); scrollToAanvraag(); }} style={{ ...buttonBase, flex: 1, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Terug</button>
-                    <button type="submit" disabled={submitting} style={{ ...buttonBase, flex: 2, background: submitting ? C.sub : C.groen, color: C.wit, opacity: submitting ? 0.75 : 1 }}>
+                    <button type="submit" disabled={submitting} style={{ ...primaryCtaStyle, flex: 2, background: submitting ? C.sub : C.oranje, opacity: submitting ? 0.75 : 1 }}>
                       {submitting ? "Aanvraag versturen..." : "Start aanvraag teamscan"}
                     </button>
                   </div>
