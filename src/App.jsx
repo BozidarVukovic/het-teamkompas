@@ -1529,11 +1529,11 @@ function PublicSite({ onLoginClick }) {
               <div style={{ marginTop: 28, display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", gap: 16, alignItems: isMobile ? "stretch" : "center", background: PUB.donker, color: PUB.wit, borderRadius: 18, padding: isMobile ? 22 : 26 }}>
                 <div>
                   <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 6 }}>Wil je dit voor je eigen team zichtbaar maken?</div>
-                  <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)" }}>Start laagdrempelig met de digitale teamscan of plan eerst een verkennende kennismaking.</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)" }}>Start laagdrempelig met de digitale teamscan of plan eerst een verdiepend gesprek.</div>
                 </div>
                 <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 10, flexShrink: 0 }}>
-                  <span style={{ ...ctaStyle, display: "inline-block", background: PUB.teal }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
-                  <span style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center" }} onClick={openModal}>Plan kennismaking</span>
+                  <span style={{ ...ctaStyle, display: "inline-block", background: PUB.teal }} onClick={() => navigate("/teamscan")}>Start de digitale teamscan</span>
+                  <span style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center" }} onClick={openModal}>Plan een verdiepend gesprek</span>
                 </div>
               </div>
             </Fade>
@@ -9494,8 +9494,8 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
                   De teamscan helpt om de juiste teamvraag scherp te maken. Daarna kan een teamdag, coachingsgesprek of begeleid traject veel gerichter worden ingericht.
                 </p>
                 <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12 }}>
-                  <span style={{ ...ctaStyle, color: PUB.wit, flex: 1 }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
-                  <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none", flex: 1 }} onClick={openModal}>Plan kennismaking</span>
+                  <span style={{ ...ctaStyle, color: PUB.wit, flex: 1 }} onClick={() => navigate("/teamscan")}>Start de digitale teamscan</span>
+                  <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none", flex: 1 }} onClick={openModal}>Plan een verdiepend gesprek</span>
                 </div>
               </div>
             </Fade>

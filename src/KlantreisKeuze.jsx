@@ -59,7 +59,7 @@ export default function KlantreisKeuze() {
                 minHeight: "52px",
               }}
             >
-              plan een verkennend gesprek
+              plan een verdiepend gesprek
             </button>
           </div>
 
@@ -102,7 +102,7 @@ export default function KlantreisKeuze() {
                 minHeight: "52px",
               }}
             >
-              start digitale teamscan
+              start de digitale teamscan
             </button>
           </div>
 
