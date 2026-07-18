@@ -848,8 +848,8 @@ function SeoHead({ page = "home" }) {
       image: "https://www.mijnteamkompas.nl/teamkompas-vier-domeinen.jpg",
     },
     teamontwikkeling: {
-      title: "Teamontwikkeling en teamcoaching | samenwerking verbeteren",
-      description: "Versterk teamontwikkeling met teamscan, teamcoaching en begeleiding op samenwerking, psychologische veiligheid, eigenaarschap, motivatie en teamdag.",
+      title: "Teamontwikkeling Nederland | samenwerking verbeteren",
+      description: "Teamontwikkeling voor organisaties in Nederland. Verbeter samenwerking, psychologische veiligheid en eigenaarschap met teamscan, teamcoaching en praktische borging.",
       url: "https://www.mijnteamkompas.nl/teamontwikkeling",
       image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
     },
@@ -906,6 +906,67 @@ function SeoHead({ page = "home" }) {
       <meta name="twitter:title" content={seo.title} />
       <meta name="twitter:description" content={seo.description} />
       <meta name="twitter:image" content={seo.image} />
+      {page === "teamontwikkeling" && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: "Teamontwikkeling",
+            provider: {
+              "@type": "ProfessionalService",
+              name: "Mijn Teamkompas",
+              url: "https://www.mijnteamkompas.nl",
+            },
+            areaServed: {
+              "@type": "Country",
+              name: "Nederland",
+            },
+            serviceType: [
+              "Teamontwikkeling",
+              "Teamcoaching",
+              "Teamscan",
+              "Teamdag",
+              "Leiderschapsbegeleiding",
+            ],
+            description: seo.description,
+            url: seo.url,
+          })}
+        </script>
+      )}
+      {page === "teamontwikkeling" && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "Wanneer is teamontwikkeling zinvol?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Teamontwikkeling is zinvol wanneer samenwerking meer energie kost dan nodig is, eigenaarschap achterblijft of gesprekken over veiligheid, richting en gedrag te veel aan de oppervlakte blijven.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Waar begint een traject bij Mijn Teamkompas mee?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Een traject begint met het scherp maken van de teamvraag. Dat kan via een verkennend gesprek, intake of teamscan, zodat de vervolgstap aansluit op wat er echt speelt.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Is teamontwikkeling hetzelfde als een teamdag?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Nee. Een teamdag kan onderdeel zijn van teamontwikkeling, maar Mijn Teamkompas koppelt een teamdag aan analyse, dialoog en borging in dagelijks gedrag.",
+                },
+              },
+            ],
+          })}
+        </script>
+      )}
     </Helmet>
   );
 }
@@ -9212,6 +9273,27 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
     "spanning tussen teams, functies of afdelingen constructief onderzoeken",
   ];
 
+  const verdiepingen = [
+    ["Teamcoaching", "Begeleiding voor teams die communicatie, feedback, eigenaarschap en onderlinge samenwerking willen versterken.", "/teamcoaching"],
+    ["Teamdag", "Een gerichte teamdag op basis van analyse, dialoog en afspraken die terugkomen in het dagelijks werk.", "/teamdag"],
+    ["Boven- en onderstroom", "Maak zichtbaar wat formeel besproken wordt en wat in gedrag, spanning of aannames onder de oppervlakte blijft.", "/boven-en-onderstroom"],
+  ];
+
+  const faqs = [
+    [
+      "Wanneer is teamontwikkeling zinvol?",
+      "Wanneer samenwerking meer energie kost dan nodig is, eigenaarschap achterblijft of gesprekken over veiligheid, richting en gedrag te veel aan de oppervlakte blijven.",
+    ],
+    [
+      "Waar begint een traject bij Mijn Teamkompas mee?",
+      "We beginnen met het scherp maken van de teamvraag. Dat kan via een verkennend gesprek, intake of teamscan, zodat de vervolgstap aansluit op wat er echt speelt.",
+    ],
+    [
+      "Is teamontwikkeling hetzelfde als een teamdag?",
+      "Nee. Een teamdag kan onderdeel zijn van teamontwikkeling, maar we koppelen die aan analyse, dialoog en borging in dagelijks gedrag.",
+    ],
+  ];
+
   return (
     <>
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, overflowX: "hidden", paddingTop: 64, background: PUB.wit }}>
@@ -9349,6 +9431,47 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
                 </div>
               </div>
             </Fade>
+          </div>
+        </section>
+
+        <section style={{ background: PUB.wit, padding: isMobile ? "54px 20px" : "78px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <Fade>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Verdieping</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14, maxWidth: 820 }}>Teamontwikkeling raakt aan coaching, teamdagen en de onderstroom.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, maxWidth: 820, marginBottom: 30 }}>
+                Soms begint de vraag bij een teamdag, soms bij coaching en soms bij de spanning tussen wat gezegd wordt en wat mensen ervaren. Deze verdiepingen helpen om de juiste vervolgstap te kiezen.
+              </p>
+            </Fade>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+              {verdiepingen.map(([titel, tekst, href], i) => (
+                <Fade key={titel} delay={i * 0.05}>
+                  <a href={href} style={{ display: "block", height: "100%", background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, textDecoration: "none", boxShadow: "0 16px 38px rgba(13,27,42,0.06)" }}>
+                    <h3 style={{ fontSize: 22, lineHeight: 1.2, color: PUB.donker, margin: "0 0 10px" }}>{titel}</h3>
+                    <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                    <span style={{ display: "inline-block", marginTop: 16, fontSize: 13, fontWeight: 800, color: PUB.teal }}>Lees verder →</span>
+                  </a>
+                </Fade>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ background: PUB.licht, padding: isMobile ? "54px 20px" : "78px 60px" }}>
+          <div style={{ maxWidth: 980, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".8fr 1.2fr", gap: 34, alignItems: "start" }}>
+            <Fade>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Veelgestelde vragen</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>Praktische vragen over teamontwikkeling.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Kort antwoord op vragen die vaak leven bij leidinggevenden, HR en teams die een eerste stap willen zetten.</p>
+            </Fade>
+            <div style={{ display: "grid", gap: 12 }}>
+              {faqs.map(([vraag, antwoord]) => (
+                <details key={vraag} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: "18px 20px", boxShadow: "0 12px 30px rgba(13,27,42,0.05)" }}>
+                  <summary style={{ cursor: "pointer", fontSize: 17, fontWeight: 850, color: PUB.donker }}>{vraag}</summary>
+                  <p style={{ margin: "12px 0 0", fontSize: 15, lineHeight: 1.75, color: PUB.sub }}>{antwoord}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </section>
 
