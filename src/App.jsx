@@ -6788,6 +6788,13 @@ function PageRapportages() {
     const now    = new Date();
     const datum  = now.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
 
+    const domeinUitleg = {
+      "Veiligheid en leiderschap": "Meet of teamleden zich durven uitspreken, fouten bespreekbaar kunnen maken en zich gesteund voelen door de leidinggevende.",
+      "Beleving van verandering": "Meet hoe het team veranderingen ervaart: is er duidelijkheid over het waarom, voelt het team zich meegenomen en is er vertrouwen in de richting?",
+      "Energie en motivatie": "Meet waar het team energie van krijgt en wat energie kost: werkplezier, motivatie, werkdruk en de balans daartussen.",
+      "Verbeteren en leren": "Meet of het team leert van fouten, ruimte ervaart om te experimenteren en verbeteringen ook echt vasthoudt.",
+    };
+
     const scoreRij = (label, score, kleur) => score !== null ? `
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
         <div style="font-size:12px;color:${kleur};font-weight:600;width:130px;flex-shrink:0;">${label}</div>
@@ -6857,6 +6864,7 @@ function PageRapportages() {
         ${scores.map(s => `
         <div class="sum-card" style="background:${s.kleur}18;border:1px solid ${s.kleur}33;">
           <div style="font-size:11px;font-weight:700;color:${s.kleur};letter-spacing:1px;text-transform:uppercase;">${s.naam}</div>
+          <div style="font-size:11.5px;color:#5b6775;line-height:1.55;margin-top:6px;text-align:left;">${domeinUitleg[s.naam] || ""}</div>
           <div class="sum-score" style="color:${s.totaal ? scoreKleurHex(s.totaal) : '#aaa'};">${s.totaal ? s.totaal.toFixed(1) : "—"}</div>
           <div class="sum-label" style="color:${s.kleur};">Gemiddeld (schaal 1–5)</div>
         </div>`).join("")}
@@ -6902,11 +6910,50 @@ function PageRapportages() {
     <div class="section" style="background:#0D1B2A;color:white;">
       <div style="font-size:11px;color:#00A896;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Over deze rapportage</div>
       <p style="font-size:13px;line-height:1.7;color:rgba(255,255,255,0.65);">
-        Deze rapportage is gegenereerd op basis van de ingevulde teamscans via Het Teamkompas. 
-        Individuele antwoorden zijn anoniem verwerkt. Scores zijn gebaseerd op een schaal van 1 tot 5. 
-        Een score van 4 of hoger duidt op een sterke positie; tussen 3 en 4 is er ruimte voor verbetering; 
+        Deze rapportage is gegenereerd op basis van de ingevulde teamscans via Het Teamkompas.
+        Individuele antwoorden zijn anoniem verwerkt. Scores zijn gebaseerd op een schaal van 1 tot 5.
+        Een score van 4 of hoger duidt op een sterke positie; tussen 3 en 4 is er ruimte voor verbetering;
         onder de 3 verdient het domein prioritaire aandacht.
       </p>
+    </div>
+
+    <!-- BIJLAGE: DE GESTELDE VRAGEN -->
+    <div class="section" style="page-break-before: always;">
+      <div class="section-title">Bijlage — De gestelde vragen</div>
+      <p style="font-size:13px;color:#6B7A8D;line-height:1.7;margin-bottom:20px;">
+        Hieronder staan per domein de stellingen zoals ze in deze scan zijn voorgelegd.
+        Elke stelling is beantwoord op een schaal van 1 (helemaal oneens) tot 5 (helemaal eens).
+        Vragen gemarkeerd met <em>(open vraag)</em> zijn met eigen woorden beantwoord; die antwoorden staan eerder in dit rapport.
+      </p>
+      ${pijlerNamen.map((naam, pi) => {
+        const schaal = stellingen.filter(s => s.pijler === pi && s.type === "schaal");
+        const open   = stellingen.filter(s => s.pijler === pi && s.type === "open");
+        if (!schaal.length && !open.length) return "";
+        return `
+        <div style="margin-bottom:24px;">
+          <div style="font-size:14px;font-weight:700;color:${pijlerKleuren[pi]};margin-bottom:4px;">${naam}</div>
+          <div style="font-size:12px;color:#6B7A8D;line-height:1.6;margin-bottom:8px;">${domeinUitleg[naam] || ""}</div>
+          <ol style="margin:0;padding-left:22px;">
+            ${schaal.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;">${s.tekst}</li>`).join("")}
+            ${open.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;"><em>${s.tekst}</em> <span style="color:#999;">(open vraag)</span></li>`).join("")}
+          </ol>
+        </div>`;
+      }).join("")}
+      ${(() => {
+        const rest = stellingen.filter(s => s.pijler > 3);
+        if (!rest.length) return "";
+        const restSchaal = rest.filter(s => s.type === "schaal");
+        const restOpen   = rest.filter(s => s.type === "open");
+        return `
+        <div style="margin-bottom:8px;">
+          <div style="font-size:14px;font-weight:700;color:#0F766E;margin-bottom:4px;">Samenwerking, communicatie en richting</div>
+          <div style="font-size:12px;color:#6B7A8D;line-height:1.6;margin-bottom:8px;">Meet hoe teamleden samenwerken, of het onderlinge gesprek open is, en of het team de koers kent en zich daarbij betrokken voelt.</div>
+          <ol style="margin:0;padding-left:22px;">
+            ${restSchaal.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;">${s.tekst}</li>`).join("")}
+            ${restOpen.map(s => `<li style="font-size:12.5px;color:#444;line-height:1.7;margin-bottom:4px;"><em>${s.tekst}</em> <span style="color:#999;">(open vraag)</span></li>`).join("")}
+          </ol>
+        </div>`;
+      })()}
     </div>
 
   </div>
