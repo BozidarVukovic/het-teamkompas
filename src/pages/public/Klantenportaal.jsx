@@ -119,10 +119,27 @@ export default function Klantenportaal() {
               </article>
             </div>
             {materialen.length > 0 && <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 24, padding: 26 }}>
-              <h3 style={{ marginTop: 0 }}>Aanvullende materialen en notities</h3>
-              <ul style={{ margin: 0, paddingLeft: 20, color: PUB.sub, lineHeight: 1.9 }}>
-                {materialen.map((item, index) => <li key={`${item.titel}-${index}`}>{item.titel}</li>)}
-              </ul>
+              <h3 style={{ marginTop: 0 }}>Documenten en materialen</h3>
+              <div style={{ display: "grid", gap: 12 }}>
+                {materialen.map((item, index) => (
+                  <div key={`${item.titel}-${index}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: "14px 18px", flexWrap: "wrap" }}>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", marginBottom: 4 }}>
+                        <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: PUB.teal, background: "rgba(15,118,110,0.08)", padding: "3px 10px", borderRadius: 999 }}>
+                          {item.url ? (item.categorie || "Document") : "Notitie"}
+                        </span>
+                        {item.datum && <span style={{ fontSize: 13, color: PUB.sub }}>{item.datum}</span>}
+                      </div>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: PUB.donker, lineHeight: 1.5 }}>{item.titel}</div>
+                    </div>
+                    {item.url && (
+                      <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ background: PUB.oranje, color: PUB.donker, padding: "10px 16px", borderRadius: 10, fontWeight: 800, fontSize: 14, textDecoration: "none", flexShrink: 0 }}>
+                        Openen
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>}
           </div>
         </section>

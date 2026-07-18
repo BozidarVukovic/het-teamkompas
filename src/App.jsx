@@ -2848,7 +2848,7 @@ function PageKlanten() {
   const [selectedTrajectId, setSelectedTrajectId] = useState(null);
   const [selectedMetingId, setSelectedMetingId] = useState(null);
   const [gekopieerd, setGekopieerd] = useState(null);
-  const [portalNotitie, setPortalNotitie] = useState("");
+  const [portalItem, setPortalItem] = useState({ titel: "", url: "", categorie: "Rapport", datum: "" });
   const [portalOpslaan, setPortalOpslaan] = useState(false);
   const [portalLinkBezig, setPortalLinkBezig] = useState(false);
   const [nieuw, setNieuw] = useState({ naam:"", sector:"", contact:"", email:"", status:"Actief" });
@@ -3254,23 +3254,50 @@ function PageKlanten() {
     }
   };
 
-  const slaPortalNotitieOp = async () => {
+  const slaPortalItemOp = async () => {
     if (!selectedKlant || !isEchteKlantRecord) return;
+    const titel = portalItem.titel.trim();
+    if (!titel) return;
     setPortalOpslaan(true);
     try {
-      const materiaal = portalNotitie.trim();
+      const url = portalItem.url.trim();
       const bestaand = selectedKlant.portalMaterialen || [];
+      const nieuwItem = {
+        titel,
+        type: url ? "document" : "notitie",
+        url,
+        categorie: url ? portalItem.categorie : "",
+        datum: portalItem.datum || "",
+        aangemaakt: new Date().toISOString(),
+      };
       await updateDoc(doc(db, "klanten", selectedKlant.id), {
         portalWelkom: bewerkData.portalWelkom || selectedKlant.portalWelkom || "",
-        portalMaterialen: materiaal ? [...bestaand, { titel: materiaal, type: "notitie", aangemaakt: new Date().toISOString() }] : bestaand,
+        portalMaterialen: [...bestaand, nieuwItem],
         portalBijgewerkt: serverTimestamp(),
       });
-      setPortalNotitie("");
+      setPortalItem({ titel: "", url: "", categorie: "Rapport", datum: "" });
       await laadData();
     } catch (err) {
       console.error("Klantportaal bijwerken mislukt:", err);
     } finally {
       setPortalOpslaan(false);
+    }
+  };
+
+  const verwijderPortalItem = async (index) => {
+    if (!selectedKlant || !isEchteKlantRecord) return;
+    const bestaand = selectedKlant.portalMaterialen || [];
+    const item = bestaand[index];
+    if (!item) return;
+    if (!window.confirm(`"${item.titel}" verwijderen uit het klantportaal?`)) return;
+    try {
+      await updateDoc(doc(db, "klanten", selectedKlant.id), {
+        portalMaterialen: bestaand.filter((_, i) => i !== index),
+        portalBijgewerkt: serverTimestamp(),
+      });
+      await laadData();
+    } catch (err) {
+      console.error("Portaal-item verwijderen mislukt:", err);
     }
   };
 
@@ -3614,19 +3641,62 @@ function PageKlanten() {
                     </button>
                     {selectedKlant.portalToken && <span style={{fontSize:11,color:ADM.muted,fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:360}}>{getPortalLink()}</span>}
                   </div>
-                  <textarea
-                    value={portalNotitie}
-                    onChange={e=>setPortalNotitie(e.target.value)}
-                    placeholder="Voeg materiaal, afspraak of notitie toe aan het klantportaal..."
-                    style={{width:"100%",minHeight:68,background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box",resize:"vertical"}}
-                  />
-                  <div style={{display:"flex",justifyContent:"space-between",gap:10,alignItems:"center",marginTop:8,flexWrap:"wrap"}}>
+                  <div style={{display:"grid",gap:8,marginBottom:8}}>
+                    <input
+                      value={portalItem.titel}
+                      onChange={e=>setPortalItem(p=>({...p, titel:e.target.value}))}
+                      placeholder="Titel (bijv. Teamscan rapportage T1) of korte notitie"
+                      style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+                    />
+                    <input
+                      value={portalItem.url}
+                      onChange={e=>setPortalItem(p=>({...p, url:e.target.value}))}
+                      placeholder="Link naar document (OneDrive/SharePoint) — leeg laten voor een notitie"
+                      style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+                    />
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                      <select
+                        value={portalItem.categorie}
+                        onChange={e=>setPortalItem(p=>({...p, categorie:e.target.value}))}
+                        style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}>
+                        {["Rapport","Verslag","Presentatie","Overig"].map(c => <option key={c} value={c} style={{color:"#0D1B2A"}}>{c}</option>)}
+                      </select>
+                      <input
+                        type="date"
+                        value={portalItem.datum}
+                        onChange={e=>setPortalItem(p=>({...p, datum:e.target.value}))}
+                        style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
+                      />
+                    </div>
+                  </div>
+                  <div style={{display:"flex",justifyContent:"space-between",gap:10,alignItems:"center",marginBottom:10,flexWrap:"wrap"}}>
                     <div style={{fontSize:11,color:ADM.muted}}>{(selectedKlant.portalMaterialen || []).length} item(s) zichtbaar in dit klantportaal.</div>
-                    <button onClick={slaPortalNotitieOp} disabled={portalOpslaan}
-                      style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"8px 12px",fontWeight:700,fontSize:12,cursor:portalOpslaan?"wait":"pointer"}}>
+                    <button onClick={slaPortalItemOp} disabled={portalOpslaan || !portalItem.titel.trim()}
+                      style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"8px 12px",fontWeight:700,fontSize:12,cursor:portalOpslaan?"wait":"pointer",opacity:!portalItem.titel.trim()?0.5:1}}>
                       {portalOpslaan ? "Opslaan..." : "Toevoegen aan portaal"}
                     </button>
                   </div>
+                  {(selectedKlant.portalMaterialen || []).length > 0 && (
+                    <div style={{display:"grid",gap:6}}>
+                      {(selectedKlant.portalMaterialen || []).map((item, index) => (
+                        <div key={`${item.titel}-${index}`} style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"8px 12px",flexWrap:"wrap"}}>
+                          <div style={{minWidth:0}}>
+                            <span style={{fontSize:13,fontWeight:700,color:ADM.white}}>{item.titel}</span>
+                            <span style={{fontSize:11,color:ADM.muted,marginLeft:8}}>
+                              {[item.url ? (item.categorie || "Document") : "Notitie", item.datum].filter(Boolean).join(" · ")}
+                            </span>
+                          </div>
+                          <div style={{display:"flex",gap:6,flexShrink:0}}>
+                            {item.url && <a href={item.url} target="_blank" rel="noopener noreferrer" style={{fontSize:11,color:ADM.teal,fontWeight:700,textDecoration:"none",border:`1px solid ${ADM.border}`,borderRadius:6,padding:"5px 9px"}}>Openen</a>}
+                            <button onClick={()=>verwijderPortalItem(index)}
+                              style={{background:"transparent",color:ADM.red,border:"1px solid rgba(231,76,60,0.4)",borderRadius:6,padding:"5px 9px",fontSize:11,fontWeight:700,cursor:"pointer"}}>
+                              Verwijderen
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
