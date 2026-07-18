@@ -11,7 +11,7 @@ import KlantreisKeuze from "./KlantreisKeuze";
 import Verkennen from "./Verkennen";
 import TeamscanDigitaal from "./TeamscanDigitaal";
 import ContactModal from "./ContactModal";
-import { auth, db, ADMIN_EMAILS } from "./firebase";
+import { auth, db, ADMIN_EMAILS, maakPortalAccount } from "./firebase";
 import FunnelDashboard from "./FunnelDashboard";
 import { PUB, ADM } from "./styles/tokens";
 import { useInView, useIsMobile } from "./components/shared/hooks";
@@ -61,6 +61,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import {
@@ -8618,6 +8619,235 @@ function PageNieuwsbrief() {
   );
 }
 
+function PageKlantportaalBeheer() {
+  const [laden, setLaden] = useState(true);
+  const [klanten, setKlanten] = useState([]);
+  const [geselecteerd, setGeselecteerd] = useState(null);
+  const [documenten, setDocumenten] = useState([]);
+  const [docsLaden, setDocsLaden] = useState(false);
+  const [portalEmailInput, setPortalEmailInput] = useState("");
+  const [bezig, setBezig] = useState(false);
+  const [melding, setMelding] = useState("");
+  const [fout, setFout] = useState("");
+  const [nieuwDoc, setNieuwDoc] = useState({ titel: "", categorie: "Rapport", datum: "", url: "", omschrijving: "" });
+
+  const laadKlanten = async () => {
+    setLaden(true);
+    try {
+      const snap = await getDocs(collection(db, "klanten"));
+      const lijst = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      lijst.sort((a, b) => String(a.naam || "").localeCompare(String(b.naam || "")));
+      setKlanten(lijst);
+    } catch (err) {
+      console.error("Klanten laden mislukt:", err);
+    }
+    setLaden(false);
+  };
+
+  useEffect(() => { laadKlanten(); }, []);
+
+  const selecteerKlant = async (k) => {
+    setGeselecteerd(k);
+    setMelding(""); setFout("");
+    setPortalEmailInput(k.portalEmail || k.email || "");
+    setDocsLaden(true);
+    try {
+      const snap = await getDocs(collection(db, "klanten", k.id, "documenten"));
+      const lijst = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      lijst.sort((a, b) => String(b.datum || "").localeCompare(String(a.datum || "")));
+      setDocumenten(lijst);
+    } catch (err) {
+      console.error("Documenten laden mislukt:", err);
+      setDocumenten([]);
+    }
+    setDocsLaden(false);
+  };
+
+  const geefToegang = async () => {
+    if (!geselecteerd) return;
+    setBezig(true); setMelding(""); setFout("");
+    try {
+      const resultaat = await maakPortalAccount(portalEmailInput);
+      await updateDoc(doc(db, "klanten", geselecteerd.id), { portalEmail: resultaat.email });
+      setMelding(resultaat.bestondAl
+        ? `Account bestond al; er is een wachtwoord-instelmail gestuurd naar ${resultaat.email}.`
+        : `Toegang aangemaakt. ${resultaat.email} heeft een e-mail ontvangen om een wachtwoord in te stellen.`);
+      const bijgewerkt = { ...geselecteerd, portalEmail: resultaat.email };
+      setGeselecteerd(bijgewerkt);
+      setKlanten((ks) => ks.map((k) => (k.id === bijgewerkt.id ? bijgewerkt : k)));
+    } catch (err) {
+      console.error("Portaltoegang aanmaken mislukt:", err);
+      setFout(err && err.code === "auth/invalid-email" ? "Dit e-mailadres is ongeldig." : "Toegang aanmaken lukte niet. Controleer het e-mailadres en probeer opnieuw.");
+    }
+    setBezig(false);
+  };
+
+  const stuurResetMail = async () => {
+    if (!geselecteerd || !geselecteerd.portalEmail) return;
+    setBezig(true); setMelding(""); setFout("");
+    try {
+      await sendPasswordResetEmail(auth, geselecteerd.portalEmail);
+      setMelding(`Wachtwoord-instelmail opnieuw gestuurd naar ${geselecteerd.portalEmail}.`);
+    } catch {
+      setFout("Versturen lukte niet. Probeer het later opnieuw.");
+    }
+    setBezig(false);
+  };
+
+  const trekToegangIn = async () => {
+    if (!geselecteerd) return;
+    if (!window.confirm(`Toegang intrekken voor ${geselecteerd.portalEmail}? De klant kan dan niet meer inloggen op het portaal.`)) return;
+    setBezig(true); setMelding(""); setFout("");
+    try {
+      await updateDoc(doc(db, "klanten", geselecteerd.id), { portalEmail: "" });
+      const bijgewerkt = { ...geselecteerd, portalEmail: "" };
+      setGeselecteerd(bijgewerkt);
+      setKlanten((ks) => ks.map((k) => (k.id === bijgewerkt.id ? bijgewerkt : k)));
+      setMelding("Toegang ingetrokken.");
+    } catch {
+      setFout("Intrekken lukte niet.");
+    }
+    setBezig(false);
+  };
+
+  const voegDocToe = async (e) => {
+    e.preventDefault();
+    if (!geselecteerd) return;
+    if (!nieuwDoc.titel.trim() || !nieuwDoc.url.trim()) { setFout("Titel en link zijn verplicht."); return; }
+    setBezig(true); setMelding(""); setFout("");
+    try {
+      const ref = await addDoc(collection(db, "klanten", geselecteerd.id, "documenten"), {
+        titel: nieuwDoc.titel.trim(),
+        categorie: nieuwDoc.categorie,
+        datum: nieuwDoc.datum,
+        url: nieuwDoc.url.trim(),
+        omschrijving: nieuwDoc.omschrijving.trim(),
+        toegevoegd: serverTimestamp(),
+      });
+      setDocumenten((ds) => [{ id: ref.id, ...nieuwDoc }, ...ds]);
+      setNieuwDoc({ titel: "", categorie: "Rapport", datum: "", url: "", omschrijving: "" });
+      setMelding("Document toegevoegd.");
+    } catch (err) {
+      console.error("Document toevoegen mislukt:", err);
+      setFout("Toevoegen lukte niet.");
+    }
+    setBezig(false);
+  };
+
+  const verwijderDoc = async (d) => {
+    if (!geselecteerd) return;
+    if (!window.confirm(`"${d.titel}" verwijderen uit het portaal?`)) return;
+    try {
+      await deleteDoc(doc(db, "klanten", geselecteerd.id, "documenten", d.id));
+      setDocumenten((ds) => ds.filter((x) => x.id !== d.id));
+    } catch (err) {
+      console.error("Document verwijderen mislukt:", err);
+    }
+  };
+
+  const veld = {
+    width: "100%", padding: "10px 12px", borderRadius: 8, border: `1px solid ${ADM.border}`,
+    background: ADM.navyMid, color: ADM.text, fontSize: 14, fontFamily: "inherit", boxSizing: "border-box",
+  };
+  const kaart = { background: ADM.navy, border: `1px solid ${ADM.border}`, borderRadius: 14, padding: 20 };
+  const knop = { background: ADM.teal, color: ADM.white, border: "none", borderRadius: 8, padding: "10px 16px", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit" };
+  const knopGhost = { background: "transparent", color: ADM.text, border: `1px solid ${ADM.border}`, borderRadius: 8, padding: "10px 16px", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit" };
+
+  return (
+    <div style={{ padding: 28 }}>
+      <h1 style={{ fontSize: 22, color: ADM.white, margin: "0 0 6px" }}>Klantportaal</h1>
+      <p style={{ fontSize: 14, color: ADM.muted, margin: "0 0 24px", lineHeight: 1.6 }}>
+        Geef klanten toegang tot hun eigen omgeving op /klantportaal en beheer per klant de documenten (links naar bijvoorbeeld OneDrive of SharePoint).
+      </p>
+
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(240px, 320px) 1fr", gap: 20, alignItems: "start" }}>
+        <div style={kaart}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: ADM.white, marginBottom: 12 }}>Klanten</div>
+          {laden && <div style={{ color: ADM.muted, fontSize: 13 }}>Laden…</div>}
+          {!laden && klanten.length === 0 && <div style={{ color: ADM.muted, fontSize: 13, lineHeight: 1.6 }}>Nog geen klanten. Maak eerst een klant aan onder Klanten.</div>}
+          <div style={{ display: "grid", gap: 8 }}>
+            {klanten.map((k) => (
+              <button key={k.id} type="button" onClick={() => selecteerKlant(k)}
+                style={{ textAlign: "left", background: geselecteerd && geselecteerd.id === k.id ? ADM.navyMid : "transparent", border: `1px solid ${geselecteerd && geselecteerd.id === k.id ? ADM.teal : ADM.border}`, borderRadius: 10, padding: "10px 12px", cursor: "pointer", fontFamily: "inherit" }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: ADM.white }}>{k.naam || "(zonder naam)"}</div>
+                <div style={{ fontSize: 12, color: k.portalEmail ? ADM.green : ADM.muted, marginTop: 2 }}>
+                  {k.portalEmail ? `Portaal actief: ${k.portalEmail}` : "Geen portaltoegang"}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gap: 20 }}>
+          {!geselecteerd && <div style={{ ...kaart, color: ADM.muted, fontSize: 14 }}>Selecteer links een klant.</div>}
+
+          {geselecteerd && (
+            <>
+              <div style={kaart}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: ADM.white, marginBottom: 12 }}>Toegang voor {geselecteerd.naam}</div>
+                {!geselecteerd.portalEmail ? (
+                  <div style={{ display: "grid", gap: 10, maxWidth: 460 }}>
+                    <label style={{ fontSize: 12, color: ADM.muted }}>E-mailadres contactpersoon</label>
+                    <input type="email" value={portalEmailInput} onChange={(e) => setPortalEmailInput(e.target.value)} style={veld} />
+                    <button type="button" onClick={geefToegang} disabled={bezig} style={{ ...knop, opacity: bezig ? 0.7 : 1 }}>
+                      {bezig ? "Bezig…" : "Portaltoegang aanmaken"}
+                    </button>
+                    <div style={{ fontSize: 12, color: ADM.muted, lineHeight: 1.6 }}>
+                      De klant ontvangt automatisch een e-mail om een wachtwoord in te stellen en kan daarna inloggen op mijnteamkompas.nl/klantportaal.
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+                    <span style={{ fontSize: 14, color: ADM.green, fontWeight: 700 }}>{geselecteerd.portalEmail}</span>
+                    <button type="button" onClick={stuurResetMail} disabled={bezig} style={knopGhost}>Wachtwoordmail opnieuw sturen</button>
+                    <button type="button" onClick={trekToegangIn} disabled={bezig} style={{ ...knopGhost, color: ADM.red, borderColor: "rgba(231,76,60,0.4)" }}>Toegang intrekken</button>
+                  </div>
+                )}
+                {melding && <div style={{ fontSize: 13, color: ADM.green, marginTop: 12, lineHeight: 1.5 }}>{melding}</div>}
+                {fout && <div style={{ fontSize: 13, color: ADM.red, marginTop: 12, lineHeight: 1.5 }}>{fout}</div>}
+              </div>
+
+              <div style={kaart}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: ADM.white, marginBottom: 14 }}>Documenten in het portaal</div>
+
+                <form onSubmit={voegDocToe} style={{ display: "grid", gap: 10, marginBottom: 20, maxWidth: 640 }}>
+                  <input placeholder="Titel (bijv. Teamscan rapportage T1)" value={nieuwDoc.titel} onChange={(e) => setNieuwDoc({ ...nieuwDoc, titel: e.target.value })} style={veld} />
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                    <select value={nieuwDoc.categorie} onChange={(e) => setNieuwDoc({ ...nieuwDoc, categorie: e.target.value })} style={veld}>
+                      {PORTAL_CATEGORIEEN.map((c) => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                    <input type="date" value={nieuwDoc.datum} onChange={(e) => setNieuwDoc({ ...nieuwDoc, datum: e.target.value })} style={veld} />
+                  </div>
+                  <input placeholder="Link naar het document (OneDrive, SharePoint, …)" value={nieuwDoc.url} onChange={(e) => setNieuwDoc({ ...nieuwDoc, url: e.target.value })} style={veld} />
+                  <input placeholder="Korte omschrijving (optioneel)" value={nieuwDoc.omschrijving} onChange={(e) => setNieuwDoc({ ...nieuwDoc, omschrijving: e.target.value })} style={veld} />
+                  <button type="submit" disabled={bezig} style={{ ...knop, justifySelf: "start", opacity: bezig ? 0.7 : 1 }}>Document toevoegen</button>
+                </form>
+
+                {docsLaden && <div style={{ color: ADM.muted, fontSize: 13 }}>Laden…</div>}
+                {!docsLaden && documenten.length === 0 && <div style={{ color: ADM.muted, fontSize: 13 }}>Nog geen documenten voor deze klant.</div>}
+                <div style={{ display: "grid", gap: 8 }}>
+                  {documenten.map((d) => (
+                    <div key={d.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, border: `1px solid ${ADM.border}`, borderRadius: 10, padding: "10px 14px", flexWrap: "wrap" }}>
+                      <div>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: ADM.white }}>{d.titel}</div>
+                        <div style={{ fontSize: 12, color: ADM.muted, marginTop: 2 }}>{[d.categorie, d.datum].filter(Boolean).join(" · ")}</div>
+                      </div>
+                      <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                        <a href={d.url} target="_blank" rel="noopener noreferrer" style={{ ...knopGhost, textDecoration: "none", padding: "8px 12px" }}>Openen</a>
+                        <button type="button" onClick={() => verwijderDoc(d)} style={{ ...knopGhost, color: ADM.red, borderColor: "rgba(231,76,60,0.4)", padding: "8px 12px" }}>Verwijderen</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AdminDashboard({ onLogout }) {
   const [activeNav, setActiveNav] = useState("Dashboard");
   const isMobile = useIsMobile();
@@ -8657,6 +8887,7 @@ function AdminDashboard({ onLogout }) {
     { label:"Reflectiekaart leads", icon:"📥", badge: nieuwReflectieCount > 0 ? String(nieuwReflectieCount) : null, section:null },
     { label:"Nieuwsbrief",        icon:"📧", section:null },
     { label:"Klanten",            icon:"🏢", section:null },
+    { label:"Klantportaal",       icon:"🔐", section:null },
     { label:"Scans",              icon:"📝", section:"Trajecten" },
     { label:"Metingen",           icon:"📋", section:null },
     { label:"Rapportages",        icon:"📈", section:null },
@@ -8670,6 +8901,7 @@ function AdminDashboard({ onLogout }) {
     if (activeNav === "Reflectiekaart leads") return <PageReflectieLeads />;
     if (activeNav === "Nieuwsbrief")          return <PageNieuwsbrief />;
     if (activeNav === "Klanten")              return <PageKlanten />;
+    if (activeNav === "Klantportaal")         return <PageKlantportaalBeheer />;
     if (activeNav === "Scans")                return <PageScans
       ScanResultaten={ScanResultaten}
       exporteerScanAlsCsv={exporteerScanAlsCsv}
@@ -10686,6 +10918,211 @@ function BovenOnderstroomPage() {
   );
 }
 
+const PORTAL_CATEGORIEEN = ["Rapport", "Verslag", "Presentatie", "Overig"];
+
+function KlantportaalPage() {
+  const isMobile = useIsMobile();
+  const [user, setUser] = useState(null);
+  const [authKlaar, setAuthKlaar] = useState(false);
+  const [email, setEmail] = useState("");
+  const [wachtwoord, setWachtwoord] = useState("");
+  const [fout, setFout] = useState("");
+  const [melding, setMelding] = useState("");
+  const [bezig, setBezig] = useState(false);
+  const [klant, setKlant] = useState(null);
+  const [documenten, setDocumenten] = useState([]);
+  const [laden, setLaden] = useState(false);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setAuthKlaar(true);
+    });
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    const laad = async () => {
+      if (!user || !user.email) { setKlant(null); setDocumenten([]); return; }
+      setLaden(true);
+      try {
+        const q = query(collection(db, "klanten"), where("portalEmail", "==", user.email.toLowerCase()));
+        const snap = await getDocs(q);
+        if (snap.docs.length === 0) { setKlant(null); setDocumenten([]); setLaden(false); return; }
+        const k = { id: snap.docs[0].id, ...snap.docs[0].data() };
+        setKlant(k);
+        const docsSnap = await getDocs(collection(db, "klanten", k.id, "documenten"));
+        const lijst = docsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        lijst.sort((a, b) => String(b.datum || "").localeCompare(String(a.datum || "")));
+        setDocumenten(lijst);
+      } catch (err) {
+        console.error("Klantportaal laden mislukt:", err);
+        setFout("Er ging iets mis bij het laden van je omgeving. Probeer het later opnieuw.");
+      }
+      setLaden(false);
+    };
+    laad();
+  }, [user]);
+
+  const login = async (e) => {
+    e.preventDefault();
+    setFout(""); setMelding(""); setBezig(true);
+    try {
+      await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), wachtwoord);
+    } catch (err) {
+      const code = err && err.code ? err.code : "";
+      if (code === "auth/invalid-credential" || code === "auth/wrong-password" || code === "auth/user-not-found") {
+        setFout("E-mailadres of wachtwoord klopt niet.");
+      } else if (code === "auth/too-many-requests") {
+        setFout("Te veel pogingen. Wacht even en probeer het opnieuw.");
+      } else {
+        setFout("Inloggen lukte niet. Probeer het opnieuw.");
+      }
+    }
+    setBezig(false);
+  };
+
+  const wachtwoordVergeten = async () => {
+    setFout(""); setMelding("");
+    const adres = email.trim().toLowerCase();
+    if (!adres) { setFout("Vul eerst je e-mailadres in, dan sturen we een herstelmail."); return; }
+    try {
+      await sendPasswordResetEmail(auth, adres);
+      setMelding("Als dit e-mailadres bekend is, ontvang je binnen enkele minuten een e-mail om een wachtwoord in te stellen.");
+    } catch {
+      setMelding("Als dit e-mailadres bekend is, ontvang je binnen enkele minuten een e-mail om een wachtwoord in te stellen.");
+    }
+  };
+
+  const uitloggen = async () => {
+    try { await signOut(auth); } catch {}
+    setEmail(""); setWachtwoord(""); setKlant(null); setDocumenten([]);
+  };
+
+  const inputStyle = {
+    width: "100%", padding: "13px 14px", borderRadius: 10, border: `1px solid ${PUB.lijn}`,
+    fontSize: 15, fontFamily: "inherit", boxSizing: "border-box", background: PUB.wit, color: PUB.donker,
+  };
+
+  const isIngelogdeKlant = user && klant;
+  const isIngelogdZonderKoppeling = user && authKlaar && !laden && !klant;
+
+  return (
+    <>
+      <Helmet>
+        <title>Klantportaal | Mijn Teamkompas</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="description" content="Beveiligde klantomgeving van Mijn Teamkompas." />
+      </Helmet>
+
+      <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.licht, minHeight: "100vh" }}>
+        <section style={{ background: PUB.donker, padding: isMobile ? "92px 22px 40px" : "118px 60px 52px" }}>
+          <div style={{ maxWidth: 980, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+              Klantportaal
+            </div>
+            <h1 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.1, color: PUB.wit, margin: 0, letterSpacing: "-0.02em" }}>
+              {isIngelogdeKlant ? `Welkom, ${klant.contact || klant.naam}` : "Jouw documenten, op één plek."}
+            </h1>
+            {isIngelogdeKlant && (
+              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.65)", margin: "10px 0 0" }}>
+                Omgeving van {klant.naam}
+              </p>
+            )}
+          </div>
+        </section>
+
+        <section style={{ padding: isMobile ? "34px 22px 60px" : "48px 60px 90px" }}>
+          <div style={{ maxWidth: 980, margin: "0 auto" }}>
+
+            {!authKlaar && <div style={{ color: PUB.sub, fontSize: 15 }}>Laden…</div>}
+
+            {authKlaar && !user && (
+              <div style={{ maxWidth: 440, background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: isMobile ? 24 : 32, boxShadow: "0 12px 32px rgba(13,27,42,0.06)" }}>
+                <h2 style={{ fontSize: 20, margin: "0 0 6px" }}>Inloggen</h2>
+                <p style={{ fontSize: 14, color: PUB.sub, margin: "0 0 20px", lineHeight: 1.6 }}>
+                  Log in met het e-mailadres waarmee je bent uitgenodigd.
+                </p>
+                <form onSubmit={login}>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>E-mailadres</label>
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" style={{ ...inputStyle, marginBottom: 14 }} />
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>Wachtwoord</label>
+                  <input type="password" value={wachtwoord} onChange={(e) => setWachtwoord(e.target.value)} autoComplete="current-password" style={{ ...inputStyle, marginBottom: 18 }} />
+                  {fout && <div style={{ fontSize: 14, color: "#B4372F", marginBottom: 14, lineHeight: 1.5 }}>{fout}</div>}
+                  {melding && <div style={{ fontSize: 14, color: PUB.teal, marginBottom: 14, lineHeight: 1.5 }}>{melding}</div>}
+                  <button type="submit" disabled={bezig} style={{ width: "100%", background: PUB.oranje, color: PUB.donker, padding: "13px 18px", borderRadius: 10, fontWeight: 700, fontSize: 15, border: "none", cursor: "pointer", opacity: bezig ? 0.7 : 1 }}>
+                    {bezig ? "Bezig…" : "Inloggen"}
+                  </button>
+                </form>
+                <button type="button" onClick={wachtwoordVergeten} style={{ background: "none", border: "none", color: PUB.teal, fontWeight: 700, fontSize: 14, cursor: "pointer", padding: 0, marginTop: 16, fontFamily: "inherit" }}>
+                  Wachtwoord vergeten of eerste keer inloggen?
+                </button>
+              </div>
+            )}
+
+            {isIngelogdZonderKoppeling && (
+              <div style={{ maxWidth: 560, background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: isMobile ? 24 : 32 }}>
+                <h2 style={{ fontSize: 20, margin: "0 0 10px" }}>Geen omgeving gevonden</h2>
+                <p style={{ fontSize: 15, color: PUB.sub, lineHeight: 1.7, margin: "0 0 18px" }}>
+                  Er is nog geen klantomgeving gekoppeld aan {user.email}. Neem contact op via{" "}
+                  <a href="mailto:info@mijnteamkompas.nl" style={{ color: PUB.teal, fontWeight: 700, textDecoration: "none" }}>info@mijnteamkompas.nl</a>, dan zetten we het voor je klaar.
+                </p>
+                <button type="button" onClick={uitloggen} style={{ background: "none", border: `1px solid ${PUB.lijn}`, color: PUB.donker, padding: "10px 16px", borderRadius: 10, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: "inherit" }}>
+                  Uitloggen
+                </button>
+              </div>
+            )}
+
+            {isIngelogdeKlant && (
+              <>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+                  <h2 style={{ fontSize: 22, margin: 0 }}>Documenten</h2>
+                  <button type="button" onClick={uitloggen} style={{ background: "none", border: `1px solid ${PUB.lijn}`, color: PUB.donker, padding: "9px 16px", borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>
+                    Uitloggen
+                  </button>
+                </div>
+
+                {laden && <div style={{ color: PUB.sub, fontSize: 15 }}>Documenten laden…</div>}
+
+                {!laden && documenten.length === 0 && (
+                  <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 28, color: PUB.sub, fontSize: 15, lineHeight: 1.7 }}>
+                    Er staan nog geen documenten voor je klaar. Zodra er iets nieuws is, zie je het hier.
+                  </div>
+                )}
+
+                <div style={{ display: "grid", gap: 12 }}>
+                  {documenten.map((d) => (
+                    <div key={d.id} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: isMobile ? 18 : "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 6, flexWrap: "wrap" }}>
+                          <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: PUB.teal, background: "rgba(15,118,110,0.08)", padding: "4px 10px", borderRadius: 999 }}>
+                            {d.categorie || "Document"}
+                          </span>
+                          {d.datum && <span style={{ fontSize: 13, color: PUB.sub }}>{d.datum}</span>}
+                        </div>
+                        <div style={{ fontSize: 16, fontWeight: 700, color: PUB.donker, lineHeight: 1.4 }}>{d.titel}</div>
+                        {d.omschrijving && <div style={{ fontSize: 14, color: PUB.sub, marginTop: 4, lineHeight: 1.6 }}>{d.omschrijving}</div>}
+                      </div>
+                      <a href={d.url} target="_blank" rel="noopener noreferrer" style={{ background: PUB.oranje, color: PUB.donker, padding: "11px 18px", borderRadius: 10, fontWeight: 700, fontSize: 14, textDecoration: "none", flexShrink: 0 }}>
+                        Openen
+                      </a>
+                    </div>
+                  ))}
+                </div>
+
+                <p style={{ fontSize: 13, color: PUB.sub, marginTop: 28, lineHeight: 1.6 }}>
+                  Vragen over je documenten? Mail naar{" "}
+                  <a href="mailto:info@mijnteamkompas.nl" style={{ color: PUB.teal, fontWeight: 700, textDecoration: "none" }}>info@mijnteamkompas.nl</a>.
+                </p>
+              </>
+            )}
+          </div>
+        </section>
+      </div>
+    </>
+  );
+}
+
 function TeamdagPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -11033,8 +11470,14 @@ export default function App() {
         const allowed = ADMIN_EMAILS.includes(user.email || "");
 
         if (!allowed) {
-          await signOut(auth);
-          setView("login");
+          // Klantportaal-gebruikers mogen ingelogd blijven op /klantportaal.
+          const isPortalPath = window.location.pathname.startsWith("/klantportaal");
+          if (!isPortalPath) {
+            await signOut(auth);
+            setView("login");
+            setAuthReady(true);
+            return;
+          }
           setAuthReady(true);
           return;
         }
@@ -11171,6 +11614,7 @@ export default function App() {
         <Route path="/psychologische-veiligheid" element={<PsychologischeVeiligheidPage />} />
         <Route path="/sociale-veiligheid" element={<SocialeVeiligheidPage />} />
         <Route path="/boven-en-onderstroom" element={<BovenOnderstroomPage />} />
+        <Route path="/klantportaal" element={<KlantportaalPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />

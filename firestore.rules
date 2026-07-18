@@ -11,9 +11,23 @@ service cloud.firestore {
         ];
     }
 
-    // Backoffice: beheerders mogen alles lezen en beheren
+    // Backoffice: beheerders mogen alles lezen en beheren.
+    // Klantportaal: een ingelogde klant mag alleen zijn eigen klantrecord
+    // en de bijbehorende documenten lezen (koppeling via portalEmail).
     match /klanten/{docId} {
-      allow read, write: if isAdmin();
+      allow read: if isAdmin()
+        || (request.auth != null
+            && resource.data.portalEmail is string
+            && resource.data.portalEmail != ""
+            && resource.data.portalEmail == request.auth.token.email);
+      allow write: if isAdmin();
+
+      match /documenten/{documentId} {
+        allow read: if isAdmin()
+          || (request.auth != null
+              && get(/databases/$(database)/documents/klanten/$(docId)).data.portalEmail == request.auth.token.email);
+        allow write: if isAdmin();
+      }
     }
 
     match /vragenlijsten/{docId} {
