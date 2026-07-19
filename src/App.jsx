@@ -827,11 +827,77 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
 }
 
 
+
+function LeadTrustBar({ isMobile = false, tone = "light" }) {
+  const dark = tone === "dark";
+  const items = [
+    ["Reactie binnen 1 werkdag", "Geen verkoopgesprek, wel scherpte op jullie vraag"],
+    ["Vrijblijvend en concreet", "In 30 minuten helder of teamscan, teamdag of coaching past"],
+    ["Anonieme teaminput", "Veilig inzicht in patronen zonder individuen bloot te leggen"],
+  ];
+
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 12, marginTop: 22 }}>
+      {items.map(([titel, tekst]) => (
+        <div key={titel} style={{ background: dark ? "rgba(255,255,255,0.08)" : PUB.wit, border: `1px solid ${dark ? "rgba(255,255,255,0.14)" : PUB.lijn}`, borderRadius: 14, padding: "14px 16px" }}>
+          <div style={{ fontSize: 13, fontWeight: 850, color: dark ? PUB.wit : PUB.donker, marginBottom: 4 }}>✓ {titel}</div>
+          <div style={{ fontSize: 12, lineHeight: 1.55, color: dark ? "rgba(255,255,255,0.66)" : PUB.sub }}>{tekst}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StickyLeadCta({ onClick, isMobile = false }) {
+  return (
+    <div style={{ position: "fixed", left: isMobile ? 14 : "auto", right: 14, bottom: 14, zIndex: 900, maxWidth: isMobile ? "calc(100% - 28px)" : 360 }}>
+      <button type="button" onClick={onClick} style={{ width: "100%", border: 0, borderRadius: 999, padding: isMobile ? "12px 16px" : "14px 18px", background: PUB.oranje, color: PUB.donker, fontWeight: 900, fontSize: 14, cursor: "pointer", boxShadow: "0 18px 50px rgba(13,27,42,0.28)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+        Plan vrijblijvende kennismaking <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  );
+}
+
+function ConversionImpactReport({ isMobile = false, onCta }) {
+  const verbeteringen = [
+    ["Hoog", "Eén dominante CTA naar kennismaking", "Minder keuze-stress: elke pagina stuurt naar een veilig eerste gesprek."],
+    ["Hoog", "Trustproof direct bij hero en formulier", "Reactietijd, vrijblijvendheid en anonimiteit verlagen drempels."],
+    ["Middel", "SEO-intent gekoppeld aan aanbod", "Bezoekers vanuit thema-pagina’s zien sneller welke dienst logisch is."],
+    ["Middel", "Korter formulier met betere microcopy", "Minder frictie, duidelijk wat er na verzenden gebeurt."],
+  ];
+
+  return (
+    <section style={{ background: PUB.licht, padding: isMobile ? "52px 20px" : "76px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 24, alignItems: "start" }}>
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 850, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Conversie-analyse</div>
+          <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, margin: "0 0 14px" }}>Grootste impact richting 10 adviesgesprekken per maand.</h2>
+          <p style={{ fontSize: 16, lineHeight: 1.78, color: PUB.sub, margin: "0 0 22px" }}>
+            De website is ingericht als leadfunnel: herkennen van het probleem, vertrouwen opbouwen, bewijs tonen, risico verlagen en consequent uitnodigen voor een vrijblijvende kennismaking.
+          </p>
+          <button type="button" onClick={onCta} style={{ background: PUB.donker, color: PUB.wit, border: 0, borderRadius: 8, padding: "14px 20px", fontWeight: 850, cursor: "pointer" }}>Bespreek jullie teamvraag</button>
+        </div>
+        <div style={{ display: "grid", gap: 12 }}>
+          {verbeteringen.map(([impact, titel, tekst]) => (
+            <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 18, boxShadow: "0 12px 32px rgba(13,27,42,0.05)" }}>
+              <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 6 }}>
+                <span style={{ background: impact === "Hoog" ? PUB.oranje : PUB.teal, color: impact === "Hoog" ? PUB.donker : PUB.wit, borderRadius: 999, padding: "4px 9px", fontSize: 11, fontWeight: 900 }}>{impact} impact</span>
+                <strong style={{ color: PUB.donker }}>{titel}</strong>
+              </div>
+              <div style={{ color: PUB.sub, fontSize: 14, lineHeight: 1.65 }}>{tekst}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function SeoHead({ page = "home" }) {
   const pages = {
     home: {
       title: "Mijn Teamkompas | teamscan, workshops en coaching",
-      description: "Mijn Teamkompas begeleidt teams en leiders bij gedragsverandering en organisatieontwikkeling met teamscan, workshops, teamdagen en coaching.",
+      description: "Plan een vrijblijvend adviesgesprek over teamontwikkeling. Mijn Teamkompas helpt met teamscan, workshops, teamdagen en coaching bij betere samenwerking en leiderschap.",
       url: "https://www.mijnteamkompas.nl/",
       image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
     },
@@ -848,8 +914,8 @@ function SeoHead({ page = "home" }) {
       image: "https://www.mijnteamkompas.nl/teamkompas-vier-domeinen.jpg",
     },
     teamontwikkeling: {
-      title: "Teamontwikkeling en teamcoaching | samenwerking verbeteren",
-      description: "Versterk teamontwikkeling met teamscan, teamcoaching en begeleiding op samenwerking, psychologische veiligheid, eigenaarschap, motivatie en teamdag.",
+      title: "Teamontwikkeling Nederland | samenwerking verbeteren",
+      description: "Teamontwikkeling voor organisaties in Nederland. Verbeter samenwerking, psychologische veiligheid en eigenaarschap met teamscan, teamcoaching en praktische borging.",
       url: "https://www.mijnteamkompas.nl/teamontwikkeling",
       image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
     },
@@ -906,6 +972,67 @@ function SeoHead({ page = "home" }) {
       <meta name="twitter:title" content={seo.title} />
       <meta name="twitter:description" content={seo.description} />
       <meta name="twitter:image" content={seo.image} />
+      {page === "teamontwikkeling" && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: "Teamontwikkeling",
+            provider: {
+              "@type": "ProfessionalService",
+              name: "Mijn Teamkompas",
+              url: "https://www.mijnteamkompas.nl",
+            },
+            areaServed: {
+              "@type": "Country",
+              name: "Nederland",
+            },
+            serviceType: [
+              "Teamontwikkeling",
+              "Teamcoaching",
+              "Teamscan",
+              "Teamdag",
+              "Leiderschapsbegeleiding",
+            ],
+            description: seo.description,
+            url: seo.url,
+          })}
+        </script>
+      )}
+      {page === "teamontwikkeling" && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "Wanneer is teamontwikkeling zinvol?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Teamontwikkeling is zinvol wanneer samenwerking meer energie kost dan nodig is, eigenaarschap achterblijft of gesprekken over veiligheid, richting en gedrag te veel aan de oppervlakte blijven.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Waar begint een traject bij Mijn Teamkompas mee?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Een traject begint met het scherp maken van de teamvraag. Dat kan via een verkennend gesprek, intake of teamscan, zodat de vervolgstap aansluit op wat er echt speelt.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Is teamontwikkeling hetzelfde als een teamdag?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Nee. Een teamdag kan onderdeel zijn van teamontwikkeling, maar Mijn Teamkompas koppelt een teamdag aan analyse, dialoog en borging in dagelijks gedrag.",
+                },
+              },
+            ],
+          })}
+        </script>
+      )}
     </Helmet>
   );
 }
@@ -1181,7 +1308,8 @@ function PublicSite({ onLoginClick }) {
               <span style={ghostStyle} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
               <span style={{ ...ghostStyle, borderColor: "rgba(0,168,150,0.55)", color: PUB.teal, background: "rgba(0,168,150,0.10)" }} onClick={() => navigate("/klantenportaal")}>Naar klantportaal</span>
             </div>
-            <div style={{ marginTop: 24, color: "rgba(255,255,255,0.58)", fontSize: 13, lineHeight: 1.65, maxWidth: 660 }}>
+            <LeadTrustBar isMobile={isMobile} tone="dark" />
+            <div style={{ marginTop: 18, color: "rgba(255,255,255,0.58)", fontSize: 13, lineHeight: 1.65, maxWidth: 660 }}>
               Voor teams die vastlopen in samenwerking, verandering of onderlinge communicatie, en voor leiders die beweging willen zonder harder te trekken.
             </div>
           </div>
@@ -1401,11 +1529,11 @@ function PublicSite({ onLoginClick }) {
               <div style={{ marginTop: 28, display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", gap: 16, alignItems: isMobile ? "stretch" : "center", background: PUB.donker, color: PUB.wit, borderRadius: 18, padding: isMobile ? 22 : 26 }}>
                 <div>
                   <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 6 }}>Wil je dit voor je eigen team zichtbaar maken?</div>
-                  <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)" }}>Start laagdrempelig met de digitale teamscan of plan eerst een verkennende kennismaking.</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)" }}>Start laagdrempelig met de digitale teamscan of plan eerst een verdiepend gesprek.</div>
                 </div>
                 <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 10, flexShrink: 0 }}>
-                  <span style={{ ...ctaStyle, display: "inline-block", background: PUB.teal }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
-                  <span style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center" }} onClick={openModal}>Plan kennismaking</span>
+                  <span style={{ ...ctaStyle, display: "inline-block", background: PUB.teal }} onClick={() => navigate("/teamscan")}>Start de digitale teamscan</span>
+                  <span style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center" }} onClick={openModal}>Plan een verdiepend gesprek</span>
                 </div>
               </div>
             </Fade>
@@ -1456,6 +1584,7 @@ function PublicSite({ onLoginClick }) {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Homepage" />
       <CookieBanner ref={cookieBannerRef} />
     </>
@@ -9212,6 +9341,27 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
     "spanning tussen teams, functies of afdelingen constructief onderzoeken",
   ];
 
+  const verdiepingen = [
+    ["Teamcoaching", "Begeleiding voor teams die communicatie, feedback, eigenaarschap en onderlinge samenwerking willen versterken.", "/teamcoaching"],
+    ["Teamdag", "Een gerichte teamdag op basis van analyse, dialoog en afspraken die terugkomen in het dagelijks werk.", "/teamdag"],
+    ["Boven- en onderstroom", "Maak zichtbaar wat formeel besproken wordt en wat in gedrag, spanning of aannames onder de oppervlakte blijft.", "/boven-en-onderstroom"],
+  ];
+
+  const faqs = [
+    [
+      "Wanneer is teamontwikkeling zinvol?",
+      "Wanneer samenwerking meer energie kost dan nodig is, eigenaarschap achterblijft of gesprekken over veiligheid, richting en gedrag te veel aan de oppervlakte blijven.",
+    ],
+    [
+      "Waar begint een traject bij Mijn Teamkompas mee?",
+      "We beginnen met het scherp maken van de teamvraag. Dat kan via een verkennend gesprek, intake of teamscan, zodat de vervolgstap aansluit op wat er echt speelt.",
+    ],
+    [
+      "Is teamontwikkeling hetzelfde als een teamdag?",
+      "Nee. Een teamdag kan onderdeel zijn van teamontwikkeling, maar we koppelen die aan analyse, dialoog en borging in dagelijks gedrag.",
+    ],
+  ];
+
   return (
     <>
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, overflowX: "hidden", paddingTop: 64, background: PUB.wit }}>
@@ -9344,11 +9494,52 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
                   De teamscan helpt om de juiste teamvraag scherp te maken. Daarna kan een teamdag, coachingsgesprek of begeleid traject veel gerichter worden ingericht.
                 </p>
                 <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12 }}>
-                  <span style={{ ...ctaStyle, color: PUB.wit, flex: 1 }} onClick={() => navigate("/teamscan")}>Start teamscan</span>
-                  <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none", flex: 1 }} onClick={openModal}>Plan kennismaking</span>
+                  <span style={{ ...ctaStyle, color: PUB.wit, flex: 1 }} onClick={() => navigate("/teamscan")}>Start de digitale teamscan</span>
+                  <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none", flex: 1 }} onClick={openModal}>Plan een verdiepend gesprek</span>
                 </div>
               </div>
             </Fade>
+          </div>
+        </section>
+
+        <section style={{ background: PUB.wit, padding: isMobile ? "54px 20px" : "78px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <Fade>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Verdieping</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14, maxWidth: 820 }}>Teamontwikkeling raakt aan coaching, teamdagen en de onderstroom.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, maxWidth: 820, marginBottom: 30 }}>
+                Soms begint de vraag bij een teamdag, soms bij coaching en soms bij de spanning tussen wat gezegd wordt en wat mensen ervaren. Deze verdiepingen helpen om de juiste vervolgstap te kiezen.
+              </p>
+            </Fade>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+              {verdiepingen.map(([titel, tekst, href], i) => (
+                <Fade key={titel} delay={i * 0.05}>
+                  <a href={href} style={{ display: "block", height: "100%", background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, textDecoration: "none", boxShadow: "0 16px 38px rgba(13,27,42,0.06)" }}>
+                    <h3 style={{ fontSize: 22, lineHeight: 1.2, color: PUB.donker, margin: "0 0 10px" }}>{titel}</h3>
+                    <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                    <span style={{ display: "inline-block", marginTop: 16, fontSize: 13, fontWeight: 800, color: PUB.teal }}>Lees verder →</span>
+                  </a>
+                </Fade>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ background: PUB.licht, padding: isMobile ? "54px 20px" : "78px 60px" }}>
+          <div style={{ maxWidth: 980, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".8fr 1.2fr", gap: 34, alignItems: "start" }}>
+            <Fade>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Veelgestelde vragen</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>Praktische vragen over teamontwikkeling.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Kort antwoord op vragen die vaak leven bij leidinggevenden, HR en teams die een eerste stap willen zetten.</p>
+            </Fade>
+            <div style={{ display: "grid", gap: 12 }}>
+              {faqs.map(([vraag, antwoord]) => (
+                <details key={vraag} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: "18px 20px", boxShadow: "0 12px 30px rgba(13,27,42,0.05)" }}>
+                  <summary style={{ cursor: "pointer", fontSize: 17, fontWeight: 850, color: PUB.donker }}>{vraag}</summary>
+                  <p style={{ margin: "12px 0 0", fontSize: 15, lineHeight: 1.75, color: PUB.sub }}>{antwoord}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -9360,6 +9551,8 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             </Fade>
           </div>
         </section>
+
+        <ConversionImpactReport isMobile={isMobile} onCta={openModal} />
 
         <section style={{ background: PUB.wit, padding: isMobile ? "50px 20px" : "72px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
           <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
@@ -9375,6 +9568,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           </div>
         </section>
       </div>
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamontwikkeling" />
     </>
   );
@@ -9635,6 +9829,7 @@ function TeamcoachingPage() {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamcoaching" />
     </>
   );
@@ -10175,6 +10370,7 @@ function PsychologischeVeiligheidPage() {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Psychologische veiligheid" />
     </>
   );
@@ -10578,6 +10774,7 @@ function SocialeVeiligheidPage() {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Sociale veiligheid" />
     </>
   );
@@ -11068,6 +11265,7 @@ function BovenOnderstroomPage() {
         </div>
       )}
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Boven- en onderstroom" />
     </>
   );
@@ -11501,6 +11699,7 @@ function BreinEnSamenwerkingPage() {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Brein en samenwerking" />
     </>
   );
@@ -12324,6 +12523,7 @@ function TeamdagPage() {
         </section>
       </div>
 
+      <StickyLeadCta onClick={openModal} isMobile={isMobile} />
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamdag" />
     </>
   );

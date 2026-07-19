@@ -9,9 +9,13 @@ export const PUB = {
   paars: "#6B4E9E",
   oranje: "#E8821A",
   licht: "#F4F7F9",
+  bg: "#F4F7F9",
+  sand: "#F7F3EA",
   wit: "#FFFFFF",
   sub: "#6B7A8D",
+  muted: "#637083",
   lijn: "#dde4ed",
+  border: "#dde4ed",
 };
 
 export const ADM = {
