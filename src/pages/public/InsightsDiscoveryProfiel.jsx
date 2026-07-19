@@ -157,7 +157,24 @@ export default function InsightsDiscoveryProfiel() {
     <Section style={{ background: PUB.licht }}>
       <Eyebrow>De vier kleurenergieën</Eyebrow>
       <h2 className="tk-heading-lg">Voorkeuren herkennen zonder mensen vast te zetten.</h2>
-      <div className="tk-grid tk-grid-3" style={{ marginTop: 28 }}>{energy.map(([name, text, strengths, risks, color]) => <Card key={name} accent={color}><h3>{name}</h3><p>{text}</p><strong style={{ display: "block", marginTop: 16 }}>Mogelijke kracht</strong><ul>{strengths.map((item) => <li key={item}>{item}</li>)}</ul><strong>Mogelijk risico</strong><ul>{risks.map((item) => <li key={item}>{item}</li>)}</ul></Card>)}</div>
+      <div className="tk-energy-grid" style={{ marginTop: 28 }}>
+        {energy.map(([name, text, strengths, risks, color]) => (
+          <Card key={name} accent={color}>
+            <div className="tk-energy-card">
+              <h3>{name}</h3>
+              <p>{text}</p>
+              <div>
+                <strong>Mogelijke kracht</strong>
+                <ul>{strengths.map((item) => <li key={item}>{item}</li>)}</ul>
+              </div>
+              <div>
+                <strong>Mogelijk risico</strong>
+                <ul>{risks.map((item) => <li key={item}>{item}</li>)}</ul>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
       <p className="tk-lead" style={{ fontSize: 18, maxWidth: 760 }}>De kracht zit niet in één kleur, maar in het bewust kunnen inzetten van verschillende voorkeuren.</p>
     </Section>
 
