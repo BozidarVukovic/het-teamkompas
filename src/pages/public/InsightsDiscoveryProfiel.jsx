@@ -216,7 +216,25 @@ export default function InsightsDiscoveryProfiel() {
       </div>
     </Section>
 
-    <Section><Eyebrow>Hoe werkt het?</Eyebrow><h2 className="tk-heading-lg">Van aanvraag naar bespreking.</h2><div className="tk-grid tk-grid-3" style={{ marginTop: 28 }}>{[["01","Aanvraag en korte afstemming","We bespreken voor wie het profiel bedoeld is en welk doel centraal staat."],["02","Invullen van de vragenlijst","De deelnemer ontvangt een persoonlijke link en vult de vragenlijst online in."],["03","Persoonlijk profiel","De deelnemer ontvangt een uitgebreid persoonlijk profiel."],["04","Persoonlijke bespreking of teamsessie","Het profiel wordt besproken in een individueel gesprek, binnen een teamdag of als onderdeel van een teamontwikkelingstraject."]].map(([nr,titel,tekst])=><Card key={nr} accent={PUB.teal}><h3>{nr} · {titel}</h3><p>{tekst}</p></Card>)}</div></Section>
+    <Section>
+      <Eyebrow>Hoe werkt het?</Eyebrow>
+      <h2 className="tk-heading-lg">Van aanvraag naar bespreking.</h2>
+      <div className="tk-process-grid" style={{ marginTop: 28 }}>
+        {[
+          ["01", "Aanvraag en korte afstemming", "We bespreken voor wie het profiel bedoeld is en welk doel centraal staat."],
+          ["02", "Invullen van de vragenlijst", "De deelnemer ontvangt een persoonlijke link en vult de vragenlijst online in."],
+          ["03", "Persoonlijk profiel", "De deelnemer ontvangt een uitgebreid persoonlijk profiel."],
+          ["04", "Persoonlijke bespreking of teamsessie", "Het profiel wordt besproken in een individueel gesprek, binnen een teamdag of als onderdeel van een teamontwikkelingstraject."],
+        ].map(([nr, titel, tekst]) => (
+          <Card key={nr} accent={PUB.teal}>
+            <div className="tk-process-card">
+              <h3><span>{nr}</span><span>{titel}</span></h3>
+              <p>{tekst}</p>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </Section>
 
     <Section style={{ background: PUB.sand }}>
       <Eyebrow>Mogelijkheden</Eyebrow>
