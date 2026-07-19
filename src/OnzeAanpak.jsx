@@ -253,7 +253,7 @@ export default function OnzeAanpakPage() {
         </section>
       </div>
 
-      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Onze aanpak" />
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Onze aanpak pagina" interesse="Verkennend gesprek" />
     </HelmetProvider>
   );
 }

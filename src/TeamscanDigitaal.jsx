@@ -5,6 +5,7 @@ import { collection, addDoc, serverTimestamp, updateDoc } from "firebase/firesto
 import { db } from "./firebase";
 import KompasDot from "./components/shared/KompasDot";
 import { sendTeamscanConfirmationEmail } from "./email";
+import { getCurrentPageInfo } from "./contactMetadata";
 
 const C = {
   donker: "#0D1B2A",
@@ -266,10 +267,16 @@ export default function TeamscanDigitaal() {
     setSubmitting(true);
 
     try {
+      const pagina = window.location.href;
+      const bron = getCurrentPageInfo(window.location.pathname);
+      const interesse = "Digitale Teamscan";
+
       const requestRef = await addDoc(collection(db, "teamscanSelfserviceAanvragen"), {
         type: "digitale_teamscan_selfservice",
         status: "nieuw",
-        bron: "website_teamscan_digitaal",
+        bron,
+        pagina,
+        interesse,
         funnelFase: "lead_aanvraag",
         bedrijf: form.bedrijf.trim(),
         afdeling: form.afdeling.trim(),
@@ -308,6 +315,9 @@ export default function TeamscanDigitaal() {
           managerEmail: form.managerEmail.trim().toLowerCase(),
           teamGrootte: teamGrootteNummer,
           toelichting: form.toelichting.trim(),
+          interesse,
+          bron,
+          pagina,
           requestId: requestRef.id,
         });
 

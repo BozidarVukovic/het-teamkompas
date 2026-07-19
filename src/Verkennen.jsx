@@ -75,7 +75,7 @@ export default function Verkennen(){
             <button onClick={()=>setOpen(true)} style={{background:C.wit, color:C.teal, border:"none", borderRadius:12, padding:"15px 22px", fontWeight:900, cursor:"pointer"}}>Plan een verkennend gesprek</button>
           </div>
         </section>
-        <ContactModal isOpen={open} onClose={()=>setOpen(false)} bron="Klantreis persoonlijk traject" />
+        <ContactModal isOpen={open} onClose={()=>setOpen(false)} bron="Verkennend gesprek pagina" interesse="Verkennend gesprek" />
       </div>
     </HelmetProvider>
   );

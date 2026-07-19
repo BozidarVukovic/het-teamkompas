@@ -5,6 +5,7 @@ import { db } from "../../lib/firebase";
 import { CONTACT_TO_EMAIL, EMAILJS_PUBLIC_KEY, EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID } from "../../email";
 import { PUB } from "../../styles/tokens";
 import { ButtonLink, Card, Eyebrow, Field, PageShell, Section } from "../../components/design-system";
+import { getCurrentPageInfo } from "../../contactMetadata";
 
 const initialForm = {
   naam: "",
@@ -67,16 +68,22 @@ export default function InsightsDiscoveryProfiel() {
     if (!validate()) return;
     setStatus("sending");
     try {
+      const pagina = window.location.href;
+      const bron = getCurrentPageInfo(window.location.pathname);
+
       await addDoc(collection(db, "contactaanvragen"), {
         naam: form.naam,
         organisatie: form.organisatie,
         email: form.email,
         telefoon: form.telefoon,
-        interesse: form.interesse,
+        interesse: "Insights Discovery",
+        interesseDetail: form.interesse,
+        gewensteStap: form.interesse,
         aantalPersonen: form.aantalPersonen,
         bericht: form.toelichting,
         status: "Nieuw",
-        bron: "Insights Discovery-profiel",
+        bron,
+        pagina,
         aangemaakt_op: serverTimestamp(),
       });
       const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
@@ -92,8 +99,12 @@ export default function InsightsDiscoveryProfiel() {
             from_email: form.email,
             from_telefoon: form.telefoon,
             teamgrootte: form.aantalPersonen,
-            gewenste_stap: `Insights Discovery - ${form.interesse}`,
-            bericht: form.toelichting,
+            gewenste_stap: form.interesse,
+            interesse: "Insights Discovery",
+            bron,
+            pagina,
+            subject: "Nieuwe aanvraag – Insights Discovery",
+            bericht: `Interesse: Insights Discovery (${form.interesse})\nBron: ${bron}\nPagina: ${pagina}\n\n${form.toelichting}`,
             to_email: CONTACT_TO_EMAIL,
           },
         }),
