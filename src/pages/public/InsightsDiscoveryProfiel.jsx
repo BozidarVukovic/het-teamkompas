@@ -19,11 +19,13 @@ const initialForm = {
 };
 
 const faqItems = [
-  ["Is Insights Discovery hetzelfde als DISC?", "Nee. Het zijn verschillende modellen en werkwijzen. Beide kunnen helpen om gedrag en communicatie bespreekbaar te maken, maar wij gebruiken Insights Discovery vooral als praktische gespreksstarter binnen teamontwikkeling."],
-  ["Worden mensen met dit profiel in hokjes geplaatst?", "Nee. Iedereen gebruikt alle kleurenergieën en gedrag verandert per context. Het profiel is geen oordeel, maar taal om voorkeuren, kwaliteiten en spanning zorgvuldig te bespreken."],
-  ["Kan ik alleen een individueel profiel aanvragen?", "Ja. Een individueel profiel kan waardevol zijn voor professionals en leidinggevenden die hun communicatie, kwaliteiten en ontwikkelpunten beter willen begrijpen."],
-  ["Kunnen de profielen onderdeel zijn van een teamdag?", "Ja. We kunnen profielen koppelen aan oefeningen, teamvraagstukken en concrete afspraken tijdens een teamdag of breder teamontwikkelingstraject."],
-  ["Wordt een persoonlijk profiel vertrouwelijk behandeld?", "Ja. Een persoonlijk profiel vraagt om zorgvuldigheid. We spreken vooraf af wat individueel blijft en wat in een teamsetting gedeeld wordt, zodat het gesprek veilig en respectvol blijft."],
+  ["Is Insights Discovery hetzelfde als DISC?", "Nee. DISC en Insights Discovery zijn verschillende modellen, ook al werken beide met vier herkenbare stijlen of kleuren. DISC beschrijft vooral zichtbaar gedrag, zoals dominant, invloedrijk, stabiel of consciëntieus gedrag. Insights Discovery kijkt breder naar psychologische voorkeuren en is gebaseerd op het gedachtegoed van Carl Jung. Het gaat ook over voorkeuren in communicatie, besluitvorming, informatieverwerking en samenwerking. Iedereen heeft alle vier de kleurenergieën in zich; de waarde zit vooral in de kwaliteit van het gesprek en de manier waarop het profiel wordt toegepast."],
+  ["Worden mensen met Insights Discovery in hokjes geplaatst?", "Dat is nadrukkelijk niet de bedoeling. Een profiel beschrijft voorkeuren, geen vaste identiteit. Mensen kunnen hun gedrag aanpassen en verschillende kleurenergieën inzetten afhankelijk van de situatie. Wij zeggen daarom niet: jij bent rood of jij bent blauw. We spreken over energieën die iemand meer of minder van nature inzet."],
+  ["Is Insights Discovery wetenschappelijk bewezen?", "Insights Discovery is gebaseerd op het gedachtegoed van Carl Jung en wordt veel gebruikt binnen organisaties. Het is geen klinische test en ook geen diagnose-instrument. Zoals bij veel persoonlijkheidsmodellen is het belangrijk om het profiel niet als absolute waarheid te behandelen. De praktische waarde zit vooral in zelfinzicht, een gedeelde taal en een beter gesprek over communicatie en samenwerking."],
+  ["Kan ik alleen een individueel profiel aanvragen?", "Ja. Een individueel profiel kan worden gebruikt voor persoonlijke ontwikkeling, leiderschap, communicatie of coaching. De meeste impact ontstaat wanneer het profiel ook wordt besproken en gekoppeld aan concrete situaties uit het werk."],
+  ["Kunnen de profielen onderdeel zijn van een teamdag?", "Ja. Tijdens een teamdag kunnen teamleden hun eigen voorkeuren leren begrijpen en onderzoeken wat de verdeling van voorkeuren betekent voor besluitvorming, feedback, tempo, perspectieven en samenwerking onder druk."],
+  ["Is een profiel geschikt voor selectie of beoordeling?", "Een Insights Discovery-profiel is volgens onze werkwijze niet bedoeld als zelfstandig selectie- of beoordelingsinstrument. Het profiel kan input geven voor ontwikkeling en samenwerking, maar mag niet worden gebruikt als enige basis voor beslissingen over geschiktheid, functioneren of loopbaan."],
+  ["Wordt een persoonlijk profiel vertrouwelijk behandeld?", "Ja. Een persoonlijk profiel bevat persoonlijke informatie en wordt zorgvuldig behandeld. Vooraf spreken we af wie het profiel ontvangt, wat individueel blijft, wat iemand zelf met het team deelt en hoe informatie tijdens een teamsessie wordt gebruikt. Een teamoverzicht is nooit een vervanging voor het persoonlijke gesprek met de deelnemer."],
 ];
 
 function trackEvent(event) {
@@ -107,16 +109,24 @@ export default function InsightsDiscoveryProfiel() {
   };
 
   const energy = [
-    ["Vurig rood", "Richting", "Direct, doelgericht en besluitvaardig.", PUB.oranje],
-    ["Stralend geel", "Ideeën", "Enthousiast, verbindend en gericht op mogelijkheden.", "#D99A1E"],
-    ["Zacht groen", "Relatie", "Betrokken, rustig en gericht op harmonie.", PUB.groen],
-    ["Helder blauw", "Zorgvuldigheid", "Analytisch, precies en gericht op kwaliteit.", PUB.blauw],
+    ["Vurig rood", "Resultaat, tempo, duidelijkheid en actie.", ["snel schakelen", "knopen doorhakken", "resultaatgericht werken", "voortgang creëren"], ["ongeduldig worden", "te snel beslissen", "weinig ruimte laten voor nuance", "directheid die harder overkomt dan bedoeld"], PUB.oranje],
+    ["Stralend geel", "Enthousiasme, mogelijkheden, contact en inspiratie.", ["anderen meenemen", "nieuwe ideeën genereren", "gemakkelijk contact maken", "energie creëren"], ["snel afgeleid raken", "details missen", "afspraken onvoldoende afronden", "te snel naar nieuwe mogelijkheden bewegen"], "#D99A1E"],
+    ["Zacht groen", "Verbinding, harmonie, zorgvuldigheid en betrokkenheid.", ["goed luisteren", "vertrouwen opbouwen", "geduldig samenwerken", "aandacht hebben voor de groep"], ["conflicten uitstellen", "eigen grenzen onvoldoende aangeven", "lang blijven zoeken naar draagvlak", "terughoudend zijn met directe feedback"], PUB.groen],
+    ["Helder blauw", "Kwaliteit, logica, structuur en nauwkeurigheid.", ["analytisch denken", "kwaliteit bewaken", "risico’s herkennen", "zorgvuldig voorbereiden"], ["te lang analyseren", "kritisch of afstandelijk overkomen", "moeite hebben met onduidelijkheid", "besluiten uitstellen totdat alle informatie beschikbaar is"], PUB.blauw],
+  ];
+
+  const fundamenten = [
+    ["Psychologische veiligheid", "Een profiel kan helpen om verschillen minder persoonlijk te maken. Daardoor ontstaat meer ruimte om vragen te stellen, feedback te geven en onzekerheid uit te spreken.", "/psychologische-veiligheid"],
+    ["Boven- en onderstroom", "De kleurenergieën maken zichtbaar wat boven tafel gebeurt, zoals communicatie en taakverdeling. Het gesprek over behoeften, irritaties, aannames en spanning helpt om ook de onderstroom beter te begrijpen.", "/boven-en-onderstroom"],
+    ["Neuromanagement", "Voorkeuren hebben invloed op hoe mensen reageren op druk, onzekerheid, verandering, status en autonomie. Daarmee sluit het profiel aan bij inzichten over het brein en gedrag op het werk.", "/brein-en-samenwerking"],
+    ["Kleine experimenten", "Het profiel krijgt pas waarde wanneer teams ermee oefenen, bijvoorbeeld door vergaderingen anders in te richten, feedback anders te formuleren of collega’s bewust eerder te betrekken.", "/kleine-experimenten"],
+    ["Eigenaarschap", "Zelfinzicht helpt mensen om verantwoordelijkheid te nemen voor hun eigen gedrag, communicatie en invloed op het team.", "/teamontwikkeling"],
   ];
 
   return <PageShell>
     <Helmet>
       <title>Insights Discovery-profiel voor teams | Mijn Teamkompas</title>
-      <meta name="description" content="Ontdek hoe een Insights Discovery-profiel helpt om communicatie, zelfinzicht en samenwerking binnen teams te versterken." />
+      <meta name="description" content="Insights Discovery-profiel voor teams, teamdagen en teamontwikkeling. Lees over kleurenergieën, communicatieprofiel team en het verschil tussen DISC en Insights Discovery." />
       <link rel="canonical" href="https://www.mijnteamkompas.nl/insights-discovery-profiel" />
       <meta property="og:title" content="Insights Discovery-profiel voor betere samenwerking" />
       <meta property="og:description" content="Gebruik Insights Discovery als startpunt voor zelfinzicht, betere communicatie en teamontwikkeling." />
@@ -131,15 +141,24 @@ export default function InsightsDiscoveryProfiel() {
       <p className="tk-lead" style={{ color: "rgba(255,255,255,.76)" }}>Goede samenwerking begint met inzicht in jezelf en nieuwsgierigheid naar de ander. Een Insights Discovery-profiel geeft taal aan voorkeuren, kwaliteiten, communicatie en gedrag onder druk.</p>
       <div className="tk-actions">
         <button type="button" className="tk-button tk-button-primary" onClick={scrollToForm}>Vraag een Insights Discovery-profiel aan</button>
-        <ButtonLink href="/verkennen" variant="secondary" onClick={() => trackEvent("insights_hero_contact_click")}>Bespreek de mogelijkheden</ButtonLink>
+        <ButtonLink href="/verkennen" variant="secondary" onClick={() => trackEvent("insights_hero_contact_click")}>Plan een verkennend gesprek</ButtonLink>
       </div>
     </Section>
 
     <Section>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 28, alignItems: "start" }}>
-        <div><Eyebrow>Wat is Insights Discovery?</Eyebrow><h2 className="tk-heading-lg">Een herkenbare taal voor gedrag en communicatie.</h2><p className="tk-lead" style={{ fontSize: 18 }}>Het model gebruikt vier kleurenergieën. Iedereen heeft alle vier in zich, in een eigen verhouding en afhankelijk van de situatie. Wij zetten het niet los in, maar verbinden het aan luisteren, meten en bewegen binnen teamontwikkeling.</p></div>
-        <div className="tk-grid tk-grid-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>{energy.map(([name,label,text,color]) => <Card key={name} accent={color}><h3>{name}</h3><strong>{label}</strong><p>{text}</p></Card>)}</div>
+      <div style={{ maxWidth: 880 }}>
+        <Eyebrow>Wat is Insights Discovery?</Eyebrow>
+        <h2 className="tk-heading-lg">Een model voor persoonlijke en professionele ontwikkeling.</h2>
+        <p className="tk-lead" style={{ fontSize: 18 }}>Insights Discovery helpt mensen om beter te begrijpen welke gedrags- en communicatievoorkeuren zij van nature laten zien en hoe deze voorkeuren invloed hebben op samenwerking. Het model is gebaseerd op het werk van Carl Jung en vertaalt psychologische voorkeuren naar vier herkenbare kleurenergieën: vurig rood, stralend geel, zacht groen en helder blauw.</p>
+        <p style={{ color: PUB.muted, lineHeight: 1.75, fontSize: 16 }}>Iedereen beschikt over alle vier de kleurenergieën. Het verschil zit in de mate waarin iemand deze voorkeuren van nature inzet. Ook context speelt mee: op het werk, thuis, onder druk of in een leidinggevende rol kunnen andere kanten zichtbaar worden. Een persoonlijk Insights Discovery-profiel geeft daarom geen vaststaand oordeel, maar biedt taal om te onderzoeken waar iemand energie van krijgt, hoe iemand besluiten neemt, communiceert, wat iemand nodig heeft van anderen en hoe iemand effectiever kan aansluiten bij collega’s.</p>
       </div>
+    </Section>
+
+    <Section style={{ background: PUB.licht }}>
+      <Eyebrow>De vier kleurenergieën</Eyebrow>
+      <h2 className="tk-heading-lg">Voorkeuren herkennen zonder mensen vast te zetten.</h2>
+      <div className="tk-grid tk-grid-3" style={{ marginTop: 28 }}>{energy.map(([name, text, strengths, risks, color]) => <Card key={name} accent={color}><h3>{name}</h3><p>{text}</p><strong style={{ display: "block", marginTop: 16 }}>Mogelijke kracht</strong><ul>{strengths.map((item) => <li key={item}>{item}</li>)}</ul><strong>Mogelijk risico</strong><ul>{risks.map((item) => <li key={item}>{item}</li>)}</ul></Card>)}</div>
+      <p className="tk-lead" style={{ fontSize: 18, maxWidth: 760 }}>De kracht zit niet in één kleur, maar in het bewust kunnen inzetten van verschillende voorkeuren.</p>
     </Section>
 
     <Section style={{ background: PUB.sand }}>
@@ -154,6 +173,30 @@ export default function InsightsDiscoveryProfiel() {
 
     <Section style={{ background: PUB.licht }}>
       <Card accent={PUB.oranje}><Eyebrow>Geen hokjes</Eyebrow><h2 className="tk-heading-lg">Een startpunt voor het gesprek.</h2><p className="tk-lead" style={{ fontSize: 18 }}>Een profiel vertelt niet wie iemand definitief is. Gedrag wordt mede beïnvloed door context, rol, ervaring, veiligheid en druk. Daarom gebruiken wij Insights Discovery nooit als eindpunt, maar als startpunt voor een betekenisvol gesprek over <a href="/psychologische-veiligheid">psychologische veiligheid</a>, <a href="/sociale-veiligheid">sociale veiligheid</a>, <a href="/boven-en-onderstroom">boven- en onderstroom</a>, <a href="/brein-en-samenwerking">neuromanagement</a>, <a href="/kleine-experimenten">kleine experimenten</a>, eigenaarschap en samenwerking.</p></Card>
+    </Section>
+
+    <Section>
+      <div style={{ maxWidth: 900 }}>
+        <Eyebrow>Hoe wij Insights Discovery inzetten</Eyebrow>
+        <h2 className="tk-heading-lg">Niet als losse test, maar als hulpmiddel voor het echte gesprek.</h2>
+        <p className="tk-lead" style={{ fontSize: 18 }}>Wij gebruiken Insights Discovery niet om mensen te beoordelen. Het profiel helpt om het gesprek over samenwerking concreter te maken en wordt altijd verbonden aan de praktijk van het team.</p>
+        <div className="tk-grid tk-grid-3" style={{ marginTop: 28 }}>{["als onderdeel van een teamdag", "binnen een teamontwikkelingstraject", "bij individuele coaching", "bij leiderschapsontwikkeling", "bij spanningen of misverstanden", "bij rollen, verantwoordelijkheden en teamafspraken"].map((item) => <Card key={item} accent={PUB.teal}><h3>{item}</h3></Card>)}</div>
+        <p style={{ color: PUB.muted, lineHeight: 1.75, fontSize: 16, marginTop: 24 }}>Welke verschillen zien we terug in vergaderingen? Wie neemt snel het voortouw? Wie stelt kritische vragen? Wie bewaakt de relatie? Wie spreekt zich minder snel uit? Het doel is niet dat teamleden elkaars kleur onthouden. Het doel is dat zij beter leren waarnemen, luisteren, afstemmen en samenwerken.</p>
+      </div>
+    </Section>
+
+    <Section style={{ background: PUB.sand }}>
+      <Eyebrow>Verbonden met onze aanpak</Eyebrow>
+      <h2 className="tk-heading-lg">Insights Discovery als onderdeel van het bredere kompas.</h2>
+      <div className="tk-grid tk-grid-3" style={{ marginTop: 28 }}>{fundamenten.map(([titel, tekst, href]) => <Card key={titel} accent={PUB.teal}><h3>{titel}</h3><p>{tekst}</p><a href={href} style={{ display: "inline-block", marginTop: 14, color: PUB.teal, fontWeight: 850, textDecoration: "none" }}>Lees verder →</a></Card>)}</div>
+    </Section>
+
+    <Section>
+      <div style={{ maxWidth: 880 }}>
+        <Eyebrow>DISC en Insights Discovery</Eyebrow>
+        <h2 className="tk-heading-lg">Wat is het verschil tussen DISC en Insights Discovery?</h2>
+        <p style={{ color: PUB.muted, lineHeight: 1.75, fontSize: 16 }}>DISC beschrijft vooral zichtbaar gedrag. Insights Discovery kijkt breder naar psychologische voorkeuren in communicatie, besluitvorming, informatieverwerking en samenwerking. Beide modellen kunnen nuttig zijn, maar geen van beide vertelt de volledige waarheid over een persoon. Bij Mijn Teamkompas gebruiken we Insights Discovery als communicatieprofiel voor teams en als gespreksinstrument binnen teamontwikkeling, teamcoaching of een Insights Discovery teamdag.</p>
+      </div>
     </Section>
 
     <Section><Eyebrow>Hoe werkt het?</Eyebrow><h2 className="tk-heading-lg">Van aanvraag naar bespreking.</h2><div className="tk-grid tk-grid-3" style={{ marginTop: 28 }}>{[["01","Aanvraag en korte afstemming","We bespreken voor wie het profiel bedoeld is en welk doel centraal staat."],["02","Invullen van de vragenlijst","De deelnemer ontvangt een persoonlijke link en vult de vragenlijst online in."],["03","Persoonlijk profiel","De deelnemer ontvangt een uitgebreid persoonlijk profiel."],["04","Persoonlijke bespreking of teamsessie","Het profiel wordt besproken in een individueel gesprek, binnen een teamdag of als onderdeel van een teamontwikkelingstraject."]].map(([nr,titel,tekst])=><Card key={nr} accent={PUB.teal}><h3>{nr} · {titel}</h3><p>{tekst}</p></Card>)}</div></Section>

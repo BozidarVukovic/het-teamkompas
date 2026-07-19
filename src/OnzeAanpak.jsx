@@ -81,7 +81,7 @@ export default function OnzeAanpakPage() {
     "communicatie, feedback en samenwerking bespreekbaar maken",
     "nieuwe of samengestelde teams sneller op elkaar afstemmen",
     "leiderschap, rolverdeling en besluitvorming concreter maken",
-    "bestaande Insights Discovery profielen opnieuw praktisch toepassen",
+    "bestaande Insights Discovery-profielen opnieuw praktisch toepassen",
   ];
 
   const insightsWaarde = [
@@ -94,10 +94,10 @@ export default function OnzeAanpakPage() {
     <HelmetProvider>
       <Helmet>
         <title>Onze aanpak | teamcoaching, teamdag en Insights Discovery | Mijn Teamkompas</title>
-        <meta name="description" content="Ontdek hoe Mijn Teamkompas teams helpt met teamscan, teamcoaching, teamdag en Insights Discovery profielen als gedragslens voor betere samenwerking." />
+        <meta name="description" content="Ontdek hoe Mijn Teamkompas teams helpt met teamscan, teamcoaching, teamdag en Insights Discovery-profielen als gedragslens voor betere samenwerking." />
         <link rel="canonical" href="https://www.mijnteamkompas.nl/onze-aanpak" />
         <meta property="og:title" content="Onze aanpak | teamcoaching, teamdag en Insights Discovery" />
-        <meta property="og:description" content="Mijn Teamkompas combineert teamscan, veranderkundige duiding en Insights Discovery profielen om samenwerking concreet te verbeteren." />
+        <meta property="og:description" content="Mijn Teamkompas combineert teamscan, veranderkundige duiding en Insights Discovery-profielen om samenwerking concreet te verbeteren." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/onze-aanpak" />
       </Helmet>
