@@ -19,6 +19,7 @@ const kennis = [
   ["Sociale veiligheid", "/sociale-veiligheid"],
   ["Boven- en onderstroom", "/boven-en-onderstroom"],
   ["Brein en samenwerking", "/brein-en-samenwerking"],
+  ["Kleine experimenten", "/kleine-experimenten"],
 ];
 
 function isStaticPage(path) {

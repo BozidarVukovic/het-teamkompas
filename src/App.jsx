@@ -10681,6 +10681,12 @@ function BovenOnderstroomPage() {
       link: null,
       label: "Je bent op deze pagina",
     },
+    {
+      titel: "Kleine experimenten",
+      tekst: "Hoe teams inzichten omzetten in concreet gedrag: stap voor stap leren in plaats van grote plannen.",
+      link: "/kleine-experimenten",
+      label: "Lees over kleine experimenten →",
+    },
   ];
 
   const faqs = [
@@ -10951,15 +10957,15 @@ function BovenOnderstroomPage() {
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ maxWidth: 820, marginBottom: 36 }}>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vier lagen, één fundament</div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vijf lagen, één fundament</div>
               <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
                 Brein, veiligheid en onderstroom horen bij elkaar.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
-                Ons brein verklaart waarom mensen reageren zoals ze reageren. Sociale veiligheid is de ondergrens: respectvol met elkaar omgaan. Psychologische veiligheid is de bovengrens: durven uitspreken. En de onderstroom is de laag waarin dit alles zichtbaar wordt. Samen vormen ze het fundament van hoe wij naar teams kijken.
+                Ons brein verklaart waarom mensen reageren zoals ze reageren. Sociale veiligheid is de ondergrens: respectvol met elkaar omgaan. Psychologische veiligheid is de bovengrens: durven uitspreken. De onderstroom is de laag waarin dit alles zichtbaar wordt. En via kleine experimenten zet een team die inzichten om in concreet gedrag. Samen vormen ze het fundament van hoe wij naar teams kijken.
               </p>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
               {fundament.map(({ titel, tekst, link, label }) => (
                 <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
                   <h3 style={{ fontSize: 17, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
@@ -11151,6 +11157,12 @@ function BreinEnSamenwerkingPage() {
       titel: "Boven- en onderstroom",
       tekst: "Wat er gebeurt wanneer gevoelens en behoeften wel of niet besproken worden.",
       link: "/boven-en-onderstroom",
+      label: "Lees verder →",
+    },
+    {
+      titel: "Kleine experimenten",
+      tekst: "Hoe teams inzichten omzetten in concreet gedrag: stap voor stap leren als team.",
+      link: "/kleine-experimenten",
       label: "Lees verder →",
     },
   ];
@@ -11406,15 +11418,15 @@ function BreinEnSamenwerkingPage() {
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ maxWidth: 820, marginBottom: 36 }}>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vier lagen, één fundament</div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vijf lagen, één fundament</div>
               <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
                 Zo hangt alles samen.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
-                Het brein verklaart waarom mensen reageren zoals ze reageren. Psychologische veiligheid beschrijft wat mensen nodig hebben om zich uit te spreken. Sociale veiligheid legt de normen die daarvoor nodig zijn. En de boven- en onderstroom laat zien wat er gebeurt als gevoelens en behoeften wel of niet besproken worden.
+                Het brein verklaart waarom mensen reageren zoals ze reageren. Psychologische veiligheid beschrijft wat mensen nodig hebben om zich uit te spreken. Sociale veiligheid legt de normen die daarvoor nodig zijn. De boven- en onderstroom laat zien wat er gebeurt als gevoelens en behoeften wel of niet besproken worden. En via kleine experimenten zet een team die inzichten om in concreet gedrag.
               </p>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
               {fundament.map(({ titel, tekst, link, label }) => (
                 <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24 }}>
                   <h3 style={{ fontSize: 16, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
@@ -11490,6 +11502,492 @@ function BreinEnSamenwerkingPage() {
       </div>
 
       <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Brein en samenwerking" />
+    </>
+  );
+}
+
+function KleineExperimentenPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState(null);
+  const isMobile = useIsMobile();
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
+  const ctaStyle = {
+    background: PUB.oranje,
+    color: PUB.donker,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    boxShadow: "0 12px 28px rgba(232,130,26,0.28)",
+    border: "none",
+  };
+
+  const ghostStyle = {
+    background: "rgba(255,255,255,0.08)",
+    color: PUB.wit,
+    padding: "14px 22px",
+    borderRadius: 8,
+    fontWeight: 700,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    display: "inline-block",
+    border: "1px solid rgba(255,255,255,0.22)",
+  };
+
+  const voorbeelden = [
+    "We beginnen drie weken lang iedere vergadering met een korte check-in.",
+    "We spreken elkaar deze week binnen 24 uur aan als iets ons stoort.",
+    "We lopen één dag mee met een collega van wie we het werk niet goed kennen.",
+    "Iedereen stelt deze week één nieuwsgierige vraag extra voordat hij een mening geeft.",
+    "We sluiten iedere vergadering af met één leerpunt: wat deden we vandaag goed, wat kan beter?",
+    "We evalueren na drie weken samen: wat heeft dit opgeleverd en wat proberen we hierna?",
+  ];
+
+  const voorwaarden = [
+    {
+      titel: "Psychologische veiligheid is het fundament",
+      tekst: "Experimenteren betekent proberen, en proberen betekent dat iets mag mislukken. Wie bang is om afgerekend te worden, neemt geen risico en voert geen experiment uit. Zonder veiligheid geen leren.",
+      link: "/psychologische-veiligheid",
+      label: "Lees over psychologische veiligheid →",
+    },
+    {
+      titel: "Sociale veiligheid maakt leren mogelijk",
+      tekst: "Leren vraagt meer dan durven zeggen wat je vindt. Het vraagt ook het vertrouwen dat collega's je intenties niet in twijfel trekken. In veilige teams klinkt eerder: ik zat ernaast, kun jij mij helpen?",
+      link: "/sociale-veiligheid",
+      label: "Lees over sociale veiligheid →",
+    },
+    {
+      titel: "De onderstroom bepaalt het succes",
+      tekst: "Veel teams experimenteren alleen in de bovenstroom: nieuwe afspraken, nieuwe formats. Maar als onder water niets verandert, verdwijnen die afspraken vanzelf. Krachtige experimenten raken ook de vraag: waarom durven we dit eigenlijk niet?",
+      link: "/boven-en-onderstroom",
+      label: "Lees over boven- en onderstroom →",
+    },
+    {
+      titel: "Het brein leert door ervaren",
+      tekst: "Ons brein leert niet door lezen, maar door doen. Iedere positieve ervaring bouwt vertrouwen op, en dat vertrouwen maakt de volgende stap makkelijker. Zo ontstaat gedragsverandering: niet in één keer, maar stap voor stap.",
+      link: "/brein-en-samenwerking",
+      label: "Lees over brein en samenwerking →",
+    },
+  ];
+
+  const cyclus = [
+    ["1", "Veiligheid", "Mensen durven eerlijk te zijn over wat er speelt."],
+    ["2", "Inzicht", "De onderstroom wordt zichtbaar, vaak via de teamscan."],
+    ["3", "Begrip", "Het team begrijpt hoe het brein reageert op verandering."],
+    ["4", "Experimenteren", "Een kleine, veilige verandering wordt uitgeprobeerd."],
+    ["5", "Reflecteren", "Het team kijkt samen terug: wat zagen we gebeuren?"],
+    ["6", "Aanpassen", "Nieuwe inzichten worden direct toegepast in de volgende ronde."],
+    ["7", "Groei", "Nieuw gedrag wordt langzaam de nieuwe gewoonte."],
+  ];
+
+  const reflectievragen = [
+    "Wanneer hebben wij voor het laatst bewust iets uitgeprobeerd?",
+    "Welke kleine verandering zouden wij morgen al kunnen testen?",
+    "Wat houdt ons tegen om te experimenteren?",
+    "Hoe reageren wij wanneer een experiment mislukt?",
+    "Leren wij als team net zo veel van wat niet werkt als van wat wel werkt?",
+    "Welk klein experiment zou onze samenwerking deze week al kunnen verbeteren?",
+  ];
+
+  const fundament = [
+    { titel: "Brein en samenwerking", tekst: "Waarom mensen reageren zoals ze reageren.", link: "/brein-en-samenwerking", label: "Lees verder →" },
+    { titel: "Psychologische veiligheid", tekst: "Wat mensen nodig hebben om zich uit te spreken.", link: "/psychologische-veiligheid", label: "Lees verder →" },
+    { titel: "Sociale veiligheid", tekst: "Welke normen en omgangsvormen daarvoor nodig zijn.", link: "/sociale-veiligheid", label: "Lees verder →" },
+    { titel: "Boven- en onderstroom", tekst: "Wat er speelt boven én onder de oppervlakte.", link: "/boven-en-onderstroom", label: "Lees verder →" },
+    { titel: "Kleine experimenten", tekst: "Hoe teams inzichten omzetten in concreet gedrag.", link: null, label: "Je bent op deze pagina" },
+  ];
+
+  const faqs = [
+    ["Wat is een teamexperiment precies?", "Een experiment is een kleine, veilige verandering waarmee je als team iets wilt leren. Geen project, geen reorganisatie en geen nieuw beleid, maar bijvoorbeeld drie weken lang elk overleg afsluiten met één leerpunt. Klein genoeg om morgen te starten, concreet genoeg om iets van te leren."],
+    ["Wat is het verschil met een pilot of project?", "Een project stuurt op een vooraf bepaald resultaat en voelt al snel als een definitieve keuze. Een experiment stuurt op leren: het is tijdelijk, klein en expliciet bedoeld om te ontdekken wat werkt. Daardoor roept het minder weerstand op en meer nieuwsgierigheid."],
+    ["Wat als een experiment mislukt?", "Een experiment dat niet oplevert wat je hoopte, is geen mislukking maar informatie: de afspraak was te vaag, de timing klopte niet of de behoefte lag anders. Het gaat pas mis als een team er niets van leert. Daarom hoort bij elk experiment een moment van samen terugkijken."],
+    ["Wat is een growth mindset?", "Psycholoog Carol Dweck ontdekte dat mensen verschillend naar ontwikkeling kijken. Bij een fixed mindset staan eigenschappen vast: 'zo zijn wij nu eenmaal', 'dat hebben we al geprobeerd'. Bij een growth mindset zijn vaardigheden te ontwikkelen en levert elke fout informatie op. Teams met een growth mindset zien experimenteren niet als risico, maar als manier van leren."],
+    ["Is dit hetzelfde als Lean of Agile werken?", "We gebruiken hetzelfde uitgangspunt als Lean en Agile: je hoeft niet alles vooraf te weten, je leert door te doen. Maar wij passen het toe op samenwerking en gedrag in plaats van op processen en producten. Geen borden en ceremonies, wel kleine stappen, reflectie en continu verbeteren."],
+    ["Hoe begint een team hiermee?", "Meestal met veiligheid en inzicht: via de teamscan wordt zichtbaar wat er speelt, ook onder de oppervlakte. Daarna kiest het team zelf één klein experiment, voert het enkele weken uit en kijkt samen terug. Wij begeleiden dat ritme tijdens teamdagen en teamcoaching, totdat het team het zelf kan."],
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>Kleine experimenten: stap voor stap groeien als team | Mijn Teamkompas</title>
+        <meta
+          name="description"
+          content="Grote veranderingen beginnen klein. Hoe teams leren via kleine experimenten, met inzichten uit Lean, Agile, neuromanagement en de growth mindset."
+        />
+        <link rel="canonical" href="https://www.mijnteamkompas.nl/kleine-experimenten" />
+        <meta property="og:title" content="Kleine experimenten: stap voor stap groeien als team | Mijn Teamkompas" />
+        <meta property="og:description" content="Verandertrajecten lopen zelden vast op onwil, maar op te grote stappen. Over leren als team via kleine, veilige experimenten en een growth mindset." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.mijnteamkompas.nl/kleine-experimenten" />
+        <meta property="og:image" content="https://www.mijnteamkompas.nl/blog/images/experimenteren.jpg" />
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Service",
+                "name": "Leren als team via kleine experimenten",
+                "description": "Mijn Teamkompas helpt teams duurzaam veranderen via kleine, veilige experimenten: van inzicht via de teamscan naar nieuw gedrag, met reflectie en continue verbetering.",
+                "provider": {
+                  "@type": "LocalBusiness",
+                  "name": "Mijn Teamkompas",
+                  "url": "https://www.mijnteamkompas.nl",
+                  "email": "info@mijnteamkompas.nl",
+                  "areaServed": "NL"
+                },
+                "serviceType": "Teamcoaching, teamscan, teamontwikkeling",
+                "url": "https://www.mijnteamkompas.nl/kleine-experimenten"
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "Wat is een teamexperiment precies?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Een experiment is een kleine, veilige verandering waarmee je als team iets wilt leren. Geen project of reorganisatie, maar bijvoorbeeld drie weken lang elk overleg afsluiten met één leerpunt."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Wat als een experiment mislukt?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Een experiment dat niet oplevert wat je hoopte, is geen mislukking maar informatie. Het gaat pas mis als een team er niets van leert. Daarom hoort bij elk experiment een moment van samen terugkijken."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Wat is een growth mindset?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Bij een growth mindset zijn vaardigheden te ontwikkelen en levert elke fout informatie op. Teams met een growth mindset zien experimenteren niet als risico, maar als manier van leren."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Is dit hetzelfde als Lean of Agile werken?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Het uitgangspunt is hetzelfde: je leert door te doen. Mijn Teamkompas past dit toe op samenwerking en gedrag in plaats van op processen en producten."
+                    }
+                  }
+                ]
+              },
+              {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://www.mijnteamkompas.nl/"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Kleine experimenten: stap voor stap groeien als team",
+                    "item": "https://www.mijnteamkompas.nl/kleine-experimenten"
+                  }
+                ]
+              }
+            ]
+          }
+        `}</script>
+      </Helmet>
+
+      <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
+
+        {/* 1. Hero */}
+        <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
+          <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+              Kleine experimenten
+            </div>
+            <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
+              Grote veranderingen beginnen klein.
+            </h1>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 14 }}>
+              Iedereen wil dat samenwerking beter wordt: dat collega's elkaar makkelijker aanspreken, dat vergaderingen energie geven, dat problemen sneller worden opgelost. Toch lopen veel verandertrajecten vast. Zelden door onwil, veel vaker omdat de verandering te groot wordt gemaakt.
+            </p>
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>
+              Mijn Teamkompas helpt teams veranderen via kleine, veilige experimenten: uitproberen, terugkijken, leren en bijstellen. Zo ontstaat een lerend team. Geen team dat alles perfect doet, maar een team dat steeds beter wordt.
+            </p>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+            </div>
+          </div>
+          <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
+            <img src="/blog/images/experimenteren.jpg" alt="Team dat samen een klein experiment uitprobeert en ervan leert" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.85 }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94), rgba(13,27,42,0.08))" }} />
+          </div>
+        </section>
+
+        {/* 2. Waarom groot mislukt */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 56, alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Waarom groot vaak mislukt</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Hoe groter de verandering, hoe groter de weerstand.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 18 }}>
+                Teams maken plannen, schrijven acties op en organiseren werkgroepen. Enkele weken later is vrijwel alles weer zoals het was. Dat ligt zelden aan motivatie. Ons brein is gebouwd om energie te besparen: verandering kost energie, nieuwe gewoontes vragen aandacht, en onzekerheid voelt als mogelijk gevaar.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>
+                Daarom werken kleine stappen vaak beter dan grote plannen. Lean en Agile zijn wereldwijd bekend geworden om precies dit uitgangspunt: je hoeft niet alles vooraf te weten, je leert door te doen. Iets kleins proberen, kijken wat er gebeurt, leren en bijstellen. Niet perfect, wel steeds beter.
+              </p>
+              <a href="/brein-en-samenwerking" style={{ color: PUB.teal, fontWeight: 700, fontSize: 15, textDecoration: "none" }}>Lees ook: waarom ons brein samenwerken soms moeilijk maakt →</a>
+            </div>
+            <div style={{ background: PUB.licht, borderRadius: 22, padding: isMobile ? 24 : 36, border: `1px solid ${PUB.lijn}` }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: PUB.donker, marginBottom: 20 }}>Elke verandering roept in ons brein onbewust vragen op:</div>
+              {[
+                "Is dit wel veilig?",
+                "Gaat dit mis?",
+                "Wat betekent dit voor mij?",
+                "Kan ik dit wel?",
+                "Wat verlies ik als dit doorgaat?",
+              ].map((item) => (
+                <div key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 14 }}>
+                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 900, flexShrink: 0, marginTop: 1 }}>?</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.donker }}>{item}</div>
+                </div>
+              ))}
+              <div style={{ fontSize: 13, lineHeight: 1.6, color: PUB.sub, marginTop: 6 }}>
+                Een klein experiment houdt deze vragen klein, en daarmee ook de weerstand.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. Wat is een experiment */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wat is een experiment?</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Geen project. Geen reorganisatie. Een kleine, veilige verandering waarmee je iets wilt leren.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Een goed experiment is klein genoeg om morgen te starten, tijdelijk genoeg om veilig te voelen en concreet genoeg om iets van te leren. Kleine acties, grote inzichten. Een paar voorbeelden:
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+              {voorbeelden.map((v, i) => (
+                <div key={i} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22, boxShadow: "0 8px 24px rgba(13,27,42,0.05)" }}>
+                  <div style={{ fontSize: 13, fontWeight: 900, color: PUB.teal, marginBottom: 8 }}>Experiment {i + 1}</div>
+                  <p style={{ fontSize: 15, lineHeight: 1.7, color: PUB.donker, margin: 0 }}>{v}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Voorwaarden */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wanneer werkt het?</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Experimenteren werkt alleen als het veilig voelt.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Hier komen de andere lagen van ons kennisfundament samen. Een experiment zonder veiligheid wordt niet uitgevoerd, en een experiment dat de onderstroom negeert, verdwijnt vanzelf weer.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 18 }}>
+              {voorwaarden.map(({ titel, tekst, link, label }) => (
+                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 26 }}>
+                  <h3 style={{ fontSize: 17, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: "0 0 14px" }}>{tekst}</p>
+                  <a href={link} style={{ color: PUB.teal, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>{label}</a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Mindset */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Van fixed naar growth mindset</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Hoe een team naar fouten kijkt, bepaalt hoe snel het leert.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Psycholoog Carol Dweck ontdekte dat mensen grofweg op twee manieren naar ontwikkeling kijken. Dat verschil hoor je terug in hoe teams over verandering praten.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 18 }}>
+              <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 26, borderTop: "4px solid #B4372F" }}>
+                <h3 style={{ fontSize: 17, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>Fixed mindset</h3>
+                <p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: "0 0 12px" }}>
+                  Eigenschappen staan grotendeels vast. Fouten voelen als falen, feedback als kritiek en verandering als bedreiging. Je hoort dan uitspraken als:
+                </p>
+                {["Zo zijn wij nu eenmaal.", "Dat gaat hier nooit werken.", "Ik ben daar niet goed in.", "Dat hebben we al geprobeerd."].map((u) => (
+                  <div key={u} style={{ fontSize: 14, lineHeight: 1.6, color: PUB.donker, fontStyle: "italic", marginBottom: 6 }}>"{u}"</div>
+                ))}
+              </div>
+              <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 26, borderTop: `4px solid ${PUB.groen}` }}>
+                <h3 style={{ fontSize: 17, margin: "0 0 10px", color: PUB.donker, fontWeight: 700 }}>Growth mindset</h3>
+                <p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: "0 0 12px" }}>
+                  Mensen kunnen groeien, vaardigheden zijn te ontwikkelen en iedere fout levert informatie op. Experimenten zijn dan geen risico meer, maar een manier van leren:
+                </p>
+                {["Wat kunnen we hiervan leren?", "Zullen we iets anders proberen?", "Dit werkte niet, en dat is nuttige informatie.", "Wat vraagt dit van ons als team?"].map((u) => (
+                  <div key={u} style={{ fontSize: 14, lineHeight: 1.6, color: PUB.donker, fontStyle: "italic", marginBottom: 6 }}>"{u}"</div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 6. De Teamkompas-cyclus */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Hoe teams groeien</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                De cyclus achter onze hele aanpak.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Wij geloven niet in grote veranderprogramma's, maar in kleine bewegingen die samen een groot verschil maken. Deze cyclus herhaalt zich: elk experiment maakt het volgende makkelijker, en stap voor stap wordt leren de gewoonte.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(150px, 1fr))", gap: 14 }}>
+              {cyclus.map(([nr, titel, tekst]) => (
+                <div key={nr} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 20 }}>
+                  <div style={{ width: 34, height: 34, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 14, marginBottom: 12 }}>{nr}</div>
+                  <h3 style={{ fontSize: 15, margin: "0 0 6px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 13, lineHeight: 1.6, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 7. Reflectievragen */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 48, alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Zelf aan de slag</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Reflectievragen voor jouw team.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 16 }}>
+                Deze vragen zijn een goed startpunt voor het eerstvolgende teamoverleg. Kies er één en neem er tien minuten voor. Grote kans dat daar het eerste experiment uit voortkomt.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Liever eerst zien waar het team staat? De teamscan maakt zichtbaar hoe het team veiligheid, energie en samenwerking ervaart, en waar een klein experiment het meeste verschil maakt.
+              </p>
+            </div>
+            <div style={{ background: PUB.donker, borderRadius: 22, padding: isMobile ? 24 : 36 }}>
+              {reflectievragen.map((v, i) => (
+                <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", marginBottom: i === reflectievragen.length - 1 ? 0 : 16 }}>
+                  <div style={{ width: 26, height: 26, borderRadius: "50%", background: "rgba(15,118,110,0.35)", color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, flexShrink: 0 }}>{i + 1}</div>
+                  <div style={{ fontSize: 15, lineHeight: 1.65, color: "rgba(255,255,255,0.85)" }}>{v}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 8. Kennisfundament */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820, marginBottom: 36 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vijf lagen, één fundament</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
+                Zo hangt alles samen.
+              </h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
+                Het brein verklaart waarom mensen reageren zoals ze reageren. Psychologische veiligheid beschrijft wat mensen nodig hebben om zich uit te spreken. Sociale veiligheid legt de normen die daarvoor nodig zijn. De boven- en onderstroom laat zien wat er gebeurt als gevoelens wel of niet besproken worden. En kleine experimenten zetten al die inzichten om in concreet gedrag.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+              {fundament.map(({ titel, tekst, link, label }) => (
+                <div key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}>
+                  <h3 style={{ fontSize: 16, margin: "0 0 8px", color: PUB.donker, fontWeight: 700 }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.65, color: PUB.sub, margin: "0 0 12px" }}>{tekst}</p>
+                  {link ? (
+                    <a href={link} style={{ color: PUB.teal, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>{label}</a>
+                  ) : (
+                    <span style={{ color: PUB.sub, fontWeight: 700, fontSize: 14 }}>{label}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 9. FAQ */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 860, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Veelgestelde vragen</div>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 32px" }}>
+              Veelgestelde vragen over kleine experimenten
+            </h2>
+            <div style={{ display: "grid", gap: 10 }}>
+              {faqs.map(([vraag, antwoord], i) => (
+                <div key={i} style={{ border: `1px solid ${PUB.lijn}`, borderRadius: 16, overflow: "hidden" }}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    style={{ width: "100%", background: openFaq === i ? PUB.wit : PUB.licht, border: "none", padding: "18px 22px", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, cursor: "pointer", fontFamily: "inherit" }}
+                  >
+                    <span style={{ fontSize: 16, fontWeight: 700, color: PUB.donker, lineHeight: 1.4 }}>{vraag}</span>
+                    <span style={{ fontSize: 20, color: PUB.teal, fontWeight: 700, flexShrink: 0, transform: openFaq === i ? "rotate(45deg)" : "none", transition: "transform 0.2s" }}>+</span>
+                  </button>
+                  {openFaq === i && (
+                    <div style={{ padding: "6px 22px 20px", background: PUB.wit }}>
+                      <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>{antwoord}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Reflectiekaart leadblok */}
+        <section style={{ padding: isMobile ? "52px 22px" : "80px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+            <Fade>
+              <ReflectiekaartFormulier bronPagina="Kleine experimenten" variant="block" />
+            </Fade>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
+          <div style={{ maxWidth: 780, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+              Stap voor stap groeien
+            </div>
+            <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
+              Welk klein experiment past bij jouw team?
+            </h2>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", marginBottom: 28 }}>
+              Begin met een teamscan of plan een verkennend gesprek. Dan kijken we samen waar jouw team staat en welk eerste experiment het meeste verschil maakt.
+            </p>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/onze-aanpak" style={{ color: "rgba(255,255,255,0.72)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over onze aanpak →</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Kleine experimenten" />
     </>
   );
 }
@@ -11981,6 +12479,7 @@ export default function App() {
         <Route path="/sociale-veiligheid" element={<SocialeVeiligheidPage />} />
         <Route path="/boven-en-onderstroom" element={<BovenOnderstroomPage />} />
         <Route path="/brein-en-samenwerking" element={<BreinEnSamenwerkingPage />} />
+        <Route path="/kleine-experimenten" element={<KleineExperimentenPage />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
