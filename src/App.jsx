@@ -23,6 +23,7 @@ import Blog from "./pages/public/Blog";
 import BlogPost from "./pages/public/BlogPost";
 import Klantenportaal from "./pages/public/Klantenportaal";
 import InsightsDiscoveryProfiel from "./pages/public/InsightsDiscoveryProfiel";
+import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
 import CookieBanner from "./components/shared/CookieBanner";
@@ -1596,7 +1597,7 @@ function PublicSite({ onLoginClick }) {
       </div>
 
       <StickyLeadCta onClick={openModal} isMobile={isMobile} />
-      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Homepage" />
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Homepage" interesse="Algemene vraag" />
       <CookieBanner ref={cookieBannerRef} />
     </>
   );
@@ -2789,6 +2790,7 @@ function PageContactaanvragen() {
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(null);
+  const [interestFilter, setInterestFilter] = useState("all");
 
   useEffect(() => {
     const laadAanvragen = async () => {
@@ -2808,6 +2810,10 @@ function PageContactaanvragen() {
             email: data.email || "",
             tel: data.telefoon || "",
             bericht: data.bericht || "",
+            interesse: data.interesse || "Algemene vraag",
+            bron: data.bron || getCurrentPageInfo(data.pagina || ""),
+            pagina: data.pagina || "-",
+            gewensteStap: data.gewensteStap || data.gewenste_stap || data.gewensteVervolgactie || "Nog te bepalen",
             datum,
             status: data.status || "Nieuw",
           };
@@ -2844,19 +2850,38 @@ function PageContactaanvragen() {
     : s === "Verwerkt" ? "rgba(46,204,113,0.12)"
     : "rgba(255,255,255,0.05)";
 
+  const interestBadgeStyle = (interesse) => {
+    const config = getInterestConfig(interesse);
+    return {
+      background: `${config.color}22`,
+      color: config.color,
+      border: `1px solid ${config.color}55`,
+    };
+  };
+
+  const filteredAanvragen = interestFilter === "all" ? aanvragen : aanvragen.filter(a => a.interesse === interestFilter);
+
   if (loading) return <div style={{ color: ADM.muted, padding: 20 }}>Laden...</div>;
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: selected ? "1fr 400px" : "1fr", gap: 20 }}>
       <div>
-        <div style={{ fontSize: 13, color: ADM.muted, marginBottom: 20 }}>
+        <div style={{ fontSize: 13, color: ADM.muted, marginBottom: 14 }}>
           {aanvragen.filter(a => a.status === "Nieuw").length} nieuwe aanvragen ·{" "}
           {aanvragen.filter(a => a.status === "In behandeling").length} in behandeling ·{" "}
           {aanvragen.length} totaal
         </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
+          {CONTACT_INTEREST_FILTERS.map((filter) => (
+            <button key={filter.value} type="button" onClick={() => setInterestFilter(filter.value)}
+              style={{ border: `1px solid ${interestFilter === filter.value ? ADM.teal : ADM.border}`, background: interestFilter === filter.value ? "rgba(0,168,150,0.14)" : "rgba(255,255,255,0.03)", color: interestFilter === filter.value ? ADM.teal : ADM.muted, borderRadius: 999, padding: "7px 12px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+              {filter.label}
+            </button>
+          ))}
+        </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {aanvragen.map((a) => (
+          {filteredAanvragen.map((a) => (
             <div key={a.id}
               onClick={() => setSelected(selected?.id === a.id ? null : a)}
               style={{
@@ -2868,20 +2893,29 @@ function PageContactaanvragen() {
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                 <div>
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 8 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, ...interestBadgeStyle(a.interesse) }}>{getInterestConfig(a.interesse).badge} {a.interesse}</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20, background: statusBg(a.status), color: statusColor(a.status) }}>{a.status}</span>
+                  </div>
                   <div style={{ fontWeight: 600, color: ADM.white, fontSize: 15 }}>{a.naam}</div>
                   <div style={{ fontSize: 12, color: ADM.muted, marginTop: 2 }}>{a.org} · {a.datum}</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 10, marginTop: 12 }}>
+                    {[["Interesse", a.interesse], ["Bron", a.bron], ["Pagina", a.pagina], ["Vervolgstap", a.gewensteStap]].map(([label, value]) => (
+                      <div key={label}>
+                        <div style={{ fontSize: 10, color: ADM.muted, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 3 }}>{label}</div>
+                        <div style={{ fontSize: 12, color: ADM.white }}>{value || "-"}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20,
-                  background: statusBg(a.status), color: statusColor(a.status), flexShrink: 0 }}>
-                  {a.status}
-                </span>
+
               </div>
               <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                 {a.bericht}
               </div>
             </div>
           ))}
-          {aanvragen.length === 0 && (
+          {filteredAanvragen.length === 0 && (
             <div style={{ color: ADM.muted, fontSize: 14, padding: 20, textAlign: "center" }}>
               Nog geen contactaanvragen ontvangen.
             </div>
@@ -2904,7 +2938,7 @@ function PageContactaanvragen() {
             </span>
           </div>
 
-          {[["Naam", selected.naam], ["Organisatie", selected.org], ["E-mail", selected.email], ["Telefoon", selected.tel || "-"]].map(([l, v]) => (
+          {[["Interesse", selected.interesse], ["Bron", selected.bron], ["Pagina", selected.pagina], ["Vervolgstap", selected.gewensteStap], ["Naam", selected.naam], ["Organisatie", selected.org], ["E-mail", selected.email], ["Telefoon", selected.tel || "-"]].map(([l, v]) => (
             <div key={l} style={{ marginBottom: 14 }}>
               <div style={{ fontSize: 10, color: ADM.muted, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 4 }}>{l}</div>
               <div style={{ fontSize: 14, color: ADM.white }}>{v}</div>
@@ -9614,7 +9648,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
         </section>
       </div>
       <StickyLeadCta onClick={openModal} isMobile={isMobile} />
-      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamontwikkeling" />
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamontwikkeling pagina" interesse="Teamontwikkeling" />
     </>
   );
 }
@@ -9875,7 +9909,7 @@ function TeamcoachingPage() {
       </div>
 
       <StickyLeadCta onClick={openModal} isMobile={isMobile} />
-      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamcoaching" />
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamcoaching pagina" interesse="Teamcoaching" />
     </>
   );
 }
@@ -10416,7 +10450,7 @@ function PsychologischeVeiligheidPage() {
       </div>
 
       <StickyLeadCta onClick={openModal} isMobile={isMobile} />
-      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Psychologische veiligheid" />
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Psychologische veiligheid pagina" interesse="Teamontwikkeling" />
     </>
   );
 }
@@ -10820,7 +10854,7 @@ function SocialeVeiligheidPage() {
       </div>
 
       <StickyLeadCta onClick={openModal} isMobile={isMobile} />
-      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Sociale veiligheid" />
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Sociale veiligheid pagina" interesse="Teamontwikkeling" />
     </>
   );
 }
@@ -11311,7 +11345,7 @@ function BovenOnderstroomPage() {
       )}
 
       <StickyLeadCta onClick={openModal} isMobile={isMobile} />
-      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Boven- en onderstroom" />
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Boven- en onderstroom pagina" interesse="Teamontwikkeling" />
     </>
   );
 }
@@ -11745,7 +11779,7 @@ function BreinEnSamenwerkingPage() {
       </div>
 
       <StickyLeadCta onClick={openModal} isMobile={isMobile} />
-      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Brein en samenwerking" />
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Neuromanagement pagina" interesse="Teamontwikkeling" />
     </>
   );
 }
@@ -12231,7 +12265,7 @@ function KleineExperimentenPage() {
         </section>
       </div>
 
-      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Kleine experimenten" />
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Kleine experimenten pagina" interesse="Workshop" />
     </>
   );
 }
@@ -12569,7 +12603,7 @@ function TeamdagPage() {
       </div>
 
       <StickyLeadCta onClick={openModal} isMobile={isMobile} />
-      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamdag" />
+      <ContactModal isOpen={modalOpen} onClose={closeModal} bron="Teamdag pagina" interesse="Teamdag" />
     </>
   );
 }

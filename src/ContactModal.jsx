@@ -7,6 +7,7 @@ import {
   EMAILJS_PUBLIC_KEY,
   CONTACT_TO_EMAIL,
 } from "./email";
+import { getCurrentPageInfo } from "./contactMetadata";
 
 const emptyForm = {
   naam: "",
@@ -18,7 +19,7 @@ const emptyForm = {
   bericht: "",
 };
 
-export default function ContactModal({ isOpen, onClose, bron = "Website" }) {
+export default function ContactModal({ isOpen, onClose, bron = "Website", interesse = "Verkennend gesprek" }) {
   const [form, setForm] = useState(emptyForm);
   const [status, setStatus] = useState("idle");
 
@@ -40,10 +41,15 @@ export default function ContactModal({ isOpen, onClose, bron = "Website" }) {
     setStatus("sending");
 
     try {
+      const pagina = typeof window !== "undefined" ? window.location.href : "";
+      const bronLabel = bron || getCurrentPageInfo();
+
       await addDoc(collection(db, "contactaanvragen"), {
         ...form,
         status: "Nieuw",
-        bron,
+        interesse,
+        bron: bronLabel,
+        pagina,
         aangemaakt_op: serverTimestamp(),
       });
 
@@ -61,7 +67,11 @@ export default function ContactModal({ isOpen, onClose, bron = "Website" }) {
             from_telefoon: form.telefoon,
             teamgrootte: form.teamgrootte,
             gewenste_stap: form.gewensteStap,
-            bericht: form.bericht,
+            interesse,
+            bron: bronLabel,
+            pagina,
+            subject: `Nieuwe aanvraag – ${interesse}`,
+            bericht: `Interesse: ${interesse}\nBron: ${bronLabel}\nPagina: ${pagina}\n\n${form.bericht}`,
             to_email: CONTACT_TO_EMAIL,
           },
         }),

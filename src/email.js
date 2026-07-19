@@ -24,10 +24,14 @@ export async function sendContactEmail(params) {
 
 export async function sendTeamscanConfirmationEmail({
   toEmail,
+  managerEmail,
   managerName,
   organisatie,
   afdeling,
   teamGrootte,
+  interesse = "Digitale Teamscan",
+  bron = "Teamscan pagina",
+  pagina = "",
 }) {
   const safeName = managerName || "dank voor je aanvraag";
 
@@ -35,16 +39,20 @@ export async function sendTeamscanConfirmationEmail({
     EMAILJS_SERVICE_ID,
     EMAILJS_TEMPLATE_ID,
     {
-      to_email: toEmail,
+      to_email: toEmail || managerEmail,
       reply_to: CONTACT_TO_EMAIL,
 
-      subject: "Bevestiging aanvraag digitale teamscan",
+      subject: `Nieuwe aanvraag – ${interesse}`,
 
       from_name: "Mijn Teamkompas",
       to_name: safeName,
 
       message: `
 Beste ${safeName},
+
+Interesse: ${interesse}
+Bron: ${bron}
+Pagina: ${pagina || "-"}
 
 Dank voor je aanvraag voor de digitale teamscan van Mijn Teamkompas.
 
@@ -65,6 +73,9 @@ www.mijnteamkompas.nl
       organisatie: organisatie || "",
       afdeling: afdeling || "",
       team_grootte: teamGrootte || "",
+      interesse,
+      bron,
+      pagina: pagina || "",
     },
     EMAILJS_PUBLIC_KEY
   );
