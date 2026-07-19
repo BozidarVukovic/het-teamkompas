@@ -11824,7 +11824,7 @@ function KleineExperimentenPage() {
         <meta property="og:description" content="Verandertrajecten lopen zelden vast op onwil, maar op te grote stappen. Over leren als team via kleine, veilige experimenten en een growth mindset." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/kleine-experimenten" />
-        <meta property="og:image" content="https://www.mijnteamkompas.nl/blog/images/experimenteren.jpg" />
+        <meta property="og:image" content="https://www.mijnteamkompas.nl/kleine-experimenten.jpg" />
         <script type="application/ld+json">{`
           {
             "@context": "https://schema.org",
@@ -11925,7 +11925,7 @@ function KleineExperimentenPage() {
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
-            <img src="/blog/images/experimenteren.jpg" alt="Team dat samen een klein experiment uitprobeert en ervan leert" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.85 }} />
+            <img src="/kleine-experimenten.jpg" alt="Team dat samen een klein experiment uitprobeert en ervan leert" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.85 }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94), rgba(13,27,42,0.08))" }} />
           </div>
         </section>
