@@ -15,6 +15,7 @@
     { "source": "/teamcoaching", "destination": "/teamcoaching/index.html" },
     { "source": "/teamdag", "destination": "/teamdag/index.html" },
     { "source": "/teamontwikkeling", "destination": "/teamontwikkeling/index.html" },
+    { "source": "/insights-discovery-profiel", "destination": "/insights-discovery-profiel/index.html" },
     { "source": "/onze-aanpak", "destination": "/onze-aanpak/index.html" },
     { "source": "/verkennen", "destination": "/verkennen/index.html" },
     { "source": "/sprekers", "destination": "/sprekers/index.html" },

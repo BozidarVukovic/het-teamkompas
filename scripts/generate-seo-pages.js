@@ -146,6 +146,27 @@ const pages = [
       </main>`,
   },
   {
+    route: "insights-discovery-profiel",
+    title: "Insights Discovery-profiel voor teams | Mijn Teamkompas",
+    description:
+      "Ontdek hoe een Insights Discovery-profiel helpt om communicatie, zelfinzicht en samenwerking binnen teams te versterken.",
+    url: "https://www.mijnteamkompas.nl/insights-discovery-profiel",
+    image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
+    content: `
+      <main>
+        <h1>Insights Discovery-profiel voor betere samenwerking</h1>
+        <p>Een Insights Discovery-profiel helpt professionals en teams om voorkeuren, kwaliteiten, communicatie en gedrag onder druk bespreekbaar te maken. Mijn Teamkompas gebruikt het profiel niet als los testproduct, maar als hulpmiddel binnen teamontwikkeling.</p>
+        <h2>Wat levert het op?</h2>
+        <ul>
+          <li>Meer zelfinzicht in natuurlijke voorkeuren, kwaliteiten en valkuilen.</li>
+          <li>Een gezamenlijke taal voor communicatie en samenwerking.</li>
+          <li>Een startpunt voor een teamsessie, teamdag of ontwikkeltraject.</li>
+        </ul>
+        <p>Vraag een profiel of verkennend gesprek aan via <a href="mailto:info@mijnteamkompas.nl">info@mijnteamkompas.nl</a>.</p>
+        <nav><a href="/teamontwikkeling">Teamontwikkeling</a> <a href="/teamdag">Teamdag</a> <a href="/psychologische-veiligheid">Psychologische veiligheid</a> <a href="/verkennen">Verkennend gesprek</a></nav>
+      </main>`,
+  },
+  {
     route: "verkennen",
     title: "Verkennend gesprek | bespreek je teamvraag met Mijn Teamkompas",
     description:

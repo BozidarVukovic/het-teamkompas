@@ -22,6 +22,7 @@ import ScanInvullen from "./pages/public/ScanInvullen";
 import Blog from "./pages/public/Blog";
 import BlogPost from "./pages/public/BlogPost";
 import Klantenportaal from "./pages/public/Klantenportaal";
+import InsightsDiscoveryProfiel from "./pages/public/InsightsDiscoveryProfiel";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
 import CookieBanner from "./components/shared/CookieBanner";
@@ -9274,6 +9275,17 @@ function AdminDashboard({ onLogout }) {
 // ─────────────────────────────────────────────
 // ROOT — ROUTING met Firebase Auth state
 // ─────────────────────────────────────────────
+function InsightsKnowledgeCta() {
+  return (
+    <section style={{ background: PUB.licht, padding: "0 24px 72px" }}>
+      <div style={{ maxWidth: 960, margin: "0 auto", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 24, padding: 28, boxShadow: "0 16px 38px rgba(13,27,42,0.06)", display: "flex", gap: 18, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
+        <p style={{ margin: 0, color: PUB.sub, fontSize: 16, lineHeight: 1.65 }}>Benieuwd hoe jouw communicatievoorkeuren de samenwerking beïnvloeden? Ontdek het Insights Discovery-profiel.</p>
+        <a href="/insights-discovery-profiel" style={{ background: PUB.teal, color: PUB.wit, padding: "12px 18px", borderRadius: 999, textDecoration: "none", fontWeight: 850 }}>Ontdek het profiel</a>
+      </div>
+    </section>
+  );
+}
+
 function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
@@ -9281,6 +9293,13 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+  const registreerTeamontwikkelingEvent = async (event) => {
+    try {
+      await addDoc(collection(db, "teamscanEvents"), { event, pagina: "teamontwikkeling", url: window.location.href, timestamp: serverTimestamp() });
+    } catch (error) {
+      console.warn("Funnel-event niet opgeslagen", error);
+    }
+  };
 
   const ctaStyle = {
     background: PUB.oranje,
@@ -9499,6 +9518,17 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
                 </div>
               </div>
             </Fade>
+          </div>
+        </section>
+
+        <section style={{ background: PUB.wit, padding: isMobile ? "54px 20px" : "78px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 24, padding: isMobile ? 24 : 34, display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.25fr .75fr", gap: 24, alignItems: "center", boxShadow: "0 18px 46px rgba(13,27,42,0.07)" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Insights Discovery</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, color: PUB.donker, margin: "0 0 12px", letterSpacing: "-0.04em" }}>Begrijp eerst jezelf, daarna elkaar</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>Goede samenwerking begint met zelfinzicht. Met een Insights Discovery-profiel krijgen deelnemers inzicht in hun communicatievoorkeuren, sterke kwaliteiten en mogelijke valkuilen. Teams ontwikkelen hierdoor een gezamenlijke taal om verschillen te begrijpen en beter te benutten.</p>
+            </div>
+            <a href="/insights-discovery-profiel" onClick={() => registreerTeamontwikkelingEvent("teamontwikkeling_insights_click")} style={{ ...ctaStyle, color: PUB.wit, textDecoration: "none", justifySelf: isMobile ? "stretch" : "start", textAlign: "center" }}>Ontdek Insights Discovery</a>
           </div>
         </section>
 
@@ -12672,14 +12702,15 @@ export default function App() {
         <Route path="/verkennen" element={<><SeoHead page="verkennen" /><Verkennen /></>} />
         <Route path="/teamscan" element={<><SeoHead page="teamscan" /><TeamscanDigitaal /></>} />
         <Route path="/teamontwikkeling" element={<><SeoHead page="teamontwikkeling" /><TeamontwikkelingSeoLandingspagina onLoginClick={() => setView("login")} /></>} />
+        <Route path="/insights-discovery-profiel" element={<InsightsDiscoveryProfiel />} />
         <Route path="/admin/funnel" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/teamcoaching" element={<><SeoHead page="teamcoaching" /><TeamcoachingPage /></>} />
         <Route path="/teamdag" element={<TeamdagPage />} />
-        <Route path="/psychologische-veiligheid" element={<PsychologischeVeiligheidPage />} />
-        <Route path="/sociale-veiligheid" element={<SocialeVeiligheidPage />} />
-        <Route path="/boven-en-onderstroom" element={<BovenOnderstroomPage />} />
-        <Route path="/brein-en-samenwerking" element={<BreinEnSamenwerkingPage />} />
-        <Route path="/kleine-experimenten" element={<KleineExperimentenPage />} />
+        <Route path="/psychologische-veiligheid" element={<><PsychologischeVeiligheidPage /><InsightsKnowledgeCta /></>} />
+        <Route path="/sociale-veiligheid" element={<><SocialeVeiligheidPage /><InsightsKnowledgeCta /></>} />
+        <Route path="/boven-en-onderstroom" element={<><BovenOnderstroomPage /><InsightsKnowledgeCta /></>} />
+        <Route path="/brein-en-samenwerking" element={<><BreinEnSamenwerkingPage /><InsightsKnowledgeCta /></>} />
+        <Route path="/kleine-experimenten" element={<><KleineExperimentenPage /><InsightsKnowledgeCta /></>} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
