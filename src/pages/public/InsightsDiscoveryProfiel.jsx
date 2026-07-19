@@ -158,7 +158,32 @@ export default function InsightsDiscoveryProfiel() {
 
     <Section><Eyebrow>Hoe werkt het?</Eyebrow><h2 className="tk-heading-lg">Van aanvraag naar bespreking.</h2><div className="tk-grid tk-grid-3" style={{ marginTop: 28 }}>{[["01","Aanvraag en korte afstemming","We bespreken voor wie het profiel bedoeld is en welk doel centraal staat."],["02","Invullen van de vragenlijst","De deelnemer ontvangt een persoonlijke link en vult de vragenlijst online in."],["03","Persoonlijk profiel","De deelnemer ontvangt een uitgebreid persoonlijk profiel."],["04","Persoonlijke bespreking of teamsessie","Het profiel wordt besproken in een individueel gesprek, binnen een teamdag of als onderdeel van een teamontwikkelingstraject."]].map(([nr,titel,tekst])=><Card key={nr} accent={PUB.teal}><h3>{nr} · {titel}</h3><p>{tekst}</p></Card>)}</div></Section>
 
-    <Section style={{ background: PUB.sand }}><Eyebrow>Mogelijkheden</Eyebrow><h2 className="tk-heading-lg">Kies de vorm die past bij je vraag.</h2><div className="tk-grid tk-grid-3" style={{ marginTop: 28 }}>{[["Individueel profiel","Voor professionals en leidinggevenden die meer inzicht willen in hun eigen communicatie, kwaliteiten en ontwikkelpunten."],["Profielen voor een team","Voor teams die elkaars voorkeuren beter willen begrijpen en de samenwerking willen versterken."],["Onderdeel van een teamdag","Het profiel wordt gekoppeld aan oefeningen, teamvraagstukken, communicatie, eigenaarschap en concrete afspraken."]].map(([titel,tekst])=><Card key={titel} accent={PUB.teal}><h3>{titel}</h3><p>{tekst}</p><button type="button" className="tk-button tk-button-primary" style={{ marginTop: 18 }} onClick={scrollToForm}>Aanvragen</button></Card>)}</div></Section>
+    <Section style={{ background: PUB.sand }}>
+      <Eyebrow>Mogelijkheden</Eyebrow>
+      <h2 className="tk-heading-lg">Kies de vorm die past bij je vraag.</h2>
+      <div className="tk-grid tk-grid-3" style={{ marginTop: 28 }}>
+        {[
+          ["Individueel profiel", "Voor professionals en leidinggevenden die meer inzicht willen in hun eigen communicatie, kwaliteiten en ontwikkelpunten."],
+          ["Profielen voor een team", "Voor teams die elkaars voorkeuren beter willen begrijpen en de samenwerking willen versterken."],
+          ["Onderdeel van een teamdag", "Het profiel wordt gekoppeld aan oefeningen, teamvraagstukken, communicatie, eigenaarschap en concrete afspraken."],
+        ].map(([titel, tekst]) => (
+          <Card key={titel} accent={PUB.teal}>
+            <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+              <h3>{titel}</h3>
+              <p>{tekst}</p>
+              <button
+                type="button"
+                className="tk-button tk-button-primary"
+                style={{ alignSelf: "flex-start", marginTop: "auto" }}
+                onClick={scrollToForm}
+              >
+                Aanvragen
+              </button>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </Section>
 
     <Section id="aanvraagformulier"><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 34, alignItems: "start" }}><div><Eyebrow>Aanvraag</Eyebrow><h2 className="tk-heading-lg">Vraag een Insights Discovery-profiel aan</h2><p className="tk-lead" style={{ fontSize: 18 }}>Laat je gegevens achter. We nemen contact met je op om de vraag, het doel en de passende vorm kort te bespreken.</p>{status === "sent" && <Card accent={PUB.groen}><h3>Aanvraag ontvangen</h3><p>Bedankt. We nemen contact met je op om de passende vorm kort af te stemmen.</p></Card>}</div><form onSubmit={submit} noValidate style={{ background: "white", border: `1px solid ${PUB.border}`, borderRadius: 28, padding: 28, boxShadow: "0 18px 46px rgba(13,27,42,.09)" }} onFocus={() => { if (!formStarted) { setFormStarted(true); trackEvent("insights_formulier_start"); } }}><div style={{ position: "absolute", left: -9999 }}><label>Website<Field value={form.website} onChange={(e)=>update("website", e.target.value)} tabIndex="-1" autoComplete="off" /></label></div>{[["naam","Naam","text","name",true],["organisatie","Organisatie","text","organization",true],["email","E-mailadres","email","email",true],["telefoon","Telefoonnummer","tel","tel",false],["aantalPersonen","Aantal personen","number","off",false]].map(([key,label,type,auto])=><label key={key} style={{ display: "block", marginBottom: 14, fontWeight: 800 }}>{label}{key !== "telefoon" && key !== "aantalPersonen" ? " *" : ""}<Field type={type} value={form[key]} onChange={(e)=>update(key,e.target.value)} autoComplete={auto} aria-invalid={Boolean(errors[key])} style={{ marginTop: 6 }} />{errors[key] && <span style={{ color: "#b42318", fontSize: 13 }}>{errors[key]}</span>}</label>)}<label style={{ display: "block", marginBottom: 14, fontWeight: 800 }}>Interesse *<Field as="select" value={form.interesse} onChange={(e)=>update("interesse",e.target.value)} style={{ marginTop: 6 }}>{["individueel profiel","teamprofielen","onderdeel van een teamdag","ik wil eerst overleggen"].map((option)=><option key={option}>{option}</option>)}</Field></label><label style={{ display: "block", marginBottom: 14, fontWeight: 800 }}>Toelichting of vraag *<Field as="textarea" rows={5} value={form.toelichting} onChange={(e)=>update("toelichting",e.target.value)} aria-invalid={Boolean(errors.toelichting)} style={{ marginTop: 6, resize: "vertical" }} />{errors.toelichting && <span style={{ color: "#b42318", fontSize: 13 }}>{errors.toelichting}</span>}</label><label style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 18 }}><input type="checkbox" checked={form.privacy} onChange={(e)=>update("privacy",e.target.checked)} style={{ marginTop: 4 }} /><span>Ik ga akkoord met zorgvuldig gebruik van mijn gegevens volgens de <a href="/privacyverklaring_mijnteamkompas.pdf" target="_blank" rel="noreferrer">privacyverklaring</a>. *</span></label>{errors.privacy && <div style={{ color: "#b42318", fontSize: 13, marginBottom: 12 }}>{errors.privacy}</div>}{status === "error" && <div style={{ color: "#b42318", fontSize: 14, marginBottom: 12 }}>Versturen lukte niet. Probeer opnieuw of neem contact op via de bestaande contactmogelijkheid.</div>}<button className="tk-button tk-button-primary" type="submit" disabled={status === "sending"}>{status === "sending" ? "Versturen..." : "Verstuur mijn aanvraag"}</button><p style={{ color: PUB.muted, fontSize: 13, lineHeight: 1.5 }}>We sturen geen namen, e-mails, telefoonnummers of vrije tekst naar analytics.</p></form></div></Section>
 
