@@ -163,11 +163,11 @@ export default function InsightsDiscoveryProfiel() {
             <div className="tk-energy-card">
               <h3>{name}</h3>
               <p>{text}</p>
-              <div>
+              <div className="tk-energy-strengths">
                 <strong>Mogelijke kracht</strong>
                 <ul>{strengths.map((item) => <li key={item}>{item}</li>)}</ul>
               </div>
-              <div>
+              <div className="tk-energy-risks">
                 <strong>Mogelijk risico</strong>
                 <ul>{risks.map((item) => <li key={item}>{item}</li>)}</ul>
               </div>
