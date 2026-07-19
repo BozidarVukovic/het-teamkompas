@@ -655,7 +655,7 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
   ];
 
   const toepassingen = [
-    ["Samenwerking verbeteren", "Wanneer teams langs elkaar heen werken, helpen Insights Discovery profielen om verschillen in gedrag zichtbaar en bespreekbaar te maken."],
+    ["Samenwerking verbeteren", "Wanneer teams langs elkaar heen werken, helpen Insights Discovery-profielen om verschillen in gedrag zichtbaar en bespreekbaar te maken."],
     ["Leiderschap versterken", "Leidinggevenden krijgen meer zicht op hun eigen stijl en leren beter aansluiten op wat verschillende teamleden nodig hebben."],
     ["Verandering begeleiden", "Inzicht in gedrag helpt teams om onder druk of in verandering constructiever te communiceren en sneller begrip op te bouwen."],
   ];
@@ -679,7 +679,7 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
               </h2>
               <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, marginBottom: 16, maxWidth: 620 }}>
                 Veel teams lopen niet vast door een gebrek aan inzet of expertise, maar doordat verschillen in gedrag, communicatie en tempo onzichtbaar blijven.
-                Met <strong style={{ color: PUB.donker }}>Insights Discovery profielen</strong> maakt Mijn Teamkompas die verschillen zichtbaar en praktisch toepasbaar.
+                Met <strong style={{ color: PUB.donker }}>Insights Discovery-profielen</strong> maakt Mijn Teamkompas die verschillen zichtbaar en praktisch toepasbaar.
               </p>
               <p style={{ fontSize: 15, lineHeight: 1.8, color: PUB.sub, marginBottom: 26, maxWidth: 620 }}>
                 Zo ontstaat meer begrip, sterkere samenwerking, gerichter leiderschap en een stevigere basis voor duurzame <strong style={{ color: PUB.donker }}>teamontwikkeling</strong>.
@@ -694,7 +694,7 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
                 </span>
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-                {["Insights Discovery profielen", "teamontwikkeling", "gedrag in teams", "samenwerking verbeteren"].map((label) => (
+                {["Insights Discovery-profielen", "teamontwikkeling", "gedrag in teams", "samenwerking verbeteren"].map((label) => (
                   <span key={label} style={{ fontSize: 11, color: PUB.tealDark, background: "rgba(0,168,150,0.08)", border: "1px solid rgba(0,168,150,0.14)", padding: "6px 10px", borderRadius: 999, fontWeight: 600 }}>
                     {label}
                   </span>
@@ -1232,7 +1232,7 @@ function PublicSite({ onLoginClick }) {
     ["3", "Voorstel / trajectontwerp", "Een passende aanpak voor jullie team en context."],
     ["4", "Teamscan uitzetten", "Veilig en gestructureerd ophalen wat teamleden ervaren."],
     ["5", "Analyse teamscan", "Patronen, verschillen en signalen vertalen naar betekenis."],
-    ["6", "Insights Discovery profielen", "Gedrag, communicatie en samenwerking concreet maken."],
+    ["6", "Insights Discovery-profielen", "Gedrag, communicatie en samenwerking concreet maken."],
     ["7", "Terugkoppeling & maatwerkadvies", "Duidelijke conclusies en haalbare vervolgstappen."],
     ["8", "Workshop of teamdag", "Gerichte interventie waarin inzicht wordt omgezet in gedrag."],
     ["9", "Borging / follow-up", "Zorgen dat inzichten blijven landen in het dagelijks werk."],
@@ -1256,6 +1256,14 @@ function PublicSite({ onLoginClick }) {
       "We helpen leiders en teams ander gedrag vol te houden.",
       "Met coaching vertalen we inzichten naar dagelijks leiderschap, eigenaarschap en betere gesprekken in de praktijk.",
       PUB.oranje,
+    ],
+    [
+      "Insights Discovery-profielen",
+      "Begrijp jezelf en elkaar beter.",
+      "Een Insights Discovery-profiel geeft inzicht in communicatievoorkeuren, kwaliteiten, mogelijke valkuilen en gedrag onder druk. Het helpt professionals en teams om verschillen beter te begrijpen en bewuster samen te werken.",
+      PUB.paars,
+      "/insights-discovery-profiel",
+      "Ontdek Insights Discovery",
     ],
   ];
 
@@ -1336,13 +1344,14 @@ function PublicSite({ onLoginClick }) {
                 </p>
               </div>
             </Fade>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 18 }}>
-              {aanbodItems.map(([titel, kernzin, tekst, kleur], i) => (
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 18 }}>
+              {aanbodItems.map(([titel, kernzin, tekst, kleur, href, cta], i) => (
                 <Fade key={titel} delay={i * 0.06} style={{ height: "100%" }}>
                   <div style={{ height: "100%", border: `1px solid ${PUB.lijn}`, borderTop: `5px solid ${kleur}`, borderRadius: 18, padding: 24, background: PUB.wit, boxShadow: "0 18px 44px rgba(13,27,42,0.08)", boxSizing: "border-box" }}>
                     <div style={{ fontSize: 20, fontWeight: 900, color: PUB.donker, marginBottom: 10 }}>{titel}</div>
                     <div style={{ fontSize: 15, fontWeight: 800, color: PUB.tealDark, lineHeight: 1.55, marginBottom: 10 }}>{kernzin}</div>
                     <div style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub }}>{tekst}</div>
+                    {href && <button type="button" onClick={() => navigate(href)} style={{ marginTop: 16, border: 0, background: "transparent", padding: 0, color: PUB.teal, fontSize: 13, fontWeight: 900, cursor: "pointer" }}>{cta} →</button>}
                   </div>
                 </Fade>
               ))}
@@ -1576,6 +1585,7 @@ function PublicSite({ onLoginClick }) {
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => window.open("/privacyverklaring_mijnteamkompas.pdf", "_blank")}>Privacyverklaring</span>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => window.open("/algemene_voorwaarden_mijnteamkompas.pdf", "_blank")}>Algemene voorwaarden</span>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => navigate("/insights-discovery-profiel")}>Insights Discovery</span>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => navigate("/klantenportaal")}>Klantenportaal</span>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={() => cookieBannerRef.current?.open()}>Cookie-instellingen</span>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", cursor: "pointer" }} onClick={onLoginClick}>Beheer</span>
@@ -9279,8 +9289,8 @@ function InsightsKnowledgeCta() {
   return (
     <section style={{ background: PUB.licht, padding: "0 24px 72px" }}>
       <div style={{ maxWidth: 960, margin: "0 auto", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 24, padding: 28, boxShadow: "0 16px 38px rgba(13,27,42,0.06)", display: "flex", gap: 18, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
-        <p style={{ margin: 0, color: PUB.sub, fontSize: 16, lineHeight: 1.65 }}>Benieuwd hoe jouw communicatievoorkeuren de samenwerking beïnvloeden? Ontdek het Insights Discovery-profiel.</p>
-        <a href="/insights-discovery-profiel" style={{ background: PUB.teal, color: PUB.wit, padding: "12px 18px", borderRadius: 999, textDecoration: "none", fontWeight: 850 }}>Ontdek het profiel</a>
+        <p style={{ margin: 0, color: PUB.sub, fontSize: 16, lineHeight: 1.65, flex: "1 1 360px" }}>Meer begrip voor elkaars voorkeuren maakt verschillen veiliger bespreekbaar. Lees hoe een Insights Discovery-profiel communicatie, onderstroom en eigenaarschap kan ondersteunen.</p>
+        <a href="/insights-discovery-profiel" style={{ background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, textDecoration: "none", fontWeight: 800, boxShadow: "0 14px 32px rgba(15,118,110,0.20)" }}>Ontdek Insights Discovery</a>
       </div>
     </section>
   );
@@ -9522,13 +9532,18 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
         </section>
 
         <section style={{ background: PUB.wit, padding: isMobile ? "54px 20px" : "78px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 24, padding: isMobile ? 24 : 34, display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.25fr .75fr", gap: 24, alignItems: "center", boxShadow: "0 18px 46px rgba(13,27,42,0.07)" }}>
-            <div>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Insights Discovery</div>
-              <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, color: PUB.donker, margin: "0 0 12px", letterSpacing: "-0.04em" }}>Begrijp eerst jezelf, daarna elkaar</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>Goede samenwerking begint met zelfinzicht. Met een Insights Discovery-profiel krijgen deelnemers inzicht in hun communicatievoorkeuren, sterke kwaliteiten en mogelijke valkuilen. Teams ontwikkelen hierdoor een gezamenlijke taal om verschillen te begrijpen en beter te benutten.</p>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Ondersteunende instrumenten</div>
+            <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 24 }}>Teamontwikkeling krijgt meer diepte met passende hulpmiddelen.</h2>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+              {[["Teamscan", "Maakt zichtbaar waar samenwerking, veiligheid, energie en leren aandacht vragen.", "/teamscan", "Start met de teamscan"], ["Teamdag", "Zet inzicht om in een begeleid gesprek, oefeningen en concrete teamafspraken.", "/teamdag", "Bekijk teamdagen"], ["Insights Discovery-profielen", "Voor professionals en teams die meer inzicht willen in communicatie, samenwerking, voorkeuren en gedrag onder druk.", "/insights-discovery-profiel", "Lees meer over Insights Discovery"]].map(([titel, tekst, href, label]) => (
+                <a key={titel} href={href} onClick={() => titel === "Insights Discovery-profielen" && registreerTeamontwikkelingEvent("teamontwikkeling_insights_click")} style={{ display: "block", height: "100%", background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, textDecoration: "none", boxShadow: "0 16px 38px rgba(13,27,42,0.06)" }}>
+                  <h3 style={{ fontSize: 22, lineHeight: 1.2, color: PUB.donker, margin: "0 0 10px" }}>{titel}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                  <span style={{ display: "inline-block", marginTop: 16, fontSize: 13, fontWeight: 800, color: PUB.teal }}>{label} →</span>
+                </a>
+              ))}
             </div>
-            <a href="/insights-discovery-profiel" onClick={() => registreerTeamontwikkelingEvent("teamontwikkeling_insights_click")} style={{ ...ctaStyle, color: PUB.wit, textDecoration: "none", justifySelf: isMobile ? "stretch" : "start", textAlign: "center" }}>Ontdek Insights Discovery</a>
           </div>
         </section>
 
@@ -9660,7 +9675,7 @@ function TeamcoachingPage() {
   ];
 
   const insights = [
-    "Teamcoaching met Insights Discovery profielen.",
+    "Teamcoaching met Insights Discovery-profielen.",
     "Communicatie en voorkeursgedrag zichtbaar maken.",
     "Samenwerking onder druk beter begrijpen.",
     "Verschillen in tempo, stijl en besluitvorming bespreekbaar maken.",
@@ -9795,7 +9810,7 @@ function TeamcoachingPage() {
                 Gedragsprofielen helpen om communicatie concreet te maken.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
-                Wanneer passend gebruiken we Insights Discovery profielen binnen de teamcoaching. Daarmee ontstaat een herkenbare taal voor voorkeuren, communicatie, samenwerking onder druk en verschillen in tempo of besluitvorming.
+                Wanneer passend gebruiken we Insights Discovery-profielen binnen de teamcoaching. Daarmee ontstaat een herkenbare taal voor voorkeuren, communicatie, samenwerking onder druk en verschillen in tempo of besluitvorming.
               </p>
               <div style={{ display: "grid", gap: 12, marginTop: 20 }}>
                 {insights.map((item) => (

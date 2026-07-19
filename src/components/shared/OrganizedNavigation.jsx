@@ -8,6 +8,7 @@ const TEAL = "#00A896";
 const diensten = [
   ["Teamscan", "/teamscan"],
   ["Teamontwikkeling", "/teamontwikkeling"],
+  ["Insights Discovery", "/insights-discovery-profiel"],
   ["Teamcoaching", "/teamcoaching"],
   ["Teamdag", "/teamdag"],
   ["Sprekers", "/sprekers"],

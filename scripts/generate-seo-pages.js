@@ -149,21 +149,27 @@ const pages = [
     route: "insights-discovery-profiel",
     title: "Insights Discovery-profiel voor teams | Mijn Teamkompas",
     description:
-      "Ontdek hoe een Insights Discovery-profiel helpt om communicatie, zelfinzicht en samenwerking binnen teams te versterken.",
+      "Insights Discovery-profiel voor teams, teamdagen en teamontwikkeling. Lees over kleurenergieën, communicatieprofiel team en het verschil tussen DISC en Insights Discovery.",
     url: "https://www.mijnteamkompas.nl/insights-discovery-profiel",
     image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
     content: `
       <main>
         <h1>Insights Discovery-profiel voor betere samenwerking</h1>
-        <p>Een Insights Discovery-profiel helpt professionals en teams om voorkeuren, kwaliteiten, communicatie en gedrag onder druk bespreekbaar te maken. Mijn Teamkompas gebruikt het profiel niet als los testproduct, maar als hulpmiddel binnen teamontwikkeling.</p>
-        <h2>Wat levert het op?</h2>
-        <ul>
-          <li>Meer zelfinzicht in natuurlijke voorkeuren, kwaliteiten en valkuilen.</li>
-          <li>Een gezamenlijke taal voor communicatie en samenwerking.</li>
-          <li>Een startpunt voor een teamsessie, teamdag of ontwikkeltraject.</li>
-        </ul>
+        <p>Een Insights Discovery-profiel helpt professionals en teams om communicatievoorkeuren, kwaliteiten, valkuilen en gedrag onder druk bespreekbaar te maken. Mijn Teamkompas gebruikt het profiel niet als los product, maar als hulpmiddel binnen teamontwikkeling, teamcoaching en teamdagen.</p>
+        <h2>Wat is Insights Discovery?</h2>
+        <p>Insights Discovery is een model voor persoonlijke en professionele ontwikkeling, gebaseerd op het gedachtegoed van Carl Jung. Het vertaalt psychologische voorkeuren naar vier kleurenergieën: vurig rood, stralend geel, zacht groen en helder blauw. Iedereen heeft alle vier de energieën in zich; de verhouding en context bepalen wat zichtbaar wordt.</p>
+        <h2>Insights Discovery voor teams</h2>
+        <p>Een Insights Discovery-profiel voor teams helpt bij zelfinzicht, communicatie, besluitvorming, feedback en samenwerking onder druk. Het profiel is geen oordeel, maar een communicatieprofiel team dat taal geeft aan verschillen en behoeften.</p>
+        <h2>Wat is het verschil tussen DISC en Insights Discovery?</h2>
+        <p>DISC beschrijft vooral zichtbaar gedrag. Insights Discovery kijkt breder naar psychologische voorkeuren in communicatie, besluitvorming, informatieverwerking en samenwerking. Beide modellen kunnen nuttig zijn, maar geen van beide vertelt de volledige waarheid over een persoon. De waarde ontstaat door het gesprek en de toepassing in de praktijk.</p>
+        <h2>Insights Discovery teamdag</h2>
+        <p>Tijdens een Insights Discovery teamdag koppelen we persoonlijke profielen aan echte situaties: vergaderingen, rolverdeling, feedback, spanning en teamafspraken. Zo wordt een persoonlijkheidsprofiel voor teams onderdeel van duurzame teamontwikkeling.</p>
+        <h2>Veelgestelde vragen</h2>
+        <p><strong>Worden mensen in hokjes geplaatst?</strong><br />Nee. We spreken over voorkeuren en kleurenergieën, niet over vaste identiteiten.</p>
+        <p><strong>Is het geschikt voor selectie?</strong><br />Nee. In onze werkwijze is Insights Discovery bedoeld voor ontwikkeling en samenwerking, niet als zelfstandig beoordelingsinstrument.</p>
+        <p><strong>Wordt een profiel vertrouwelijk behandeld?</strong><br />Ja. Vooraf spreken we af wie het profiel ontvangt, wat individueel blijft en wat iemand zelf met het team deelt.</p>
         <p>Vraag een profiel of verkennend gesprek aan via <a href="mailto:info@mijnteamkompas.nl">info@mijnteamkompas.nl</a>.</p>
-        <nav><a href="/teamontwikkeling">Teamontwikkeling</a> <a href="/teamdag">Teamdag</a> <a href="/psychologische-veiligheid">Psychologische veiligheid</a> <a href="/verkennen">Verkennend gesprek</a></nav>
+        <nav><a href="/teamontwikkeling">Teamontwikkeling</a> <a href="/teamdag">Teamdag</a> <a href="/teamcoaching">Teamcoaching</a> <a href="/psychologische-veiligheid">Psychologische veiligheid</a> <a href="/boven-en-onderstroom">Boven- en onderstroom</a> <a href="/brein-en-samenwerking">Neuromanagement</a> <a href="/kleine-experimenten">Kleine experimenten</a> <a href="/verkennen">Verkennend gesprek</a></nav>
       </main>`,
   },
   {
