@@ -98,7 +98,7 @@
   </url>
   <url>
     <loc>https://www.mijnteamkompas.nl/blog</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-07-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
@@ -165,6 +165,12 @@
   <url>
     <loc>https://www.mijnteamkompas.nl/blog/waarom-niemand-de-uitkomsten-van-het-mto-herkent</loc>
     <lastmod>2026-07-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/waarom-generaties-anders-met-verandering-omgaan</loc>
+    <lastmod>2026-07-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
