@@ -55,6 +55,8 @@ Maar vaker is werkdruk de taal die mensen gebruiken voor iets wat moeilijker te 
 
 Dat is een ander probleem. En het vraagt een ander gesprek.
 
+Lees ook hoe [taakeisen en hulpbronnen invloed hebben op energie en bevlogenheid in het werk](/kennis/bevlogenheid-in-het-werk).
+
 ---
 
 Wil je weten of werkdruk in jouw team echt over hoeveelheid werk gaat, of over onduidelijkheid, samenwerking en eigenaarschap? Met de teamscan van Mijn Teamkompas maken we zichtbaar waar energie weglekt en waar beweging mogelijk is. Zonder standaardoplossingen, maar met een zorgvuldige verkenning van wat er in jouw specifieke team speelt.
