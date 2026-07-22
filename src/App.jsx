@@ -23,6 +23,8 @@ import Blog from "./pages/public/Blog";
 import BlogPost from "./pages/public/BlogPost";
 import Klantenportaal from "./pages/public/Klantenportaal";
 import InsightsDiscoveryProfiel from "./pages/public/InsightsDiscoveryProfiel";
+import KenniskaartTeamontwikkeling from "./pages/public/KenniskaartTeamontwikkeling";
+import BevlogenheidInHetWerk from "./pages/public/BevlogenheidInHetWerk";
 import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
@@ -9323,8 +9325,8 @@ function InsightsKnowledgeCta() {
   return (
     <section style={{ background: PUB.licht, padding: "0 24px 72px" }}>
       <div style={{ maxWidth: 960, margin: "0 auto", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 24, padding: 28, boxShadow: "0 16px 38px rgba(13,27,42,0.06)", display: "flex", gap: 18, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
-        <p style={{ margin: 0, color: PUB.sub, fontSize: 16, lineHeight: 1.65, flex: "1 1 360px" }}>Meer begrip voor elkaars voorkeuren maakt verschillen veiliger bespreekbaar. Lees hoe een Insights Discovery-profiel communicatie, onderstroom en eigenaarschap kan ondersteunen.</p>
-        <a href="/insights-discovery-profiel" style={{ background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, textDecoration: "none", fontWeight: 800, boxShadow: "0 14px 32px rgba(15,118,110,0.20)" }}>Ontdek Insights Discovery</a>
+        <p style={{ margin: 0, color: PUB.sub, fontSize: 16, lineHeight: 1.65, flex: "1 1 360px" }}>Bekijk hoe dit thema samenhangt met de andere fundamenten van teamontwikkeling, zoals kijken naar onderstroom, begrijpen van gedrag, verbinden, bewegen en borgen.</p>
+        <a href="/kennis/kenniskaart-teamontwikkeling" style={{ background: PUB.teal, color: PUB.wit, padding: "14px 22px", borderRadius: 8, textDecoration: "none", fontWeight: 800, boxShadow: "0 14px 32px rgba(15,118,110,0.20)" }}>Bekijk de kenniskaart</a>
       </div>
     </section>
   );
@@ -12628,6 +12630,8 @@ export default function App() {
         <Route path="/boven-en-onderstroom" element={<><BovenOnderstroomPage /><InsightsKnowledgeCta /></>} />
         <Route path="/brein-en-samenwerking" element={<><BreinEnSamenwerkingPage /><InsightsKnowledgeCta /></>} />
         <Route path="/kleine-experimenten" element={<><KleineExperimentenPage /><InsightsKnowledgeCta /></>} />
+        <Route path="/kennis/kenniskaart-teamontwikkeling" element={<KenniskaartTeamontwikkeling />} />
+        <Route path="/kennis/bevlogenheid-in-het-werk" element={<BevlogenheidInHetWerk />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />

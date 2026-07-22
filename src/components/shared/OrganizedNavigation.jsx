@@ -15,6 +15,7 @@ const diensten = [
 ];
 
 const kennis = [
+  ["Kenniskaart teamontwikkeling", "/kennis/kenniskaart-teamontwikkeling"],
   ["Blog", "/blog"],
   ["Psychologische veiligheid", "/psychologische-veiligheid"],
   ["Sociale veiligheid", "/sociale-veiligheid"],
