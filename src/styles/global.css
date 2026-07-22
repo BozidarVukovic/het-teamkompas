@@ -105,7 +105,9 @@ a { color: inherit; }
 @media (max-width: 760px) { .tk-knowledge-two-column, .tk-knowledge-cta-card { grid-template-columns: 1fr; display: grid; } .tk-knowledge-hero { padding-top: 104px; } .tk-knowledge-step-card { padding: 30px 18px 20px; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .tk-button, .tk-knowledge-step-card { transition: none; } .tk-button:hover, .tk-knowledge-step-card:hover, .tk-knowledge-step-card:focus-within { transform: none; } }
 
-.tk-jdr-hero { overflow: hidden; }
+.tk-jdr-hero { overflow: hidden; background: radial-gradient(circle at 85% 20%, rgba(15,118,110,.30), transparent 42%), var(--tk-color-ink); color: #fff; }
+.tk-jdr-hero .tk-heading-xl { color: #fff; }
+.tk-jdr-hero .tk-lead { color: rgba(255,255,255,.72); }
 .tk-jdr-band { background: var(--tk-color-sand); }
 .tk-jdr-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
 .tk-tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
