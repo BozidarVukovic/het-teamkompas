@@ -3,7 +3,7 @@ title: Manager worden van je eigen groep
 date: 2026-06-25
 description: Wie vanuit het team manager wordt van diezelfde groep, staat voor een complexe overgang. Dit artikel stelt de vragen die er echt toe doen, langs de vier domeinen van Mijn Teamkompas.
 image: /blog/images/vanteamnaardirigent.png
-lead: Er wordt vaak makkelijk over management gesproken. Alsof leidinggeven vooral gaat over planningen maken, besluiten nemen en zorgen dat het werk doorgaat. Maar wie ooit de stap maakte van collega naar leidinggevende, van de groep naar het hoofd van diezelfde groep, weet dat er iets fundamenteels verandert. Niet alleen in de functie. In de verhouding. In de verwachtingen. In de blik die mensen op je richten.
+lead: Er wordt vaak makkelijk over management gesproken. Alsof leidinggeven vooral gaat over planningen maken, besluiten nemen en zorgen dat het werk doorgaat. Maar wie ooit de stap maakte van collega naar leidinggevende, van de groep naar het hoofd van diezelfde groep, weet dat er iets fundamenteels verandert. De functie is maar een deel; het gaat ook om de verhouding, de verwachtingen en de blik die mensen op je richten.
 author: Mijn Teamkompas
 ---
 
@@ -31,7 +31,7 @@ Maar er verandert wel iets. De verantwoordelijkheid verandert. De verwachtingen 
 
 De vraag is niet of de overgang plaatsvindt. De vraag is of jij er de regie over neemt.
 
-Een manager die de transitie expliciet maakt en zegt: *"Mijn rol is veranderd, dat betekent dat ik soms andere gesprekken met jullie voer dan voorheen"*, geeft het team iets om op te bouwen. Niet zekerheid over alles. Wel helderheid over de richting.
+Een manager die de transitie expliciet maakt en zegt: *"Mijn rol is veranderd, dat betekent dat ik soms andere gesprekken met jullie voer dan voorheen"*, geeft het team iets om op te bouwen. Geen zekerheid over alles, wel helderheid over de richting.
 
 En dat is precies wat mensen nodig hebben in een moment van verandering: niet de garantie dat alles goed gaat, maar het gevoel dat iemand weet waar naartoe.
 
@@ -43,7 +43,7 @@ Manager worden van de eigen groep is emotioneel ingewikkelder dan mensen van bui
 
 Tegelijkertijd ben je nu verantwoordelijk voor besluiten die misschien niet populair zijn. Je moet soms grenzen stellen aan gedrag dat je als collega liet gaan. Je moet keuzes uitleggen die vanuit de organisatie komen. Je moet mensen aanspreken waarmee je jarenlang op gelijke voet hebt gestaan.
 
-Dat kost energie. Niet omdat jij zwak bent, maar omdat het systeem complex is.
+Dat kost energie. Dat ligt niet aan jou, maar aan de complexiteit van het systeem.
 
 De valkuil is dan ook tweeledig. De een blijft te lang de vriend: vermijdt moeilijke gesprekken, stelt grenzen uit, laat gedrag te lang gaan uit angst voor afwijzing. De ander neemt te snel afstand: wordt formeler, bewijst zijn positie, creëert juist de afstand die hij wilde vermijden.
 

@@ -37,7 +37,7 @@ Wanneer een verandering onduidelijkheid veroorzaakt, wordt het stresssysteem sne
 
 Dat verklaart waarom dezelfde verandering door de één als kans wordt gezien en door de ander als bedreiging.
 
-Niet omdat iemand tegen verandering is. Maar omdat ieder brein risico anders inschat.
+Het ligt er niet aan dat iemand tegen verandering is, maar aan hoe verschillend elk brein risico inschat.
 
 ## Ervaring reist mee
 
@@ -76,7 +76,7 @@ Teams die veranderingen goed oppakken, proberen niet iedereen hetzelfde te laten
 
 De ervaren collega ziet vaak risico's die anderen missen. De jonge collega ziet kansen die nog niet eerder zijn geprobeerd.
 
-Wanneer beide perspectieven serieus worden genomen, ontstaat betere besluitvorming. Niet ondanks de verschillen, maar dankzij de verschillen.
+Wanneer beide perspectieven serieus worden genomen, ontstaat betere besluitvorming, dankzij de verschillen in plaats van ondanks.
 
 ## Kleine experimenten maken verandering veiliger
 

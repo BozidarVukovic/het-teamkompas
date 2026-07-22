@@ -2,7 +2,7 @@
 title: Waarom teambuilding niet werkt als de basis ontbreekt
 date: 2026-06-15
 description: Organisaties investeren in teambuildingactiviteiten terwijl de onderstroom nooit besproken wordt. Ontdek waarom activiteiten zonder fundament niets veranderen.
-lead: Organisaties investeren jaarlijks miljoenen in teambuildingactiviteiten. De bowlingbaan, het kookworkshopje, de escape room. En toch verandert er daarna vaak niets. Niet omdat de activiteit mislukte, maar omdat het probleem ergens anders zit.
+lead: Organisaties investeren jaarlijks miljoenen in teambuildingactiviteiten. De bowlingbaan, het kookworkshopje, de escape room. En toch verandert er daarna vaak niets. Dat komt zelden doordat de activiteit mislukte; het probleem zit ergens anders.
 author: Mijn Teamkompas
 image: /blog/images/teambuilding-puzzel.jpg
 ---
@@ -43,7 +43,7 @@ Dit is geen pleidooi tegen teamactiviteiten. Een team dat goed samenwerkt, dat e
 
 Het probleem is de volgorde. Activiteiten boeken als eerste stap, terwijl de basis nog niet staat, is als schilderen op een muur die vocht trekt. Het ziet er even goed uit. Maar het houdt niet.
 
-De basis is: weten wat er speelt. Niet alleen in de bovenstroom, maar ook eronder. En de bereidheid hebben om dat bespreekbaar te maken, ook als dat even schuurt.
+De basis is: weten wat er speelt, in de bovenstroom en ook eronder. En de bereidheid hebben om dat bespreekbaar te maken, ook als dat even schuurt.
 
 Wanneer heeft jouw team voor het laatst een gesprek gehad over wat er écht speelt, niet wat er op de agenda staat, maar wat er onder de oppervlakte leeft? En als dat gesprek er niet is geweest: wat houdt het tegen?
 

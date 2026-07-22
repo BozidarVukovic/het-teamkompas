@@ -23,7 +23,7 @@ Want hoe geef je leiding? Hoe neem je mensen mee? Hoe ga je om met kritiek? Hoev
 
 Juist daar ontstaan de verschillen.
 
-In veel Nederlandse organisaties is het normaal dat medewerkers meedenken, vragen stellen en kritisch reageren. Niet omdat ze tegen verandering zijn, maar omdat ze willen begrijpen waarom iets nodig is. Kritiek is dan vaak geen weerstand, maar betrokkenheid.
+In veel Nederlandse organisaties is het normaal dat medewerkers meedenken, vragen stellen en kritisch reageren. Dat doen ze zelden omdat ze tegen verandering zijn; ze willen begrijpen waarom iets nodig is. Kritiek is dan vaak geen weerstand, maar betrokkenheid.
 
 Maar in een andere managementcultuur kan diezelfde houding heel anders worden gelezen. Als vertraging. Als negativiteit. Als gebrek aan loyaliteit. Als niet willen meebewegen.
 
@@ -57,13 +57,13 @@ Het probleem is alleen dat sneller sturen niet automatisch leidt tot meer bewegi
 
 Voor medewerkers die al lang in een organisatie werken, is verandering vaak meer dan een nieuw plan. Het raakt aan identiteit.
 
-Zij hebben het bedrijf opgebouwd, door moeilijke periodes gedragen, klanten geholpen, collega's ingewerkt en veranderingen overleefd. Ze voelen zich verbonden met "hoe wij het hier doen". Niet uit nostalgie, maar omdat daar ervaring en trots in zit.
+Zij hebben het bedrijf opgebouwd, door moeilijke periodes gedragen, klanten geholpen, collega's ingewerkt en veranderingen overleefd. Ze voelen zich verbonden met "hoe wij het hier doen". Dat is geen nostalgie; daar zit ervaring en trots in.
 
 Wanneer nieuw management binnenkomt met stevige taal, nieuwe KPI's en een andere toon, kan dat voelen alsof het verleden wordt weggeveegd.
 
 Alsof bestaande kennis er minder toe doet. Alsof betrokkenheid wordt verward met weerstand. Alsof kritische vragen niet welkom zijn. Alsof mensen ineens moeten bewijzen dat ze nog wel passen bij de nieuwe koers.
 
-Dan ontstaat er geen energie, maar verdediging. Niet omdat mensen niet willen veranderen, maar omdat ze zich niet erkend voelen.
+Dan ontstaat er geen energie, maar verdediging. De oorzaak is zelden onwil om te veranderen; mensen voelen zich niet erkend.
 
 ## De onderstroom wordt groter
 
@@ -105,7 +105,7 @@ De brug ontstaat wanneer beide kanten elkaar niet proberen te corrigeren, maar p
 
 ## De rol van leiderschap
 
-Juist in dit soort situaties is verbindend leiderschap essentieel. Niet als vriendelijke saus over harde besluiten, maar als serieuze voorwaarde voor duurzame verandering.
+Juist in dit soort situaties is verbindend leiderschap essentieel. Het is geen vriendelijke saus over harde besluiten, maar een serieuze voorwaarde voor duurzame verandering.
 
 Leiders moeten richting geven én ruimte maken. Ze moeten tempo vragen én luisteren naar signalen. Ze moeten duidelijk zijn over keuzes én nieuwsgierig blijven naar wat die keuzes oproepen. Ze moeten zorgen dat mensen niet alleen weten wat er verandert, maar ook waarom en waartoe.
 

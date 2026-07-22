@@ -3,7 +3,7 @@ title: Waarom collega's verwachten dat de manager het gedoe oplost
 date: 2026-07-04
 description: Zodra spanning ontstaat kijkt een team al snel naar de manager. Dat voelt veilig, maar maakt het team niet sterker. Waarom eigenaarschap terug moet naar de groep.
 image: /blog/images/manageralsoplosser.png
-lead: In veel teams gebeurt iets opvallends. Zodra er spanning ontstaat, onduidelijkheid groeit of samenwerking schuurt, kijken mensen al snel naar de manager. Niet altijd uitgesproken, maar vaak wel voelbaar.
+lead: In veel teams gebeurt iets opvallends. Zodra er spanning ontstaat, onduidelijkheid groeit of samenwerking schuurt, kijken mensen al snel naar de manager. Vaak niet uitgesproken, maar wel voelbaar.
 author: Mijn Teamkompas
 ---
 
@@ -11,7 +11,7 @@ author: Mijn Teamkompas
 
 Op het eerste gezicht lijkt dat logisch. Een manager heeft een formele rol, draagt verantwoordelijkheid en wordt geacht overzicht te houden. Maar als een team gewend raakt om elk gedoe, elk misverstand en elke onderlinge spanning bij de manager neer te leggen, ontstaat er een patroon dat uiteindelijk niemand helpt.
 
-Niet de manager. Niet het team. En zeker niet de samenwerking.
+Uiteindelijk niet de manager, niet het team, en zeker niet de samenwerking.
 
 ## De manager als oplosloket
 
@@ -57,7 +57,7 @@ Maar een manager kan niet namens een heel team volwassen samenwerken.
 
 Een manager kan niet elk ongemak wegorganiseren. Een manager kan niet alle misverstanden voorkomen. Een manager kan niet namens collega's eerlijk zijn, luisteren, aanspreken, vertragen of verantwoordelijkheid nemen.
 
-Als alles via de manager loopt, wordt het team minder sterk. Niet sterker.
+Als alles via de manager loopt, wordt het team minder sterk in plaats van sterker.
 
 De echte beweging ontstaat wanneer collega's leren denken: wat is mijn aandeel in dit patroon? Wat heb ik zelf nog niet uitgesproken? Met wie moet ik eigenlijk in gesprek? En wat vraagt deze situatie van ons als team, niet alleen van onze manager?
 
@@ -91,11 +91,11 @@ Voor managers is de valkuil groot om toch weer de redder te worden. Zeker als je
 
 Maar soms is de krachtigste interventie niet oplossen, maar terugleggen.
 
-Niet **"Ik regel het wel"**, maar **"Heb je dit al met de collega zelf besproken?"**
+In plaats van **"Ik regel het wel"**: **"Heb je dit al met de collega zelf besproken?"**
 
-Niet **"Ik zal haar erop aanspreken"**, maar **"Wat maakt dat jij dit niet zelf kunt zeggen?"**
+In plaats van **"Ik zal haar erop aanspreken"**: **"Wat maakt dat jij dit niet zelf kunt zeggen?"**
 
-Niet **"Ik neem dit mee"**, maar **"Wie moet hierover met wie in gesprek?"**
+In plaats van **"Ik neem dit mee"**: **"Wie moet hierover met wie in gesprek?"**
 
 Daarmee laat je mensen niet zwemmen. Je helpt ze juist groeien in volwassen samenwerking.
 
@@ -115,7 +115,7 @@ De manager blijft belangrijk, maar niet als permanente oplosser van alles wat on
 
 Teams worden niet sterker doordat één persoon alle problemen oplost. Teams worden sterker doordat mensen leren om samen verantwoordelijkheid te nemen voor wat er tussen hen gebeurt.
 
-Daar begint volwassen samenwerking. Niet bij een manager die harder gaat werken. Maar bij collega's die durven zeggen: dit speelt er, dit doet het met mij, en ik wil het graag samen beter maken.
+Daar begint volwassen samenwerking. Ze begint niet bij een manager die harder gaat werken, maar bij collega's die durven zeggen: dit speelt er, dit doet het met mij, en ik wil het graag samen beter maken.
 
 - - -
 

@@ -16,9 +16,9 @@ In teamvergaderingen werkt het anders. Daar staat de roze olifant al maanden in 
 
 ## We leren vroeg wat het kost om te spreken
 
-Kleine kinderen doen het nog gewoon. Ze wijzen in de supermarkt, stellen vragen die volwassenen al lang niet meer hardop stellen, zeggen zonder omweg wat ze zien. Niet omdat ze geen gevoel voor tact hebben, maar omdat ze nog niet geleerd hebben wat het sociale prijskaartje is van eerlijk zijn.
+Kleine kinderen doen het nog gewoon. Ze wijzen in de supermarkt, stellen vragen die volwassenen al lang niet meer hardop stellen, zeggen zonder omweg wat ze zien. Dat heeft weinig met een gebrek aan tact te maken; ze hebben nog niet geleerd wat het sociale prijskaartje is van eerlijk zijn.
 
-Op een gegeven moment leren we dat rekenen. Niet door één grote les, maar door honderden kleine momenten waarop we zagen wat er gebeurde als iemand wél iets zei. De collega die een kritische vraag stelde en merkte dat de sfeer veranderde. Het teamlid dat een probleem benoemde en vervolgens als 'moeilijk' werd bestempeld. We internaliseren die signalen sneller dan we beseffen, en na een tijdje is zwijgen geen bewuste keuze meer, het is gewoon wat je doet.
+Op een gegeven moment leren we dat rekenen. Zelden door één grote les, meestal door honderden kleine momenten waarop we zagen wat er gebeurde als iemand wél iets zei. De collega die een kritische vraag stelde en merkte dat de sfeer veranderde. Het teamlid dat een probleem benoemde en vervolgens als 'moeilijk' werd bestempeld. We internaliseren die signalen sneller dan we beseffen, en na een tijdje is zwijgen geen bewuste keuze meer, het is gewoon wat je doet.
 
 Het gevolg is dat de meeste teams vol zitten met onuitgesproken observaties, ongestelde vragen en teruggehouden meningen. Iedereen heeft ze. Niemand noemt ze. En intussen groeit de olifant.
 

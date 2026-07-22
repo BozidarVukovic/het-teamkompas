@@ -1,7 +1,7 @@
 ---
 title: "Werkdruk is niet altijd het probleem: vaak is onduidelijkheid de echte energielek"
 date: 2026-06-13
-description: Teams ervaren werkdruk als een probleem van hoeveelheid. Maar vaak zit de echte energielek ergens anders — in rolonduidelijkheid, gemiste eigenaarschap en samenwerking die hapert.
+description: Teams ervaren werkdruk als een probleem van hoeveelheid. Maar vaak zit de echte energielek ergens anders: in rolonduidelijkheid, gemiste eigenaarschap en samenwerking die hapert.
 lead: We noemen het werkdruk. Maar als je beter kijkt, gaat het bijna nooit alleen over te veel werk. Het gaat over werk waarbij onduidelijk is wie wat doet, waarom het telt en of het ertoe doet.
 author: Mijn Teamkompas
 image: /blog/images/werkdruk-team-overleg.jpg
@@ -15,7 +15,7 @@ Wat is het verschil? Niet de hoeveelheid werk. De hoeveelheid is bijna gelijk. H
 
 ## Het lichaam houdt geen onderscheid
 
-Ons brein verwerkt onzekerheid als een bedreiging. Niet als een zakelijke uitdaging, maar als een signaal dat er iets gevaarlijks op komst is. De amygdala, het deel van het brein dat gevaar registreert, maakt geen onderscheid tussen een roofdier en een onduidelijk takenpakket. Beide activeren dezelfde stressrespons: verhoogde waakzaamheid, verminderde cognitieve capaciteit, de neiging om je klein te maken of juist te overcompenseren.
+Ons brein verwerkt onzekerheid als een bedreiging, niet als een zakelijke uitdaging maar als een signaal dat er iets gevaarlijks op komst is. De amygdala, het deel van het brein dat gevaar registreert, maakt geen onderscheid tussen een roofdier en een onduidelijk takenpakket. Beide activeren dezelfde stressrespons: verhoogde waakzaamheid, verminderde cognitieve capaciteit, de neiging om je klein te maken of juist te overcompenseren.
 
 Dat verklaart iets wat veel leidinggevenden en teamleden herkennen maar zelden benoemen: mensen die klagen over werkdruk, zijn lang niet altijd mensen met te veel werk. Het zijn mensen die te veel energie kwijt zijn aan vragen die buiten hun werk liggen. Wie pakt dit op? Valt dit bij mij? Doe ik het goed? Wordt dit gezien? Mág ik hierover beslissen?
 
@@ -23,7 +23,7 @@ Die vragen kosten geen agenda-uren, maar ze kosten wel energie. Dag na dag.
 
 ## Rolonduidelijkheid is geen HR-probleem
 
-In gesprekken met teams komt het steeds terug. Niet als klacht over een manager of als probleem dat iemand bewust heeft gecreëerd, maar als een sluipend patroon. Twee mensen die allebei denken verantwoordelijk te zijn voor hetzelfde. Of niemand die het voelt. Vergaderingen die eindigen zonder dat duidelijk is wie wat doet, waarna iedereen zijn eigen conclusie trekt.
+In gesprekken met teams komt het steeds terug, zelden als klacht over een manager of als bewust gecreëerd probleem, maar als een sluipend patroon. Twee mensen die allebei denken verantwoordelijk te zijn voor hetzelfde. Of niemand die het voelt. Vergaderingen die eindigen zonder dat duidelijk is wie wat doet, waarna iedereen zijn eigen conclusie trekt.
 
 Rolonduidelijkheid is geen HR-term voor een organisatieprobleem. Het is een dagelijkse ervaring van energie die wegloopt langs de randen van de samenwerking. Energie die niet naar het werk gaat, maar naar het navigeren van de onzekerheid eromheen.
 
@@ -35,11 +35,11 @@ Eigenaarschap is een woord dat veel teams gebruiken en weinig teams definiëren.
 
 Mensen nemen eigenaarschap als drie dingen kloppen. Ze begrijpen *wat* er van hen verwacht wordt. Ze weten *waarom* dat telt. En ze hebben het gevoel dat ze de ruimte hebben om *hoe* te beslissen. Ontbreekt een van die drie, dan is eigenaarschap geen gedrag dat ontstaat, maar een verwachting die beschaamd wordt.
 
-En als eigenaarschap uitblijft, verschuift de energie. Mensen wachten af. Ze doen wat gevraagd wordt, niet meer. Niet omdat ze lui zijn of het niet willen, maar omdat de context het hun niet gemakkelijk maakt om meer te doen. Ze zijn voorzichtig geworden. Terecht.
+En als eigenaarschap uitblijft, verschuift de energie. Mensen wachten af. Ze doen wat gevraagd wordt, niet meer. Dat is geen luiheid of onwil; de context maakt het hun niet gemakkelijk om meer te doen. Ze zijn voorzichtig geworden. Terecht.
 
 ## Leiderschap en de stilte die alles zegt
 
-Leidinggevenden spelen hierin een rol die ze soms onderschatten. Niet door wat ze zeggen, maar door wat ze onbeantwoord laten. Een team dat merkt dat besluiten teruggedraaid worden zonder uitleg, leert het patroon snel: investeer je niet te veel. Een team dat merkt dat initiatief wordt bestraft door extra verantwoordelijkheid zonder erkenning, stopt met initiatief nemen.
+Leidinggevenden spelen hierin een rol die ze soms onderschatten, minder door wat ze zeggen dan door wat ze onbeantwoord laten. Een team dat merkt dat besluiten teruggedraaid worden zonder uitleg, leert het patroon snel: investeer je niet te veel. Een team dat merkt dat initiatief wordt bestraft door extra verantwoordelijkheid zonder erkenning, stopt met initiatief nemen.
 
 Die aanpassingen zijn rationeel. Ze zijn het resultaat van goed opletten. En ze zijn onzichtbaar voor iemand die niet goed naar het patroon kijkt.
 
