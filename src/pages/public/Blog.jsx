@@ -78,20 +78,6 @@ export default function Blog({ onLoginClick }) {
 
       {/* Posts grid */}
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px" }}>
-        <div style={{ display: "grid", gap: 16, marginBottom: 28 }}>
-          <Link to="/kennis/kenniskaart-teamontwikkeling" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10, background: "#fff", border: "1px solid #dde4ed", borderRadius: 18, padding: "26px 28px", boxShadow: "0 10px 28px rgba(13,27,42,0.08)", textDecoration: "none", color: "inherit" }}>
-            <p style={{ margin: 0, color: "#0F766E", fontSize: 12, fontWeight: 850, letterSpacing: ".1em", textTransform: "uppercase" }}>Centrale kenniskaart</p>
-            <h2 style={{ margin: 0, color: "#0D1B2A", fontSize: 26, letterSpacing: "-.03em" }}>Kenniskaart voor teamontwikkeling</h2>
-            <p style={{ margin: 0, color: "#637083", lineHeight: 1.65, maxWidth: 720 }}>Zie hoe psychologische veiligheid, sociale veiligheid, boven- en onderstroom, neuromanagement, kleine experimenten en eigenaarschap samen bijdragen aan duurzame teamontwikkeling.</p>
-            <p style={{ margin: "4px 0 0", color: "#0F766E", fontWeight: 800 }}>Bekijk de ontwikkelroute →</p>
-          </Link>
-          <Link to="/kennis/bevlogenheid-in-het-werk" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10, background: "#fff", border: "1px solid #dde4ed", borderRadius: 18, padding: "26px 28px", boxShadow: "0 10px 28px rgba(13,27,42,0.08)", textDecoration: "none", color: "inherit" }}>
-            <p style={{ margin: 0, color: "#E8821A", fontSize: 12, fontWeight: 850, letterSpacing: ".1em", textTransform: "uppercase" }}>Themapagina</p>
-            <h2 style={{ margin: 0, color: "#0D1B2A", fontSize: 26, letterSpacing: "-.03em" }}>Bevlogenheid in het werk</h2>
-            <p style={{ margin: 0, color: "#637083", lineHeight: 1.65, maxWidth: 720 }}>Lees hoe taakeisen en hulpbronnen invloed hebben op energie en bevlogenheid in het werk.</p>
-            <p style={{ margin: "4px 0 0", color: "#0F766E", fontWeight: 800 }}>Bekijk het JD-R-model →</p>
-          </Link>
-        </div>
         {posts.length === 0 && (
           <p style={{ color: "#666", textAlign: "center" }}>Nog geen artikelen gepubliceerd.</p>
         )}

@@ -22,6 +22,7 @@ const kennis = [
   ["Boven- en onderstroom", "/boven-en-onderstroom"],
   ["Brein en samenwerking", "/brein-en-samenwerking"],
   ["Kleine experimenten", "/kleine-experimenten"],
+  ["Bevlogenheid in het werk", "/kennis/bevlogenheid-in-het-werk"],
 ];
 
 function isStaticPage(path) {

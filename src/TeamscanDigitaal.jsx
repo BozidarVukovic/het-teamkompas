@@ -572,7 +572,7 @@ export default function TeamscanDigitaal() {
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 20 }}>
               <div style={{ background: C.wit, border: `1px solid ${C.lijn}`, borderRadius: 20, padding: 28 }}>
-                <div style={{ fontWeight: 900, fontSize: 16, color: C.sub, marginBottom: 18, letterSpacing: "0.04em", textTransform: "uppercase", fontSize: 12 }}>Medewerkerstevredenheidsonderzoek</div>
+                <div style={{ fontWeight: 900, color: C.sub, marginBottom: 18, letterSpacing: "0.04em", textTransform: "uppercase", fontSize: 12 }}>Medewerkerstevredenheidsonderzoek</div>
                 {[
                   "Meet tevredenheid over arbeidsomstandigheden, beloning en beleid",
                   "Organisatieniveau: grote groepen, statistische uitkomsten",
