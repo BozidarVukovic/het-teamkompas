@@ -7,7 +7,7 @@ lead: Wanneer organisaties spreken over een sterk team, gaat het vaak over talen
 author: Mijn Teamkompas
 ---
 
-Sterker nog, teams waarin iedereen ongeveer hetzelfde denkt, dezelfde achtergrond heeft of problemen op dezelfde manier benadert, lopen vaak eerder vast. Niet omdat de mensen niet goed zijn, maar omdat ze elkaar onvoldoende uitdagen.
+Sterker nog, teams waarin iedereen ongeveer hetzelfde denkt, dezelfde achtergrond heeft of problemen op dezelfde manier benadert, lopen vaak eerder vast. Aan de mensen ligt het meestal niet. Ze dagen elkaar alleen te weinig uit.
 
 Juist verschillen maken teams sterker.
 
@@ -27,7 +27,7 @@ Verschillen zorgen ervoor dat een team verder kijkt dan de eerste oplossing.
 
 ## Betere besluiten door verschillende perspectieven
 
-Onderzoek laat al jaren zien dat diverse teams gemiddeld betere besluiten nemen. Niet omdat de teamleden slimmer zijn, maar omdat ze samen meer perspectieven meenemen.
+Onderzoek laat al jaren zien dat diverse teams gemiddeld betere besluiten nemen. Dat komt zelden doordat de teamleden slimmer zijn. Ze nemen samen simpelweg meer perspectieven mee.
 
 Waar de één vooral kansen ziet, herkent een ander de risico's. Waar de één snelheid belangrijk vindt, bewaakt een ander de kwaliteit. Waar de één zich richt op de inhoud, let een ander op de relatie tussen collega's of de impact voor klanten.
 
@@ -41,7 +41,7 @@ De één denkt eerst na en spreekt daarna, de ander denkt hardop. De één wil s
 
 Herkent een team die verschillen niet, dan krijgen collega's al snel een etiket. "Hij luistert nooit." "Zij remt alles af." "Hij wil altijd gelijk hebben." Terwijl het zelden over onwil gaat, en meestal over een andere manier van denken en samenwerken.
 
-Er zijn modellen die helpen die verschillen zichtbaar en bespreekbaar te maken. Insights Discovery is daar een voorbeeld van: het maakt inzichtelijk welke voorkeuren mensen hebben in communiceren, samenwerken en besluiten nemen. Niet om mensen in hokjes te plaatsen, maar om meer begrip voor elkaar te creëren. Wanneer collega's elkaars voorkeuren beter begrijpen, verandert irritatie vaak in nieuwsgierigheid. En daar begint betere samenwerking.
+Er zijn modellen die helpen die verschillen zichtbaar en bespreekbaar te maken. Insights Discovery is daar een voorbeeld van: het maakt inzichtelijk welke voorkeuren mensen hebben in communiceren, samenwerken en besluiten nemen. Het doel is geen etiket, maar meer begrip voor elkaar. Wanneer collega's elkaars voorkeuren beter begrijpen, verandert irritatie vaak in nieuwsgierigheid. En daar begint betere samenwerking.
 
 ## Diversiteit werkt alleen bij veiligheid
 
@@ -71,7 +71,7 @@ Laat de leidinggevende tijdens een overleg als laatste spreken. Geef één colle
 
 ## Tot slot
 
-Bij Mijn Teamkompas gebruiken we verschillende hulpmiddelen om teams inzicht te geven in hun samenwerking. Insights Discovery is daar één van. Niet omdat een profiel het antwoord geeft, maar omdat het een laagdrempelige manier biedt om verschillen bespreekbaar te maken.
+Bij Mijn Teamkompas gebruiken we verschillende hulpmiddelen om teams inzicht te geven in hun samenwerking. Insights Discovery is daar één van. Een profiel geeft niet het antwoord, maar het biedt wel een laagdrempelige manier om verschillen bespreekbaar te maken.
 
 Het echte verschil ontstaat namelijk niet door het invullen van een vragenlijst. Het ontstaat wanneer collega's elkaar beter leren begrijpen, verschillende perspectieven leren waarderen en die bewust inzetten om samen betere resultaten te behalen. Dat zijn de teams die blijven leren, zich sneller aanpassen en uiteindelijk meer bereiken.
 
