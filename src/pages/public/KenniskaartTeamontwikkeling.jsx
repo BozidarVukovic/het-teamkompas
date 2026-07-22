@@ -15,22 +15,22 @@ const steps = [
   {
     nr: "2", title: "Begrijpen", question: "Waarom reageren mensen zoals ze reageren?", color: "var(--tk-color-purple)",
     text: "Gedrag wordt begrijpelijker wanneer teamleden leren kijken naar menselijke behoeften, stressreacties, voorkeuren en verschillen. Begrip voorkomt snelle oordelen en maakt samenwerking beter bespreekbaar.",
-    topics: [["neuromanagement", "/brein-en-samenwerking"], ["Insights Discovery", "/insights-discovery-profiel"], ["verschillen tussen mensen"], ["gedrag onder druk", "/brein-en-samenwerking"], ["groepsdynamiek", "/teamontwikkeling"]],
+    topics: [["neuromanagement", "/brein-en-samenwerking"], ["bevlogenheid", "/kennis/bevlogenheid-in-het-werk"], ["Insights Discovery", "/insights-discovery-profiel"], ["verschillen tussen mensen"], ["gedrag onder druk", "/brein-en-samenwerking"], ["groepsdynamiek", "/teamontwikkeling"]],
   },
   {
     nr: "3", title: "Verbinden", question: "Wat is nodig om het echte gesprek te kunnen voeren?", color: "var(--tk-color-green)",
     text: "Teams groeien wanneer mensen zich veilig genoeg voelen om vragen te stellen, fouten te erkennen, feedback te geven en afwijkende perspectieven in te brengen. Veiligheid is geen einddoel, maar een voorwaarde om samen te leren.",
-    topics: [["psychologische veiligheid", "/psychologische-veiligheid"], ["sociale veiligheid", "/sociale-veiligheid"], ["vertrouwen", "/psychologische-veiligheid"], ["feedback"], ["inclusie en verschillen benutten"]],
+    topics: [["psychologische veiligheid", "/psychologische-veiligheid"], ["bevlogenheid", "/kennis/bevlogenheid-in-het-werk"], ["sociale veiligheid", "/sociale-veiligheid"], ["vertrouwen", "/psychologische-veiligheid"], ["feedback"], ["inclusie en verschillen benutten"]],
   },
   {
     nr: "4", title: "Bewegen", question: "Welke kleine stap kunnen we nu zetten?", color: "var(--tk-color-orange)",
     text: "Verandering hoeft niet direct groot of volledig uitgewerkt te zijn. Teams kunnen nieuwe werkwijzen en nieuw gedrag eerst op kleine schaal uitproberen, evalueren en verbeteren.",
-    topics: [["kleine experimenten", "/kleine-experimenten"], ["lean en agile werken", "/kleine-experimenten"], ["growth mindset", "/kleine-experimenten"], ["eigenaarschap", "/teamontwikkeling"], ["leren door te doen"]],
+    topics: [["kleine experimenten", "/kleine-experimenten"], ["energiebalans", "/kennis/bevlogenheid-in-het-werk"], ["lean en agile werken", "/kleine-experimenten"], ["growth mindset", "/kleine-experimenten"], ["eigenaarschap", "/teamontwikkeling"], ["leren door te doen"]],
   },
   {
     nr: "5", title: "Borgen", question: "Hoe zorgen we dat de ontwikkeling doorgaat?", color: "var(--tk-color-teal)",
     text: "Een teamdag of interventie krijgt pas blijvende waarde wanneer teams regelmatig terugkijken, afspraken opvolgen en verantwoordelijkheid nemen voor hun eigen ontwikkeling.",
-    topics: [["teamrituelen"], ["reflectie", "/klantenportaal"], ["teamafspraken", "/teamdag"], ["evalueren"], ["leiderschap", "/teamcoaching"], ["eigenaarschap", "/teamontwikkeling"], ["continu leren", "/kleine-experimenten"]],
+    topics: [["teamrituelen"], ["reflectie", "/klantenportaal"], ["teamafspraken", "/teamdag"], ["evalueren"], ["leiderschap", "/teamcoaching"], ["duurzame inzetbaarheid", "/kennis/bevlogenheid-in-het-werk"], ["eigenaarschap", "/teamontwikkeling"], ["continu leren", "/kleine-experimenten"]],
   },
 ];
 
