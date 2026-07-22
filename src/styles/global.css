@@ -42,9 +42,9 @@ a { color: inherit; }
 .tk-section { padding: clamp(56px, 8vw, 96px) 24px; }
 .tk-container { width: min(1120px, 100%); margin: 0 auto; }
 .tk-eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 18px; color: var(--tk-color-teal); font-size: 13px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
-.tk-heading-xl { margin: 0; max-width: 920px; font-size: clamp(42px, 7vw, 76px); line-height: .98; letter-spacing: -.055em; }
-.tk-heading-lg { margin: 0; font-size: clamp(30px, 4.5vw, 46px); line-height: 1.08; letter-spacing: -.04em; }
-.tk-lead { max-width: 820px; margin: 24px 0 0; color: var(--tk-color-muted); font-size: clamp(18px, 2vw, 22px); line-height: 1.6; }
+.tk-heading-xl { margin: 0; max-width: 920px; font-size: clamp(34px, 5vw, 52px); line-height: 1.05; letter-spacing: -.03em; }
+.tk-heading-lg { margin: 0; font-size: clamp(28px, 4vw, 40px); line-height: 1.12; letter-spacing: -.02em; }
+.tk-lead { max-width: 820px; margin: 20px 0 0; color: var(--tk-color-muted); font-size: clamp(16px, 2vw, 18px); line-height: 1.7; }
 .tk-grid { display: grid; gap: 18px; }
 .tk-grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 .tk-process-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
