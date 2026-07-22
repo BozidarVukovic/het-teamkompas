@@ -108,6 +108,9 @@ a { color: inherit; }
 .tk-jdr-hero { overflow: hidden; background: radial-gradient(circle at 85% 20%, rgba(15,118,110,.30), transparent 42%), var(--tk-color-ink); color: #fff; }
 .tk-jdr-hero .tk-heading-xl { color: #fff; }
 .tk-jdr-hero .tk-lead { color: rgba(255,255,255,.72); }
+.tk-jdr-hero-inner { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(28px, 5vw, 56px); align-items: center; }
+.tk-jdr-hero-media { width: 100%; height: 100%; max-height: 440px; object-fit: cover; border-radius: 22px; box-shadow: 0 24px 55px rgba(0,0,0,.38); }
+@media (max-width: 760px) { .tk-jdr-hero-inner { grid-template-columns: 1fr; } .tk-jdr-hero-media { max-height: 260px; } }
 .tk-jdr-band { background: var(--tk-color-sand); }
 .tk-jdr-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
 .tk-tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }

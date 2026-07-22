@@ -56,14 +56,20 @@ export default function BevlogenheidInHetWerk() {
         <meta property="og:description" content="Hoe taakeisen en hulpbronnen invloed hebben op energie, motivatie, werkstress en duurzame inzetbaarheid." />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={`https://www.mijnteamkompas.nl${ROUTE}`} />
+        <meta property="og:image" content="https://www.mijnteamkompas.nl/bevlogenheid.jpg" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
       <Section className="tk-knowledge-hero tk-jdr-hero">
-        <Eyebrow withDot>Kennis · energie en motivatie</Eyebrow>
-        <h1 className="tk-heading-xl">Bevlogenheid in het werk</h1>
-        <p className="tk-lead">Sommige werkdagen vliegen voorbij. Je voelt energie, krijgt iets voor elkaar en ervaart dat je werk ertoe doet. Op andere dagen lijkt iedere taak meer moeite te kosten. Bevlogenheid is geen vaste eigenschap van een medewerker. Het ontstaat in de wisselwerking tussen wat het werk van iemand vraagt en wat het werk, het team en de organisatie daarvoor teruggeven.</p>
-        <div className="tk-actions"><ButtonLink href="/teamscan">Onderzoek wat jouw team energie geeft</ButtonLink><ButtonLink href="/kennis/kenniskaart-teamontwikkeling" variant="secondary">Bekijk de kenniskaart</ButtonLink></div>
+        <div className="tk-jdr-hero-inner">
+          <div className="tk-jdr-hero-text">
+            <Eyebrow withDot>Kennis · energie en motivatie</Eyebrow>
+            <h1 className="tk-heading-xl">Bevlogenheid in het werk</h1>
+            <p className="tk-lead">Sommige werkdagen vliegen voorbij. Je voelt energie, krijgt iets voor elkaar en ervaart dat je werk ertoe doet. Op andere dagen lijkt iedere taak meer moeite te kosten. Bevlogenheid is geen vaste eigenschap van een medewerker. Het ontstaat in de wisselwerking tussen wat het werk van iemand vraagt en wat het werk, het team en de organisatie daarvoor teruggeven.</p>
+            <div className="tk-actions"><ButtonLink href="/teamscan">Onderzoek wat jouw team energie geeft</ButtonLink><ButtonLink href="/kennis/kenniskaart-teamontwikkeling" variant="secondary">Bekijk de kenniskaart</ButtonLink></div>
+          </div>
+          <img className="tk-jdr-hero-media" src="/bevlogenheid.jpg" alt="Medewerker die met energie en plezier aan het werk is" />
+        </div>
       </Section>
 
       <Section>
