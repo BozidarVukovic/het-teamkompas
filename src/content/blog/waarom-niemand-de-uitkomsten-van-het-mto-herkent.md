@@ -35,7 +35,7 @@ Er speelt nog iets. Op de sheet staat een 6 voor samenwerking, en het team bespr
 
 Maar een gemiddelde bestaat niet uit één waarheid. Achter die 6 kan een 9 zitten van iemand die net een goede periode heeft, en een 3 van iemand die zich al maanden buitengesloten voelt. Die twee ervaringen bestaan allebei echt. Het gemiddelde bestaat niet.
 
-Tijdens de bespreking legt ieder teamlid de score naast de eigen ervaring, vindt het verschil te groot en concludeert: dit klopt niet. De reactie "dat herken ik eigenlijk niet" is dan volkomen oprecht. Het betekent alleen niet dat de uitkomst onjuist is. Het betekent dat er verschillende werkelijkheden naast elkaar bestaan in hetzelfde team.
+Tijdens de bespreking legt ieder teamlid de score naast de eigen ervaring, vindt het verschil te groot en concludeert: dit klopt niet. De reactie "dat herken ik eigenlijk niet" is dan volkomen oprecht. Het betekent alleen niet dat de uitkomst onjuist is. Het betekent dat er verschillende werkelijkheden naast elkaar bestaan in hetzelfde team. Vaak zit dat in [de boven- en onderstroom](/boven-en-onderstroom): wat zichtbaar is op de sheet, en wat eronder meespeelt.
 
 ## De vraag die het gesprek dichtzet
 

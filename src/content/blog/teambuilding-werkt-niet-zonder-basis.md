@@ -11,7 +11,7 @@ Stel: een team heeft al maanden spanning. Twee mensen praten niet meer rechtstre
 
 En op maandag is alles weer zoals het was.
 
-Niemand heeft iets gedaan of gezegd wat niet klopte. De dag was goed georganiseerd. De bedoeling was oprecht. Maar de onderstroom die al maanden speelt, is geen moment aangeraakt. En een onbesproken onderstroom verdwijnt niet door een gezellige middag. Hij wacht gewoon.
+Niemand heeft iets gedaan of gezegd wat niet klopte. De dag was goed georganiseerd. De bedoeling was oprecht. Maar de onderstroom die al maanden speelt, is geen moment aangeraakt. En een onbesproken onderstroom verdwijnt niet door een gezellige middag. Hij wacht gewoon. Meer over hoe [de boven- en onderstroom samenwerken](/boven-en-onderstroom) lees je op onze themapagina.
 
 ## Teambuilding lost op wat niet het probleem is
 

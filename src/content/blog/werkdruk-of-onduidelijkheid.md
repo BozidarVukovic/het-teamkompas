@@ -39,7 +39,7 @@ En als eigenaarschap uitblijft, verschuift de energie. Mensen wachten af. Ze doe
 
 ## Leiderschap en de stilte die alles zegt
 
-Leidinggevenden spelen hierin een rol die ze soms onderschatten, minder door wat ze zeggen dan door wat ze onbeantwoord laten. Een team dat merkt dat besluiten teruggedraaid worden zonder uitleg, leert het patroon snel: investeer je niet te veel. Een team dat merkt dat initiatief wordt bestraft door extra verantwoordelijkheid zonder erkenning, stopt met initiatief nemen.
+Leidinggevenden spelen hierin een rol die ze soms onderschatten, minder door wat ze zeggen dan door wat ze onbeantwoord laten. Een team dat merkt dat besluiten teruggedraaid worden zonder uitleg, leert het patroon snel: investeer je niet te veel. Een team dat merkt dat initiatief wordt bestraft door extra verantwoordelijkheid zonder erkenning, stopt met initiatief nemen. Veel daarvan speelt zich af in [de boven- en onderstroom](/boven-en-onderstroom) van een team.
 
 Die aanpassingen zijn rationeel. Ze zijn het resultaat van goed opletten. En ze zijn onzichtbaar voor iemand die niet goed naar het patroon kijkt.
 

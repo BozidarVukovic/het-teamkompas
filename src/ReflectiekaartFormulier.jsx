@@ -397,7 +397,7 @@ UTM campaign: ${utm.utm_campaign || "-"}`,
             />
             <span>
               Ik ontvang graag de reflectiekaart en af en toe praktische inzichten van Mijn Teamkompas over teamontwikkeling, samenwerking en leiderschap. Ik kan mij op elk moment uitschrijven.{" "}
-              <a href="/privacy" style={{ color: C.teal }} target="_blank" rel="noopener noreferrer">
+              <a href="/privacyverklaring_mijnteamkompas.pdf" style={{ color: C.teal }} target="_blank" rel="noopener noreferrer">
                 Privacyverklaring
               </a>
             </span>

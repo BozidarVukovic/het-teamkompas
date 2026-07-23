@@ -11242,6 +11242,7 @@ function BovenOnderstroomPage() {
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
                 Ons brein verklaart waarom mensen reageren zoals ze reageren. Sociale veiligheid is de ondergrens: respectvol met elkaar omgaan. Psychologische veiligheid is de bovengrens: durven uitspreken. De onderstroom is de laag waarin dit alles zichtbaar wordt. En via kleine experimenten zet een team die inzichten om in concreet gedrag. Samen vormen ze het fundament van hoe wij naar teams kijken.
               </p>
+              <a href="/kennis/kenniskaart-teamontwikkeling" style={{ color: PUB.teal, fontWeight: 700, fontSize: 15, textDecoration: "none", display: "inline-block", marginTop: 14 }}>Bekijk de kenniskaart voor teamontwikkeling →</a>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
               {fundament.map(({ titel, tekst, link, label }) => (
@@ -11704,6 +11705,7 @@ function BreinEnSamenwerkingPage() {
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
                 Het brein verklaart waarom mensen reageren zoals ze reageren. Psychologische veiligheid beschrijft wat mensen nodig hebben om zich uit te spreken. Sociale veiligheid legt de normen die daarvoor nodig zijn. De boven- en onderstroom laat zien wat er gebeurt als gevoelens en behoeften wel of niet besproken worden. En via kleine experimenten zet een team die inzichten om in concreet gedrag.
               </p>
+              <a href="/kennis/kenniskaart-teamontwikkeling" style={{ color: PUB.teal, fontWeight: 700, fontSize: 15, textDecoration: "none", display: "inline-block", marginTop: 14 }}>Bekijk de kenniskaart voor teamontwikkeling →</a>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
               {fundament.map(({ titel, tekst, link, label }) => (
@@ -12191,6 +12193,7 @@ function KleineExperimentenPage() {
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
                 Het brein verklaart waarom mensen reageren zoals ze reageren. Psychologische veiligheid beschrijft wat mensen nodig hebben om zich uit te spreken. Sociale veiligheid legt de normen die daarvoor nodig zijn. De boven- en onderstroom laat zien wat er gebeurt als gevoelens wel of niet besproken worden. En kleine experimenten zetten al die inzichten om in concreet gedrag.
               </p>
+              <a href="/kennis/kenniskaart-teamontwikkeling" style={{ color: PUB.teal, fontWeight: 700, fontSize: 15, textDecoration: "none", display: "inline-block", marginTop: 14 }}>Bekijk de kenniskaart voor teamontwikkeling →</a>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
               {fundament.map(({ titel, tekst, link, label }) => (

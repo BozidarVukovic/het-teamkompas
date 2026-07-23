@@ -30,7 +30,7 @@ const steps = [
   {
     nr: "5", title: "Borgen", question: "Hoe zorgen we dat de ontwikkeling doorgaat?", color: "var(--tk-color-teal)",
     text: "Een teamdag of interventie krijgt pas blijvende waarde wanneer teams regelmatig terugkijken, afspraken opvolgen en verantwoordelijkheid nemen voor hun eigen ontwikkeling.",
-    topics: [["teamrituelen"], ["reflectie", "/klantenportaal"], ["teamafspraken", "/teamdag"], ["evalueren"], ["leiderschap", "/teamcoaching"], ["duurzame inzetbaarheid", "/kennis/bevlogenheid-in-het-werk"], ["eigenaarschap", "/teamontwikkeling"], ["continu leren", "/kleine-experimenten"]],
+    topics: [["teamrituelen"], ["reflectie", "/kleine-experimenten"], ["teamafspraken", "/teamdag"], ["evalueren"], ["leiderschap", "/teamcoaching"], ["duurzame inzetbaarheid", "/kennis/bevlogenheid-in-het-werk"], ["eigenaarschap", "/teamontwikkeling"], ["continu leren", "/kleine-experimenten"]],
   },
 ];
 

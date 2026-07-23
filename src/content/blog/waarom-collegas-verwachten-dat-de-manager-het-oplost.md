@@ -63,7 +63,7 @@ De echte beweging ontstaat wanneer collega's leren denken: wat is mijn aandeel i
 
 ## Van klagen naar eigenaarschap
 
-Veel gedoe in teams begint niet met grote conflicten, maar met kleine momenten die niet worden besproken.
+Veel gedoe in teams begint niet met grote conflicten, maar met kleine momenten die niet worden besproken. Hoe je eigenaarschap terugbrengt naar het team, is een van de kernvragen van [teamontwikkeling](/teamontwikkeling).
 
 Een collega komt een afspraak niet na. Iemand neemt veel ruimte in tijdens overleg. Een besluit wordt steeds opnieuw ter discussie gesteld. Een teamlid voelt zich niet gehoord. Er wordt over elkaar gesproken in plaats van met elkaar.
 

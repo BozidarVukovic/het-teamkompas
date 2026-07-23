@@ -17,7 +17,7 @@ Ik vermoed dat niemand zich van het verschil bewust was. Misschien had de één 
 
 Dat is menselijk. En toch bleef het bij me hangen.
 
-Want voor degene die wordt begroet, of juist niet, kan zo'n klein moment verrassend veel betekenen. Het bepaalt mede of je je even gezien voelt, of even lucht.
+Want voor degene die wordt begroet, of juist niet, kan zo'n klein moment verrassend veel betekenen. Het bepaalt mede of je je even gezien voelt, of even lucht. Dat gevoel van gezien worden vormt de bodem onder [psychologische veiligheid in teams](/psychologische-veiligheid).
 
 ## Waar samenwerking begint
 

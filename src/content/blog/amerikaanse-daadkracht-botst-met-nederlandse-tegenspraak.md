@@ -113,6 +113,8 @@ En misschien nog belangrijker: leiders moeten kunnen verdragen dat betrokken men
 
 > **Want in veel Nederlandse organisaties betekent stilte niet dat er draagvlak is. Stilte betekent eerder dat mensen zijn afgehaakt.**
 
+Of mensen zich vrij voelen om tegenspraak te geven, hangt sterk samen met [psychologische veiligheid in teams](/psychologische-veiligheid).
+
 ## Tot slot
 
 Wanneer een Nederlands bedrijf te maken krijgt met een meer internationale, Amerikaanse manier van aansturen, ontstaat er niet vanzelf weerstand. Er ontstaat vooral verwarring als gedrag verkeerd wordt geïnterpreteerd.

@@ -63,4 +63,4 @@ Daar denk ik nog regelmatig aan.
 
 - - -
 
-Herken je dit in jouw team? Mijn Teamkompas helpt teams om dit soort gesprekken boven tafel te krijgen. [Plan een vrijblijvend kennismakingsgesprek](/verkennen) of start met een [teamscan](/teamscan).
+Herken je dit in jouw team? Mijn Teamkompas helpt teams om dit soort gesprekken boven tafel te krijgen, precies daar waar [de boven- en onderstroom](/boven-en-onderstroom) elkaar raken. [Plan een vrijblijvend kennismakingsgesprek](/verkennen) of start met een [teamscan](/teamscan).

@@ -41,7 +41,7 @@ De één denkt eerst na en spreekt daarna, de ander denkt hardop. De één wil s
 
 Herkent een team die verschillen niet, dan krijgen collega's al snel een etiket. "Hij luistert nooit." "Zij remt alles af." "Hij wil altijd gelijk hebben." Terwijl het zelden over onwil gaat, en meestal over een andere manier van denken en samenwerken.
 
-Er zijn modellen die helpen die verschillen zichtbaar en bespreekbaar te maken. Insights Discovery is daar een voorbeeld van: het maakt inzichtelijk welke voorkeuren mensen hebben in communiceren, samenwerken en besluiten nemen. Het doel is geen etiket, maar meer begrip voor elkaar. Wanneer collega's elkaars voorkeuren beter begrijpen, verandert irritatie vaak in nieuwsgierigheid. En daar begint betere samenwerking.
+Er zijn modellen die helpen die verschillen zichtbaar en bespreekbaar te maken. [Insights Discovery](/insights-discovery-profiel) is daar een voorbeeld van: het maakt inzichtelijk welke voorkeuren mensen hebben in communiceren, samenwerken en besluiten nemen. Het doel is geen etiket, maar meer begrip voor elkaar. Wanneer collega's elkaars voorkeuren beter begrijpen, verandert irritatie vaak in nieuwsgierigheid. En daar begint betere samenwerking.
 
 ## Diversiteit werkt alleen bij veiligheid
 

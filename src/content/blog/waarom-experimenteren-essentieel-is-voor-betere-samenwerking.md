@@ -27,7 +27,7 @@ Want hoe mensen samenwerken laat zich slecht op papier verbeteren. Je kunt lang 
 
 Ik zag een team dat het anders aanpakte. Geen plan, geen werkgroep. Ze spraken één ding af: de komende drie weken sluiten we elk overleg af met de vraag wat er nog niet gezegd is. Daarna kijken we of het iets oplevert.
 
-Wat me opviel was hoe anders de toon werd. Er hoefde niemand overtuigd te worden. Het was geen definitieve verandering waar je iets van moest vinden. Het was een poging. Wie het niks vond, kon dat over drie weken gewoon zeggen.
+Wat me opviel was hoe anders de toon werd. Er hoefde niemand overtuigd te worden. Het was geen definitieve verandering waar je iets van moest vinden. Het was een poging. Wie het niks vond, kon dat over drie weken gewoon zeggen. Meer over deze manier van werken lees je op onze pagina over [kleine experimenten](/kleine-experimenten).
 
 De eerste week was de vraag vooral ongemakkelijk. Stiltes. Een grapje. In de tweede week zei iemand iets over de werkverdeling wat al maanden speelde. Daar is toen een gesprek over gevoerd dat volgens mij belangrijker was dan het experiment zelf.
 

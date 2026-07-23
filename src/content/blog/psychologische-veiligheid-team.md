@@ -14,7 +14,7 @@ Maar wat is het precies, en hoe vergroot je het in de praktijk?
 
 Psychologische veiligheid betekent dat teamleden zich vrij voelen om zich uit te spreken zonder bang te zijn voor negatieve consequenties. Ze stellen vragen, geven fouten toe, uiten zorgen en doen suggesties, zonder dat ze vrezen voor schaamte, straf of uitsluiting.
 
-Het gaat niet om vriendelijkheid of het vermijden van conflict. Het gaat om een klimaat waarin eerlijkheid normaal is.
+Het gaat niet om vriendelijkheid of het vermijden van conflict. Het gaat om een klimaat waarin eerlijkheid normaal is. Op onze themapagina lees je meer over hoe je [psychologische veiligheid in teams verbetert](/psychologische-veiligheid).
 
 ## Hoe herken je een onveilig team?
 

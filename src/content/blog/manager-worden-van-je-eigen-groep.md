@@ -53,7 +53,7 @@ Geen van beide werkt. Wat wel werkt, is wat je *volwassen nabijheid* zou kunnen 
 
 ## Leren en verbeteren: krijg jij de ruimte om dit vak te leren?
 
-Management is geen bijrol. Het is een vak. En zoals elk vak vraagt het om oefening, reflectie en eerlijke terugkoppeling.
+Management is geen bijrol. Het is een vak. En zoals elk vak vraagt het om oefening, reflectie en eerlijke terugkoppeling. Daarin kan [teamcoaching en leiderschapsbegeleiding](/teamcoaching) het verschil maken.
 
 Toch wordt er van managers, zeker van mensen die vanuit het team doorgroeien, vaak verwacht dat ze de overgang vanzelf goed maken. Dat ze het gevoel meenemen, de mensen al kennen en dus een vliegende start hebben.
 

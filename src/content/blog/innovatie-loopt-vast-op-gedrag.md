@@ -15,7 +15,7 @@ Daar zit de kracht van dit vraagstuk. Innovatie is niet technisch. Het is mensel
 
 Veel innovaties worden gepresenteerd via plannen, dashboards, businesscases en deadlines. Rationeel klopt het vaak. De vernieuwing is efficiënter, slimmer, veiliger of toekomstbestendiger.
 
-Maar voor medewerkers voelt innovatie vaak als iets anders. "Ben ik straks nog goed genoeg?" "Verlies ik mijn vakmanschap?" "Krijg ik er werk bij?" "Wordt dit weer iets dat over ons heen wordt uitgerold?" "Mag ik nog twijfelen zonder als lastig te worden gezien?"
+Maar voor medewerkers voelt innovatie vaak als iets anders. "Ben ik straks nog goed genoeg?" "Verlies ik mijn vakmanschap?" "Krijg ik er werk bij?" "Wordt dit weer iets dat over ons heen wordt uitgerold?" "Mag ik nog twijfelen zonder als lastig te worden gezien?" Dat het brein verandering eerst als risico weegt, verklaren we op onze pagina over [wat er in ons brein gebeurt tijdens samenwerking](/brein-en-samenwerking).
 
 Dit is het verschil tussen bovenstroom en onderstroom. De bovenstroom gaat over systemen, processen en doelen. De onderstroom gaat over vertrouwen, veiligheid, invloed, betekenis en eigenaarschap. Innovatie loopt vast wanneer we alleen de bovenstroom managen en de onderstroom negeren.
 

@@ -47,7 +47,7 @@ Een vraag die verder helpt: hoe hebben wij onze omgeving eigenlijk ingericht? Ma
 
 Het antwoord kan verrassend klein beginnen. Een overleg openen met een check-in voordat de inhoud begint. Een experiment kleiner maken zodat de kans op succes groter wordt. Reflectietijd inplannen in plaats van de agenda dicht te zetten. Feedback een vast onderdeel maken van een projectafsluiting.
 
-Kleine aanpassingen in de omgeving leiden vaak tot grote verschillen in gedrag.
+Kleine aanpassingen in de omgeving leiden vaak tot grote verschillen in gedrag. Dat is precies de gedachte achter [kleine experimenten in teams](/kleine-experimenten).
 
 > **Niet harder duwen, maar slimmer ontwerpen.**
 

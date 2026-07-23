@@ -33,7 +33,7 @@ Een goed jaargesprek onderzoekt niet alleen wat iemand heeft bereikt, maar ook w
 
 Misschien presteerde iemand minder omdat de samenwerking stroef verliep. Misschien zit er veel meer potentieel in een medewerker die onvoldoende wordt uitgedaagd. Of misschien vraagt iemand al maanden om ondersteuning, zonder dat dit echt is opgepakt.
 
-Wie alleen naar de bovenstroom kijkt, de resultaten, mist vaak de onderliggende oorzaken. En daar ligt de sleutel tot duurzame verbetering.
+Wie alleen naar de bovenstroom kijkt, de resultaten, mist vaak de onderliggende oorzaken. En daar ligt de sleutel tot duurzame verbetering. Meer hierover lees je op onze pagina over [de boven- en onderstroom in teams](/boven-en-onderstroom).
 
 ## Maak van het jaargesprek een startpunt
 
