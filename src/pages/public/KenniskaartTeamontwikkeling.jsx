@@ -9,7 +9,7 @@ const steps = [
     nr: "1", title: "Kijken", question: "Wat gebeurt er werkelijk in het team?", color: "var(--tk-color-blue)",
     text: "Voordat een team kan veranderen, moet zichtbaar worden wat er werkelijk speelt. Niet alleen in afspraken, processen en structuren, maar ook in gedrag, relaties, aannames en onuitgesproken verwachtingen.",
     topics: [
-      ["teamscan", "/teamscan"], ["boven- en onderstroom", "/boven-en-onderstroom"], ["teamdynamiek", "/teamontwikkeling"], ["dagelijkse observaties"], ["patronen in samenwerking"],
+      ["teamscan", "/teamscan"], ["teamcultuur", "/kennis/teamcultuur"], ["boven- en onderstroom", "/boven-en-onderstroom"], ["teamdynamiek", "/teamontwikkeling"], ["dagelijkse observaties"], ["patronen in samenwerking"],
     ],
   },
   {

@@ -4,8 +4,8 @@ export function PageShell({ children, tone = "light" }) {
   return <main className="tk-page" data-tone={tone}>{children}</main>;
 }
 
-export function Section({ children, className = "", style }) {
-  return <section className={`tk-section ${className}`.trim()} style={style}><div className="tk-container">{children}</div></section>;
+export function Section({ children, className = "", style, id }) {
+  return <section id={id} className={`tk-section ${className}`.trim()} style={style}><div className="tk-container">{children}</div></section>;
 }
 
 export function Eyebrow({ children, withDot = false }) {

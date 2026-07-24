@@ -23,6 +23,7 @@ const kennis = [
   ["Brein en samenwerking", "/brein-en-samenwerking"],
   ["Kleine experimenten", "/kleine-experimenten"],
   ["Bevlogenheid in het werk", "/kennis/bevlogenheid-in-het-werk"],
+  ["Teamcultuur", "/kennis/teamcultuur"],
 ];
 
 function isStaticPage(path) {

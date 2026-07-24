@@ -25,6 +25,7 @@ import Klantenportaal from "./pages/public/Klantenportaal";
 import InsightsDiscoveryProfiel from "./pages/public/InsightsDiscoveryProfiel";
 import KenniskaartTeamontwikkeling from "./pages/public/KenniskaartTeamontwikkeling";
 import BevlogenheidInHetWerk from "./pages/public/BevlogenheidInHetWerk";
+import Teamcultuur from "./pages/public/Teamcultuur";
 import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
@@ -12635,6 +12636,7 @@ export default function App() {
         <Route path="/kleine-experimenten" element={<><KleineExperimentenPage /><InsightsKnowledgeCta /></>} />
         <Route path="/kennis/kenniskaart-teamontwikkeling" element={<KenniskaartTeamontwikkeling />} />
         <Route path="/kennis/bevlogenheid-in-het-werk" element={<BevlogenheidInHetWerk />} />
+        <Route path="/kennis/teamcultuur" element={<Teamcultuur />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />

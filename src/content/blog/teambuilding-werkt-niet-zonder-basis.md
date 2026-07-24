@@ -15,7 +15,7 @@ Niemand heeft iets gedaan of gezegd wat niet klopte. De dag was goed georganisee
 
 ## Teambuilding lost op wat niet het probleem is
 
-Er is een verschil tussen een team dat *samenwerkt* en een team dat *aardig voor elkaar is*. Veel teambuildingactiviteiten zijn gericht op het tweede. Ze creëren momenten van verbinding buiten de werkcontext: lachen, iets samen doen, elkaar even anders zien.
+Er is een verschil tussen een team dat *samenwerkt* en een team dat *aardig voor elkaar is*. Veel teambuildingactiviteiten zijn gericht op het tweede. Ze creëren momenten van verbinding buiten de werkcontext: lachen, iets samen doen, elkaar even anders zien. Wat een team echt draagt, is de dagelijkse [teamcultuur](/kennis/teamcultuur): het gedrag dat mensen samen normaal zijn gaan vinden.
 
 Dat heeft waarde. Maar het is niet hetzelfde als werken aan wat samenwerking belemmert.
 

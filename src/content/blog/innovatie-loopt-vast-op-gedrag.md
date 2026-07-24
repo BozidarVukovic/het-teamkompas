@@ -9,7 +9,7 @@ image: /blog/images/Innovatie-gedrag-team.jpg.png
 
 Waarom zeggen teams vaak "we staan open voor vernieuwing", maar blijft het oude gedrag toch bestaan? Waarom wordt een goed idee in een projectgroep enthousiast ontvangen, maar op de werkvloer voorzichtig, afwachtend of zelfs cynisch? En misschien de belangrijkste vraag: wat verliezen mensen eigenlijk wanneer wij zeggen dat ze moeten innoveren?
 
-Daar zit de kracht van dit vraagstuk. Innovatie is niet technisch. Het is menselijk.
+Daar zit de kracht van dit vraagstuk. Innovatie is niet technisch. Het is menselijk. Vaak botst een goed idee op de bestaande [teamcultuur](/kennis/teamcultuur): het gedrag dat een team gewend is geraakt.
 
 ## Innovatie klinkt rationeel, maar voelt persoonlijk
 
