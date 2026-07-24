@@ -25,6 +25,7 @@ const kennis = [
   ["Bevlogenheid in het werk", "/kennis/bevlogenheid-in-het-werk"],
   ["Teamcultuur", "/kennis/teamcultuur"],
   ["Eigenaarschap in teams", "/kennis/eigenaarschap-in-teams"],
+  ["Verandermanagement", "/kennis/verandermanagement"],
 ];
 
 function isStaticPage(path) {

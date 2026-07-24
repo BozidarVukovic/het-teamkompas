@@ -31,7 +31,7 @@ Het verschil zit dus niet alleen in leeftijd, maar vooral in de mentale modellen
 
 ## Ons brein houdt van voorspelbaarheid
 
-Iedere verandering vraagt iets van onze hersenen. Ons brein is voortdurend bezig met één belangrijke vraag: ben ik veilig? Hoe dat werkt, lees je op onze pagina over [wat er in ons brein gebeurt tijdens samenwerking](/brein-en-samenwerking).
+Iedere verandering vraagt iets van onze hersenen. Ons brein is voortdurend bezig met één belangrijke vraag: ben ik veilig? Hoe dat werkt, lees je op onze pagina over [wat er in ons brein gebeurt tijdens samenwerking](/brein-en-samenwerking). Wil je weten waarom veranderingen zo vaak stranden, lees dan onze pagina over [verandermanagement](/kennis/verandermanagement).
 
 Wanneer een verandering onduidelijkheid veroorzaakt, wordt het stresssysteem sneller actief. Vooral wanneer mensen het gevoel hebben controle kwijt te raken, ontstaat weerstand.
 

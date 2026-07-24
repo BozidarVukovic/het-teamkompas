@@ -27,6 +27,7 @@ import KenniskaartTeamontwikkeling from "./pages/public/KenniskaartTeamontwikkel
 import BevlogenheidInHetWerk from "./pages/public/BevlogenheidInHetWerk";
 import Teamcultuur from "./pages/public/Teamcultuur";
 import EigenaarschapInTeams from "./pages/public/EigenaarschapInTeams";
+import Verandermanagement from "./pages/public/Verandermanagement";
 import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
@@ -12639,6 +12640,7 @@ export default function App() {
         <Route path="/kennis/bevlogenheid-in-het-werk" element={<BevlogenheidInHetWerk />} />
         <Route path="/kennis/teamcultuur" element={<Teamcultuur />} />
         <Route path="/kennis/eigenaarschap-in-teams" element={<EigenaarschapInTeams />} />
+        <Route path="/kennis/verandermanagement" element={<Verandermanagement />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
