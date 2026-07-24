@@ -3,7 +3,7 @@ import { ButtonLink, Card, Eyebrow, PageShell, Section } from "../../components/
 import KompasDot from "../../components/shared/KompasDot";
 
 const ROUTE = "/kennis/teamcultuur";
-const IMAGE = "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg";
+const IMAGE = "https://www.mijnteamkompas.nl/teamcultuur.jpg";
 
 const toc = [
   ["Wat is teamcultuur?", "wat-is-teamcultuur"],
@@ -154,7 +154,7 @@ export default function Teamcultuur() {
             <p className="tk-lead">"We moeten aan de cultuur werken." Het is een van de meest uitgesproken zinnen binnen organisaties. Toch blijkt het verrassend moeilijk om uit te leggen wat cultuur eigenlijk is. Cultuur is veel concreter dan het lijkt: ze is zichtbaar in het dagelijkse gedrag van mensen.</p>
             <div className="tk-actions"><ButtonLink href="/teamscan">Ontdek de teamscan</ButtonLink><ButtonLink href="/verkennen" variant="secondary">Plan een kennismaking</ButtonLink></div>
           </div>
-          <img className="tk-jdr-hero-media" src="/teamkompas-workshop-hero.jpg" alt="Teamcultuur wordt zichtbaar in het dagelijkse gedrag en de ongeschreven regels binnen een team." />
+          <img className="tk-jdr-hero-media" src="/teamcultuur.jpg" alt="Teamcultuur wordt zichtbaar in het dagelijkse gedrag en de ongeschreven regels binnen een team." />
         </div>
       </Section>
 
