@@ -3,7 +3,7 @@ import { ButtonLink, Card, Eyebrow, PageShell, Section } from "../../components/
 import KompasDot from "../../components/shared/KompasDot";
 
 const ROUTE = "/kennis/verandermanagement";
-const IMAGE = "https://www.mijnteamkompas.nl/teamkompas-vier-domeinen.jpg";
+const IMAGE = "https://www.mijnteamkompas.nl/verandermanagement.jpg";
 
 const toc = [
   ["Waarom verandering zo moeilijk is", "waarom-moeilijk"],
@@ -152,7 +152,7 @@ export default function Verandermanagement() {
             <p className="tk-lead">Een inspirerende kick-off. Nieuwe strategie, nieuwe kernwaarden, nieuwe posters, nieuwe projectgroepen. Iedereen enthousiast. En drie maanden later werkt vrijwel iedereen weer precies zoals daarvoor. Hoe kan dat?</p>
             <div className="tk-actions"><ButtonLink href="/teamscan">Ontdek de teamscan</ButtonLink><ButtonLink href="/verkennen" variant="secondary">Plan een kennismaking</ButtonLink></div>
           </div>
-          <img className="tk-jdr-hero-media" src="/teamkompas-vier-domeinen.jpg" alt="Verandering slaagt pas wanneer gedrag, vertrouwen en teamcultuur meebewegen, niet alleen de plannen." />
+          <img className="tk-jdr-hero-media" src="/verandermanagement.jpg" alt="Verandering slaagt pas wanneer gedrag, vertrouwen en teamcultuur meebewegen, niet alleen de plannen." />
         </div>
       </Section>
 
