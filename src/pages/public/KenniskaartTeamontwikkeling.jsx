@@ -25,7 +25,7 @@ const steps = [
   {
     nr: "4", title: "Bewegen", question: "Welke kleine stap kunnen we nu zetten?", color: "var(--tk-color-orange)",
     text: "Verandering hoeft niet direct groot of volledig uitgewerkt te zijn. Teams kunnen nieuwe werkwijzen en nieuw gedrag eerst op kleine schaal uitproberen, evalueren en verbeteren.",
-    topics: [["kleine experimenten", "/kleine-experimenten"], ["energiebalans", "/kennis/bevlogenheid-in-het-werk"], ["lean en agile werken", "/kleine-experimenten"], ["growth mindset", "/kleine-experimenten"], ["eigenaarschap", "/teamontwikkeling"], ["leren door te doen"]],
+    topics: [["kleine experimenten", "/kleine-experimenten"], ["eigenaarschap", "/kennis/eigenaarschap-in-teams"], ["energiebalans", "/kennis/bevlogenheid-in-het-werk"], ["lean en agile werken", "/kleine-experimenten"], ["growth mindset", "/kleine-experimenten"], ["leren door te doen"]],
   },
   {
     nr: "5", title: "Borgen", question: "Hoe zorgen we dat de ontwikkeling doorgaat?", color: "var(--tk-color-teal)",
