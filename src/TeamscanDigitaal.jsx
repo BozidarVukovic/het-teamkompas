@@ -109,9 +109,25 @@ function StepBadge({ active, done, number, label }) {
   );
 }
 
+const TEAMSCAN_FAQ = [
+  ["Wat is een online teamscan?", "Een online teamscan is een korte vragenlijst die teamleden ieder afzonderlijk invullen over hoe zij de samenwerking ervaren. De antwoorden worden samengebracht in een teambeeld. Bij Mijn Teamkompas is dat beeld geen beoordeling van het team, maar een gezamenlijke spiegel: een startpunt om patronen en verschillen te bespreken."],
+  ["Wat meet de Teamscan?", "De scan brengt vier domeinen in beeld: veiligheid en leiderschap, beleving van verandering, energie en motivatie, en verbeteren en leren. Teamleden reageren op stellingen op een schaal van 1 tot 5, aangevuld met open vragen waarin ze in eigen woorden kunnen toelichten wat er speelt."],
+  ["Hoe lang duurt het invullen?", "De vragenlijst voor teamleden bestaat uit 29 items, die voor de leidinggevende uit 30. In de praktijk is dat in ongeveer tien tot vijftien minuten in te vullen, afhankelijk van hoe uitgebreid iemand de open vragen beantwoordt."],
+  ["Worden mijn antwoorden herleid naar mij persoonlijk?", "Bij het invullen wordt geen naam en geen e-mailadres vastgelegd. Wat wordt opgeslagen is de rol (teamlid of leidinggevende), de antwoorden en het moment van inzending. De terugkoppeling gebeurt op teamniveau. In heel kleine teams kan een individuele bijdrage soms alsnog te herkennen zijn; dat is goed om vooraf met elkaar te benoemen."],
+  ["Krijgt iedere deelnemer een eigen rapport?", "Nee. De uitkomsten worden samengebracht in één teambeeld, met een aparte weergave voor de perceptie van teamleden en die van de leidinggevende. Dat verschil in beleving is vaak het meest waardevolle gespreksonderwerp."],
+  ["Hoeveel deelnemers zijn er nodig?", "Voor een bruikbaar teambeeld werken we met een richtlijn van minimaal vijf ingevulde vragenlijsten van teamleden. Bij minder respondenten wordt de terugkoppeling snel te herleidbaar en te smal om patronen uit te lezen."],
+  ["Wat is het verschil met een medewerkerstevredenheidsonderzoek?", "Een MTO meet doorgaans tevredenheid over arbeidsomstandigheden, beloning en beleid, meestal organisatiebreed. De Teamscan kijkt naar de werking van één specifiek team: hoe mensen samenwerken, of zij zich veilig voelen om zich uit te spreken en waar energie ontstaat of weglekt."],
+  ["Wat is het verschil met Insights Discovery?", "Insights Discovery geeft inzicht in individuele voorkeuren in communiceren en samenwerken. De Teamscan gaat over het team als geheel: de ervaren samenwerking en de patronen daarin. De twee vullen elkaar aan en worden soms in één traject gecombineerd."],
+  ["Wat gebeurt er na het invullen?", "De uitkomsten worden samengebracht in een rapportage en vervolgens met het team besproken. Vanuit dat gesprek kiest het team een of enkele kleine experimenten met een eigenaar en een evaluatiemoment. Het invullen is dus het begin, niet het eindpunt."],
+  ["Kan de meting later worden herhaald?", "Ja. De scan kan als nulmeting worden ingezet en later opnieuw worden uitgevoerd, zodat het team kan onderzoeken wat is veranderd en wat nog aandacht vraagt."],
+  ["Is de Teamscan ook geschikt voor een managementteam?", "Ja. Er is een aparte vragenlijst voor de leidinggevende, waardoor het verschil tussen de beleving van het team en die van de leidinggevende zichtbaar wordt. Bij managementteams wordt die vergelijking vaak een waardevol startpunt."],
+  ["Wat kost een Teamscan?", "Er is geen vast tarief dat we publiceren, omdat de investering afhangt van de teamgrootte, de mate van voorbereiding, of er een begeleide bespreking of teamdag bij hoort en of er een herhaalmeting volgt. In een kennismakingsgesprek maken we dat concreet."],
+];
+
 export default function TeamscanDigitaal() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [openFaq, setOpenFaq] = useState(null);
   const aanvraagRef = useRef(null);
   const pageViewTrackedRef = useRef(false);
   const formStartTrackedRef = useRef(false);
@@ -420,16 +436,43 @@ export default function TeamscanDigitaal() {
   return (
     <HelmetProvider>
       <Helmet>
-        <title>Teamscan voor teamontwikkeling en samenwerking | Mijn Teamkompas</title>
+        <title>Online Teamscan: inzicht in jullie team | Mijn Teamkompas</title>
         <meta
           name="description"
-          content="Ontdek wat een teamscan is en hoe Mijn Teamkompas samenwerking, veiligheid, energie en leren zichtbaar maakt. Start laagdrempelig met een digitale teamscan."
+          content="De online Teamscan maakt zichtbaar hoe teamleden de samenwerking ervaren. Bekijk wat de scan meet, hoe hij werkt en het voorbeeldrapport."
         />
+        <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://www.mijnteamkompas.nl/teamscan" />
-        <meta property="og:title" content="Teamscan voor teamontwikkeling en samenwerking | Mijn Teamkompas" />
-        <meta property="og:description" content="Een teamscan maakt zichtbaar waar samenwerking sterk is, waar spanning ontstaat en welke vervolgstappen logisch zijn." />
+        <meta property="og:title" content="Online Teamscan: inzicht in jullie team | Mijn Teamkompas" />
+        <meta property="og:description" content="Een online teamscan maakt zichtbaar waar samenwerking sterk is, waar spanning ontstaat en welke vervolgstappen logisch zijn." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/teamscan" />
+        <meta property="og:image" content="https://www.mijnteamkompas.nl/teamkompas-voorbeeldrapport-overzicht.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Online Teamscan: inzicht in jullie team | Mijn Teamkompas" />
+        <meta name="twitter:description" content="Bekijk wat de online Teamscan meet, hoe hij werkt en wat er in het rapport staat." />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Service",
+              name: "Online Teamscan",
+              serviceType: "Teamscan, teamdiagnose, teamontwikkeling",
+              description: "Een online teamscan waarmee teamleden individueel invullen hoe zij de samenwerking ervaren, met een gezamenlijk teambeeld op vier domeinen als startpunt voor het gesprek.",
+              url: "https://www.mijnteamkompas.nl/teamscan",
+              areaServed: "NL",
+              provider: { "@type": "LocalBusiness", name: "Mijn Teamkompas", url: "https://www.mijnteamkompas.nl", email: "info@mijnteamkompas.nl" },
+            },
+            { "@type": "FAQPage", mainEntity: TEAMSCAN_FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
+            {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Home", item: "https://www.mijnteamkompas.nl/" },
+                { "@type": "ListItem", position: 2, name: "Online Teamscan", item: "https://www.mijnteamkompas.nl/teamscan" },
+              ],
+            },
+          ],
+        })}</script>
       </Helmet>
 
       <div style={{ fontFamily: "Roboto, sans-serif", background: C.wit, color: C.donker, minHeight: "100vh" }}>
@@ -447,9 +490,9 @@ export default function TeamscanDigitaal() {
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr 0.95fr", gap: 42, alignItems: "center" }}>
             <div>
               <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", textTransform: "uppercase", color: "#7DB7FF", marginBottom: 14 }}>Digitale teamscan</div>
-              <h1 style={{ fontSize: isMobile ? 36 : 58, lineHeight: 1.04, margin: "0 0 18px", letterSpacing: "-0.03em" }}>Teamscan voor betere samenwerking, veiligheid en teamontwikkeling</h1>
+              <h1 style={{ fontSize: isMobile ? 36 : 58, lineHeight: 1.04, margin: "0 0 18px", letterSpacing: "-0.03em" }}>Online Teamscan voor meer inzicht in jullie samenwerking</h1>
               <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 680 }}>
-                De teamscan van Mijn Teamkompas maakt zichtbaar waar samenwerking energie geeft, waar spanning ontstaat en welke vervolgstappen logisch zijn. Je start laagdrempelig en krijgt een praktisch beeld van wat er in het team speelt.
+                De online teamscan maakt zichtbaar hoe teamleden de samenwerking ervaren. Geen cijfer voor het team, maar een gezamenlijke spiegel: wat gaat goed, waar ontstaan patronen en welke volgende stap maakt het meeste verschil?
               </p>
               <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 26 }}>
                 <a
@@ -656,6 +699,88 @@ export default function TeamscanDigitaal() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Privacy en vertrouwelijkheid */}
+        <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.licht }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+            <div style={{ maxWidth: 780, marginBottom: 26 }}>
+              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Vertrouwelijkheid</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, margin: "0 0 14px" }}>Wat er met de antwoorden gebeurt</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub }}>
+                Deelnemers moeten weten waar ze aan toe zijn. Daarom precies wat er wel en niet wordt vastgelegd.
+              </p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+              {[
+                ["Geen naam of e-mailadres", "Bij het invullen wordt geen naam en geen e-mailadres vastgelegd. Wat wordt opgeslagen is de rol (teamlid of leidinggevende), de gegeven antwoorden en het moment van inzending."],
+                ["Terugkoppeling op teamniveau", "De rapportage toont het beeld van het team, met een aparte weergave voor teamleden en leidinggevende. Losse antwoorden worden niet aan personen gekoppeld."],
+                ["Klein team, extra aandacht", "In een heel klein team kan een bijdrage soms alsnog te herkennen zijn. Benoem dat vooraf met elkaar; het maakt het gesprek erover eerlijker."],
+              ].map(([titel, tekst]) => (
+                <article key={titel} style={{ background: C.wit, border: `1px solid ${C.lijn}`, borderRadius: 20, padding: 22 }}>
+                  <h3 style={{ fontSize: 17, margin: "0 0 8px", lineHeight: 1.4 }}>{titel}</h3>
+                  <p style={{ fontSize: 15, lineHeight: 1.75, color: C.sub, margin: 0 }}>{tekst}</p>
+                </article>
+              ))}
+            </div>
+            <p style={{ fontSize: 14, lineHeight: 1.75, color: C.sub, marginTop: 18, maxWidth: 780 }}>
+              Meer weten over hoe wij met gegevens omgaan? Bekijk de{" "}
+              <a href="/privacyverklaring_mijnteamkompas.pdf" target="_blank" rel="noopener noreferrer" style={{ color: C.teal, fontWeight: 800 }}>privacyverklaring</a>. Heb je specifieke vragen over bewaartermijnen of verwerking binnen jullie organisatie, bespreek die dan vooraf; dan leggen we het samen goed vast.
+            </p>
+          </div>
+        </section>
+
+        {/* Onderbouwing */}
+        <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+            <div style={{ maxWidth: 820 }}>
+              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Onderbouwing</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, margin: "0 0 14px" }}>Waarop de scan is gebaseerd</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub, marginBottom: 14 }}>
+                De vier domeinen sluiten aan op inzichten uit onderzoek naar teamfunctioneren. Veiligheid en leiderschap bouwt voort op het werk rond{" "}
+                <a href="/psychologische-veiligheid" style={{ color: C.teal, fontWeight: 700 }}>psychologische veiligheid</a> van Amy Edmondson. Energie en motivatie sluit aan op het{" "}
+                <a href="/kennis/bevlogenheid-in-het-werk" style={{ color: C.teal, fontWeight: 700 }}>Job Demands-Resources-model</a>. Beleving van verandering leunt op inzichten over hoe mensen op onzekerheid reageren, uitgewerkt op onze pagina over{" "}
+                <a href="/brein-en-samenwerking" style={{ color: C.teal, fontWeight: 700 }}>brein en samenwerking</a>. Verbeteren en leren komt uit de praktijk van{" "}
+                <a href="/kleine-experimenten" style={{ color: C.teal, fontWeight: 700 }}>kleine experimenten</a>, lean en agile.
+              </p>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: C.sub, background: C.licht, border: `1px solid ${C.lijn}`, borderRadius: 16, padding: "16px 18px" }}>
+                Eerlijk over wat dit wel en niet betekent: de Teamscan is <strong>gebaseerd op wetenschappelijke inzichten</strong>, en is geen formeel gevalideerd meetinstrument met genormeerde scores of benchmarkcijfers. De uitkomsten zijn bedoeld als spiegel voor het gesprek, niet als objectieve waarheid over het team.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.licht }}>
+          <div style={{ maxWidth: 860, margin: "0 auto" }}>
+            <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Veelgestelde vragen</div>
+            <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, margin: "0 0 26px" }}>Vragen over de online Teamscan</h2>
+            <div style={{ display: "grid", gap: 10 }}>
+              {TEAMSCAN_FAQ.map(([vraag, antwoord], i) => (
+                <div key={i} style={{ border: `1px solid ${C.lijn}`, borderRadius: 16, overflow: "hidden", background: C.wit }}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    aria-expanded={openFaq === i}
+                    style={{ width: "100%", background: openFaq === i ? C.licht : C.wit, border: "none", padding: "17px 20px", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, cursor: "pointer", fontFamily: "inherit" }}
+                  >
+                    <span style={{ fontSize: 16, fontWeight: 800, color: C.donker, lineHeight: 1.4 }}>{vraag}</span>
+                    <span aria-hidden="true" style={{ fontSize: 20, color: C.teal, fontWeight: 800, flexShrink: 0, transform: openFaq === i ? "rotate(45deg)" : "none", transition: "transform .2s" }}>+</span>
+                  </button>
+                  {openFaq === i && (
+                    <div style={{ padding: "4px 20px 18px", background: C.licht }}>
+                      <p style={{ fontSize: 15, lineHeight: 1.8, color: C.sub, margin: 0 }}>{antwoord}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <p style={{ fontSize: 15, lineHeight: 1.8, color: C.sub, marginTop: 22 }}>
+              Wil je de scan combineren met een begeleide dag? Bekijk hoe je{" "}
+              <a href="/teamdag" style={{ color: C.teal, fontWeight: 800 }}>een teamdag organiseert</a> en wat er nodig is om{" "}
+              <a href="/kennis/impact-van-een-teamdag" style={{ color: C.teal, fontWeight: 800 }}>afspraken daarna te borgen</a>.
+            </p>
           </div>
         </section>
 

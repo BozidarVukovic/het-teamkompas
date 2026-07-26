@@ -916,10 +916,10 @@ function SeoHead({ page = "home" }) {
       image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
     },
     teamscan: {
-      title: "Teamscan starten | inzicht in samenwerking, energie en veiligheid",
-      description: "Start laagdrempelig een digitale teamscan. Krijg inzicht in samenwerking, psychologische veiligheid, energie, motivatie en verbeterkracht in je team.",
+      title: "Online Teamscan: inzicht in jullie team | Mijn Teamkompas",
+      description: "De online Teamscan maakt zichtbaar hoe teamleden de samenwerking ervaren. Bekijk wat de scan meet, hoe hij werkt en het voorbeeldrapport.",
       url: "https://www.mijnteamkompas.nl/teamscan",
-      image: "https://www.mijnteamkompas.nl/teamkompas-vier-domeinen.jpg",
+      image: "https://www.mijnteamkompas.nl/teamkompas-voorbeeldrapport-overzicht.jpg",
     },
     teamontwikkeling: {
       title: "Teamontwikkeling Nederland | samenwerking verbeteren",

@@ -14,26 +14,32 @@ const baseHtml = fs.readFileSync(path.join(distDir, "index.html"), "utf-8");
 const pages = [
   {
     route: "teamscan",
-    title: "Teamscan starten | inzicht in samenwerking, energie en veiligheid",
+    title: "Online Teamscan: inzicht in jullie team | Mijn Teamkompas",
     description:
-      "Start laagdrempelig een digitale teamscan. Krijg inzicht in samenwerking, psychologische veiligheid, energie, motivatie en verbeterkracht in je team.",
+      "De online Teamscan maakt zichtbaar hoe teamleden de samenwerking ervaren. Bekijk wat de scan meet, hoe hij werkt en het voorbeeldrapport.",
     url: "https://www.mijnteamkompas.nl/teamscan",
-    image: "https://www.mijnteamkompas.nl/teamkompas-vier-domeinen.jpg",
+    image: "https://www.mijnteamkompas.nl/teamkompas-voorbeeldrapport-overzicht.jpg",
     content: `
       <main>
-        <h1>Teamscan starten — inzicht in samenwerking, energie en veiligheid</h1>
-        <p>Met de digitale teamscan van Mijn Teamkompas krijg je snel en laagdrempelig zicht op wat er speelt in je team. De scan meet op vier domeinen tegelijk: psychologische veiligheid, energie en motivatie, verandering en duidelijkheid, en leren en verbeteren.</p>
-        <h2>Wat meet de teamscan?</h2>
+        <h1>Online Teamscan voor meer inzicht in jullie samenwerking</h1>
+        <p>De online teamscan maakt zichtbaar hoe teamleden de samenwerking ervaren. Geen cijfer voor het team, maar een gezamenlijke spiegel: wat gaat goed, waar ontstaan patronen en welke volgende stap maakt het meeste verschil?</p>
+        <h2>Wat meet de Teamscan?</h2>
         <ul>
-          <li><strong>Vertrouwen en veiligheid.</strong> Kunnen mensen zich uitspreken, fouten bespreken en elkaar aanspreken?</li>
+          <li><strong>Veiligheid en leiderschap.</strong> Kunnen mensen zich uitspreken, fouten bespreken en elkaar aanspreken?</li>
+          <li><strong>Beleving van verandering.</strong> Begrijpen mensen wat er verandert en wat er van hen wordt gevraagd?</li>
           <li><strong>Energie en motivatie.</strong> Waar geven werk en samenwerking energie, en waar ontstaan belasting of frustratie?</li>
-          <li><strong>Verandering en duidelijkheid.</strong> Begrijpen mensen wat er verandert en wat er van hen wordt gevraagd?</li>
-          <li><strong>Leren en verbeteren.</strong> Hoe leert een team van ervaringen en worden verbeteringen vastgehouden?</li>
+          <li><strong>Verbeteren en leren.</strong> Hoe leert een team van ervaringen en worden verbeteringen vastgehouden?</li>
         </ul>
-        <h2>Voor wie is de teamscan?</h2>
-        <p>Geschikt voor teams in zakelijke dienstverlening, gemeenten, onderwijs en industrie.</p>
+        <h2>Hoe werkt de online teamscan?</h2>
+        <p>Teamleden vullen de scan online in via een eigen link. De vragenlijst bestaat uit stellingen op een schaal van 1 tot 5 en een aantal open vragen; invullen kost ongeveer tien tot vijftien minuten. Er is een aparte variant voor teamleden en voor de leidinggevende, zodat verschillen in beeld tussen team en leiding zichtbaar worden. Daarna volgt een rapportage op teamniveau en een gesprek over wat de uitkomsten betekenen.</p>
+        <h2>Wat er met de antwoorden gebeurt</h2>
+        <p>Bij het invullen wordt geen naam en geen e-mailadres vastgelegd. Wat wordt opgeslagen is de rol, de gegeven antwoorden en het moment van inzending. De terugkoppeling gebeurt op teamniveau. In een heel klein team kan een bijdrage soms alsnog te herkennen zijn; benoem dat vooraf met elkaar.</p>
+        <h2>Onderbouwing</h2>
+        <p>De vier domeinen sluiten aan op inzichten uit onderzoek naar teamfunctioneren, waaronder psychologische veiligheid en het Job Demands-Resources-model. De Teamscan is gebaseerd op wetenschappelijke inzichten en is geen formeel gevalideerd meetinstrument met genormeerde scores of benchmarkcijfers.</p>
+        <h2>Voor wie is de Teamscan?</h2>
+        <p>Geschikt voor teams en managementteams in zakelijke dienstverlening, gemeenten, onderwijs, zorg en industrie. Vanaf ongeveer vijf deelnemers is een teambeeld zinvol te maken.</p>
         <p>Plan een vrijblijvend kennismakingsgesprek via <a href="mailto:info@mijnteamkompas.nl">info@mijnteamkompas.nl</a>.</p>
-        <nav><a href="/">Home</a> <a href="/teamcoaching">Teamcoaching</a> <a href="/teamdag">Teamdag</a> <a href="/verkennen">Verkennend gesprek</a></nav>
+        <nav><a href="/">Home</a> <a href="/psychologische-veiligheid">Psychologische veiligheid</a> <a href="/teamcoaching">Teamcoaching</a> <a href="/teamdag">Teamdag</a> <a href="/verkennen">Verkennend gesprek</a></nav>
       </main>`,
   },
   {

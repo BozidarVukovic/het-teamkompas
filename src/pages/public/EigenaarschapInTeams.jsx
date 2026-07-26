@@ -343,7 +343,7 @@ export default function EigenaarschapInTeams() {
         <div className="tk-section-heading"><Eyebrow>Zichtbaar maken</Eyebrow><h2 className="tk-heading-lg">Eigenaarschap en de teamscan</h2></div>
         <div className="tk-rich-text" style={{ maxWidth: 820 }}>
           <p>Eigenaarschap laat zich niet los meten van psychologische veiligheid, rolhelderheid, leiderschap, samenwerking, vertrouwen, autonomie, aanspreekgedrag, werkdruk, hulpbronnen en gedeelde doelen. Al die onderwerpen bepalen samen of mensen ruimte ervaren om verantwoordelijkheid te nemen.</p>
-          <p>De <a href="/teamscan">teamscan</a> van Mijn Teamkompas maakt zichtbaar waar medewerkers ruimte ervaren, waar verantwoordelijkheden onduidelijk zijn, waar leiderschap initiatief stimuleert of afremt, en waar de bovenstroom en de onderstroom van elkaar verschillen. Dat levert een concreet vertrekpunt op om te bepalen welke kleine interventies het meeste effect hebben.</p>
+          <p>De <a href="/teamscan">online teamscan</a> van Mijn Teamkompas maakt zichtbaar waar medewerkers ruimte ervaren, waar verantwoordelijkheden onduidelijk zijn, waar leiderschap initiatief stimuleert of afremt, en waar de bovenstroom en de onderstroom van elkaar verschillen. Dat levert een concreet vertrekpunt op om te bepalen welke kleine interventies het meeste effect hebben.</p>
         </div>
       </Section>
 

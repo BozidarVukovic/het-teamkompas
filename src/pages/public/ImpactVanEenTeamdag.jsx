@@ -328,7 +328,7 @@ export default function ImpactVanEenTeamdag() {
         <div className="tk-section-heading"><Eyebrow>Onze aanpak</Eyebrow><h2 className="tk-heading-lg">Een dag als moment in een beweging</h2></div>
         <div className="tk-grid tk-grid-3">
           <Card accent="var(--tk-color-green)"><h3>Luisteren</h3><p>Vooraf en tijdens de dag begrijpen wat er werkelijk speelt, vanuit meerdere perspectieven en niet alleen vanuit de leidinggevende.</p></Card>
-          <Card accent="var(--tk-color-blue)"><h3>Meten</h3><p>Patronen zichtbaar maken met gesprekken of de <a href="/teamscan">teamscan</a>. Meten is geen doel, maar een gezamenlijke spiegel.</p></Card>
+          <Card accent="var(--tk-color-blue)"><h3>Meten</h3><p>Patronen zichtbaar maken met gesprekken of de <a href="/teamscan">online teamscan</a>. Meten is geen doel, maar een gezamenlijke spiegel.</p></Card>
           <Card accent="var(--tk-color-teal)"><h3>Bewegen</h3><p>Inzichten vertalen naar klein, observeerbaar gedrag dat het team zelf kan oefenen en evalueren.</p></Card>
         </div>
         <p className="tk-note">In deze aanpak is de dag zelf geen losse gebeurtenis, maar één moment in een langere ontwikkelbeweging. Waar dat past, gebruiken we ook <a href="/insights-discovery-profiel">Insights Discovery</a> om verschillen tussen mensen bespreekbaar te maken.</p>
