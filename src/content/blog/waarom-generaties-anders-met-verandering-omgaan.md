@@ -5,6 +5,11 @@ description: Verschillen in veranderbereidheid gaan minder over leeftijd dan ove
 image: /blog/images/generatiekloof.jpg
 lead: Waarom doet hij zo moeilijk over die nieuwe werkwijze? Iedereen ziet toch dat dit beter is? Aan de andere kant van de tafel denkt een collega juist: waarom moet alles ineens anders?
 author: Mijn Teamkompas
+category: Verandering
+tags: verandering, gedrag, leren
+imageAlt: Illustratie bij het artikel waarom generaties anders met verandering omgaan
+relatedKnowledgePages: /kennis/verandermanagement
+relatedServices: /teamcoaching,/teamdag
 ---
 
 Vrijwel ieder team herkent dit soort gesprekken. Al snel worden er etiketten geplakt.

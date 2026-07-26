@@ -3,27 +3,88 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
       ]
     }
   ],
   "rewrites": [
-    { "source": "/teamscan", "destination": "/teamscan/index.html" },
-    { "source": "/teamcoaching", "destination": "/teamcoaching/index.html" },
-    { "source": "/teamdag", "destination": "/teamdag/index.html" },
-    { "source": "/teamontwikkeling", "destination": "/teamontwikkeling/index.html" },
-    { "source": "/insights-discovery-profiel", "destination": "/insights-discovery-profiel/index.html" },
-    { "source": "/onze-aanpak", "destination": "/onze-aanpak/index.html" },
-    { "source": "/verkennen", "destination": "/verkennen/index.html" },
-    { "source": "/sprekers", "destination": "/sprekers/index.html" },
-    { "source": "/sprekers/edmond-lam", "destination": "/sprekers/edmond-lam/index.html" },
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/deelnemen/:scanId", "destination": "/index.html" },
-    { "source": "/blog", "destination": "/blog/index.html" },
-    { "source": "/blog/:slug", "destination": "/blog/:slug/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/teamscan",
+      "destination": "/teamscan/index.html"
+    },
+    {
+      "source": "/teamcoaching",
+      "destination": "/teamcoaching/index.html"
+    },
+    {
+      "source": "/teamdag",
+      "destination": "/teamdag/index.html"
+    },
+    {
+      "source": "/teamontwikkeling",
+      "destination": "/teamontwikkeling/index.html"
+    },
+    {
+      "source": "/insights-discovery-profiel",
+      "destination": "/insights-discovery-profiel/index.html"
+    },
+    {
+      "source": "/onze-aanpak",
+      "destination": "/onze-aanpak/index.html"
+    },
+    {
+      "source": "/verkennen",
+      "destination": "/verkennen/index.html"
+    },
+    {
+      "source": "/sprekers",
+      "destination": "/sprekers/index.html"
+    },
+    {
+      "source": "/sprekers/edmond-lam",
+      "destination": "/sprekers/edmond-lam/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/deelnemen/:scanId",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/blog/:slug/index.html"
+    },
+    {
+      "source": "/inspiratie",
+      "destination": "/inspiratie/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/blog",
+      "destination": "/inspiratie",
+      "permanent": true
+    }
   ]
 }

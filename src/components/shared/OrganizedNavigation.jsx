@@ -11,7 +11,7 @@ function isStaticPage(path) {
 
 function NavLink({ item, onNavigate, className = "" }) {
   const { pathname } = useLocation();
-  const active = pathname === item.href;
+  const active = pathname === item.href || (item.href === "/inspiratie" && pathname.startsWith("/blog/"));
   return (
     <a className={className} href={item.href} aria-current={active ? "page" : undefined} onClick={(event) => {
       event.preventDefault();
@@ -73,7 +73,7 @@ function KnowledgeMenu({ onNavigate }) {
     {open && <section className="knowledge-menu" id={id} aria-label="Kennis">
       <div className="knowledge-menu__featured">
         <p className="knowledge-menu__eyebrow">Begin bij een hoofdthema</p>
-        <NavLink item={knowledgeNavigation.overview} onNavigate={go} className="knowledge-menu__overview" />
+        <p className="knowledge-menu__overview">Duurzame kennis</p>
         {knowledgeNavigation.featured.map((item) => <NavLink key={item.href} item={item} onNavigate={go} />)}
       </div>
       <div className="knowledge-menu__groups">
@@ -82,7 +82,7 @@ function KnowledgeMenu({ onNavigate }) {
           {group.links.map((item) => <NavLink key={item.href} item={item} onNavigate={go} />)}
         </div>)}
       </div>
-      <NavLink item={{ ...knowledgeNavigation.overview, label: "Bekijk alle kennis →" }} onNavigate={go} className="knowledge-menu__all" />
+      <NavLink item={{ label: "Start bij teamcultuur →", href: "/kennis/teamcultuur" }} onNavigate={go} className="knowledge-menu__all" />
     </section>}
   </div>;
 }
@@ -94,7 +94,7 @@ function MobileKnowledge({ onNavigate }) {
   return <div className="mobile-nav__section">
     <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>Kennis <span aria-hidden="true">{open ? "−" : "+"}</span></button>
     {open && <div id={id} className="mobile-nav__knowledge">
-      <NavLink item={knowledgeNavigation.overview} onNavigate={onNavigate} className="mobile-nav__overview" />
+      <p className="mobile-nav__overview">Duurzame kennis</p>
       <p>Hoofdthema’s</p>
       {knowledgeNavigation.featured.map((item) => <NavLink key={item.href} item={item} onNavigate={onNavigate} />)}
       {knowledgeNavigation.groups.map((group, index) => {
@@ -105,7 +105,7 @@ function MobileKnowledge({ onNavigate }) {
           {groupOpen && <div id={groupId}>{group.links.map((item) => <NavLink key={item.href} item={item} onNavigate={onNavigate} />)}</div>}
         </div>;
       })}
-      <NavLink item={{ ...knowledgeNavigation.overview, label: "Bekijk alle kennis →" }} onNavigate={onNavigate} className="mobile-nav__all" />
+      <NavLink item={{ label: "Start bij teamcultuur →", href: "/kennis/teamcultuur" }} onNavigate={onNavigate} className="mobile-nav__all" />
     </div>}
   </div>;
 }
@@ -153,6 +153,7 @@ export default function OrganizedNavigation() {
           <SimpleDropdown label="Diensten" items={serviceLinks} onNavigate={go} />
           <a href="/onze-aanpak" onClick={(e) => { e.preventDefault(); go("/onze-aanpak"); }}>Onze aanpak</a>
           <KnowledgeMenu onNavigate={go} />
+          <NavLink item={{ label: "Inspiratie", href: "/inspiratie" }} onNavigate={go} />
           <a href="/#over-ons" onClick={(e) => goAnker(e, "/#over-ons")}>Over ons</a>
           <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="site-nav__cta">Plan vrijblijvend gesprek</a>
           <a href="/beheer" onClick={(e) => { e.preventDefault(); go("/beheer"); }} className="site-nav__login">Inloggen</a>
@@ -163,6 +164,7 @@ export default function OrganizedNavigation() {
       <div className="mobile-nav__section"><SimpleDropdown label="Diensten" items={serviceLinks} onNavigate={go} /></div>
       <a href="/onze-aanpak" onClick={(e) => { e.preventDefault(); go("/onze-aanpak"); }}>Onze aanpak</a>
       <MobileKnowledge onNavigate={go} />
+      <NavLink item={{ label: "Inspiratie", href: "/inspiratie" }} onNavigate={go} />
       <a href="/#over-ons" onClick={(e) => goAnker(e, "/#over-ons")}>Over ons</a>
       <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="mobile-nav__cta">Plan vrijblijvend gesprek</a>
       <a href="/beheer" onClick={(e) => { e.preventDefault(); go("/beheer"); }} className="mobile-nav__login">Inloggen →</a>

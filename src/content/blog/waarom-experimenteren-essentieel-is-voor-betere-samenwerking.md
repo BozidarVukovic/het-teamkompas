@@ -5,6 +5,11 @@ description: Een team dat drie keer over hetzelfde probleem vergadert zonder iet
 image: /blog/images/experimenteren.jpg
 lead: Het overleg liep tegen het einde toen punt vijf voorbijkwam. Feedbackcultuur. Een teamlid zuchtte hoorbaar. Dit stond er in maart ook al op, zei ze. Toen zouden we er een plan voor maken.
 author: Mijn Teamkompas
+category: Verandering
+tags: verandering, gedrag, leren
+imageAlt: Illustratie bij het artikel waarom experimenteren essentieel is voor betere samenwerking
+relatedKnowledgePages: /kennis/verandermanagement
+relatedServices: /teamcoaching,/teamdag
 ---
 
 Er viel een korte stilte. De manager keek de tafel rond en stelde voor om het onderwerp mee te nemen naar de heidag in september. Iedereen knikte. Volgende punt.

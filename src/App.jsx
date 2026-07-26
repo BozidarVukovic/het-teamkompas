@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Navigate, Routes, Route, useNavigate } from "react-router-dom";
 import OnzeAanpak from "./OnzeAanpak";
 import KlantreisKeuze from "./KlantreisKeuze";
 import Verkennen from "./Verkennen";
@@ -31,6 +31,7 @@ import Verandermanagement from "./pages/public/Verandermanagement";
 import ImpactVanEenTeamdag from "./pages/public/ImpactVanEenTeamdag";
 import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
+import RelatedArticles from "./components/shared/RelatedArticles";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
 import CookieBanner from "./components/shared/CookieBanner";
 import ReflectiekaartFormulier from "./ReflectiekaartFormulier";
@@ -12641,27 +12642,28 @@ export default function App() {
         <Route path="/deelnemen/:deelnameId" element={homeElement} />
         <Route path="/onze-aanpak" element={<><SeoHead page="onzeAanpak" /><OnzeAanpak /></>} />
         <Route path="/verkennen" element={<><SeoHead page="verkennen" /><Verkennen /></>} />
-        <Route path="/teamscan" element={<><SeoHead page="teamscan" /><TeamscanDigitaal /></>} />
-        <Route path="/teamontwikkeling" element={<><SeoHead page="teamontwikkeling" /><TeamontwikkelingSeoLandingspagina onLoginClick={() => setView("login")} /></>} />
+        <Route path="/teamscan" element={<><SeoHead page="teamscan" /><TeamscanDigitaal /><RelatedArticles title="Verdiep je in dit onderwerp" paths={["/teamscan"]} /></>} />
+        <Route path="/teamontwikkeling" element={<><SeoHead page="teamontwikkeling" /><TeamontwikkelingSeoLandingspagina onLoginClick={() => setView("login")} /><RelatedArticles title="Verdiep je in dit onderwerp" paths={["/teamontwikkeling"]} /></>} />
         <Route path="/insights-discovery-profiel" element={<InsightsDiscoveryProfiel />} />
         <Route path="/admin/funnel" element={<><SeoHead page="beheer" />{beheerElement}</>} />
-        <Route path="/teamcoaching" element={<><SeoHead page="teamcoaching" /><TeamcoachingPage /></>} />
-        <Route path="/teamdag" element={<TeamdagPage />} />
+        <Route path="/teamcoaching" element={<><SeoHead page="teamcoaching" /><TeamcoachingPage /><RelatedArticles title="Verdiep je in dit onderwerp" paths={["/teamcoaching"]} /></>} />
+        <Route path="/teamdag" element={<><TeamdagPage /><RelatedArticles title="Verdiep je in dit onderwerp" paths={["/teamdag"]} /></>} />
         <Route path="/psychologische-veiligheid" element={<><PsychologischeVeiligheidPage /><InsightsKnowledgeCta /></>} />
         <Route path="/sociale-veiligheid" element={<><SocialeVeiligheidPage /><InsightsKnowledgeCta /></>} />
         <Route path="/boven-en-onderstroom" element={<><BovenOnderstroomPage /><InsightsKnowledgeCta /></>} />
         <Route path="/brein-en-samenwerking" element={<><BreinEnSamenwerkingPage /><InsightsKnowledgeCta /></>} />
         <Route path="/kleine-experimenten" element={<><KleineExperimentenPage /><InsightsKnowledgeCta /></>} />
         <Route path="/kennis/kenniskaart-teamontwikkeling" element={<KenniskaartTeamontwikkeling />} />
-        <Route path="/kennis/bevlogenheid-in-het-werk" element={<BevlogenheidInHetWerk />} />
-        <Route path="/kennis/teamcultuur" element={<Teamcultuur />} />
-        <Route path="/kennis/eigenaarschap-in-teams" element={<EigenaarschapInTeams />} />
-        <Route path="/kennis/verandermanagement" element={<Verandermanagement />} />
+        <Route path="/kennis/bevlogenheid-in-het-werk" element={<><BevlogenheidInHetWerk /><RelatedArticles paths={["/kennis/bevlogenheid-in-het-werk"]} /></>} />
+        <Route path="/kennis/teamcultuur" element={<><Teamcultuur /><RelatedArticles paths={["/kennis/teamcultuur"]} /></>} />
+        <Route path="/kennis/eigenaarschap-in-teams" element={<><EigenaarschapInTeams /><RelatedArticles paths={["/kennis/eigenaarschap-in-teams"]} /></>} />
+        <Route path="/kennis/verandermanagement" element={<><Verandermanagement /><RelatedArticles paths={["/kennis/verandermanagement"]} /></>} />
         <Route path="/kennis/impact-van-een-teamdag" element={<ImpactVanEenTeamdag />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
-        <Route path="/blog" element={<Blog />} />
+        <Route path="/inspiratie" element={<Blog />} />
+        <Route path="/blog" element={<Navigate to="/inspiratie" replace />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
       </Routes>
     </HelmetProvider>

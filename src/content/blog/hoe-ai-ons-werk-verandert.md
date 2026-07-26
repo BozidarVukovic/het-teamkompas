@@ -5,6 +5,11 @@ description: AI roept in teams heel verschillende reacties op: kans én onzekerh
 image: /blog/images/aienwerk.jpg
 lead: Tijdens een overleg vertelt een collega enthousiast dat hij met AI in twintig minuten een eerste analyse heeft gemaakt waar hij normaal een halve dag mee bezig zou zijn. Iemand vraagt nieuwsgierig hoe hij dat aanpakte. Een ander blijft stil.
 author: Mijn Teamkompas
+category: Verandering
+tags: verandering, gedrag, leren
+imageAlt: Illustratie bij het artikel hoe ai ons werk verandert
+relatedKnowledgePages: /kennis/verandermanagement
+relatedServices: /teamcoaching,/teamdag
 ---
 
 Na afloop zegt diegene bij de koffieautomaat: als dit zo doorgaat, hebben ze mij straks misschien niet meer nodig.

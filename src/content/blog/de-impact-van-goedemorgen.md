@@ -5,6 +5,11 @@ description: Bij de ingang van kantoor kruiste ik vanmorgen twee collega's. De Ã
 image: /blog/images/goedemorgen.jpg
 lead: Vanmorgen liep ik, zoals zo vaak, het kantoor binnen. Bij de ingang kruiste ik verschillende collega's. Sommigen keken op, maakten oogcontact en wensten elkaar een goedemorgen. Een klein gebaar, nauwelijks een seconde werk.
 author: Mijn Teamkompas
+category: Samenwerking
+tags: samenwerking, teamontwikkeling, teamcultuur
+imageAlt: Illustratie bij het artikel de impact van goedemorgen
+relatedKnowledgePages: /kennis/teamcultuur
+relatedServices: /teamontwikkeling,/teamdag
 ---
 
 Een paar stappen verder liep iemand anders voorbij. Geen oogcontact. Geen glimlach. Geen goedemorgen. Alsof de ander er simpelweg niet was.

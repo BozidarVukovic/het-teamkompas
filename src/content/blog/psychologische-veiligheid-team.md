@@ -5,6 +5,11 @@ description: Psychologische veiligheid bepaalt of mensen durven spreken, fouten
   bespreken en initiatief nemen. Ontdek wat het betekent en hoe je het praktisch
   vergroot.
 image: /blog/images/edd3c51abe20856798a8ad559c2dd7c8b49fb7ae3e0ab6b659697a75f026640f.png
+category: Teamcultuur
+tags: teamcultuur, psychologische veiligheid, aanspreken
+imageAlt: Illustratie bij het artikel psychologische veiligheid team
+relatedKnowledgePages: /kennis/teamcultuur,/psychologische-veiligheid
+relatedServices: /teamdag,/teamcoaching,/teamscan
 ---
 Psychologische veiligheid is een van de sterkste voorspellers van teamprestaties. Google onderzocht honderden teams en ontdekte dat het de belangrijkste factor was, belangrijker dan de samenstelling van het team of de intelligentie van de leden.
 

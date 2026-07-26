@@ -5,6 +5,11 @@ description: Een team vol deskundige professionals presteert niet vanzelf beter.
 image: /blog/images/diversiteit.jpg
 lead: Wanneer organisaties spreken over een sterk team, gaat het vaak over talent. De juiste mensen op de juiste plek. Toch behaalt een team vol deskundige professionals niet automatisch betere resultaten.
 author: Mijn Teamkompas
+category: Samenwerking
+tags: samenwerking, teamontwikkeling, teamcultuur
+imageAlt: Illustratie bij het artikel waarom diversiteit positief werkt voor het teamresultaat
+relatedKnowledgePages: /kennis/teamcultuur
+relatedServices: /teamontwikkeling,/teamdag
 ---
 
 Sterker nog, teams waarin iedereen ongeveer hetzelfde denkt, dezelfde achtergrond heeft of problemen op dezelfde manier benadert, lopen vaak eerder vast. Aan de mensen ligt het meestal niet. Ze dagen elkaar alleen te weinig uit.

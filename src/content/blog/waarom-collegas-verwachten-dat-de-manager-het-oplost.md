@@ -5,6 +5,11 @@ description: Zodra spanning ontstaat kijkt een team al snel naar de manager. Dat
 image: /blog/images/manageralsoplosser.png
 lead: In veel teams gebeurt iets opvallends. Zodra er spanning ontstaat, onduidelijkheid groeit of samenwerking schuurt, kijken mensen al snel naar de manager. Vaak niet uitgesproken, maar wel voelbaar.
 author: Mijn Teamkompas
+category: Leiderschap
+tags: leiderschap, eigenaarschap, doelen
+imageAlt: Illustratie bij het artikel waarom collegas verwachten dat de manager het oplost
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams
+relatedServices: /teamcoaching,/teamontwikkeling
 ---
 
 *"Daar moet de leidinggevende iets van vinden." "Dit moet hogerop worden opgelost." "Waarom grijpt de manager niet in?" "Daar wordt toch voor betaald?"*

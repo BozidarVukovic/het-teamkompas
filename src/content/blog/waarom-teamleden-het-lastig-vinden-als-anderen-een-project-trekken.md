@@ -5,6 +5,11 @@ description: In de vergadering knikte iedereen toen Sanne het project kreeg. Bij
 image: /blog/images/projectrol.jpg
 lead: Na afloop van het overleg stond ik bij de koffieautomaat toen een van de teamleden naast me kwam staan. Mooi hoor, dat verbeterproject, zei hij. Maar waarom Sanne? Die werkt hier net twee jaar.
 author: Mijn Teamkompas
+category: Leiderschap
+tags: leiderschap, eigenaarschap, doelen
+imageAlt: Illustratie bij het artikel waarom teamleden het lastig vinden als anderen een project trekken
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams
+relatedServices: /teamcoaching,/teamontwikkeling
 ---
 
 Een kwartier eerder had de manager verteld dat Sanne het nieuwe project ging trekken. In de vergadering had niemand iets gezegd. Er was geknikt, iemand had haar succes gewenst, en het overleg was doorgegaan naar het volgende punt.

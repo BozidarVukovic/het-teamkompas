@@ -5,6 +5,11 @@ description: Internationale aansturing en de Nederlandse werkcultuur botsen niet
 image: /blog/images/Amerikaansmanagement.png
 lead: Veel Nederlandse bedrijven maken vroeg of laat een nieuwe fase door. Ze groeien, worden onderdeel van een internationale organisatie of krijgen te maken met managers uit een andere bedrijfscultuur. Dat kan veel brengen, maar het kan ook gaan schuren.
 author: Mijn Teamkompas
+category: Leiderschap
+tags: leiderschap, eigenaarschap, doelen
+imageAlt: Illustratie bij het artikel amerikaanse daadkracht botst met nederlandse tegenspraak
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams
+relatedServices: /teamcoaching,/teamontwikkeling
 ---
 
 Zeker wanneer een Nederlands bedrijf, met collega's die er vaak al jaren werken, ineens wordt aangestuurd vanuit een meer Amerikaanse managementstijl, ontstaat er soms een patroon waarin beide kanten elkaar niet goed begrijpen.
