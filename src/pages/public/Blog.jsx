@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import KompasDot from "../../components/shared/KompasDot";
+import { knowledgeNavigation } from "../../components/shared/navigationData";
 
 // Vite glob import: alle markdown-bestanden in src/content/blog als raw tekst
 const rawPosts = import.meta.glob("../../content/blog/*.md", {
@@ -50,34 +50,34 @@ export default function Blog({ onLoginClick }) {
         <title>Kennis over teamontwikkeling | Mijn Teamkompas</title>
         <meta name="description" content="Lees kennis en blogs over teamontwikkeling, psychologische veiligheid, boven- en onderstroom, neuromanagement en kleine experimenten." />
       </Helmet>
-      {/* Nav */}
-      <nav style={{
-        background: "#0D1B2A",
-        padding: "16px 32px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}>
-        <Link to="/" style={{ color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 18, display: "flex", alignItems: "center", gap: 9 }}>
-          <KompasDot size={22} /> Mijn Teamkompas
-        </Link>
-        <div style={{ display: "flex", gap: 24 }}>
-          <Link to="/teamscan" style={{ color: "#c8d8e8", textDecoration: "none", fontSize: 14 }}>Teamscan</Link>
-          <Link to="/teamcoaching" style={{ color: "#c8d8e8", textDecoration: "none", fontSize: 14 }}>Teamcoaching</Link>
-          <Link to="/verkennen" style={{ color: "#4FC3F7", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>Gesprek aanvragen</Link>
-        </div>
-      </nav>
-
       {/* Hero */}
-      <div style={{ background: "#0D1B2A", padding: "64px 32px 48px", textAlign: "center" }}>
-        <h1 style={{ color: "#fff", fontSize: 36, fontWeight: 700, margin: "0 0 12px" }}>Blog</h1>
+      <div style={{ background: "#0D1B2A", padding: "112px 32px 48px", textAlign: "center" }}>
+        <h1 style={{ color: "#fff", fontSize: 36, fontWeight: 700, margin: "0 0 12px" }}>Kennis over teamontwikkeling</h1>
         <p style={{ color: "#8fa3bb", fontSize: 18, maxWidth: 600, margin: "0 auto" }}>
-          Inzichten over teamontwikkeling, psychologische veiligheid en samenwerking.
+          Verdiep je in een hoofdthema of ontdek onze nieuwste artikelen over teams en samenwerking.
         </p>
       </div>
 
+      <main>
+      <section aria-labelledby="kennispaginas-heading" style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 24px 12px" }}>
+        <p style={{ color: "#008f80", fontWeight: 800, fontSize: 12, letterSpacing: ".1em", textTransform: "uppercase", margin: "0 0 8px" }}>Centrale kennispagina’s</p>
+        <h2 id="kennispaginas-heading" style={{ color: "#0D1B2A", fontSize: 28, margin: "0 0 8px" }}>Kies een thema</h2>
+        <p style={{ color: "#4a5568", lineHeight: 1.6, margin: "0 0 24px" }}>Deze pagina’s leggen de belangrijkste thema’s uit en wijzen je door naar verdiepende kennis.</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+          {knowledgeNavigation.featured.map((item) => <Link key={item.href} to={item.href} style={{ padding: "20px", background: "#fff", border: "1px solid #dce5e8", borderRadius: 12, color: "#0D1B2A", textDecoration: "none", fontWeight: 750, boxShadow: "0 2px 10px rgba(13,27,42,.05)" }}>{item.label}<span aria-hidden="true" style={{ display: "block", marginTop: 12, color: "#008f80" }}>Bekijk thema →</span></Link>)}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 24, marginTop: 36 }}>
+          {knowledgeNavigation.groups.map((group) => <section key={group.label} aria-labelledby={`group-${group.label.replaceAll(" ", "-")}`}>
+            <h3 id={`group-${group.label.replaceAll(" ", "-")}`} style={{ color: "#0D1B2A", fontSize: 17, margin: "0 0 8px" }}>{group.label}</h3>
+            {group.links.map((item) => <Link key={item.href} to={item.href} style={{ display: "block", minHeight: 44, padding: "10px 0", color: "#176b67", fontWeight: 650, textDecoration: "none", borderBottom: "1px solid #e3e8e9" }}>{item.label}</Link>)}
+          </section>)}
+        </div>
+      </section>
+
       {/* Posts grid */}
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px" }}>
+      <section aria-labelledby="artikelen-heading" style={{ maxWidth: 900, margin: "0 auto", padding: "52px 24px" }}>
+        <p style={{ color: "#008f80", fontWeight: 800, fontSize: 12, letterSpacing: ".1em", textTransform: "uppercase", margin: "0 0 8px" }}>Blog en actualiteit</p>
+        <h2 id="artikelen-heading" style={{ color: "#0D1B2A", fontSize: 28, margin: "0 0 24px" }}>Artikelen en inzichten</h2>
         {posts.length === 0 && (
           <p style={{ color: "#666", textAlign: "center" }}>Nog geen artikelen gepubliceerd.</p>
         )}
@@ -129,7 +129,8 @@ export default function Blog({ onLoginClick }) {
             </Link>
           ))}
         </div>
-      </div>
+      </section>
+      </main>
 
       {/* Footer CTA */}
       <div style={{ background: "#0D1B2A", padding: "48px 32px", textAlign: "center" }}>
