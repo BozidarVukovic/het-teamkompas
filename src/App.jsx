@@ -841,7 +841,7 @@ function LeadTrustBar({ isMobile = false, tone = "light" }) {
   const items = [
     ["Reactie binnen 1 werkdag", "Geen verkoopgesprek, wel scherpte op jullie vraag"],
     ["Vrijblijvend en concreet", "In 30 minuten helder of teamscan, teamdag of coaching past"],
-    ["Anonieme teaminput", "Veilig inzicht in patronen zonder individuen bloot te leggen"],
+    ["Input zonder naam", "Terugkoppeling op teamniveau, geen individuen in beeld"],
   ];
 
   return (
@@ -2135,7 +2135,7 @@ function ScanResultaten({ lijst, antwoorden, onBack }) {
               display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <div>
               <div style={{fontWeight:600,color:ADM.white,fontSize:13}}>
-                Anoniem
+                Deelnemer
                 <span style={{fontSize:11,color:a.rol==="Leidinggevende"?"#a78bfa":ADM.muted,fontWeight:400,marginLeft:6}}>({a.rol})</span>
               </div>
             </div>
@@ -4919,7 +4919,7 @@ function bouwBasisscanRapportHtml(lijst, resp) {
       <div style="font-size:11px;color:#00A896;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Over deze rapportage</div>
       <p style="font-size:13px;line-height:1.7;color:rgba(255,255,255,0.65);">
         Deze rapportage is gegenereerd op basis van de ingevulde teamscans via Het Teamkompas.
-        Individuele antwoorden zijn anoniem verwerkt. Scores zijn gebaseerd op een schaal van 1 tot 5.
+        Bij het invullen zijn geen namen en e-mailadressen vastgelegd; antwoorden zijn samengevoegd op teamniveau. Scores zijn gebaseerd op een schaal van 1 tot 5.
         Een score van 4 of hoger duidt op een sterke positie; tussen 3 en 4 is er ruimte voor verbetering;
         onder de 3 verdient het domein prioritaire aandacht.
       </p>
@@ -6296,7 +6296,7 @@ function PageRapportages() {
       Deze totaalrapportage combineert de medewerkersscan en de managementscan van Het Teamkompas.
       Scores lopen van 1 tot 5. Een score ≥ 4 duidt op een sterke positie; 3–4 vraagt aandacht; onder 3 is prioritaire actie gewenst.
       De gap-analyse toont het verschil in perceptie tussen de leidinggevende en het team per domein.
-      Individuele antwoorden zijn anoniem verwerkt.
+      Bij het invullen zijn geen namen en e-mailadressen vastgelegd; antwoorden zijn samengevoegd op teamniveau.
     </p>
   </div>
 
@@ -9985,14 +9985,14 @@ function PsychologischeVeiligheidPage() {
   const hoeZichtbaar = [
     ["1", "Meten via de teamscan", "We brengen in kaart hoe veiligheid en leiderschap werkelijk worden beleefd door teamleden én de leidinggevende. De perceptiekloof tussen beiden is vaak de meest waardevolle informatie."],
     ["2", "Patronen duiden", "We laten zien welke situaties veiligheid wegnemen en welke gedragingen, ook onbedoeld, bijdragen aan onveiligheid of terughoudendheid in het team."],
-    ["3", "Gesprek faciliteren", "We begeleiden het gesprek op een manier die zelf ook veilig is: anoniem waar nodig, gericht op patronen en gedrag in plaats van op personen of schuld."],
+    ["3", "Gesprek faciliteren", "We begeleiden het gesprek op een manier die zelf ook veilig is: gericht op patronen en gedrag in plaats van op personen of schuld, en met duidelijke afspraken over wat er met de uitkomsten gebeurt."],
     ["4", "Gedrag verankeren", "We vertalen inzichten naar concrete, kleine gedragsafspraken die het team de volgende dag al kan toepassen. Niet als regels, maar als nieuwe gewoontes."],
   ];
 
   const rolTeamscan = [
     {
-      titel: "Anonieme input van iedereen",
-      tekst: "De teamscan geeft elk teamlid een stem zonder dat individuen zichtbaar worden. Dat maakt het veilig om eerlijk te zijn over wat er speelt, ook als dat ongemakkelijk is.",
+      titel: "Iedereen heeft een stem",
+      tekst: "Bij het invullen wordt geen naam en geen e-mailadres vastgelegd en de terugkoppeling gebeurt op teamniveau. Dat maakt het makkelijker om eerlijk te zijn over wat er speelt, ook als dat ongemakkelijk is.",
     },
     {
       titel: "Perceptiekloof zichtbaar maken",
@@ -10025,7 +10025,7 @@ function PsychologischeVeiligheidPage() {
     ["Is psychologische veiligheid hetzelfde als vriendelijkheid of gezelligheid?", "Nee. Een team kan prettig omgaan met elkaar en toch onveilig zijn als niemand durft te zeggen wat ze echt denken. Psychologische veiligheid gaat over de bereidheid om eerlijk te zijn, ook als dat lastig is. Het is eerder een kwaliteit van gesprek dan van sfeer."],
     ["Hoe lang duurt het om psychologische veiligheid in teams te verbeteren?", "Er is geen vaste tijdlijn. Kleine gedragsveranderingen zijn soms al snel merkbaar. Een duurzame cultuurverandering vraagt consistentie over langere tijd. Wij werken niet met eenmalige interventies, maar met een aanpak die borging meeneemt."],
     ["Kunnen we beginnen zonder teamscan?", "Ja, dat is mogelijk. We kunnen ook starten met een verkennend gesprek of intake om te bepalen wat past. De teamscan biedt wel een duidelijker vertrekpunt omdat het de perceptiekloof tussen leidinggevende en team zichtbaar maakt."],
-    ["Werkt dit ook bij een team dat weerstand heeft?", "Ja, maar dan is het des te belangrijker om de aanpak goed te ontwerpen. We beginnen altijd anoniem en richten het gesprek op patronen, niet op personen. Dat verlaagt de drempel ook voor teams die sceptisch zijn."],
+    ["Werkt dit ook bij een team dat weerstand heeft?", "Ja, maar dan is het des te belangrijker om de aanpak goed te ontwerpen. We beginnen met een scan waarbij geen naam wordt vastgelegd en richten het gesprek op patronen, niet op personen. Dat verlaagt de drempel ook voor teams die sceptisch zijn."],
     ["Wat is het verschil met teambuilding?", "Teambuilding richt zich op verbinding en plezier. Dat heeft waarde, maar verandert zelden structurele patronen in veiligheid, feedback of aanspreekbaarheid. Onze aanpak richt zich op concreet gedrag en de mechanismes achter veiligheid, niet op een leuke dag samen."],
     ["Wat is het verschil met een vertrouwenspersoon of klachtenbeleid?", "Een vertrouwenspersoon en een klachtenbeleid zijn belangrijk voor individuele situaties. Psychologische veiligheid gaat over de collectieve dynamiek in het team: durft iedereen dagelijks bij te dragen, ideeën te delen en elkaar aan te spreken? Dat is een teameigenschap, geen individuele kwestie."],
     ["Hoe merkt een leidinggevende dat psychologische veiligheid verbetert?", "Meetbare signalen zijn: meer vragen in overleggen, meer initiatief buiten vaste kaders, eerder benoemen van fouten of twijfels en feedback die direct en constructief wordt gegeven. De teamscan maakt dit kwantificeerbaar: zo zie je over tijd of het veilig teamklimaat daadwerkelijk is verbeterd."],
@@ -10305,15 +10305,15 @@ function PsychologischeVeiligheidPage() {
             <div>
               <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>De rol van de teamscan</div>
               <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px" }}>
-                De teamscan geeft iedereen een stem, zonder iemand te exposeren.
+                De teamscan geeft iedereen een stem, zonder iemand voor de groep te zetten.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 16 }}>
-                Praten over psychologische veiligheid kan in zichzelf onveilig aanvoelen. De teamscan lost dat op door anoniem te meten wat er speelt, zodat patronen zichtbaar worden zonder dat individuen blootgesteld worden.
+                Praten over psychologische veiligheid kan in zichzelf onveilig aanvoelen. De teamscan verlaagt die drempel: bij het invullen wordt geen naam of e-mailadres vastgelegd en de terugkoppeling gebeurt op teamniveau, zodat het gesprek over patronen gaat en niet over personen.
               </p>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>
                 De scan vergelijkt ook hoe de leidinggevende de veiligheid ervaart met hoe teamleden dat doen. Die perceptiekloof is vaak het meest waardevolle startpunt voor teamontwikkeling.
               </p>
-              <a href="/teamscan" style={{ color: PUB.teal, fontWeight: 700, fontSize: 15, textDecoration: "none" }}>Bekijk hoe de teamscan werkt →</a>
+              <a href="/teamscan" style={{ color: PUB.teal, fontWeight: 700, fontSize: 15, textDecoration: "none" }}>Bekijk hoe de online teamscan werkt →</a>
             </div>
             <div style={{ display: "grid", gap: 16 }}>
               {rolTeamscan.map(({ titel, tekst }) => (
@@ -10524,9 +10524,9 @@ function SocialeVeiligheidPage() {
   ];
 
   const aanpak = [
-    ["1", "Meten via de teamscan", "We brengen anoniem in kaart hoe veilig het team zich werkelijk voelt, ook op de aspecten waar mensen niet hardop over praten. Het verschil tussen de beleving van teamleden en die van de leidinggevende is vaak de belangrijkste informatie."],
+    ["1", "Meten via de teamscan", "We brengen in kaart hoe veilig het team zich werkelijk voelt, ook op de aspecten waar mensen niet hardop over praten. Bij het invullen wordt geen naam vastgelegd en de terugkoppeling gebeurt op teamniveau. Het verschil tussen de beleving van teamleden en die van de leidinggevende is vaak de belangrijkste informatie."],
     ["2", "Patronen duiden", "We laten zien welke situaties en gedragingen onveiligheid in stand houden. Niet om schuldigen aan te wijzen, maar om zichtbaar te maken wat er werkelijk gebeurt in de dagelijkse omgang."],
-    ["3", "Gesprek faciliteren", "We begeleiden het gesprek op een manier die zelf veilig is: anoniem waar nodig, gericht op gedrag en patronen in plaats van op personen. Zo kan het team bespreken wat tot nu toe onbespreekbaar was."],
+    ["3", "Gesprek faciliteren", "We begeleiden het gesprek op een manier die zelf veilig is: gericht op gedrag en patronen in plaats van op personen. Zo kan het team bespreken wat tot nu toe onbespreekbaar was."],
     ["4", "Afspraken verankeren", "We vertalen het gesprek naar concrete afspraken over omgangsvormen en over wat het team doet als een grens wordt overschreden. Met een vast moment om terug te kijken of het ook echt anders gaat."],
   ];
 
@@ -10542,9 +10542,9 @@ function SocialeVeiligheidPage() {
     ["Wat is het verschil tussen sociale veiligheid en psychologische veiligheid?", "Sociale veiligheid is de ondergrens: vrij zijn van ongewenst gedrag. Psychologische veiligheid is de bovengrens: durven bijdragen, fouten benoemen en het oneens zijn. Een team kan sociaal veilig zijn en toch psychologisch onveilig, bijvoorbeeld als niemand wordt gepest maar ook niemand zich uitspreekt. Andersom kan het niet: zonder sociale veiligheid is psychologische veiligheid onbereikbaar."],
     ["Is sociale veiligheid niet vooral een zaak van HR en de vertrouwenspersoon?", "Een vertrouwenspersoon en een meldprocedure zijn onmisbaar voor individuele situaties. Maar sociale veiligheid wordt dagelijks gemaakt in het team zelf: in hoe mensen elkaar aanspreken, wie wordt betrokken en wat wordt toegelaten. Dat teamniveau is waar wij mee werken, aanvullend op wat HR organiseert."],
     ["Wat zegt de wet over sociale veiligheid?", "De Arbowet verplicht werkgevers om beleid te voeren tegen psychosociale arbeidsbelasting, waaronder pesten, intimidatie, agressie en discriminatie. Werkgevers moeten risico's inventariseren en maatregelen nemen. Een teamscan kan onderdeel zijn van die inventarisatie, maar onze focus ligt op wat er daarna gebeurt: het gesprek en het gedrag in het team."],
-    ["Hoe maak je sociale onveiligheid bespreekbaar zonder mensen te beschadigen?", "Door te beginnen met anonieme input, zodat patronen zichtbaar worden zonder dat individuen worden blootgesteld. En door het gesprek te richten op situaties en gedrag in plaats van op schuld. Onze begeleiding is erop gericht dat het gesprek zelf veilig verloopt, ook voor degenen om wie het gaat."],
+    ["Hoe maak je sociale onveiligheid bespreekbaar zonder mensen te beschadigen?", "Door te beginnen met een scan waarbij geen naam of e-mailadres wordt vastgelegd, zodat patronen zichtbaar worden op teamniveau. En door het gesprek te richten op situaties en gedrag in plaats van op schuld. Onze begeleiding is erop gericht dat het gesprek zelf veilig verloopt, ook voor degenen om wie het gaat."],
     ["Wat als het ongewenste gedrag van de leidinggevende zelf komt?", "Dat komt voor, en dan is een teamtraject alleen niet de oplossing. De teamscan maakt het verschil tussen de beleving van het team en die van de leidinggevende zichtbaar, en dat kan een eerlijk startpunt zijn. Soms adviseren we daarnaast een individueel traject of betrekken we de opdrachtgever boven de leidinggevende."],
-    ["Kan de teamscan sociale veiligheid meten?", "De teamscan meet hoe veilig teamleden zich voelen in het team en bij de leidinggevende, anoniem en concreet. De scan vervangt geen formeel onderzoek naar grensoverschrijdend gedrag, maar maakt wel zichtbaar of er signalen zijn en waar het gesprek moet beginnen."],
+    ["Kan de teamscan sociale veiligheid meten?", "De teamscan meet concreet hoe veilig teamleden zich voelen in het team en bij de leidinggevende, zonder dat er een naam aan de antwoorden hangt. De scan vervangt geen formeel onderzoek naar grensoverschrijdend gedrag, maar maakt wel zichtbaar of er signalen zijn en waar het gesprek moet beginnen."],
     ["Werkt dit ook als er al een incident is geweest?", "Ja, maar de volgorde luistert dan nauw. Eerst moet de formele kant goed zijn afgehandeld. Daarna helpt een begeleid traject het team om het vertrouwen te herstellen en nieuwe omgangsvormen op te bouwen. Juist na een incident is zorgvuldige begeleiding belangrijk."],
   ];
 
@@ -10558,7 +10558,7 @@ function SocialeVeiligheidPage() {
         />
         <link rel="canonical" href="https://www.mijnteamkompas.nl/sociale-veiligheid" />
         <meta property="og:title" content="Sociale veiligheid in teams verbeteren | Mijn Teamkompas" />
-        <meta property="og:description" content="Mijn Teamkompas helpt teams sociale veiligheid te versterken: van anoniem meten naar een veilig gesprek, van signalen naar concrete afspraken over omgangsvormen." />
+        <meta property="og:description" content="Mijn Teamkompas helpt teams sociale veiligheid te versterken: van meten naar een veilig gesprek, van signalen naar concrete afspraken over omgangsvormen." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/sociale-veiligheid" />
         <script type="application/ld+json">{`
@@ -10603,7 +10603,7 @@ function SocialeVeiligheidPage() {
                     "name": "Kan de teamscan sociale veiligheid meten?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "De teamscan meet anoniem hoe veilig teamleden zich voelen in het team en bij de leidinggevende. De scan vervangt geen formeel onderzoek naar grensoverschrijdend gedrag, maar maakt zichtbaar of er signalen zijn en waar het gesprek moet beginnen."
+                      "text": "De teamscan meet concreet hoe veilig teamleden zich voelen in het team en bij de leidinggevende, zonder dat er een naam aan de antwoorden hangt. De scan vervangt geen formeel onderzoek naar grensoverschrijdend gedrag, maar maakt zichtbaar of er signalen zijn en waar het gesprek moet beginnen."
                     }
                   },
                   {
@@ -10653,7 +10653,7 @@ function SocialeVeiligheidPage() {
               Pesten, uitsluiting, kleinerende grapjes of intimidatie: sociale onveiligheid is zelden zichtbaar in de vergadering, maar altijd voelbaar in het team. Mensen wapenen zich, vermijden elkaar en houden hun hoofd omlaag.
             </p>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>
-              Mijn Teamkompas helpt teams sociale veiligheid te versterken. Met een anonieme teamscan die zichtbaar maakt wat er speelt, een begeleid gesprek dat zelf veilig verloopt en concrete afspraken over hoe het team met elkaar omgaat.
+              Mijn Teamkompas helpt teams sociale veiligheid te versterken. Met een online teamscan die zichtbaar maakt wat er speelt, een begeleid gesprek dat zelf veilig verloopt en concrete afspraken over hoe het team met elkaar omgaat.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
@@ -10762,7 +10762,7 @@ function SocialeVeiligheidPage() {
                 Van signalen naar een gesprek dat zelf veilig is.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
-                Praten over sociale veiligheid is spannend, omdat het al snel over personen lijkt te gaan. Onze aanpak is er daarom op gericht dat het gesprek zelf veilig verloopt: anoniem waar nodig, gericht op patronen en met duidelijke afspraken over wat er met de uitkomsten gebeurt.
+                Praten over sociale veiligheid is spannend, omdat het al snel over personen lijkt te gaan. Onze aanpak is er daarom op gericht dat het gesprek zelf veilig verloopt: gericht op patronen en met duidelijke afspraken over wat er met de uitkomsten gebeurt.
               </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16 }}>
@@ -10848,7 +10848,7 @@ function SocialeVeiligheidPage() {
               Wil je weten hoe veilig jouw team zich werkelijk voelt?
             </h2>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", marginBottom: 28 }}>
-              Begin met een anonieme teamscan of plan een verkennend gesprek. Dan kijken we samen wat er speelt en welke aanpak daarbij past.
+              Begin met de online teamscan of plan een verkennend gesprek. Dan kijken we samen wat er speelt en welke aanpak daarbij past.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
@@ -10932,7 +10932,7 @@ function BovenOnderstroomPage() {
   ];
 
   const aanpak = [
-    ["1", "Meten via de teamscan", "De teamscan maakt anoniem zichtbaar wat er in de onderstroom speelt: hoe veilig voelt het team zich, waar zit energie en waar lekt die weg? Zo wordt bespreekbaar wat tot nu toe alleen voelbaar was."],
+    ["1", "Meten via de teamscan", "De teamscan maakt zichtbaar wat er in de onderstroom speelt: hoe veilig voelt het team zich, waar zit energie en waar lekt die weg? Er wordt geen naam vastgelegd en de terugkoppeling gebeurt op teamniveau, waardoor bespreekbaar wordt wat tot nu toe alleen voelbaar was."],
     ["2", "Patronen duiden", "We laten zien welke patronen er onder de oppervlakte spelen en hoe die het dagelijkse gedrag sturen. Niet wie het doet, maar wat er steeds opnieuw gebeurt."],
     ["3", "Onderstroom bespreekbaar maken", "Tijdens teamdagen en begeleiding onderzoeken we nieuwsgierig wat er speelt, zonder mensen te confronteren. Met reflectievragen, teamdialogen en waar passend Insights Discovery."],
     ["4", "Afspraken die gedragen worden", "Pas daarna maken we nieuwe afspraken in de bovenstroom. Want afspraken werken pas echt wanneer mensen zich eraan willen verbinden."],
@@ -10975,9 +10975,9 @@ function BovenOnderstroomPage() {
     ["Wat is de onderstroom van een team precies?", "De onderstroom is alles wat het gedrag in een team beïnvloedt maar niet direct zichtbaar is: vertrouwen, onzekerheid, motivatie, emoties, eerdere ervaringen, loyaliteit, onuitgesproken verwachtingen en onderlinge verhoudingen. Deze factoren bepalen vaak sterker hoe mensen samenwerken dan de afspraken die op papier staan."],
     ["Is de onderstroom altijd negatief?", "Nee. De onderstroom bevat ook de kracht van een team: vertrouwen, betrokkenheid, plezier, motivatie, loyaliteit en verbinding. Wanneer die zichtbaar worden gemaakt, ontstaat vaak veel meer energie in een team. De onderstroom is geen probleem dat opgelost moet worden, maar een laag die aandacht verdient."],
     ["Hoe herken je dat er iets in de onderstroom speelt?", "Aan gedrag: stiltes tijdens vergaderingen, veel gesprekken na het overleg, besluiten die niet worden uitgevoerd, terughoudendheid, defensief reageren, eilandvorming, cynische humor of steeds dezelfde discussies. En aan uitspraken als 'er hangt iets' of 'we zeggen nooit waar het echt over gaat'."],
-    ["Kun je de onderstroom meten?", "Deels. De teamscan maakt anoniem zichtbaar hoe teamleden veiligheid, energie, verandering en samenwerking ervaren, ook op punten waar in het team niet hardop over gesproken wordt. De cijfers zijn geen eindpunt maar een startpunt: ze maken bespreekbaar wat eerst alleen voelbaar was."],
+    ["Kun je de onderstroom meten?", "Deels. De teamscan maakt zichtbaar hoe teamleden veiligheid, energie, verandering en samenwerking ervaren, ook op punten waar in het team niet hardop over gesproken wordt. Er hangt geen naam aan de antwoorden en de terugkoppeling gebeurt op teamniveau. De cijfers zijn geen eindpunt maar een startpunt: ze maken bespreekbaar wat eerst alleen voelbaar was."],
     ["Wat is het verschil met psychologische veiligheid?", "Psychologische veiligheid is een van de belangrijkste onderdelen van de onderstroom: durven mensen zich uitspreken? Boven- en onderstroom is het bredere denkmodel: het verklaart waarom teams kunnen vastlopen terwijl de plannen en afspraken op orde zijn. De begrippen horen bij elkaar, maar zijn niet hetzelfde."],
-    ["Hoe maak je de onderstroom bespreekbaar zonder dat het zweverig of confronterend wordt?", "Door te beginnen bij concreet gedrag en anonieme input, en door nieuwsgierig te onderzoeken in plaats van te confronteren. We gebruiken reflectievragen, teamdialogen, de teamscan en waar passend Insights Discovery. Het gesprek gaat over patronen en situaties, niet over schuld."],
+    ["Hoe maak je de onderstroom bespreekbaar zonder dat het zweverig of confronterend wordt?", "Door te beginnen bij concreet gedrag en bij input waar geen naam aan hangt, en door nieuwsgierig te onderzoeken in plaats van te confronteren. We gebruiken reflectievragen, teamdialogen, de teamscan en waar passend Insights Discovery. Het gesprek gaat over patronen en situaties, niet over schuld."],
   ];
 
   return (
@@ -11036,7 +11036,7 @@ function BovenOnderstroomPage() {
                     "name": "Kun je de onderstroom meten?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "Deels. De teamscan maakt anoniem zichtbaar hoe teamleden veiligheid, energie, verandering en samenwerking ervaren. De cijfers zijn een startpunt: ze maken bespreekbaar wat eerst alleen voelbaar was."
+                      "text": "Deels. De teamscan maakt zichtbaar hoe teamleden veiligheid, energie, verandering en samenwerking ervaren, zonder dat er een naam aan de antwoorden hangt. De cijfers zijn een startpunt: ze maken bespreekbaar wat eerst alleen voelbaar was."
                     }
                   },
                   {

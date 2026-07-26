@@ -35,7 +35,7 @@ Leidinggevenden die zelf fouten benoemen en ervan leren, geven anderen toestemmi
 Een leidinggevende die altijd het antwoord heeft, ontmoedigt anderen om mee te denken. Vragen stellen geeft ruimte.
 
 **4. Meet wat er speelt**
-Je kunt pas verbeteren wat je begrijpt. Een teamscan maakt zichtbaar hoe medewerkers de veiligheid in het team ervaren, anoniem en eerlijk.
+Je kunt pas verbeteren wat je begrijpt. Een teamscan maakt zichtbaar hoe medewerkers de veiligheid in het team ervaren, zonder dat er een naam aan de antwoorden hangt.
 
 ## Wat levert het op?
 

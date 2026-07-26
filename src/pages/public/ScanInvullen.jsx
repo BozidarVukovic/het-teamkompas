@@ -137,7 +137,7 @@ return "";
       return "Deze verdiepende scan gaat over de mate waarin jij je leidinggevende ervaart als een veilige basis — iemand die beschikbaar is, je aanvaardt zoals je bent, empathie toont en je uitdaagt om te groeien. De scan is gebaseerd op de negen kenmerken van Secure Base Leadership. Er zijn geen goede of foute antwoorden. Jouw eerlijke beleving geeft de meeste inzicht.";
     }
     if (isBelevingVeranderingVerdieping(lijst)) {
-      return "Deze verdiepende scan brengt in kaart hoe jij het leiderschap van jouw leidinggevende ervaart in relatie tot verandering. De vragen zijn gebaseerd op neurowetenschappelijke inzichten over hoe het menselijk brein optimaal functioneert — het SCARF-model. Je antwoorden zijn anoniem en worden alleen op teamniveau besproken.";
+      return "Deze verdiepende scan brengt in kaart hoe jij het leiderschap van jouw leidinggevende ervaart in relatie tot verandering. De vragen zijn gebaseerd op neurowetenschappelijke inzichten over hoe het menselijk brein optimaal functioneert — het SCARF-model. Er wordt geen naam of e-mailadres vastgelegd; de uitkomsten worden alleen op teamniveau besproken.";
     }
     if (isEnergieMotivatieVerdieping(lijst)) {
       return "Deze verdiepende scan gaat over de balans tussen wat jouw werk van je vraagt en wat het je geeft. We meten taakeisen (aspecten die energie kosten), hulpbronnen (aspecten die energie geven) en uitkomsten zoals bevlogenheid en uitputting. Dit is gebaseerd op het JD-R model. Let op: bij de taakeisen betekent een hogere score een hogere belasting. Er zijn geen goede of foute antwoorden.";
@@ -309,16 +309,16 @@ return "";
           <div style={{fontSize:22,fontWeight:700,color:ADM.white,marginBottom:10}}>{lijst.naam}</div>
           <div style={{fontSize:14,color:ADM.muted,lineHeight:1.7,marginBottom:16}}>
             {isVeiligheidLeiderschapVerdieping(lijst)
-              ? `Verdiepende scan · ${totaal} vragen · ca. 8–12 minuten · anoniem`
+              ? `Verdiepende scan · ${totaal} vragen · ca. 8–12 minuten · zonder naam of e-mailadres`
               : isBelevingVeranderingVerdieping(lijst)
-              ? `Verdiepende scan · ${totaal} vragen · ca. 8–12 minuten · anoniem`
+              ? `Verdiepende scan · ${totaal} vragen · ca. 8–12 minuten · zonder naam of e-mailadres`
               : isEnergieMotivatieVerdieping(lijst)
-              ? `Verdiepende scan · ${totaal} vragen · ca. 8–12 minuten · anoniem`
+              ? `Verdiepende scan · ${totaal} vragen · ca. 8–12 minuten · zonder naam of e-mailadres`
               : isVerbeterenLerenVerdieping(lijst)
-              ? `Verdiepende scan · ${totaal} vragen · ca. 10–15 minuten · anoniem`
+              ? `Verdiepende scan · ${totaal} vragen · ca. 10–15 minuten · zonder naam of e-mailadres`
               : isGecombineerdeVerdieping(lijst)
-              ? `Gecombineerde verdiepende scan · ${totaal} vragen · ca. 10–18 minuten · anoniem`
-              : `Deze scan bestaat uit ${totaal} vragen en duurt ongeveer 5–8 minuten. Je antwoorden zijn anoniem.`}
+              ? `Gecombineerde verdiepende scan · ${totaal} vragen · ca. 10–18 minuten · zonder naam of e-mailadres`
+              : `Deze scan bestaat uit ${totaal} vragen en duurt ongeveer 5–8 minuten. Er wordt geen naam of e-mailadres vastgelegd; de uitkomsten worden op teamniveau besproken.`}
           </div>
 
           <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${ADM.border}`,borderRadius:12,padding:"16px 18px",textAlign:"left"}}>
