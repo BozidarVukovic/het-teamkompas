@@ -5,6 +5,11 @@ description: Voor veel medewerkers is het jaargesprek een verplicht nummer. Hoe 
 image: /blog/images/jaargesprek.jpg
 lead: Voor veel medewerkers is het jaargesprek een verplicht nummer. Een afspraak die ieder jaar terugkomt, waarin prestaties worden besproken, een formulier wordt ingevuld en afspraken worden gemaakt voor het komende jaar. Een uur later gaat iedereen weer verder met de dagelijkse werkzaamheden.
 author: Mijn Teamkompas
+category: Leiderschap
+tags: leiderschap, eigenaarschap, doelen
+imageAlt: Illustratie bij het artikel hoe kan een jaargesprek echt waarde toevoegen
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams
+relatedServices: /teamcoaching,/teamontwikkeling
 ---
 
 Stel jezelf eens de vraag: wanneer heb jij voor het laatst een jaargesprek gehad dat je echt heeft geïnspireerd?

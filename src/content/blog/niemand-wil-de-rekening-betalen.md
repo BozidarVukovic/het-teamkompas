@@ -9,6 +9,11 @@ lead: In elk team staat hij. Iedereen ziet hem. Maar niemand zegt iets. Waarom
   hoofd voert?
 author: Mijn Teamkompas
 image: https://images.unsplash.com/photo-1549366021-9f761d450615?w=1200&q=80&auto=format&fit=crop
+category: Teamcultuur
+tags: teamcultuur, psychologische veiligheid, aanspreken
+imageAlt: Illustratie bij het artikel niemand wil de rekening betalen
+relatedKnowledgePages: /kennis/teamcultuur,/psychologische-veiligheid
+relatedServices: /teamdag,/teamcoaching,/teamscan
 ---
 We staan aan het begin van het WK. Iedereen kijkt mee, op kantoor of thuis. En iedereen kent het beeld: een keiharde tackel op de enkel, de scheidsrechter fluit niet. Het publiek reageert direct. Niemand vraagt zich af of hij de enige is die het zag, het was overduidelijk voor de hele wereld.
 

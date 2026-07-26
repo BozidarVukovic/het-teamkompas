@@ -5,6 +5,11 @@ description: Bij de metro liggen een roltrap en een trap naast elkaar. Bijna ied
 image: /blog/images/roltrap.jpg
 lead: Iedere ochtend stap ik uit de metro en loop ik richting de uitgang. Rechts ligt een brede roltrap. Daarnaast bevindt zich een gewone trap. Vrijwel iedereen stapt automatisch op de roltrap. Slechts een klein groepje neemt de trap.
 author: Mijn Teamkompas
+category: Verandering
+tags: verandering, gedrag, leren
+imageAlt: Illustratie bij het artikel waarom kiezen de meeste mensen voor de roltrap
+relatedKnowledgePages: /kennis/verandermanagement
+relatedServices: /teamcoaching,/teamdag
 ---
 
 Het gebeurt waarschijnlijk duizenden keren per dag, en niemand staat erbij stil. Ik ook niet, tot ik er op een ochtend toevallig naar bleef kijken.

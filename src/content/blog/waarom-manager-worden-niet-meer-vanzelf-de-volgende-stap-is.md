@@ -5,6 +5,11 @@ description: Steeds meer professionals bedanken vriendelijk voor een leidinggeve
 image: /blog/images/doorgroeien.jpg
 lead: Vroeger was het duidelijk. Je begon als medewerker, groeide uit tot expert, en als je goed presteerde kwam vanzelf de volgende stap: manager worden. Een teken van succes, met meer verantwoordelijkheid, invloed, salaris en status.
 author: Mijn Teamkompas
+category: Leiderschap
+tags: leiderschap, eigenaarschap, doelen
+imageAlt: Illustratie bij het artikel waarom manager worden niet meer vanzelf de volgende stap is
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams
+relatedServices: /teamcoaching,/teamontwikkeling
 ---
 
 De laatste jaren zie je iets opvallends gebeuren. Steeds meer professionals bedanken vriendelijk voor een leidinggevende functie. Dat komt zelden door een gebrek aan ambitie. Vaker hebben ze gewoon een andere ambitie.

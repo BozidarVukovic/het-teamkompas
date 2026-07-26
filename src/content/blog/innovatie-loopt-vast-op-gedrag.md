@@ -5,6 +5,11 @@ description: Innovatie mislukt zelden omdat mensen tegen vernieuwing zijn. Het l
 lead: Afdelingen omarmen innovatie pas wanneer mensen niet alleen begrijpen wat er verandert, maar ook ervaren dat hun zorgen, vakmanschap en dagelijkse realiteit serieus worden genomen.
 author: Mijn Teamkompas
 image: /blog/images/Innovatie-gedrag-team.jpg.png
+category: Verandering
+tags: verandering, gedrag, leren
+imageAlt: Illustratie bij het artikel innovatie loopt vast op gedrag
+relatedKnowledgePages: /kennis/verandermanagement
+relatedServices: /teamcoaching,/teamdag
 ---
 
 Waarom zeggen teams vaak "we staan open voor vernieuwing", maar blijft het oude gedrag toch bestaan? Waarom wordt een goed idee in een projectgroep enthousiast ontvangen, maar op de werkvloer voorzichtig, afwachtend of zelfs cynisch? En misschien de belangrijkste vraag: wat verliezen mensen eigenlijk wanneer wij zeggen dat ze moeten innoveren?

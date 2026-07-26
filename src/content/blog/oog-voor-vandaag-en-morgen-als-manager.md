@@ -5,6 +5,11 @@ description: De agenda staat vol met brandjes van vandaag. Hoe maak je ruimte vo
 image: /blog/images/hedenentoekomst.jpg
 lead: De agenda staat vol. Er is een collega ziek, een klant heeft een klacht, de planning loopt uit en tussendoor komen er tientallen e-mails binnen die allemaal urgent lijken.
 author: Mijn Teamkompas
+category: Leiderschap
+tags: leiderschap, eigenaarschap, doelen
+imageAlt: Illustratie bij het artikel oog voor vandaag en morgen als manager
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams
+relatedServices: /teamcoaching,/teamontwikkeling
 ---
 
 Aan het einde van de dag heb je hard gewerkt. Misschien zelfs heel hard.

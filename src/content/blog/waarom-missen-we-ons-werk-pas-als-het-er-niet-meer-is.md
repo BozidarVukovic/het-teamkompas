@@ -5,6 +5,11 @@ description: We verlangen soms jaren naar ons pensioen, en missen daarna juist i
 image: /blog/images/pensioen.jpg
 lead: Regelmatig zie ik collega's afscheid nemen van hun werkzame leven. Na tientallen jaren hard werken is het eindelijk zover: pensioen. Vaak wordt er maanden naar uitgekeken. "Nog even volhouden", hoor je dan.
 author: Mijn Teamkompas
+category: Samenwerking
+tags: samenwerking, teamontwikkeling, teamcultuur
+imageAlt: Illustratie bij het artikel waarom missen we ons werk pas als het er niet meer is
+relatedKnowledgePages: /kennis/teamcultuur
+relatedServices: /teamontwikkeling,/teamdag
 ---
 
 En toch gebeurt er iets opvallends. Na een paar weken of maanden vakantie zie je sommigen langzaam weer op zoek gaan naar iets nieuws. Vrijwilligerswerk. Een paar dagen terug in de oude organisatie. Een bestuursfunctie. Of gewoon een nieuwe uitdaging.

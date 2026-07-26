@@ -5,6 +5,11 @@ description: Zorgvuldig opgestelde doelen worden gepresenteerd, het team knikt, 
 image: /blog/images/kpi.jpg
 lead: Dit zijn onze doelen voor komend jaar. De manager klikt naar de volgende sheet. Het team knikt. Misschien worden er nog een paar vragen gesteld. En daarna gaat iedereen weer aan het werk.
 author: Mijn Teamkompas
+category: Leiderschap
+tags: leiderschap, eigenaarschap, doelen
+imageAlt: Illustratie bij het artikel waarom de beste kpis niet door het management worden bedacht
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams
+relatedServices: /teamcoaching,/teamontwikkeling
 ---
 
 Elke organisatie heeft ze: jaarplannen, KPI's en dashboards. Vaak zorgvuldig opgesteld door managers of directies, en gepresenteerd tijdens een teamoverleg.

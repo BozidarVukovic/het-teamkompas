@@ -5,6 +5,11 @@ description: Teams ervaren werkdruk als een probleem van hoeveelheid. Maar vaak 
 lead: We noemen het werkdruk. Maar als je beter kijkt, gaat het bijna nooit alleen over te veel werk. Het gaat over werk waarbij onduidelijk is wie wat doet, waarom het telt en of het ertoe doet.
 author: Mijn Teamkompas
 image: /blog/images/werkdruk-team-overleg.jpg
+category: Bevlogenheid en werkplezier
+tags: bevlogenheid, energie, werkplezier
+imageAlt: Illustratie bij het artikel werkdruk of onduidelijkheid
+relatedKnowledgePages: /kennis/bevlogenheid-in-het-werk
+relatedServices: /teamscan,/teamcoaching
 ---
 
 Stel je twee collega's voor. Allebei werken ze veertig uur per week. Allebei hebben ze een volle agenda, e-mail die niet leegloopt en vergaderingen die vergaderingen voortbrengen.

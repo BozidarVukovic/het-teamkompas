@@ -5,6 +5,11 @@ description: OGSM mislukt zelden door het model, maar door de toepassing. Waarom
 image: /blog/images/ogsm.jpg
 lead: "We hebben een nieuwe strategie. We werken vanaf nu met OGSM." Ik heb het de afgelopen jaren regelmatig gehoord. Inspirerende sessies, prachtige schema's met doelen en KPI's, een enthousiast management.
 author: Mijn Teamkompas
+category: Leiderschap
+tags: leiderschap, eigenaarschap, doelen
+imageAlt: Illustratie bij het artikel waarom ogsm vaak niet werkt
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams
+relatedServices: /teamcoaching,/teamontwikkeling
 ---
 
 Een paar maanden later vraag je een willekeurige medewerker: waar werken jullie organisatiebreed eigenlijk naartoe? Vaak blijft het even stil. Of je krijgt: volgens mij stond daar iets over op intranet.

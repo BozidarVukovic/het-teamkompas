@@ -221,6 +221,14 @@ const pages = [
         <nav><a href="/">Home</a> <a href="/teamscan">Teamscan</a> <a href="/teamcoaching">Teamcoaching</a> <a href="/teamdag">Teamdag</a></nav>
       </main>`,
   },
+  {
+    route: "inspiratie",
+    title: "Inspiratie over teams, leiderschap en samenwerking | Mijn Teamkompas",
+    description: "Lees artikelen over teamcultuur, leiderschap, eigenaarschap, psychologische veiligheid, verandering en samenwerken in teams.",
+    url: "https://www.mijnteamkompas.nl/inspiratie",
+    image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
+    content: `<main><h1>Inspiratie voor teams die willen blijven groeien</h1><p>Artikelen met herkenbare situaties uit teams en organisaties, verbonden aan gedragswetenschap, teamdynamiek en praktische manieren om beweging te creëren.</p><h2>Artikelen over teams en samenwerking</h2><p>Ontdek inzichten over teamcultuur, leiderschap, verandering, bevlogenheid en samenwerking.</p></main>`,
+  },
 ];
 
 for (const page of pages) {

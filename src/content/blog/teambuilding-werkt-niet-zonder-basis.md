@@ -5,6 +5,11 @@ description: Organisaties investeren in teambuildingactiviteiten terwijl de onde
 lead: Organisaties investeren jaarlijks miljoenen in teambuildingactiviteiten. De bowlingbaan, het kookworkshopje, de escape room. En toch verandert er daarna vaak niets. Dat komt zelden doordat de activiteit mislukte; het probleem zit ergens anders.
 author: Mijn Teamkompas
 image: /blog/images/teambuilding-puzzel.jpg
+category: Teamcultuur
+tags: teamcultuur, psychologische veiligheid, aanspreken
+imageAlt: Illustratie bij het artikel teambuilding werkt niet zonder basis
+relatedKnowledgePages: /kennis/teamcultuur,/psychologische-veiligheid
+relatedServices: /teamdag,/teamcoaching,/teamscan
 ---
 
 Stel: een team heeft al maanden spanning. Twee mensen praten niet meer rechtstreeks met elkaar. De leidinggevende weet het, maar heeft het er nog niet over gehad. Dan komt de teambuilding: een middag buiten, activiteiten, lunch. Iedereen doet mee. Het is zelfs gezellig.

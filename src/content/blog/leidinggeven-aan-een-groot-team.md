@@ -5,6 +5,11 @@ description: Een groot team aansturen zoals een klein team werkt zelden. Waarom 
 image: /blog/images/grootteam.jpg
 lead: Veertig collega's aansturen. Op papier lijkt het een kwestie van organiseren, plannen en controleren. In de praktijk voelt het vaak heel anders.
 author: Mijn Teamkompas
+category: Leiderschap
+tags: leiderschap, eigenaarschap, doelen
+imageAlt: Illustratie bij het artikel leidinggeven aan een groot team
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams
+relatedServices: /teamcoaching,/teamontwikkeling
 ---
 
 Je begint met de beste intenties. Je wilt zichtbaar zijn, iedereen kennen, beschikbaar zijn voor vragen. Maar naarmate het team groeit, wordt dat steeds lastiger. Je agenda loopt vol met overleggen, e-mails en operationele vraagstukken. Voordat je het weet, ben je vooral problemen aan het oplossen in plaats van leiding te geven.

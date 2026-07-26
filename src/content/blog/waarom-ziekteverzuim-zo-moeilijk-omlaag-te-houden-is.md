@@ -5,6 +5,11 @@ description: Het verzuim daalt na maanden werk, en een paar maanden later staat 
 image: /blog/images/ziekteverzuim.jpg
 lead: Een manager vertelt trots dat het ziekteverzuim eindelijk is gedaald. Na maanden van gesprekken, extra aandacht en een aantal gerichte acties gaan de cijfers de goede kant op. Een paar maanden later staan ze weer op het oude niveau.
 author: Mijn Teamkompas
+category: Bevlogenheid en werkplezier
+tags: bevlogenheid, energie, werkplezier
+imageAlt: Illustratie bij het artikel waarom ziekteverzuim zo moeilijk omlaag te houden is
+relatedKnowledgePages: /kennis/bevlogenheid-in-het-werk
+relatedServices: /teamscan,/teamcoaching
 ---
 
 Herkenbaar? Dan is dat team niet het enige. Veel organisaties lukt het tijdelijk om het verzuim te verlagen, maar het vasthouden blijkt veel lastiger. Dat is niet vreemd, want ziekteverzuim is zelden het echte probleem. Meestal is het een zichtbaar gevolg van wat zich onder de oppervlakte afspeelt.

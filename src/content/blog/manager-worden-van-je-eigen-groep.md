@@ -5,6 +5,11 @@ description: Wie vanuit het team manager wordt van diezelfde groep, staat voor e
 image: /blog/images/vanteamnaardirigent.png
 lead: Er wordt vaak makkelijk over management gesproken. Alsof leidinggeven vooral gaat over planningen maken, besluiten nemen en zorgen dat het werk doorgaat. Maar wie ooit de stap maakte van collega naar leidinggevende, van de groep naar het hoofd van diezelfde groep, weet dat er iets fundamenteels verandert. De functie is maar een deel; het gaat ook om de verhouding, de verwachtingen en de blik die mensen op je richten.
 author: Mijn Teamkompas
+category: Leiderschap
+tags: leiderschap, eigenaarschap, doelen
+imageAlt: Illustratie bij het artikel manager worden van je eigen groep
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams
+relatedServices: /teamcoaching,/teamontwikkeling
 ---
 
 *En dan begint de echte vraag: ben je bereid om die verandering ook echt toe te laten?*

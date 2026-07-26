@@ -5,6 +5,11 @@ description: Iedereen vulde het onderzoek in, niemand herkent de uitkomst. Over 
 image: /blog/images/mto.jpg
 lead: De resultaten zijn binnen. De manager kijkt de vergaderruimte rond. Het team heeft het medewerkerstevredenheidsonderzoek enkele weken geleden ingevuld en de scores vallen tegen, vooral op onderwerpen als communicatie, samenwerking en vertrouwen.
 author: Mijn Teamkompas
+category: Bevlogenheid en werkplezier
+tags: bevlogenheid, energie, werkplezier
+imageAlt: Illustratie bij het artikel waarom niemand de uitkomsten van het mto herkent
+relatedKnowledgePages: /kennis/bevlogenheid-in-het-werk
+relatedServices: /teamscan,/teamcoaching
 ---
 
 "Ik schrok eerlijk gezegd van de resultaten," zegt de manager. "Ik wil graag begrijpen wat er speelt. Wie herkent deze uitkomsten?"

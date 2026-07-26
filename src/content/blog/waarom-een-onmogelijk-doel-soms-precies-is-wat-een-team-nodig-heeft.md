@@ -5,6 +5,11 @@ description: Een ambitieus doel valt en de bezwaren volgen meteen. Waarom juist 
 image: /blog/images/doelen.jpg
 lead: Iedere manager kent het moment. Een ambitieus doel wordt uitgesproken en de reactie volgt vrijwel direct. Dat gaat nooit lukken. Daar hebben we veel te weinig tijd voor. Zoiets hebben we nog nooit gedaan.
 author: Mijn Teamkompas
+category: Samenwerking
+tags: samenwerking, teamontwikkeling, teamcultuur
+imageAlt: Illustratie bij het artikel waarom een onmogelijk doel soms precies is wat een team nodig heeft
+relatedKnowledgePages: /kennis/teamcultuur
+relatedServices: /teamontwikkeling,/teamdag
 ---
 
 Op dat moment lijken de bezwaren logisch. Ze zijn vaak ook terecht. Vanuit de kennis, ervaring en werkwijze van vandaag lijkt het doel simpelweg niet haalbaar.

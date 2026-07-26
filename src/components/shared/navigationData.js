@@ -8,7 +8,7 @@ export const serviceLinks = [
 ];
 
 export const knowledgeNavigation = {
-  overview: { label: "Kennisoverzicht", href: "/blog" },
+  overview: { label: "Teamcultuur", href: "/kennis/teamcultuur" },
   featured: [
     { label: "Teamcultuur", href: "/kennis/teamcultuur" },
     { label: "Psychologische veiligheid", href: "/psychologische-veiligheid" },

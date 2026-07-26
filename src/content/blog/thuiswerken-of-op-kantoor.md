@@ -5,6 +5,11 @@ description: Hybride werken lost zich niet op met één regel over kantoordagen.
 image: /blog/images/thuisofkantoor.jpg
 lead: Op maandagochtend is het druk op kantoor. De parkeerplaats vol, vergaderruimtes bezet, bij de koffieautomaat de weekendverhalen. Op vrijdag ziet hetzelfde kantoor er heel anders uit: een paar bezette bureaus, veel online overleg.
 author: Mijn Teamkompas
+category: Samenwerking
+tags: samenwerking, teamontwikkeling, teamcultuur
+imageAlt: Illustratie bij het artikel thuiswerken of op kantoor
+relatedKnowledgePages: /kennis/teamcultuur
+relatedServices: /teamontwikkeling,/teamdag
 ---
 
 Voor medewerkers is thuiswerken inmiddels een vanzelfsprekend onderdeel van het werk. Voor werkgevers blijft het een ingewikkeld vraagstuk. Hoeveel vrijheid geef je? Wanneer is aanwezigheid noodzakelijk? En hoe voorkom je dat thuiswerken ten koste gaat van verbinding, samenwerking en cultuur?

@@ -1,25 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import KompasDot from "../../components/shared/KompasDot";
 import NieuwsbriefFormulier from "../../components/shared/NieuwsbriefFormulier";
-
-const rawPosts = import.meta.glob("../../content/blog/*.md", {
-  eager: true,
-  query: "?raw",
-  import: "default",
-});
-
-function parseFrontmatter(raw) {
-  const match = raw.match(/^---\n([\s\S]*?)\n---/);
-  if (!match) return { data: {}, content: raw };
-  const frontmatter = {};
-  match[1].split("\n").forEach((line) => {
-    const [key, ...rest] = line.split(": ");
-    if (key) frontmatter[key.trim()] = rest.join(": ").trim();
-  });
-  return { data: frontmatter, content: raw.slice(match[0].length).trim() };
-}
+import RelatedArticles from "../../components/shared/RelatedArticles";
+import { blogPosts, formatPublishDate } from "../../content/blogData";
 
 function calcReadTime(text) {
   const words = text.trim().split(/\s+/).length;
@@ -81,39 +67,20 @@ function ShareButtons({ title }) {
 
 export default function BlogPost() {
   const { slug } = useParams();
-  const [post, setPost] = useState(null);
-  const [notFound, setNotFound] = useState(false);
-
-  useEffect(() => {
-    const entry = Object.entries(rawPosts).find(([path]) =>
-      path.endsWith(`/${slug}.md`)
-    );
-    if (!entry) {
-      setNotFound(true);
-      return;
-    }
-    const { data, content } = parseFrontmatter(entry[1]);
-    setPost({ ...data, content });
-  }, [slug]);
+  const post = blogPosts.find((item) => item.slug === slug);
+  const notFound = !post;
 
   if (notFound) {
     return (
       <div style={{ minHeight: "100vh", background: "#f9f7f4", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ color: "#666", marginBottom: 16 }}>Artikel niet gevonden.</p>
-          <Link to="/blog" style={{ color: "#4FC3F7" }}>← Terug naar blog</Link>
+          <Link to="/inspiratie" style={{ color: "#4FC3F7" }}>← Terug naar Inspiratie</Link>
         </div>
       </div>
     );
   }
 
-  if (!post) {
-    return (
-      <div style={{ minHeight: "100vh", background: "#f9f7f4", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ color: "#8fa3bb" }}>Laden...</div>
-      </div>
-    );
-  }
 
   const readTime = post.readtime || calcReadTime(post.content);
   const author = post.author || "Mijn Teamkompas";
@@ -121,35 +88,19 @@ export default function BlogPost() {
   return (
     <div style={{ minHeight: "100vh", background: "#f9f7f4" }}>
       {/* SEO */}
-      <title>{post.title ? `${post.title} | Mijn Teamkompas` : "Mijn Teamkompas Blog"}</title>
-      {post.description && <meta name="description" content={post.description} />}
-
-      {/* Nav */}
-      <nav style={{
-        background: "#0D1B2A",
-        padding: "16px 32px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        position: "relative",
-        zIndex: 10,
-      }}>
-        <Link to="/" style={{ color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 18, display: "flex", alignItems: "center", gap: 9 }}>
-          <KompasDot size={22} /> Mijn Teamkompas
-        </Link>
-        <div style={{ display: "flex", gap: 24 }}>
-          <Link to="/blog" style={{ color: "#c8d8e8", textDecoration: "none", fontSize: 14 }}>Blog</Link>
-          <Link to="/teamscan" style={{ color: "#c8d8e8", textDecoration: "none", fontSize: 14 }}>Teamscan</Link>
-          <Link to="/verkennen" style={{ color: "#4FC3F7", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>Gesprek aanvragen</Link>
-        </div>
-      </nav>
+      <Helmet>
+        <title>{`${post.title} | Mijn Teamkompas`}</title>
+        <meta name="description" content={post.excerpt} />
+        <link rel="canonical" href={`https://www.mijnteamkompas.nl/blog/${post.slug}`} />
+        <script type="application/ld+json">{JSON.stringify({ "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: post.excerpt, image: post.image ? `https://www.mijnteamkompas.nl${post.image}` : undefined, datePublished: post.publishDate, dateModified: post.modifiedDate, author: { "@type": "Organization", name: post.author }, publisher: { "@type": "Organization", name: "Mijn Teamkompas" }, mainEntityOfPage: `https://www.mijnteamkompas.nl/blog/${post.slug}` })}</script>
+      </Helmet>
 
       {/* Hero image — full width */}
       {post.image && (
         <div style={{ width: "100%", height: 420, overflow: "hidden", background: "#1a2a3a" }}>
           <img
             src={post.image}
-            alt={post.title}
+            alt={post.imageAlt}
             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           />
         </div>
@@ -159,9 +110,11 @@ export default function BlogPost() {
       <article style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 96px" }}>
 
         {/* Back link */}
-        <Link to="/blog" style={{ color: "#8fa3bb", textDecoration: "none", fontSize: 13, display: "inline-block", marginBottom: 32, letterSpacing: "0.02em" }}>
+        <Link to="/inspiratie" style={{ color: "#8fa3bb", textDecoration: "none", fontSize: 13, display: "inline-block", marginBottom: 32, letterSpacing: "0.02em" }}>
           ← Alle artikelen
         </Link>
+
+        <p className="article-category">{post.category}</p>
 
         {/* Title */}
         <h1 style={{
@@ -221,11 +174,11 @@ export default function BlogPost() {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
             <span style={{ fontSize: 14, fontWeight: 600, color: "#0D1B2A" }}>{author}</span>
-            {post.date && (
+            {post.publishDate && (
               <>
                 <span style={{ color: "#c8d8e8", fontSize: 13 }}>·</span>
                 <span style={{ fontSize: 13, color: "#8fa3bb" }}>
-                  {new Date(post.date).toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" })}
+                  {formatPublishDate(post.publishDate)}
                 </span>
               </>
             )}
@@ -320,12 +273,12 @@ export default function BlogPost() {
           textAlign: "center",
         }}>
           <h2 style={{ color: "#fff", fontSize: 20, fontWeight: 700, margin: "0 0 10px" }}>
-            Hoe staat het met jouw team?
+            Wil je dit onderwerp binnen jouw team bespreekbaar maken?
           </h2>
           <p style={{ color: "#8fa3bb", marginBottom: 24, fontSize: 15, lineHeight: 1.6 }}>
-            Maak inzichtelijk wat er speelt met een teamscan.
+            Ontdek hoe onze begeleiding aansluit bij wat jouw team nodig heeft.
           </p>
-          <Link to="/verkennen" style={{
+          <Link to={post.relatedServices[0] || "/verkennen"} style={{
             background: "#4FC3F7",
             color: "#0D1B2A",
             padding: "12px 28px",
@@ -335,10 +288,11 @@ export default function BlogPost() {
             fontSize: 15,
             display: "inline-block",
           }}>
-            Gesprek aanvragen
+            Bekijk passende begeleiding
           </Link>
         </div>
       </article>
+      <RelatedArticles tags={post.tags} category={post.category} excludeSlug={post.slug} />
     </div>
   );
 }
