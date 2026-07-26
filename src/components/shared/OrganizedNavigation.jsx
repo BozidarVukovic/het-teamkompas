@@ -26,6 +26,7 @@ const kennis = [
   ["Teamcultuur", "/kennis/teamcultuur"],
   ["Eigenaarschap in teams", "/kennis/eigenaarschap-in-teams"],
   ["Verandermanagement", "/kennis/verandermanagement"],
+  ["Impact van een teamdag", "/kennis/impact-van-een-teamdag"],
 ];
 
 function isStaticPage(path) {

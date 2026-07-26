@@ -28,6 +28,7 @@ import BevlogenheidInHetWerk from "./pages/public/BevlogenheidInHetWerk";
 import Teamcultuur from "./pages/public/Teamcultuur";
 import EigenaarschapInTeams from "./pages/public/EigenaarschapInTeams";
 import Verandermanagement from "./pages/public/Verandermanagement";
+import ImpactVanEenTeamdag from "./pages/public/ImpactVanEenTeamdag";
 import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
@@ -12346,7 +12347,7 @@ function TeamdagPage() {
     ["3", "Combineer analyse met ontmoeting", "Een goede teamdag heeft ruimte voor cijfers, observaties en verhalen. De teamscan kan patronen zichtbaar maken; ontmoeting zorgt dat mensen betekenis geven aan die uitkomsten."],
     ["4", "Maak ook de onderstroom bespreekbaar", "Bespreek niet alleen processen en afspraken. Onderzoek voorzichtig welke spanning, zorgen, overtuigingen of gewoontes invloed hebben op het gedrag in het team.", "/boven-en-onderstroom", "Lees hoe boven- en onderstroom samenwerken"],
     ["5", "Vertaal inzichten naar klein en concreet gedrag", "Kies liever twee haalbare experimenten dan tien grote voornemens. Beschrijf wie wat anders gaat doen, wanneer het zichtbaar is en hoe het team elkaar helpt herinneren.", "/kleine-experimenten", "Lees meer over kleine experimenten"],
-    ["6", "Organiseer opvolging na de teamdag", "Plan meteen een kort vervolg: wat leren we, wat werkt, wat vraagt bijsturing? Borging ontstaat door ritme, eigenaarschap en bespreekbare voortgang.", "/kennis/eigenaarschap-in-teams", "Lees hoe eigenaarschap ontstaat"],
+    ["6", "Organiseer opvolging na de teamdag", "Plan meteen een kort vervolg: wat leren we, wat werkt, wat vraagt bijsturing? Borging ontstaat door ritme, eigenaarschap en bespreekbare voortgang.", "/kennis/impact-van-een-teamdag", "Lees hoe je afspraken na een teamdag borgt"],
   ];
 
   const programma = [
@@ -12655,6 +12656,7 @@ export default function App() {
         <Route path="/kennis/teamcultuur" element={<Teamcultuur />} />
         <Route path="/kennis/eigenaarschap-in-teams" element={<EigenaarschapInTeams />} />
         <Route path="/kennis/verandermanagement" element={<Verandermanagement />} />
+        <Route path="/kennis/impact-van-een-teamdag" element={<ImpactVanEenTeamdag />} />
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
