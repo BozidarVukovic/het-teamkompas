@@ -195,6 +195,15 @@ export default function OrganizedNavigation() {
     }
   };
 
+  // Ankerlink naar een sectie op de homepage. ScrollManager handelt het
+  // scrollen af zodra de route en de hash gezet zijn, dus hier alleen
+  // navigeren. Staan we al op de homepage, dan zet navigate enkel de hash.
+  const goAnker = (event, path) => {
+    event.preventDefault();
+    setMenuOpen(false);
+    navigate(path);
+  };
+
   const simpleLink = {
     color: "rgba(255,255,255,0.76)",
     textDecoration: "none",
@@ -222,7 +231,7 @@ export default function OrganizedNavigation() {
               <Dropdown label="Diensten" items={diensten} />
               <a href="/onze-aanpak" onClick={(event) => { event.preventDefault(); go("/onze-aanpak"); }} style={simpleLink}>Onze aanpak</a>
               <Dropdown label="Kennis" items={kennis} />
-              <a href="/#over-ons" onClick={(event) => { event.preventDefault(); if (window.location.pathname === "/") { const el = document.getElementById("over-ons"); if (el) { el.scrollIntoView({ behavior: "smooth" }); } else { window.location.href = "/#over-ons"; } } else { window.location.href = "/#over-ons"; } }} style={simpleLink}>Over ons</a>
+              <a href="/#over-ons" onClick={(event) => goAnker(event, "/#over-ons")} style={simpleLink}>Over ons</a>
               <a href="/verkennen" onClick={(event) => { event.preventDefault(); go("/verkennen"); }} style={{ background: "#F4F7F9", color: NAVY, fontWeight: 800, padding: "10px 17px", borderRadius: 999, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap" }}>Plan vrijblijvend gesprek</a>
               <a href="/beheer" onClick={(event) => { event.preventDefault(); go("/beheer"); }} style={{ ...simpleLink, color: "rgba(255,255,255,0.48)", fontSize: 12 }}>Inloggen</a>
             </div>
@@ -235,7 +244,7 @@ export default function OrganizedNavigation() {
           <MobileGroup label="Diensten" items={diensten} onNavigate={go} />
           <a href="/onze-aanpak" onClick={(event) => { event.preventDefault(); go("/onze-aanpak"); }} style={{ display: "block", padding: "15px 22px", color: "rgba(255,255,255,0.85)", fontSize: 15, fontWeight: 700, textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>Onze aanpak</a>
           <MobileGroup label="Kennis" items={kennis} onNavigate={go} />
-          <a href="/#over-ons" style={{ display: "block", padding: "15px 22px", color: "rgba(255,255,255,0.85)", fontSize: 15, fontWeight: 700, textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>Over ons</a>
+          <a href="/#over-ons" onClick={(event) => goAnker(event, "/#over-ons")} style={{ display: "block", padding: "15px 22px", color: "rgba(255,255,255,0.85)", fontSize: 15, fontWeight: 700, textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>Over ons</a>
           <a href="/verkennen" onClick={(event) => { event.preventDefault(); go("/verkennen"); }} style={{ display: "block", margin: "16px 20px 8px", padding: "13px 18px", textAlign: "center", background: "#F4F7F9", color: NAVY, borderRadius: 999, fontWeight: 800, textDecoration: "none" }}>Plan vrijblijvend gesprek</a>
           <a href="/beheer" onClick={(event) => { event.preventDefault(); go("/beheer"); }} style={{ display: "block", padding: "12px 22px 18px", color: TEAL, textAlign: "center", textDecoration: "none", fontSize: 14, fontWeight: 700 }}>Inloggen →</a>
         </div>

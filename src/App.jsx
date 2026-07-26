@@ -339,8 +339,9 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
     };
 
     if (window.location.pathname !== "/") {
+      // ScrollManager pikt de hash op zodra de homepage gemonteerd is.
+      // Zelf een setTimeout gebruiken zou daar tegenin scrollen.
       navigate(`/#${id}`);
-      setTimeout(scrollToTarget, 300);
       return;
     }
 
