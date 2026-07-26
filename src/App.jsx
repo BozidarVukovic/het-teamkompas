@@ -12344,9 +12344,9 @@ function TeamdagPage() {
     ["1", "Bepaal wat er na de teamdag anders moet zijn", "Maak de bedoeling concreet. Gaat het om vertrouwen, rolhelderheid, communicatie, eigenaarschap of omgaan met verandering? Een scherpe vraag voorkomt een vol programma zonder richting."],
     ["2", "Luister vooraf naar verschillende perspectieven", "Spreek niet alleen met de leidinggevende. Vraag teamleden wat zij merken in de praktijk, waar energie zit en wat steeds terugkomt. Dat maakt de dag herkenbaar en eerlijker."],
     ["3", "Combineer analyse met ontmoeting", "Een goede teamdag heeft ruimte voor cijfers, observaties en verhalen. De teamscan kan patronen zichtbaar maken; ontmoeting zorgt dat mensen betekenis geven aan die uitkomsten."],
-    ["4", "Maak ook de onderstroom bespreekbaar", "Bespreek niet alleen processen en afspraken. Onderzoek voorzichtig welke spanning, zorgen, overtuigingen of gewoontes invloed hebben op het gedrag in het team."],
-    ["5", "Vertaal inzichten naar klein en concreet gedrag", "Kies liever twee haalbare experimenten dan tien grote voornemens. Beschrijf wie wat anders gaat doen, wanneer het zichtbaar is en hoe het team elkaar helpt herinneren."],
-    ["6", "Organiseer opvolging na de teamdag", "Plan meteen een kort vervolg: wat leren we, wat werkt, wat vraagt bijsturing? Borging ontstaat door ritme, eigenaarschap en bespreekbare voortgang."],
+    ["4", "Maak ook de onderstroom bespreekbaar", "Bespreek niet alleen processen en afspraken. Onderzoek voorzichtig welke spanning, zorgen, overtuigingen of gewoontes invloed hebben op het gedrag in het team.", "/boven-en-onderstroom", "Lees hoe boven- en onderstroom samenwerken"],
+    ["5", "Vertaal inzichten naar klein en concreet gedrag", "Kies liever twee haalbare experimenten dan tien grote voornemens. Beschrijf wie wat anders gaat doen, wanneer het zichtbaar is en hoe het team elkaar helpt herinneren.", "/kleine-experimenten", "Lees meer over kleine experimenten"],
+    ["6", "Organiseer opvolging na de teamdag", "Plan meteen een kort vervolg: wat leren we, wat werkt, wat vraagt bijsturing? Borging ontstaat door ritme, eigenaarschap en bespreekbare voortgang.", "/kennis/eigenaarschap-in-teams", "Lees hoe eigenaarschap ontstaat"],
   ];
 
   const programma = [
@@ -12411,6 +12411,20 @@ function TeamdagPage() {
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@graph": [
+            {
+              "@type": "Service",
+              name: "Teamdag organiseren en begeleiden",
+              serviceType: "Teamdag, teamontwikkeling, teambegeleiding",
+              description: "Mijn Teamkompas begeleidt teamdagen die verder gaan dan een leuke dag: van intake en teamscan naar gesprekken over boven- en onderstroom, concrete afspraken en opvolging.",
+              url: "https://www.mijnteamkompas.nl/teamdag",
+              areaServed: "NL",
+              provider: {
+                "@type": "LocalBusiness",
+                name: "Mijn Teamkompas",
+                url: "https://www.mijnteamkompas.nl",
+                email: "info@mijnteamkompas.nl",
+              },
+            },
             { "@type": "FAQPage", mainEntity: faqJson },
             { "@type": "BreadcrumbList", itemListElement: [
               { "@type": "ListItem", position: 1, name: "Home", item: "https://www.mijnteamkompas.nl/" },
@@ -12449,7 +12463,7 @@ function TeamdagPage() {
         </section>
 
         <section style={sectionStyle(PUB.licht)}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 850, marginBottom: 34 }}><div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Praktische stappen</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Zo kun je een goede teamdag organiseren</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Ook als je de dag zelf voorbereidt, helpt deze volgorde om van inspiratie naar resultaat te komen.</p></div><div style={{ display: "grid", gap: 14 }}>{organiseerStappen.map(([nr, titel, tekst]) => <article key={nr} style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "64px 1fr", gap: 18, background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}><div style={{ width: 44, height: 44, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>{nr}</div><div><h3 style={{ fontSize: 20, margin: "0 0 8px" }}>{titel}</h3><p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p></div></article>)}</div></div>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 850, marginBottom: 34 }}><div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Praktische stappen</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Zo kun je een goede teamdag organiseren</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Ook als je de dag zelf voorbereidt, helpt deze volgorde om van inspiratie naar resultaat te komen.</p></div><div style={{ display: "grid", gap: 14 }}>{organiseerStappen.map(([nr, titel, tekst, href, linkLabel]) => <article key={nr} style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "64px 1fr", gap: 18, background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}><div style={{ width: 44, height: 44, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>{nr}</div><div><h3 style={{ fontSize: 20, margin: "0 0 8px" }}>{titel}</h3><p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>{href && <a href={href} style={{ display: "inline-block", marginTop: 10, color: PUB.teal, fontWeight: 800, fontSize: 14, textDecoration: "none" }}>{linkLabel} →</a>}</div></article>)}</div></div>
         </section>
 
         <section style={sectionStyle()}>

@@ -43,7 +43,7 @@ Dit is geen pleidooi tegen teamactiviteiten. Een team dat goed samenwerkt, dat e
 
 Het probleem is de volgorde. Activiteiten boeken als eerste stap, terwijl de basis nog niet staat, is als schilderen op een muur die vocht trekt. Het ziet er even goed uit. Maar het houdt niet.
 
-De basis is: weten wat er speelt, in de bovenstroom en ook eronder. En de bereidheid hebben om dat bespreekbaar te maken, ook als dat even schuurt.
+De basis is: weten wat er speelt, in de bovenstroom en ook eronder. En de bereidheid hebben om dat bespreekbaar te maken, ook als dat even schuurt. Wil je [een teamdag organiseren](/teamdag) die daar wél bij begint, dan is het vertrekpunt het teamvraagstuk en niet het programma.
 
 Wanneer heeft jouw team voor het laatst een gesprek gehad over wat er écht speelt, niet wat er op de agenda staat, maar wat er onder de oppervlakte leeft? En als dat gesprek er niet is geweest: wat houdt het tegen?
 

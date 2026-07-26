@@ -287,7 +287,7 @@ export default function Teamcultuur() {
         <ol className="tk-jdr-steps" style={{ marginTop: 26 }}>
           {stappen.map(([t, d]) => <li key={t}><strong>{t}</strong><span>{d}</span></li>)}
         </ol>
-        <p className="tk-note"><a href="/kleine-experimenten">Lees meer over kleine experimenten in teams.</a></p>
+        <p className="tk-note"><a href="/kleine-experimenten">Lees meer over kleine experimenten in teams</a>, of bekijk hoe je <a href="/teamdag">een teamdag organiseert</a> waarop het team samen zulke experimenten kiest.</p>
       </Section>
 
       {/* Van waarden naar zichtbaar gedrag */}

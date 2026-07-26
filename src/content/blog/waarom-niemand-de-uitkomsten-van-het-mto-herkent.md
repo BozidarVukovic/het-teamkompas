@@ -55,7 +55,7 @@ Teams die dat begrijpen, voeren een ander gesprek. Ze zoeken niet naar wie gelij
 
 > **Niet de enquête zorgt voor verbetering. Het gesprek dat erop volgt doet dat.**
 
-Een team dat het onderzoek keurig invult, een hoge respons haalt en een verzorgd rapport ontvangt, heeft daarmee nog niets veranderd. Al dat werk kan zomaar eindigen in één stilte en drie keer "ik herken het niet". Wat er daarna gebeurt, bepaalt of het onderzoek iets waard was.
+Een team dat het onderzoek keurig invult, een hoge respons haalt en een verzorgd rapport ontvangt, heeft daarmee nog niets veranderd. Al dat werk kan zomaar eindigen in één stilte en drie keer "ik herken het niet". Wat er daarna gebeurt, bepaalt of het onderzoek iets waard was. Een begeleide [teamdag met blijvend resultaat](/teamdag) is vaak de plek waar dat gesprek wél op gang komt.
 
 ## Tot slot
 
