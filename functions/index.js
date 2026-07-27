@@ -1,6 +1,7 @@
 const { setGlobalOptions } = require("firebase-functions");
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { defineSecret } = require("firebase-functions/params");
+const crypto = require("crypto");
 const admin = require("firebase-admin");
 const { FieldValue } = require("firebase-admin/firestore");
 const OpenAI = require("openai");
@@ -20,6 +21,38 @@ const COLLECTION_AANVRAGEN = "teamscanSelfserviceAanvragen";
 const COLLECTION_TEAMWIELEN = "teamwielen";
 
 const AI_MODEL = "gpt-4.1-mini";
+
+// Gratis individuele teamscan: inhoud en scoremodel zijn bewust deterministisch.
+const FREE_SCAN_VERSION = "1.0.0";
+const FREE_SCORE_VERSION = "1.0.0";
+const FREE_THEMES = [
+  ["veiligheid","Psychologische veiligheid","Ruimte om zorgen, fouten en verschil uit te spreken.","Welk gesprek stel jij uit omdat de ruimte nog niet veilig genoeg voelt?","Vraag aan het einde van één overleg: welk belangrijk punt is nog niet uitgesproken?"],
+  ["communicatie","Communicatie en luisteren","Elkaar begrijpen en misverstanden constructief bespreken.","Wanneer voelde jij je voor het laatst echt gehoord in je team?","Vat in één overleg eerst het standpunt van een ander samen voordat je reageert."],
+  ["eigenaarschap","Eigenaarschap en duidelijkheid","Weten wat wordt verwacht en verbeteringen daadwerkelijk oppakken.","Bij welk besluit is nu niet helder wie de volgende stap zet?","Leg bij één besluit eigenaar, eerstvolgende stap en evaluatiedatum vast."],
+  ["verbinding","Samenwerking en verbinding","Steun, respect voor verschillen en gezamenlijke betrokkenheid.","Welk verschil in stijl kan jullie samenwerking juist sterker maken?","Vraag één collega welke steun die deze week van jou nodig heeft."],
+  ["energie","Energie en motivatie","Voldoening, haalbare belasting en ruimte voor herstel.","Wat is het kleinste terugkerende energielek dat je kunt beïnvloeden?","Benoem in een check-in één energiegever en één beïnvloedbaar energielek."],
+  ["leiderschap","Leiderschap en beweging","Open dialoog, richting en ruimte om te leren en bewegen.","Waar helpt meer richting, en waar helpt juist meer ruimte?","Vraag bij één verandering expliciet wat mensen nodig hebben om mee te bewegen."],
+].map(([id,label,description,reflection,experiment])=>({id,label,description,reflection,experiment}));
+const FREE_QUESTION_THEMES = {v1:"veiligheid",v2:"veiligheid",v3:"veiligheid",v4:"veiligheid",c1:"communicatie",c2:"communicatie",c3:"communicatie",c4:"communicatie",e1:"eigenaarschap",e2:"eigenaarschap",e3:"eigenaarschap",e4:"eigenaarschap",s1:"verbinding",s2:"verbinding",s3:"verbinding",s4:"verbinding",n1:"energie",n2:"energie",n3:"energie",n4:"energie",l1:"leiderschap",l2:"leiderschap",l3:"leiderschap",l4:"leiderschap"};
+const FREE_PATTERNS = [
+  ["betrokken_lage_energie","verbinding","energie","Betrokkenheid vraagt energie","Je antwoorden kunnen wijzen op veel onderlinge betrokkenheid, terwijl de beschikbare energie onder druk staat."],
+  ["veilig_weinig_eigenaarschap","veiligheid","eigenaarschap","Ruimte kan nog meer beweging krijgen","Er lijkt ruimte om je uit te spreken, maar die ruimte vertaalt zich mogelijk nog niet altijd naar eigenaarschap en opvolging."],
+  ["steun_weinig_aanspreken","verbinding","communicatie","Steun en het echte gesprek","Onderlinge steun lijkt aanwezig, terwijl het constructief bespreken van verschil mogelijk extra aandacht verdient."],
+  ["richting_lage_veiligheid","leiderschap","veiligheid","Richting zonder alle stemmen","Richting wordt mogelijk duidelijk ervaren, maar niet iedere zorg of afwijkende mening lijkt even gemakkelijk op tafel te komen."],
+  ["veel_praten_weinig_bewegen","communicatie","eigenaarschap","Van gesprek naar opvolging","Er lijkt veel basis voor gesprek, terwijl besluiten en verbeteringen mogelijk niet steeds een duidelijke eigenaar krijgen."],
+].map(([id,high,low,title,text])=>({id,high,low,title,text}));
+
+function freeZone(score){ return score>=75?{id:"strong",label:"Sterke basis"}:score>=55?{id:"attention",label:"Aandacht en verdieping"}:{id:"pattern",label:"Mogelijk belemmerend patroon"}; }
+function calculateFreeResults(answers){
+  const themeScores=FREE_THEMES.map(theme=>{const values=Object.entries(FREE_QUESTION_THEMES).filter(([,t])=>t===theme.id).map(([id])=>Number(answers[id])).filter(v=>Number.isFinite(v)&&v>=1&&v<=5);const score=values.length?Math.round(((values.reduce((a,b)=>a+b,0)/values.length)-1)*25):null;return {...theme,score,answered:values.length,zone:score===null?null:freeZone(score)};});
+  if(themeScores.some(t=>t.answered!==4)) throw new HttpsError("invalid-argument","Beantwoord alle 24 vragen.");
+  const ranked=[...themeScores].sort((a,b)=>b.score-a.score), strengths=ranked.slice(0,2), opportunities=[...ranked].reverse().slice(0,2);
+  const patterns=FREE_PATTERNS.filter(p=>themeScores.find(t=>t.id===p.high).score>=75&&themeScores.find(t=>t.id===p.low).score<55).slice(0,3);
+  return {themeScores,strengths,opportunities,patterns,reflections:opportunities.map(t=>t.reflection),experiments:opportunities.map(t=>t.experiment),scoreModelVersion:FREE_SCORE_VERSION};
+}
+
+const freeRate = new Map();
+function enforceFreeRate(request, limit=12){const ip=request.rawRequest?.ip||"unknown", now=Date.now(), recent=(freeRate.get(ip)||[]).filter(t=>now-t<3600000);if(recent.length>=limit)throw new HttpsError("resource-exhausted","Te veel verzoeken. Probeer het later opnieuw.");recent.push(now);freeRate.set(ip,recent);}
 
 function isNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
@@ -812,4 +845,52 @@ exports.getCustomerPortal = onCall(async (request) => {
     trajecten,
     rapporten,
   };
+});
+
+exports.startFreeScan = onCall(async (request) => {
+  enforceFreeRate(request);
+  const data=request.data||{}, ref=db.collection("freeScanInstances").doc();
+  const cleanUtm=Object.fromEntries(Object.entries(data.utm||{}).filter(([k,v])=>/^utm_(source|medium|campaign|content|term)$/.test(k)&&typeof v==="string").map(([k,v])=>[k,v.slice(0,120)]));
+  await ref.set({sessionId:ref.id,status:"started",questionnaireVersion:FREE_SCAN_VERSION,scoreModelVersion:FREE_SCORE_VERSION,startedAt:FieldValue.serverTimestamp(),source:String(data.source||"direct").slice(0,200),utm:cleanUtm,retentionUntil:admin.firestore.Timestamp.fromMillis(Date.now()+365*86400000)});
+  return {sessionId:ref.id,questionnaireVersion:FREE_SCAN_VERSION};
+});
+
+exports.completeFreeScan = onCall(async (request) => {
+  enforceFreeRate(request,8); const data=request.data||{}, participant=data.participant||{};
+  if(participant.hp) throw new HttpsError("permission-denied","Inzending geweigerd.");
+  const sessionId=String(data.sessionId||""); if(!/^[\w-]{10,80}$/.test(sessionId))throw new HttpsError("invalid-argument","Ongeldige scansessie.");
+  const firstName=String(participant.firstName||"").trim().slice(0,80), email=String(participant.email||"").trim().toLowerCase().slice(0,254);
+  if(!firstName||!/^\S+@\S+\.\S+$/.test(email)||participant.consentProcessing!==true)throw new HttpsError("invalid-argument","Naam, geldig e-mailadres en toestemming zijn verplicht.");
+  if(data.questionnaireVersion!==FREE_SCAN_VERSION)throw new HttpsError("failed-precondition","De vragenlijst is gewijzigd. Vernieuw de pagina om veilig opnieuw te starten.");
+  const result=calculateFreeResults(data.answers||{}), token=crypto.randomBytes(32).toString("hex"), ref=db.collection("freeScanInstances").doc(sessionId), existing=await ref.get();
+  if(!existing.exists)throw new HttpsError("not-found","Scansessie niet gevonden.");
+  if(existing.data().status!=="started"){const old=existing.data();return {result:old.result,reportUrl:`/gratis-teamscan/rapport/${old.reportToken}`,emailStatus:old.email?.status||"pending"};}
+  const now=new Date(), reportExpiresAt=admin.firestore.Timestamp.fromMillis(Date.now()+90*86400000);
+  await ref.update({status:"report_generated",completedAt:FieldValue.serverTimestamp(),participant:{firstName,email,role:String(participant.role||"").slice(0,100),organisation:String(participant.organisation||"").slice(0,120),teamSize:String(participant.teamSize||"").slice(0,30)},consents:{processing:{granted:true,at:now.toISOString(),version:"privacy-2026-07"},marketing:{granted:participant.consentMarketing===true,at:now.toISOString(),version:"marketing-2026-07"}},answers:data.answers,result,report:{version:"1.0.0",generatedAt:now.toISOString(),expiresAt:reportExpiresAt},reportToken:token,email:{status:"pending",attempts:0,templateVersion:"1.0.0"}});
+  let emailStatus="pending", emailError="";
+  try {
+    const service=process.env.EMAILJS_SERVICE_ID, template=process.env.EMAILJS_FREE_SCAN_TEMPLATE_ID, publicKey=process.env.EMAILJS_PUBLIC_KEY;
+    if(!service||!template||!publicKey) throw new Error("E-mailconfiguratie ontbreekt");
+    const reportUrl=`https://www.mijnteamkompas.nl/gratis-teamscan/rapport/${token}`;
+    const response=await fetch("https://api.emailjs.com/api/v1.0/email/send",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({service_id:service,template_id:template,user_id:publicKey,template_params:{to_email:email,to_name:firstName,subject:"Jouw persoonlijke Teamkompas staat klaar",strength:result.strengths[0].label,opportunity:result.opportunities[0].label,reflection:result.reflections[0],experiment:result.experiments[0],report_url:reportUrl,reply_to:"info@mijnteamkompas.nl"}})});
+    if(!response.ok)throw new Error(`Providerstatus ${response.status}`); emailStatus="sent";
+  } catch(err){emailStatus="failed";emailError=String(err.message||"Verzenden mislukt").slice(0,200);}
+  await ref.update({status:emailStatus==="sent"?"email_sent":"email_failed",email:{status:emailStatus,attempts:1,lastAttemptAt:new Date().toISOString(),error:emailError}});
+  return {result,reportUrl:`/gratis-teamscan/rapport/${token}`,emailStatus};
+});
+
+exports.getFreeScanReport = onCall(async (request) => {
+  enforceFreeRate(request,30); const token=String(request.data?.token||"");
+  if(!/^[a-f0-9]{64}$/.test(token))throw new HttpsError("permission-denied","Ongeldige rapporttoken.");
+  const snap=await db.collection("freeScanInstances").where("reportToken","==",token).limit(1).get(); if(snap.empty)throw new HttpsError("not-found","Rapport niet gevonden.");
+  const item=snap.docs[0].data(); if(item.anonymized||item.report?.expiresAt?.toMillis()<Date.now())throw new HttpsError("permission-denied","Rapport is verlopen.");
+  return {participant:{firstName:item.participant?.firstName||""},result:item.result,completedAt:item.completedAt?.toDate().toISOString()||new Date().toISOString(),questionnaireVersion:item.questionnaireVersion};
+});
+
+exports.manageFreeScan = onCall(async (request) => {
+  if(!isAdminRequest(request))throw new HttpsError("permission-denied","Alleen beheerders.");
+  const {id,action}=request.data||{}, ref=db.collection("freeScanInstances").doc(String(id||"")), snap=await ref.get(); if(!snap.exists)throw new HttpsError("not-found","Inzending niet gevonden.");
+  if(action==="delete"){await ref.delete();return {ok:true};}
+  if(action==="anonymize"){await ref.update({participant:{firstName:"Geanonimiseerd",email:"",role:"",organisation:"",teamSize:""},answers:{},reportToken:FieldValue.delete(),anonymized:true,anonymizedAt:FieldValue.serverTimestamp(),status:"anonymized"});return {ok:true};}
+  throw new HttpsError("invalid-argument","Onbekende beheeractie.");
 });

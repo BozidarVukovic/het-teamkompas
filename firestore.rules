@@ -44,6 +44,12 @@ service cloud.firestore {
       allow create: if true;
     }
 
+    // Gratis scan wordt publiek uitsluitend via gevalideerde Cloud Functions benaderd.
+    match /freeScanInstances/{docId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if false;
+    }
+
     match /reflectiekaartLeads/{docId} {
       allow read, update, delete: if isAdmin();
       allow create: if true;

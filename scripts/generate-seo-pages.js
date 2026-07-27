@@ -13,6 +13,13 @@ const baseHtml = fs.readFileSync(path.join(distDir, "index.html"), "utf-8");
 
 const pages = [
   {
+    route: "gratis-teamscan",
+    title: "Gratis persoonlijke teamscan | Mijn Teamkompas",
+    description: "Ontdek in 8 tot 10 minuten hoe jij de samenwerking binnen jouw team ervaart en ontvang direct jouw persoonlijke Teamkompas.",
+    url: "https://www.mijnteamkompas.nl/gratis-teamscan",
+    content: `<main><h1>Ontdek hoe jij de samenwerking binnen jouw team ervaart</h1><p>Deze gratis individuele teamscan geeft in 8 tot 10 minuten inzicht in jouw persoonlijke beleving van veiligheid, communicatie, eigenaarschap, verbinding, energie en leiderschap.</p><h2>Direct inzicht en een persoonlijk rapport</h2><p>Na 24 vragen ontvang je een ontwikkelgerichte samenvatting, reflectievragen, kleine experimenten en een beveiligd persoonlijk rapport per e-mail. De uitkomst is geen oordeel of diagnose van het hele team.</p><p><a href="/gratis-teamscan">Start de gratis teamscan</a> of ontdek het verschil met de <a href="/teamscan">volledige Teamscan</a>.</p></main>`,
+  },
+  {
     route: "teamscan",
     title: "Online Teamscan: inzicht in jullie team | Mijn Teamkompas",
     description:
