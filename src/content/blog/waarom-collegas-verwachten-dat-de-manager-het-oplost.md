@@ -2,7 +2,7 @@
 title: Waarom collega's verwachten dat de manager het gedoe oplost
 date: 2026-07-04
 description: Zodra spanning ontstaat kijkt een team al snel naar de manager. Dat voelt veilig, maar maakt het team niet sterker. Waarom eigenaarschap terug moet naar de groep.
-image: /blog/images/manageralsoplosser.png
+image: /blog/images/manager-als-oplosser.jpg
 lead: In veel teams gebeurt iets opvallends. Zodra er spanning ontstaat, onduidelijkheid groeit of samenwerking schuurt, kijken mensen al snel naar de manager. Vaak niet uitgesproken, maar wel voelbaar.
 author: Mijn Teamkompas
 category: Leiderschap

@@ -2,7 +2,7 @@
 title: Wanneer Amerikaanse daadkracht botst met Nederlandse tegenspraak
 date: 2026-07-04
 description: Internationale aansturing en de Nederlandse werkcultuur botsen niet door taal, maar door verwachtingen rond leiderschap, tempo en tegenspraak.
-image: /blog/images/Amerikaansmanagement.png
+image: /blog/images/amerikaans-management.jpg
 lead: Veel Nederlandse bedrijven maken vroeg of laat een nieuwe fase door. Ze groeien, worden onderdeel van een internationale organisatie of krijgen te maken met managers uit een andere bedrijfscultuur. Dat kan veel brengen, maar het kan ook gaan schuren.
 author: Mijn Teamkompas
 category: Leiderschap

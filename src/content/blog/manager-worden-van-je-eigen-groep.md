@@ -2,7 +2,7 @@
 title: Manager worden van je eigen groep
 date: 2026-06-25
 description: Wie vanuit het team manager wordt van diezelfde groep, staat voor een complexe overgang. Dit artikel stelt de vragen die er echt toe doen, langs de vier domeinen van Mijn Teamkompas.
-image: /blog/images/vanteamnaardirigent.png
+image: /blog/images/van-team-naar-dirigent.jpg
 lead: Er wordt vaak makkelijk over management gesproken. Alsof leidinggeven vooral gaat over planningen maken, besluiten nemen en zorgen dat het werk doorgaat. Maar wie ooit de stap maakte van collega naar leidinggevende, van de groep naar het hoofd van diezelfde groep, weet dat er iets fundamenteels verandert. De functie is maar een deel; het gaat ook om de verhouding, de verwachtingen en de blik die mensen op je richten.
 author: Mijn Teamkompas
 category: Leiderschap

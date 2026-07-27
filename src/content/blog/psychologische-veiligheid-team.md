@@ -4,7 +4,7 @@ date: 2026-06-11
 description: Psychologische veiligheid bepaalt of mensen durven spreken, fouten
   bespreken en initiatief nemen. Ontdek wat het betekent en hoe je het praktisch
   vergroot.
-image: /blog/images/edd3c51abe20856798a8ad559c2dd7c8b49fb7ae3e0ab6b659697a75f026640f.png
+image: /blog/images/psychologische-veiligheid.jpg
 category: Teamcultuur
 tags: teamcultuur, psychologische veiligheid, aanspreken
 imageAlt: Illustratie bij het artikel psychologische veiligheid team

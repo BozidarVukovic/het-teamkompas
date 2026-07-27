@@ -4,7 +4,7 @@ date: 2026-06-20
 description: Innovatie mislukt zelden omdat mensen tegen vernieuwing zijn. Het loopt vast omdat er onvoldoende ruimte is om uit te spreken wat mensen spannend vinden, wat ze dreigen kwijt te raken en wat er werkelijk nodig is om iets nieuws eigen te maken.
 lead: Afdelingen omarmen innovatie pas wanneer mensen niet alleen begrijpen wat er verandert, maar ook ervaren dat hun zorgen, vakmanschap en dagelijkse realiteit serieus worden genomen.
 author: Mijn Teamkompas
-image: /blog/images/Innovatie-gedrag-team.jpg.png
+image: /blog/images/innovatie-gedrag-team.jpg
 category: Verandering
 tags: verandering, gedrag, leren
 imageAlt: Illustratie bij het artikel innovatie loopt vast op gedrag
