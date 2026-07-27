@@ -28,6 +28,7 @@ export const knowledgeNavigation = {
     {
       label: "Energie en motivatie",
       links: [
+        { label: "Teamenergie", href: "/kennis/teamenergie" },
         { label: "Bevlogenheid in het werk", href: "/kennis/bevlogenheid-in-het-werk" },
       ],
     },

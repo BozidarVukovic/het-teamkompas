@@ -12,6 +12,7 @@ const signals = [
   ["In de organisatie", ["voortdurend wisselende prioriteiten", "structurele onderbezetting", "onduidelijke verantwoordelijkheden", "veel verbeterinitiatieven zonder samenhang", "weinig invloed op besluiten", "systemen en processen die extra werk veroorzaken", "focus op individuele veerkracht zonder de werkomgeving te verbeteren"]],
 ];
 const related = [
+  ["Teamenergie", "Hoe energie in een team behouden blijft of wegloopt via de inrichting van het werk, de samenwerking en het leiderschap.", "/kennis/teamenergie"],
   ["Psychologische veiligheid", "Mensen moeten zich veilig genoeg voelen om aan te geven dat de belasting te hoog is, een fout is gemaakt of hulp nodig is.", "/psychologische-veiligheid"],
   ["Sociale veiligheid", "Onveilig gedrag, uitsluiting of intimidatie zijn zware taakeisen die veel energie kunnen kosten.", "/sociale-veiligheid"],
   ["Boven- en onderstroom", "De zichtbare werkdruk bevindt zich vaak in de bovenstroom. Onuitgesproken spanning en frustratie zitten vaker in de onderstroom.", "/boven-en-onderstroom"],

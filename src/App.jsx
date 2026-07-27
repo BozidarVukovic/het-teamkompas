@@ -25,6 +25,7 @@ import Klantenportaal from "./pages/public/Klantenportaal";
 import InsightsDiscoveryProfiel from "./pages/public/InsightsDiscoveryProfiel";
 import KenniskaartTeamontwikkeling from "./pages/public/KenniskaartTeamontwikkeling";
 import BevlogenheidInHetWerk from "./pages/public/BevlogenheidInHetWerk";
+import Teamenergie from "./pages/public/Teamenergie";
 import Teamcultuur from "./pages/public/Teamcultuur";
 import EigenaarschapInTeams from "./pages/public/EigenaarschapInTeams";
 import Verandermanagement from "./pages/public/Verandermanagement";
@@ -12654,6 +12655,7 @@ export default function App() {
         <Route path="/brein-en-samenwerking" element={<><BreinEnSamenwerkingPage /><InsightsKnowledgeCta /></>} />
         <Route path="/kleine-experimenten" element={<><KleineExperimentenPage /><InsightsKnowledgeCta /></>} />
         <Route path="/kennis/kenniskaart-teamontwikkeling" element={<KenniskaartTeamontwikkeling />} />
+        <Route path="/kennis/teamenergie" element={<><Teamenergie /><RelatedArticles paths={["/kennis/teamenergie"]} /></>} />
         <Route path="/kennis/bevlogenheid-in-het-werk" element={<><BevlogenheidInHetWerk /><RelatedArticles paths={["/kennis/bevlogenheid-in-het-werk"]} /></>} />
         <Route path="/kennis/teamcultuur" element={<><Teamcultuur /><RelatedArticles paths={["/kennis/teamcultuur"]} /></>} />
         <Route path="/kennis/eigenaarschap-in-teams" element={<><EigenaarschapInTeams /><RelatedArticles paths={["/kennis/eigenaarschap-in-teams"]} /></>} />

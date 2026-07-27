@@ -15,7 +15,7 @@ const steps = [
   {
     nr: "2", title: "Begrijpen", question: "Waarom reageren mensen zoals ze reageren?", color: "var(--tk-color-purple)",
     text: "Gedrag wordt begrijpelijker wanneer teamleden leren kijken naar menselijke behoeften, stressreacties, voorkeuren en verschillen. Begrip voorkomt snelle oordelen en maakt samenwerking beter bespreekbaar.",
-    topics: [["neuromanagement", "/brein-en-samenwerking"], ["verandermanagement", "/kennis/verandermanagement"], ["bevlogenheid", "/kennis/bevlogenheid-in-het-werk"], ["Insights Discovery", "/insights-discovery-profiel"], ["verschillen tussen mensen"], ["gedrag onder druk", "/brein-en-samenwerking"], ["groepsdynamiek", "/teamontwikkeling"]],
+    topics: [["neuromanagement", "/brein-en-samenwerking"], ["verandermanagement", "/kennis/verandermanagement"], ["teamenergie", "/kennis/teamenergie"], ["bevlogenheid", "/kennis/bevlogenheid-in-het-werk"], ["Insights Discovery", "/insights-discovery-profiel"], ["gedrag onder druk", "/brein-en-samenwerking"], ["groepsdynamiek", "/teamontwikkeling"]],
   },
   {
     nr: "3", title: "Verbinden", question: "Wat is nodig om het echte gesprek te kunnen voeren?", color: "var(--tk-color-green)",
