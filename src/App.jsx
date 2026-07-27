@@ -38,6 +38,8 @@ import CookieBanner from "./components/shared/CookieBanner";
 import ReflectiekaartFormulier from "./ReflectiekaartFormulier";
 import { Analytics } from "@vercel/analytics/react";
 import PageScans from "./pages/admin/PageScans";
+import PageGratisTeamscan from "./pages/admin/PageGratisTeamscan";
+import GratisTeamscan, { GratisTeamscanReport } from "./pages/public/GratisTeamscan";
 import {
   berekenScanScoresVoorMeting,
   isVeiligheidLeiderschapVerdieping,
@@ -9212,6 +9214,7 @@ function AdminDashboard({ onLogout }) {
     { label:"Dashboard",          icon:"📊", section:"Overzicht" },
     { label:"Contactaanvragen",   icon:"📬", badge: nieuwAanvragenCount > 0 ? String(nieuwAanvragenCount) : null, section:null },
     { label:"Teamscan aanvragen", icon:"🧭", badge: nieuwTeamscanCount > 0 ? String(nieuwTeamscanCount) : null, section:null },
+    { label:"Gratis teamscan",    icon:"✨", section:null },
     { label:"Reflectiekaart leads", icon:"📥", badge: nieuwReflectieCount > 0 ? String(nieuwReflectieCount) : null, section:null },
     { label:"Nieuwsbrief",        icon:"📧", section:null },
     { label:"Klanten",            icon:"🏢", section:null },
@@ -9225,6 +9228,7 @@ function AdminDashboard({ onLogout }) {
   const renderPage = () => {
     if (activeNav === "Contactaanvragen")     return <PageContactaanvragen />;
     if (activeNav === "Teamscan aanvragen")   return <FunnelDashboard />;
+    if (activeNav === "Gratis teamscan")      return <PageGratisTeamscan />;
     if (activeNav === "Reflectiekaart leads") return <PageReflectieLeads />;
     if (activeNav === "Nieuwsbrief")          return <PageNieuwsbrief />;
     if (activeNav === "Klanten")              return <PageKlanten />;
@@ -12644,6 +12648,8 @@ export default function App() {
         <Route path="/onze-aanpak" element={<><SeoHead page="onzeAanpak" /><OnzeAanpak /></>} />
         <Route path="/verkennen" element={<><SeoHead page="verkennen" /><Verkennen /></>} />
         <Route path="/teamscan" element={<><SeoHead page="teamscan" /><TeamscanDigitaal /><RelatedArticles title="Verdiep je in dit onderwerp" paths={["/teamscan"]} /></>} />
+        <Route path="/gratis-teamscan" element={<GratisTeamscan />} />
+        <Route path="/gratis-teamscan/rapport/:token" element={<GratisTeamscanReport />} />
         <Route path="/teamontwikkeling" element={<><SeoHead page="teamontwikkeling" /><TeamontwikkelingSeoLandingspagina onLoginClick={() => setView("login")} /><RelatedArticles title="Verdiep je in dit onderwerp" paths={["/teamontwikkeling"]} /></>} />
         <Route path="/insights-discovery-profiel" element={<InsightsDiscoveryProfiel />} />
         <Route path="/admin/funnel" element={<><SeoHead page="beheer" />{beheerElement}</>} />
