@@ -13,6 +13,9 @@ const db = admin.firestore();
 setGlobalOptions({ maxInstances: 10 });
 
 const OPENAI_API_KEY = defineSecret("OPENAI_API_KEY");
+const EMAILJS_SERVICE_ID = defineSecret("EMAILJS_SERVICE_ID");
+const EMAILJS_FREE_SCAN_TEMPLATE_ID = defineSecret("EMAILJS_FREE_SCAN_TEMPLATE_ID");
+const EMAILJS_PUBLIC_KEY = defineSecret("EMAILJS_PUBLIC_KEY");
 
 const COLLECTION_VRAGENLIJSTEN = "vragenlijsten";
 const COLLECTION_ANTWOORDEN = "antwoorden";
@@ -855,7 +858,7 @@ exports.startFreeScan = onCall(async (request) => {
   return {sessionId:ref.id,questionnaireVersion:FREE_SCAN_VERSION};
 });
 
-exports.completeFreeScan = onCall(async (request) => {
+exports.completeFreeScan = onCall({ secrets: [EMAILJS_SERVICE_ID, EMAILJS_FREE_SCAN_TEMPLATE_ID, EMAILJS_PUBLIC_KEY] }, async (request) => {
   enforceFreeRate(request,8); const data=request.data||{}, participant=data.participant||{};
   if(participant.hp) throw new HttpsError("permission-denied","Inzending geweigerd.");
   const sessionId=String(data.sessionId||""); if(!/^[\w-]{10,80}$/.test(sessionId))throw new HttpsError("invalid-argument","Ongeldige scansessie.");
