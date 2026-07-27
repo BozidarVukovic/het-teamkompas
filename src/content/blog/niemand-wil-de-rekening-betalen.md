@@ -8,7 +8,7 @@ lead: In elk team staat hij. Iedereen ziet hem. Maar niemand zegt iets. Waarom
   is het zo moeilijk om het gesprek te starten dat iedereen al lang in zijn
   hoofd voert?
 author: Mijn Teamkompas
-image: https://images.unsplash.com/photo-1549366021-9f761d450615?w=1200&q=80&auto=format&fit=crop
+image: https://images.unsplash.com/photo-1549366021-9f761d450615?w=1200&h=800&fit=crop&crop=entropy&q=80&auto=format
 category: Teamcultuur
 tags: teamcultuur, psychologische veiligheid, aanspreken
 imageAlt: Illustratie bij het artikel niemand wil de rekening betalen
