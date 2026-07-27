@@ -123,6 +123,7 @@ const TEAMSCAN_FAQ = [
   ["Is de Teamscan ook geschikt voor een managementteam?", "Ja. Er is een aparte vragenlijst voor de leidinggevende, waardoor het verschil tussen de beleving van het team en die van de leidinggevende zichtbaar wordt. Bij managementteams wordt die vergelijking vaak een waardevol startpunt."],
   ["Wat kost een Teamscan?", "Aan het aanvragen van de scan zijn op dit moment geen kosten verbonden. Wat daarna de investering bepaalt, is de omvang van het traject: het aantal teams en deelnemers, hoeveel voorbereiding en intake er nodig is, of er een begeleide bespreking of teamdag bij hoort, en of er later een herhaalmeting volgt. We publiceren daarom geen standaardtarief, maar noemen in het kennismakingsgesprek een concreet bedrag voordat je iets vastlegt."],
   ["Kan ik eerst zien wat eruit komt voordat ik iets afspreek?", "Ja. Op deze pagina staan vier voorbeeldpagina's uit een rapport, gebaseerd op fictieve data. Daarmee zie je hoe de uitkomsten worden vertaald naar inzicht, duiding en vervolgstappen, zonder dat je iets hoeft aan te vragen."],
+  ["Is er ook een gratis versie van de teamscan?", "Ja. Er is een gratis individuele teamscan die je in ongeveer acht tot tien minuten zelf invult. Je krijgt daarna direct een persoonlijk rapport met reflectievragen en een eerste stap. Die gratis scan geeft jouw eigen beleving weer en is geen oordeel over het team. De volledige teamscan op deze pagina brengt de beleving van alle teamleden samen en maakt de verschillen daartussen bespreekbaar."],
 ];
 
 export default function TeamscanDigitaal() {
@@ -615,6 +616,29 @@ export default function TeamscanDigitaal() {
               <a href="#aanvraag" onClick={() => trackFormStartOnce({ trigger: "rapport_preview_cta" })} style={{ ...primaryCtaStyle, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Start de teamscan</a>
               <button onClick={() => navigate("/verkennen")} style={{ ...buttonBase, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Plan een kennismaking</button>
             </div>
+          </div>
+        </section>
+
+        {/* Gratis individuele scan als laagdrempelige instap */}
+        <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: "linear-gradient(135deg,#0D1B2A 0%, #143B68 100%)", color: C.wit }}>
+          <div style={{ maxWidth: 1040, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.15fr 0.85fr", gap: 34, alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", textTransform: "uppercase", color: "#7DB7FF", marginBottom: 12 }}>Gratis · individueel · 8 tot 10 minuten</div>
+              <h2 style={{ fontSize: isMobile ? 28 : 38, lineHeight: 1.12, margin: "0 0 14px" }}>Liever eerst zelf ervaren hoe zo’n scan werkt?</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.78)", margin: "0 0 22px", maxWidth: 620 }}>
+                Doe de gratis individuele teamscan. Je beantwoordt een korte vragenlijst over hoe jij de samenwerking ervaart en krijgt direct een persoonlijk rapport met reflectievragen en een eerste kleine stap. Het is een persoonlijke indruk, geen oordeel over het hele team. De volledige teamscan hierboven brengt juist de beleving van álle teamleden samen.
+              </p>
+              <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12 }}>
+                <a href="/gratis-teamscan" onClick={(e) => { e.preventDefault(); navigate("/gratis-teamscan"); }} style={{ ...primaryCtaStyle, background: C.teal, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Start de gratis teamscan</a>
+              </div>
+            </div>
+            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 10 }}>
+              {["Gratis en vrijblijvend", "Direct een persoonlijk rapport", "Persoonlijk en vertrouwelijk", "Een concrete eerste stap"].map((item) => (
+                <li key={item} style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 12, padding: "12px 14px", fontSize: 15, fontWeight: 700 }}>
+                  <span aria-hidden="true" style={{ color: "#7DB7FF", fontWeight: 900 }}>✓</span>{item}
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
