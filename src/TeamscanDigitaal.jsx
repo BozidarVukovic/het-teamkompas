@@ -818,7 +818,7 @@ export default function TeamscanDigitaal() {
         <section id="aanvraag" ref={aanvraagRef} style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.licht, scrollMarginTop: 86 }}>
           <div style={{ maxWidth: 1040, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.8fr 1.2fr", gap: 34, alignItems: "start" }}>
             <aside style={{ background: C.wit, border: `1px solid ${C.lijn}`, borderRadius: 24, padding: 24 }}>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Leadgenerator</div>
+              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Teamscan aanvragen</div>
               <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, margin: "0 0 12px" }}>Start zonder verplichting</h2>
               <p style={{ color: C.sub, lineHeight: 1.75, margin: "0 0 20px" }}>
                 In deze fase gebruiken we de digitale teamscan om teams laagdrempelig te helpen en te leren waar de meeste behoefte zit. Er zijn nu geen kosten verbonden aan deze aanvraag.
