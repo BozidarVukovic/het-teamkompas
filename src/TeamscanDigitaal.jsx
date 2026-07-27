@@ -496,13 +496,20 @@ export default function TeamscanDigitaal() {
               <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 680 }}>
                 De online teamscan maakt zichtbaar hoe teamleden de samenwerking ervaren. Geen cijfer voor het team, maar een gezamenlijke spiegel: wat gaat goed, waar ontstaan patronen en welke volgende stap maakt het meeste verschil?
               </p>
-              <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 26 }}>
+              <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", flexWrap: "wrap", gap: 12, marginTop: 26 }}>
+                <a
+                  href="/gratis-teamscan"
+                  onClick={(e) => { e.preventDefault(); navigate("/gratis-teamscan"); }}
+                  style={{ ...buttonBase, background: C.wit, color: C.donker, fontWeight: 800, display: "inline-flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
+                >
+                  Doe de gratis teamscan
+                </a>
                 <a
                   href="#aanvraag"
                   onClick={() => trackFormStartOnce({ trigger: "hero_button" })}
                   style={{ ...primaryCtaStyle, display: "inline-flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
                 >
-                  Start de aanvraag
+                  Vraag de teamscan aan
                 </a>
                 <a
                   href="#voorbeeldrapport"
@@ -510,8 +517,10 @@ export default function TeamscanDigitaal() {
                 >
                   Bekijk het voorbeeldrapport
                 </a>
-                <button onClick={() => navigate("/verkennen")} style={{ ...buttonBase, background: "transparent", color: "rgba(255,255,255,0.8)", border: "1px solid rgba(255,255,255,0.16)" }}>Liever persoonlijk starten</button>
               </div>
+              <p style={{ fontSize: 13.5, color: "rgba(255,255,255,0.62)", margin: "14px 0 0" }}>
+                De gratis teamscan is individueel en duurt 8 tot 10 minuten. <button onClick={() => navigate("/verkennen")} style={{ background: "transparent", border: "none", color: "#7DB7FF", fontWeight: 700, cursor: "pointer", padding: 0, font: "inherit", textDecoration: "underline" }}>Liever eerst persoonlijk overleggen?</button>
+              </p>
             </div>
 
             <div style={{ display: "grid", gap: 12 }}>
