@@ -95,13 +95,16 @@ export default function BlogPost() {
         <script type="application/ld+json">{JSON.stringify({ "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: post.excerpt, image: post.image ? `https://www.mijnteamkompas.nl${post.image}` : undefined, datePublished: post.publishDate, dateModified: post.modifiedDate, author: { "@type": "Organization", name: post.author }, publisher: { "@type": "Organization", name: "Mijn Teamkompas" }, mainEntityOfPage: `https://www.mijnteamkompas.nl/blog/${post.slug}` })}</script>
       </Helmet>
 
-      {/* Hero image — full width */}
+      {/* Hero image — 3:2 verhouding zodat de hele foto zichtbaar blijft (de meeste
+          blogbeelden zijn 3:2). Een vaste hoogte croppte het beeld voorheen sterk. */}
       {post.image && (
-        <div style={{ width: "100%", height: 420, overflow: "hidden", background: "#1a2a3a" }}>
+        <div style={{ width: "100%", maxWidth: 900, margin: "0 auto", aspectRatio: "3 / 2", overflow: "hidden", background: "#1a2a3a" }}>
           <img
             src={post.image}
             alt={post.imageAlt}
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            width="1200"
+            height="800"
+            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
           />
         </div>
       )}

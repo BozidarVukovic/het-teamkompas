@@ -8,7 +8,8 @@ export const serviceLinks = [
 ];
 
 export const knowledgeNavigation = {
-  overview: { label: "Teamcultuur", href: "/kennis/teamcultuur" },
+  // Centrale hub: de kenniskaart bundelt alle kennisthema's op één pagina.
+  overview: { label: "Bekijk alle kennis", href: "/kennis/kenniskaart-teamontwikkeling" },
   featured: [
     { label: "Teamcultuur", href: "/kennis/teamcultuur" },
     { label: "Psychologische veiligheid", href: "/psychologische-veiligheid" },
@@ -31,10 +32,9 @@ export const knowledgeNavigation = {
       ],
     },
     {
-      label: "Veranderen en ontwikkelen",
+      label: "Veranderen en verbeteren",
       links: [
         { label: "Kleine experimenten", href: "/kleine-experimenten" },
-        { label: "Kenniskaart teamontwikkeling", href: "/kennis/kenniskaart-teamontwikkeling" },
         { label: "Borging na een teamdag", href: "/kennis/impact-van-een-teamdag" },
       ],
     },
@@ -42,6 +42,7 @@ export const knowledgeNavigation = {
 };
 
 export const allKnowledgeLinks = [
+  knowledgeNavigation.overview,
   ...knowledgeNavigation.featured,
   ...knowledgeNavigation.groups.flatMap((group) => group.links),
 ];

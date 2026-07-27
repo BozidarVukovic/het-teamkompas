@@ -72,8 +72,8 @@ function KnowledgeMenu({ onNavigate }) {
     <button className="site-nav__trigger" type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)} onFocus={show}>Kennis <span aria-hidden="true">⌄</span></button>
     {open && <section className="knowledge-menu" id={id} aria-label="Kennis">
       <div className="knowledge-menu__featured">
-        <p className="knowledge-menu__eyebrow">Begin bij een hoofdthema</p>
-        <p className="knowledge-menu__overview">Duurzame kennis</p>
+        <p className="knowledge-menu__eyebrow">Hoofdthema’s</p>
+        <NavLink item={knowledgeNavigation.overview} onNavigate={go} className="knowledge-menu__overview" />
         {knowledgeNavigation.featured.map((item) => <NavLink key={item.href} item={item} onNavigate={go} />)}
       </div>
       <div className="knowledge-menu__groups">
@@ -82,7 +82,7 @@ function KnowledgeMenu({ onNavigate }) {
           {group.links.map((item) => <NavLink key={item.href} item={item} onNavigate={go} />)}
         </div>)}
       </div>
-      <NavLink item={{ label: "Start bij teamcultuur →", href: "/kennis/teamcultuur" }} onNavigate={go} className="knowledge-menu__all" />
+      <NavLink item={{ label: "Naar alle artikelen en blogs →", href: "/inspiratie" }} onNavigate={go} className="knowledge-menu__all" />
     </section>}
   </div>;
 }
@@ -94,7 +94,7 @@ function MobileKnowledge({ onNavigate }) {
   return <div className="mobile-nav__section">
     <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>Kennis <span aria-hidden="true">{open ? "−" : "+"}</span></button>
     {open && <div id={id} className="mobile-nav__knowledge">
-      <p className="mobile-nav__overview">Duurzame kennis</p>
+      <NavLink item={knowledgeNavigation.overview} onNavigate={onNavigate} className="mobile-nav__overview" />
       <p>Hoofdthema’s</p>
       {knowledgeNavigation.featured.map((item) => <NavLink key={item.href} item={item} onNavigate={onNavigate} />)}
       {knowledgeNavigation.groups.map((group, index) => {
@@ -105,7 +105,7 @@ function MobileKnowledge({ onNavigate }) {
           {groupOpen && <div id={groupId}>{group.links.map((item) => <NavLink key={item.href} item={item} onNavigate={onNavigate} />)}</div>}
         </div>;
       })}
-      <NavLink item={{ label: "Start bij teamcultuur →", href: "/kennis/teamcultuur" }} onNavigate={onNavigate} className="mobile-nav__all" />
+      <NavLink item={{ label: "Naar alle artikelen en blogs →", href: "/inspiratie" }} onNavigate={onNavigate} className="mobile-nav__all" />
     </div>}
   </div>;
 }
