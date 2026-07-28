@@ -1312,27 +1312,14 @@ function PublicSite({ onLoginClick }) {
             <h1 style={{ fontSize: isMobile ? 34 : 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, marginBottom: 20, letterSpacing: "-0.03em" }}>
               Teams en leiders begeleiden bij gedragsverandering en organisatieontwikkeling
             </h1>
-            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 680, marginBottom: 16 }}>
-              Mijn Teamkompas helpt teams beter samenwerken als gedrag, verandering of leiderschap vastloopt. Met een teamscan, workshops en coaching maken we zichtbaar wat er speelt en begeleiden we teams en leiders naar ander gedrag in de praktijk.
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 620, marginBottom: 16 }}>
+              Voor teams die vastlopen in samenwerking, verandering of communicatie, en voor leiders die beweging willen zonder harder te trekken. We maken zichtbaar wat er speelt en vertalen dat naar ander gedrag in de praktijk.
             </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 20 }}>
-              {[
-                { label: "Teamscan", href: "/teamscan" },
-                { label: "Workshops en teamdagen", href: "/teamontwikkeling" },
-                { label: "Coaching van leiders en teams", href: "/teamcoaching" },
-              ].map(({ label, href }) => (
-                <span key={label} onClick={() => navigate(href)} style={{ border: "1px solid rgba(255,255,255,0.24)", color: "rgba(255,255,255,0.86)", borderRadius: 999, padding: "8px 12px", fontSize: 13, fontWeight: 800, background: "rgba(255,255,255,0.08)", cursor: "pointer" }}>{label}</span>
-              ))}
-            </div>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
               <span style={ctaStyle} onClick={openModal}>Plan een kennismaking</span>
               <span style={ghostStyle} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
-              <span style={{ ...ghostStyle, borderColor: "rgba(0,168,150,0.55)", color: PUB.teal, background: "rgba(0,168,150,0.10)" }} onClick={() => navigate("/klantenportaal")}>Naar klantportaal</span>
             </div>
             <LeadTrustBar isMobile={isMobile} tone="dark" />
-            <div style={{ marginTop: 18, color: "rgba(255,255,255,0.58)", fontSize: 13, lineHeight: 1.65, maxWidth: 660 }}>
-              Voor teams die vastlopen in samenwerking, verandering of onderlinge communicatie, en voor leiders die beweging willen zonder harder te trekken.
-            </div>
           </div>
           <div style={{ minHeight: isMobile ? 320 : "86vh", position: "relative", zIndex: 1 }}>
             <img src="/teamkompas-workshop-hero.jpg" alt="Teamworkshop van Mijn Teamkompas met kompaswerkvorm en gezamenlijke dialoog" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: .82 }} />
