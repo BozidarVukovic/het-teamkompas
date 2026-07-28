@@ -1,6 +1,6 @@
 ---
 title: Waarom innovatie en creativiteit steeds belangrijker worden
-date: 2026-07-27
+date: 2026-07-28
 description: In bijna elk team leven ideeën over hoe het beter kan. Waarom ze vaak onuitgesproken blijven, en wat een team nodig heeft om ze wél te onderzoeken.
 image: /blog/images/innovatie.jpg
 lead: Tijdens een overleg komt een probleem op tafel dat er al langer ligt. De werkdruk loopt op, mensen wachten langer op een reactie en de frustratie is voelbaar. Iemand doet een voorstel. Het blijft even stil.
