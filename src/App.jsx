@@ -1353,8 +1353,8 @@ function PublicSite({ onLoginClick }) {
             <div style={{ position: "absolute", inset: 0, background: isMobile ? "linear-gradient(to top, rgba(13,27,42,0.88), rgba(13,27,42,0.18))" : "linear-gradient(to right, rgba(13,27,42,0.92), rgba(13,27,42,0.10))" }} />
             <div style={{ position: "absolute", left: isMobile ? 22 : 44, right: isMobile ? 22 : 44, bottom: isMobile ? 24 : 44, background: "rgba(255,255,255,0.92)", borderRadius: 18, padding: 22, boxShadow: "0 24px 70px rgba(0,0,0,0.28)" }}>
               <div style={{ fontSize: 13, fontWeight: 800, color: PUB.teal, marginBottom: 8 }}>Wanneer schakel je ons in?</div>
-              <div style={{ fontSize: isMobile ? 20 : 24, fontWeight: 800, color: PUB.donker, lineHeight: 1.2, marginBottom: 8 }}>Als samenwerking stroef loopt of verandering onvoldoende landt.</div>
-              <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.sub }}>We maken gedrag, spanning en verantwoordelijkheid bespreekbaar en vertalen dit naar concrete beweging.</div>
+              <div style={{ fontSize: isMobile ? 20 : 24, fontWeight: 800, color: PUB.donker, lineHeight: 1.2, marginBottom: 8 }}>Als de samenwerking stroef loopt, of als een verandering op papier klaar is maar in het werk nog niet.</div>
+              <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.sub }}>We helpen benoemen wat daaronder zit en kiezen samen één stap die de week erna al merkbaar is.</div>
             </div>
           </div>
         </section>
