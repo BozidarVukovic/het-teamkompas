@@ -862,9 +862,36 @@ function LeadTrustBar({ isMobile = false, tone = "light" }) {
 }
 
 function StickyLeadCta({ onClick, isMobile = false }) {
+  // Pas tonen zodra de bezoeker voorbij de hero is. In de hero staat al een
+  // eigen kennismakings-knop; twee keer dezelfde vraag naast elkaar maakt het
+  // eerste scherm onrustig.
+  const [zichtbaar, setZichtbaar] = useState(false);
+
+  useEffect(() => {
+    const drempel = () => Math.max(window.innerHeight * 0.75, 420);
+    const onScroll = () => setZichtbaar(window.scrollY > drempel());
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
   return (
-    <div style={{ position: "fixed", left: isMobile ? 14 : "auto", right: 14, bottom: 14, zIndex: 900, maxWidth: isMobile ? "calc(100% - 28px)" : 360 }}>
-      <button type="button" onClick={onClick} style={{ width: "100%", border: 0, borderRadius: 999, padding: isMobile ? "12px 16px" : "14px 18px", background: PUB.oranje, color: PUB.donker, fontWeight: 900, fontSize: 14, cursor: "pointer", boxShadow: "0 18px 50px rgba(13,27,42,0.28)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+    <div
+      aria-hidden={!zichtbaar}
+      style={{
+        position: "fixed", left: isMobile ? 14 : "auto", right: 14, bottom: 14, zIndex: 900,
+        maxWidth: isMobile ? "calc(100% - 28px)" : 360,
+        opacity: zichtbaar ? 1 : 0,
+        transform: zichtbaar ? "translateY(0)" : "translateY(12px)",
+        pointerEvents: zichtbaar ? "auto" : "none",
+        transition: "opacity .25s ease, transform .25s ease",
+      }}
+    >
+      <button type="button" onClick={onClick} tabIndex={zichtbaar ? 0 : -1} style={{ width: "100%", border: 0, borderRadius: 999, padding: isMobile ? "12px 16px" : "14px 18px", background: PUB.oranje, color: PUB.donker, fontWeight: 900, fontSize: 14, cursor: "pointer", boxShadow: "0 18px 50px rgba(13,27,42,0.28)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
         Plan vrijblijvende kennismaking <span aria-hidden="true">→</span>
       </button>
     </div>
