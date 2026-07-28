@@ -1342,9 +1342,13 @@ function PublicSite({ onLoginClick }) {
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 620, marginBottom: 16 }}>
               Voor teams die vastlopen in samenwerking, verandering of communicatie, en voor leiders die beweging willen zonder harder te trekken. We maken zichtbaar wat er speelt en vertalen dat naar ander gedrag in de praktijk.
             </p>
-            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", flexWrap: "wrap", gap: 12, marginTop: 30 }}>
               <span style={ctaStyle} onClick={openModal}>Plan een kennismaking</span>
+              <span style={{ background: PUB.wit, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 800, fontSize: 14, cursor: "pointer", textAlign: "center" }} onClick={() => navigate("/gratis-teamscan")}>Doe de gratis teamscan</span>
               <span style={ghostStyle} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
+            </div>
+            <div style={{ marginTop: 12, color: "rgba(255,255,255,0.55)", fontSize: 13 }}>
+              De gratis teamscan is individueel en duurt 8 tot 10 minuten.
             </div>
             <LeadTrustBar isMobile={isMobile} tone="dark" />
           </div>
