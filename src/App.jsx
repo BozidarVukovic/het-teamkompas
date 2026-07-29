@@ -7,6 +7,8 @@ import { useState, useEffect, useRef } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Navigate, Routes, Route, useNavigate } from "react-router-dom";
 import OnzeAanpak from "./OnzeAanpak";
+import heroContent from "./content/heroContent";
+import { trackEvent } from "./lib/analytics";
 import KlantreisKeuze from "./KlantreisKeuze";
 import Verkennen from "./Verkennen";
 import TeamscanDigitaal from "./TeamscanDigitaal";
@@ -844,9 +846,9 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
 function LeadTrustBar({ isMobile = false, tone = "light" }) {
   const dark = tone === "dark";
   const items = [
-    ["Reactie binnen 1 werkdag", "Geen verkoopgesprek, wel scherpte op jullie vraag"],
+    ["Reactie binnen één werkdag", "Geen verkoopgesprek, wel scherpte op jullie vraag"],
     ["Vrijblijvend en concreet", "In 30 minuten helder of teamscan, teamdag of coaching past"],
-    ["Input zonder naam", "Terugkoppeling op teamniveau, geen individuen in beeld"],
+    ["Inzicht zonder naam of verplichting", "Terugkoppeling op teamniveau, geen individuen in beeld"],
   ];
 
   return (
@@ -937,7 +939,7 @@ function SeoHead({ page = "home" }) {
   const pages = {
     home: {
       title: "Mijn Teamkompas | teamscan, workshops en coaching",
-      description: "Plan een vrijblijvend adviesgesprek over teamontwikkeling. Mijn Teamkompas helpt met teamscan, workshops, teamdagen en coaching bij betere samenwerking en leiderschap.",
+      description: "Loopt samenwerking of verandering binnen je team vast? Mijn Teamkompas maakt zichtbaar wat er speelt en helpt teams met concrete stappen naar ander gedrag.",
       url: "https://www.mijnteamkompas.nl/",
       image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
     },
@@ -1331,35 +1333,79 @@ function PublicSite({ onLoginClick }) {
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, overflowX: "hidden", paddingTop: 64, background: PUB.wit }}>
 
-        <section id="home" style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "86vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", alignItems: "center", position: "relative", overflow: "hidden" }}>
+        <section id="home" style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "80vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", alignItems: "center", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.035) 1px,transparent 1px)", backgroundSize: "30px 30px" }} />
           <Strepen />
           <div style={{ padding: isMobile ? "58px 24px 36px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 16 }}>Teamscan, workshops en coaching</div>
-            <h1 style={{ fontSize: isMobile ? 34 : 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, marginBottom: 20, letterSpacing: "-0.03em" }}>
-              Teams en leiders begeleiden bij gedragsverandering en organisatieontwikkeling
+            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 16 }}>{heroContent.eyebrow}</div>
+            {/* Regellengte begrensd via maxWidth, zodat losse woorden niet los op een regel vallen. */}
+            <h1 style={{ fontSize: isMobile ? 32 : 52, fontWeight: 800, lineHeight: 1.08, color: PUB.wit, marginBottom: 20, letterSpacing: "-0.03em", maxWidth: isMobile ? "100%" : 620, textWrap: "balance" }}>
+              {heroContent.title}
             </h1>
-            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 620, marginBottom: 16 }}>
-              Voor teams die vastlopen in samenwerking, verandering of communicatie, en voor leiders die beweging willen zonder harder te trekken. We maken zichtbaar wat er speelt en vertalen dat naar ander gedrag in de praktijk.
+            <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.78)", maxWidth: 600, marginBottom: 0 }}>
+              {heroContent.subtitle}
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", flexWrap: "wrap", gap: 12, marginTop: 30 }}>
-              <span style={ctaStyle} onClick={openModal}>Plan een kennismaking</span>
-              <span style={{ background: PUB.wit, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 800, fontSize: 14, cursor: "pointer", textAlign: "center" }} onClick={() => navigate("/gratis-teamscan")}>Doe de gratis teamscan</span>
-              <span style={ghostStyle} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
+              <button
+                type="button"
+                onClick={() => { trackEvent(heroContent.primaryCta.event); openModal(); }}
+                style={{ ...ctaStyle, border: 0, font: "inherit", fontWeight: 800, fontSize: 15, width: isMobile ? "100%" : "auto" }}
+              >
+                {heroContent.primaryCta.label}
+              </button>
+              <a
+                href={heroContent.secondaryCta.href}
+                onClick={(e) => { e.preventDefault(); trackEvent(heroContent.secondaryCta.event); navigate(heroContent.secondaryCta.href); }}
+                style={{ background: PUB.wit, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 800, fontSize: 14, cursor: "pointer", textAlign: "center", textDecoration: "none", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}
+              >
+                {heroContent.secondaryCta.label}
+              </a>
             </div>
-            <div style={{ marginTop: 12, color: "rgba(255,255,255,0.55)", fontSize: 13 }}>
-              De gratis teamscan is individueel en duurt 8 tot 10 minuten.
+            <div style={{ marginTop: 14, color: "rgba(255,255,255,0.58)", fontSize: 13, lineHeight: 1.6, maxWidth: 560 }}>
+              {heroContent.ctaNote}
+            </div>
+            <div style={{ marginTop: 14 }}>
+              <a
+                href={heroContent.tertiaryCta.href}
+                onClick={(e) => { e.preventDefault(); trackEvent(heroContent.tertiaryCta.event); navigate(heroContent.tertiaryCta.href); }}
+                style={{ color: PUB.teal, fontWeight: 800, fontSize: 14, textDecoration: "underline", textUnderlineOffset: 3 }}
+              >
+                {heroContent.tertiaryCta.label} →
+              </a>
             </div>
             <LeadTrustBar isMobile={isMobile} tone="dark" />
-          </div>
-          <div style={{ minHeight: isMobile ? 320 : "86vh", position: "relative", zIndex: 1 }}>
-            <img src="/teamkompas-workshop-hero.jpg" alt="Teamworkshop van Mijn Teamkompas met kompaswerkvorm en gezamenlijke dialoog" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: .82 }} />
-            <div style={{ position: "absolute", inset: 0, background: isMobile ? "linear-gradient(to top, rgba(13,27,42,0.88), rgba(13,27,42,0.18))" : "linear-gradient(to right, rgba(13,27,42,0.92), rgba(13,27,42,0.10))" }} />
-            <div style={{ position: "absolute", left: isMobile ? 22 : 44, right: isMobile ? 22 : 44, bottom: isMobile ? 24 : 44, background: "rgba(255,255,255,0.92)", borderRadius: 18, padding: 22, boxShadow: "0 24px 70px rgba(0,0,0,0.28)" }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: PUB.teal, marginBottom: 8 }}>Wanneer schakel je ons in?</div>
-              <div style={{ fontSize: isMobile ? 20 : 24, fontWeight: 800, color: PUB.donker, lineHeight: 1.2, marginBottom: 8 }}>Als de samenwerking stroef loopt, of als een verandering op papier klaar is maar in het werk nog niet.</div>
-              <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.sub }}>We helpen benoemen wat daaronder zit en kiezen samen één stap die de week erna al merkbaar is.</div>
+            <div style={{ marginTop: 16, color: "rgba(255,255,255,0.52)", fontSize: 12.5, lineHeight: 1.6, maxWidth: 560 }}>
+              {heroContent.proofLine}
             </div>
+          </div>
+          <div style={{ position: "relative", zIndex: 1, alignSelf: "stretch" }}>
+            <div style={{ position: "relative", minHeight: isMobile ? 260 : "100%", height: isMobile ? 260 : "100%" }}>
+              <img src="/teamkompas-workshop-hero.jpg" alt="Teamworkshop van Mijn Teamkompas met kompaswerkvorm en gezamenlijke dialoog" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: .82 }} />
+              <div style={{ position: "absolute", inset: 0, background: isMobile ? "linear-gradient(to top, rgba(13,27,42,0.55), rgba(13,27,42,0.12))" : "linear-gradient(to right, rgba(13,27,42,0.92), rgba(13,27,42,0.10))" }} />
+            </div>
+            {/* Op desktop zweeft het blok over de foto; op mobiel staat het eronder,
+                zodat er geen tekst over het beeld heen valt. */}
+            <div style={{ position: isMobile ? "static" : "absolute", left: isMobile ? undefined : 44, right: isMobile ? undefined : 44, bottom: isMobile ? undefined : 44, margin: isMobile ? "0 22px 30px" : undefined, background: isMobile ? "rgba(255,255,255,0.96)" : "rgba(255,255,255,0.92)", borderRadius: 18, padding: 22, boxShadow: "0 24px 70px rgba(0,0,0,0.28)" }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: PUB.teal, marginBottom: 8 }}>{heroContent.infoCard.label}</div>
+              <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 800, color: PUB.donker, lineHeight: 1.25, marginBottom: 8 }}>{heroContent.infoCard.title}</div>
+              <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.sub }}>{heroContent.infoCard.text}</div>
+            </div>
+          </div>
+        </section>
+
+        {/* Luisteren, meten, bewegen. Staat direct onder de hero en piept aan de
+            onderkant van het eerste scherm, als uitnodiging om verder te lezen. */}
+        <section aria-label="Onze werkwijze" style={{ background: PUB.donker, borderTop: "1px solid rgba(255,255,255,0.10)", padding: isMobile ? "26px 24px 30px" : "26px 60px 30px" }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: isMobile ? 14 : 28 }}>
+            {heroContent.approach.map(([titel, tekst], i) => (
+              <div key={titel} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                <span aria-hidden="true" style={{ flexShrink: 0, width: 26, height: 26, borderRadius: "50%", background: "rgba(0,168,150,0.16)", color: PUB.teal, fontSize: 12, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center" }}>{i + 1}</span>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 850, color: PUB.wit, marginBottom: 3 }}>{titel}</div>
+                  <div style={{ fontSize: 13.5, lineHeight: 1.6, color: "rgba(255,255,255,0.66)" }}>{tekst}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
