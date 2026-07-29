@@ -17,22 +17,18 @@ export const heroContent = {
   subtitle:
     "Wij maken zichtbaar wat verandering, samenwerking en eigenaarschap onbewust tegenhoudt. Daarna helpen we teams om met kleine, concrete stappen ander gedrag in de praktijk te brengen.",
 
-  primaryCta: { label: "Plan een vrijblijvende kennismaking", event: "hero_primary_cta_click" },
-  secondaryCta: { label: "Doe de gratis teamscan", href: "/gratis-teamscan", event: "hero_teamscan_click" },
+  // De gratis teamscan is de laagdrempeligste eerste stap en staat daarom
+  // vooraan in het oranje. De kennismaking blijft duidelijk zichtbaar als
+  // tweede route. Eventnamen beschrijven de actie, niet de plek op de pagina.
+  scanCta: { label: "Doe de gratis teamscan", href: "/gratis-teamscan", event: "hero_teamscan_click" },
+  contactCta: { label: "Plan een vrijblijvende kennismaking", event: "hero_primary_cta_click" },
   tertiaryCta: { label: "Bekijk onze aanpak", href: "/onze-aanpak", event: "hero_approach_click" },
 
-  ctaNote:
-    "De gratis teamscan is individueel, duurt 8 tot 10 minuten en geeft direct inzicht in de belangrijkste ontwikkelpunten van jouw team.",
-
-  // Inhoudelijk vertrouwenselement. Er is nog geen geverifieerde kwantitatieve
-  // bewijskracht (klantlogo's, aantallen, reviews) beschikbaar in de codebase of
-  // beheeromgeving, dus staat hier bewust geen cijfer. Zodra die er is, kan deze
-  // regel worden vervangen of aangevuld met `proofItems` hieronder.
-  proofLine:
-    "Praktisch, mensgericht en gebaseerd op inzichten uit teamontwikkeling en gedragspsychologie",
+  ctaNote: "Individueel, 8 tot 10 minuten, direct inzicht.",
 
   // Plek voor toekomstige, aantoonbare bewijskracht: klantlogo's, aantallen
   // begeleide teams of reviews. Blijft leeg tot die feitelijk onderbouwd zijn.
+  // Bewust geen algemene claim over de eigen werkwijze; dat is geen bewijs.
   proofItems: [],
 
   // Het witte blok bij de foto. Verdiept de hero, herhaalt hem niet.

@@ -1346,37 +1346,32 @@ function PublicSite({ onLoginClick }) {
               {heroContent.subtitle}
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", flexWrap: "wrap", gap: 12, marginTop: 30 }}>
+              <a
+                href={heroContent.scanCta.href}
+                onClick={(e) => { e.preventDefault(); trackEvent(heroContent.scanCta.event); navigate(heroContent.scanCta.href); }}
+                style={{ ...ctaStyle, fontWeight: 800, fontSize: 15, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}
+              >
+                {heroContent.scanCta.label}
+              </a>
               <button
                 type="button"
-                onClick={() => { trackEvent(heroContent.primaryCta.event); openModal(); }}
-                style={{ ...ctaStyle, border: 0, font: "inherit", fontWeight: 800, fontSize: 15, width: isMobile ? "100%" : "auto" }}
+                onClick={() => { trackEvent(heroContent.contactCta.event); openModal(); }}
+                style={{ background: PUB.wit, color: PUB.donker, border: 0, font: "inherit", padding: "14px 22px", borderRadius: 8, fontWeight: 800, fontSize: 14, cursor: "pointer", textAlign: "center", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}
               >
-                {heroContent.primaryCta.label}
+                {heroContent.contactCta.label}
               </button>
-              <a
-                href={heroContent.secondaryCta.href}
-                onClick={(e) => { e.preventDefault(); trackEvent(heroContent.secondaryCta.event); navigate(heroContent.secondaryCta.href); }}
-                style={{ background: PUB.wit, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 800, fontSize: 14, cursor: "pointer", textAlign: "center", textDecoration: "none", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}
-              >
-                {heroContent.secondaryCta.label}
-              </a>
             </div>
-            <div style={{ marginTop: 14, color: "rgba(255,255,255,0.58)", fontSize: 13, lineHeight: 1.6, maxWidth: 560 }}>
-              {heroContent.ctaNote}
-            </div>
-            <div style={{ marginTop: 14 }}>
+            <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 16px" }}>
+              <span style={{ color: "rgba(255,255,255,0.58)", fontSize: 13 }}>{heroContent.ctaNote}</span>
               <a
                 href={heroContent.tertiaryCta.href}
                 onClick={(e) => { e.preventDefault(); trackEvent(heroContent.tertiaryCta.event); navigate(heroContent.tertiaryCta.href); }}
-                style={{ color: PUB.teal, fontWeight: 800, fontSize: 14, textDecoration: "underline", textUnderlineOffset: 3 }}
+                style={{ color: PUB.teal, fontWeight: 800, fontSize: 13.5, textDecoration: "underline", textUnderlineOffset: 3 }}
               >
                 {heroContent.tertiaryCta.label} →
               </a>
             </div>
             <LeadTrustBar isMobile={isMobile} tone="dark" />
-            <div style={{ marginTop: 16, color: "rgba(255,255,255,0.52)", fontSize: 12.5, lineHeight: 1.6, maxWidth: 560 }}>
-              {heroContent.proofLine}
-            </div>
           </div>
           <div style={{ position: "relative", zIndex: 1, alignSelf: "stretch" }}>
             <div style={{ position: "relative", minHeight: isMobile ? 260 : "100%", height: isMobile ? 260 : "100%" }}>
