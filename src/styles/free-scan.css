@@ -85,7 +85,14 @@
 .free-score span { display: block; }
 .free-score span { font-size: 12px; color: var(--tk-color-muted); margin-top: 3px; }
 .free-score-track { height: 12px; border-radius: 99px; background: #e4e9ee; overflow: hidden; }
-.free-score-track i { display: block; height: 100%; border-radius: 99px; }
+.free-score-track i { display: block; height: 100%; border-radius: 99px; min-width: 4px; }
+
+/* Sterke punten en ontwikkelkansen als lijst. Losse regels lezen prettiger dan
+   een opsomming met "en", omdat de themanamen zelf al een "en" bevatten. */
+.free-theme-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.free-theme-list li { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.free-theme-list li span { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.free-theme-list li b { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--tk-color-muted); }
 
 /* ---------------------------------------------------------------- uitslag en rapport */
 .free-result blockquote { font-size: 23px; line-height: 1.5; border-left: 5px solid var(--tk-color-orange); padding-left: 22px; margin: 36px 0; }
