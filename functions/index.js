@@ -23,8 +23,9 @@ const COLLECTION_TEAMWIELEN = "teamwielen";
 const AI_MODEL = "gpt-4.1-mini";
 
 // Gratis individuele teamscan: inhoud en scoremodel zijn bewust deterministisch.
-const FREE_SCAN_VERSION = "1.0.0";
-const FREE_SCORE_VERSION = "1.0.0";
+// Houd deze twee versies gelijk aan src/data/freeScanConfig.js.
+const FREE_SCAN_VERSION = "1.1.0";
+const FREE_SCORE_VERSION = "1.1.0";
 const FREE_THEMES = [
   ["veiligheid","Psychologische veiligheid","Ruimte om zorgen, fouten en verschil uit te spreken.","Welk gesprek stel jij uit omdat de ruimte nog niet veilig genoeg voelt?","Vraag aan het einde van één overleg: welk belangrijk punt is nog niet uitgesproken?"],
   ["communicatie","Communicatie en luisteren","Elkaar begrijpen en misverstanden constructief bespreken.","Wanneer voelde jij je voor het laatst echt gehoord in je team?","Vat in één overleg eerst het standpunt van een ander samen voordat je reageert."],
@@ -34,6 +35,9 @@ const FREE_THEMES = [
   ["leiderschap","Leiderschap en beweging","Open dialoog, richting en ruimte om te leren en bewegen.","Waar helpt meer richting, en waar helpt juist meer ruimte?","Vraag bij één verandering expliciet wat mensen nodig hebben om mee te bewegen."],
 ].map(([id,label,description,reflection,experiment])=>({id,label,description,reflection,experiment}));
 const FREE_QUESTION_THEMES = {v1:"veiligheid",v2:"veiligheid",v3:"veiligheid",v4:"veiligheid",c1:"communicatie",c2:"communicatie",c3:"communicatie",c4:"communicatie",e1:"eigenaarschap",e2:"eigenaarschap",e3:"eigenaarschap",e4:"eigenaarschap",s1:"verbinding",s2:"verbinding",s3:"verbinding",s4:"verbinding",n1:"energie",n2:"energie",n3:"energie",n4:"energie",l1:"leiderschap",l2:"leiderschap",l3:"leiderschap",l4:"leiderschap"};
+// Omgekeerd gescoorde vragen: een hoge score is daar juist ongunstig.
+// Moet gelijk blijven aan FREE_SCAN_REVERSED in src/data/freeScanConfig.js.
+const FREE_REVERSED = new Set(["v3","c4","e3","n4"]);
 const FREE_PATTERNS = [
   ["betrokken_lage_energie","verbinding","energie","Betrokkenheid vraagt energie","Je antwoorden kunnen wijzen op veel onderlinge betrokkenheid, terwijl de beschikbare energie onder druk staat."],
   ["veilig_weinig_eigenaarschap","veiligheid","eigenaarschap","Ruimte kan nog meer beweging krijgen","Er lijkt ruimte om je uit te spreken, maar die ruimte vertaalt zich mogelijk nog niet altijd naar eigenaarschap en opvolging."],
@@ -44,7 +48,7 @@ const FREE_PATTERNS = [
 
 function freeZone(score){ return score>=75?{id:"strong",label:"Sterke basis"}:score>=55?{id:"attention",label:"Aandacht en verdieping"}:{id:"pattern",label:"Mogelijk belemmerend patroon"}; }
 function calculateFreeResults(answers){
-  const themeScores=FREE_THEMES.map(theme=>{const values=Object.entries(FREE_QUESTION_THEMES).filter(([,t])=>t===theme.id).map(([id])=>Number(answers[id])).filter(v=>Number.isFinite(v)&&v>=1&&v<=5);const score=values.length?Math.round(((values.reduce((a,b)=>a+b,0)/values.length)-1)*25):null;return {...theme,score,answered:values.length,zone:score===null?null:freeZone(score)};});
+  const themeScores=FREE_THEMES.map(theme=>{const values=Object.entries(FREE_QUESTION_THEMES).filter(([,t])=>t===theme.id).map(([id])=>{const v=Number(answers[id]);if(!Number.isFinite(v)||v<1||v>5)return null;return FREE_REVERSED.has(id)?6-v:v;}).filter(v=>v!==null);const score=values.length?Math.round(((values.reduce((a,b)=>a+b,0)/values.length)-1)*25):null;return {...theme,score,answered:values.length,zone:score===null?null:freeZone(score)};});
   if(themeScores.some(t=>t.answered!==4)) throw new HttpsError("invalid-argument","Beantwoord alle 24 vragen.");
   const ranked=[...themeScores].sort((a,b)=>b.score-a.score), strengths=ranked.slice(0,2), opportunities=[...ranked].reverse().slice(0,2);
   const patterns=FREE_PATTERNS.filter(p=>themeScores.find(t=>t.id===p.high).score>=75&&themeScores.find(t=>t.id===p.low).score<55).slice(0,3);

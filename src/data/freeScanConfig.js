@@ -1,6 +1,12 @@
 // Versieerbare, deterministische inhoud voor de individuele perceptiescan.
-export const FREE_SCAN_VERSION = "1.0.0";
-export const SCORE_MODEL_VERSION = "1.0.0";
+//
+// 1.1.0: vier omgekeerde vragen toegevoegd (tegen instemmingsneiging), dubbel
+// ontkennende en dubbelloopse formuleringen herschreven, dubbel gebruikte
+// bronvraag opgelost en twee items van individueel naar teamniveau gebracht.
+// Let op: deze versie moet gelijk blijven aan FREE_SCAN_VERSION in
+// functions/index.js, anders weigert de server inzendingen.
+export const FREE_SCAN_VERSION = "1.1.0";
+export const SCORE_MODEL_VERSION = "1.1.0";
 
 export const FREE_SCAN_SCALE = [
   { value: 1, label: "Helemaal oneens" }, { value: 2, label: "Oneens" },
@@ -17,16 +23,49 @@ export const FREE_SCAN_THEMES = [
   { id: "leiderschap", label: "Leiderschap en beweging", color: "#8B5CF6", description: "Open dialoog, richting en ruimte om te leren en bewegen.", reflection: "Waar helpt meer richting, en waar helpt juist meer ruimte?", experiment: "Vraag bij één verandering expliciet wat mensen nodig hebben om mee te bewegen." },
 ];
 
-// Alle formuleringen zijn geselecteerd of persoonlijk afgeleid van de bestaande medewerkersscan.
+// Formuleringen zijn afgeleid van de bestaande medewerkersscan (sourceId) of
+// nieuw geformuleerd voor deze scan (sourceId null).
+//
+// `reverse: true` betekent dat een hoge score juist ongunstig is; de scoring
+// draait de waarde om (6 - antwoord). Vier van de 24 vragen staan omgekeerd,
+// zodat iemand die alles klakkeloos op "eens" zet geen vals positief beeld
+// krijgt. Deze omkering gebeurt óók server-side; houd beide in sync.
 const q = (id, theme, text, sourceId, reverse = false) => ({ id, theme, text, sourceId, reverse });
+
 export const FREE_SCAN_QUESTIONS = [
-  q("v1","veiligheid","Ik voel me veilig om mijn mening te geven.",1006), q("v2","veiligheid","Ik durf fouten of twijfels te bespreken.",1007), q("v3","veiligheid","In mijn team wordt verschil in stijl en achtergrond gewaardeerd.",1010), q("v4","veiligheid","Belangrijke zorgen worden in mijn team open besproken.",1003),
-  q("c1","communicatie","Ik voel me begrepen door mijn collega’s.",1001), q("c2","communicatie","Verschillen in werkstijl en communicatie worden gerespecteerd.",1002), q("c3","communicatie","Misverstanden worden meestal open en constructief besproken.",1003), q("c4","communicatie","Ik pas mijn manier van communiceren aan verschillende collega’s aan.",1004),
-  q("e1","eigenaarschap","Ik voel eigenaarschap over verbeteringen in mijn werk.",1023), q("e2","eigenaarschap","Ik heb vertrouwen dat verbeteringen ook echt worden opgepakt.",1028), q("e3","eigenaarschap","Verbeteren voelt als onderdeel van mijn werk, niet als extra taak.",1025), q("e4","eigenaarschap","Initiatief nemen wordt in mijn team aangemoedigd.",1009),
-  q("s1","verbinding","Ik ervaar voldoende autonomie en ondersteuning.",1020), q("s2","verbinding","Ik voel me betrokken bij veranderingen binnen mijn team.",1027), q("s3","verbinding","Ik vertrouw erop dat collega’s mij steunen als het nodig is.",4), q("s4","verbinding","Ik leer van mijn collega’s.",18),
-  q("n1","energie","Mijn werk kost mij niet structureel meer energie dan het oplevert.",1017), q("n2","energie","Ik haal voldoening uit mijn werk.",1018), q("n3","energie","Frustraties in het dagelijks werk worden serieus genomen.",1019), q("n4","energie","De werkdruk is voor mij beheersbaar.",13),
-  q("l1","leiderschap","Mijn leidinggevende nodigt uit tot openheid en dialoog.",1008), q("l2","leiderschap","Veranderingen worden duidelijk en begrijpelijk uitgelegd.",1012), q("l3","leiderschap","Mijn zorgen of gevoelens bij verandering krijgen aandacht.",1014), q("l4","leiderschap","Leren en experimenteren wordt aangemoedigd.",1024),
+  q("v1","veiligheid","Ik voel me veilig om mijn mening te geven.",1006),
+  q("v2","veiligheid","Ik durf fouten of twijfels te bespreken.",1007),
+  q("v3","veiligheid","Ik houd mijn mening weleens voor me om gedoe te voorkomen.",null,true),
+  q("v4","veiligheid","Belangrijke zorgen worden in mijn team open besproken.",1003),
+
+  q("c1","communicatie","Ik voel me begrepen door mijn collega’s.",1001),
+  q("c2","communicatie","Verschillen in werkstijl en communicatie worden gerespecteerd.",1002),
+  q("c3","communicatie","Als er een misverstand ontstaat, praten we het uit.",null),
+  q("c4","communicatie","Belangrijke informatie bereikt mij vaak te laat.",null,true),
+
+  q("e1","eigenaarschap","Ik voel eigenaarschap over verbeteringen in mijn werk.",1023),
+  q("e2","eigenaarschap","Ik heb vertrouwen dat verbeteringen ook echt worden opgepakt.",1028),
+  q("e3","eigenaarschap","Besluiten blijven bij ons vaak liggen zonder duidelijke eigenaar.",null,true),
+  q("e4","eigenaarschap","Initiatief nemen wordt in mijn team aangemoedigd.",1009),
+
+  q("s1","verbinding","Ik ervaar voldoende ruimte om mijn werk op mijn eigen manier te doen.",1020),
+  q("s2","verbinding","Ik voel me betrokken bij veranderingen binnen mijn team.",1027),
+  q("s3","verbinding","Ik vertrouw erop dat collega’s mij steunen als het nodig is.",4),
+  q("s4","verbinding","In ons team helpen mensen elkaar ook wanneer het druk is.",18),
+
+  q("n1","energie","Mijn werk geeft mij meer energie dan het kost.",1017),
+  q("n2","energie","Ik haal voldoening uit mijn werk.",1018),
+  q("n3","energie","Frustraties in het dagelijks werk worden serieus genomen.",1019),
+  q("n4","energie","Aan het einde van de werkweek ben ik vaak leeg.",13,true),
+
+  q("l1","leiderschap","Mijn leidinggevende nodigt uit tot openheid en dialoog.",1008),
+  q("l2","leiderschap","Veranderingen worden duidelijk en begrijpelijk uitgelegd.",1012),
+  q("l3","leiderschap","Mijn zorgen of gevoelens bij verandering krijgen aandacht.",1014),
+  q("l4","leiderschap","Leren en experimenteren wordt aangemoedigd.",1024),
 ];
+
+// Ids van omgekeerd gescoorde vragen. Gespiegeld in functions/index.js.
+export const FREE_SCAN_REVERSED = FREE_SCAN_QUESTIONS.filter((item) => item.reverse).map((item) => item.id);
 
 export const SCORE_ZONES = [
   { min: 75, id: "strong", label: "Sterke basis" },
