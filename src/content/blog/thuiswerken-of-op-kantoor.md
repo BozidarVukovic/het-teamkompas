@@ -74,6 +74,8 @@ Kies vervolgens één gezamenlijke kantoordag voor de komende vier weken en rich
 
 De vraag is uiteindelijk niet of thuiswerken beter is dan werken op kantoor. De vraag is hoe we het werk zo organiseren dat de medewerker én het team goed kunnen functioneren.
 
+Een kantoordag alleen is daarvoor zelden genoeg. Waarom een vol kantoor nog geen verbonden team maakt, lees je in [iedereen was op kantoor en toch sprak niemand elkaar](/blog/aanwezig-maar-niet-verbonden).
+
 - - -
 
 Wil je onderzoeken wat hybride werken doet met de samenwerking in jouw team? Mijn Teamkompas maakt zichtbaar waar verbinding en energie ontstaan, en waar ze weglekken. [Plan een vrijblijvend kennismakingsgesprek](/verkennen) of start met een [teamscan](/teamscan).
