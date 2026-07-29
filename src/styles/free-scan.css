@@ -36,17 +36,20 @@
 .free-content summary { font-weight: 850; cursor: pointer; }
 
 /* ---------------------------------------------------------------- vragenlijst */
-.free-progress { padding-top: 52px; }
+/* Doel: vraag én alle vijf de antwoorden passen samen op één scherm, ook op een
+   kleinere laptop. Daarom compacte witruimte en een bescheiden vraagkop; een
+   stelling hoeft geen display-formaat. */
+.free-progress { padding-top: 28px; }
 .free-progress span { display: block; font-weight: 800; margin-bottom: 8px; }
 .free-progress progress { width: 100%; height: 10px; accent-color: var(--tk-color-teal); }
 
-.free-question { margin-top: 48px; }
+.free-question { margin-top: 24px; }
 .free-question > span { color: var(--tk-color-teal); font-weight: 850; }
-.free-question h1 { font-size: clamp(28px, 5vw, 45px); max-width: 800px; }
-.free-question fieldset { border: 0; padding: 0; display: grid; gap: 10px; }
-.free-question label { display: flex; align-items: center; gap: 14px; background: #fff; border: 2px solid var(--tk-color-border); padding: 14px 18px; border-radius: 14px; cursor: pointer; }
+.free-question h1 { font-size: clamp(21px, 2.6vw, 30px); line-height: 1.25; letter-spacing: -.02em; max-width: 720px; margin: 10px 0 18px; }
+.free-question fieldset { border: 0; padding: 0; display: grid; gap: 8px; }
+.free-question label { display: flex; align-items: center; gap: 12px; background: #fff; border: 2px solid var(--tk-color-border); padding: 11px 16px; border-radius: 12px; cursor: pointer; }
 .free-question label.selected { border-color: var(--tk-color-teal); background: #effaf8; }
-.free-question label b { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--tk-color-bg); }
+.free-question label b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--tk-color-bg); flex-shrink: 0; }
 
 /* Zichtbare focus voor toetsenbordgebruikers: het antwoord waar je met Tab of
    de pijltjestoetsen op staat moet herkenbaar zijn, ook als het nog niet
@@ -55,7 +58,7 @@
 .free-question label:focus-within { outline: 3px solid var(--tk-color-teal); outline-offset: 2px; }
 
 /* ---------------------------------------------------------------- acties */
-.free-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 28px; }
+.free-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 20px; }
 .free-actions button:not(.tk-button) { border: 0; background: transparent; padding: 14px; font-weight: 800; cursor: pointer; }
 
 .free-page a:focus-visible,
@@ -106,6 +109,17 @@
   .free-score { grid-template-columns: 1fr 42px; }
   .free-score-track { grid-row: 2; grid-column: 1 / 3; }
   .free-shell { width: min(100% - 30px, 960px); }
+}
+
+/* Lage schermen (kleine laptops, liggende telefoon): nog wat strakker, zodat de
+   vraag met alle vijf de antwoorden zonder scrollen zichtbaar blijft. */
+@media (max-height: 780px) {
+  .free-progress { padding-top: 20px; }
+  .free-question { margin-top: 16px; }
+  .free-question h1 { font-size: clamp(19px, 2.2vw, 25px); margin: 8px 0 14px; }
+  .free-question fieldset { gap: 6px; }
+  .free-question label { padding: 9px 14px; }
+  .free-actions { margin-top: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
