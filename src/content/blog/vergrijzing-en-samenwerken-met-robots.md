@@ -1,6 +1,6 @@
 ---
 title: Nederland vergrijst. Waarom werken we nog niet vanzelfsprekend samen met robots?
-date: 2026-07-28
+date: 2026-07-29
 description: De tekorten lopen op en toch aarzelen we bij robots. Wat cultuur en gedrag daarmee te maken hebben, en waarom techniek zelden het grootste obstakel is.
 image: /blog/images/vergrijzing-en-robots.jpg
 lead: In de zorg lopen de tekorten op. In de techniek, in de logistiek en in het onderwijs net zo goed. En straks misschien ook op jouw afdeling. Ondertussen worden we met elkaar ouder: er gaan de komende jaren veel meer mensen met pensioen dan er jongeren bijkomen.
