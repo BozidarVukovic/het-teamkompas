@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useParams } from "react-router-dom";
-import { FREE_SCAN_QUESTIONS, FREE_SCAN_SCALE, FREE_SCAN_THEMES, FREE_SCAN_VERSION } from "../../data/freeScanConfig";
+import { FREE_SCAN_QUESTIONS, FREE_SCAN_SCALE, FREE_SCAN_THEMES, FREE_SCAN_VERSION, REPORT_META } from "../../data/freeScanConfig";
 import { calculateFreeScanResults } from "../../lib/freeScanScoring";
 import "../../styles/free-scan.css";
 
@@ -14,6 +14,20 @@ const emit = (name, data={}) => window.dispatchEvent(new CustomEvent("teamkompas
 // de balken onzichtbaar (background: undefined).
 const themeColor = (id) => FREE_SCAN_THEMES.find((t) => t.id === id)?.color || "var(--tk-color-teal)";
 
+// Vult de door de server berekende scores aan met de inhoudelijke velden uit de
+// lokale configuratie (kleur, achtergrond, duiding, kennispagina). De server
+// blijft leidend voor de score zelf.
+const verrijk = (result) => {
+  if (!result?.themeScores) return result;
+  const bij = (t) => ({ ...(FREE_SCAN_THEMES.find((x) => x.id === t.id) || {}), ...t });
+  return {
+    ...result,
+    themeScores: result.themeScores.map(bij),
+    strengths: (result.strengths || []).map(bij),
+    opportunities: (result.opportunities || []).map(bij),
+  };
+};
+
 function ScoreOverview({ result }) {
   return <div className="free-score-list" aria-label="Themascores">{result.themeScores.map(theme=><div className="free-score" key={theme.id}><div><strong>{theme.label}</strong><span>{theme.zone?.label || "Geen score"}</span></div><div className="free-score-track"><i role="img" aria-label={`${theme.label}: ${theme.score ?? "geen"} van 100`} style={{width:`${theme.score || 0}%`,background:themeColor(theme.id)}} /></div><b>{theme.score ?? "–"}</b></div>)}</div>;
 }
@@ -23,8 +37,162 @@ export function GratisTeamscanReport() {
   useEffect(()=>{ httpsCallable(getFunctions(),"getFreeScanReport")({token}).then(r=>setState({report:r.data})).catch(()=>setState({error:"Deze rapportlink is ongeldig of verlopen."})); },[token]);
   if(state.loading) return <main className="free-shell"><p>Rapport laden…</p></main>;
   if(state.error) return <main className="free-shell"><Helmet><meta name="robots" content="noindex,nofollow" /></Helmet><h1>Rapport niet beschikbaar</h1><p>{state.error}</p></main>;
-  const {participant,result,completedAt}=state.report;
-  return <main className="free-shell free-report"><Helmet><title>Jouw persoonlijke Teamkompas</title><meta name="robots" content="noindex,nofollow" /></Helmet><header><span>Luisteren · Meten · Bewegen</span><h1>Jouw persoonlijke Teamkompas</h1><p>{participant.firstName} · {new Date(completedAt).toLocaleDateString("nl-NL")}</p></header><section><h2>Jouw persoonlijke perspectief</h2><p>Deze uitslag weerspiegelt hoe jij de samenwerking ervaart. Het is geen oordeel of diagnose van het volledige team. Verschillen in beleving kunnen juist waardevolle gespreksinformatie opleveren.</p><ScoreOverview result={result}/></section><section><h2>Samenvatting</h2><p><strong>Kracht:</strong> {result.strengths[0]?.label}.</p><p><strong>Ontwikkelkans:</strong> {result.opportunities[0]?.label}.</p>{result.patterns.map(p=><article key={p.id}><h3>{p.title}</h3><p>{p.text}</p></article>)}</section><section><h2>Van inzicht naar beweging</h2>{result.themeScores.map(t=><article className="free-theme" key={t.id}><h3>{t.label} — {t.score}/100</h3><p>{t.description} Jouw antwoorden wijzen op een <strong>{t.zone.label.toLowerCase()}</strong>. Dit kan waardevol zijn om samen verder te onderzoeken.</p><p><strong>Reflectie:</strong> {t.reflection}</p><p><strong>Klein experiment:</strong> {t.experiment}</p></article>)}</section><section className="free-cta"><h2>Van één perspectief naar een teambeeld</h2><p>De volledige Teamscan maakt overeenkomsten, verschillen en onderliggende patronen tussen teamleden zichtbaar.</p><a className="tk-button tk-button-primary" href="/teamscan" onClick={()=>emit("free_scan_report_full_scan_click")}>Ontdek de volledige Teamscan</a></section></main>;
+  const { participant, completedAt, questionnaireVersion } = state.report;
+  const result = verrijk(state.report.result);
+  const datum = new Date(completedAt).toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+  // Laagste score eerst: dat is de meest logische plek om te beginnen.
+  const prioriteit = [...result.themeScores].filter((t) => t.score !== null).sort((a, b) => a.score - b.score);
+  const laagste = prioriteit[0];
+
+  return (
+    <main className="free-shell free-report">
+      <Helmet>
+        <title>Jouw persoonlijke Teamkompas</title>
+        <meta name="robots" content="noindex,nofollow" />
+      </Helmet>
+
+      <header className="free-report__cover">
+        <div>
+          <span className="free-eyebrow">Luisteren · Meten · Bewegen</span>
+          <h1>Persoonlijk Teamkompas</h1>
+          <p className="free-report__lead">Een beeld van hoe jij de samenwerking in jouw team ervaart, met per domein een duiding, een reflectievraag en een eerste stap.</p>
+        </div>
+        <dl className="free-report__meta">
+          <div><dt>Opgesteld voor</dt><dd>{participant.firstName}</dd></div>
+          <div><dt>Datum</dt><dd>{datum}</dd></div>
+          <div><dt>Instrument</dt><dd>Gratis individuele teamscan</dd></div>
+          <div><dt>Versie</dt><dd>Vragenlijst {questionnaireVersion} · rapport {REPORT_META.version}</dd></div>
+        </dl>
+        <button type="button" className="free-report__print" onClick={() => window.print()}>Rapport printen of opslaan als pdf</button>
+      </header>
+
+      {/* 01 ---------------------------------------------------------------- */}
+      <section>
+        <p className="free-report__num">01</p>
+        <h2>Overzicht</h2>
+        <p>Hieronder staan je scores op de zes domeinen. De score loopt van 0 tot 100 en beschrijft jouw eigen beleving, niet de prestatie van het team.</p>
+        <ScoreOverview result={result} />
+
+        <div className="free-report__grid">
+          <article className="free-theme">
+            <h3>Hoe je deze scores leest</h3>
+            <p>{REPORT_META.scale}</p>
+            <ul className="free-zone-list">
+              {REPORT_META.zones.map((z) => (
+                <li key={z.id}><span className={`free-zone free-zone--${z.id}`}>{z.label}</span><b>{z.range}</b><p>{z.text}</p></li>
+              ))}
+            </ul>
+          </article>
+          <article className="free-theme">
+            <h3>Eerste duiding</h3>
+            <p>Je sterkste domein is <strong>{result.strengths[0]?.label}</strong> met een score van {result.strengths[0]?.score}. De grootste ontwikkelkans zit bij <strong>{laagste?.label}</strong> met {laagste?.score}.</p>
+            <p>Het verschil tussen die twee is {Math.abs((result.strengths[0]?.score ?? 0) - (laagste?.score ?? 0))} punten. Een groot verschil wijst er vaak op dat één domein de rest afremt. Liggen de scores dicht bij elkaar, dan is het beeld gelijkmatiger en kun je kiezen waar je begint.</p>
+          </article>
+        </div>
+      </section>
+
+      {/* 02 ---------------------------------------------------------------- */}
+      <section>
+        <p className="free-report__num">02</p>
+        <h2>Leidende inzichten</h2>
+        <div className="free-report__grid">
+          <article className="free-theme">
+            <h3>Je sterke basis</h3>
+            <ul className="free-theme-list">{result.strengths.map((t) => <li key={t.id}><span style={{ background: themeColor(t.id) }} aria-hidden="true" />{t.label}<b>{t.score}</b></li>)}</ul>
+            <p>Benoem dit expliciet in je team. Wat goed werkt blijft vaak onbesproken, waardoor het ook makkelijk verdwijnt.</p>
+          </article>
+          <article className="free-theme">
+            <h3>Je ontwikkelkansen</h3>
+            <ul className="free-theme-list">{result.opportunities.map((t) => <li key={t.id}><span style={{ background: themeColor(t.id) }} aria-hidden="true" />{t.label}<b>{t.score}</b></li>)}</ul>
+            <p>Begin bij één van deze twee. Twee domeinen tegelijk aanpakken levert meestal minder op dan één stap die je echt volhoudt.</p>
+          </article>
+        </div>
+
+        {result.patterns?.length > 0 && (
+          <>
+            <h3 className="free-report__sub">Patronen in jouw antwoorden</h3>
+            <p>Deze combinaties vallen op omdat een hoge en een lage score elkaar hier beïnvloeden.</p>
+            {result.patterns.map((p) => (
+              <article className="free-theme free-theme--pattern" key={p.id}><h4>{p.title}</h4><p>{p.text}</p></article>
+            ))}
+          </>
+        )}
+      </section>
+
+      {/* 03 ---------------------------------------------------------------- */}
+      <section>
+        <p className="free-report__num">03</p>
+        <h2>Domeinanalyse</h2>
+        <p>Per domein: wat het betekent, waar het inhoudelijk op rust, wat jouw score kan suggereren en welke stap je kunt zetten.</p>
+        {result.themeScores.map((t) => (
+          <article className="free-theme free-theme--domain" key={t.id}>
+            <div className="free-theme__head">
+              <span className="free-theme__dot" style={{ background: themeColor(t.id) }} aria-hidden="true" />
+              <h3>{t.label}</h3>
+              <span className={`free-zone free-zone--${t.zone?.id || "attention"}`}>{t.zone?.label}</span>
+              <b>{t.score ?? "–"}<small>/100</small></b>
+            </div>
+            <p className="free-theme__desc">{t.description}</p>
+            {t.theory && <p><strong>Achtergrond.</strong> {t.theory}</p>}
+            {(t.score >= 75 ? t.whenHigh : t.whenLow) && (
+              <p><strong>Wat jouw score kan betekenen.</strong> {t.score >= 75 ? t.whenHigh : t.whenLow}</p>
+            )}
+            <div className="free-theme__actions">
+              <div><span>Reflectievraag</span><p>{t.reflection}</p></div>
+              <div><span>Klein experiment</span><p>{t.experiment}</p></div>
+            </div>
+            {t.knowledge && <p className="free-theme__link"><a href={t.knowledge.href}>Meer over {t.knowledge.label.toLowerCase()} →</a></p>}
+          </article>
+        ))}
+      </section>
+
+      {/* 04 ---------------------------------------------------------------- */}
+      <section>
+        <p className="free-report__num">04</p>
+        <h2>Vervolgstappen</h2>
+        <h3 className="free-report__sub">Prioritering op basis van jouw scores</h3>
+        <table className="free-table">
+          <thead><tr><th>#</th><th>Domein</th><th>Score</th><th>Zone</th></tr></thead>
+          <tbody>
+            {prioriteit.map((t, i) => (
+              <tr key={t.id}><td>{i + 1}</td><td><span className="free-theme__dot" style={{ background: themeColor(t.id) }} aria-hidden="true" />{t.label}</td><td>{t.score}</td><td>{t.zone?.label}</td></tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="free-report__note">Deze volgorde is een suggestie op basis van je scores. Wat werkelijk het meeste oplevert, hangt af van wat er in jouw team speelt.</p>
+
+        <h3 className="free-report__sub">Een ritme voor de komende negentig dagen</h3>
+        <ol className="free-horizon">
+          {REPORT_META.horizon.map(([wanneer, wat]) => (
+            <li key={wanneer}><span>{wanneer}</span><p>{wat}</p></li>
+          ))}
+        </ol>
+
+        <h3 className="free-report__sub">Het gesprek aangaan</h3>
+        <p>Deze scan krijgt pas waarde wanneer je erover praat. Je hoeft de scores niet te delen om het gesprek te openen. Een vraag werkt vaak beter dan een cijfer.</p>
+        <ul className="free-bullets">
+          <li>"Ik heb nagedacht over onze samenwerking. Mag ik één ding met je bespreken dat me opviel?"</li>
+          <li>"Wat zou jij noemen als het domein waar wij als team het meeste te winnen hebben?"</li>
+          <li>"Wat heb je van mij nodig om {laagste ? laagste.label.toLowerCase() : "dit onderwerp"} makkelijker te maken?"</li>
+        </ul>
+      </section>
+
+      {/* Verantwoording ---------------------------------------------------- */}
+      <section className="free-report__small">
+        <h2>Verantwoording en grenzen</h2>
+        {REPORT_META.limits.map(([titel, tekst]) => (
+          <p key={titel}><strong>{titel}.</strong> {tekst}</p>
+        ))}
+        <p><strong>Bewaartermijn.</strong> Deze rapportlink is tijdelijk beschikbaar. Bewaar het rapport zelf als je het langer wilt kunnen inzien, bijvoorbeeld via de printknop bovenaan.</p>
+      </section>
+
+      <section className="free-cta">
+        <h2>Van één perspectief naar een teambeeld</h2>
+        <p>Dit rapport laat zien hoe jij het ervaart. De volledige Teamscan brengt de beleving van alle teamleden samen en maakt het verschil tussen team en leidinggevende zichtbaar. Dat verschil is meestal het meest waardevolle gespreksonderwerp.</p>
+        <a className="tk-button tk-button-primary" href="/teamscan" onClick={() => emit("free_scan_report_full_scan_click")}>Ontdek de volledige Teamscan</a>
+      </section>
+    </main>
+  );
 }
 
 export default function GratisTeamscan() {
