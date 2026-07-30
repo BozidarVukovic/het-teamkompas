@@ -12,10 +12,12 @@
 export const heroContent = {
   eyebrow: "Voor teams en leiders die echt beweging willen",
 
-  title: "Iedereen doet zijn best. Toch blijft de samenwerking vastlopen.",
+  // Let op: deze kop staat ook in het statische SEO-blok in index.html.
+  // Wijzig ze samen, anders leest Google iets anders dan de bezoeker ziet.
+  title: "Teams die goed samenwerken presteren merkbaar beter. Wij maken zichtbaar wat dat nu tegenhoudt.",
 
   subtitle:
-    "Wij maken zichtbaar wat verandering, samenwerking en eigenaarschap onbewust tegenhoudt. Daarna helpen we teams om met kleine, concrete stappen ander gedrag in de praktijk te brengen.",
+    "Iedereen doet zijn best en toch loopt de samenwerking vast. Wij brengen in beeld wat verandering, eigenaarschap en onderling vertrouwen in de weg zit, en helpen teams met kleine concrete stappen naar ander gedrag in de praktijk.",
 
   // De gratis teamscan is de laagdrempeligste eerste stap en staat daarom
   // vooraan in het oranje. De kennismaking blijft duidelijk zichtbaar als
