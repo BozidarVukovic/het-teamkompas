@@ -64,6 +64,8 @@ De kans is groot dat er talenten zichtbaar worden waar niemand eerder bij stilst
 
 Welk talent in jouw team blijft nu ongebruikt, alleen omdat het niet in iemands functie staat?
 
+Ruimte geven binnen duidelijke kaders speelt ook bij heel praktische vragen. Hoe je dat doet bij verzoeken om andere werktijden, staat in [maatwerk in werktijden zonder de bedrijfsvoering uit het oog te verliezen](/blog/maatwerk-in-werktijden).
+
 - - -
 
 Wil je zichtbaar maken welke kwaliteiten er in jouw team aanwezig zijn en waar ze onbenut blijven? Mijn Teamkompas helpt teams en leidinggevenden daar taal en richting aan te geven. [Plan een vrijblijvend kennismakingsgesprek](/verkennen) of start met een [teamscan](/teamscan).

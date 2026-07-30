@@ -62,6 +62,8 @@ De beste managers proberen niet iedereen tevreden te houden. Ze zoeken naar oplo
 
 Welke maatwerkafspraak binnen jouw team zou je vandaag nog net zo uitleggen als op de dag dat je hem maakte?
 
+Ruimte geven gaat trouwens niet alleen over werktijden. Waarom het ook loont om ruimte te geven aan iemands kwaliteiten, lees je in [minder sturen op functieomschrijvingen en meer op talenten](/blog/van-functieomschrijving-naar-talent).
+
 - - -
 
 Wil je onderzoeken hoe eerlijk de verdeling van werk en ruimte in jouw team wordt ervaren? Mijn Teamkompas maakt zichtbaar wat er speelt, ook wat er niet hardop wordt gezegd. [Plan een vrijblijvend kennismakingsgesprek](/verkennen) of start met een [teamscan](/teamscan).
