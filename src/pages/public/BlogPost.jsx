@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import KompasDot from "../../components/shared/KompasDot";
 import NieuwsbriefFormulier from "../../components/shared/NieuwsbriefFormulier";
 import RelatedArticles from "../../components/shared/RelatedArticles";
-import { blogPosts, formatPublishDate } from "../../content/blogData";
+import { allBlogPosts, blogPosts, formatPublishDate } from "../../content/blogData";
 
 function calcReadTime(text) {
   const words = text.trim().split(/\s+/).length;
@@ -67,7 +67,10 @@ function ShareButtons({ title }) {
 
 export default function BlogPost() {
   const { slug } = useParams();
-  const post = blogPosts.find((item) => item.slug === slug);
+  // Zoek in álle artikelen, ook de ingeplande. Zo blijft een gedeelde link naar
+  // een gepland artikel werken in plaats van op een foutpagina uit te komen.
+  const post = allBlogPosts.find((item) => item.slug === slug);
+  const isGepland = post ? !blogPosts.some((item) => item.slug === post.slug) : false;
   const notFound = !post;
 
   if (notFound) {
@@ -91,9 +94,17 @@ export default function BlogPost() {
       <Helmet>
         <title>{`${post.title} | Mijn Teamkompas`}</title>
         <meta name="description" content={post.excerpt} />
+        {/* Een gepland artikel mag nog niet in Google verschijnen. */}
+        {isGepland && <meta name="robots" content="noindex, follow" />}
         <link rel="canonical" href={`https://www.mijnteamkompas.nl/blog/${post.slug}`} />
         <script type="application/ld+json">{JSON.stringify({ "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: post.excerpt, image: post.image ? `https://www.mijnteamkompas.nl${post.image}` : undefined, datePublished: post.publishDate, dateModified: post.modifiedDate, author: { "@type": "Organization", name: post.author }, publisher: { "@type": "Organization", name: "Mijn Teamkompas" }, mainEntityOfPage: `https://www.mijnteamkompas.nl/blog/${post.slug}` })}</script>
       </Helmet>
+
+      {isGepland && (
+        <div style={{ background: "#fdf1e0", color: "#97591a", padding: "12px 24px", textAlign: "center", fontWeight: 700, fontSize: 14 }}>
+          Dit artikel staat ingepland en verschijnt op {formatPublishDate(post.publishDate)}. Je bekijkt nu een voorvertoning.
+        </div>
+      )}
 
       {/* Hero image — 3:2 verhouding zodat de hele foto zichtbaar blijft (de meeste
           blogbeelden zijn 3:2). Een vaste hoogte croppte het beeld voorheen sterk. */}

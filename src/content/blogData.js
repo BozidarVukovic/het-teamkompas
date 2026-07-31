@@ -30,7 +30,25 @@ function validTime(date) {
   return Number.isNaN(time) ? 0 : time;
 }
 
-export const blogPosts = Object.entries(rawPosts)
+/**
+ * Is dit artikel al gepubliceerd?
+ *
+ * Een artikel met een datum in de toekomst is ingepland: het staat wel in de
+ * codebase, maar verschijnt pas op zijn publicatiedatum in de overzichten.
+ * We vergelijken op kalenderdag, zodat een artikel van vandaag meteen zichtbaar
+ * is en niet pas om middernacht.
+ */
+function isGepubliceerd(date) {
+  const tijd = Date.parse(date);
+  if (Number.isNaN(tijd)) return true; // geen of ongeldige datum: gewoon tonen
+  const vandaag = new Date();
+  vandaag.setHours(23, 59, 59, 999);
+  return tijd <= vandaag.getTime();
+}
+
+// Alle artikelen, inclusief ingeplande. Gebruikt door de detailpagina, zodat een
+// gedeelde link naar een gepland artikel blijft werken en niet op een 404 uitkomt.
+export const allBlogPosts = Object.entries(rawPosts)
   .map(([filePath, raw]) => {
     const { data, content } = parseFrontmatter(raw);
     const slug = filePath.replace(/.*\//, "").replace(/\.md$/, "");
@@ -54,6 +72,12 @@ export const blogPosts = Object.entries(rawPosts)
     };
   })
   .sort((a, b) => validTime(b.publishDate) - validTime(a.publishDate) || a.title.localeCompare(b.title, "nl"));
+
+// Wat bezoekers in de overzichten zien: alleen wat al gepubliceerd is.
+export const blogPosts = allBlogPosts.filter((post) => isGepubliceerd(post.publishDate));
+
+// Handig voor beheer: wat staat er nog in de wachtrij, en wanneer verschijnt het?
+export const geplandeBlogPosts = allBlogPosts.filter((post) => !isGepubliceerd(post.publishDate));
 
 export const blogCategories = [...new Set(blogPosts.map((post) => post.category))]
   .filter((category) => blogPosts.filter((post) => post.category === category).length > 1)

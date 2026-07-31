@@ -157,26 +157,8 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://www.mijnteamkompas.nl/blog/manager-worden-van-je-eigen-groep</loc>
-    <lastmod>2026-06-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://www.mijnteamkompas.nl/blog/waarom-collegas-verwachten-dat-de-manager-het-oplost</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://www.mijnteamkompas.nl/blog/amerikaanse-daadkracht-botst-met-nederlandse-tegenspraak</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://www.mijnteamkompas.nl/blog/innovatie-loopt-vast-op-gedrag</loc>
-    <lastmod>2026-06-20</lastmod>
+    <loc>https://www.mijnteamkompas.nl/blog/werkdruk-of-onduidelijkheid</loc>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
@@ -187,8 +169,26 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://www.mijnteamkompas.nl/blog/werkdruk-of-onduidelijkheid</loc>
-    <lastmod>2026-06-13</lastmod>
+    <loc>https://www.mijnteamkompas.nl/blog/innovatie-loopt-vast-op-gedrag</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/manager-worden-van-je-eigen-groep</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/amerikaanse-daadkracht-botst-met-nederlandse-tegenspraak</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/waarom-collegas-verwachten-dat-de-manager-het-oplost</loc>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
@@ -211,19 +211,25 @@
     <priority>0.75</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/blog/waarom-generaties-anders-met-verandering-omgaan</loc>
+    <lastmod>2026-07-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/blog/waarom-kiezen-de-meeste-mensen-voor-de-roltrap</loc>
     <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://www.mijnteamkompas.nl/blog/waarom-diversiteit-positief-werkt-voor-het-teamresultaat</loc>
+    <loc>https://www.mijnteamkompas.nl/blog/hoe-kan-een-jaargesprek-echt-waarde-toevoegen</loc>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://www.mijnteamkompas.nl/blog/hoe-kan-een-jaargesprek-echt-waarde-toevoegen</loc>
+    <loc>https://www.mijnteamkompas.nl/blog/waarom-diversiteit-positief-werkt-voor-het-teamresultaat</loc>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
@@ -259,12 +265,6 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://www.mijnteamkompas.nl/blog/waarom-ogsm-vaak-niet-werkt</loc>
-    <lastmod>2026-07-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
     <loc>https://www.mijnteamkompas.nl/blog/leidinggeven-aan-een-groot-team</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -272,6 +272,12 @@
   </url>
   <url>
     <loc>https://www.mijnteamkompas.nl/blog/waarom-missen-we-ons-werk-pas-als-het-er-niet-meer-is</loc>
+    <lastmod>2026-07-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/waarom-ogsm-vaak-niet-werkt</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
@@ -295,12 +301,6 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://www.mijnteamkompas.nl/blog/waarom-generaties-anders-met-verandering-omgaan</loc>
-    <lastmod>2026-07-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
     <loc>https://www.mijnteamkompas.nl/blog/mannelijke-en-vrouwelijke-leiders</loc>
     <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
@@ -319,12 +319,6 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://www.mijnteamkompas.nl/blog/waarom-innovatie-en-creativiteit-belangrijker-worden</loc>
-    <lastmod>2026-07-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
     <loc>https://www.mijnteamkompas.nl/blog/collegas-meekrijgen-bij-verandering</loc>
     <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
@@ -337,13 +331,19 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://www.mijnteamkompas.nl/blog/vergrijzing-en-samenwerken-met-robots</loc>
-    <lastmod>2026-07-29</lastmod>
+    <loc>https://www.mijnteamkompas.nl/blog/waarom-innovatie-en-creativiteit-belangrijker-worden</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
     <loc>https://www.mijnteamkompas.nl/blog/aanwezig-maar-niet-verbonden</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/vergrijzing-en-samenwerken-met-robots</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
@@ -363,30 +363,6 @@
   <url>
     <loc>https://www.mijnteamkompas.nl/blog/van-functieomschrijving-naar-talent</loc>
     <lastmod>2026-07-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://www.mijnteamkompas.nl/blog/hoe-een-meningsverschil-een-teamconflict-wordt</loc>
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://www.mijnteamkompas.nl/blog/ondersteunen-is-iets-anders-dan-redden</loc>
-    <lastmod>2026-08-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://www.mijnteamkompas.nl/blog/houvast-tijdens-onzekerheid</loc>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://www.mijnteamkompas.nl/blog/onmisbare-medewerker-als-risico</loc>
-    <lastmod>2026-08-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>

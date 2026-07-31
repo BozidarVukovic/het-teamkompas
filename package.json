@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/generate-seo-pages.js",
+    "build": "node scripts/sync-sitemap-blogs.mjs && vite build && node scripts/generate-seo-pages.js",
     "preview": "vite preview",
     "test:scroll": "node scripts/test-scrollmanager.mjs"
     ,"test:free-scan": "node --test tests/freeScanScoring.test.mjs"
