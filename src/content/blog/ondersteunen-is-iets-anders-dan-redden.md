@@ -72,6 +72,8 @@ Kijk daarna wat er gebeurt, met het probleem én met het gesprek. Neemt de ander
 
 Welk probleem dat deze week op jouw bureau landde, had eigenlijk ergens anders thuisgehoord?
 
+Waarom collega's dat gedoe zo makkelijk bij de manager neerleggen, en wat daaronder zit, lees je in [waarom collega's verwachten dat de manager het gedoe oplost](/blog/waarom-collegas-verwachten-dat-de-manager-het-oplost).
+
 - - -
 
 Wil je onderzoeken waar in jouw team het eigenaarschap blijft hangen? Mijn Teamkompas maakt die patronen zichtbaar en helpt om er klein mee te beginnen. [Plan een vrijblijvend kennismakingsgesprek](/verkennen) of start met een [teamscan](/teamscan).

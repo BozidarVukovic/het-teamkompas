@@ -122,6 +122,8 @@ Teams worden niet sterker doordat één persoon alle problemen oplost. Teams wor
 
 Daar begint volwassen samenwerking. Ze begint niet bij een manager die harder gaat werken, maar bij collega's die durven zeggen: dit speelt er, dit doet het met mij, en ik wil het graag samen beter maken.
 
+Wat dat van de manager zelf vraagt, en waar de grens ligt tussen helpen en overnemen, staat in [ondersteunen is iets anders dan redden](/blog/ondersteunen-is-iets-anders-dan-redden).
+
 - - -
 
 Herken je dit patroon in jouw team? Mijn Teamkompas helpt teams en leidinggevenden om zichtbaar te maken wat er speelt, en om het gesprek te voeren dat er werkelijk toe doet. [Plan een vrijblijvend kennismakingsgesprek](/verkennen) of start met een [teamscan](/teamscan).
