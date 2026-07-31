@@ -1,6 +1,6 @@
 ---
 title: Waarom slimme organisaties minder sturen op functieomschrijvingen en meer op talenten
-date: 2026-07-30
+date: 2026-07-31
 description: Functies veranderen sneller dan ze beschreven kunnen worden. Waarom talentgericht werken meer energie en wendbaarheid oplevert dan een scherper profiel.
 image: /blog/images/talenten.jpg
 lead: In veel teams kennen collega's vooral elkaars functie. Zij doet HR, hij is projectleider, zij werkt op financiën. Het staat netjes in het organogram en het zegt verrassend weinig over wat iemand werkelijk kan bijdragen.

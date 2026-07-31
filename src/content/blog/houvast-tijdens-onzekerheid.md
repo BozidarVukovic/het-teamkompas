@@ -1,6 +1,6 @@
 ---
 title: Waarom medewerkers tijdens onzekerheid minder behoefte hebben aan antwoorden dan aan houvast
-date: 2026-07-31
+date: 2026-08-07
 description: Wachten met communiceren tot je zekerheid hebt voelt zorgvuldig. Ondertussen vult het team de stilte zelf in. Wat mensen dan werkelijk van je nodig hebben.
 image: /blog/images/dagelijks-leiderschap.jpg
 lead: Tijdens een reorganisatie of een periode van hoge werkdruk ontstaat vaak dezelfde reflex. Een leidinggevende wil eerst zekerheid hebben voordat er iets wordt gecommuniceerd. Wachten op een besluit van de directie, op een definitief plan, op duidelijkheid over functies en budgetten.

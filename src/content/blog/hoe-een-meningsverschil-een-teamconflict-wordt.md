@@ -1,6 +1,6 @@
 ---
 title: Een teamconflict begint vaak met een gesprek dat niet wordt gevoerd
-date: 2026-07-30
+date: 2026-08-05
 description: Conflicten ontstaan zelden door één groot moment. Hoe een klein meningsverschil via aannames en beeldvorming uitgroeit tot een probleem voor het hele team.
 image: /blog/images/conflict.jpg
 lead: Het begint met iets kleins. Een collega reageert kortaf in een overleg. Iemand levert informatie later aan dan afgesproken. Een besluit valt zonder dat iedereen zich gehoord voelt. Of twee mensen denken simpelweg anders over hoe een taak moet worden aangepakt.

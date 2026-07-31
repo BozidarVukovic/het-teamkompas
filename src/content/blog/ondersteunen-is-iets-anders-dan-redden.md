@@ -1,6 +1,6 @@
 ---
 title: Ondersteunen is iets anders dan redden
-date: 2026-07-31
+date: 2026-08-03
 description: Een manager die elk probleem oplost bouwt aan afhankelijkheid. Hoe je betrokken blijft zonder het eigenaarschap van je team over te nemen.
 image: /blog/images/probleemoplossing.jpg
 lead: Een medewerker loopt binnen met een probleem. Je ziet meteen wat er speelt, je kent de oplossing en je zou het gesprek sneller kunnen voeren. Binnen twee minuten is het geregeld. De medewerker loopt opgelucht weg en jij hebt er een taak bij.

@@ -1,6 +1,6 @@
 ---
 title: Waarom onmisbare medewerkers een risico kunnen worden voor het team
-date: 2026-07-31
+date: 2026-08-10
 description: In elk team is er iemand bij wie iedereen aanklopt. Hoe die kracht ongemerkt een kwetsbaarheid wordt, en wat je eraan doet zonder iemand af te remmen.
 image: /blog/images/sterkste-medewerker.jpg
 lead: In vrijwel ieder team zit iemand bij wie iedereen aanklopt. De collega met de meeste ervaring, die precies weet hoe de systemen werken en aan een half woord genoeg heeft. Gaat er iets mis, dan wordt diegene erbij gehaald. Dreigt een deadline, dan springt die bij.
