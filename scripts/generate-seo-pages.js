@@ -9,7 +9,14 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(__dirname, "../dist");
+const blogDir = path.join(__dirname, "../src/content/blog");
 const baseHtml = fs.readFileSync(path.join(distDir, "index.html"), "utf-8");
+
+const SITE = "https://www.mijnteamkompas.nl";
+
+// Valt een pagina terug op deze afbeelding, dan is er tenminste altijd iets te
+// zien wanneer iemand de link deelt op LinkedIn of in een chat.
+const DEFAULT_IMAGE = `${SITE}/teamkompas-workshop-hero.jpg`;
 
 const pages = [
   {
@@ -17,6 +24,7 @@ const pages = [
     title: "Gratis persoonlijke teamscan | Mijn Teamkompas",
     description: "Ontdek in 8 tot 10 minuten hoe jij de samenwerking binnen jouw team ervaart en ontvang direct jouw persoonlijke Teamkompas.",
     url: "https://www.mijnteamkompas.nl/gratis-teamscan",
+    image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
     content: `<main><h1>Ontdek hoe jij de samenwerking binnen jouw team ervaart</h1><p>Deze gratis individuele teamscan geeft in 8 tot 10 minuten inzicht in jouw persoonlijke beleving van veiligheid, communicatie, eigenaarschap, verbinding, energie en leiderschap.</p><h2>Direct inzicht en een persoonlijk rapport</h2><p>Na 24 vragen ontvang je een ontwikkelgerichte samenvatting, reflectievragen, kleine experimenten en een beveiligd persoonlijk rapport per e-mail. De uitkomst is geen oordeel of diagnose van het hele team.</p><p><a href="/gratis-teamscan">Start de gratis teamscan</a> of ontdek het verschil met de <a href="/teamscan">volledige Teamscan</a>.</p></main>`,
   },
   {
@@ -238,42 +246,155 @@ const pages = [
   },
 ];
 
-for (const page of pages) {
+// ---------------------------------------------------------------------------
+// Blogartikelen
+//
+// Zonder deze stap krijgt elk artikel de titel en omschrijving van de homepage
+// mee in de ruwe HTML. Google voert JavaScript uit en ziet uiteindelijk wel het
+// juiste, maar LinkedIn, WhatsApp en Slack doen dat niet: die tonen dan de
+// homepagetekst zonder foto. Daarom bouwen we per gepubliceerd artikel een
+// eigen statische versie.
+// ---------------------------------------------------------------------------
+
+const escapeHtml = (waarde = "") =>
+  String(waarde).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+function leesFrontmatter(raw) {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return { data: {}, body: raw };
+  const data = {};
+  let laatsteSleutel = "";
+  match[1].split(/\r?\n/).forEach((regel) => {
+    const veld = regel.match(/^([A-Za-z][\w-]*):\s*(.*)$/);
+    if (veld) {
+      laatsteSleutel = veld[1];
+      data[laatsteSleutel] = veld[2].replace(/^(["'])(.*)\1$/, "$2").trim();
+    } else if (/^\s+/.test(regel) && laatsteSleutel) {
+      data[laatsteSleutel] = `${data[laatsteSleutel]} ${regel.trim()}`.trim();
+    }
+  });
+  return { data, body: raw.slice(match[0].length).trim() };
+}
+
+// Kleine markdown-omzetter. Genoeg voor wat crawlers nodig hebben: koppen,
+// alinea's, opsommingen, vetgedrukte tekst en links. Geen volledige parser.
+function markdownNaarHtml(markdown) {
+  const inline = (tekst) =>
+    escapeHtml(tekst)
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+
+  const blokken = markdown.split(/\n{2,}/);
+  const uit = [];
+
+  for (const blok of blokken) {
+    const tekst = blok.trim();
+    if (!tekst) continue;
+
+    const kop = tekst.match(/^(#{2,4})\s+(.*)$/);
+    if (kop) {
+      const niveau = kop[1].length;
+      uit.push(`<h${niveau}>${inline(kop[2])}</h${niveau}>`);
+      continue;
+    }
+
+    if (/^[-*]\s+/.test(tekst)) {
+      const items = tekst
+        .split(/\n/)
+        .filter((regel) => /^[-*]\s+/.test(regel))
+        .map((regel) => `<li>${inline(regel.replace(/^[-*]\s+/, ""))}</li>`)
+        .join("");
+      uit.push(`<ul>${items}</ul>`);
+      continue;
+    }
+
+    uit.push(`<p>${inline(tekst.replace(/\n/g, " "))}</p>`);
+  }
+
+  return uit.join("");
+}
+
+// Een artikel met een datum in de toekomst staat ingepland en hoort nog niet
+// online. Dezelfde grens als in blogData.js en sync-sitemap-blogs.mjs.
+const vandaag = new Date();
+vandaag.setHours(23, 59, 59, 999);
+
+const blogPaginas = fs
+  .readdirSync(blogDir)
+  .filter((naam) => naam.endsWith(".md"))
+  .map((naam) => {
+    const slug = naam.replace(/\.md$/, "");
+    const { data, body } = leesFrontmatter(fs.readFileSync(path.join(blogDir, naam), "utf-8"));
+    return { slug, data, body, tijd: Date.parse(data.date || "") };
+  })
+  .filter(({ tijd }) => !Number.isNaN(tijd) && tijd <= vandaag.getTime())
+  .map(({ slug, data, body }) => {
+    const titel = data.title || "Artikel";
+    const beschrijving = data.description || data.lead || "";
+    const afbeelding = data.image ? `${SITE}${data.image}` : DEFAULT_IMAGE;
+    return {
+      route: `blog/${slug}`,
+      title: `${titel} | Mijn Teamkompas`,
+      description: beschrijving,
+      url: `${SITE}/blog/${slug}`,
+      image: afbeelding,
+      type: "article",
+      published: data.date || "",
+      content:
+        `<main><article>` +
+        `<h1>${escapeHtml(titel)}</h1>` +
+        (data.lead ? `<p>${escapeHtml(data.lead)}</p>` : "") +
+        markdownNaarHtml(body) +
+        `<nav><a href="/inspiratie">Alle artikelen</a> <a href="/teamscan">Teamscan</a> ` +
+        `<a href="/gratis-teamscan">Gratis teamscan</a></nav>` +
+        `</article></main>`,
+    };
+  });
+
+for (const page of [...pages, ...blogPaginas]) {
+  const beeld = escapeHtml(page.image || DEFAULT_IMAGE);
+  const titel = escapeHtml(page.title);
+  const beschrijving = escapeHtml(page.description);
+  const soort = page.type || "website";
+
   const metaTags = `
     <link rel="canonical" href="${page.url}" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="${soort}" />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:site_name" content="Mijn Teamkompas" />
-    <meta property="og:title" content="${page.title}" />
-    <meta property="og:description" content="${page.description}" />
+    <meta property="og:title" content="${titel}" />
+    <meta property="og:description" content="${beschrijving}" />
     <meta property="og:url" content="${page.url}" />
-    <meta property="og:image" content="${page.image}" />
+    <meta property="og:image" content="${beeld}" />${
+      page.published ? `\n    <meta property="article:published_time" content="${page.published}" />` : ""
+    }
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="${page.title}" />
-    <meta name="twitter:description" content="${page.description}" />
-    <meta name="twitter:image" content="${page.image}" />`;
+    <meta name="twitter:title" content="${titel}" />
+    <meta name="twitter:description" content="${beschrijving}" />
+    <meta name="twitter:image" content="${beeld}" />`;
 
-  // Vervang de homepage title en description door pagina-specifieke versie
+  // Vervang de homepage title en description door pagina-specifieke versie.
+  // De vervangingen gebeuren met een functie, zodat een dollarteken in de tekst
+  // niet als verwijzing naar een regex-groep wordt gelezen.
   let html = baseHtml
-    .replace(
-      /<title>.*?<\/title>/,
-      `<title>${page.title}</title>`
-    )
+    .replace(/<title>.*?<\/title>/, () => `<title>${titel}</title>`)
     .replace(
       /<meta name="description" content=".*?" \/>/,
-      `<meta name="description" content="${page.description}" />`
+      () => `<meta name="description" content="${beschrijving}" />`
     );
 
-  // Voeg canonical + OG + Twitter tags toe na de description tag
+  // Vervang het terugvalblok met deel-tags door de pagina-specifieke versie.
+  // Vervangen en niet toevoegen, want twee keer og:title in dezelfde pagina
+  // levert onvoorspelbare voorbeelden op bij LinkedIn en WhatsApp.
   html = html.replace(
-    /(<meta name="description".*?\/>)/,
-    `$1\n${metaTags}`
+    /<!-- social-tags -->[\s\S]*?<!-- \/social-tags -->/,
+    () => `<!-- social-tags -->${metaTags}\n    <!-- /social-tags -->`
   );
 
   // Vervang de homepage seo-fallback content door pagina-specifieke content
   html = html.replace(
-    /(<div id="seo-fallback">)[\s\S]*?(<\/div>\s*<\/div>\s*<\/body>)/,
-    `$1${page.content}\n    </div>\n  </div>\n  </body>`
+    /<div id="seo-fallback">[\s\S]*?<\/div>\s*<\/div>\s*<\/body>/,
+    () => `<div id="seo-fallback">${page.content}\n    </div>\n  </div>\n  </body>`
   );
 
   const outDir = path.join(distDir, page.route);
@@ -282,4 +403,6 @@ for (const page of pages) {
   console.log(`✓ dist/${page.route}/index.html`);
 }
 
-console.log("\nKlaar — SEO-pagina's gegenereerd.");
+console.log(
+  `\nKlaar — ${pages.length} vaste pagina's en ${blogPaginas.length} gepubliceerde artikelen gegenereerd.`
+);

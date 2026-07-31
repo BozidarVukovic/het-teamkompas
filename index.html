@@ -12,6 +12,23 @@
     <meta name="author" content="Mijn Teamkompas" />
     <meta name="robots" content="index, follow" />
 
+    <!-- Terugvaltags voor het delen van een link. React Helmet overschrijft ze -->
+    <!-- per pagina, en scripts/generate-seo-pages.js zet ze ook statisch neer. -->
+    <!-- Ze staan hier zodat een gedeelde link nooit zonder titel of beeld valt. -->
+    <!-- social-tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="nl_NL" />
+    <meta property="og:site_name" content="Mijn Teamkompas" />
+    <meta property="og:title" content="Mijn Teamkompas | Teamscan, teamcoaching en leiderschapsbegeleiding" />
+    <meta property="og:description" content="Loopt samenwerking of verandering binnen je team vast? Mijn Teamkompas maakt zichtbaar wat er speelt en helpt teams met concrete stappen naar ander gedrag." />
+    <meta property="og:url" content="https://www.mijnteamkompas.nl/" />
+    <meta property="og:image" content="https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mijn Teamkompas | Teamscan, teamcoaching en leiderschapsbegeleiding" />
+    <meta name="twitter:description" content="Loopt samenwerking of verandering binnen je team vast? Mijn Teamkompas maakt zichtbaar wat er speelt en helpt teams met concrete stappen naar ander gedrag." />
+    <meta name="twitter:image" content="https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg" />
+    <!-- /social-tags -->
+
     <!-- Preconnect fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -89,6 +106,9 @@
             <a href="/sprekers">Sprekers</a>
             <a href="/teamontwikkeling">Teamontwikkeling</a>
             <a href="/teamcoaching">Teamcoaching</a>
+            <a href="/teamscan">Teamscan</a>
+            <a href="/gratis-teamscan">Gratis teamscan</a>
+            <a href="/inspiratie">Inspiratie</a>
           </nav>
         </header>
 
@@ -141,7 +161,7 @@
           <h2>Hoe we werken — drie stappen naar beweging</h2>
           <p>Elk traject begint met luisteren. Dan meten. Dan bewegen.</p>
           <ol>
-            <li><strong>Teamkompas Scan.</strong> We meten op alle vijf domeinen tegelijk. Doorlooptijd vier tot zes weken.</li>
+            <li><strong>Teamkompas Scan.</strong> We meten op alle vier domeinen tegelijk. Doorlooptijd vier tot zes weken.</li>
             <li><strong>Inzicht en dialoog.</strong> We presenteren de resultaten en faciliteren het gesprek in workshops en sessies.</li>
             <li><strong>Gerichte interventies.</strong> Concrete stappen op maat voor jouw organisatie.</li>
           </ol>
