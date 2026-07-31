@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 /**
  * Verbindt de interne events van de site met Google Analytics 4.
@@ -9,17 +8,17 @@ import { useLocation } from "react-router-dom";
  * gtag. Componenten weten daardoor niets van Analytics; wisselen we ooit van
  * meetoplossing, dan verandert alleen dit bestand.
  *
- * Twee dingen die hier bewust geregeld zijn:
+ * Over toestemming: gtag bestaat pas nadat de bezoeker cookies accepteert
+ * (zie CookieBanner). Is er geen toestemming, dan is `window.gtag` afwezig en
+ * verdwijnt het event stilletjes. Dat is de bedoeling. We bewaren ook niets om
+ * later alsnog te versturen.
  *
- * 1. Toestemming. gtag bestaat pas nadat de bezoeker cookies accepteert
- *    (zie CookieBanner). Is er geen toestemming, dan is `window.gtag`
- *    afwezig en verdwijnt het event stilletjes. Dat is de bedoeling: zonder
- *    toestemming meten we niet, en we bewaren ook niets om later alsnog te
- *    versturen.
- *
- * 2. Paginaweergaves in een single page app. `gtag("config", ...)` meet alleen
- *    de eerste pagina. Bij navigatie binnen de site verandert de URL zonder
- *    herladen, dus die weergaves sturen we hier zelf.
+ * Paginaweergaves worden hier bewust NIET gemeten. In de Analytics-instellingen
+ * staat onder Verbeterde meting de optie "Paginawijzigingen op basis van
+ * browsegeschiedenisgebeurtenissen" aan. Google meet de navigatie binnen deze
+ * single page app daardoor al zelf, want react-router gebruikt precies die
+ * browsergeschiedenis. Zouden we hier ook een page_view sturen, dan telt elke
+ * paginaweergave dubbel.
  */
 
 function stuur(naam, data = {}) {
@@ -32,10 +31,6 @@ function stuur(naam, data = {}) {
 }
 
 export default function AnalyticsBridge() {
-  const location = useLocation();
-  const eerstePagina = useRef(true);
-
-  // Interne events doorsturen.
   useEffect(() => {
     function onEvent(e) {
       const { name, ...rest } = e.detail || {};
@@ -44,21 +39,6 @@ export default function AnalyticsBridge() {
     window.addEventListener("teamkompas:analytics", onEvent);
     return () => window.removeEventListener("teamkompas:analytics", onEvent);
   }, []);
-
-  // Paginaweergaves bij navigatie binnen de site.
-  useEffect(() => {
-    // De eerste weergave is al door gtag("config", ...) gemeld; anders telt
-    // elke bezoeker zijn landingspagina dubbel.
-    if (eerstePagina.current) {
-      eerstePagina.current = false;
-      return;
-    }
-    stuur("page_view", {
-      page_path: `${location.pathname}${location.search}`,
-      page_location: window.location.href,
-      page_title: document.title,
-    });
-  }, [location.pathname, location.search]);
 
   return null;
 }
