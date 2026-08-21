@@ -1,6 +1,6 @@
 ---
 title: Waarom goede voetbalteams pas in de laatste twintig minuten instorten
-date: 2026-08-22
+date: 2026-08-21
 description: Een ploeg speelt zeventig minuten uitstekend en valt daarna uit elkaar. Wat er dan werkelijk gebeurt, en waarom teams op het werk hetzelfde overkomt.
 image: /blog/images/voetbal.jpg
 lead: Afgelopen weekend zat ik weer op de tribune in Rotterdam. De openingswedstrijd van het nieuwe seizoen van Feyenoord. Zo'n eerste thuiswedstrijd heeft altijd iets: een vol stadion, nieuwe verwachtingen, het gevoel dat alles opnieuw begint.
