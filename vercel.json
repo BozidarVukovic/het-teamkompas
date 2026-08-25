@@ -76,6 +76,14 @@
       "destination": "/inspiratie/index.html"
     },
     {
+      "source": "/kennisbank",
+      "destination": "/kennisbank/index.html"
+    },
+    {
+      "source": "/kennisbank/:type/:slug",
+      "destination": "/kennisbank/:type/:slug/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

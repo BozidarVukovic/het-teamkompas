@@ -10,6 +10,8 @@ export const serviceLinks = [
 export const knowledgeNavigation = {
   // Centrale hub: de kenniskaart bundelt alle kennisthema's op één pagina.
   overview: { label: "Bekijk alle kennis", href: "/kennis/kenniskaart-teamontwikkeling" },
+  // De kenniswijzer helpt bezoekers via vijf vragen naar passende content.
+  wijzer: { label: "Kenniswijzer: vind wat past", href: "/kennisbank" },
   featured: [
     { label: "Teamcultuur", href: "/kennis/teamcultuur" },
     { label: "Psychologische veiligheid", href: "/psychologische-veiligheid" },
@@ -44,6 +46,7 @@ export const knowledgeNavigation = {
 
 export const allKnowledgeLinks = [
   knowledgeNavigation.overview,
+  knowledgeNavigation.wijzer,
   ...knowledgeNavigation.featured,
   ...knowledgeNavigation.groups.flatMap((group) => group.links),
 ];

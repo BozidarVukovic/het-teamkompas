@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Helmet } from "react-helmet-async";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import ArticleCard from "../../components/shared/ArticleCard";
 import { blogCategories, blogPosts } from "../../content/blogData";
 
@@ -28,6 +28,7 @@ export default function Blog() {
         <h1>Inspiratie voor teams die willen blijven groeien</h1>
         <p>Samenwerken lijkt vanzelfsprekend, maar in de dagelijkse praktijk lopen teams regelmatig vast in oude patronen, onuitgesproken verwachtingen en goede voornemens die weer verdwijnen.</p>
         <p>In onze artikelen onderzoeken we herkenbare situaties uit teams en organisaties. We verbinden alledaagse observaties aan gedragswetenschap, teamdynamiek en praktische manieren om beweging te creëren.</p>
+      <p><Link className="inspiration-all-button" to="/kennisbank">Weet je niet waar te beginnen? Start de kenniswijzer →</Link></p>
       </div>
     </header>
     <main className="inspiration-container inspiration-main">

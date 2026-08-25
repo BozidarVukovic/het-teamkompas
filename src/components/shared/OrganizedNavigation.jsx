@@ -74,6 +74,7 @@ function KnowledgeMenu({ onNavigate }) {
       <div className="knowledge-menu__featured">
         <p className="knowledge-menu__eyebrow">Hoofdthema’s</p>
         <NavLink item={knowledgeNavigation.overview} onNavigate={go} className="knowledge-menu__overview" />
+        <NavLink item={knowledgeNavigation.wijzer} onNavigate={go} className="knowledge-menu__overview" />
         {knowledgeNavigation.featured.map((item) => <NavLink key={item.href} item={item} onNavigate={go} />)}
       </div>
       <div className="knowledge-menu__groups">
@@ -95,6 +96,7 @@ function MobileKnowledge({ onNavigate }) {
     <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>Kennis <span aria-hidden="true">{open ? "−" : "+"}</span></button>
     {open && <div id={id} className="mobile-nav__knowledge">
       <NavLink item={knowledgeNavigation.overview} onNavigate={onNavigate} className="mobile-nav__overview" />
+      <NavLink item={knowledgeNavigation.wijzer} onNavigate={onNavigate} className="mobile-nav__overview" />
       <p>Hoofdthema’s</p>
       {knowledgeNavigation.featured.map((item) => <NavLink key={item.href} item={item} onNavigate={onNavigate} />)}
       {knowledgeNavigation.groups.map((group, index) => {

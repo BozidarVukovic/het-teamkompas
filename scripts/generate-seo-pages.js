@@ -12,6 +12,8 @@ const distDir = path.join(__dirname, "../dist");
 const blogDir = path.join(__dirname, "../src/content/blog");
 const baseHtml = fs.readFileSync(path.join(distDir, "index.html"), "utf-8");
 
+import { INTERNE_ITEMS } from "../src/data/kennisbank/items.js";
+
 const SITE = "https://www.mijnteamkompas.nl";
 
 // Valt een pagina terug op deze afbeelding, dan is er tenminste altijd iets te
@@ -19,6 +21,15 @@ const SITE = "https://www.mijnteamkompas.nl";
 const DEFAULT_IMAGE = `${SITE}/teamkompas-workshop-hero.jpg`;
 
 const pages = [
+  {
+    route: "kennisbank",
+    title: "Kennisbank en kenniswijzer voor teams | Mijn Teamkompas",
+    description:
+      "Beantwoord vijf korte vragen en vind passende artikelen, werkvormen, reflectievragen, experimenten en downloads voor jouw teamsituatie.",
+    url: "https://www.mijnteamkompas.nl/kennisbank",
+    image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
+    content: `<main><h1>Vind wat jouw team nu nodig heeft</h1><p>Beantwoord vijf korte vragen en ontdek passende artikelen, werkvormen, reflectievragen en kleine interventies voor jouw teamsituatie. Geen algemeen advies, maar een praktische route naar een volgende stap.</p><h2>Hoe de kenniswijzer werkt</h2><p>Je geeft aan wat er speelt in je team, vanuit welke rol je zoekt, wat je wilt bereiken, hoeveel tijd je hebt en hoe je aan de slag wilt. Op basis van vaste kenmerken van onze content volgen maximaal zes suggesties, met bij elke suggestie de reden waarom die past. Er komt geen chatbot of taalmodel aan te pas.</p><h2>Wat je hier vindt</h2><ul><li>Artikelen over samenwerking, leiderschap, motivatie en verandering</li><li>Werkvormen die je zelf kunt begeleiden</li><li>Reflectievragen voor jezelf of voor het team</li><li>Teaminterventies en kleine experimenten</li><li>Canvassen, checklists en de reflectiekaart</li><li>De gratis persoonlijke teamscan en de volledige Teamscan</li></ul><p><a href="/kennisbank">Start de kenniswijzer</a>, bekijk <a href="/inspiratie">alle artikelen</a> of doe de <a href="/gratis-teamscan">gratis teamscan</a>.</p></main>`,
+  },
   {
     route: "gratis-teamscan",
     title: "Gratis persoonlijke teamscan | Mijn Teamkompas",
@@ -351,7 +362,48 @@ const blogPaginas = fs
     };
   });
 
-for (const page of [...pages, ...blogPaginas]) {
+// Statische versie van elke kennisbankpagina met een eigen detailpagina.
+// Zoekmachines en linkvoorbeelden krijgen zo echte inhoud te zien, ook zonder
+// JavaScript. De React-pagina blijft de versie die bezoekers gebruiken.
+const kennisbankPaginas = INTERNE_ITEMS.map((item) => {
+  const inhoud = item.inhoud || {};
+  const lijst = (waarden = []) => waarden.map((waarde) => `<li>${escapeHtml(waarde)}</li>`).join("");
+  const stappen = (inhoud.stappen || [])
+    .map((stap) => `<li><strong>${escapeHtml(stap.titel)}</strong> ${escapeHtml(stap.tekst)}</li>`)
+    .join("");
+  const velden = (inhoud.velden || [])
+    .map((veld) => `<li><strong>${escapeHtml(veld.label)}</strong> ${escapeHtml(veld.uitleg || "")}</li>`)
+    .join("");
+
+  return {
+    route: `kennisbank/${item.type}/${item.slug}`,
+    title: `${item.titel} | Mijn Teamkompas`,
+    description: item.samenvatting,
+    url: `${SITE}${item.href}`,
+    image: DEFAULT_IMAGE,
+    type: "article",
+    published: item.datum || "",
+    content:
+      `<main><article>`
+      + `<h1>${escapeHtml(item.titel)}</h1>`
+      + `<p>${escapeHtml(item.samenvatting)}</p>`
+      + (inhoud.waarvoor ? `<h2>Waarvoor je dit gebruikt</h2><p>${escapeHtml(inhoud.waarvoor)}</p>` : "")
+      + (inhoud.hypothese ? `<h2>Wat je onderzoekt</h2><p>${escapeHtml(inhoud.hypothese)}</p>` : "")
+      + (inhoud.hoe ? `<h2>Hoe je het gebruikt</h2><p>${escapeHtml(inhoud.hoe)}</p>` : "")
+      + (inhoud.benodigdheden ? `<h2>Wat je nodig hebt</h2><ul>${lijst(inhoud.benodigdheden)}</ul>` : "")
+      + (stappen ? `<h2>Stap voor stap</h2><ol>${stappen}</ol>` : "")
+      + (inhoud.vragen ? `<h2>De vragen</h2><ol>${lijst(inhoud.vragen)}</ol>` : "")
+      + (inhoud.zinnen ? `<h2>Zinnen die je kunt gebruiken</h2><ul>${lijst(inhoud.zinnen)}</ul>` : "")
+      + (velden ? `<h2>Het canvas</h2><ul>${velden}</ul>` : "")
+      + (inhoud.waaraanMerkJeHet ? `<h2>Waaraan je merkt dat het werkt</h2><p>${escapeHtml(inhoud.waaraanMerkJeHet)}</p>` : "")
+      + (inhoud.letOp ? `<h2>Let op</h2><p>${escapeHtml(inhoud.letOp)}</p>` : "")
+      + `<nav><a href="/kennisbank">Naar de kennisbank</a> <a href="/inspiratie">Alle artikelen</a> `
+      + `<a href="/gratis-teamscan">Gratis teamscan</a></nav>`
+      + `</article></main>`,
+  };
+});
+
+for (const page of [...pages, ...blogPaginas, ...kennisbankPaginas]) {
   const beeld = escapeHtml(page.image || DEFAULT_IMAGE);
   const titel = escapeHtml(page.title);
   const beschrijving = escapeHtml(page.description);
@@ -404,5 +456,5 @@ for (const page of [...pages, ...blogPaginas]) {
 }
 
 console.log(
-  `\nKlaar — ${pages.length} vaste pagina's en ${blogPaginas.length} gepubliceerde artikelen gegenereerd.`
+  `\nKlaar — ${pages.length} vaste pagina's, ${blogPaginas.length} gepubliceerde artikelen en ${kennisbankPaginas.length} kennisbankpagina's gegenereerd.`
 );

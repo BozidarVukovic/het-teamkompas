@@ -96,7 +96,7 @@ export default function KenniskaartTeamontwikkeling() {
         <Eyebrow withDot>Kennis · teamontwikkeling</Eyebrow>
         <h1 className="tk-heading-xl">Kenniskaart voor teamontwikkeling</h1>
         <p className="tk-lead">Een team ontwikkelt zich zelden door één training, model of gesprek. Duurzame groei ontstaat wanneer teams leren kijken naar wat er werkelijk speelt, begrijpen waar gedrag vandaan komt, werken aan veiligheid en verbinding, kleine stappen durven zetten en hun ontwikkeling blijven vasthouden.</p>
-        <div className="tk-actions"><ButtonLink href="/teamscan">Ontdek waar jouw team staat</ButtonLink><ButtonLink href="/blog" variant="secondary">Naar kennisoverzicht</ButtonLink></div>
+        <div className="tk-actions"><ButtonLink href="/kennisbank">Vind wat jouw team nu nodig heeft</ButtonLink><ButtonLink href="/teamscan" variant="secondary">Ontdek waar jouw team staat</ButtonLink><ButtonLink href="/inspiratie" variant="secondary">Naar kennisoverzicht</ButtonLink></div>
       </Section>
 
       <Section className="tk-knowledge-map-section">
@@ -128,7 +128,7 @@ export default function KenniskaartTeamontwikkeling() {
         <div className="tk-starting-grid">
           {situations.map(([text, step]) => <Card key={text} accent="var(--tk-color-teal)"><h3>{step}</h3><p>{text}</p></Card>)}
         </div>
-        <div className="tk-actions"><ButtonLink href="/teamscan">Ontdek het startpunt van jouw team</ButtonLink></div>
+        <div className="tk-actions"><ButtonLink href="/kennisbank">Start de kenniswijzer</ButtonLink><ButtonLink href="/teamscan" variant="secondary">Ontdek het startpunt van jouw team</ButtonLink></div>
       </Section>
 
       <Section className="tk-knowledge-final-cta">

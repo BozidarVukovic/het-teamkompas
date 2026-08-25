@@ -73,3 +73,7 @@ dist/
 
 # macOS metadata
 .DS_Store
+
+# Tijdelijke bestanden van vite en van de testscripts
+vite.config.js.timestamp-*
+scripts/.tmp-*
