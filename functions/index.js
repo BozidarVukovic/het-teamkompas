@@ -1,5 +1,5 @@
 const { setGlobalOptions } = require("firebase-functions");
-const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { onCall, onRequest, HttpsError } = require("firebase-functions/v2/https");
 const { defineSecret } = require("firebase-functions/params");
 const crypto = require("crypto");
 const admin = require("firebase-admin");
@@ -905,4 +905,23 @@ exports.manageFreeScan = onCall(async (request) => {
   if(action==="delete"){await ref.delete();return {ok:true};}
   if(action==="anonymize"){await ref.update({participant:{firstName:"Geanonimiseerd",email:"",role:"",organisation:"",teamSize:""},answers:{},reportToken:FieldValue.delete(),anonymized:true,anonymizedAt:FieldValue.serverTimestamp(),status:"anonymized"});return {ok:true};}
   throw new HttpsError("invalid-argument","Onbekende beheeractie.");
+});
+
+// Publieke statuscontrole voor de gratis teamscan. Geeft geen gegevens prijs:
+// bevestigt alleen dat de functies draaien en dat Firestore bereikbaar is.
+// Wordt wekelijks automatisch bevraagd zodat een storing niet weken onopgemerkt blijft.
+exports.healthCheck = onRequest({ maxInstances: 2 }, async (req, res) => {
+  res.set("Cache-Control", "no-store");
+  try {
+    await db.collection("freeScanInstances").select().limit(1).get();
+    res.status(200).json({
+      ok: true,
+      scan: "bereikbaar",
+      questionnaireVersion: FREE_SCAN_VERSION,
+      scoreModelVersion: FREE_SCORE_VERSION,
+      checkedAt: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(503).json({ ok: false, fout: "database-onbereikbaar" });
+  }
 });
