@@ -1,6 +1,9 @@
 /* Teamdag-generator. Huisstijl: navy #0D1B2A / #1A2E4A, teal #00A896. */
 
 .td-pagina {
+  /* De site heeft een vaste kopbalk. Zonder deze marge verdwijnt de bovenkant
+     van een scherm eronder zodra de wizard naar boven scrollt. */
+  scroll-margin-top: 84px;
   --td-navy: #0d1b2a;
   --td-navy-licht: #1a2e4a;
   --td-teal: #00a896;
@@ -26,7 +29,7 @@
 .td-intro {
   background: var(--td-navy);
   color: #fff;
-  padding: 64px 0 72px;
+  padding: 116px 0 72px;
 }
 
 .td-intro h1 {
@@ -122,57 +125,114 @@
   margin-top: 26px;
 }
 
-/* Wizard */
+/* Wizard: één vraag per scherm */
 
-.td-wizard { padding: 44px 0 72px; }
+/* De vaste kopbalk van de site is 64px hoog. De bovenmarge houdt daar rekening
+   mee, zodat de voortgangsindicator er niet onder verdwijnt. */
+.td-wizard {
+  padding: 108px 0 72px;
+  min-height: 58vh;
+}
 
-.td-voortgang { margin-bottom: 28px; }
+.td-binnen--smal { max-width: 680px; }
+.td-binnen--breed { max-width: 900px; }
 
-.td-voortgang-tekst {
+.td-verborgen {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Voortgang: acht fasen plus een teller */
+
+.td-voortgang { margin-bottom: 40px; }
+
+.td-fasen {
   display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  color: var(--td-grijs);
-  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.td-fase {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
   font-weight: 600;
+  color: #9aa5b2;
+  letter-spacing: 0.01em;
+}
+
+.td-fase-stip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--td-rand);
+  flex: none;
+}
+
+.td-fase--af { color: var(--td-grijs); }
+.td-fase--af .td-fase-stip { background: var(--td-teal); }
+
+.td-fase--nu { color: var(--td-navy); }
+.td-fase--nu .td-fase-stip {
+  background: var(--td-teal);
+  box-shadow: 0 0 0 4px rgba(0, 168, 150, 0.18);
 }
 
 .td-balk {
-  height: 6px;
+  height: 4px;
   background: var(--td-rand);
-  border-radius: 3px;
+  border-radius: 2px;
   overflow: hidden;
 }
 
 .td-balk-vulling {
   height: 100%;
   background: var(--td-teal);
-  border-radius: 3px;
-  transition: width 0.25s ease;
+  border-radius: 2px;
+  transition: width 0.3s ease;
 }
 
+.td-voortgang-tekst {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--td-grijs);
+  font-weight: 600;
+}
+
+.td-voortgang-fase { font-weight: 400; }
+
+/* De vraag zelf */
+
 .td-vraag h2 {
-  font-size: clamp(22px, 3.6vw, 30px);
-  margin: 0 0 8px;
-  line-height: 1.25;
+  font-size: clamp(24px, 3.8vw, 33px);
+  margin: 0 0 10px;
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+  font-weight: 800;
 }
 
 .td-vraag-uitleg {
   color: var(--td-grijs);
-  margin: 0 0 22px;
-  font-size: 15px;
-}
-
-.td-veld { margin-bottom: 28px; }
-
-.td-veld > legend,
-.td-veld-kop {
-  font-weight: 700;
+  margin: 0 0 28px;
   font-size: 16px;
-  margin-bottom: 10px;
-  padding: 0;
-  display: block;
+  max-width: 58ch;
 }
+
+.td-vraag h2 + .td-opties,
+.td-vraag h2 + .td-tekstblok { margin-top: 28px; }
+
+/* Antwoorden */
 
 .td-opties {
   display: grid;
@@ -182,82 +242,141 @@
   margin: 0;
 }
 
+.td-opties--kolommen {
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+/* Lijsten met veel of lange antwoorden: minder lucht per rij, zodat het
+   geheel binnen één scherm blijft. */
+.td-opties--compact .td-optie {
+  padding: 12px 16px;
+  font-size: 15px;
+  border-radius: 10px;
+}
+
+.td-opties--compact .td-optie-label { line-height: 1.4; }
+
 .td-optie {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
+  gap: 13px;
+  padding: 16px 18px;
   border: 1px solid var(--td-rand);
-  border-radius: 10px;
+  border-radius: 12px;
   background: #fff;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 16px;
   text-align: left;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
 }
 
-.td-optie:hover { border-color: var(--td-teal); }
+.td-optie:hover {
+  border-color: #a8b4c2;
+  background: #fbfcfd;
+}
 
-.td-optie input { margin-top: 3px; flex: none; }
+.td-optie input {
+  margin: 3px 0 0;
+  flex: none;
+  accent-color: var(--td-teal);
+  width: 18px;
+  height: 18px;
+}
+
+.td-optie-tekst { display: block; }
 
 .td-optie--gekozen {
   border-color: var(--td-teal);
-  background: rgba(0, 168, 150, 0.06);
+  background: rgba(0, 168, 150, 0.07);
+  box-shadow: inset 0 0 0 1px var(--td-teal);
 }
 
-.td-optie--uit { opacity: 0.5; }
+.td-optie--uit { opacity: 0.45; cursor: not-allowed; }
 
-.td-optie-label { font-weight: 600; }
+.td-optie-label { font-weight: 600; line-height: 1.45; }
 
 .td-optie-uitleg {
   display: block;
   font-weight: 400;
   color: var(--td-grijs);
   font-size: 14px;
-  margin-top: 2px;
+  margin-top: 3px;
+  line-height: 1.5;
 }
 
-.td-max {
+.td-teller {
   font-size: 14px;
   color: var(--td-grijs);
-  margin: 8px 0 0;
+  margin: 14px 0 0;
+}
+
+/* Vrije tekst */
+
+.td-tekstblok { margin: 0; }
+
+.td-veld-kop {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 10px;
+  display: block;
 }
 
 .td-tekstveld {
   width: 100%;
-  min-height: 92px;
-  padding: 12px 14px;
+  min-height: 130px;
+  padding: 14px 16px;
   border: 1px solid var(--td-rand);
-  border-radius: 10px;
+  border-radius: 12px;
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
   resize: vertical;
   box-sizing: border-box;
 }
 
 .td-tekstveld:focus,
-.td-optie:focus-visible,
+.td-optie:focus-within,
 .td-knop:focus-visible {
-  outline: 3px solid rgba(0, 168, 150, 0.4);
+  outline: 3px solid rgba(0, 168, 150, 0.35);
   outline-offset: 2px;
 }
 
 .td-privacy-hint {
   font-size: 14px;
   color: var(--td-grijs);
-  margin: 8px 0 0;
+  margin: 12px 0 0;
   padding-left: 14px;
   border-left: 3px solid var(--td-rand);
 }
 
+/* Navigatie onderaan */
+
 .td-navigatie {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
-  margin-top: 32px;
-  padding-top: 22px;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+  padding-top: 24px;
   border-top: 1px solid var(--td-rand);
 }
+
+.td-navigatie-rechts {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.td-autodoor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--td-grijs);
+  cursor: pointer;
+  user-select: none;
+}
+
+.td-autodoor input { accent-color: var(--td-teal); }
 
 /* Veiligheidsroute */
 
@@ -290,7 +409,7 @@
 
 /* Resultaat */
 
-.td-resultaat { padding: 44px 0 80px; }
+.td-resultaat { padding: 108px 0 80px; }
 
 .td-sectie {
   margin-bottom: 44px;
@@ -506,9 +625,15 @@
 @media (max-width: 640px) {
   .td-def { grid-template-columns: 1fr; gap: 2px; }
   .td-def dd { margin-bottom: 10px; }
-  .td-navigatie { flex-direction: column-reverse; }
+  .td-navigatie { flex-direction: column-reverse; align-items: stretch; }
   .td-navigatie .td-knop { width: 100%; }
-  .td-intro { padding: 44px 0 52px; }
+  .td-navigatie-rechts { flex-direction: column-reverse; align-items: stretch; gap: 14px; }
+  .td-autodoor { justify-content: center; }
+  .td-fasen { gap: 4px 12px; }
+  .td-fase-label { font-size: 12px; }
+  .td-intro { padding: 96px 0 52px; }
+  .td-wizard { padding: 92px 0 56px; }
+  .td-resultaat { padding: 92px 0 64px; }
   .td-conversie { padding: 22px; }
 }
 

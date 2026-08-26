@@ -12,29 +12,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 
-import {
-  STAPPEN,
-  ROLLEN,
-  TEAMGROOTTES,
-  TEAMTYPES,
-  BESTAANSDUUR,
-  AFHANKELIJKHEID,
-  AANLEIDINGEN,
-  RESULTATEN,
-  MAX_AANLEIDINGEN,
-  MAX_RESULTATEN,
-  ZICHTBAAR_VOORBEELDEN,
-  VEILIGHEIDSVRAGEN,
-  VEILIGHEID_OPTIES,
-  TIJDSOPTIES,
-  PAUZEKEUZE,
-  SETTINGS,
-  RUIMTEOPTIES,
-  AANWEZIGHEID,
-  WERKWIJZEN,
-  ERVARING,
-  OPVOLGING,
-} from "../../data/teamdag/vragen.js";
+import { VRAGEN, vraagBeantwoord } from "../../data/teamdag/vragen.js";
 import { INTRO, PRIVACYTEKST } from "../../data/teamdag/teksten.js";
 import { steltProgrammaSamen, controleerAanpassing } from "../../lib/teamdag/programma.js";
 import { magProgrammaTonen } from "../../lib/teamdag/veiligheid.js";
@@ -78,6 +56,7 @@ export default function TeamdagGenerator() {
   const [overschrijving, setOverschrijving] = useState(null);
   const [bezwaren, setBezwaren] = useState([]);
   const [melding, setMelding] = useState("");
+  const [autoDoor, setAutoDoor] = useState(true);
   const geladen = useRef(false);
   const bovenkant = useRef(null);
 
@@ -89,7 +68,7 @@ export default function TeamdagGenerator() {
     if (Object.keys(uitLink).length) {
       setAntwoorden({ ...LEEG, ...uitLink });
       setFase("vragen");
-      setStap(STAPPEN.length - 1);
+      setStap(VRAGEN.length - 1);
       return;
     }
     const bewaard = lees();
@@ -102,18 +81,30 @@ export default function TeamdagGenerator() {
     bewaar(antwoorden);
   }, [antwoorden]);
 
-  const zet = (veld, waarde) => setAntwoorden((v) => ({ ...v, [veld]: waarde }));
+  const vraag = VRAGEN[stap] || null;
 
-  const wissel = (veld, id, max) =>
-    setAntwoorden((v) => {
-      const huidig = v[veld] || [];
-      if (huidig.includes(id)) return { ...v, [veld]: huidig.filter((x) => x !== id) };
-      if (typeof max === "number" && huidig.length >= max) return v;
-      return { ...v, [veld]: [...huidig, id] };
+  const waardeVan = (v) => {
+    if (!v) return "";
+    return v.groep ? (antwoorden[v.groep] || {})[v.veld] : antwoorden[v.veld];
+  };
+
+  const zetAntwoord = (v, waarde) => {
+    setAntwoorden((huidig) => {
+      if (v.groep) {
+        return { ...huidig, [v.groep]: { ...(huidig[v.groep] || {}), [v.veld]: waarde } };
+      }
+      return { ...huidig, [v.veld]: waarde };
     });
+  };
 
-  const zetVeiligheid = (vraagId, waarde) =>
-    setAntwoorden((v) => ({ ...v, veiligheid: { ...(v.veiligheid || {}), [vraagId]: waarde } }));
+  const wisselAntwoord = (v, id) => {
+    setAntwoorden((huidig) => {
+      const lijst = huidig[v.veld] || [];
+      if (lijst.includes(id)) return { ...huidig, [v.veld]: lijst.filter((x) => x !== id) };
+      if (typeof v.max === "number" && lijst.length >= v.max) return huidig;
+      return { ...huidig, [v.veld]: [...lijst, id] };
+    });
+  };
 
   const programma = useMemo(() => steltProgrammaSamen(antwoorden, overschrijving), [antwoorden, overschrijving]);
 
@@ -125,8 +116,12 @@ export default function TeamdagGenerator() {
     }
   }, [fase, programma.oordeel.route, tochGekozen]);
 
+  // Naar de bovenkant van de vraag, met ruimte voor de vaste kopbalk van de
+  // site. Zonder die correctie valt de voortgangsindicator eronder weg.
   const naarBoven = () => {
-    if (bovenkant.current) bovenkant.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!bovenkant.current || typeof window === "undefined") return;
+    const top = bovenkant.current.getBoundingClientRect().top + window.scrollY - 84;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   };
 
   const start = () => {
@@ -136,17 +131,21 @@ export default function TeamdagGenerator() {
     naarBoven();
   };
 
-  const volgende = () => {
-    if (stap < STAPPEN.length - 1) {
-      setStap((s) => s + 1);
-      naarBoven();
-      return;
-    }
+  const afronden = () => {
     trackEvent("teamdag_generator_afgerond");
     setOverschrijving(null);
     setBezwaren([]);
     setFase("resultaat");
     naarBoven();
+  };
+
+  const volgende = () => {
+    if (stap < VRAGEN.length - 1) {
+      setStap((s) => s + 1);
+      naarBoven();
+      return;
+    }
+    afronden();
   };
 
   const vorige = () => {
@@ -159,30 +158,21 @@ export default function TeamdagGenerator() {
     naarBoven();
   };
 
-  const huidigeStap = STAPPEN[stap];
+  // Bij één keuze schuift de wizard vanzelf door. Dat scheelt de helft van de
+  // klikken; de korte vertraging laat de gekozen optie nog even oplichten,
+  // zodat het niet voelt alsof het scherm onder je vandaan springt.
+  const doorschuifTimer = useRef(null);
+  useEffect(() => () => clearTimeout(doorschuifTimer.current), []);
 
-  const compleet = (() => {
-    switch (huidigeStap && huidigeStap.id) {
-      case "rol":
-        return Boolean(antwoorden.rol);
-      case "team":
-        return Boolean(antwoorden.teamgrootte && antwoorden.teamtype && antwoorden.bestaansduur && antwoorden.afhankelijkheid);
-      case "aanleiding":
-        return (antwoorden.aanleidingen || []).length > 0;
-      case "resultaat":
-        return (antwoorden.resultaten || []).length > 0;
-      case "veiligheid":
-        return VEILIGHEIDSVRAGEN.every((v) => Boolean((antwoorden.veiligheid || {})[v.id]));
-      case "tijd":
-        return Boolean(antwoorden.tijd && antwoorden.setting && antwoorden.ruimte && antwoorden.aanwezigheid);
-      case "werkwijze":
-        return (antwoorden.werkwijzen || []).length > 0 && Boolean(antwoorden.ervaring);
-      case "borging":
-        return Boolean(antwoorden.opvolging);
-      default:
-        return false;
+  const kiesEnkel = (v, waarde) => {
+    zetAntwoord(v, waarde);
+    if (autoDoor) {
+      clearTimeout(doorschuifTimer.current);
+      doorschuifTimer.current = setTimeout(() => volgende(), 260);
     }
-  })();
+  };
+
+  const compleet = vraagBeantwoord(vraag, antwoorden);
 
   // Aanpassen van het programma. Iedere aanpassing wordt getoetst; komt er een
   // bezwaar uit, dan blijft het oude programma staan.
@@ -282,147 +272,47 @@ export default function TeamdagGenerator() {
         </>
       ) : null}
 
-      {fase === "vragen" && huidigeStap ? (
+      {fase === "vragen" && vraag ? (
         <section className="td-wizard">
-          <div className="td-binnen">
-            <Voortgang nummer={huidigeStap.nummer} totaal={STAPPEN.length} titel={huidigeStap.kort} />
+          <div className={`td-binnen ${vraag.breed ? "td-binnen--breed" : "td-binnen--smal"}`}>
+            <Voortgang fase={vraag.fase} vraagNummer={stap + 1} totaalVragen={VRAGEN.length} />
 
-            <div className="td-vraag">
-              <h2>{huidigeStap.titel}</h2>
+            <div className="td-vraag" key={vraag.id}>
+              <h2>{vraag.kop}</h2>
+              {vraag.uitleg ? <p className="td-vraag-uitleg">{vraag.uitleg}</p> : null}
 
-              {huidigeStap.id === "rol" ? (
-                <>
-                  <p className="td-vraag-uitleg">
-                    We gebruiken je rol om de aandachtspunten bij het programma aan te passen.
-                  </p>
-                  <EnkeleKeuze naam="rol" opties={ROLLEN} waarde={antwoorden.rol} onKies={(v) => zet("rol", v)} />
-                </>
+              {vraag.type === "enkel" ? (
+                <EnkeleKeuze
+                  naam={vraag.id}
+                  opties={vraag.opties}
+                  waarde={waardeVan(vraag)}
+                  onKies={(waarde) => kiesEnkel(vraag, waarde)}
+                  kolommen={vraag.kolommen}
+                  compact={vraag.compact}
+                />
               ) : null}
 
-              {huidigeStap.id === "team" ? (
-                <>
-                  <EnkeleKeuze kop="Hoeveel deelnemers?" naam="teamgrootte" opties={TEAMGROOTTES} waarde={antwoorden.teamgrootte} onKies={(v) => zet("teamgrootte", v)} />
-                  <EnkeleKeuze kop="Wat voor team is het?" naam="teamtype" opties={TEAMTYPES} waarde={antwoorden.teamtype} onKies={(v) => zet("teamtype", v)} />
-                  <EnkeleKeuze kop="Hoe lang bestaat het team?" naam="bestaansduur" opties={BESTAANSDUUR} waarde={antwoorden.bestaansduur} onKies={(v) => zet("bestaansduur", v)} />
-                  <EnkeleKeuze
-                    kop="Hoe afhankelijk zijn teamleden van elkaar?"
-                    naam="afhankelijkheid"
-                    opties={AFHANKELIJKHEID}
-                    waarde={antwoorden.afhankelijkheid}
-                    onKies={(v) => zet("afhankelijkheid", v)}
-                  />
-                </>
+              {vraag.type === "meer" ? (
+                <MeervoudigeKeuze
+                  naam={vraag.id}
+                  opties={vraag.opties}
+                  waarden={antwoorden[vraag.veld] || []}
+                  onWissel={(id) => wisselAntwoord(vraag, id)}
+                  max={vraag.max}
+                  kolommen={vraag.kolommen || vraag.breed}
+                  compact={vraag.compact || vraag.breed}
+                />
               ) : null}
 
-              {huidigeStap.id === "aanleiding" ? (
-                <>
-                  <MeervoudigeKeuze
-                    naam="aanleidingen"
-                    opties={AANLEIDINGEN}
-                    waarden={antwoorden.aanleidingen}
-                    onWissel={(id) => wissel("aanleidingen", id, MAX_AANLEIDINGEN)}
-                    max={MAX_AANLEIDINGEN}
-                    uitleg="Kies er maximaal drie. De eerste keuze weegt het zwaarst."
-                  />
-                  <Tekstveld
-                    id="td-toelichting"
-                    kop="Korte toelichting (optioneel)"
-                    waarde={antwoorden.toelichting}
-                    onWijzig={(v) => zet("toelichting", v)}
-                    hint={PRIVACYTEKST.vrijeTekst}
-                    plaatshouder="Bijvoorbeeld: sinds de reorganisatie zijn de overleggen korter en stiller geworden."
-                  />
-                  <p className="td-max">
-                    Deze tekst wordt niet gebruikt om het programma te bepalen. Hij komt alleen terug in je eigen
-                    overzicht.
-                  </p>
-                </>
-              ) : null}
-
-              {huidigeStap.id === "resultaat" ? (
-                <>
-                  <MeervoudigeKeuze
-                    naam="resultaten"
-                    opties={RESULTATEN}
-                    waarden={antwoorden.resultaten}
-                    onWissel={(id) => wissel("resultaten", id, MAX_RESULTATEN)}
-                    max={MAX_RESULTATEN}
-                    uitleg="Kies er maximaal twee. Het eerste doel bepaalt de opbouw van het programma."
-                  />
-                  <EnkeleKeuze
-                    kop="Wat zou twee weken na de teamdag zichtbaar anders moeten zijn?"
-                    naam="zichtbaar"
-                    opties={ZICHTBAAR_VOORBEELDEN.map((z) => ({ id: z, label: z }))}
-                    waarde={antwoorden.zichtbaar}
-                    onKies={(v) => zet("zichtbaar", v)}
-                  />
-                  <Tekstveld
-                    id="td-zichtbaar-eigen"
-                    kop="Of formuleer het in je eigen woorden (optioneel)"
-                    waarde={antwoorden.zichtbaarEigen}
-                    onWijzig={(v) => zet("zichtbaarEigen", v)}
-                    hint={PRIVACYTEKST.vrijeTekst}
-                    maxLengte={240}
-                  />
-                </>
-              ) : null}
-
-              {huidigeStap.id === "veiligheid" ? (
-                <>
-                  <p className="td-vraag-uitleg">
-                    Deze vragen bepalen welke werkvormen passen. We stellen niets vast over jouw team; we kijken
-                    alleen of een gezamenlijke dag nu een verstandige eerste stap is.
-                  </p>
-                  {VEILIGHEIDSVRAGEN.map((v) => (
-                    <EnkeleKeuze
-                      key={v.id}
-                      kop={v.vraag}
-                      naam={`veiligheid-${v.id}`}
-                      opties={VEILIGHEID_OPTIES}
-                      waarde={(antwoorden.veiligheid || {})[v.id]}
-                      onKies={(waarde) => zetVeiligheid(v.id, waarde)}
-                    />
-                  ))}
-                </>
-              ) : null}
-
-              {huidigeStap.id === "tijd" ? (
-                <>
-                  <EnkeleKeuze naam="tijd" kop="Beschikbare tijd" opties={TIJDSOPTIES} waarde={antwoorden.tijd} onKies={(v) => zet("tijd", v)} />
-                  <EnkeleKeuze naam="pauze" kop="Is een pauze nodig?" opties={PAUZEKEUZE} waarde={antwoorden.pauze} onKies={(v) => zet("pauze", v)} />
-                  <EnkeleKeuze naam="setting" kop="Waar vindt de bijeenkomst plaats?" opties={SETTINGS} waarde={antwoorden.setting} onKies={(v) => zet("setting", v)} />
-                  <EnkeleKeuze naam="ruimte" kop="Is er een geschikte ruimte?" opties={RUIMTEOPTIES} waarde={antwoorden.ruimte} onKies={(v) => zet("ruimte", v)} />
-                  <EnkeleKeuze
-                    naam="aanwezigheid"
-                    kop="Moet je rekening houden met wisselende aanwezigheid?"
-                    opties={AANWEZIGHEID}
-                    waarde={antwoorden.aanwezigheid}
-                    onKies={(v) => zet("aanwezigheid", v)}
-                  />
-                </>
-              ) : null}
-
-              {huidigeStap.id === "werkwijze" ? (
-                <>
-                  <MeervoudigeKeuze
-                    naam="werkwijzen"
-                    opties={WERKWIJZEN}
-                    waarden={antwoorden.werkwijzen}
-                    onWissel={(id) => wissel("werkwijzen", id)}
-                    uitleg="Meerdere keuzes zijn mogelijk."
-                  />
-                  <EnkeleKeuze
-                    naam="ervaring"
-                    kop="Hoeveel ervaring heeft het team met teamdagen?"
-                    opties={ERVARING}
-                    waarde={antwoorden.ervaring}
-                    onKies={(v) => zet("ervaring", v)}
-                  />
-                </>
-              ) : null}
-
-              {huidigeStap.id === "borging" ? (
-                <EnkeleKeuze naam="opvolging" opties={OPVOLGING} waarde={antwoorden.opvolging} onKies={(v) => zet("opvolging", v)} />
+              {vraag.type === "tekst" ? (
+                <Tekstveld
+                  id={`td-${vraag.id}`}
+                  waarde={antwoorden[vraag.veld]}
+                  onWijzig={(waarde) => zetAntwoord(vraag, waarde)}
+                  hint={PRIVACYTEKST.vrijeTekst}
+                  plaatshouder={vraag.plaatshouder}
+                  maxLengte={vraag.maxLengte}
+                />
               ) : null}
             </div>
 
@@ -430,9 +320,25 @@ export default function TeamdagGenerator() {
               <button type="button" className="td-knop td-knop--secundair" onClick={vorige}>
                 Terug
               </button>
-              <button type="button" className="td-knop td-knop--primair" onClick={volgende} disabled={!compleet}>
-                {stap === STAPPEN.length - 1 ? "Stel mijn teamdag samen" : "Volgende"}
-              </button>
+              <div className="td-navigatie-rechts">
+                {vraag.type === "enkel" ? (
+                  <label className="td-autodoor">
+                    <input
+                      type="checkbox"
+                      checked={autoDoor}
+                      onChange={() => setAutoDoor((v) => !v)}
+                    />
+                    Automatisch doorgaan
+                  </label>
+                ) : null}
+                <button type="button" className="td-knop td-knop--primair" onClick={volgende} disabled={!compleet}>
+                  {stap === VRAGEN.length - 1
+                    ? "Stel mijn teamdag samen"
+                    : vraag.optioneel && !waardeVan(vraag)
+                      ? "Overslaan"
+                      : "Volgende"}
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -479,7 +385,7 @@ export default function TeamdagGenerator() {
                   className="td-knop td-knop--secundair"
                   onClick={() => {
                     setFase("vragen");
-                    setStap(4);
+                    setStap(VRAGEN.findIndex((v) => v.fase === "veiligheid"));
                     naarBoven();
                   }}
                 >

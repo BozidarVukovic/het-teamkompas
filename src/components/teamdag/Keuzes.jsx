@@ -3,18 +3,27 @@
 // Alle door de gebruiker ingevoerde tekst wordt als tekst weergegeven, nooit
 // als HTML. React ontsnapt dat standaard; er wordt hier bewust nergens
 // dangerouslySetInnerHTML gebruikt.
+//
+// `kolommen` zet korte antwoorden naast elkaar in plaats van onder elkaar. Dat
+// is bedoeld voor lijsten met korte labels, zoals ja, gedeeltelijk, nee.
 
 import React from "react";
 
-export function EnkeleKeuze({ naam, opties, waarde, onKies, kop, uitleg }) {
+export function EnkeleKeuze({ naam, opties, waarde, onKies, kolommen = false, compact = false }) {
   return (
-    <fieldset className="td-veld td-opties">
-      {kop ? <legend>{kop}</legend> : null}
-      {uitleg ? <p className="td-vraag-uitleg">{uitleg}</p> : null}
+    <fieldset className={`td-opties${kolommen ? " td-opties--kolommen" : ""}${compact ? " td-opties--compact" : ""}`}>
+      <legend className="td-verborgen">Kies één antwoord</legend>
       {opties.map((o) => {
         const gekozen = waarde === o.id;
         return (
-          <label key={o.id} className={`td-optie${gekozen ? " td-optie--gekozen" : ""}`}>
+          <label
+            key={o.id}
+            className={`td-optie${gekozen ? " td-optie--gekozen" : ""}`}
+            // Klikken op het antwoord dat al gekozen is, vuurt geen onChange af.
+            // Zonder deze regel lijkt de keuze dood bij een vooringevuld
+            // antwoord of wanneer iemand via Terug terugkomt.
+            onClick={() => { if (gekozen) onKies(o.id); }}
+          >
             <input
               type="radio"
               name={naam}
@@ -22,7 +31,7 @@ export function EnkeleKeuze({ naam, opties, waarde, onKies, kop, uitleg }) {
               checked={gekozen}
               onChange={() => onKies(o.id)}
             />
-            <span>
+            <span className="td-optie-tekst">
               <span className="td-optie-label">{o.label}</span>
               {o.uitleg ? <span className="td-optie-uitleg">{o.uitleg}</span> : null}
             </span>
@@ -33,50 +42,53 @@ export function EnkeleKeuze({ naam, opties, waarde, onKies, kop, uitleg }) {
   );
 }
 
-export function MeervoudigeKeuze({ naam, opties, waarden = [], onWissel, kop, max, uitleg }) {
+export function MeervoudigeKeuze({ naam, opties, waarden = [], onWissel, max, kolommen = false, compact = false }) {
   const vol = typeof max === "number" && waarden.length >= max;
   return (
-    <fieldset className="td-veld td-opties">
-      {kop ? <legend>{kop}</legend> : null}
-      {uitleg ? <p className="td-vraag-uitleg">{uitleg}</p> : null}
-      {opties.map((o) => {
-        const gekozen = waarden.includes(o.id);
-        const uit = vol && !gekozen;
-        return (
-          <label
-            key={o.id}
-            className={`td-optie${gekozen ? " td-optie--gekozen" : ""}${uit ? " td-optie--uit" : ""}`}
-          >
-            <input
-              type="checkbox"
-              name={naam}
-              value={o.id}
-              checked={gekozen}
-              disabled={uit}
-              onChange={() => onWissel(o.id)}
-            />
-            <span>
-              <span className="td-optie-label">{o.label}</span>
-              {o.uitleg ? <span className="td-optie-uitleg">{o.uitleg}</span> : null}
-            </span>
-          </label>
-        );
-      })}
+    <>
+      <fieldset className={`td-opties${kolommen ? " td-opties--kolommen" : ""}${compact ? " td-opties--compact" : ""}`}>
+        <legend className="td-verborgen">Kies wat van toepassing is</legend>
+        {opties.map((o) => {
+          const gekozen = waarden.includes(o.id);
+          const uit = vol && !gekozen;
+          return (
+            <label
+              key={o.id}
+              className={`td-optie${gekozen ? " td-optie--gekozen" : ""}${uit ? " td-optie--uit" : ""}`}
+            >
+              <input
+                type="checkbox"
+                name={naam}
+                value={o.id}
+                checked={gekozen}
+                disabled={uit}
+                onChange={() => onWissel(o.id)}
+              />
+              <span className="td-optie-tekst">
+                <span className="td-optie-label">{o.label}</span>
+                {o.uitleg ? <span className="td-optie-uitleg">{o.uitleg}</span> : null}
+              </span>
+            </label>
+          );
+        })}
+      </fieldset>
       {typeof max === "number" ? (
-        <p className="td-max">
-          {waarden.length} van maximaal {max} gekozen.
+        <p className="td-teller">
+          {waarden.length} van maximaal {max} gekozen
         </p>
       ) : null}
-    </fieldset>
+    </>
   );
 }
 
 export function Tekstveld({ id, kop, waarde, onWijzig, hint, plaatshouder, maxLengte = 400 }) {
   return (
-    <div className="td-veld">
-      <label className="td-veld-kop" htmlFor={id}>
-        {kop}
-      </label>
+    <div className="td-tekstblok">
+      {kop ? (
+        <label className="td-veld-kop" htmlFor={id}>
+          {kop}
+        </label>
+      ) : null}
       <textarea
         id={id}
         className="td-tekstveld"

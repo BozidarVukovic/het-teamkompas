@@ -214,16 +214,238 @@ export const OPVOLGING = [
   { id: "onbekend", label: "Nog onbekend", maxActies: 2, maxExperimenten: 1 },
 ];
 
+// De acht fasen van de beslisboom. Ze bepalen de indeling van de
+// voortgangsindicator; de gebruiker beantwoordt binnen een fase één vraag per
+// scherm.
 export const STAPPEN = [
-  { id: "rol", nummer: 1, titel: "Vanuit welke rol organiseer je deze teamdag?", kort: "Rol" },
-  { id: "team", nummer: 2, titel: "Wat voor team is het?", kort: "Team" },
-  { id: "aanleiding", nummer: 3, titel: "Waarom wil je juist nu een teamdag organiseren?", kort: "Aanleiding" },
-  { id: "resultaat", nummer: 4, titel: "Wat moet aan het einde van de teamdag anders of duidelijker zijn?", kort: "Resultaat" },
+  { id: "rol", nummer: 1, titel: "Jouw rol", kort: "Rol" },
+  { id: "team", nummer: 2, titel: "Het team", kort: "Team" },
+  { id: "aanleiding", nummer: 3, titel: "De aanleiding", kort: "Aanleiding" },
+  { id: "resultaat", nummer: 4, titel: "Het gewenste resultaat", kort: "Resultaat" },
   { id: "veiligheid", nummer: 5, titel: "Veiligheid en spanning", kort: "Veiligheid" },
-  { id: "tijd", nummer: 6, titel: "Hoeveel tijd is beschikbaar?", kort: "Tijd" },
-  { id: "werkwijze", nummer: 7, titel: "Hoe wil je tijdens de teamdag werken?", kort: "Werkwijze" },
-  { id: "borging", nummer: 8, titel: "Hoeveel ruimte is er na de teamdag voor opvolging?", kort: "Borging" },
+  { id: "tijd", nummer: 6, titel: "Tijd en vorm", kort: "Tijd" },
+  { id: "werkwijze", nummer: 7, titel: "Manier van werken", kort: "Werkwijze" },
+  { id: "borging", nummer: 8, titel: "Borging", kort: "Borging" },
 ];
+
+// Eén vraag per scherm. Iedere vraag staat hier los, zodat de wizard er
+// doorheen loopt zonder dat er ergens een scherm met vier vragen tegelijk
+// ontstaat.
+//
+// Velden per vraag:
+//   id          uniek
+//   fase        id uit STAPPEN, bepaalt waar je in de voortgang staat
+//   veld        sleutel in het antwoordobject
+//   groep       optioneel: antwoord komt in een subobject (alleen veiligheid)
+//   type        enkel | meer | tekst
+//   kop         de vraag zelf
+//   uitleg      optionele toelichting onder de vraag
+//   opties      lijst met antwoordopties (bij enkel en meer)
+//   max         maximumaantal keuzes (bij meer)
+//   optioneel   deze vraag mag worden overgeslagen
+//   kolommen    true: korte opties naast elkaar in twee kolommen
+//   breed       true: bredere kolom met twee kolommen antwoorden, voor lange lijsten
+//   compact     true: minder ruimte per antwoord, voor lijsten met lange zinnen
+export const VRAGEN = [
+  {
+    id: "rol",
+    fase: "rol",
+    veld: "rol",
+    type: "enkel",
+    kop: "Vanuit welke rol organiseer je deze teamdag?",
+    uitleg: "We gebruiken je rol om de aandachtspunten bij het programma aan te passen.",
+    opties: ROLLEN,
+  },
+  {
+    id: "teamgrootte",
+    fase: "team",
+    veld: "teamgrootte",
+    type: "enkel",
+    kop: "Hoeveel mensen doen er mee?",
+    uitleg: "De groepsgrootte bepaalt welke werkvormen werken. Wat plenair kan bij acht mensen, werkt bij vijfentwintig niet meer.",
+    opties: TEAMGROOTTES,
+    kolommen: true,
+  },
+  {
+    id: "teamtype",
+    fase: "team",
+    veld: "teamtype",
+    type: "enkel",
+    kop: "Wat voor team is het?",
+    opties: TEAMTYPES,
+    kolommen: true,
+  },
+  {
+    id: "bestaansduur",
+    fase: "team",
+    veld: "bestaansduur",
+    type: "enkel",
+    kop: "Hoe lang bestaat het team in deze samenstelling?",
+    opties: BESTAANSDUUR,
+  },
+  {
+    id: "afhankelijkheid",
+    fase: "team",
+    veld: "afhankelijkheid",
+    type: "enkel",
+    kop: "Hoe afhankelijk zijn teamleden van elkaar?",
+    uitleg: "Hier valt of staat de opzet mee. Een groep die vooral een manager deelt, heeft een ander programma nodig dan een team dat elkaar dagelijks nodig heeft.",
+    opties: AFHANKELIJKHEID,
+  },
+  {
+    id: "aanleidingen",
+    fase: "aanleiding",
+    veld: "aanleidingen",
+    type: "meer",
+    kop: "Waarom wil je juist nu een teamdag organiseren?",
+    uitleg: "Kies er maximaal drie. Je eerste keuze weegt het zwaarst.",
+    opties: AANLEIDINGEN,
+    max: MAX_AANLEIDINGEN,
+    breed: true,
+  },
+  {
+    id: "toelichting",
+    fase: "aanleiding",
+    veld: "toelichting",
+    type: "tekst",
+    kop: "Wil je dat kort toelichten?",
+    uitleg: "Deze tekst bepaalt het programma niet. Hij komt alleen terug in je eigen overzicht, zodat je later weet waar het om ging.",
+    plaatshouder: "Bijvoorbeeld: sinds de reorganisatie zijn de overleggen korter en stiller geworden.",
+    optioneel: true,
+    maxLengte: 400,
+  },
+  {
+    id: "resultaten",
+    fase: "resultaat",
+    veld: "resultaten",
+    type: "meer",
+    kop: "Wat moet aan het einde van de dag anders of duidelijker zijn?",
+    uitleg: "Kies er maximaal twee. Het eerste doel bepaalt de opbouw van het programma.",
+    opties: RESULTATEN,
+    max: MAX_RESULTATEN,
+    breed: true,
+  },
+  {
+    id: "zichtbaar",
+    fase: "resultaat",
+    veld: "zichtbaar",
+    type: "enkel",
+    kop: "Wat zou twee weken later zichtbaar anders moeten zijn?",
+    uitleg: "Kies wat het dichtst in de buurt komt. Hierdoor wordt het doel toetsbaar in plaats van een voornemen.",
+    opties: ZICHTBAAR_VOORBEELDEN.map((z) => ({ id: z, label: z })),
+    compact: true,
+  },
+  {
+    id: "zichtbaar-eigen",
+    fase: "resultaat",
+    veld: "zichtbaarEigen",
+    type: "tekst",
+    kop: "Of formuleer het in je eigen woorden",
+    plaatshouder: "Waaraan zou een buitenstaander merken dat de dag iets heeft opgeleverd?",
+    optioneel: true,
+    maxLengte: 240,
+  },
+  ...VEILIGHEIDSVRAGEN.map((v, i) => ({
+    id: `veiligheid-${v.id}`,
+    fase: "veiligheid",
+    veld: v.id,
+    groep: "veiligheid",
+    type: "enkel",
+    kop: v.vraag,
+    uitleg: i === 0
+      ? "Deze vragen bepalen welke werkvormen passen. We stellen niets vast over jouw team; we kijken alleen of een gezamenlijke dag nu een verstandige eerste stap is."
+      : undefined,
+    opties: VEILIGHEID_OPTIES,
+    kolommen: true,
+  })),
+  {
+    id: "tijd",
+    fase: "tijd",
+    veld: "tijd",
+    type: "enkel",
+    kop: "Hoeveel tijd is er beschikbaar?",
+    uitleg: "Het programma vult precies deze tijd, met ruimte voor uitloop.",
+    opties: TIJDSOPTIES,
+  },
+  {
+    id: "pauze",
+    fase: "tijd",
+    veld: "pauze",
+    type: "enkel",
+    kop: "Wil je een pauze in het programma?",
+    opties: PAUZEKEUZE,
+    kolommen: true,
+  },
+  {
+    id: "setting",
+    fase: "tijd",
+    veld: "setting",
+    type: "enkel",
+    kop: "Waar vindt de bijeenkomst plaats?",
+    opties: SETTINGS,
+  },
+  {
+    id: "ruimte",
+    fase: "tijd",
+    veld: "ruimte",
+    type: "enkel",
+    kop: "Is er een geschikte ruimte?",
+    uitleg: "De indeling van de zaal bepaalt meer van het programma dan de meeste organisatoren verwachten.",
+    opties: RUIMTEOPTIES,
+  },
+  {
+    id: "aanwezigheid",
+    fase: "tijd",
+    veld: "aanwezigheid",
+    type: "enkel",
+    kop: "Kan iedereen de hele tijd aanwezig zijn?",
+    opties: AANWEZIGHEID,
+  },
+  {
+    id: "werkwijzen",
+    fase: "werkwijze",
+    veld: "werkwijzen",
+    type: "meer",
+    kop: "Hoe wil je tijdens de teamdag werken?",
+    uitleg: "Meerdere keuzes zijn mogelijk. Weet je het nog niet, kies dan geen voorkeur.",
+    opties: WERKWIJZEN,
+    breed: true,
+  },
+  {
+    id: "ervaring",
+    fase: "werkwijze",
+    veld: "ervaring",
+    type: "enkel",
+    kop: "Hoeveel ervaring heeft het team met teamdagen?",
+    uitleg: "Bij weinig ervaring kiezen we laagdrempelige werkvormen die weinig uitleg vragen.",
+    opties: ERVARING,
+  },
+  {
+    id: "opvolging",
+    fase: "borging",
+    veld: "opvolging",
+    type: "enkel",
+    kop: "Hoeveel ruimte is er na de teamdag voor opvolging?",
+    uitleg: "Is er weinig ruimte, dan houden we het bij één afspraak of één klein experiment. Meer overleeft de terugkeer naar de dagelijkse drukte niet.",
+    opties: OPVOLGING,
+  },
+];
+
+/** Het volgnummer van een fase, gebruikt door de voortgangsindicator. */
+export function faseVan(vraag) {
+  return STAPPEN.find((s) => s.id === (vraag && vraag.fase)) || STAPPEN[0];
+}
+
+/** Is deze vraag beantwoord? */
+export function vraagBeantwoord(vraag, antwoorden = {}) {
+  if (!vraag) return false;
+  if (vraag.optioneel) return true;
+  const waarde = vraag.groep
+    ? (antwoorden[vraag.groep] || {})[vraag.veld]
+    : antwoorden[vraag.veld];
+  if (vraag.type === "meer") return Array.isArray(waarde) && waarde.length > 0;
+  return typeof waarde === "string" && waarde.length > 0;
+}
 
 /** Kleine hulpfunctie: zoek een optie op id binnen een lijst. */
 export function optie(lijst, id) {

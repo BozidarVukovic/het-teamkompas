@@ -6,6 +6,8 @@ import assert from "node:assert/strict";
 
 import {
   STAPPEN,
+  VRAGEN,
+  vraagBeantwoord,
   AANLEIDINGEN,
   RESULTATEN,
   TEAMGROOTTES,
@@ -55,9 +57,72 @@ const met = (extra) => ({ ...BASIS, ...extra });
 
 // --- Structuur van de vragenlijst ---
 
-test("de beslisboom heeft acht genummerde stappen", () => {
+test("de beslisboom heeft acht genummerde fasen", () => {
   assert.equal(STAPPEN.length, 8);
   STAPPEN.forEach((s, i) => assert.equal(s.nummer, i + 1));
+});
+
+test("iedere vraag staat op een eigen scherm en hoort bij een bestaande fase", () => {
+  const fasen = new Set(STAPPEN.map((s) => s.id));
+  const ids = new Set();
+  VRAGEN.forEach((v) => {
+    assert.ok(!ids.has(v.id), `dubbele vraag-id: ${v.id}`);
+    ids.add(v.id);
+    assert.ok(fasen.has(v.fase), `${v.id}: onbekende fase ${v.fase}`);
+    assert.ok(v.kop && v.kop.length > 8, `${v.id}: geen bruikbare vraagtekst`);
+    assert.ok(["enkel", "meer", "tekst"].includes(v.type), `${v.id}: onbekend type`);
+    if (v.type !== "tekst") {
+      assert.ok(Array.isArray(v.opties) && v.opties.length >= 2, `${v.id}: te weinig antwoordopties`);
+    }
+  });
+});
+
+test("de vragen volgen de fasen in volgorde", () => {
+  const volgorde = STAPPEN.map((s) => s.id);
+  const posities = VRAGEN.map((v) => volgorde.indexOf(v.fase));
+  for (let i = 1; i < posities.length; i += 1) {
+    assert.ok(posities[i] >= posities[i - 1], "de fasen lopen terug in de vragenlijst");
+  }
+});
+
+test("iedere fase heeft minstens één vraag", () => {
+  STAPPEN.forEach((s) => {
+    assert.ok(VRAGEN.some((v) => v.fase === s.id), `fase ${s.id} heeft geen vragen`);
+  });
+});
+
+test("de vragen dekken alle velden die de programmalogica gebruikt", () => {
+  const gedekt = new Set(VRAGEN.filter((v) => !v.groep).map((v) => v.veld));
+  ["rol", "teamgrootte", "teamtype", "bestaansduur", "afhankelijkheid", "aanleidingen",
+   "resultaten", "tijd", "pauze", "setting", "ruimte", "aanwezigheid", "werkwijzen",
+   "ervaring", "opvolging"].forEach((veld) => {
+    assert.ok(gedekt.has(veld), `veld ${veld} wordt nergens gevraagd`);
+  });
+  const veiligheidsvelden = new Set(VRAGEN.filter((v) => v.groep === "veiligheid").map((v) => v.veld));
+  VEILIGHEIDSVRAGEN.forEach((v) => {
+    assert.ok(veiligheidsvelden.has(v.id), `veiligheidsvraag ${v.id} wordt niet gesteld`);
+  });
+});
+
+test("een optionele vraag mag worden overgeslagen, een verplichte niet", () => {
+  const optioneel = VRAGEN.find((v) => v.optioneel);
+  const verplicht = VRAGEN.find((v) => !v.optioneel && v.type === "enkel");
+  assert.ok(optioneel && verplicht);
+  assert.equal(vraagBeantwoord(optioneel, {}), true);
+  assert.equal(vraagBeantwoord(verplicht, {}), false);
+  assert.equal(vraagBeantwoord(verplicht, { [verplicht.veld]: verplicht.opties[0].id }), true);
+});
+
+test("een meerkeuzevraag is pas beantwoord met minstens één keuze", () => {
+  const meer = VRAGEN.find((v) => v.type === "meer" && !v.optioneel);
+  assert.equal(vraagBeantwoord(meer, { [meer.veld]: [] }), false);
+  assert.equal(vraagBeantwoord(meer, { [meer.veld]: [meer.opties[0].id] }), true);
+});
+
+test("een veiligheidsvraag leest het antwoord uit het juiste subobject", () => {
+  const v = VRAGEN.find((q) => q.groep === "veiligheid");
+  assert.equal(vraagBeantwoord(v, {}), false);
+  assert.equal(vraagBeantwoord(v, { veiligheid: { [v.veld]: "ja" } }), true);
 });
 
 test("maximaal drie aanleidingen en twee resultaten", () => {
