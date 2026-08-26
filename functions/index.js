@@ -25,7 +25,8 @@ const AI_MODEL = "gpt-4.1-mini";
 // Gratis individuele teamscan: inhoud en scoremodel zijn bewust deterministisch.
 // Houd deze twee versies gelijk aan src/data/freeScanConfig.js.
 const FREE_SCAN_VERSION = "1.1.0";
-const FREE_SCORE_VERSION = "1.1.0";
+// Moet gelijk blijven aan SCORE_MODEL_VERSION in src/data/freeScanConfig.js.
+const FREE_SCORE_VERSION = "2.0.0";
 const FREE_THEMES = [
   ["veiligheid","Psychologische veiligheid","Ruimte om zorgen, fouten en verschil uit te spreken.","Welk gesprek stel jij uit omdat de ruimte nog niet veilig genoeg voelt?","Vraag aan het einde van één overleg: welk belangrijk punt is nog niet uitgesproken?"],
   ["communicatie","Communicatie en luisteren","Elkaar begrijpen en misverstanden constructief bespreken.","Wanneer voelde jij je voor het laatst echt gehoord in je team?","Vat in één overleg eerst het standpunt van een ander samen voordat je reageert."],
@@ -46,12 +47,19 @@ const FREE_PATTERNS = [
   ["veel_praten_weinig_bewegen","communicatie","eigenaarschap","Van gesprek naar opvolging","Er lijkt veel basis voor gesprek, terwijl besluiten en verbeteringen mogelijk niet steeds een duidelijke eigenaar krijgen."],
 ].map(([id,high,low,title,text])=>({id,high,low,title,text}));
 
-function freeZone(score){ return score>=75?{id:"strong",label:"Sterke basis"}:score>=55?{id:"attention",label:"Aandacht en verdieping"}:{id:"pattern",label:"Mogelijk belemmerend patroon"}; }
+// Scorecategorieën op de schaal van 1 tot en met 5. Moet gelijk blijven aan
+// SCORE_ZONES in src/data/freeScanConfig.js: 3,50 is sterk, 3,49 is wisselend,
+// 2,50 is wisselend en 2,49 is een duidelijke ontwikkelbehoefte.
+function freeZone(gemiddelde){ return gemiddelde>=3.5?{id:"strong",label:"Relatief sterke basis"}:gemiddelde>=2.5?{id:"attention",label:"Wisselend of kwetsbaar"}:{id:"pattern",label:"Duidelijke ontwikkelbehoefte"}; }
 function calculateFreeResults(answers){
-  const themeScores=FREE_THEMES.map(theme=>{const values=Object.entries(FREE_QUESTION_THEMES).filter(([,t])=>t===theme.id).map(([id])=>{const v=Number(answers[id]);if(!Number.isFinite(v)||v<1||v>5)return null;return FREE_REVERSED.has(id)?6-v:v;}).filter(v=>v!==null);const score=values.length?Math.round(((values.reduce((a,b)=>a+b,0)/values.length)-1)*25):null;return {...theme,score,answered:values.length,zone:score===null?null:freeZone(score)};});
+  // Het gemiddelde blijft leidend en wordt met volle precisie bewaard. `score`
+  // is de oude weergave van 0 tot 100 en blijft erin staan voor eerder
+  // opgeslagen rapporten en het e-mailsjabloon. Ontbrekende antwoorden tellen
+  // nooit als nul mee: ze doen niet mee aan het gemiddelde.
+  const themeScores=FREE_THEMES.map(theme=>{const vragen=Object.entries(FREE_QUESTION_THEMES).filter(([,t])=>t===theme.id);const values=vragen.map(([id])=>{const v=Number(answers[id]);if(!Number.isFinite(v)||v<1||v>5)return null;return FREE_REVERSED.has(id)?6-v:v;}).filter(v=>v!==null);const voldoende=vragen.length>0&&values.length/vragen.length>=0.75;const gemiddelde=voldoende?values.reduce((a,b)=>a+b,0)/values.length:null;const score=gemiddelde===null?null:Math.round((gemiddelde-1)*25);return {...theme,gemiddelde,score,answered:values.length,gevraagd:vragen.length,zone:gemiddelde===null?null:freeZone(gemiddelde)};});
   if(themeScores.some(t=>t.answered!==4)) throw new HttpsError("invalid-argument","Beantwoord alle 24 vragen.");
-  const ranked=[...themeScores].sort((a,b)=>b.score-a.score), strengths=ranked.slice(0,2), opportunities=[...ranked].reverse().slice(0,2);
-  const patterns=FREE_PATTERNS.filter(p=>themeScores.find(t=>t.id===p.high).score>=75&&themeScores.find(t=>t.id===p.low).score<55).slice(0,3);
+  const ranked=[...themeScores].sort((a,b)=>b.gemiddelde-a.gemiddelde), strengths=ranked.slice(0,2), opportunities=[...ranked].reverse().slice(0,2);
+  const patterns=FREE_PATTERNS.filter(p=>themeScores.find(t=>t.id===p.high).gemiddelde>=3.5&&themeScores.find(t=>t.id===p.low).gemiddelde<3).slice(0,2);
   return {themeScores,strengths,opportunities,patterns,reflections:opportunities.map(t=>t.reflection),experiments:opportunities.map(t=>t.experiment),scoreModelVersion:FREE_SCORE_VERSION};
 }
 

@@ -212,3 +212,11 @@
   a { text-decoration: none; color: inherit; }
   .free-theme__link { display: none; }
 }
+
+/* Uitklapbare methodische toelichting onder aan het rapport. */
+.free-details { margin-top: 22px; border: 1px solid #dde4ed; border-radius: 12px; background: #fff; }
+.free-details summary { padding: 14px 18px; font-weight: 700; cursor: pointer; border-radius: 12px; }
+.free-details summary:focus-visible { outline: 3px solid rgba(15,118,110,.4); outline-offset: 2px; }
+.free-details > div { padding: 0 18px 16px; }
+.free-details p { margin: 0 0 12px; line-height: 1.7; }
+@media print { .free-details { border: 0; } .free-details > div { display: block !important; padding: 0; } .free-details summary { display: none; } }
