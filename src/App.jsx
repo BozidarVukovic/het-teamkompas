@@ -35,6 +35,7 @@ import ImpactVanEenTeamdag from "./pages/public/ImpactVanEenTeamdag";
 import Kennisbank from "./pages/public/Kennisbank";
 import KennisbankItem from "./pages/public/KennisbankItem";
 import Gespreksvoorbereider from "./pages/public/Gespreksvoorbereider";
+import TeamdagGenerator from "./pages/public/TeamdagGenerator";
 import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import RelatedArticles from "./components/shared/RelatedArticles";
@@ -12533,7 +12534,7 @@ function TeamdagPage() {
         </section>
 
         <section style={sectionStyle(PUB.licht)}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 850, marginBottom: 34 }}><div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Praktische stappen</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Zo kun je een goede teamdag organiseren</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Ook als je de dag zelf voorbereidt, helpt deze volgorde om van inspiratie naar resultaat te komen.</p></div><div style={{ display: "grid", gap: 14 }}>{organiseerStappen.map(([nr, titel, tekst, href, linkLabel]) => <article key={nr} style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "64px 1fr", gap: 18, background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}><div style={{ width: 44, height: 44, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>{nr}</div><div><h3 style={{ fontSize: 20, margin: "0 0 8px" }}>{titel}</h3><p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>{href && <a href={href} style={{ display: "inline-block", marginTop: 10, color: PUB.teal, fontWeight: 800, fontSize: 14, textDecoration: "none" }}>{linkLabel} →</a>}</div></article>)}</div></div>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 850, marginBottom: 34 }}><div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Praktische stappen</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Zo kun je een goede teamdag organiseren</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Ook als je de dag zelf voorbereidt, helpt deze volgorde om van inspiratie naar resultaat te komen.</p><div style={{ marginTop: 18, padding: "18px 22px", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16 }}><strong style={{ display: "block", fontSize: 17, marginBottom: 6 }}>Liever meteen een concrete opzet?</strong><p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: "0 0 12px" }}>Beantwoord acht korte vragen over jouw team, de aanleiding en de beschikbare tijd. Je krijgt een programma met tijden, werkvormen, voorbereiding en borging. Zonder AI, op basis van vaste beslisregels.</p><a href="/teamdag-generator" style={{ display: "inline-block", background: PUB.teal, color: PUB.wit, padding: "12px 20px", borderRadius: 10, fontWeight: 800, fontSize: 15, textDecoration: "none" }}>Stel je teamdag samen →</a></div></div><div style={{ display: "grid", gap: 14 }}>{organiseerStappen.map(([nr, titel, tekst, href, linkLabel]) => <article key={nr} style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "64px 1fr", gap: 18, background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}><div style={{ width: 44, height: 44, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>{nr}</div><div><h3 style={{ fontSize: 20, margin: "0 0 8px" }}>{titel}</h3><p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>{href && <a href={href} style={{ display: "inline-block", marginTop: 10, color: PUB.teal, fontWeight: 800, fontSize: 14, textDecoration: "none" }}>{linkLabel} →</a>}</div></article>)}</div></div>
         </section>
 
         <section style={sectionStyle()}>
@@ -12733,6 +12734,7 @@ export default function App() {
         <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/gespreksvoorbereider" element={<Gespreksvoorbereider />} />
+        <Route path="/teamdag-generator" element={<TeamdagGenerator />} />
         <Route path="/kennisbank" element={<Kennisbank />} />
         <Route path="/kennisbank/:type/:slug" element={<KennisbankItem />} />
         <Route path="/inspiratie" element={<Blog />} />

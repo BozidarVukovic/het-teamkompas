@@ -77,3 +77,4 @@ dist/
 # Tijdelijke bestanden van vite en van de testscripts
 vite.config.js.timestamp-*
 scripts/.tmp-*
+dist-check-WEG/

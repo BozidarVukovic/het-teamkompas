@@ -43,6 +43,12 @@
     <priority>0.88</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/teamdag-generator</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.86</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/sprekers</loc>
     <lastmod>2026-07-14</lastmod>
     <changefreq>monthly</changefreq>
@@ -709,8 +715,20 @@
     <priority>0.70</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/kennisbank/werkvorm/de-stem-van-de-minderheid</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/kennisbank/werkvorm/de-stiltestart</loc>
     <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/kennisbank/werkvorm/een-twee-vier-iedereen</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>
@@ -733,8 +751,20 @@
     <priority>0.70</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/kennisbank/werkvorm/situatie-gedrag-effect</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/kennisbank/werkvorm/spanning-op-tafel</loc>
     <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/kennisbank/werkvorm/stoppen-houden-starten</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>
@@ -751,6 +781,12 @@
     <priority>0.70</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/kennisbank/werkvorm/terugblik-op-wat-er-werkelijk-gebeurde</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/kennisbank/werkvorm/van-irritatie-naar-afspraak</loc>
     <lastmod>2026-08-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -759,6 +795,12 @@
   <url>
     <loc>https://www.mijnteamkompas.nl/kennisbank/werkvorm/van-symptoom-naar-patroon</loc>
     <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/kennisbank/werkvorm/van-waarneming-naar-besluit</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>

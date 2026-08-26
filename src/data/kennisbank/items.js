@@ -6,6 +6,7 @@
 // alleen in de browserbundel.
 
 import { WERKVORMEN } from "./items-werkvormen.js";
+import { TEAMDAG_WERKVORMEN } from "./items-werkvormen-teamdag.js";
 import { REFLECTIEVRAGEN } from "./items-reflectie.js";
 import { INTERVENTIES, EXPERIMENTEN } from "./items-beweging.js";
 import { DOWNLOADS, GESPREKSVOORBEREIDERS } from "./items-hulpmiddelen.js";
@@ -66,6 +67,7 @@ export const BASIS_ITEMS = [
   ...bundel(KENNISPAGINAS, "artikel"),
   ...bundel(REFLECTIEVRAGEN, "reflectievraag"),
   ...bundel(WERKVORMEN, "werkvorm"),
+  ...bundel(TEAMDAG_WERKVORMEN, "werkvorm"),
   ...bundel(INTERVENTIES, "interventie"),
   ...bundel(EXPERIMENTEN, "experiment"),
   ...bundel(DOWNLOADS, "download"),

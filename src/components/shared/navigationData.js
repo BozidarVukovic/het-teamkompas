@@ -14,6 +14,8 @@ export const knowledgeNavigation = {
   wijzer: { label: "Kenniswijzer: vind wat past", href: "/kennisbank" },
   // Interactief hulpmiddel om een lastig gesprek voor te bereiden.
   gesprek: { label: "Gespreksvoorbereider", href: "/gespreksvoorbereider" },
+  // Interactieve opzet voor een teamdag, samengesteld uit vaste beslisregels.
+  teamdag: { label: "Teamdag-generator", href: "/teamdag-generator" },
   featured: [
     { label: "Teamcultuur", href: "/kennis/teamcultuur" },
     { label: "Psychologische veiligheid", href: "/psychologische-veiligheid" },

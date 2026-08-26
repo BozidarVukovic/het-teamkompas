@@ -22,6 +22,15 @@ const DEFAULT_IMAGE = `${SITE}/teamkompas-workshop-hero.jpg`;
 
 const pages = [
   {
+    route: "teamdag-generator",
+    title: "Teamdag-generator: stel een programma samen | Mijn Teamkompas",
+    description:
+      "Stel in drie minuten een eerste programmaopzet voor je teamdag samen: passende werkvormen, tijden, voorbereiding en borging. Zonder AI, op basis van vaste beslisregels.",
+    url: "https://www.mijnteamkompas.nl/teamdag-generator",
+    image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
+    content: `<main><h1>Bouw een teamdag die meer oplevert dan een leuke dag</h1><p>De meeste teamdagen stranden niet op de werkvormen, maar op de vraag ervoor: wat moet er aan het einde van de dag anders zijn? Beantwoord acht korte vragen over je team, de aanleiding, de veiligheid, de beschikbare tijd en de opvolging. Je krijgt een programma met tijden, passende werkvormen, wat je vooraf regelt en hoe je de afspraken borgt.</p><h2>Wat de generator meeweegt</h2><ul><li>De rol van waaruit je de dag organiseert</li><li>Teamgrootte, teamtype en hoe afhankelijk mensen van elkaar zijn</li><li>De aanleiding en het gewenste resultaat</li><li>Veiligheid en spanning in het team</li><li>De beschikbare tijd, van negentig minuten tot een volledige dag</li><li>Fysiek, online of hybride, en hoeveel ruimte er is voor opvolging</li></ul><h2>Een programma dat exact past</h2><p>Het programma past precies binnen de gekozen tijd, met opening, pauze, reflectie, afspraken en afsluiting. Er blijft altijd buffer over en die wordt niet volgezet met een extra werkvorm. Je kunt onderdelen vervangen, korter of langer maken en het geheel afdrukken.</p><h2>Wanneer een teamdag niet de eerste stap is</h2><p>Bij signalen van sociale onveiligheid of een openlijk conflict stelt de generator geen regulier programma samen. Je krijgt dan uitleg over een zorgvuldige intake, afzonderlijke gesprekken en het betrekken van HR of een vertrouwenspersoon. Er wordt niet vastgesteld wat er in jouw team aan de hand is.</p><h2>Zonder AI en zonder server</h2><p>Er komt geen chatbot of taalmodel aan te pas: het programma ontstaat uit vaste beslisregels en vooraf geschreven onderdelen. Wat je invult blijft op je eigen apparaat.</p><p><a href="/teamdag-generator">Stel je teamdag samen</a>, lees over <a href="/teamdag">begeleiding bij een teamdag</a> of doe de <a href="/gratis-teamscan">gratis teamscan</a>.</p></main>`,
+  },
+  {
     route: "gespreksvoorbereider",
     title: "Gespreksvoorbereider: een lastig gesprek voorbereiden | Mijn Teamkompas",
     description:

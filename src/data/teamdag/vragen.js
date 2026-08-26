@@ -1,0 +1,231 @@
+// Teamdag-generator: alle vragen en antwoordopties op één plek.
+//
+// Deze module is bewust vrij van React en van Vite-specifieke imports, zodat het
+// validatiescript en de tests hem met gewoon node kunnen laden.
+
+export const GENERATOR_VERSIE = "1.0.0";
+
+export const ROLLEN = [
+  {
+    id: "teamleider",
+    label: "Teamleider of manager",
+    aandachtspunt: "jouw rol beïnvloedt hoeveel ruimte teamleden ervaren om vrijuit te spreken. Maak vooraf duidelijk wanneer je deelnemer bent en wanneer je een besluit neemt.",
+  },
+  {
+    id: "teamlid",
+    label: "Teamlid",
+    aandachtspunt: "je organiseert de dag zonder formele positie. Stem vooraf met je leidinggevende af welke ruimte er is om afspraken te maken, zodat de dag niet eindigt in voorstellen die blijven liggen.",
+  },
+  {
+    id: "hr",
+    label: "HR-professional of organisatieadviseur",
+    aandachtspunt: "je kijkt van een afstand mee. Onderzoek vooraf of het team de vraag herkent, anders kan de dag overkomen als iets wat over het team wordt besloten in plaats van met het team.",
+  },
+  {
+    id: "teamcoach",
+    label: "Teamcoach of facilitator",
+    aandachtspunt: "je begeleidt het gesprek en bent zelf geen partij. Spreek vooraf af wat je doet wanneer de leidinggevende het gesprek naar zich toetrekt.",
+  },
+  {
+    id: "projectleider",
+    label: "Projectleider",
+    aandachtspunt: "in een projectteam is de opdracht meestal helder en de samenwerking nieuw. Besteed meer tijd aan werkafspraken en besluitvorming dan aan onderlinge kennismaking.",
+  },
+  {
+    id: "directie-mt",
+    label: "Directie- of managementteamlid",
+    aandachtspunt: "in een managementteam is ieder lid ook eigenaar van een eigen onderdeel. Benoem vooraf welke besluiten deze dag genomen kunnen worden en welke niet.",
+  },
+  {
+    id: "anders",
+    label: "Anders",
+    aandachtspunt: "maak vooraf duidelijk vanuit welke positie je de dag organiseert. Deelnemers stemmen hun openheid daarop af.",
+  },
+];
+
+// `representatief` is de groepsgrootte waarop werkvormen worden getoetst: het
+// zwaarste geval binnen de bandbreedte dat nog realistisch is. Een werkvorm
+// moet bij die grootte werken om in het programma te mogen komen.
+export const TEAMGROOTTES = [
+  { id: "3-6", label: "3 tot en met 6 deelnemers", min: 3, max: 6, representatief: 6 },
+  { id: "7-12", label: "7 tot en met 12 deelnemers", min: 7, max: 12, representatief: 12 },
+  { id: "13-20", label: "13 tot en met 20 deelnemers", min: 13, max: 20, representatief: 20 },
+  { id: "20plus", label: "Meer dan 20 deelnemers", min: 21, max: 60, representatief: 25 },
+];
+
+export const TEAMTYPES = [
+  { id: "operationeel", label: "Bestaand operationeel team" },
+  { id: "nieuw", label: "Nieuw team" },
+  { id: "samengevoegd", label: "Recent samengevoegd team" },
+  { id: "mt", label: "Managementteam" },
+  { id: "project", label: "Projectteam" },
+  { id: "zelfstandigen", label: "Team van zelfstandige professionals" },
+  { id: "multidisciplinair", label: "Multidisciplinair team" },
+  { id: "anders", label: "Anders" },
+];
+
+export const BESTAANSDUUR = [
+  { id: "kort", label: "Korter dan drie maanden" },
+  { id: "jaar", label: "Drie tot twaalf maanden" },
+  { id: "lang", label: "Langer dan één jaar" },
+  { id: "verandering", label: "Team bestaat al langer, maar heeft recent een grote verandering doorgemaakt" },
+];
+
+export const AFHANKELIJKHEID = [
+  { id: "dagelijks", label: "Teamleden hebben elkaar dagelijks nodig", niveau: 3 },
+  { id: "regelmatig", label: "Teamleden werken regelmatig samen", niveau: 2 },
+  { id: "manager", label: "Teamleden delen vooral een manager of afdeling", niveau: 1 },
+  { id: "onduidelijk", label: "Het is nog onduidelijk waarvoor teamleden elkaar nodig hebben", niveau: 0 },
+];
+
+// `spoor` verwijst naar een programmaspoor in sporen.js. Meerdere aanleidingen
+// mogen naar hetzelfde spoor wijzen.
+export const AANLEIDINGEN = [
+  { id: "nieuw-team", label: "Het team is nieuw of opnieuw samengesteld", spoor: "nieuw-team" },
+  { id: "samenwerking-vast", label: "De samenwerking loopt vast", spoor: "patroon-onderzoeken" },
+  { id: "rollen-onduidelijk", label: "Rollen en verantwoordelijkheden zijn onduidelijk", spoor: "rolhelderheid" },
+  { id: "niet-aanspreken", label: "We spreken elkaar onvoldoende aan", spoor: "aanspreekbaarheid" },
+  { id: "spanning", label: "Er is spanning of conflict", spoor: "spanning" },
+  { id: "niet-vrij", label: "Niet iedereen voelt zich vrij om zich uit te spreken", spoor: "veiligheid" },
+  { id: "afspraken", label: "Afspraken worden onvoldoende nagekomen", spoor: "aanspreekbaarheid" },
+  { id: "veel-overleg", label: "We overleggen veel, maar besluiten weinig", spoor: "besluitvorming" },
+  { id: "geen-doel", label: "Het team mist een gezamenlijk doel", spoor: "gezamenlijk-doel" },
+  { id: "verandering", label: "We staan voor een verandering", spoor: "verandering" },
+  { id: "werkdruk", label: "Werkdruk en energie vragen aandacht", spoor: "energie" },
+  { id: "eigenaarschap", label: "We willen meer eigenaarschap", spoor: "eigenaarschap" },
+  { id: "kwaliteiten", label: "We benutten elkaars kwaliteiten onvoldoende", spoor: "kwaliteiten" },
+  { id: "terugkijken", label: "We willen terugkijken en leren", spoor: "leren" },
+  { id: "groeien", label: "De samenwerking gaat goed en we willen verder groeien", spoor: "groei" },
+  { id: "verbinding", label: "We willen vooral verbinding en ontmoeting", spoor: "verbinding" },
+  { id: "opdracht", label: "Er is een concrete opdracht van de organisatie", spoor: "gezamenlijk-doel" },
+  { id: "anders", label: "Anders", spoor: "patroon-onderzoeken" },
+];
+
+export const MAX_AANLEIDINGEN = 3;
+export const MAX_RESULTATEN = 2;
+
+// `blokDoel` koppelt een gewenst resultaat aan het type blok dat minimaal in het
+// programma hoort te zitten. De selectielogica gebruikt dat als harde eis.
+export const RESULTATEN = [
+  { id: "begrijpen", label: "We begrijpen beter wat er in de samenwerking speelt", spoor: "patroon-onderzoeken", blokDoel: "diagnose" },
+  { id: "doel", label: "We hebben een gezamenlijk doel geformuleerd", spoor: "gezamenlijk-doel", blokDoel: "richting" },
+  { id: "rollen", label: "Rollen en verantwoordelijkheden zijn duidelijker", spoor: "rolhelderheid", blokDoel: "rollen" },
+  { id: "afspraken", label: "We hebben duidelijke teamafspraken gemaakt", spoor: "aanspreekbaarheid", blokDoel: "afspraken" },
+  { id: "verschillen", label: "We kunnen verschillen beter bespreekbaar maken", spoor: "veiligheid", blokDoel: "bespreekbaar" },
+  { id: "kwaliteiten", label: "We hebben meer inzicht in elkaars kwaliteiten", spoor: "kwaliteiten", blokDoel: "kwaliteiten" },
+  { id: "verandering", label: "We begrijpen de verandering en onze invloed daarop", spoor: "verandering", blokDoel: "verandering" },
+  { id: "experimenten", label: "We hebben één of twee concrete verbeterexperimenten gekozen", spoor: "leren", blokDoel: "experiment" },
+  { id: "besluiten", label: "Onze overleg- en besluitvorming is duidelijker", spoor: "besluitvorming", blokDoel: "besluiten" },
+  { id: "spanning", label: "We hebben spanning of frustratie zorgvuldig onderzocht", spoor: "spanning", blokDoel: "spanning" },
+  { id: "lessen", label: "We hebben teruggekeken en belangrijke lessen bepaald", spoor: "leren", blokDoel: "terugblik" },
+  { id: "kennen", label: "We hebben elkaar beter leren kennen", spoor: "verbinding", blokDoel: "kennismaking" },
+  { id: "actieplan", label: "We hebben een concreet actieplan met eigenaren en data", spoor: "eigenaarschap", blokDoel: "afspraken" },
+  { id: "wel-geen-team", label: "We hebben bepaald waarvoor we wel en geen team hoeven te zijn", spoor: "gezamenlijk-doel", blokDoel: "richting" },
+];
+
+export const ZICHTBAAR_VOORBEELDEN = [
+  "In het overleg wordt minstens één keer een punt benoemd dat eerder op de gang bleef.",
+  "Bij ieder besluit staat genoteerd wie het uitvoert en wanneer het af is.",
+  "Twee mensen hebben een gesprek gevoerd dat ze eerder uitstelden.",
+  "Er ligt één afspraak die iedereen kan navertellen zonder het document erbij.",
+  "Het team weet van elkaar wie waarvoor eerste aanspreekpunt is.",
+  "Er loopt één klein experiment waar het team elkaar aan herinnert.",
+  "Nieuwe collega's krijgen hetzelfde antwoord op de vraag waar dit team voor is.",
+  "Er is één taak, overleg of handeling geschrapt of vereenvoudigd.",
+];
+
+// De veiligheidsvragen wegen twee kanten op: `risicoBij` leidt tot de
+// veiligheidsroute, `twijfelBij` alleen tot een aandachtspunt en een lagere
+// beschikbare veiligheidsruimte voor werkvormen.
+export const VEILIGHEIDSVRAGEN = [
+  { id: "vrij-spreken", vraag: "Voelen teamleden zich doorgaans vrij om hun mening te geven?", risicoBij: ["nee"], twijfelBij: ["gedeeltelijk", "weet-niet"] },
+  { id: "conflict", vraag: "Is er momenteel sprake van een openlijk conflict?", risicoBij: ["ja"], twijfelBij: ["gedeeltelijk"] },
+  { id: "onveilig-gedrag", vraag: "Zijn er signalen van pesten, intimidatie, discriminatie of buitensluiten?", risicoBij: ["ja", "gedeeltelijk"], twijfelBij: ["weet-niet"] },
+  { id: "gebeurtenissen", vraag: "Zijn er recente gebeurtenissen die veel emoties of onzekerheid oproepen?", risicoBij: [], twijfelBij: ["ja", "gedeeltelijk"] },
+  { id: "afspraken-vertrouwen", vraag: "Vertrouwen teamleden erop dat gemaakte afspraken worden opgevolgd?", risicoBij: [], twijfelBij: ["nee", "gedeeltelijk"] },
+  { id: "leidinggevende", vraag: "Is de leidinggevende zelf onderdeel van de spanning?", risicoBij: [], twijfelBij: ["ja", "gedeeltelijk", "weet-niet"] },
+];
+
+export const VEILIGHEID_OPTIES = [
+  { id: "ja", label: "Ja" },
+  { id: "gedeeltelijk", label: "Gedeeltelijk" },
+  { id: "nee", label: "Nee" },
+  { id: "weet-niet", label: "Weet ik niet" },
+];
+
+export const TIJDSOPTIES = [
+  { id: "90m", label: "90 minuten", minuten: 90, buffer: 10, pauzeAdvies: false },
+  { id: "2u", label: "2 uur", minuten: 120, buffer: 10, pauzeAdvies: false },
+  { id: "dagdeel-3-5", label: "Een dagdeel van 3,5 uur", minuten: 210, buffer: 10, pauzeAdvies: true },
+  { id: "dagdeel-4", label: "Een dagdeel van 4 uur", minuten: 240, buffer: 10, pauzeAdvies: true },
+  { id: "dag-6", label: "Een volledige dag van ongeveer 6 uur exclusief lunch", minuten: 360, buffer: 20, pauzeAdvies: true },
+  { id: "dag-7", label: "Een volledige dag van ongeveer 7 uur inclusief lunch", minuten: 420, buffer: 20, pauzeAdvies: true, lunch: 45 },
+];
+
+export const PAUZEKEUZE = [
+  { id: "ja", label: "Ja, plan een pauze in" },
+  { id: "nee", label: "Nee, dat is niet nodig" },
+];
+
+export const SETTINGS = [
+  { id: "fysiek", label: "Fysiek op één locatie" },
+  { id: "online", label: "Online" },
+  { id: "hybride", label: "Hybride: een deel op locatie, een deel online" },
+];
+
+export const RUIMTEOPTIES = [
+  { id: "ja", label: "Ja, er is een geschikte ruimte" },
+  { id: "beperkt", label: "Er is een ruimte, maar zonder wanden of flip-overs" },
+  { id: "nee", label: "Nog niet geregeld" },
+];
+
+export const AANWEZIGHEID = [
+  { id: "iedereen", label: "Iedereen kan de hele tijd aanwezig zijn" },
+  { id: "wisselend", label: "Er is ploegendienst of wisselende aanwezigheid" },
+];
+
+export const WERKWIJZEN = [
+  { id: "individueel", label: "Individueel reflecteren" },
+  { id: "tweetallen", label: "Gesprekken in tweetallen" },
+  { id: "subgroepen", label: "Kleine groepen" },
+  { id: "plenair", label: "Plenair gesprek" },
+  { id: "oefening", label: "Praktische oefening" },
+  { id: "canvas", label: "Visueel werken met een canvas" },
+  { id: "scan", label: "Werken met teamscanresultaten" },
+  { id: "casus", label: "Werken met een concrete casus" },
+  { id: "acties", label: "Afspraken en acties formuleren" },
+  { id: "actief", label: "Energieke of actieve werkvorm" },
+  { id: "rustig", label: "Rustige en verdiepende werkvorm" },
+  { id: "geen", label: "Geen voorkeur" },
+];
+
+export const ERVARING = [
+  { id: "weinig", label: "Weinig of geen ervaring", maxNiveau: 1 },
+  { id: "enige", label: "Enige ervaring", maxNiveau: 2 },
+  { id: "veel", label: "Veel ervaring", maxNiveau: 3 },
+];
+
+export const OPVOLGING = [
+  { id: "geen", label: "Geen structurele opvolging", maxActies: 1, maxExperimenten: 1 },
+  { id: "een-moment", label: "Eén evaluatiemoment", maxActies: 2, maxExperimenten: 1 },
+  { id: "dertig-dagen", label: "Korte opvolging gedurende dertig dagen", maxActies: 3, maxExperimenten: 2 },
+  { id: "maandelijks", label: "Maandelijkse opvolging", maxActies: 3, maxExperimenten: 2 },
+  { id: "coach", label: "Begeleiding door een coach of facilitator", maxActies: 3, maxExperimenten: 2 },
+  { id: "onbekend", label: "Nog onbekend", maxActies: 2, maxExperimenten: 1 },
+];
+
+export const STAPPEN = [
+  { id: "rol", nummer: 1, titel: "Vanuit welke rol organiseer je deze teamdag?", kort: "Rol" },
+  { id: "team", nummer: 2, titel: "Wat voor team is het?", kort: "Team" },
+  { id: "aanleiding", nummer: 3, titel: "Waarom wil je juist nu een teamdag organiseren?", kort: "Aanleiding" },
+  { id: "resultaat", nummer: 4, titel: "Wat moet aan het einde van de teamdag anders of duidelijker zijn?", kort: "Resultaat" },
+  { id: "veiligheid", nummer: 5, titel: "Veiligheid en spanning", kort: "Veiligheid" },
+  { id: "tijd", nummer: 6, titel: "Hoeveel tijd is beschikbaar?", kort: "Tijd" },
+  { id: "werkwijze", nummer: 7, titel: "Hoe wil je tijdens de teamdag werken?", kort: "Werkwijze" },
+  { id: "borging", nummer: 8, titel: "Hoeveel ruimte is er na de teamdag voor opvolging?", kort: "Borging" },
+];
+
+/** Kleine hulpfunctie: zoek een optie op id binnen een lijst. */
+export function optie(lijst, id) {
+  return lijst.find((o) => o.id === id) || null;
+}

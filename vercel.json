@@ -88,6 +88,10 @@
       "destination": "/gespreksvoorbereider/index.html"
     },
     {
+      "source": "/teamdag-generator",
+      "destination": "/teamdag-generator/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
