@@ -12,6 +12,8 @@ export const knowledgeNavigation = {
   overview: { label: "Bekijk alle kennis", href: "/kennis/kenniskaart-teamontwikkeling" },
   // De kenniswijzer helpt bezoekers via vijf vragen naar passende content.
   wijzer: { label: "Kenniswijzer: vind wat past", href: "/kennisbank" },
+  // Interactief hulpmiddel om een lastig gesprek voor te bereiden.
+  gesprek: { label: "Gespreksvoorbereider", href: "/gespreksvoorbereider" },
   featured: [
     { label: "Teamcultuur", href: "/kennis/teamcultuur" },
     { label: "Psychologische veiligheid", href: "/psychologische-veiligheid" },
@@ -47,6 +49,7 @@ export const knowledgeNavigation = {
 export const allKnowledgeLinks = [
   knowledgeNavigation.overview,
   knowledgeNavigation.wijzer,
+  knowledgeNavigation.gesprek,
   ...knowledgeNavigation.featured,
   ...knowledgeNavigation.groups.flatMap((group) => group.links),
 ];

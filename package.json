@@ -10,7 +10,8 @@
     "test:free-scan": "node --test tests/freeScanScoring.test.mjs",
     "test:kennisbank": "node --test tests/kennisbank.test.mjs",
     "valideer:kennisbank": "node scripts/valideer-kennisbank.mjs",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "test:gesprek": "node --test tests/gespreksvoorbereider.test.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

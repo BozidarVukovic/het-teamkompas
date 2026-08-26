@@ -84,6 +84,10 @@
       "destination": "/kennisbank/:type/:slug/index.html"
     },
     {
+      "source": "/gespreksvoorbereider",
+      "destination": "/gespreksvoorbereider/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

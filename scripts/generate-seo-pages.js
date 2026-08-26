@@ -22,6 +22,15 @@ const DEFAULT_IMAGE = `${SITE}/teamkompas-workshop-hero.jpg`;
 
 const pages = [
   {
+    route: "gespreksvoorbereider",
+    title: "Gespreksvoorbereider: een lastig gesprek voorbereiden | Mijn Teamkompas",
+    description:
+      "Bereid een lastig of belangrijk gesprek stap voor stap voor. Je schrijft zelf, de website zet je antwoorden in een vast gespreksformat. Zonder AI, alles blijft op je eigen apparaat.",
+    url: "https://www.mijnteamkompas.nl/gespreksvoorbereider",
+    image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
+    content: `<main><h1>Een lastig gesprek begint bij een goede voorbereiding</h1><p>Een lastig gesprek verloopt zelden zoals je het bedacht. Wat wel helpt, is vooraf scherp krijgen wat je precies hebt gezien, welk effect dat heeft en wat je wilt bereiken. Je beantwoordt een paar vragen en de website zet jouw antwoorden in een vast gespreksformat dat je kunt afdrukken of aanpassen.</p><h2>Zes gesprekssituaties</h2><ul><li>Een collega aanspreken op concreet gedrag</li><li>Onveilig gedrag bespreken, met een aparte veiligheidsroute</li><li>Een teamafspraak evalueren die niet werkt</li><li>Rolonduidelijkheid bespreken: wie beslist, wie voert uit, wie wordt geraadpleegd</li><li>Feedback vragen op je eigen gedrag, communicatie of leiderschap</li><li>Een verschil van inzicht bespreekbaar maken</li></ul><h2>Hoe het werkt</h2><p>De route helpt je onderscheid te maken tussen wat je hebt waargenomen en wat je daarvan hebt gemaakt, het effect zorgvuldig te beschrijven, een open vraag voor te bereiden en het gedeelde belang te benoemen. Het resultaat is een voorbereiding en geen tekst om voor te lezen.</p><h2>Zonder AI en zonder server</h2><p>Er komt geen chatbot of taalmodel aan te pas: jij schrijft de inhoud, de website combineert die met vaste tekstblokken. Wat je invult blijft op je eigen apparaat en gaat nooit naar een server. Deze tool geeft geen juridisch, psychologisch of arbeidsrechtelijk advies.</p><p><a href="/gespreksvoorbereider">Start de gespreksvoorbereider</a>, bekijk de <a href="/kennisbank">kennisbank</a> of doe de <a href="/gratis-teamscan">gratis teamscan</a>.</p></main>`,
+  },
+  {
     route: "kennisbank",
     title: "Kennisbank en kenniswijzer voor teams | Mijn Teamkompas",
     description:

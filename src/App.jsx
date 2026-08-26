@@ -34,6 +34,7 @@ import Verandermanagement from "./pages/public/Verandermanagement";
 import ImpactVanEenTeamdag from "./pages/public/ImpactVanEenTeamdag";
 import Kennisbank from "./pages/public/Kennisbank";
 import KennisbankItem from "./pages/public/KennisbankItem";
+import Gespreksvoorbereider from "./pages/public/Gespreksvoorbereider";
 import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import RelatedArticles from "./components/shared/RelatedArticles";
@@ -12731,6 +12732,7 @@ export default function App() {
         <Route path="/beheer" element={<><SeoHead page="beheer" />{beheerElement}</>} />
         <Route path="/klantenportaal" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
+        <Route path="/gespreksvoorbereider" element={<Gespreksvoorbereider />} />
         <Route path="/kennisbank" element={<Kennisbank />} />
         <Route path="/kennisbank/:type/:slug" element={<KennisbankItem />} />
         <Route path="/inspiratie" element={<Blog />} />

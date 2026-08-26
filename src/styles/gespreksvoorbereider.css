@@ -1,0 +1,151 @@
+/* Gespreksvoorbereider.
+   Bouwt voort op de tokens uit global.css en op de opzet van kennisbank.css,
+   zodat knoppen, kaarten en afstanden gelijk zijn aan de rest van de site. */
+
+.gv-page { background: #f9f7f4; color: var(--tk-color-ink); }
+.gv-container { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+.gv-smal { width: min(760px, calc(100% - 48px)); margin-inline: auto; }
+
+.gv-hero { padding: 132px 0 56px; color: #fff; background: radial-gradient(circle at 80% 12%, rgba(0,168,150,.26), transparent 36%), var(--tk-color-ink); }
+.gv-hero h1 { max-width: 720px; margin: 0 0 18px; font-size: clamp(32px, 4.6vw, 50px); line-height: 1.08; letter-spacing: -.02em; }
+.gv-hero p { max-width: 700px; margin: 0 0 12px; color: #c8d8e8; font-size: 17px; line-height: 1.7; }
+.gv-eyebrow { margin: 0 0 10px; color: #45d5c5; font-size: 12px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+
+.gv-knop { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 13px 22px; border: 1px solid transparent; border-radius: 999px; font-weight: 800; font-size: 15px; text-decoration: none; cursor: pointer; transition: transform .16s ease, background .16s ease, border-color .16s ease; }
+.gv-knop:hover { transform: translateY(-1px); }
+.gv-knop--primair { background: var(--tk-color-orange); color: #fff; box-shadow: 0 12px 30px rgba(232,130,26,.26); }
+.gv-knop--primair:hover { background: #cf7015; }
+.gv-knop--secundair { background: #fff; color: var(--tk-color-ink); border-color: var(--tk-color-border); }
+.gv-knop--stil { background: transparent; color: inherit; border-color: currentColor; opacity: .85; }
+.gv-knop--klein { min-height: 40px; padding: 8px 15px; font-size: 14px; }
+.gv-knop[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+
+.gv-sectie { padding-block: clamp(40px, 6vw, 68px); }
+.gv-sectie--wit { background: #fff; }
+.gv-sectie h2 { margin: 0 0 12px; font-size: clamp(23px, 3.2vw, 32px); line-height: 1.2; }
+
+/* Situatiekeuze ---------------------------------------------------------- */
+.gv-situaties { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 26px; padding: 0; list-style: none; }
+.gv-situatie { width: 100%; height: 100%; display: flex; gap: 14px; align-items: flex-start; padding: 20px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; text-align: left; cursor: pointer; box-shadow: var(--tk-shadow-sm); transition: border-color .16s ease, transform .16s ease; }
+.gv-situatie:hover { border-color: var(--gv-accent, var(--tk-color-teal)); transform: translateY(-2px); }
+.gv-situatie-icoon { flex: 0 0 auto; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: color-mix(in srgb, var(--gv-accent, var(--tk-color-teal)), white 86%); font-size: 22px; }
+.gv-situatie strong { display: block; margin-bottom: 6px; font-size: 17px; line-height: 1.3; }
+.gv-situatie span { color: var(--tk-color-muted); font-size: 14.5px; line-height: 1.6; }
+
+/* Stappen ---------------------------------------------------------------- */
+.gv-kaart { padding: clamp(22px, 4vw, 36px); border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; box-shadow: var(--tk-shadow-md); scroll-margin-top: 96px; }
+.gv-voortgang { margin-bottom: 22px; }
+.gv-voortgang p { margin: 0 0 8px; display: flex; flex-wrap: wrap; gap: 4px 12px; color: var(--tk-color-muted); font-size: 14px; font-weight: 700; }
+.gv-voortgang p b { color: var(--gv-accent, var(--tk-color-teal)); font-weight: 800; }
+.gv-voortgang-balk { height: 6px; border-radius: 999px; background: #e6ecf2; overflow: hidden; }
+.gv-voortgang-balk i { display: block; height: 100%; border-radius: 999px; background: var(--gv-accent, var(--tk-color-teal)); transition: width .25s ease; }
+
+.gv-kaart h2 { margin: 0 0 8px; font-size: clamp(21px, 3vw, 29px); line-height: 1.22; letter-spacing: -.015em; scroll-margin-top: 96px; }
+.gv-uitleg { margin: 0 0 20px; color: var(--tk-color-muted); font-size: 15.5px; line-height: 1.65; }
+
+.gv-veld { margin-bottom: 20px; }
+.gv-veld > label, .gv-veldlabel { display: block; margin-bottom: 7px; font-size: 15px; font-weight: 700; }
+.gv-veld textarea, .gv-veld input[type="text"] { width: 100%; min-height: 52px; padding: 13px 15px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-sm); background: #fff; color: var(--tk-color-ink); font-size: 16px; line-height: 1.6; resize: vertical; }
+.gv-veld textarea { min-height: 108px; }
+.gv-veld textarea:focus-visible, .gv-veld input:focus-visible { outline: 3px solid rgba(15,118,110,.4); outline-offset: 2px; }
+.gv-veld[data-fout="true"] textarea, .gv-veld[data-fout="true"] input { border-color: #b3261e; }
+.gv-fout { display: flex; gap: 8px; margin: 8px 0 0; color: #b3261e; font-size: 14px; font-weight: 650; line-height: 1.5; }
+.gv-teller { margin: 6px 0 0; color: var(--tk-color-muted); font-size: 13px; text-align: right; }
+
+.gv-privacy-melding { display: flex; gap: 9px; margin: 0 0 12px; padding: 10px 13px; border-radius: var(--tk-radius-sm); background: #f4f7f9; color: #40525f; font-size: 13.5px; line-height: 1.55; }
+
+.gv-opties { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin: 0; padding: 0; }
+.gv-optie { display: flex; gap: 12px; align-items: flex-start; min-height: 56px; padding: 13px 15px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-md); background: #fff; cursor: pointer; line-height: 1.45; transition: border-color .14s ease, background .14s ease; }
+.gv-optie:hover { border-color: var(--gv-accent, var(--tk-color-teal)); }
+.gv-optie input { flex: 0 0 auto; width: 20px; height: 20px; margin: 1px 0 0; accent-color: var(--tk-color-teal); }
+.gv-optie span { font-size: 15px; font-weight: 620; }
+.gv-optie:has(input:checked) { border-color: var(--gv-accent, var(--tk-color-teal)); background: color-mix(in srgb, var(--gv-accent, var(--tk-color-teal)), white 92%); box-shadow: inset 0 0 0 1px var(--gv-accent, var(--tk-color-teal)); }
+.gv-optie:has(input:disabled) { opacity: .5; cursor: not-allowed; }
+.gv-limiet { margin: 12px 0 0; color: var(--tk-color-muted); font-size: 13.5px; }
+
+.gv-tabel { width: 100%; margin: 0 0 20px; border-collapse: collapse; font-size: 14.5px; }
+.gv-tabel caption { margin-bottom: 10px; color: var(--tk-color-muted); font-size: 14px; text-align: left; }
+.gv-tabel th, .gv-tabel td { padding: 10px 12px; border: 1px solid var(--tk-color-border); text-align: left; vertical-align: top; line-height: 1.5; }
+.gv-tabel th { background: #f4f7f9; font-size: 13px; letter-spacing: .02em; }
+.gv-tabel td:first-child { color: #8a5a3b; }
+.gv-tabel td:last-child { color: #1f5c3d; }
+.gv-tabel-wrap { overflow-x: auto; }
+
+.gv-details { margin: 0 0 20px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-md); background: #fff; }
+.gv-details summary { padding: 13px 16px; font-size: 14.5px; font-weight: 700; cursor: pointer; border-radius: var(--tk-radius-md); }
+.gv-details summary:focus-visible { outline: 3px solid rgba(15,118,110,.4); outline-offset: 2px; }
+.gv-details > div { padding: 0 16px 16px; color: var(--tk-color-muted); font-size: 14.5px; line-height: 1.65; }
+.gv-details ul { margin: 0; padding-left: 1.2rem; }
+.gv-details li + li { margin-top: 6px; }
+
+.gv-effect { margin-bottom: 22px; padding: 18px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-md); background: #fbfcfd; }
+.gv-effect h3 { margin: 0 0 12px; font-size: 16.5px; }
+.gv-schaal { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; padding: 0; }
+.gv-schaal label { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 7px 13px; border: 1px solid var(--tk-color-border); border-radius: 999px; background: #fff; font-size: 14px; font-weight: 650; cursor: pointer; }
+.gv-schaal label:has(input:checked) { border-color: var(--gv-accent, var(--tk-color-teal)); background: color-mix(in srgb, var(--gv-accent, var(--tk-color-teal)), white 90%); }
+.gv-schaal input { width: 16px; height: 16px; accent-color: var(--tk-color-teal); }
+
+.gv-chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 14px; padding: 0; list-style: none; }
+.gv-chips li span { display: inline-flex; padding: 5px 11px; border: 1px solid var(--tk-color-border); border-radius: 999px; background: #fff; color: #40525f; font-size: 13px; font-weight: 620; }
+
+.gv-acties { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--tk-color-border); }
+.gv-acties .gv-spacer { flex: 1 1 auto; }
+
+/* Veiligheidsroute ------------------------------------------------------- */
+.gv-veiligheid { border-left: 4px solid var(--tk-color-orange); }
+.gv-melding { margin: 18px 0 0; padding: 18px 20px; border: 1px solid #f0d3ac; border-radius: var(--tk-radius-md); background: #fdf6ec; color: #6b4a12; font-size: 15.5px; line-height: 1.7; }
+.gv-melding h3 { margin: 0 0 8px; color: #6b4a12; font-size: 18px; }
+.gv-melding ul { margin: 12px 0 0; padding-left: 1.2rem; }
+.gv-melding li + li { margin-top: 7px; }
+.gv-melding--rustig { border-color: #bfe3dc; background: #eff8f6; color: #14504a; }
+.gv-melding--rustig h3 { color: #14504a; }
+.gv-disclaimer { margin: 18px 0 0; color: var(--tk-color-muted); font-size: 13.5px; line-height: 1.6; }
+
+/* Resultaat -------------------------------------------------------------- */
+.gv-resultaat { padding: clamp(22px, 4vw, 36px); border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; box-shadow: var(--tk-shadow-md); }
+.gv-resultaat-kop { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 6px; }
+.gv-label { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border-radius: 999px; background: color-mix(in srgb, var(--gv-accent, var(--tk-color-teal)), white 86%); color: #123; font-size: 13px; font-weight: 800; }
+.gv-sectie-blok { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--tk-color-border); }
+.gv-sectie-blok:first-of-type { border-top: 0; padding-top: 0; }
+.gv-sectie-blok h3 { margin: 0 0 8px; color: var(--gv-accent, var(--tk-color-teal)); font-size: 13px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+.gv-sectie-blok p { margin: 0 0 8px; font-size: 17px; line-height: 1.72; }
+.gv-lijst { margin: 0; padding-left: 1.25rem; color: #40525f; font-size: 15.5px; line-height: 1.75; }
+.gv-lijst li + li { margin-top: 8px; }
+.gv-blok { margin-top: 26px; padding: 20px 22px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-md); background: #f9fbfc; }
+.gv-blok h3 { margin: 0 0 12px; font-size: 17px; }
+.gv-tips { margin: 0; padding-left: 1.3rem; font-size: 15.5px; line-height: 1.7; }
+.gv-tips li + li { margin-top: 8px; }
+
+.gv-samenvatting { display: grid; gap: 12px; margin-top: 20px; }
+.gv-samenvatting div { display: grid; grid-template-columns: minmax(140px, 200px) 1fr; gap: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--tk-color-border); font-size: 15px; }
+.gv-samenvatting dt { color: var(--tk-color-muted); font-weight: 700; }
+.gv-samenvatting dd { margin: 0; }
+
+.gv-opslag { margin-top: 28px; padding: 18px 20px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-md); background: #fff; color: var(--tk-color-muted); font-size: 14px; line-height: 1.65; }
+.gv-opslag h3 { margin: 0 0 8px; color: var(--tk-color-ink); font-size: 15px; }
+.gv-opslag-acties { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+
+.gv-verborgen { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 620px) {
+  .gv-container, .gv-smal { width: min(100% - 32px, 1120px); }
+  .gv-hero { padding-top: 108px; }
+  .gv-acties { flex-direction: column; align-items: stretch; }
+  .gv-acties .gv-knop { width: 100%; }
+  .gv-acties .gv-spacer { display: none; }
+  .gv-samenvatting div { grid-template-columns: 1fr; gap: 2px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gv-knop, .gv-situatie, .gv-voortgang-balk i { transition: none; }
+  .gv-knop:hover, .gv-situatie:hover { transform: none; }
+}
+
+@media print {
+  .site-header, .mobile-nav, .gv-hero, .gv-geenprint, .gv-acties, .gv-opslag { display: none !important; }
+  .gv-page, .gv-sectie { background: #fff; padding: 0; }
+  .gv-resultaat { border: 0; box-shadow: none; padding: 0; }
+  .gv-smal, .gv-container { width: 100%; }
+  .gv-sectie-blok { break-inside: avoid; }
+  .gv-blok { border: 1px solid #999; background: #fff; break-inside: avoid; }
+}

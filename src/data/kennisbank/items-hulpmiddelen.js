@@ -163,6 +163,26 @@ export const DOWNLOADS = [
 
 export const GESPREKSVOORBEREIDERS = [
   {
+    id: "gv-tool",
+    url: "/gespreksvoorbereider",
+    titel: "De gespreksvoorbereider",
+    samenvatting: "Beantwoord een paar vragen en de website zet jouw eigen woorden in een vast gespreksformat: waarneming, effect, open vraag, gedeeld belang en een concrete afspraak.",
+    domeinen: ["veiligheid-leiderschap", "verbeteren-leren"],
+    situaties: ["niet-aanspreken", "spanning-bij-verschil", "rollen-onduidelijk", "afspraken-niet-nagekomen", "niet-uitspreken", "weinig-vertrouwen"],
+    rollen: ["teamlid", "teamleider", "directie-mt", "hr", "teamcoach", "projectleider"],
+    doelen: ["gesprek-voorbereiden", "bespreekbaar-maken", "conflict-onderzoeken", "gesprek-leidinggevende", "rollen-verduidelijken"],
+    werkwijzen: ["voorbereiden", "reflecteren"],
+    tijdMinuten: 15,
+    vorm: "individueel",
+    niveau: "laag",
+    voorbereiding: "Geen",
+    tags: ["feedback", "aanspreekbaarheid", "communicatie", "conflict", "rolhelderheid"],
+    uitgelicht: true,
+    datum: "2026-08-25",
+    vervolgstap: { label: "Start de gespreksvoorbereider", href: "/gespreksvoorbereider" },
+    gerelateerd: ["rv-voor-een-lastig-gesprek", "gv-collega-aanspreken", "wv-spanning-op-tafel"],
+  },
+  {
     id: "gv-collega-aanspreken",
     slug: "een-collega-aanspreken",
     titel: "Een collega aanspreken",
@@ -179,8 +199,8 @@ export const GESPREKSVOORBEREIDERS = [
     tags: ["aanspreekbaarheid", "feedback", "communicatie", "afspraken"],
     uitgelicht: true,
     datum: "2026-08-25",
-    vervolgstap: { label: "Bekijk de werkvorm Van irritatie naar afspraak", href: "/kennisbank/werkvorm/van-irritatie-naar-afspraak" },
-    gerelateerd: ["rv-voor-een-lastig-gesprek", "wv-van-irritatie-naar-afspraak", "rv-eigen-aandeel"],
+    vervolgstap: { label: "Bereid dit gesprek stap voor stap voor", href: "/gespreksvoorbereider?situatie=collega-aanspreken" },
+    gerelateerd: ["gv-tool", "rv-voor-een-lastig-gesprek", "wv-van-irritatie-naar-afspraak", "rv-eigen-aandeel"],
     inhoud: {
       waarvoor: "Aanspreken gaat mis wanneer het begint met een conclusie over de ander. Wie start met wat hij zag, houdt het gesprek open.",
       stappen: [
@@ -214,7 +234,7 @@ export const GESPREKSVOORBEREIDERS = [
     voorbereiding: "Geen",
     tags: ["feedback", "leiderschap", "psychologische-veiligheid", "reflectie"],
     datum: "2026-08-25",
-    vervolgstap: { label: "Reflecteer op je eigen rol als leidinggevende", href: "/kennisbank/reflectievraag/mijn-rol-als-leidinggevende" },
+    vervolgstap: { label: "Bereid je feedbackvraag stap voor stap voor", href: "/gespreksvoorbereider?situatie=feedback-vragen" },
     gerelateerd: ["rv-leidinggevende-eigen-rol", "int-fout-van-de-maand", "rv-veiligheid-team"],
     inhoud: {
       waarvoor: "Wie vraagt of het goed gaat, krijgt ja. De vraag bepaalt het antwoord meer dan de relatie.",
@@ -249,8 +269,8 @@ export const GESPREKSVOORBEREIDERS = [
     voorbereiding: "Geen",
     tags: ["rolhelderheid", "afspraken", "communicatie", "besluitvorming"],
     datum: "2026-08-25",
-    vervolgstap: { label: "Maak het samen zichtbaar met de rollenmatrix", href: "/kennisbank/werkvorm/rollen-en-verwachtingen" },
-    gerelateerd: ["wv-rollen-en-verwachtingen", "dl-rollencanvas", "rv-rol-en-verwachtingen"],
+    vervolgstap: { label: "Bereid dit gesprek stap voor stap voor", href: "/gespreksvoorbereider?situatie=rolonduidelijkheid" },
+    gerelateerd: ["gv-tool", "wv-rollen-en-verwachtingen", "dl-rollencanvas"],
     inhoud: {
       waarvoor: "Het gesprek over rollen wordt vaak uitgesteld omdat het voelt als kritiek op een collega. Wie begint met een concreet moment waarop het misging, houdt het zakelijk.",
       stappen: [
@@ -284,7 +304,7 @@ export const GESPREKSVOORBEREIDERS = [
     tags: ["conflict", "communicatie", "besluitvorming", "vertrouwen"],
     uitgelicht: true,
     datum: "2026-08-25",
-    vervolgstap: { label: "Bekijk de werkvorm Spanning op tafel", href: "/kennisbank/werkvorm/spanning-op-tafel" },
+    vervolgstap: { label: "Bereid dit gesprek stap voor stap voor", href: "/gespreksvoorbereider?situatie=verschil-van-inzicht" },
     gerelateerd: ["wv-spanning-op-tafel", "rv-eigen-aandeel", "art:/boven-en-onderstroom"],
     inhoud: {
       waarvoor: "Een inhoudelijk verschil wordt een conflict zodra beide kanten hun standpunt gaan verdedigen in plaats van uitleggen. Deze voorbereiding zoekt eerst naar het belang onder het standpunt.",
@@ -319,7 +339,7 @@ export const GESPREKSVOORBEREIDERS = [
     voorbereiding: "Geen",
     tags: ["feedback", "communicatie", "werkdruk", "rolhelderheid"],
     datum: "2026-08-25",
-    vervolgstap: { label: "Doe eerst de vijf vragen voor een lastig gesprek", href: "/kennisbank/reflectievraag/voor-een-gesprek-dat-je-uitstelt" },
+    vervolgstap: { label: "Bereid dit gesprek stap voor stap voor", href: "/gespreksvoorbereider" },
     gerelateerd: ["rv-voor-een-lastig-gesprek", "gv-collega-aanspreken", "rv-energie-eigen-werk"],
     inhoud: {
       waarvoor: "Bij een gesprek met je leidinggevende speelt afhankelijkheid mee, ook wanneer de verhouding goed is. Een scherpe voorbereiding maakt het gesprek korter en veiliger.",

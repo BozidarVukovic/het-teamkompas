@@ -75,6 +75,7 @@ function KnowledgeMenu({ onNavigate }) {
         <p className="knowledge-menu__eyebrow">Hoofdthema’s</p>
         <NavLink item={knowledgeNavigation.overview} onNavigate={go} className="knowledge-menu__overview" />
         <NavLink item={knowledgeNavigation.wijzer} onNavigate={go} className="knowledge-menu__overview" />
+        <NavLink item={knowledgeNavigation.gesprek} onNavigate={go} className="knowledge-menu__overview" />
         {knowledgeNavigation.featured.map((item) => <NavLink key={item.href} item={item} onNavigate={go} />)}
       </div>
       <div className="knowledge-menu__groups">
@@ -97,6 +98,7 @@ function MobileKnowledge({ onNavigate }) {
     {open && <div id={id} className="mobile-nav__knowledge">
       <NavLink item={knowledgeNavigation.overview} onNavigate={onNavigate} className="mobile-nav__overview" />
       <NavLink item={knowledgeNavigation.wijzer} onNavigate={onNavigate} className="mobile-nav__overview" />
+      <NavLink item={knowledgeNavigation.gesprek} onNavigate={onNavigate} className="mobile-nav__overview" />
       <p>Hoofdthema’s</p>
       {knowledgeNavigation.featured.map((item) => <NavLink key={item.href} item={item} onNavigate={onNavigate} />)}
       {knowledgeNavigation.groups.map((group, index) => {

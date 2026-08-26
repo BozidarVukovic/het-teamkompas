@@ -475,8 +475,14 @@
     <priority>0.75</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/blog/duidelijkheid-is-vriendelijker-dan-veel-ruimte</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/kennisbank</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
