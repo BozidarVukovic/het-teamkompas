@@ -78,3 +78,5 @@ dist/
 vite.config.js.timestamp-*
 scripts/.tmp-*
 dist-check-WEG/
+dist-check-WEG2/
+scripts/WEG-*.mjs

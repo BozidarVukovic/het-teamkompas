@@ -193,7 +193,7 @@ export default function ProgrammaWeergave({
             <div className="td-kaart">
               <strong>Overweeg begeleiding</strong>
               <p>
-                bij dit onderwerp helpt het wanneer iemand het gesprek leidt die zelf geen partij is. Dat kan
+                Bij dit onderwerp helpt het wanneer iemand het gesprek leidt die zelf geen partij is. Dat kan
                 iemand uit de eigen organisatie zijn, of een externe begeleider.
               </p>
             </div>

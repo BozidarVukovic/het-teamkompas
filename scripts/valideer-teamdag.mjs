@@ -21,6 +21,8 @@ import {
   ERVARING,
   OPVOLGING,
   VEILIGHEIDSVRAGEN,
+  ROLLEN,
+  VRAGEN,
 } from "../src/data/teamdag/vragen.js";
 import { TAALREGELS_NIET } from "../src/data/teamdag/teksten.js";
 import { steltProgrammaSamen, controleerAanpassing } from "../src/lib/teamdag/programma.js";

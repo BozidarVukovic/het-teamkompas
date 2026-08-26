@@ -457,6 +457,38 @@ test("een lege staat wordt herkend en overschrijft niets", () => {
 
 // --- Taal en inhoud ---
 
+test("zinnen die los op het scherm komen beginnen met een hoofdletter", () => {
+  const beginKlein = (t) => typeof t === "string" && /^[a-zà-ÿ]/.test(t.trim());
+  const teksten = [];
+  BLOKKEN.forEach((b) => {
+    teksten.push([`${b.id}.doel`, b.doel], [`${b.id}.begeleider`, b.begeleider],
+      [`${b.id}.valkuilen`, b.valkuilen], [`${b.id}.opbrengst`, b.opbrengst]);
+    (b.stappen || []).forEach((s, i) => teksten.push([`${b.id}.stap${i}`, s.tekst]));
+  });
+  SPOREN.forEach((s) => {
+    teksten.push([`${s.id}.advies`, s.advies]);
+    (s.aandachtspunten || []).forEach((a, i) => teksten.push([`${s.id}.aandachtspunt${i}`, a]));
+  });
+  teksten.forEach(([waar, t]) => assert.ok(!beginKlein(t), `${waar} begint met een kleine letter: ${String(t).slice(0, 40)}`));
+});
+
+test("het samengestelde programma toont nergens een zin met een kleine beginletter", () => {
+  const beginKlein = (t) => typeof t === "string" && /^[a-zà-ÿ]/.test(t.trim());
+  const p = steltProgrammaSamen(met({ setting: "hybride", ruimte: "nee", ervaring: "weinig", opvolging: "geen", resultaten: ["begrijpen", "afspraken"] }));
+  const regels = [
+    ...p.advies,
+    ...p.aandachtspunten,
+    p.borging.tekst,
+    p.borging.evaluatie,
+    ...p.borging.acties.map((a) => a.actie),
+    p.borging.pulsemeting.tekst,
+    p.voorbereiding.ruimte,
+    ...p.voorbereiding.apart,
+    ...p.voorbereiding.algemeen.flatMap((g) => g.punten),
+  ];
+  regels.filter(Boolean).forEach((r) => assert.ok(!beginKlein(r), `begint klein: ${r.slice(0, 50)}`));
+});
+
 test("geen enkel blok gebruikt een verboden formulering", () => {
   const teksten = BLOKKEN.flatMap((b) => [b.doel, b.begeleider, b.valkuilen, b.opbrengst, ...(b.stappen || []).map((s) => s.tekst)]);
   teksten.filter(Boolean).forEach((tekst) => {

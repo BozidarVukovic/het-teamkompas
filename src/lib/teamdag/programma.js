@@ -197,16 +197,16 @@ function apartTeBespreken(antwoorden) {
   const uit = [];
   const v = antwoorden.veiligheid || {};
   if (v.conflict === "ja" || v.conflict === "gedeeltelijk") {
-    uit.push("het conflict dat je aangaf: spreek met iedere betrokkene apart voordat het onderwerp op een gezamenlijke dag komt.");
+    uit.push("Het conflict dat je aangaf: spreek met iedere betrokkene apart voordat het onderwerp op een gezamenlijke dag komt.");
   }
   if (v.leidinggevende === "ja") {
-    uit.push("de rol van de leidinggevende in de spanning: bespreek dat vooraf met de leidinggevende zelf, niet voor het eerst in de groep.");
+    uit.push("De rol van de leidinggevende in de spanning: bespreek dat vooraf met de leidinggevende zelf, niet voor het eerst in de groep.");
   }
   if (v["afspraken-vertrouwen"] === "nee") {
-    uit.push("wat er met eerdere afspraken is gebeurd: haal dat op voordat je nieuwe afspraken maakt.");
+    uit.push("Wat er met eerdere afspraken is gebeurd: haal dat op voordat je nieuwe afspraken maakt.");
   }
   if ((antwoorden.aanleidingen || []).includes("verandering")) {
-    uit.push("de feitelijke stand van de verandering: zorg dat je weet wat er wel en niet vaststaat voordat je het team ernaar vraagt.");
+    uit.push("De feitelijke stand van de verandering: zorg dat je weet wat er wel en niet vaststaat voordat je het team ernaar vraagt.");
   }
   return uit;
 }
@@ -221,12 +221,12 @@ function borging(antwoorden, onderdelen) {
   const heeftExperiment = onderdelen.some((o) => o.blok.id === "kb-experiment-kiezen");
 
   if (heeftAfspraken) {
-    acties.push({ actie: "de afspraken van vandaag rondsturen met eigenaar en datum", eigenaar: "de organisator van de dag", termijn: "binnen twee werkdagen" });
+    acties.push({ actie: "De afspraken van vandaag rondsturen met eigenaar en datum", eigenaar: "de organisator van de dag", termijn: "binnen twee werkdagen" });
   }
   if (heeftExperiment) {
-    acties.push({ actie: "het gekozen experiment starten en het team eraan herinneren", eigenaar: "één teamlid dat zich hiervoor meldt", termijn: "vanaf de eerstvolgende werkdag" });
+    acties.push({ actie: "Het gekozen experiment starten en het team eraan herinneren", eigenaar: "één teamlid dat zich hiervoor meldt", termijn: "vanaf de eerstvolgende werkdag" });
   }
-  acties.push({ actie: "het evaluatiemoment in ieders agenda zetten", eigenaar: "de organisator van de dag", termijn: "nog tijdens de teamdag" });
+  acties.push({ actie: "Het evaluatiemoment in ieders agenda zetten", eigenaar: "de organisator van de dag", termijn: "nog tijdens de teamdag" });
 
   return {
     tekst: voorstel.tekst,

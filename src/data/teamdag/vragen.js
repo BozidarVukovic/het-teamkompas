@@ -9,37 +9,37 @@ export const ROLLEN = [
   {
     id: "teamleider",
     label: "Teamleider of manager",
-    aandachtspunt: "jouw rol beïnvloedt hoeveel ruimte teamleden ervaren om vrijuit te spreken. Maak vooraf duidelijk wanneer je deelnemer bent en wanneer je een besluit neemt.",
+    aandachtspunt: "Jouw rol beïnvloedt hoeveel ruimte teamleden ervaren om vrijuit te spreken. Maak vooraf duidelijk wanneer je deelnemer bent en wanneer je een besluit neemt.",
   },
   {
     id: "teamlid",
     label: "Teamlid",
-    aandachtspunt: "je organiseert de dag zonder formele positie. Stem vooraf met je leidinggevende af welke ruimte er is om afspraken te maken, zodat de dag niet eindigt in voorstellen die blijven liggen.",
+    aandachtspunt: "Je organiseert de dag zonder formele positie. Stem vooraf met je leidinggevende af welke ruimte er is om afspraken te maken, zodat de dag niet eindigt in voorstellen die blijven liggen.",
   },
   {
     id: "hr",
     label: "HR-professional of organisatieadviseur",
-    aandachtspunt: "je kijkt van een afstand mee. Onderzoek vooraf of het team de vraag herkent, anders kan de dag overkomen als iets wat over het team wordt besloten in plaats van met het team.",
+    aandachtspunt: "Je kijkt van een afstand mee. Onderzoek vooraf of het team de vraag herkent, anders kan de dag overkomen als iets wat over het team wordt besloten in plaats van met het team.",
   },
   {
     id: "teamcoach",
     label: "Teamcoach of facilitator",
-    aandachtspunt: "je begeleidt het gesprek en bent zelf geen partij. Spreek vooraf af wat je doet wanneer de leidinggevende het gesprek naar zich toetrekt.",
+    aandachtspunt: "Je begeleidt het gesprek en bent zelf geen partij. Spreek vooraf af wat je doet wanneer de leidinggevende het gesprek naar zich toetrekt.",
   },
   {
     id: "projectleider",
     label: "Projectleider",
-    aandachtspunt: "in een projectteam is de opdracht meestal helder en de samenwerking nieuw. Besteed meer tijd aan werkafspraken en besluitvorming dan aan onderlinge kennismaking.",
+    aandachtspunt: "In een projectteam is de opdracht meestal helder en de samenwerking nieuw. Besteed meer tijd aan werkafspraken en besluitvorming dan aan onderlinge kennismaking.",
   },
   {
     id: "directie-mt",
     label: "Directie- of managementteamlid",
-    aandachtspunt: "in een managementteam is ieder lid ook eigenaar van een eigen onderdeel. Benoem vooraf welke besluiten deze dag genomen kunnen worden en welke niet.",
+    aandachtspunt: "In een managementteam is ieder lid ook eigenaar van een eigen onderdeel. Benoem vooraf welke besluiten deze dag genomen kunnen worden en welke niet.",
   },
   {
     id: "anders",
     label: "Anders",
-    aandachtspunt: "maak vooraf duidelijk vanuit welke positie je de dag organiseert. Deelnemers stemmen hun openheid daarop af.",
+    aandachtspunt: "Maak vooraf duidelijk vanuit welke positie je de dag organiseert. Deelnemers stemmen hun openheid daarop af.",
   },
 ];
 
