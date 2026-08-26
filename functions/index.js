@@ -910,7 +910,7 @@ exports.manageFreeScan = onCall(async (request) => {
 // Publieke statuscontrole voor de gratis teamscan. Geeft geen gegevens prijs:
 // bevestigt alleen dat de functies draaien en dat Firestore bereikbaar is.
 // Wordt wekelijks automatisch bevraagd zodat een storing niet weken onopgemerkt blijft.
-exports.healthCheck = onRequest({ maxInstances: 2 }, async (req, res) => {
+exports.healthCheck = onRequest(async (req, res) => {
   res.set("Cache-Control", "no-store");
   try {
     await db.collection("freeScanInstances").select().limit(1).get();
