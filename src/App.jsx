@@ -12583,12 +12583,12 @@ export default function App() {
 
         if (!allowed) {
           // Gebruikers van de samenwerkomgeving onder /app zijn geen beheerders.
-          // Zij blijven gewoon ingelogd; alleen op een beheerpad loggen we uit,
-          // zodat het beheer afgeschermd blijft.
-          if (isAdminPath) {
-            await signOut(auth);
-            setView("login");
-          }
+          // Hier wordt nooit uitgelogd: de aanmeldstatus is van de browser en
+          // niet van dit tabblad, dus een openstaande beheerpagina zou anders
+          // iemand midden in de app uit zijn sessie gooien. Het beheer blijft
+          // afgeschermd doordat het dashboard alleen verschijnt bij view
+          // "admin", en die zetten we hieronder uitsluitend voor beheerders.
+          if (isAdminPath) setView("login");
           setAuthReady(true);
           return;
         }
