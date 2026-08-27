@@ -1,6 +1,6 @@
 // Inloggen met een e-mailkoppeling. Geen wachtwoord, dus ook niets te lekken.
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 
@@ -14,28 +14,49 @@ export default function Inloggen() {
   const [fout, setFout] = useState("");
   const [vraagEmail, setVraagEmail] = useState(false);
   const [afhandelen, setAfhandelen] = useState(false);
+  const alGeprobeerd = useRef(false);
 
   useEffect(() => {
-    if (!isInloglink()) return;
+    if (!isInloglink() || alGeprobeerd.current) return;
+    alGeprobeerd.current = true;
     setAfhandelen(true);
     voltooiInloggen()
       .then((uitkomst) => {
         if (uitkomst.nodig === "email") {
           setVraagEmail(true);
           setAfhandelen(false);
+          return;
         }
+        navigeer("/app", { replace: true });
       })
       .catch(() => {
+        // Een koppeling is eenmalig. Ben je al aangemeld, dan is dit geen
+        // fout maar een herhaalde klik of een verversing van de pagina.
+        if (gebruiker) {
+          navigeer("/app", { replace: true });
+          return;
+        }
         setFout(
           "Deze koppeling werkt niet meer. Vraag hieronder een nieuwe aan; een koppeling is maar korte tijd geldig."
         );
         setAfhandelen(false);
       });
-  }, [isInloglink, voltooiInloggen]);
+  }, [isInloglink, voltooiInloggen, navigeer, gebruiker]);
 
   useEffect(() => {
-    if (gebruiker && !isInloglink()) navigeer("/app", { replace: true });
-  }, [gebruiker, isInloglink, navigeer]);
+    if (gebruiker && !afhandelen) navigeer("/app", { replace: true });
+  }, [gebruiker, afhandelen, navigeer]);
+
+  // Een aanmeldscherm mag nooit eindeloos blijven draaien. Duurt het te lang,
+  // dan zeggen we dat gewoon en bieden we een nieuwe koppeling aan.
+  useEffect(() => {
+    if (!afhandelen) return undefined;
+    const teLang = setTimeout(() => {
+      setAfhandelen(false);
+      setFout("Aanmelden duurde te lang. Vraag hieronder een nieuwe koppeling aan.");
+    }, 15000);
+    return () => clearTimeout(teLang);
+  }, [afhandelen]);
 
   const versturen = async (e) => {
     e.preventDefault();

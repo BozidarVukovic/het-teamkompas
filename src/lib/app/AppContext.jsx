@@ -106,6 +106,11 @@ export function AppProvider({ children }) {
     if (!email) return { nodig: "email" };
     await signInWithEmailLink(auth, email, window.location.href);
     schrijfOpslag(SLEUTEL_EMAIL, null);
+    // De koppeling staat nog in de adresbalk en is eenmalig. Laten we hem
+    // staan, dan blijft de app denken dat er nog ingelogd moet worden en komt
+    // hij niet voorbij het aanmeldscherm. Bovendien is een gebruikte
+    // inlogkoppeling niets om in de geschiedenis te bewaren.
+    window.history.replaceState({}, "", "/app");
     return { nodig: null };
   }, []);
 
