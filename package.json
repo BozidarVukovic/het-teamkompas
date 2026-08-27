@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/sync-sitemap-blogs.mjs && node scripts/sync-sitemap-kennisbank.mjs && node scripts/valideer-kennisbank.mjs && node scripts/valideer-teamscan.mjs && node scripts/valideer-teamdag.mjs && vite build && node scripts/generate-seo-pages.js",
+    "build": "node scripts/sync-sitemap-blogs.mjs && node scripts/sync-sitemap-kennisbank.mjs && node scripts/valideer-kennisbank.mjs && node scripts/valideer-teamscan.mjs && node scripts/valideer-teamdag.mjs && node scripts/valideer-regels.mjs && vite build && node scripts/generate-seo-pages.js",
     "preview": "vite preview",
     "test:scroll": "node scripts/test-scrollmanager.mjs",
     "test:free-scan": "node --test tests/freeScanScoring.test.mjs",
@@ -14,7 +14,10 @@
     "test:gesprek": "node --test tests/gespreksvoorbereider.test.mjs",
     "valideer:teamscan": "node scripts/valideer-teamscan.mjs",
     "valideer:teamdag": "node scripts/valideer-teamdag.mjs",
-    "test:teamdag": "node --test tests/teamdagGenerator.test.mjs"
+    "test:teamdag": "node --test tests/teamdagGenerator.test.mjs",
+    "test:regels": "npx -y firebase-tools@13 emulators:exec --only firestore --project teamkompas-regeltest \"node --test tests/securityRules.test.mjs\"",
+    "test:app": "node --test tests/adviesApp.test.mjs",
+    "valideer:regels": "node scripts/valideer-regels.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -28,6 +31,7 @@
     "react-router-dom": "^7.14.2"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^3.0.4",
     "@vitejs/plugin-react": "^4.3.1",
     "jsdom": "^29.1.1",
     "vite": "^5.4.1"

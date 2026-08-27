@@ -9,4 +9,7 @@ Disallow: /beheer
 Disallow: /admin
 Disallow: /admin/funnel
 
+# Besloten samenwerkomgeving niet indexeren
+Disallow: /app
+
 Sitemap: https://www.mijnteamkompas.nl/sitemap.xml

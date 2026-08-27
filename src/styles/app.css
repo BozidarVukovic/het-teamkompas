@@ -1,0 +1,445 @@
+/* De samenwerkomgeving. Donker thema, in de huisstijl van Mijn Teamkompas.
+   Alle klassen beginnen met tk- zodat er niets botst met de publieke site. */
+
+.tk-app {
+  --tk-navy: #0d1b2a;
+  --tk-navy-2: #14263c;
+  --tk-navy-3: #1a2e4a;
+  --tk-teal: #00a896;
+  --tk-teal-dim: rgba(0, 168, 150, 0.14);
+  --tk-tekst: #e6eef7;
+  --tk-zacht: #96a9c0;
+  --tk-lijn: rgba(255, 255, 255, 0.09);
+  --tk-rood: #e2725b;
+
+  min-height: 100vh;
+  background: var(--tk-navy);
+  color: var(--tk-tekst);
+  font-family: "Roboto", system-ui, sans-serif;
+  padding-bottom: 64px;
+}
+
+.tk-app * {
+  box-sizing: border-box;
+}
+
+.tk-balk {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  background: rgba(13, 27, 42, 0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--tk-lijn);
+}
+
+.tk-merk {
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--tk-tekst);
+  text-decoration: none;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tk-merk span {
+  color: var(--tk-teal);
+}
+
+.tk-balk-rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tk-teamkiezer {
+  background: var(--tk-navy-3);
+  color: var(--tk-tekst);
+  border: 1px solid var(--tk-lijn);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 13px;
+  max-width: 220px;
+}
+
+.tk-menu {
+  display: flex;
+  gap: 6px;
+  padding: 12px 20px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tk-menu::-webkit-scrollbar {
+  display: none;
+}
+
+.tk-menu a {
+  flex: 0 0 auto;
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tk-zacht);
+  text-decoration: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.tk-menu a:hover {
+  color: var(--tk-tekst);
+}
+
+.tk-menu a.actief {
+  color: var(--tk-tekst);
+  background: var(--tk-teal-dim);
+  border-color: rgba(0, 168, 150, 0.4);
+}
+
+.tk-inhoud {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 26px 20px 0;
+}
+
+.tk-smal {
+  max-width: 560px;
+}
+
+.tk-kop {
+  font-size: 27px;
+  line-height: 1.2;
+  margin: 0 0 8px;
+  font-weight: 800;
+}
+
+.tk-onderkop {
+  color: var(--tk-zacht);
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0 0 24px;
+}
+
+.tk-kaart {
+  background: var(--tk-navy-2);
+  border: 1px solid var(--tk-lijn);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.tk-kaart h2 {
+  font-size: 17px;
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+
+.tk-kaart p {
+  color: var(--tk-zacht);
+  line-height: 1.65;
+  font-size: 14.5px;
+  margin: 0 0 12px;
+}
+
+.tk-kaart p:last-child {
+  margin-bottom: 0;
+}
+
+.tk-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tk-zacht);
+  margin: 0 0 8px;
+}
+
+.tk-invoer,
+.tk-tekstvak {
+  width: 100%;
+  background: var(--tk-navy);
+  border: 1px solid var(--tk-lijn);
+  border-radius: 12px;
+  color: var(--tk-tekst);
+  padding: 12px 14px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.tk-invoer:focus,
+.tk-tekstvak:focus {
+  outline: 2px solid rgba(0, 168, 150, 0.55);
+  outline-offset: 1px;
+}
+
+.tk-tekstvak {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.tk-knop {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--tk-teal);
+  color: #04241f;
+}
+
+.tk-knop:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.tk-knop-rand {
+  background: transparent;
+  color: var(--tk-tekst);
+  border: 1px solid var(--tk-lijn);
+}
+
+.tk-knop-klein {
+  padding: 8px 14px;
+  font-size: 13.5px;
+}
+
+.tk-knop-gevaar {
+  background: transparent;
+  border: 1px solid rgba(226, 114, 91, 0.5);
+  color: var(--tk-rood);
+}
+
+.tk-knoppen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.tk-keuzes {
+  display: grid;
+  gap: 10px;
+}
+
+.tk-keuze {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
+  background: var(--tk-navy);
+  border: 1px solid var(--tk-lijn);
+  border-radius: 13px;
+  padding: 14px 16px;
+  color: var(--tk-tekst);
+  font-size: 15px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.tk-keuze:hover {
+  border-color: rgba(0, 168, 150, 0.4);
+}
+
+.tk-keuze.gekozen {
+  background: var(--tk-teal-dim);
+  border-color: var(--tk-teal);
+}
+
+.tk-keuze small {
+  display: block;
+  color: var(--tk-zacht);
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+.tk-bron {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--tk-zacht);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+
+.tk-rij {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--tk-lijn);
+}
+
+.tk-rij:last-child {
+  border-bottom: 0;
+}
+
+.tk-schakelaar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--tk-zacht);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tk-melding {
+  border-radius: 12px;
+  padding: 13px 15px;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  border: 1px solid var(--tk-lijn);
+  background: var(--tk-navy-2);
+  color: var(--tk-zacht);
+}
+
+.tk-melding-fout {
+  border-color: rgba(226, 114, 91, 0.45);
+  color: #f0b6a8;
+}
+
+.tk-melding-goed {
+  border-color: rgba(0, 168, 150, 0.45);
+  color: #8fe0d3;
+}
+
+.tk-advies {
+  background: linear-gradient(180deg, var(--tk-navy-3), var(--tk-navy-2));
+  border: 1px solid rgba(0, 168, 150, 0.28);
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 16px;
+}
+
+.tk-advies-blok {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--tk-lijn);
+}
+
+.tk-advies-blok:last-of-type {
+  border-bottom: 0;
+}
+
+.tk-advies-blok h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tk-teal);
+  margin: 0 0 8px;
+}
+
+.tk-advies-blok p {
+  margin: 0 0 10px;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.tk-citaat {
+  border-left: 3px solid var(--tk-teal);
+  padding: 8px 0 8px 14px;
+  color: #cfe6e1;
+  font-style: italic;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.tk-fijn {
+  font-size: 12.5px;
+  color: var(--tk-zacht);
+  line-height: 1.6;
+}
+
+.tk-lijst {
+  display: grid;
+  gap: 10px;
+}
+
+.tk-persoon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: var(--tk-navy-2);
+  border: 1px solid var(--tk-lijn);
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: var(--tk-tekst);
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.tk-persoon:hover {
+  border-color: rgba(0, 168, 150, 0.4);
+}
+
+.tk-persoon.gekozen {
+  background: var(--tk-teal-dim);
+  border-color: var(--tk-teal);
+}
+
+.tk-bol {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--tk-teal-dim);
+  border: 1px solid rgba(0, 168, 150, 0.4);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: var(--tk-teal);
+  flex: 0 0 auto;
+}
+
+.tk-code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 20px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--tk-teal);
+}
+
+.tk-stap {
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tk-teal);
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 640px) {
+  .tk-kop {
+    font-size: 23px;
+  }
+
+  .tk-inhoud {
+    padding: 20px 16px 0;
+  }
+
+  .tk-kaart,
+  .tk-advies {
+    padding: 16px;
+  }
+
+  .tk-rij {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

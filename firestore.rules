@@ -70,6 +70,126 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Teamkompas app (/app): besloten samenwerkingsomgeving
+    //
+    // Uitgangspunt: brondata is privé en gedeelde data staat in een apart
+    // document per team. Regels filteren geen velden — dat kan Firestore niet —
+    // dus de scheiding zit in de structuur. Zie docs/APP-ARCHITECTUUR.md.
+    // ─────────────────────────────────────────────────────────────────────
+
+    function ingelogd() {
+      return request.auth != null;
+    }
+
+    function ikBen(uid) {
+      return ingelogd() && request.auth.uid == uid;
+    }
+
+    function isTeamlid(orgId, teamId) {
+      return ingelogd() && exists(
+        /databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/leden/$(request.auth.uid)
+      );
+    }
+
+    function isTeambeheerder(orgId, teamId) {
+      return ingelogd() && get(
+        /databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/leden/$(request.auth.uid)
+      ).data.rol == "beheerder";
+    }
+
+    // Het eigen gebruikersdocument: naam, e-mail en de lijst met lidmaatschappen.
+    // Niemand anders kan dit lezen, ook een teambeheerder niet.
+    match /gebruikers/{uid} {
+      allow read, write: if ikBen(uid);
+    }
+
+    // Een teamcode verwijst naar organisatie en team. Opvragen mag als je
+    // ingelogd bent; doorzoeken niet, zodat codes niet te achterhalen zijn.
+    match /teamcodes/{code} {
+      allow get: if ingelogd();
+      allow list: if false;
+      allow create: if ingelogd()
+        && request.resource.data.aangemaaktDoor == request.auth.uid;
+      allow update, delete: if ingelogd()
+        && resource.data.aangemaaktDoor == request.auth.uid;
+    }
+
+    match /organisaties/{orgId} {
+      // Leesbaar voor wie lid is van een team binnen deze organisatie is niet
+      // met één expressie te bepalen; daarom is de organisatie leesbaar voor
+      // iedere ingelogde gebruiker. Er staat bewust niets gevoeligs in: alleen
+      // een naam en het moment van aanmaken.
+      allow get: if ingelogd();
+      allow list: if false;
+      allow create: if ingelogd()
+        && request.resource.data.eigenaar == request.auth.uid;
+      allow update, delete: if ingelogd()
+        && resource.data.eigenaar == request.auth.uid;
+
+      match /teams/{teamId} {
+        allow get: if isTeamlid(orgId, teamId);
+        allow list: if false;
+        allow create: if ingelogd()
+          && request.resource.data.aangemaaktDoor == request.auth.uid;
+        allow update: if isTeambeheerder(orgId, teamId);
+        allow delete: if isTeambeheerder(orgId, teamId);
+
+        // Wie lid is van het team. Bevat naam en rol, geen profielinhoud.
+        // Je voegt uitsluitend jezelf toe, en alleen met een kloppende teamcode.
+        match /leden/{uid} {
+          allow read: if isTeamlid(orgId, teamId);
+          allow create: if ikBen(uid)
+            && request.resource.data.rol in ["lid", "beheerder"]
+            && (
+              // de eerste die het team aanmaakt, wordt beheerder
+              request.resource.data.rol == "beheerder"
+              // of iemand treedt toe met de juiste code
+              || get(/databases/$(database)/documents/teamcodes/$(request.resource.data.code)).data.teamId == teamId
+            );
+          allow update: if ikBen(uid) || isTeambeheerder(orgId, teamId);
+          allow delete: if ikBen(uid) || isTeambeheerder(orgId, teamId);
+        }
+
+        // Alleen wat een gebruiker bewust deelt met dit team. Leesbaar voor
+        // teamgenoten, schrijfbaar door de eigenaar. Intrekken is verwijderen.
+        match /gedeeld/{uid} {
+          allow read: if isTeamlid(orgId, teamId);
+          allow write: if ikBen(uid) && isTeamlid(orgId, teamId);
+        }
+      }
+    }
+
+    // Brondata. Strikt privé: geen enkele andere gebruiker en geen enkele
+    // beheerder kan hier iets lezen.
+    match /profielen/{uid} {
+      allow read, write: if ikBen(uid);
+
+      match /kenmerken/{kenmerkId} {
+        allow read, write: if ikBen(uid);
+      }
+    }
+
+    match /handleidingen/{uid} {
+      allow read, write: if ikBen(uid);
+
+      match /secties/{sectieId} {
+        allow read, write: if ikBen(uid);
+      }
+    }
+
+    // Adviessessies zijn persoonlijk. We slaan alleen op dat een advies is
+    // opgevraagd en of het bruikbaar was, nooit de inhoud van het advies.
+    match /adviessessies/{sessieId} {
+      // Bewust get in plaats van read: doorzoeken van deze collectie mag niet.
+      allow get: if ingelogd() && resource.data.uid == request.auth.uid;
+      allow create: if ingelogd() && request.resource.data.uid == request.auth.uid;
+      allow update: if ingelogd() && resource.data.uid == request.auth.uid;
+      allow delete: if ingelogd() && resource.data.uid == request.auth.uid;
+      allow list: if false;
+    }
+
     // Alles wat niet expliciet hierboven staat, blijft dicht
     match /{document=**} {
       allow read, write: if false;

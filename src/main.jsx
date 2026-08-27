@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import App from "./App";
 import "./styles/global.css";
-import OrganizedNavigation from "./components/shared/OrganizedNavigation";
+import PublicNavigation from "./components/shared/PublicNavigation";
 import ScrollManager from "./components/shared/ScrollManager";
 import AnalyticsBridge from "./components/shared/AnalyticsBridge";
 
@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <ScrollManager />
       <AnalyticsBridge />
-      <OrganizedNavigation />
+      <PublicNavigation />
       <App />
       <Analytics />
     </BrowserRouter>

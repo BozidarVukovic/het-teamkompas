@@ -19,6 +19,7 @@ import { PUB, ADM } from "./styles/tokens";
 import { useInView, useIsMobile } from "./components/shared/hooks";
 import Fade from "./components/shared/Fade";
 import LoginScreen from "./components/admin/LoginScreen";
+import AppRoutes from "./pages/app/AppRoutes";
 import KompasDot from "./components/shared/KompasDot";
 import ScanInvullen from "./pages/public/ScanInvullen";
 import Blog from "./pages/public/Blog";
@@ -12576,16 +12577,22 @@ export default function App() {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        const pad = window.location.pathname;
+        const isAdminPath = pad.startsWith("/beheer") || pad.startsWith("/admin");
         const allowed = ADMIN_EMAILS.includes(user.email || "");
 
         if (!allowed) {
-          await signOut(auth);
-          setView("login");
+          // Gebruikers van de samenwerkomgeving onder /app zijn geen beheerders.
+          // Zij blijven gewoon ingelogd; alleen op een beheerpad loggen we uit,
+          // zodat het beheer afgeschermd blijft.
+          if (isAdminPath) {
+            await signOut(auth);
+            setView("login");
+          }
           setAuthReady(true);
           return;
         }
 
-        const isAdminPath = window.location.pathname.startsWith("/beheer") || window.location.pathname.startsWith("/admin");
         setView((v) => (v === "login" || isAdminPath ? "admin" : v));
       }
 
@@ -12735,6 +12742,7 @@ export default function App() {
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/gespreksvoorbereider" element={<Gespreksvoorbereider />} />
         <Route path="/teamdag-generator" element={<TeamdagGenerator />} />
+        <Route path="/app/*" element={<AppRoutes />} />
         <Route path="/kennisbank" element={<Kennisbank />} />
         <Route path="/kennisbank/:type/:slug" element={<KennisbankItem />} />
         <Route path="/inspiratie" element={<Blog />} />
