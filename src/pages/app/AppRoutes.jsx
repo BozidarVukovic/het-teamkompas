@@ -46,18 +46,20 @@ function Schil({ children }) {
         </a>
         <div className="tk-balk-rechts">
           {lidmaatschappen.length > 1 && (
-            <select
-              className="tk-teamkiezer"
-              aria-label="Kies team"
-              value={actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : ""}
-              onChange={(e) => kiesTeam(e.target.value)}
-            >
-              {lidmaatschappen.map((l) => (
-                <option key={`${l.orgId}/${l.teamId}`} value={`${l.orgId}/${l.teamId}`}>
-                  {l.teamNaam || "Team"}
-                </option>
-              ))}
-            </select>
+            <label className="tk-teamwissel">
+              <span>Je werkt in</span>
+              <select
+                className="tk-teamkiezer"
+                value={actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : ""}
+                onChange={(e) => kiesTeam(e.target.value)}
+              >
+                {lidmaatschappen.map((l) => (
+                  <option key={`${l.orgId}/${l.teamId}`} value={`${l.orgId}/${l.teamId}`}>
+                    {l.teamNaam || "Team"}
+                  </option>
+                ))}
+              </select>
+            </label>
           )}
           <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={logUit}>
             Uitloggen

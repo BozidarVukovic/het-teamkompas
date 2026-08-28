@@ -58,6 +58,29 @@
   gap: 10px;
 }
 
+/* Een naamloos keuzemenu in de balk bepaalde stilletjes wat je op elk scherm
+   zag. Met het label ervoor is meteen duidelijk dat het ergens over gaat. */
+.tk-teamwissel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tk-teamwissel > span {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--tk-zacht);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .tk-teamwissel > span {
+    display: none;
+  }
+}
+
 .tk-teamkiezer {
   background: var(--tk-navy-3);
   color: var(--tk-tekst);

@@ -94,11 +94,18 @@ export default function MijnTeam() {
 
       {team && team.code && (
         <div className="tk-kaart">
-          <h2>Iemand uitnodigen</h2>
+          <h2>Iemand uitnodigen voor {actiefTeam.teamNaam || "dit team"}</h2>
           <p>
             Stuur de uitnodiging door via mail of een berichtje. Wie hem opent, hoeft niets over te
             typen: de code staat er dan al in.
           </p>
+          {lidmaatschappen.length > 1 && (
+            <div className="tk-melding" style={{ marginBottom: 14 }}>
+              Deze code hoort bij <strong>{actiefTeam.teamNaam || "dit team"}</strong>. Je hoort bij
+              meer teams; wil je iemand voor een ander team uitnodigen, wissel dan eerst bovenin bij
+              "Je werkt in".
+            </div>
+          )}
 
           <div className="tk-code" style={{ marginBottom: 14 }}>{team.code}</div>
 
