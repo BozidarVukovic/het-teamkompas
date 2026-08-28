@@ -13,7 +13,8 @@ import { KENMERKEN } from "../../data/app/kenmerken";
 import { SECTIES } from "../../data/app/handleiding";
 
 export default function Start() {
-  const { gebruiker, naam, actiefTeam, kenmerken, handleiding, teamOverzicht } = useApp();
+  const { gebruiker, naam, actiefTeam, kenmerken, handleiding, teamOverzicht, uitnodigingscode, vergeetUitnodiging } =
+    useApp();
 
   const sleutel = actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : null;
   const bruikbaar = kenmerken.filter((k) => k.waarde && k.bevestigd !== "nee");
@@ -39,6 +40,25 @@ export default function Start() {
             }.`
           : "Je hebt nog geen team gekozen."}
       </p>
+
+      {uitnodigingscode && (
+        <div className="tk-kaart" style={{ borderColor: "rgba(0,168,150,0.45)" }}>
+          <h2>Je hebt een uitnodiging</h2>
+          <p>
+            Er staat een uitnodiging voor je klaar met de code{" "}
+            <strong style={{ color: "var(--tk-teal)" }}>{uitnodigingscode}</strong>. Je kunt bij meer
+            dan één team horen; teams zien niets van elkaar.
+          </p>
+          <div className="tk-knoppen">
+            <Link className="tk-knop tk-knop-klein" to="/app/welkom" style={{ textDecoration: "none" }}>
+              Meedoen met dit team
+            </Link>
+            <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={vergeetUitnodiging}>
+              Negeren
+            </button>
+          </div>
+        </div>
+      )}
 
       <VolgendeStap variant="groot" />
 

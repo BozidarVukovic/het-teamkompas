@@ -24,6 +24,31 @@ export default function MijnTeam() {
   const [bevestigVerlaten, setBevestigVerlaten] = useState(false);
   const [voorstellen, setVoorstellen] = useState({});
   const [uploadVoor, setUploadVoor] = useState(null);
+  const [gekopieerd, setGekopieerd] = useState(null);
+
+  // De link draagt de code mee, zodat de ontvanger niets hoeft over te typen.
+  const uitnodigingslink = (code) => `https://www.mijnteamkompas.nl/app?code=${code}`;
+
+  const uitnodigingstekst = (code, teamNaam) =>
+    [
+      `Ik gebruik Mijn Teamkompas om onze samenwerking wat makkelijker te maken. Doe je mee met ${teamNaam}?`,
+      "",
+      `1. Open ${uitnodigingslink(code)}`,
+      "2. Vul je e-mailadres in — je krijgt een koppeling per mail waarmee je binnen bent",
+      `3. De teamcode ${code} staat dan al klaar`,
+      "",
+      "Je vult zelf in hoe jij samenwerkt, en bepaalt zelf wat je met het team deelt.",
+    ].join("\n");
+
+  const kopieer = async (tekst, welke) => {
+    try {
+      await navigator.clipboard.writeText(tekst);
+      setGekopieerd(welke);
+      setTimeout(() => setGekopieerd(null), 2200);
+    } catch {
+      /* kopiëren mag niet altijd; alles staat zichtbaar op het scherm */
+    }
+  };
 
   useEffect(() => {
     if (!actiefTeam) return;
@@ -70,10 +95,50 @@ export default function MijnTeam() {
         <div className="tk-kaart">
           <h2>Iemand uitnodigen</h2>
           <p>
-            Geef deze code door aan wie je erbij wilt hebben. Wie de code heeft, kan meedoen aan dit
-            team.
+            Stuur de uitnodiging door via mail of een berichtje. Wie hem opent, hoeft niets over te
+            typen: de code staat er dan al in.
           </p>
-          <div className="tk-code">{team.code}</div>
+
+          <div className="tk-code" style={{ marginBottom: 14 }}>{team.code}</div>
+
+          <div className="tk-knoppen" style={{ marginBottom: 16 }}>
+            <button
+              type="button"
+              className="tk-knop tk-knop-klein"
+              onClick={() => kopieer(uitnodigingstekst(team.code, actiefTeam.teamNaam || "ons team"), "uitnodiging")}
+            >
+              {gekopieerd === "uitnodiging" ? "Gekopieerd" : "Kopieer de uitnodiging"}
+            </button>
+            <button
+              type="button"
+              className="tk-knop tk-knop-rand tk-knop-klein"
+              onClick={() => kopieer(uitnodigingslink(team.code), "link")}
+            >
+              {gekopieerd === "link" ? "Gekopieerd" : "Alleen de link"}
+            </button>
+            <button
+              type="button"
+              className="tk-knop tk-knop-rand tk-knop-klein"
+              onClick={() => kopieer(team.code, "code")}
+            >
+              {gekopieerd === "code" ? "Gekopieerd" : "Alleen de code"}
+            </button>
+          </div>
+
+          <div className="tk-label" style={{ marginBottom: 8 }}>Wat de ander doet</div>
+          <ol className="tk-fijn" style={{ margin: 0, paddingLeft: 20, lineHeight: 1.8 }}>
+            <li>
+              Gaat naar{" "}
+              <span style={{ color: "var(--tk-teal)" }}>mijnteamkompas.nl/app</span> — via jouw link
+              staat de code er meteen in
+            </li>
+            <li>Vult een e-mailadres in en klikt op de koppeling in de mail</li>
+            <li>Vult een naam in en doet mee met de code</li>
+          </ol>
+          <p className="tk-fijn" style={{ marginTop: 12, marginBottom: 0 }}>
+            Daarna vult diegene zijn eigen profiel in en bepaalt zelf wat er gedeeld wordt. Jij ziet
+            alleen wat hij of zij deelt.
+          </p>
         </div>
       )}
 

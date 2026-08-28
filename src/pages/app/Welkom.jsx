@@ -10,12 +10,12 @@ import { useNavigate } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 
 export default function Welkom() {
-  const { naam, zetNaam, maakTeam, doeMee, gebruiker, logUit } = useApp();
+  const { naam, zetNaam, maakTeam, doeMee, gebruiker, logUit, uitnodigingscode, vergeetUitnodiging } = useApp();
   const navigeer = useNavigate();
 
   const [mijnNaam, setMijnNaam] = useState(naam || "");
-  const [keuze, setKeuze] = useState(null);
-  const [code, setCode] = useState("");
+  const [keuze, setKeuze] = useState(uitnodigingscode ? "code" : null);
+  const [code, setCode] = useState(uitnodigingscode || "");
   const [organisatieNaam, setOrganisatieNaam] = useState("");
   const [teamNaam, setTeamNaam] = useState("");
   const [bezig, setBezig] = useState(false);
@@ -40,7 +40,10 @@ export default function Welkom() {
     try {
       const uitkomst = await doeMee({ code: code.trim().toUpperCase(), mijnNaam: mijnNaam.trim() });
       if (!uitkomst) setFout("Deze teamcode kennen we niet. Controleer of hij precies zo is overgenomen.");
-      else navigeer("/app", { replace: true });
+      else {
+        vergeetUitnodiging();
+        navigeer("/app", { replace: true });
+      }
     } catch {
       setFout("Meedoen lukte niet. Controleer de code en probeer het opnieuw.");
     } finally {
@@ -111,6 +114,13 @@ export default function Welkom() {
       </p>
 
       {fout && <div className="tk-melding tk-melding-fout">{fout}</div>}
+
+      {uitnodigingscode && (
+        <div className="tk-melding tk-melding-goed">
+          Je bent uitgenodigd voor een team. De code staat al ingevuld; je hoeft alleen op Meedoen te
+          klikken.
+        </div>
+      )}
 
       <div className="tk-keuzes" style={{ marginBottom: 18 }}>
         <button

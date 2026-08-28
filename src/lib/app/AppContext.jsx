@@ -41,6 +41,7 @@ import {
 
 const SLEUTEL_EMAIL = "teamkompas.app.email";
 const SLEUTEL_TEAM = "teamkompas.app.actiefTeam";
+const SLEUTEL_CODE = "teamkompas.app.uitnodiging";
 
 const AppContext = createContext(null);
 
@@ -78,6 +79,28 @@ export function AppProvider({ children }) {
   const [voorstellen, setVoorstellen] = useState([]);
   const [teamOverzicht, setTeamOverzicht] = useState({ team: null, leden: [], gedeeld: {}, laden: true });
   const [actiefTeamSleutel, setActiefTeamSleutel] = useState(() => leesOpslag(SLEUTEL_TEAM));
+
+  // Een uitnodigingslink draagt de teamcode mee: /app?code=ABCD-1234. Die halen
+  // we er meteen uit en onthouden we, want inloggen gaat via een e-mail en dan
+  // is de link met de code allang weg.
+  const [uitnodigingscode, setUitnodigingscode] = useState(() => {
+    try {
+      const uitLink = new URLSearchParams(window.location.search).get("code");
+      if (uitLink) {
+        const schoon = uitLink.trim().toUpperCase();
+        schrijfOpslag(SLEUTEL_CODE, schoon);
+        return schoon;
+      }
+    } catch {
+      /* geen geldige url; dan is er ook geen code */
+    }
+    return leesOpslag(SLEUTEL_CODE);
+  });
+
+  const vergeetUitnodiging = useCallback(() => {
+    schrijfOpslag(SLEUTEL_CODE, null);
+    setUitnodigingscode(null);
+  }, []);
 
   /* ------------------------------------------------------------- inloggen */
 
@@ -427,6 +450,8 @@ function terugkeeradres() {
       kenmerken,
       handleiding,
       profiel,
+      uitnodigingscode,
+      vergeetUitnodiging,
       teamOverzicht,
       herlaadTeam: () => laadTeamOverzicht(actiefTeam),
       voorstellen,
@@ -452,7 +477,7 @@ function terugkeeradres() {
     }),
     [
       gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, lidmaatschappen, actiefTeam,
-      kenmerken, handleiding, profiel, teamOverzicht, laadTeamOverzicht, voorstellen, neemInsightsOver, neemVoorstelOver,
+      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, laadTeamOverzicht, voorstellen, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
       wisInsights, maakTeam, doeMee, verlaatTeam, verwijderAlles, laadGegevens,
