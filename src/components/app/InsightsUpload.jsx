@@ -29,6 +29,12 @@ const ZEKERHEID = {
   },
 };
 
+/** Nederlandse notatie: 5,60 en niet 5.6. Percentages blijven heel. */
+function getal(waarde, eenheid) {
+  if (eenheid === "procent") return `${Math.round(waarde)}%`;
+  return waarde.toFixed(2).replace(".", ",");
+}
+
 function Staaf({ kleurId, waarde, maximum, eenheid }) {
   const k = kleur(kleurId);
   if (!k) return null;
@@ -48,8 +54,7 @@ function Staaf({ kleurId, waarde, maximum, eenheid }) {
         />
       </span>
       <span className="tk-fijn" style={{ width: 52, textAlign: "right", flex: "0 0 auto" }}>
-        {waarde}
-        {eenheid === "procent" ? "%" : ""}
+        {getal(waarde, eenheid)}
       </span>
     </div>
   );
