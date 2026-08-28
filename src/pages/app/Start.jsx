@@ -8,18 +8,13 @@
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import VolgendeStap from "../../components/app/VolgendeStap";
+import Voortgang from "../../components/app/Voortgang";
 import { bepaalVolgendeStap } from "../../lib/app/volgendeStap";
-import { KENMERKEN } from "../../data/app/kenmerken";
-import { SECTIES } from "../../data/app/handleiding";
 
 export default function Start() {
   const { gebruiker, naam, actiefTeam, kenmerken, handleiding, teamOverzicht, uitnodigingscode, vergeetUitnodiging } =
     useApp();
 
-  const sleutel = actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : null;
-  const bruikbaar = kenmerken.filter((k) => k.waarde && k.bevestigd !== "nee");
-  const gedeeld = sleutel ? bruikbaar.filter((k) => (k.gedeeldMet || []).includes(sleutel)).length : 0;
-  const sectiesIngevuld = SECTIES.filter((s) => handleiding[s.id] && handleiding[s.id].tekst).length;
 
   const stap = bepaalVolgendeStap({
     kenmerken,
@@ -62,55 +57,7 @@ export default function Start() {
 
       <VolgendeStap variant="groot" />
 
-      {!teamOverzicht.laden && stap.nummer > 1 && (
-        <div className="tk-kaart">
-          <h2>Je profiel</h2>
-          <div className="tk-rij">
-            <div>
-              <strong>{bruikbaar.length} van {KENMERKEN.length} punten ingevuld</strong>
-              <p className="tk-fijn" style={{ margin: "4px 0 0" }}>
-                Hoe completer, hoe gerichter het advies dat anderen over de samenwerking met jou
-                krijgen.
-              </p>
-            </div>
-            <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/profiel" style={{ textDecoration: "none" }}>
-              Bekijken
-            </Link>
-          </div>
-
-          {gedeeld > 0 && (
-            <div className="tk-rij">
-              <div>
-                <strong>{gedeeld} gedeeld met dit team</strong>
-                <p className="tk-fijn" style={{ margin: "4px 0 0" }}>
-                  Alleen wat je zelf aanvinkt is zichtbaar. Intrekken kan altijd.
-                </p>
-              </div>
-              <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/profiel" style={{ textDecoration: "none" }}>
-                Aanpassen
-              </Link>
-            </div>
-          )}
-
-          {stap.klaar && (
-            <div className="tk-rij">
-              <div>
-                <strong>
-                  {sectiesIngevuld === 0
-                    ? "Nog geen handleiding geschreven"
-                    : `${sectiesIngevuld} van ${SECTIES.length} stukjes handleiding`}
-                </strong>
-                <p className="tk-fijn" style={{ margin: "4px 0 0" }}>
-                  Optioneel. Een korte gebruiksaanwijzing bij jezelf, in je eigen woorden.
-                </p>
-              </div>
-              <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/handleiding" style={{ textDecoration: "none" }}>
-                {sectiesIngevuld === 0 ? "Beginnen" : "Aanvullen"}
-              </Link>
-            </div>
-          )}
-        </div>
-      )}
+      {!teamOverzicht.laden && stap.nummer > 1 && <Voortgang variant="groot" />}
 
       <p className="tk-fijn" style={{ marginBottom: 40 }}>
         Adviezen komen uit vaste regels en vooraf geschreven teksten, niet uit een taalmodel. Ze zijn

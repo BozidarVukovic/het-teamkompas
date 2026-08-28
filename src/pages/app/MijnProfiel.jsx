@@ -16,6 +16,7 @@ import VolgendeStap from "../../components/app/VolgendeStap";
 import { BEVESTIGING, BRONNEN, CATEGORIEEN, KENMERKEN } from "../../data/app/kenmerken";
 import { KLEUREN, insightsSamenvatting, kleur } from "../../lib/app/insights";
 import InsightsUpload from "../../components/app/InsightsUpload";
+import Voortgang from "../../components/app/Voortgang";
 
 function bronLabel(bron) {
   const b = BRONNEN.find((x) => x.id === bron);
@@ -64,13 +65,19 @@ function Keuze({ onKies }) {
 
 /* ------------------------------------------------------------- één kenmerk */
 
-function KenmerkKaart({ kenmerk, huidig, lidmaatschappen, onKies, onBevestig, onDelen }) {
+function KenmerkKaart({ kenmerk, nummer, totaal, huidig, lidmaatschappen, onKies, onBevestig, onDelen }) {
   const gekozenOptie = huidig && huidig.waarde ? kenmerk.opties.find((o) => o.id === huidig.waarde) : null;
   const [open, setOpen] = useState(!gekozenOptie);
 
   return (
     <div style={{ padding: "16px 0", borderTop: "1px solid var(--tk-lijn)" }}>
       <div style={{ display: "flex", gap: 10, alignItems: "baseline", flexWrap: "wrap" }}>
+        <span
+          className="tk-fijn"
+          style={{ fontVariantNumeric: "tabular-nums", minWidth: 42, flex: "0 0 auto" }}
+        >
+          {nummer} / {totaal}
+        </span>
         <strong style={{ fontSize: 15.5 }}>{kenmerk.label}</strong>
         {gekozenOptie && <span className="tk-bron">{bronLabel(huidig.bron)}</span>}
       </div>
@@ -177,6 +184,20 @@ export default function MijnProfiel() {
     });
     return uit;
   }, [kenmerken]);
+
+  // Doorlopend nummer over alle categorieën heen, zodat "7 / 12" klopt met hoe
+  // ver je bent en niet met waar je in een kopje zit.
+  const nummerVan = useMemo(() => {
+    const uit = {};
+    let n = 0;
+    CATEGORIEEN.forEach((c) => {
+      KENMERKEN.filter((k) => k.categorie === c.id).forEach((k) => {
+        n += 1;
+        uit[k.id] = n;
+      });
+    });
+    return uit;
+  }, []);
 
   const bruikbaar = kenmerken.filter((k) => k.waarde && k.bevestigd !== "nee");
   const sleutel = actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : null;
@@ -289,11 +310,12 @@ export default function MijnProfiel() {
     <div className="tk-inhoud">
       <h1 className="tk-kop">Mijn profiel</h1>
       <p className="tk-onderkop">
-        {bruikbaar.length} van {KENMERKEN.length} punten ingevuld. Niets hiervan is zichtbaar voor
-        anderen, behalve wat je zelf deelt.
+        Niets hiervan is zichtbaar voor anderen, behalve wat je zelf deelt.
       </p>
 
       {melding && <div className="tk-melding tk-melding-goed">{melding}</div>}
+
+      <Voortgang variant="klein" />
 
       {voorstellen.map((v) => (
         <div className="tk-kaart" key={`${v.orgId}/${v.teamId}`} style={{ borderColor: "rgba(0,168,150,0.45)" }}>
@@ -344,12 +366,35 @@ export default function MijnProfiel() {
         </div>
       ))}
 
+      {CATEGORIEEN.map((categorie) => {
+        const groep = KENMERKEN.filter((k) => k.categorie === categorie.id);
+        if (groep.length === 0) return null;
+        return (
+          <div className="tk-kaart" key={categorie.id}>
+            <h2>{categorie.label}</h2>
+            {groep.map((k) => (
+              <KenmerkKaart
+                key={k.id}
+                kenmerk={k}
+                huidig={perId[k.id]}
+                lidmaatschappen={lidmaatschappen}
+                nummer={nummerVan[k.id]}
+                totaal={KENMERKEN.length}
+                onKies={kiesWaarde}
+                onBevestig={zetBevestiging}
+                onDelen={wisselDelen}
+              />
+            ))}
+          </div>
+        );
+      })}
+
       {actiefTeam && bruikbaar.length > 0 && (
         <div className="tk-kaart">
-          <h2>Delen met {actiefTeam.teamNaam || "je team"}</h2>
+          <h2>Klaar? Deel het met {actiefTeam.teamNaam || "je team"}</h2>
           <p>
-            Je teamgenoten zien alleen wat je deelt, en altijd als leesbare zin — nooit als score of
-            etiket. Intrekken kan op elk moment.
+            Dit is de laatste stap. Je teamgenoten zien alleen wat je deelt, en altijd als leesbare
+            zin — nooit als score of etiket. Intrekken kan op elk moment.
           </p>
           <p style={{ marginBottom: 12 }}>
             <strong>
@@ -377,27 +422,6 @@ export default function MijnProfiel() {
           </div>
         </div>
       )}
-
-      {CATEGORIEEN.map((categorie) => {
-        const groep = KENMERKEN.filter((k) => k.categorie === categorie.id);
-        if (groep.length === 0) return null;
-        return (
-          <div className="tk-kaart" key={categorie.id}>
-            <h2>{categorie.label}</h2>
-            {groep.map((k) => (
-              <KenmerkKaart
-                key={k.id}
-                kenmerk={k}
-                huidig={perId[k.id]}
-                lidmaatschappen={lidmaatschappen}
-                onKies={kiesWaarde}
-                onBevestig={zetBevestiging}
-                onDelen={wisselDelen}
-              />
-            ))}
-          </div>
-        );
-      })}
 
       <div className="tk-kaart">
         <h2>Insights Discovery</h2>
