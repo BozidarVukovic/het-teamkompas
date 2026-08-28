@@ -121,9 +121,9 @@ export function AppProvider({ children }) {
   }, []);
 
 /**
- * Het adres waar de inlogkoppeling naar terugkeert.
+ * Het adres waar de inloglink naar terugkeert.
  *
- * Bewust vast op www voor de echte site: vraag je de koppeling aan op
+ * Bewust vast op www voor de echte site: vraag je de inloglink aan op
  * mijnteamkompas.nl en kom je terug op www.mijnteamkompas.nl (of andersom), dan
  * zijn dat voor de browser twee verschillende adressen. Het onthouden
  * e-mailadres staat dan aan de andere kant en de app vraagt er onnodig opnieuw
@@ -153,10 +153,10 @@ function terugkeeradres() {
     if (!email) return { nodig: "email" };
     await signInWithEmailLink(auth, email, window.location.href);
     schrijfOpslag(SLEUTEL_EMAIL, null);
-    // De koppeling staat nog in de adresbalk en is eenmalig. Laten we hem
+    // De inloglink staat nog in de adresbalk en is eenmalig. Laten we hem
     // staan, dan blijft de app denken dat er nog ingelogd moet worden en komt
     // hij niet voorbij het aanmeldscherm. Bovendien is een gebruikte
-    // inlogkoppeling niets om in de geschiedenis te bewaren.
+    // inloglink niets om in de geschiedenis te bewaren.
     window.history.replaceState({}, "", "/app");
     return { nodig: null };
   }, []);

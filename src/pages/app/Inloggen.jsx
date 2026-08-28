@@ -1,4 +1,4 @@
-// Inloggen met een e-mailkoppeling. Geen wachtwoord, dus ook niets te lekken.
+// Inloggen met een inloglink per e-mail. Geen wachtwoord, dus ook niets te lekken.
 
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,10 +7,10 @@ import { useApp } from "../../lib/app/AppContext";
 /**
  * Vertaalt een Firebase-foutcode naar iets waar iemand wat aan heeft.
  *
- * Belangrijk onderscheid: een verlopen of al gebruikte koppeling is iets heel
+ * Belangrijk onderscheid: een verlopen of al gebruikte inloglink is iets heel
  * anders dan een verkeerd e-mailadres. Beide dezelfde melding geven stuurt
  * mensen de verkeerde kant op — dan gaan ze hun adres controleren terwijl ze
- * een nieuwe koppeling nodig hebben.
+ * een nieuwe link nodig hebben.
  */
 function foutmelding(err) {
   const code = (err && err.code) || "";
@@ -20,7 +20,7 @@ function foutmelding(err) {
   if (code === "auth/invalid-action-code" || code === "auth/expired-action-code") {
     return {
       tekst:
-        "Deze koppeling werkt niet meer. Een koppeling is eenmalig en korte tijd geldig; waarschijnlijk is er al op geklikt of is er inmiddels een nieuwere verstuurd.",
+        "Deze inloglink is niet meer geldig. Een inloglink werkt één keer en verloopt na korte tijd. Vraag hieronder een nieuwe aan.",
       nieuweLink: true,
     };
   }
@@ -31,7 +31,7 @@ function foutmelding(err) {
     return { tekst: "Er is even geen verbinding. Probeer het zo nog eens.", nieuweLink: false };
   }
   return {
-    tekst: "Aanmelden lukte niet. Vraag hieronder een nieuwe koppeling aan.",
+    tekst: "Inloggen is niet gelukt. Vraag hieronder een nieuwe inloglink aan.",
     nieuweLink: true,
   };
 }
@@ -62,7 +62,7 @@ export default function Inloggen() {
         navigeer("/app", { replace: true });
       })
       .catch((err) => {
-        // Een koppeling is eenmalig. Ben je al aangemeld, dan is dit geen fout
+        // Een inloglink is eenmalig. Ben je al ingelogd, dan is dit geen fout
         // maar een herhaalde klik of een verversing van de pagina.
         if (gebruiker) {
           navigeer("/app", { replace: true });
@@ -78,12 +78,12 @@ export default function Inloggen() {
   }, [gebruiker, afhandelen, navigeer]);
 
   // Een aanmeldscherm mag nooit eindeloos blijven draaien. Duurt het te lang,
-  // dan zeggen we dat gewoon en bieden we een nieuwe koppeling aan.
+  // dan zeggen we dat gewoon en bieden we een nieuwe inloglink aan.
   useEffect(() => {
     if (!afhandelen) return undefined;
     const teLang = setTimeout(() => {
       setAfhandelen(false);
-      setFout("Aanmelden duurde te lang. Vraag hieronder een nieuwe koppeling aan.");
+      setFout("Inloggen duurde te lang. Vraag hieronder een nieuwe inloglink aan.");
     }, 15000);
     return () => clearTimeout(teLang);
   }, [afhandelen]);
@@ -134,8 +134,8 @@ export default function Inloggen() {
       <div className="tk-inhoud tk-smal" style={{ paddingTop: 60 }}>
         <h1 className="tk-kop">Nog even je e-mailadres</h1>
         <p className="tk-onderkop">
-          Je opent de koppeling op een ander apparaat dan waar je hem hebt aangevraagd. Vul je
-          e-mailadres in, dan controleren we of de koppeling bij jou hoort.
+          Je opent de inloglink op een ander apparaat dan waar je hem hebt aangevraagd. Vul je
+          e-mailadres in, dan controleren we of de link bij jou hoort.
         </p>
         {fout && <div className="tk-melding tk-melding-fout">{fout}</div>}
         <form onSubmit={bevestigEmail} className="tk-kaart">
@@ -163,7 +163,7 @@ export default function Inloggen() {
                 window.history.replaceState({}, "", "/app/inloggen");
               }}
             >
-              Nieuwe koppeling aanvragen
+              Nieuwe inloglink aanvragen
             </button>
           </div>
         </form>
@@ -176,8 +176,8 @@ export default function Inloggen() {
       <div className="tk-stap">Mijn Teamkompas</div>
       <h1 className="tk-kop">Inloggen</h1>
       <p className="tk-onderkop">
-        Je krijgt een koppeling per e-mail waarmee je direct binnen bent. Geen wachtwoord om te
-        onthouden en niets om kwijt te raken.
+        Inloggen gaat zonder wachtwoord. Vul je e-mailadres in, dan ontvang je een e-mail met een
+        inloglink.
       </p>
 
       {fout && <div className="tk-melding tk-melding-fout">{fout}</div>}
@@ -186,7 +186,7 @@ export default function Inloggen() {
         <div className="tk-kaart">
           <h2>Kijk in je mail</h2>
           <p>
-            We hebben een koppeling gestuurd naar <strong>{email}</strong>. Open die op dit
+            We hebben een inloglink gestuurd naar <strong>{email}</strong>. Open die op dit
             apparaat, dan ben je meteen ingelogd. Niets ontvangen? Kijk ook even in je ongewenste
             berichten.
           </p>
@@ -213,7 +213,7 @@ export default function Inloggen() {
           />
           <div className="tk-knoppen" style={{ marginTop: 14 }}>
             <button className="tk-knop" type="submit" disabled={bezig || !email}>
-              {bezig ? "Versturen..." : "Stuur mij een koppeling"}
+              {bezig ? "Versturen..." : "Stuur mij een inloglink"}
             </button>
           </div>
         </form>
