@@ -35,6 +35,7 @@ export default function MijnTeam() {
       "",
       `1. Open ${uitnodigingslink(code)}`,
       "2. Vul je e-mailadres in — je ontvangt een e-mail met een inloglink",
+      "   (die mail belandt de eerste keer nogal eens bij ongewenste berichten; kijk daar even)",
       `3. De teamcode ${code} staat dan al klaar`,
       "",
       "Je vult zelf in hoe jij samenwerkt, en bepaalt zelf wat je met het team deelt.",
@@ -132,7 +133,10 @@ export default function MijnTeam() {
               <span style={{ color: "var(--tk-teal)" }}>mijnteamkompas.nl/app</span> — via jouw link
               staat de code er meteen in
             </li>
-            <li>Vult een e-mailadres in en klikt op de inloglink in de mail</li>
+            <li>
+              Vult een e-mailadres in en klikt op de inloglink in de mail — die belandt de eerste
+              keer vaak bij ongewenste berichten
+            </li>
             <li>Vult een naam in en doet mee met de code</li>
           </ol>
           <p className="tk-fijn" style={{ marginTop: 12, marginBottom: 0 }}>

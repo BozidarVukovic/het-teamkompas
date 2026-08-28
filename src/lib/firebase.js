@@ -16,6 +16,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
+
+// Firebase stuurt de inlogmails standaard in het Engels. Met een taalcode
+// pakt hij de Nederlandse versie van zijn sjablonen. Let op: zodra een
+// sjabloon in de console met de hand is aangepast, wordt die tekst gebruikt
+// zoals hij daar staat — dan bepaalt de console de taal, niet deze regel.
+auth.languageCode = "nl";
 export const db = getFirestore(app);
 
 export const ADMIN_EMAILS = [

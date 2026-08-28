@@ -187,8 +187,12 @@ export default function Inloggen() {
           <h2>Kijk in je mail</h2>
           <p>
             We hebben een inloglink gestuurd naar <strong>{email}</strong>. Open die op dit
-            apparaat, dan ben je meteen ingelogd. Niets ontvangen? Kijk ook even in je ongewenste
-            berichten.
+            apparaat, dan ben je meteen ingelogd.
+          </p>
+          <p style={{ marginBottom: 12 }}>
+            <strong>Niets ontvangen?</strong> Kijk bij ongewenste berichten of spam — de eerste mail
+            komt daar vaak terecht. Markeer hem als "geen ongewenste e-mail", dan gaat het de
+            volgende keer vanzelf goed.
           </p>
           <button
             type="button"
