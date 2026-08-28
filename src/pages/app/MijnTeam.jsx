@@ -14,7 +14,7 @@ import InsightsUpload from "../../components/app/InsightsUpload";
 import VolgendeStap from "../../components/app/VolgendeStap";
 
 export default function MijnTeam() {
-  const { gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam } = useApp();
+  const { gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam, verwijderTeam } = useApp();
 
   const [team, setTeam] = useState(null);
   const [leden, setLeden] = useState([]);
@@ -22,6 +22,7 @@ export default function MijnTeam() {
   const [laden, setLaden] = useState(true);
   const [open, setOpen] = useState(null);
   const [bevestigVerlaten, setBevestigVerlaten] = useState(false);
+  const [bezigOpruimen, setBezigOpruimen] = useState(false);
   const [voorstellen, setVoorstellen] = useState({});
   const [uploadVoor, setUploadVoor] = useState(null);
   const [gekopieerd, setGekopieerd] = useState(null);
@@ -80,6 +81,10 @@ export default function MijnTeam() {
     const ik = leden.find((l) => l.uid === (gebruiker && gebruiker.uid));
     return ik && ik.rol === "beheerder";
   }, [leden, gebruiker]);
+
+  // Echt opruimen kan alleen wie het team beheert en er als enige in zit; een
+  // team mag nooit onder de voeten van anderen weg kunnen verdwijnen.
+  const kanVerwijderen = ikBenBeheerder && leden.length <= 1;
 
   if (!actiefTeam) return <div className="tk-inhoud"><p className="tk-onderkop">Je hebt nog geen team.</p></div>;
   if (laden) return <div className="tk-inhoud"><p className="tk-onderkop">Even laden...</p></div>;
@@ -266,9 +271,25 @@ export default function MijnTeam() {
             <button
               type="button"
               className="tk-knop tk-knop-klein tk-knop-gevaar"
-              onClick={() => verlaatTeam({ orgId: actiefTeam.orgId, teamId: actiefTeam.teamId })}
+              disabled={bezigOpruimen}
+              onClick={async () => {
+                setBezigOpruimen(true);
+                try {
+                  if (kanVerwijderen) {
+                    await verwijderTeam({
+                      orgId: actiefTeam.orgId,
+                      teamId: actiefTeam.teamId,
+                      code: team && team.code,
+                    });
+                  } else {
+                    await verlaatTeam({ orgId: actiefTeam.orgId, teamId: actiefTeam.teamId });
+                  }
+                } finally {
+                  setBezigOpruimen(false);
+                }
+              }}
             >
-              Ja, verlaat dit team
+              {bezigOpruimen ? "Bezig..." : kanVerwijderen ? "Ja, verwijder dit team" : "Ja, verlaat dit team"}
             </button>
             <button
               type="button"
@@ -284,11 +305,13 @@ export default function MijnTeam() {
             className="tk-knop tk-knop-klein tk-knop-gevaar"
             onClick={() => setBevestigVerlaten(true)}
           >
-            Dit team verlaten
+            {kanVerwijderen ? "Dit team verwijderen" : "Dit team verlaten"}
           </button>
         )}
         <p className="tk-fijn" style={{ marginTop: 10, marginBottom: 0 }}>
-          Bij het verlaten van een team wordt alles wat je met dit team deelde direct verwijderd.
+          {kanVerwijderen
+            ? "Je bent de enige in dit team, dus het wordt echt opgeruimd: het team, de organisatie en de teamcode verdwijnen. De code werkt daarna niet meer. Je eigen profiel blijft gewoon staan."
+            : "Bij het verlaten van een team wordt alles wat je met dit team deelde direct verwijderd. Het team zelf blijft bestaan voor de anderen."}
         </p>
       </div>
 

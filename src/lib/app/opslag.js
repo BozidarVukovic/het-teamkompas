@@ -198,6 +198,30 @@ export async function verlaatTeam({ uid, orgId, teamId }) {
   await setDoc(gebruikerRef(uid), { lidmaatschappen: over }, { merge: true });
 }
 
+/**
+ * Verwijdert een team echt, inclusief de organisatie en de teamcode.
+ *
+ * Alleen zinvol voor de beheerder die als enige over is: zolang er anderen in
+ * zitten, hoort een team niet onder hun voeten weg te kunnen verdwijnen.
+ *
+ * De volgorde is niet vrijblijvend. De securityregels leiden "ben ik beheerder"
+ * af uit het ledendocument, dus dat moet als laatste weg — haal je het er eerst
+ * uit, dan mag je het team daarna niet meer verwijderen en blijft het achter.
+ */
+export async function verwijderTeam({ uid, orgId, teamId, code }) {
+  await deleteDoc(gedeeldRef(orgId, teamId, uid)).catch(() => {});
+  await deleteDoc(teamRef(orgId, teamId));
+  if (code) await deleteDoc(teamcodeRef(code)).catch(() => {});
+  await deleteDoc(organisatieRef(orgId)).catch(() => {});
+  await deleteDoc(lidRef(orgId, teamId, uid)).catch(() => {});
+
+  const gebruiker = await haalGebruiker(uid);
+  const over = ((gebruiker && gebruiker.lidmaatschappen) || []).filter(
+    (l) => !(l.orgId === orgId && l.teamId === teamId)
+  );
+  await setDoc(gebruikerRef(uid), { lidmaatschappen: over }, { merge: true });
+}
+
 export async function haalTeamleden(orgId, teamId) {
   const snap = await getDocs(ledenCol(orgId, teamId));
   return snap.docs

@@ -33,6 +33,7 @@ import {
   maakOrganisatieMetTeam,
   treedToeMetCode,
   verlaatTeam as verlaatTeamInDb,
+  verwijderTeam as verwijderTeamInDb,
   verwijderEigenGegevens as verwijderEigenGegevensInDb,
   werkAlleGedeeldBij,
   werkGebruikerBij,
@@ -432,6 +433,16 @@ function terugkeeradres() {
     [gebruiker, laadGegevens]
   );
 
+  const verwijderTeam = useCallback(
+    async ({ orgId, teamId, code }) => {
+      if (!gebruiker) return;
+      await verwijderTeamInDb({ uid: gebruiker.uid, orgId, teamId, code });
+      kiesTeam(null);
+      await laadGegevens(gebruiker.uid, gebruiker.email);
+    },
+    [gebruiker, kiesTeam, laadGegevens]
+  );
+
   const verwijderAlles = useCallback(async () => {
     if (!gebruiker) return;
     await verwijderEigenGegevensInDb(gebruiker.uid);
@@ -472,6 +483,7 @@ function terugkeeradres() {
       maakTeam,
       doeMee,
       verlaatTeam,
+      verwijderTeam,
       verwijderAlles,
       herlaad: () => (gebruiker ? laadGegevens(gebruiker.uid, gebruiker.email) : null),
     }),
@@ -480,7 +492,7 @@ function terugkeeradres() {
       kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, laadTeamOverzicht, voorstellen, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
-      wisInsights, maakTeam, doeMee, verlaatTeam, verwijderAlles, laadGegevens,
+      wisInsights, maakTeam, doeMee, verlaatTeam, verwijderTeam, verwijderAlles, laadGegevens,
     ]
   );
 
