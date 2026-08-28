@@ -366,9 +366,11 @@ export default function MijnProfiel() {
                 Niets delen
               </button>
             )}
-            <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/samenwerken" style={{ textDecoration: "none" }}>
-              Advies vragen
-            </Link>
+            {gedeeld > 0 && (
+              <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/samenwerken" style={{ textDecoration: "none" }}>
+                Advies vragen
+              </Link>
+            )}
           </div>
         </div>
       )}
