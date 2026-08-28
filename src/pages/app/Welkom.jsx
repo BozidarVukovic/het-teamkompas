@@ -6,11 +6,17 @@
 // meerdere teams, en iemand kan bij meer dan één team horen.
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 
 export default function Welkom() {
-  const { naam, zetNaam, maakTeam, doeMee, gebruiker, logUit, uitnodigingscode, vergeetUitnodiging } = useApp();
+  const { naam, zetNaam, maakTeam, doeMee, gebruiker, logUit, uitnodigingscode, vergeetUitnodiging, lidmaatschappen } =
+    useApp();
+
+  // Ditzelfde scherm doet twee dingen: het is de laatste stap van het aanmelden
+  // én de plek om later bij een extra team aan te sluiten. Wie al ergens bij
+  // hoort, hoort geen "stap 2 van 2" te zien — die is allang klaar.
+  const heeftAlEenTeam = (lidmaatschappen || []).length > 0;
   const navigeer = useNavigate();
 
   const [mijnNaam, setMijnNaam] = useState(naam || "");
@@ -106,12 +112,26 @@ export default function Welkom() {
 
   return (
     <div className="tk-inhoud tk-smal" style={{ paddingTop: 56 }}>
-      <div className="tk-stap">Stap 2 van 2</div>
-      <h1 className="tk-kop">Bij welk team hoor je?</h1>
+      <div className="tk-stap">{heeftAlEenTeam ? "Nog een team" : "Stap 2 van 2"}</div>
+      <h1 className="tk-kop">
+        {heeftAlEenTeam ? "Bij een ander team aansluiten" : "Bij welk team hoor je?"}
+      </h1>
       <p className="tk-onderkop">
-        Teams staan technisch los van elkaar. Wat je met het ene team deelt, is voor een ander team
-        niet zichtbaar.
+        {heeftAlEenTeam
+          ? "Je hoort al bij een team. Hier sluit je aan bij nóg een team, bijvoorbeeld bij een andere klant of afdeling. Wil je juist iemand uitnodigen voor je huidige team? Dat doe je bij Mijn team."
+          : "Teams staan technisch los van elkaar. Wat je met het ene team deelt, is voor een ander team niet zichtbaar."}
       </p>
+
+      {heeftAlEenTeam && (
+        <div className="tk-knoppen" style={{ marginBottom: 20 }}>
+          <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/team" style={{ textDecoration: "none" }}>
+            Terug naar mijn team
+          </Link>
+          <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app" style={{ textDecoration: "none" }}>
+            Naar start
+          </Link>
+        </div>
+      )}
 
       {fout && <div className="tk-melding tk-melding-fout">{fout}</div>}
 

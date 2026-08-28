@@ -246,7 +246,7 @@ export default function MijnTeam() {
         </p>
         <p className="tk-fijn">
           <Link to="/app/welkom" style={{ color: "var(--tk-teal)" }}>
-            Bij nog een team aansluiten
+            Zelf bij een ander team aansluiten
           </Link>
         </p>
         {lidmaatschappen.length > 1 && (
