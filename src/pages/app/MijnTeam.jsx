@@ -11,6 +11,7 @@ import { useApp } from "../../lib/app/AppContext";
 import { haalGedeeldVanTeam, haalTeam, haalTeamleden } from "../../lib/app/opslag";
 import { bewaarVoorstel, haalVoorstellen } from "../../lib/app/voorstellen";
 import InsightsUpload from "../../components/app/InsightsUpload";
+import VolgendeStap from "../../components/app/VolgendeStap";
 
 export default function MijnTeam() {
   const { gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam } = useApp();
@@ -214,6 +215,9 @@ export default function MijnTeam() {
           Bij het verlaten van een team wordt alles wat je met dit team deelde direct verwijderd.
         </p>
       </div>
+
+      <VolgendeStap verbergAls="uitnodigen" />
+      <div style={{ height: 30 }} />
     </div>
   );
 }

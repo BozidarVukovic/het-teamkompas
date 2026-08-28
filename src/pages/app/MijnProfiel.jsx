@@ -12,6 +12,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
+import VolgendeStap from "../../components/app/VolgendeStap";
 import { BEVESTIGING, BRONNEN, CATEGORIEEN, KENMERKEN } from "../../data/app/kenmerken";
 import { KLEUREN, insightsSamenvatting, kleur } from "../../lib/app/insights";
 import InsightsUpload from "../../components/app/InsightsUpload";
@@ -458,6 +459,8 @@ export default function MijnProfiel() {
           </>
         )}
       </div>
+
+      <VolgendeStap />
 
       <p className="tk-fijn" style={{ marginBottom: 40 }}>
         Wat je hier invult zijn voorkeuren in samenwerking, geen oordeel over wie je bent. Je kunt

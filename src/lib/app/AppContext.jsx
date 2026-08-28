@@ -23,6 +23,9 @@ import {
   bewaarKenmerken as bewaarKenmerkenInDb,
   bewaarSectie as bewaarSectieInDb,
   haalGebruiker,
+  haalGedeeldVanTeam,
+  haalTeam,
+  haalTeamleden,
   haalHandleiding,
   haalKenmerken,
   haalProfiel,
@@ -73,6 +76,7 @@ export function AppProvider({ children }) {
   const [profiel, setProfiel] = useState(null);
   const [gegevensKlaar, setGegevensKlaar] = useState(false);
   const [voorstellen, setVoorstellen] = useState([]);
+  const [teamOverzicht, setTeamOverzicht] = useState({ team: null, leden: [], gedeeld: {}, laden: true });
   const [actiefTeamSleutel, setActiefTeamSleutel] = useState(() => leesOpslag(SLEUTEL_TEAM));
 
   /* ------------------------------------------------------------- inloggen */
@@ -189,6 +193,34 @@ function terugkeeradres() {
     );
     return gevonden || lidmaatschappen[0];
   }, [lidmaatschappen, actiefTeamSleutel]);
+
+  /**
+   * Het team waar je nu in werkt: wie erin zitten en wat zij gedeeld hebben.
+   * Eén keer ophalen op deze plek, zodat elk scherm hetzelfde weet en de
+   * volgende stap overal gelijk uitpakt.
+   */
+  const laadTeamOverzicht = useCallback(async (l) => {
+    if (!l) {
+      setTeamOverzicht({ team: null, leden: [], gedeeld: {}, laden: false });
+      return;
+    }
+    setTeamOverzicht((t) => ({ ...t, laden: true }));
+    try {
+      const [team, leden, gedeeld] = await Promise.all([
+        haalTeam(l.orgId, l.teamId),
+        haalTeamleden(l.orgId, l.teamId),
+        haalGedeeldVanTeam(l.orgId, l.teamId),
+      ]);
+      setTeamOverzicht({ team, leden, gedeeld, laden: false });
+    } catch {
+      setTeamOverzicht({ team: null, leden: [], gedeeld: {}, laden: false });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!gebruiker) return;
+    laadTeamOverzicht(actiefTeam);
+  }, [gebruiker, actiefTeam, laadTeamOverzicht]);
 
   const kiesTeam = useCallback((sleutel) => {
     setActiefTeamSleutel(sleutel);
@@ -395,6 +427,8 @@ function terugkeeradres() {
       kenmerken,
       handleiding,
       profiel,
+      teamOverzicht,
+      herlaadTeam: () => laadTeamOverzicht(actiefTeam),
       voorstellen,
       neemInsightsOver,
       neemVoorstelOver,
@@ -418,7 +452,7 @@ function terugkeeradres() {
     }),
     [
       gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, lidmaatschappen, actiefTeam,
-      kenmerken, handleiding, profiel, voorstellen, neemInsightsOver, neemVoorstelOver,
+      kenmerken, handleiding, profiel, teamOverzicht, laadTeamOverzicht, voorstellen, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
       wisInsights, maakTeam, doeMee, verlaatTeam, verwijderAlles, laadGegevens,

@@ -15,6 +15,7 @@ import {
 } from "../../lib/app/opslag";
 import { vraagAdvies } from "../../lib/app/advies/adviesService";
 import { SITUATIES } from "../../data/app/situaties";
+import VolgendeStap from "../../components/app/VolgendeStap";
 
 function initialen(naam) {
   return String(naam || "?")
@@ -178,6 +179,8 @@ export default function Samenwerken() {
           </div>
         </>
       )}
+
+      {anderen.length === 0 && <VolgendeStap />}
 
       {gekozen && !advies && (
         <>

@@ -5,6 +5,7 @@
 
 import { useMemo, useState } from "react";
 import { useApp } from "../../lib/app/AppContext";
+import VolgendeStap from "../../components/app/VolgendeStap";
 import { SECTIES, conceptVoorSectie } from "../../data/app/handleiding";
 import { bepaalWaarden } from "../../lib/app/advies/regels";
 
@@ -147,6 +148,8 @@ export default function MijnHandleiding() {
           bewaar={bewaarSectie}
         />
       ))}
+
+      <VolgendeStap />
 
       <p className="tk-fijn" style={{ marginBottom: 40 }}>
         Wat je hier deelt, komt woordelijk bij je teamgenoten terecht. Schrijf dus op wat je ook
