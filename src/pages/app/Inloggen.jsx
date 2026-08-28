@@ -4,6 +4,38 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 
+/**
+ * Vertaalt een Firebase-foutcode naar iets waar iemand wat aan heeft.
+ *
+ * Belangrijk onderscheid: een verlopen of al gebruikte koppeling is iets heel
+ * anders dan een verkeerd e-mailadres. Beide dezelfde melding geven stuurt
+ * mensen de verkeerde kant op — dan gaan ze hun adres controleren terwijl ze
+ * een nieuwe koppeling nodig hebben.
+ */
+function foutmelding(err) {
+  const code = (err && err.code) || "";
+  if (code === "auth/invalid-email") {
+    return { tekst: "Dat lijkt geen geldig e-mailadres.", nieuweLink: false };
+  }
+  if (code === "auth/invalid-action-code" || code === "auth/expired-action-code") {
+    return {
+      tekst:
+        "Deze koppeling werkt niet meer. Een koppeling is eenmalig en korte tijd geldig; waarschijnlijk is er al op geklikt of is er inmiddels een nieuwere verstuurd.",
+      nieuweLink: true,
+    };
+  }
+  if (code === "auth/user-disabled") {
+    return { tekst: "Dit account is geblokkeerd.", nieuweLink: false };
+  }
+  if (code === "auth/network-request-failed") {
+    return { tekst: "Er is even geen verbinding. Probeer het zo nog eens.", nieuweLink: false };
+  }
+  return {
+    tekst: "Aanmelden lukte niet. Vraag hieronder een nieuwe koppeling aan.",
+    nieuweLink: true,
+  };
+}
+
 export default function Inloggen() {
   const { stuurInloglink, isInloglink, voltooiInloggen, gebruiker } = useApp();
   const navigeer = useNavigate();
@@ -29,16 +61,14 @@ export default function Inloggen() {
         }
         navigeer("/app", { replace: true });
       })
-      .catch(() => {
-        // Een koppeling is eenmalig. Ben je al aangemeld, dan is dit geen
-        // fout maar een herhaalde klik of een verversing van de pagina.
+      .catch((err) => {
+        // Een koppeling is eenmalig. Ben je al aangemeld, dan is dit geen fout
+        // maar een herhaalde klik of een verversing van de pagina.
         if (gebruiker) {
           navigeer("/app", { replace: true });
           return;
         }
-        setFout(
-          "Deze koppeling werkt niet meer. Vraag hieronder een nieuwe aan; een koppeling is maar korte tijd geldig."
-        );
+        setFout(foutmelding(err).tekst);
         setAfhandelen(false);
       });
   }, [isInloglink, voltooiInloggen, navigeer, gebruiker]);
@@ -82,8 +112,9 @@ export default function Inloggen() {
     setBezig(true);
     try {
       await voltooiInloggen(email);
-    } catch {
-      setFout("Dit adres hoort niet bij de koppeling. Controleer het en probeer het opnieuw.");
+    } catch (err) {
+      setFout(foutmelding(err).tekst);
+      if (foutmelding(err).nieuweLink) setVraagEmail(false);
     } finally {
       setBezig(false);
     }
@@ -121,6 +152,18 @@ export default function Inloggen() {
           <div className="tk-knoppen" style={{ marginTop: 14 }}>
             <button className="tk-knop" type="submit" disabled={bezig}>
               {bezig ? "Bezig..." : "Aanmelden"}
+            </button>
+            <button
+              type="button"
+              className="tk-knop tk-knop-rand tk-knop-klein"
+              onClick={() => {
+                setVraagEmail(false);
+                setFout("");
+                alGeprobeerd.current = true;
+                window.history.replaceState({}, "", "/app/inloggen");
+              }}
+            >
+              Nieuwe koppeling aanvragen
             </button>
           </div>
         </form>

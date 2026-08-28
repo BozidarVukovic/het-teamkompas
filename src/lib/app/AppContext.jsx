@@ -93,11 +93,26 @@ export function AppProvider({ children }) {
     return () => stop();
   }, []);
 
+/**
+ * Het adres waar de inlogkoppeling naar terugkeert.
+ *
+ * Bewust vast op www voor de echte site: vraag je de koppeling aan op
+ * mijnteamkompas.nl en kom je terug op www.mijnteamkompas.nl (of andersom), dan
+ * zijn dat voor de browser twee verschillende adressen. Het onthouden
+ * e-mailadres staat dan aan de andere kant en de app vraagt er onnodig opnieuw
+ * om. Lokaal ontwikkelen blijft gewoon werken.
+ */
+function terugkeeradres() {
+  const host = window.location.hostname;
+  if (host.endsWith("mijnteamkompas.nl")) return "https://www.mijnteamkompas.nl/app/inloggen";
+  return `${window.location.origin}/app/inloggen`;
+}
+
   const stuurInloglink = useCallback(async (email) => {
     const schoon = String(email || "").trim().toLowerCase();
     if (!schoon) throw new Error("Vul een e-mailadres in.");
     await sendSignInLinkToEmail(auth, schoon, {
-      url: `${window.location.origin}/app/inloggen`,
+      url: terugkeeradres(),
       handleCodeInApp: true,
     });
     schrijfOpslag(SLEUTEL_EMAIL, schoon);
