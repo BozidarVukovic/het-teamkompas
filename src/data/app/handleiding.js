@@ -18,7 +18,7 @@ export const SECTIES = [
   },
   {
     id: "bereiken",
-    titel: "Hoe je me het beste bereikt",
+    titel: "Hoe je mij het beste bereikt",
     uitleg: "Wanneer en op welke manier een vraag of overleg het beste landt.",
     kenmerken: ["contact", "denken"],
     voorbeeld: "Een kort bericht werkt bij mij beter dan een spontaan telefoontje.",
@@ -42,7 +42,7 @@ export const SECTIES = [
     titel: "Wat er bij mij gebeurt onder spanning",
     uitleg: "Wat anderen aan je merken als het druk of ongemakkelijk wordt.",
     kenmerken: ["spanning"],
-    voorbeeld: "Ik word stiller. Dat betekent niet dat ik afhaak; vraag me gerust wat ik denk.",
+    voorbeeld: "Ik word stiller. Dat betekent niet dat ik afhaak; vraag mij gerust wat ik denk.",
   },
   {
     id: "energie",
@@ -67,10 +67,10 @@ export const SECTIES = [
   },
   {
     id: "aanspreken",
-    titel: "Waar je me op mag aanspreken",
+    titel: "Waar je mij op mag aanspreken",
     uitleg: "De uitnodiging die je aan je collega's geeft.",
     kenmerken: ["aanspreken"],
-    voorbeeld: "Spreek me gerust aan als ik te snel ga voor de rest.",
+    voorbeeld: "Spreek mij gerust aan als ik te snel ga voor de rest.",
   },
   {
     id: "van-jou",

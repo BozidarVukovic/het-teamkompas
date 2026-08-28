@@ -178,14 +178,14 @@ export const BEHOEFTEN = {
     },
   },
   aanspreken: {
-    tempo: { duiding: "Je collega vindt het prima om aangesproken te worden als hij of zij te snel gaat.", suggestie: "Zeg het gerust op het moment zelf.", voorbeeldzin: "Je gaat me nu te snel. Kunnen we een stap terug?" },
+    tempo: { duiding: "Je collega vindt het prima om aangesproken te worden als hij of zij te snel gaat.", suggestie: "Zeg het gerust op het moment zelf.", voorbeeldzin: "Je gaat mij nu te snel. Kunnen we een stap terug?" },
     detail: { duiding: "Je collega vindt het prima om aangesproken te worden op te lang in de details blijven.", suggestie: "Benoem het en stel voor om uit te zoomen.", voorbeeldzin: "Ik verlies het overzicht. Kunnen we even naar de hoofdlijn?" },
     stil: { duiding: "Je collega vindt het prima om aangesproken te worden wanneer hij of zij stil blijft.", suggestie: "Nodig hem of haar rechtstreeks uit.", voorbeeldzin: "Ik hoor jou nog niet. Hoe kijk jij hiernaar?" },
     toezegging: { duiding: "Je collega vindt het prima om aangesproken te worden op een toezegging die niet is nagekomen.", suggestie: "Verwijs naar de afspraak, niet naar de persoon.", voorbeeldzin: "We hadden afgesproken dat dit vrijdag klaar zou zijn. Wat is er nodig?" },
   },
   energie: {
     samen: { duiding: "Je collega krijgt energie van dingen samen aanpakken.", suggestie: "Doe het samen in plaats van te verdelen, als dat kan.", voorbeeldzin: "Zullen we hier samen een uur voor gaan zitten?" },
-    afronden: { duiding: "Je collega krijgt energie van iets echt afronden.", suggestie: "Werk naar een duidelijk eindpunt toe en benoem dat ook.", voorbeeldzin: "Als dit klaar is, is het ook echt af. Dat lijkt me een mooi moment." },
+    afronden: { duiding: "Je collega krijgt energie van iets echt afronden.", suggestie: "Werk naar een duidelijk eindpunt toe en benoem dat ook.", voorbeeldzin: "Als dit klaar is, is het ook echt af. Dat lijkt mij een mooi moment." },
     nieuw: { duiding: "Je collega krijgt energie van nieuwe ideeën en mogelijkheden.", suggestie: "Laat ruimte om te verkennen voordat je naar de uitvoering gaat.", voorbeeldzin: "Voordat we kiezen: welke mogelijkheden zie jij nog?" },
     verdieping: { duiding: "Je collega krijgt energie van ergens rustig goed in duiken.", suggestie: "Geef aaneengesloten tijd in plaats van losse momenten.", voorbeeldzin: "Neem er gerust een dagdeel voor, dan hoef je niet te haasten." },
   },

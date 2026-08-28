@@ -108,7 +108,7 @@ export const KENMERKEN = [
     vraag: "Wat gebeurt er meestal bij jou wanneer de spanning oploopt?",
     opties: [
       { id: "sneller", label: "Ik word directer en sneller", deelbaarAls: "Als de spanning oploopt word ik directer. Dat is bij mij geen boosheid." },
-      { id: "stiller", label: "Ik word stiller", deelbaarAls: "Als de spanning oploopt word ik stiller. Vraag me gerust wat ik denk." },
+      { id: "stiller", label: "Ik word stiller", deelbaarAls: "Als de spanning oploopt word ik stiller. Vraag mij gerust wat ik denk." },
       { id: "uitleg", label: "Ik ga meer uitleggen", deelbaarAls: "Als de spanning oploopt ga ik meer uitleggen dan nodig is." },
       { id: "terugtrekken", label: "Ik heb even ruimte nodig", deelbaarAls: "Bij spanning heb ik even ruimte nodig voordat ik verder kan praten." },
     ],
@@ -154,10 +154,10 @@ export const KENMERKEN = [
     label: "Waarop je aangesproken mag worden",
     vraag: "Waar mogen anderen je op aanspreken?",
     opties: [
-      { id: "tempo", label: "Als ik te snel ga", deelbaarAls: "Spreek me gerust aan als ik te snel ga voor de rest." },
-      { id: "detail", label: "Als ik te lang in details blijf", deelbaarAls: "Spreek me gerust aan als ik te lang in de details blijf hangen." },
-      { id: "stil", label: "Als ik niets zeg", deelbaarAls: "Spreek me gerust aan als ik in een overleg stil blijf." },
-      { id: "toezegging", label: "Als ik iets niet nakom", deelbaarAls: "Spreek me gerust aan als ik een toezegging niet nakom." },
+      { id: "tempo", label: "Als ik te snel ga", deelbaarAls: "Spreek mij gerust aan als ik te snel ga voor de rest." },
+      { id: "detail", label: "Als ik te lang in details blijf", deelbaarAls: "Spreek mij gerust aan als ik te lang in de details blijf hangen." },
+      { id: "stil", label: "Als ik niets zeg", deelbaarAls: "Spreek mij gerust aan als ik in een overleg stil blijf." },
+      { id: "toezegging", label: "Als ik iets niet nakom", deelbaarAls: "Spreek mij gerust aan als ik een toezegging niet nakom." },
     ],
   },
   {
@@ -169,7 +169,7 @@ export const KENMERKEN = [
       { id: "kortaf", label: "Dat ik kortaf overkom", deelbaarAls: "Ik kan kortaf overkomen. Meestal ben ik dan gewoon met de inhoud bezig." },
       { id: "twijfel", label: "Dat vragen stellen twijfel lijkt", deelbaarAls: "Als ik veel vraag, twijfel ik niet aan jou. Ik wil het goed begrijpen." },
       { id: "stilte", label: "Dat stilte desinteresse lijkt", deelbaarAls: "Als ik stil ben, ben ik meestal aan het nadenken en niet ongeïnteresseerd." },
-      { id: "enthousiasme", label: "Dat enthousiasme een toezegging lijkt", deelbaarAls: "Mijn enthousiasme is niet altijd een toezegging. Vraag me gerust of ik het echt doe." },
+      { id: "enthousiasme", label: "Dat enthousiasme een toezegging lijkt", deelbaarAls: "Mijn enthousiasme is niet altijd een toezegging. Vraag mij gerust of ik het echt doe." },
     ],
   },
 ];
