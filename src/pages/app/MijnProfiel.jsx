@@ -35,10 +35,11 @@ function Keuze({ onKies }) {
 
       <button type="button" className="tk-keuze" style={{ padding: 20, marginBottom: 12 }} onClick={() => onKies("insights")}>
         <span>
-          <strong style={{ fontSize: 17 }}>Met mijn Insights Discovery-profiel</strong>
+          <strong style={{ fontSize: 17 }}>Ik heb een Insights Discovery-profiel</strong>
           <small style={{ fontSize: 14, marginTop: 6 }}>
-            Upload de PDF. We lezen je kleurenergieën uit en vullen alle twaalf punten vast in. Daarna
-            loop je ze na en pas je aan wat niet klopt. Ongeveer een minuut.
+            Upload het PDF-bestand. Wat daarin over jouw manier van werken staat, gebruiken we om de
+            twaalf punten alvast in te vullen. Daarna loop je ze na en pas je aan wat niet klopt.
+            Ongeveer een minuut.
           </small>
         </span>
       </button>
@@ -266,8 +267,9 @@ export default function MijnProfiel() {
       <div className="tk-inhoud tk-smal">
         <h1 className="tk-kop">Je Insights-profiel</h1>
         <p className="tk-onderkop">
-          Kies de PDF van je Insights Discovery-profiel. We lezen je kleurenergieën eruit en vullen
-          daarmee alle twaalf punten in.
+          Kies het PDF-bestand van je Insights Discovery-profiel. Wat daarin staat over jouw manier
+          van werken, gebruiken we om de twaalf punten alvast in te vullen. Je bepaalt daarna zelf
+          wat blijft staan.
         </p>
         <div className="tk-kaart">
           <InsightsUpload onBevestig={naUpload} knopLabel="Overnemen in mijn profiel" />
@@ -421,15 +423,21 @@ export default function MijnProfiel() {
         ) : (
           <>
             <p>
-              Heb je een Insights Discovery-profiel? Upload de PDF, dan vullen we de punten hierboven
-              vast in. Je kunt de kleuren ook zonder PDF zelf kiezen.
+              Heb je ooit een Insights Discovery-profiel gemaakt? Upload het PDF-bestand, dan vullen
+              we de punten hierboven alvast in. Geen profiel, of niet bij de hand? Kies dan zelf
+              welke omschrijving het beste bij je past.
             </p>
             <div className="tk-knoppen" style={{ marginBottom: 14 }}>
               <button type="button" className="tk-knop tk-knop-klein" onClick={() => setModus("insights")}>
                 Profiel-PDF uploaden
               </button>
             </div>
-            <div className="tk-label">Of kies je kleuren zelf</div>
+            <div className="tk-label">Wat past het beste bij jou?</div>
+            <p className="tk-fijn" style={{ margin: "0 0 10px" }}>
+              Insights Discovery onderscheidt vier manieren van werken. Kies degene die je het meest
+              in jezelf herkent; we vullen daarmee de punten hierboven in en jij corrigeert wat niet
+              klopt.
+            </p>
             <div className="tk-keuzes">
               {KLEUREN.map((k) => (
                 <button

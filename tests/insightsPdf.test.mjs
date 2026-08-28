@@ -242,7 +242,7 @@ test("zonder waarden valt het terug op de wielpositie", () => {
   const uit = leesInsightsTekst(zonderWaarden);
   assert.equal(uit.zekerheid, "matig");
   assert.equal(uit.voorkeurskleur, "rood");
-  assert.ok(uit.gemist.includes("de waarden van de kleurenergieën"));
+  assert.ok(uit.gemist.includes("de precieze verdeling van de vier kleuren"));
 });
 
 test("zonder herkenbare inhoud wordt dat eerlijk gemeld", () => {

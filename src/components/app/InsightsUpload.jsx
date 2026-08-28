@@ -12,19 +12,19 @@ import { sectie } from "../../data/app/handleiding";
 const ZEKERHEID = {
   hoog: {
     label: "Gelukt",
-    tekst: "Je kleurenergieën stonden er met hun waarden in.",
+    tekst: "We hebben je profiel kunnen lezen. Hieronder staat wat eruit komt.",
     soort: "tk-melding-goed",
   },
   matig: {
     label: "Deels gelukt",
     tekst:
-      "De waarden zelf waren niet uit te lezen, maar je positie op het wiel wel. Daaruit volgt een voorzichtiger inschatting — controleer hem extra goed.",
+      "De precieze verdeling was niet te lezen, maar het type dat je profiel noemt wel. Dat geeft een ruwere inschatting — kijk er extra goed naar.",
     soort: "",
   },
   geen: {
     label: "Niet gelukt",
     tekst:
-      "Uit deze PDF konden we geen kleurvoorkeuren halen. Kies ze hieronder zelf; dat werkt net zo goed.",
+      "Uit dit bestand konden we niets bruikbaars halen. Kies hieronder zelf wat het beste bij je past; dat werkt net zo goed.",
     soort: "tk-melding-fout",
   },
 };
@@ -158,15 +158,20 @@ export default function InsightsUpload({
           </div>
 
           {uitkomst.wiel && (
-            <p style={{ margin: "0 0 14px", lineHeight: 1.6 }}>
-              Positie <strong>{uitkomst.wiel.positie}</strong> op het wiel:{" "}
-              <strong>{uitkomst.wiel.typenaam}</strong>
-              {uitkomst.wiel.stijl ? ` (${uitkomst.wiel.stijl})` : ""}.
+            <p style={{ margin: "0 0 16px", lineHeight: 1.6 }}>
+              Je profiel noemt je een <strong>{uitkomst.wiel.typenaam}</strong>
+              {uitkomst.wiel.stijl ? ` (${uitkomst.wiel.stijl})` : ""}, plek{" "}
+              {uitkomst.wiel.positie} op het Insights-wiel.
             </p>
           )}
 
           {uitkomst.energieen && (
             <div style={{ marginBottom: 16 }}>
+              <div className="tk-label" style={{ marginBottom: 4 }}>Wat past het meest bij je</div>
+              <p className="tk-fijn" style={{ margin: "0 0 12px" }}>
+                Insights Discovery werkt met vier kleuren, elk met een eigen manier van werken. Hoe
+                langer de balk, hoe sterker die manier in jouw profiel naar voren komt.
+              </p>
               {["rood", "geel", "groen", "blauw"]
                 .filter((id) => uitkomst.energieen[id] !== undefined)
                 .sort((a, b) => uitkomst.energieen[b] - uitkomst.energieen[a])

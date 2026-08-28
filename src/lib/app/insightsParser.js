@@ -343,23 +343,23 @@ export function leesInsightsTekst(tekst) {
     voorkeurskleur = rangorde[0];
     tweedeKleur = rangorde[1] || null;
     zekerheid = "hoog";
-    gevonden.push("je kleurenergieën met hun waarden");
+    gevonden.push("hoe de vier kleuren bij jou verdeeld zijn");
   } else if (wiel) {
     voorkeurskleur = wiel.voorkeurskleur;
     tweedeKleur = wiel.tweedeKleur;
     zekerheid = "matig";
-    gemist.push("de waarden van de kleurenergieën");
+    gemist.push("de precieze verdeling van de vier kleuren");
   } else {
-    gemist.push("de kleurenergieën");
+    gemist.push("de verdeling van de vier kleuren");
   }
 
-  if (wiel) gevonden.push(`je positie op het wiel (${wiel.positie}: ${wiel.typenaam})`);
-  else gemist.push("je positie op het wiel");
+  if (wiel) gevonden.push(`het type dat je profiel noemt (${wiel.positie}: ${wiel.typenaam})`);
+  else gemist.push("het type dat je profiel noemt");
 
   const aantalSecties = Object.keys(teksten).length;
   const aantalPunten = Object.values(teksten).reduce((som, lijst) => som + lijst.length, 0);
-  if (aantalSecties > 0) gevonden.push(`${aantalPunten} punten uit je profieltekst`);
-  else gemist.push("de profielteksten");
+  if (aantalSecties > 0) gevonden.push(`${aantalPunten} punten uit de tekst van je profiel`);
+  else gemist.push("de tekst van je profiel");
 
   return {
     voorkeurskleur,
