@@ -9,9 +9,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { haalGedeeldVanTeam, haalTeam, haalTeamleden } from "../../lib/app/opslag";
+import { bewaarVoorstel, haalVoorstellen } from "../../lib/app/voorstellen";
+import InsightsUpload from "../../components/app/InsightsUpload";
 
 export default function MijnTeam() {
-  const { gebruiker, actiefTeam, lidmaatschappen, verlaatTeam } = useApp();
+  const { gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam } = useApp();
 
   const [team, setTeam] = useState(null);
   const [leden, setLeden] = useState([]);
@@ -19,6 +21,8 @@ export default function MijnTeam() {
   const [laden, setLaden] = useState(true);
   const [open, setOpen] = useState(null);
   const [bevestigVerlaten, setBevestigVerlaten] = useState(false);
+  const [voorstellen, setVoorstellen] = useState({});
+  const [uploadVoor, setUploadVoor] = useState(null);
 
   useEffect(() => {
     if (!actiefTeam) return;
@@ -28,12 +32,16 @@ export default function MijnTeam() {
       haalTeam(actiefTeam.orgId, actiefTeam.teamId),
       haalTeamleden(actiefTeam.orgId, actiefTeam.teamId),
       haalGedeeldVanTeam(actiefTeam.orgId, actiefTeam.teamId),
+      // Alleen een beheerder mag deze lijst opvragen; voor een lid mislukt hij
+      // en dat is precies de bedoeling.
+      haalVoorstellen({ orgId: actiefTeam.orgId, teamId: actiefTeam.teamId }).catch(() => ({})),
     ])
-      .then(([t, l, g]) => {
+      .then(([t, l, g, v]) => {
         if (!actueel) return;
         setTeam(t);
         setLeden(l);
         setGedeeld(g);
+        setVoorstellen(v);
       })
       .finally(() => actueel && setLaden(false));
     return () => {
@@ -90,16 +98,54 @@ export default function MijnTeam() {
                       : "Heeft nog niets gedeeld"}
                   </p>
                 </div>
-                {g && (
-                  <button
-                    type="button"
-                    className="tk-knop tk-knop-rand tk-knop-klein"
-                    onClick={() => setOpen(uitgeklapt ? null : l.uid)}
-                  >
-                    {uitgeklapt ? "Inklappen" : "Bekijken"}
-                  </button>
-                )}
+                <div className="tk-knoppen">
+                  {g && (
+                    <button
+                      type="button"
+                      className="tk-knop tk-knop-rand tk-knop-klein"
+                      onClick={() => setOpen(uitgeklapt ? null : l.uid)}
+                    >
+                      {uitgeklapt ? "Inklappen" : "Bekijken"}
+                    </button>
+                  )}
+                  {ikBenBeheerder && !eigen && (
+                    <button
+                      type="button"
+                      className="tk-knop tk-knop-rand tk-knop-klein"
+                      onClick={() => setUploadVoor(uploadVoor === l.uid ? null : l.uid)}
+                    >
+                      {uploadVoor === l.uid ? "Sluiten" : "Insights-profiel klaarzetten"}
+                    </button>
+                  )}
+                </div>
               </div>
+
+              {ikBenBeheerder && !eigen && voorstellen[l.uid] && (
+                <p className="tk-fijn" style={{ marginTop: 8 }}>
+                  Er staat een voorstel klaar dat {l.naam || "deze persoon"} nog moet overnemen.
+                </p>
+              )}
+
+              {uploadVoor === l.uid && (
+                <div style={{ marginTop: 12 }}>
+                  <InsightsUpload
+                    voorWie={l.naam || "deze persoon"}
+                    knopLabel="Als voorstel klaarzetten"
+                    onBevestig={async (gelezen) => {
+                      await bewaarVoorstel({
+                        orgId: actiefTeam.orgId,
+                        teamId: actiefTeam.teamId,
+                        uid: l.uid,
+                        vanUid: gebruiker.uid,
+                        vanNaam: naam,
+                        voorstel: gelezen,
+                      });
+                      setVoorstellen((v) => ({ ...v, [l.uid]: { uid: l.uid } }));
+                      setUploadVoor(null);
+                    }}
+                  />
+                </div>
+              )}
 
               {uitgeklapt && g && (
                 <div style={{ marginTop: 12 }}>

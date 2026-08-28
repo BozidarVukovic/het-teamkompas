@@ -225,8 +225,27 @@ export async function bewaarInsights(uid, insights) {
   );
 }
 
+/**
+ * Bewaart de punten die uit een Insights-profiel zijn gehaald.
+ *
+ * Strikt privé, net als de rest van het profiel. Ze dienen als naslag bij het
+ * schrijven van de handleiding; ze worden nooit vanzelf gedeeld en ook nooit
+ * vanzelf in een handleidingtekst gezet.
+ */
+export async function bewaarProfielteksten(uid, teksten) {
+  await setDoc(
+    profielRef(uid),
+    { insightsTeksten: teksten || {}, bijgewerktOp: serverTimestamp() },
+    { merge: true }
+  );
+}
+
 export async function wisInsights(uid) {
-  await setDoc(profielRef(uid), { insights: null, bijgewerktOp: serverTimestamp() }, { merge: true });
+  await setDoc(
+    profielRef(uid),
+    { insights: null, insightsTeksten: {}, bijgewerktOp: serverTimestamp() },
+    { merge: true }
+  );
 }
 
 export async function haalKenmerken(uid) {
@@ -286,12 +305,13 @@ export async function haalHandleiding(uid) {
   return uit;
 }
 
-export async function bewaarSectie(uid, { sectieId, tekst, gedeeldMet }) {
+export async function bewaarSectie(uid, { sectieId, tekst, gedeeldMet, bron }) {
   await setDoc(handleidingRef(uid), { bijgewerktOp: serverTimestamp() }, { merge: true });
   const gegevens = {
     sectieId,
     tekst: tekst || "",
     gedeeldMet: gedeeldMet || [],
+    bron: bron || null,
     bijgewerktOp: new Date().toISOString(),
   };
   await setDoc(sectieRef(uid, sectieId), gegevens, { merge: true });

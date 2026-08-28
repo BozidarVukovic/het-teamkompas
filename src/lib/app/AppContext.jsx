@@ -14,8 +14,11 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../firebase";
+import { kenmerkenUitInsights } from "./insights";
+import { haalVoorstel, verwijderVoorstel } from "./voorstellen";
 import {
   bewaarInsights as bewaarInsightsInDb,
+  bewaarProfielteksten,
   bewaarKenmerk as bewaarKenmerkInDb,
   bewaarKenmerken as bewaarKenmerkenInDb,
   bewaarSectie as bewaarSectieInDb,
@@ -69,6 +72,7 @@ export function AppProvider({ children }) {
   const [handleiding, setHandleiding] = useState({});
   const [profiel, setProfiel] = useState(null);
   const [gegevensKlaar, setGegevensKlaar] = useState(false);
+  const [voorstellen, setVoorstellen] = useState([]);
   const [actiefTeamSleutel, setActiefTeamSleutel] = useState(() => leesOpslag(SLEUTEL_TEAM));
 
   /* ------------------------------------------------------------- inloggen */
@@ -82,6 +86,7 @@ export function AppProvider({ children }) {
         setKenmerken([]);
         setHandleiding({});
         setProfiel(null);
+        setVoorstellen([]);
         setGegevensKlaar(true);
       }
     });
@@ -133,10 +138,21 @@ export function AppProvider({ children }) {
       haalProfiel(uid),
     ]);
 
+    // Staat er ergens een profielvoorstel van een facilitator klaar? Dat halen
+    // we op zodat de app het kan tonen; overnemen doet de gebruiker zelf.
+    const openstaand = (
+      await Promise.all(
+        ((doc && doc.lidmaatschappen) || []).map((l) =>
+          haalVoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => null)
+        )
+      )
+    ).filter(Boolean);
+
     setGebruikerDoc(doc);
     setKenmerken(eigenKenmerken);
     setHandleiding(eigenHandleiding);
     setProfiel(eigenProfiel);
+    setVoorstellen(openstaand);
     setGegevensKlaar(true);
     return doc;
   }, []);
@@ -243,6 +259,66 @@ export function AppProvider({ children }) {
     setProfiel((p) => ({ ...(p || {}), insights: null }));
   }, [gebruiker]);
 
+  /**
+   * Neemt een ingelezen Insights-profiel over.
+   *
+   * Wat je zelf hebt ingevuld of bevestigd blijft staan: de suggesties vullen
+   * alleen de gaten. De punten uit de profieltekst worden apart bewaard als
+   * naslag; ze komen nooit vanzelf in een handleidingtekst en worden nooit
+   * vanzelf gedeeld.
+   */
+  const neemInsightsOver = useCallback(
+    async ({ voorkeurskleur, tweedeKleur, teksten }) => {
+      if (!gebruiker || !voorkeurskleur) return 0;
+      const nieuweInsights = { voorkeurskleur, tweedeKleur: tweedeKleur || null };
+      await bewaarInsightsInDb(gebruiker.uid, nieuweInsights);
+
+      const heeftTeksten = teksten && Object.keys(teksten).length > 0;
+      if (heeftTeksten) await bewaarProfielteksten(gebruiker.uid, teksten);
+
+      setProfiel((p) => ({
+        ...(p || {}),
+        insights: nieuweInsights,
+        ...(heeftTeksten ? { insightsTeksten: teksten } : {}),
+      }));
+
+      const bestaand = {};
+      kenmerken.forEach((k) => {
+        bestaand[k.kenmerkId] = k;
+      });
+
+      const nieuw = kenmerkenUitInsights(nieuweInsights)
+        .filter((a) => {
+          const b = bestaand[a.kenmerkId];
+          return !b || (!b.bevestigd && b.bron === "insights_discovery");
+        })
+        .map((a) => ({
+          ...a,
+          gedeeldMet: (bestaand[a.kenmerkId] && bestaand[a.kenmerkId].gedeeldMet) || [],
+        }));
+
+      if (nieuw.length > 0) await bewaarMeerKenmerken(nieuw);
+      return nieuw.length;
+    },
+    [gebruiker, kenmerken, bewaarMeerKenmerken]
+  );
+
+  const wijsVoorstelAf = useCallback(async (voorstel) => {
+    await verwijderVoorstel(voorstel);
+    setVoorstellen((lijst) =>
+      lijst.filter((v) => !(v.orgId === voorstel.orgId && v.teamId === voorstel.teamId))
+    );
+  }, []);
+
+  const neemVoorstelOver = useCallback(
+    async (voorstel) => {
+      const aantal = await neemInsightsOver(voorstel);
+      await wijsVoorstelAf(voorstel);
+      return aantal;
+    },
+    [neemInsightsOver, wijsVoorstelAf]
+  );
+
   const maakTeam = useCallback(
     async ({ organisatieNaam, teamNaam, mijnNaam }) => {
       if (!gebruiker) return null;
@@ -304,6 +380,10 @@ export function AppProvider({ children }) {
       kenmerken,
       handleiding,
       profiel,
+      voorstellen,
+      neemInsightsOver,
+      neemVoorstelOver,
+      wijsVoorstelAf,
       kiesTeam,
       stuurInloglink,
       isInloglink,
@@ -323,7 +403,8 @@ export function AppProvider({ children }) {
     }),
     [
       gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, lidmaatschappen, actiefTeam,
-      kenmerken, handleiding, profiel, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
+      kenmerken, handleiding, profiel, voorstellen, neemInsightsOver, neemVoorstelOver,
+      wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
       wisInsights, maakTeam, doeMee, verlaatTeam, verwijderAlles, laadGegevens,
     ]

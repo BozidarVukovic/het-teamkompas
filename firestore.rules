@@ -158,6 +158,21 @@ service cloud.firestore {
           allow read: if isTeamlid(orgId, teamId);
           allow write: if ikBen(uid) && isTeamlid(orgId, teamId);
         }
+
+        // Een facilitator kan een Insights-profiel inlezen en als voorstel
+        // klaarzetten voor een teamlid. Het is een voorstel en geen profiel:
+        // het staat hier los, en alleen de persoon zelf kan het overnemen.
+        // Naar profielen/{uid} blijft geen enkele weg lopen.
+        match /profielvoorstellen/{uid} {
+          allow get: if ikBen(uid) || isTeambeheerder(orgId, teamId);
+          allow list: if isTeambeheerder(orgId, teamId);
+          allow create, update: if isTeambeheerder(orgId, teamId)
+            && exists(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/leden/$(uid))
+            && request.resource.data.vanUid == request.auth.uid;
+          // Overnemen of weigeren betekent opruimen; de beheerder kan een
+          // voorstel ook zelf weer intrekken.
+          allow delete: if ikBen(uid) || isTeambeheerder(orgId, teamId);
+        }
       }
     }
 

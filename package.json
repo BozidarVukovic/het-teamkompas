@@ -17,13 +17,15 @@
     "test:teamdag": "node --test tests/teamdagGenerator.test.mjs",
     "test:regels": "npx -y firebase-tools@13 emulators:exec --only firestore --project teamkompas-regeltest \"node --test tests/securityRules.test.mjs\"",
     "test:app": "node --test tests/adviesApp.test.mjs",
-    "valideer:regels": "node scripts/valideer-regels.mjs"
+    "valideer:regels": "node scripts/valideer-regels.mjs",
+    "test:insights": "node --test tests/insightsPdf.test.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@vercel/analytics": "^1.3.1",
     "firebase": "^10.12.0",
     "gray-matter": "^4.0.3",
+    "pdfjs-dist": "^4.10.38",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.4",

@@ -29,6 +29,7 @@ const vereist = [
   "/profielen/{uid}",
   "/kenmerken/{kenmerkId}",
   "/handleidingen/{uid}",
+  "/profielvoorstellen/{uid}",
   "/adviessessies/{sessieId}",
 ];
 vereist.forEach((pad) => {
