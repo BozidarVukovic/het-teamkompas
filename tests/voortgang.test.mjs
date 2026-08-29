@@ -7,7 +7,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { bepaalVoortgang, voortgangInEenZin, STAPPEN_PER_KENMERK } from "../src/lib/app/voortgang.js";
+import {
+  TE_DOEN,
+  bepaalVoortgang,
+  voortgangInEenZin,
+  vraagtAandacht,
+  STAPPEN_PER_KENMERK,
+} from "../src/lib/app/voortgang.js";
 import { KENMERK_IDS } from "../src/data/app/kenmerken.js";
 import { SECTIES } from "../src/data/app/handleiding.js";
 
@@ -123,4 +129,69 @@ test("de zin erbij past bij waar je staat", () => {
     voortgangInEenZin(bepaalVoortgang({ kenmerken: maak({ bevestigd: "sterk", gedeeld: true }), actiefTeam: TEAM })),
     /compleet/
   );
+});
+
+/* ------------------------------------------------- wat vraagt nog aandacht */
+
+const punt = (over) => ({ kenmerkId: "tempo", waarde: "snel", bevestigd: null, gedeeldMet: [], ...over });
+
+test("een leeg punt vraagt om invullen, niet om nalopen of delen", () => {
+  const leeg = { kenmerk: null, sleutel: SLEUTEL };
+  assert.equal(vraagtAandacht({ ...leeg, doen: "ingevuld" }), true);
+  assert.equal(vraagtAandacht({ ...leeg, doen: "nagelopen" }), false);
+  assert.equal(vraagtAandacht({ ...leeg, doen: "gedeeld" }), false);
+});
+
+test("een ingevuld maar onbevestigd punt vraagt om nalopen", () => {
+  const k = { kenmerk: punt(), sleutel: SLEUTEL };
+  assert.equal(vraagtAandacht({ ...k, doen: "ingevuld" }), false);
+  assert.equal(vraagtAandacht({ ...k, doen: "nagelopen" }), true);
+  assert.equal(vraagtAandacht({ ...k, doen: "gedeeld" }), true);
+});
+
+test("een bevestigd en gedeeld punt vraagt nergens meer om", () => {
+  const k = { kenmerk: punt({ bevestigd: "sterk", gedeeldMet: [SLEUTEL] }), sleutel: SLEUTEL };
+  TE_DOEN.forEach((doen) => assert.equal(vraagtAandacht({ ...k, doen }), false, doen));
+});
+
+test("een weggestreept punt telt weer als leeg", () => {
+  const k = { kenmerk: punt({ bevestigd: "nee" }), sleutel: SLEUTEL };
+  assert.equal(vraagtAandacht({ ...k, doen: "ingevuld" }), true);
+  assert.equal(vraagtAandacht({ ...k, doen: "nagelopen" }), false);
+});
+
+test("zonder team vraagt niets om delen", () => {
+  assert.equal(vraagtAandacht({ kenmerk: punt({ bevestigd: "sterk" }), doen: "gedeeld", sleutel: null }), false);
+});
+
+test("het aantal dat aandacht vraagt klopt met wat er in het balkje open staat", () => {
+  const situaties = [
+    maak({ aantal: 4 }),
+    maak({ bevestigd: "sterk" }),
+    maak({ bevestigd: "sterk", gedeeld: true }),
+    maak({ aantal: 7, bevestigd: "soms" }),
+  ];
+
+  situaties.forEach((kenmerken) => {
+    const v = bepaalVoortgang({ kenmerken, actiefTeam: TEAM });
+    const perId = {};
+    kenmerken.forEach((k) => {
+      perId[k.kenmerkId] = k;
+    });
+
+    v.onderdelen.forEach((o) => {
+      const open = KENMERK_IDS.filter((id) =>
+        vraagtAandacht({ kenmerk: perId[id], doen: o.id, sleutel: SLEUTEL })
+      ).length;
+      assert.equal(open, o.open, `${o.id}: lijst zegt ${open}, balkje zegt ${o.open}`);
+    });
+  });
+});
+
+test("elk onderdeel wijst naar de eigen lijst", () => {
+  const v = bepaalVoortgang({ kenmerken: [], actiefTeam: TEAM });
+  v.onderdelen.forEach((o) => {
+    assert.match(o.naar, new RegExp(`doen=${o.id}$`));
+    assert.ok(TE_DOEN.includes(o.id));
+  });
 });

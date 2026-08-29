@@ -19,6 +19,25 @@ import { SECTIES } from "../../data/app/handleiding.js";
 
 export const STAPPEN_PER_KENMERK = 3;
 
+export const TE_DOEN = ["ingevuld", "nagelopen", "gedeeld"];
+
+/**
+ * Vraagt dit kenmerk nog aandacht voor een bepaalde stap?
+ *
+ * Dezelfde vraag die het percentage beantwoordt, maar dan per punt — zodat de
+ * knop "nalopen wat nog open staat" precies de punten toont die meetellen in
+ * dat balkje. Anders zeggen het getal en de lijst iets anders.
+ */
+export function vraagtAandacht({ kenmerk, doen, sleutel = null }) {
+  const ingevuld = Boolean(kenmerk && kenmerk.waarde && kenmerk.bevestigd !== "nee");
+  if (doen === "ingevuld") return !ingevuld;
+  if (doen === "nagelopen") return ingevuld && !kenmerk.bevestigd;
+  if (doen === "gedeeld") {
+    return ingevuld && Boolean(sleutel) && !(kenmerk.gedeeldMet || []).includes(sleutel);
+  }
+  return false;
+}
+
 export function bepaalVoortgang({ kenmerken = [], actiefTeam = null, handleiding = {} } = {}) {
   const sleutel = actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : null;
 
@@ -53,8 +72,8 @@ export function bepaalVoortgang({ kenmerken = [], actiefTeam = null, handleiding
       aantal: ingevuld,
       van,
       uitleg: "Bij hoeveel van de twaalf punten staat een antwoord.",
-      knop: "Punten invullen",
-      naar: "/app/profiel",
+      knop: "Invullen wat nog leeg is",
+      naar: "/app/profiel?doen=ingevuld",
     },
     {
       id: "nagelopen",
@@ -62,8 +81,8 @@ export function bepaalVoortgang({ kenmerken = [], actiefTeam = null, handleiding
       aantal: nagelopen,
       van,
       uitleg: "Hoeveel punten jij hebt bevestigd. Wat uit je Insights-profiel komt is een suggestie tot jij zegt dat het klopt.",
-      knop: "Punten nalopen",
-      naar: "/app/profiel",
+      knop: "Nalopen wat nog open staat",
+      naar: "/app/profiel?doen=nagelopen",
     },
     {
       id: "gedeeld",
@@ -71,12 +90,22 @@ export function bepaalVoortgang({ kenmerken = [], actiefTeam = null, handleiding
       aantal: gedeeld,
       van,
       uitleg: "Hoeveel punten je teamgenoten kunnen zien. Zonder delen kan niemand er rekening mee houden.",
-      knop: "Delen met mijn team",
-      naar: "/app/profiel",
+      knop: "Delen wat nog niet gedeeld is",
+      naar: "/app/profiel?doen=gedeeld",
     },
   ];
 
-  const volgende = onderdelen.find((o) => o.aantal < o.van) || null;
+  // "Open" is wat je nú kunt doen, niet wat er rekenkundig nog ontbreekt. Je
+  // kunt geen punt bevestigen dat nog niet is ingevuld; zou dat wel meetellen,
+  // dan zou de knop twaalf beloven en de lijst er vier tonen.
+  onderdelen.forEach((o) => {
+    o.open = KENMERK_IDS.filter((id) =>
+      vraagtAandacht({ kenmerk: perId[id], doen: o.id, sleutel })
+    ).length;
+    o.klaar = o.aantal >= o.van;
+  });
+
+  const volgende = onderdelen.find((o) => o.open > 0) || null;
 
   return {
     percentage,

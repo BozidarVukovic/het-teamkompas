@@ -10,13 +10,14 @@
 // elk punt staat waar het vandaan komt, en jij bepaalt per punt of je het deelt.
 
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import VolgendeStap from "../../components/app/VolgendeStap";
 import { BEVESTIGING, BRONNEN, CATEGORIEEN, KENMERKEN } from "../../data/app/kenmerken";
 import { KLEUREN, insightsSamenvatting, kleur } from "../../lib/app/insights";
 import InsightsUpload from "../../components/app/InsightsUpload";
 import Voortgang from "../../components/app/Voortgang";
+import { TE_DOEN, bepaalVoortgang, vraagtAandacht } from "../../lib/app/voortgang";
 
 function bronLabel(bron) {
   const b = BRONNEN.find((x) => x.id === bron);
@@ -174,6 +175,13 @@ export default function MijnProfiel() {
   } = useApp();
 
   const [modus, setModus] = useState(null);
+
+  // Kom je hier via een knop als "nalopen wat nog open staat", dan tonen we
+  // alleen de punten die dat aangaat. Zonder dat beland je boven aan een lijst
+  // van twaalf en mag je zelf zoeken wat er nog moet.
+  const [zoekParams, setZoekParams] = useSearchParams();
+  const gevraagd = zoekParams.get("doen");
+  const doen = TE_DOEN.includes(gevraagd) ? gevraagd : null;
   const [melding, setMelding] = useState("");
   const [bezig, setBezig] = useState(false);
 
@@ -203,6 +211,19 @@ export default function MijnProfiel() {
   const sleutel = actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : null;
   const gedeeld = sleutel ? bruikbaar.filter((k) => (k.gedeeldMet || []).includes(sleutel)).length : 0;
   const insights = (profiel && profiel.insights) || null;
+
+  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding: {} });
+  const onderdeel = doen ? voortgang.onderdelen.find((o) => o.id === doen) : null;
+
+  const vraagtNogAandacht = (kenmerkId) =>
+    vraagtAandacht({ kenmerk: perId[kenmerkId], doen, sleutel });
+
+  const openPunten = doen ? KENMERKEN.filter((k) => vraagtNogAandacht(k.id)) : KENMERKEN;
+
+  const toonAlles = () => {
+    zoekParams.delete("doen");
+    setZoekParams(zoekParams, { replace: true });
+  };
 
   /* --------------------------------------------------------------- acties */
 
@@ -315,7 +336,27 @@ export default function MijnProfiel() {
 
       {melding && <div className="tk-melding tk-melding-goed">{melding}</div>}
 
-      <Voortgang variant="klein" />
+      {doen && onderdeel ? (
+        <div className="tk-kaart" style={{ borderColor: "rgba(0,168,150,0.45)" }}>
+          <div className="tk-label" style={{ color: "var(--tk-teal)", marginBottom: 6 }}>
+            {onderdeel.label}
+          </div>
+          <h2 style={{ margin: "0 0 6px" }}>
+            {openPunten.length === 0
+              ? "Niets meer te doen"
+              : `Nog ${openPunten.length} ${openPunten.length === 1 ? "punt" : "punten"} te gaan`}
+          </h2>
+          <p>
+            Je ziet alleen de punten die hier nog om vragen — {onderdeel.aantal} van de{" "}
+            {onderdeel.van} zijn al {onderdeel.label.toLowerCase()}.
+          </p>
+          <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={toonAlles}>
+            Alle twaalf punten tonen
+          </button>
+        </div>
+      ) : (
+        <Voortgang variant="klein" />
+      )}
 
       {voorstellen.map((v) => (
         <div className="tk-kaart" key={`${v.orgId}/${v.teamId}`} style={{ borderColor: "rgba(0,168,150,0.45)" }}>
@@ -366,8 +407,30 @@ export default function MijnProfiel() {
         </div>
       ))}
 
+      {doen && openPunten.length === 0 && (
+        <div className="tk-kaart" style={{ borderColor: "rgba(0,168,150,0.45)" }}>
+          <h2>Dit deel is klaar</h2>
+          <p>
+            Er staat niets meer open bij "{onderdeel ? onderdeel.label.toLowerCase() : doen}".
+            {voortgang.volgende
+              ? " Er is nog wel iets anders te doen."
+              : " Je profiel is compleet."}
+          </p>
+          <div className="tk-knoppen">
+            {voortgang.volgende && (
+              <Link className="tk-knop tk-knop-klein" to={voortgang.volgende.naar} style={{ textDecoration: "none" }}>
+                {voortgang.volgende.knop} ({voortgang.volgende.open})
+              </Link>
+            )}
+            <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={toonAlles}>
+              Alle twaalf punten tonen
+            </button>
+          </div>
+        </div>
+      )}
+
       {CATEGORIEEN.map((categorie) => {
-        const groep = KENMERKEN.filter((k) => k.categorie === categorie.id);
+        const groep = openPunten.filter((k) => k.categorie === categorie.id);
         if (groep.length === 0) return null;
         return (
           <div className="tk-kaart" key={categorie.id}>
@@ -389,7 +452,7 @@ export default function MijnProfiel() {
         );
       })}
 
-      {actiefTeam && bruikbaar.length > 0 && (
+      {(!doen || doen === "gedeeld") && actiefTeam && bruikbaar.length > 0 && (
         <div className="tk-kaart">
           <h2>Klaar? Deel het met {actiefTeam.teamNaam || "je team"}</h2>
           <p>
@@ -423,6 +486,7 @@ export default function MijnProfiel() {
         </div>
       )}
 
+      {!doen && (
       <div className="tk-kaart">
         <h2>Insights Discovery</h2>
         {insights ? (
@@ -491,6 +555,7 @@ export default function MijnProfiel() {
           </>
         )}
       </div>
+      )}
 
       <VolgendeStap />
 

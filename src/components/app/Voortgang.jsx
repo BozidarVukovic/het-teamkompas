@@ -96,7 +96,7 @@ export default function Voortgang({ variant = "groot", toonOnderdelen = true }) 
             to={voortgang.volgende.naar}
             style={{ textDecoration: "none" }}
           >
-            {voortgang.volgende.knop}
+            {voortgang.volgende.knop} ({voortgang.volgende.open})
           </Link>
         </div>
       )}
