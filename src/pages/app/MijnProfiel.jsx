@@ -260,6 +260,24 @@ export default function MijnProfiel() {
     });
   };
 
+  // Alles in één keer bevestigen. Wie zijn profiel heeft ingelezen en het
+  // herkent, hoeft niet twaalf keer op "Klopt" te drukken.
+  const bevestigAlles = async () => {
+    const open = KENMERKEN.map((k) => perId[k.id]).filter(
+      (k) => k && k.waarde && !k.bevestigd && k.bevestigd !== "nee"
+    );
+    if (open.length === 0) return;
+    setBezig(true);
+    try {
+      await bewaarMeerKenmerken(open.map((k) => ({ ...k, bevestigd: "sterk" })));
+      setMelding(
+        `${open.length} ${open.length === 1 ? "punt" : "punten"} bevestigd. Loop ze gerust nog een keer na; aanpassen kan altijd.`
+      );
+    } finally {
+      setBezig(false);
+    }
+  };
+
   const deelAlles = async (aan) => {
     if (!sleutel || bruikbaar.length === 0) return;
     setBezig(true);
@@ -357,6 +375,35 @@ export default function MijnProfiel() {
       ) : (
         <Voortgang variant="klein" />
       )}
+
+      {(() => {
+        const nalopen = voortgang.onderdelen.find((o) => o.id === "nagelopen");
+        if (!nalopen || nalopen.open === 0) return null;
+        return (
+          <div className="tk-kaart">
+            <h2>Klopt dit allemaal?</h2>
+            <p>
+              Er staan {nalopen.open} {nalopen.open === 1 ? "punt" : "punten"} die je nog niet hebt
+              bevestigd. Herken je jezelf erin, bevestig ze dan in één keer — aanpassen kan daarna
+              nog steeds, punt voor punt.
+            </p>
+            <div className="tk-knoppen">
+              <button type="button" className="tk-knop tk-knop-klein" disabled={bezig} onClick={bevestigAlles}>
+                {bezig ? "Bezig..." : `Ja, alles klopt (${nalopen.open})`}
+              </button>
+              {!doen && (
+                <Link
+                  className="tk-knop tk-knop-rand tk-knop-klein"
+                  to="/app/profiel?doen=nagelopen"
+                  style={{ textDecoration: "none" }}
+                >
+                  Eerst stuk voor stuk bekijken
+                </Link>
+              )}
+            </div>
+          </div>
+        );
+      })()}
 
       {voorstellen.map((v) => (
         <div className="tk-kaart" key={`${v.orgId}/${v.teamId}`} style={{ borderColor: "rgba(0,168,150,0.45)" }}>

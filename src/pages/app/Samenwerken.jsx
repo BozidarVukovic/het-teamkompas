@@ -28,7 +28,7 @@ function initialen(naam) {
 }
 
 export default function Samenwerken() {
-  const { gebruiker, actiefTeam, kenmerken } = useApp();
+  const { gebruiker, actiefTeam, kenmerken, teamOverzicht } = useApp();
 
   const [leden, setLeden] = useState([]);
   const [gedeeld, setGedeeld] = useState({});
@@ -61,13 +61,34 @@ export default function Samenwerken() {
     };
   }, [actiefTeam]);
 
-  const anderen = useMemo(
-    () => leden.filter((l) => l.uid !== (gebruiker && gebruiker.uid)),
-    [leden, gebruiker]
-  );
+  // Echte teamgenoten en de profielen die een beheerder heeft toegevoegd staan
+  // in één lijst: over allebei valt evengoed advies te vragen. Bij een
+  // toegevoegd profiel staat er wel bij door wie het is neergezet.
+  const anderen = useMemo(() => {
+    const echt = leden
+      .filter((l) => l.uid !== (gebruiker && gebruiker.uid))
+      .map((l) => ({ ...l, sleutel: l.uid }));
 
-  const gekozen = anderen.find((l) => l.uid === gekozenUid) || null;
-  const gekozenGedeeld = gekozenUid ? gedeeld[gekozenUid] : null;
+    const toegevoegd = (teamOverzicht.profielleden || []).map((pl) => ({
+      uid: pl.id,
+      sleutel: pl.id,
+      naam: pl.naam,
+      doorBeheerder: true,
+      toegevoegdDoorNaam: pl.toegevoegdDoorNaam,
+      kenmerken: pl.kenmerken || [],
+    }));
+
+    return [...echt, ...toegevoegd].sort((a, b) =>
+      String(a.naam || "").localeCompare(String(b.naam || ""))
+    );
+  }, [leden, gebruiker, teamOverzicht.profielleden]);
+
+  const gekozen = anderen.find((l) => l.sleutel === gekozenUid) || null;
+  const gekozenGedeeld = gekozen
+    ? gekozen.doorBeheerder
+      ? { kenmerken: gekozen.kenmerken }
+      : gedeeld[gekozen.uid]
+    : null;
 
   const maakAdvies = useCallback(
     async (situatie) => {
@@ -153,14 +174,16 @@ export default function Samenwerken() {
           <p className="tk-label">1. Met wie speelt het?</p>
           <div className="tk-lijst" style={{ marginBottom: 22 }}>
             {anderen.map((l) => {
-              const heeftGedeeld = Boolean(gedeeld[l.uid]);
+              const punten = l.doorBeheerder
+                ? (l.kenmerken || []).length
+                : (gedeeld[l.uid] && gedeeld[l.uid].kenmerken.length) || 0;
               return (
                 <button
-                  key={l.uid}
+                  key={l.sleutel}
                   type="button"
-                  className={`tk-persoon${gekozenUid === l.uid ? " gekozen" : ""}`}
+                  className={`tk-persoon${gekozenUid === l.sleutel ? " gekozen" : ""}`}
                   onClick={() => {
-                    setGekozenUid(l.uid);
+                    setGekozenUid(l.sleutel);
                     opnieuw();
                   }}
                 >
@@ -168,9 +191,11 @@ export default function Samenwerken() {
                   <span>
                     {l.naam || "Teamgenoot"}
                     <small style={{ display: "block", color: "var(--tk-zacht)", fontSize: 12.5 }}>
-                      {heeftGedeeld
-                        ? `${gedeeld[l.uid].kenmerken.length} punten gedeeld`
-                        : "Heeft nog niets gedeeld"}
+                      {punten === 0
+                        ? "Heeft nog niets gedeeld"
+                        : l.doorBeheerder
+                          ? `${punten} punten · toegevoegd door ${l.toegevoegdDoorNaam || "een beheerder"}`
+                          : `${punten} punten gedeeld`}
                     </small>
                   </span>
                 </button>
@@ -233,6 +258,14 @@ export default function Samenwerken() {
 
             {advies.blokken.length > 0 && (
               <p style={{ marginTop: 16, lineHeight: 1.7 }}>{advies.afsluiter}</p>
+            )}
+
+            {gekozen && gekozen.doorBeheerder && (
+              <p className="tk-fijn" style={{ marginTop: 16 }}>
+                Dit profiel is toegevoegd door {gekozen.toegevoegdDoorNaam || "een beheerder"} op
+                basis van een Insights-profiel. {gekozen.naam} heeft het niet zelf ingevuld of
+                bevestigd — houd daar rekening mee.
+              </p>
             )}
 
             <p className="tk-fijn" style={{ marginTop: 16 }}>{advies.transparantie}</p>

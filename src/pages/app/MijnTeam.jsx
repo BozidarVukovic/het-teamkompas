@@ -10,11 +10,15 @@ import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { haalGedeeldVanTeam, haalTeam, haalTeamleden } from "../../lib/app/opslag";
 import { bewaarVoorstel, haalVoorstellen } from "../../lib/app/voorstellen";
+import { bewaarProfiellid, verwijderProfiellid } from "../../lib/app/opslag";
+import { kenmerkenUitInsights } from "../../lib/app/insights";
+import { deelzin } from "../../data/app/kenmerken";
 import InsightsUpload from "../../components/app/InsightsUpload";
 import VolgendeStap from "../../components/app/VolgendeStap";
 
 export default function MijnTeam() {
-  const { gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam, verwijderTeam } = useApp();
+  const { gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam, verwijderTeam, teamOverzicht, herlaadTeam } =
+    useApp();
 
   const [team, setTeam] = useState(null);
   const [leden, setLeden] = useState([]);
@@ -23,6 +27,9 @@ export default function MijnTeam() {
   const [open, setOpen] = useState(null);
   const [bevestigVerlaten, setBevestigVerlaten] = useState(false);
   const [bezigOpruimen, setBezigOpruimen] = useState(false);
+  const [nieuwProfiel, setNieuwProfiel] = useState(false);
+  const [profielNaam, setProfielNaam] = useState("");
+  const [profielMelding, setProfielMelding] = useState("");
   const [voorstellen, setVoorstellen] = useState({});
   const [uploadVoor, setUploadVoor] = useState(null);
   const [gekopieerd, setGekopieerd] = useState(null);
@@ -248,6 +255,109 @@ export default function MijnTeam() {
           );
         })}
       </div>
+
+      {ikBenBeheerder && (
+        <div className="tk-kaart">
+          <h2>Profielen die jij hebt toegevoegd</h2>
+          <p>
+            Heeft iemand nog geen account, of wil je een team compleet maken voor een sessie? Voeg
+            dan hier een profiel toe met naam en Insights-PDF. Het staat meteen compleet in het team
+            en je kunt er direct advies over vragen.
+          </p>
+          <p className="tk-fijn">
+            Bij zo'n profiel staat altijd dat jij het hebt toegevoegd. Het is niet door die persoon
+            zelf ingevuld of bevestigd, en het raakt zijn of haar eigen profiel niet — dat blijft van
+            de eigenaar alleen, ook voor jou.
+          </p>
+
+          {profielMelding && <div className="tk-melding tk-melding-goed">{profielMelding}</div>}
+
+          {(teamOverzicht.profielleden || []).map((pl) => (
+            <div className="tk-rij" key={pl.id}>
+              <div>
+                <strong>{pl.naam}</strong>
+                <p className="tk-fijn" style={{ margin: "3px 0 0" }}>
+                  {(pl.kenmerken || []).length} punten · toegevoegd door{" "}
+                  {pl.toegevoegdDoorNaam || "een beheerder"}
+                </p>
+              </div>
+              <button
+                type="button"
+                className="tk-knop tk-knop-rand tk-knop-klein"
+                onClick={async () => {
+                  await verwijderProfiellid({
+                    orgId: actiefTeam.orgId,
+                    teamId: actiefTeam.teamId,
+                    id: pl.id,
+                  });
+                  await herlaadTeam();
+                  setProfielMelding(`Het profiel van ${pl.naam} is verwijderd.`);
+                }}
+              >
+                Verwijderen
+              </button>
+            </div>
+          ))}
+
+          {nieuwProfiel ? (
+            <div style={{ marginTop: 14 }}>
+              <label className="tk-label" htmlFor="tk-profielnaam">Naam van deze persoon</label>
+              <input
+                id="tk-profielnaam"
+                className="tk-invoer"
+                value={profielNaam}
+                onChange={(e) => setProfielNaam(e.target.value)}
+                placeholder="Voornaam"
+              />
+              <div style={{ marginTop: 14 }}>
+                <InsightsUpload
+                  knopLabel="Toevoegen en meteen delen"
+                  onBevestig={async (gelezen) => {
+                    const kenmerken = kenmerkenUitInsights(gelezen)
+                      .map((k) => ({
+                        kenmerkId: k.kenmerkId,
+                        waarde: k.waarde,
+                        zin: deelzin(k.kenmerkId, k.waarde) || "",
+                      }))
+                      .filter((k) => k.zin);
+
+                    await bewaarProfiellid({
+                      orgId: actiefTeam.orgId,
+                      teamId: actiefTeam.teamId,
+                      naam: profielNaam.trim() || "Naamloos profiel",
+                      kenmerken,
+                      insights: {
+                        voorkeurskleur: gelezen.voorkeurskleur,
+                        tweedeKleur: gelezen.tweedeKleur || null,
+                      },
+                      toegevoegdDoor: gebruiker.uid,
+                      toegevoegdDoorNaam: naam,
+                    });
+
+                    await herlaadTeam();
+                    setProfielMelding(
+                      `${profielNaam.trim() || "Het profiel"} staat in het team met ${kenmerken.length} punten. Je kunt er meteen advies over vragen.`
+                    );
+                    setProfielNaam("");
+                    setNieuwProfiel(false);
+                  }}
+                />
+              </div>
+              <div className="tk-knoppen" style={{ marginTop: 12 }}>
+                <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={() => setNieuwProfiel(false)}>
+                  Annuleren
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="tk-knoppen" style={{ marginTop: 14 }}>
+              <button type="button" className="tk-knop tk-knop-klein" onClick={() => setNieuwProfiel(true)}>
+                Profiel toevoegen
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="tk-kaart">
         <h2>Mijn plek in dit team</h2>

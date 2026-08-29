@@ -163,6 +163,18 @@ service cloud.firestore {
         // klaarzetten voor een teamlid. Het is een voorstel en geen profiel:
         // het staat hier los, en alleen de persoon zelf kan het overnemen.
         // Naar profielen/{uid} blijft geen enkele weg lopen.
+        // Profielen die een beheerder zelf toevoegt: voor mensen die nog geen
+        // account hebben, of om een team compleet te maken bij een sessie. Ze
+        // staan bewust in een eigen collectie. Naar profielen/{uid} van een
+        // echte gebruiker loopt nog steeds geen enkele weg — dat blijft van de
+        // eigenaar alleen, ook voor een beheerder.
+        match /profielleden/{profielId} {
+          allow read: if isTeamlid(orgId, teamId);
+          allow create, update: if isTeambeheerder(orgId, teamId)
+            && request.resource.data.toegevoegdDoor == request.auth.uid;
+          allow delete: if isTeambeheerder(orgId, teamId);
+        }
+
         match /profielvoorstellen/{uid} {
           allow get: if ikBen(uid) || isTeambeheerder(orgId, teamId);
           allow list: if isTeambeheerder(orgId, teamId);

@@ -29,6 +29,7 @@ const vereist = [
   "/profielen/{uid}",
   "/kenmerken/{kenmerkId}",
   "/handleidingen/{uid}",
+  "/profielleden/{profielId}",
   "/profielvoorstellen/{uid}",
   "/adviessessies/{sessieId}",
 ];

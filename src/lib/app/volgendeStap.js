@@ -22,6 +22,7 @@ export const AANTAL_STAPPEN = 3;
  * @param {Array}  gegevens.leden          teamleden, inclusief jezelf
  * @param {object} gegevens.gedeeldPerUid  wat er per teamgenoot gedeeld is
  * @param {string} gegevens.eigenUid
+ * @param {number} gegevens.extraProfielen  profielen die de beheerder zelf toevoegde
  * @param {string} gegevens.teamcode
  */
 export function bepaalVolgendeStap({
@@ -31,6 +32,7 @@ export function bepaalVolgendeStap({
   gedeeldPerUid = {},
   eigenUid = null,
   teamcode = null,
+  extraProfielen = 0,
 } = {}) {
   const bruikbaar = kenmerken.filter((k) => k.waarde && k.bevestigd !== "nee");
   const sleutel = actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : null;
@@ -38,8 +40,11 @@ export function bepaalVolgendeStap({
     ? bruikbaar.filter((k) => (k.gedeeldMet || []).includes(sleutel)).length
     : 0;
   const teamNaam = (actiefTeam && actiefTeam.teamNaam) || "je team";
+  // Profielen die een beheerder zelf toevoegde tellen gewoon mee: daar valt
+  // net zo goed advies over te vragen.
   const anderen = leden.filter((l) => l.uid !== eigenUid);
-  const anderenMetGedeeld = anderen.filter((l) => gedeeldPerUid[l.uid]).length;
+  const aantalAnderen = anderen.length + extraProfielen;
+  const anderenMetGedeeld = anderen.filter((l) => gedeeldPerUid[l.uid]).length + extraProfielen;
 
   if (bruikbaar.length === 0) {
     return {
@@ -71,7 +76,7 @@ export function bepaalVolgendeStap({
     };
   }
 
-  if (anderen.length === 0) {
+  if (aantalAnderen === 0) {
     return {
       id: "uitnodigen",
       nummer: 3,
@@ -93,7 +98,7 @@ export function bepaalVolgendeStap({
       klaar: false,
       kop: "Je teamgenoten moeten nog delen",
       uitleg: `${
-        anderen.length === 1 ? "Er is één teamgenoot" : `Er zijn ${anderen.length} teamgenoten`
+        aantalAnderen === 1 ? "Er is één teamgenoot" : `Er zijn ${aantalAnderen} teamgenoten`
       }, maar nog niemand heeft iets gedeeld. Vraag ze hun profiel in te vullen en te delen — dan kan de app pas iets zeggen over de samenwerking met hen.`,
       kort: "Je teamgenoten hebben nog niets gedeeld. Vraag ze hun profiel in te vullen en te delen.",
       knop: "Naar mijn team",

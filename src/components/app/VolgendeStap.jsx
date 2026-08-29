@@ -52,6 +52,7 @@ export default function VolgendeStap({ variant = "klein", verbergAls = null }) {
     gedeeldPerUid: teamOverzicht.gedeeld,
     eigenUid: gebruiker && gebruiker.uid,
     teamcode: teamOverzicht.team && teamOverzicht.team.code,
+    extraProfielen: (teamOverzicht.profielleden || []).length,
   });
 
   // Op de pagina waar de stap toch al naartoe wijst, voegt hij niets toe.

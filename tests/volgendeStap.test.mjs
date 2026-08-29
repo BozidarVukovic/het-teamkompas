@@ -146,3 +146,39 @@ test("de uitkomst is deterministisch", () => {
   };
   assert.deepEqual(bepaalVolgendeStap(invoer), bepaalVolgendeStap(invoer));
 });
+
+/* ------------------------------ profielen die een beheerder heeft toegevoegd */
+
+test("een door de beheerder toegevoegd profiel telt als teamgenoot die deelt", () => {
+  const stap = bepaalVolgendeStap({
+    kenmerken: [kenmerk("tempo", true)],
+    actiefTeam: TEAM,
+    leden: [ik],
+    eigenUid: "ik",
+    extraProfielen: 1,
+  });
+  assert.equal(stap.id, "klaar", "met een toegevoegd profiel valt er advies te vragen");
+});
+
+test("zonder toegevoegde profielen blijft het uitnodigen", () => {
+  const stap = bepaalVolgendeStap({
+    kenmerken: [kenmerk("tempo", true)],
+    actiefTeam: TEAM,
+    leden: [ik],
+    eigenUid: "ik",
+    extraProfielen: 0,
+  });
+  assert.equal(stap.id, "uitnodigen");
+});
+
+test("toegevoegde profielen tellen mee in het aantal teamgenoten", () => {
+  const stap = bepaalVolgendeStap({
+    kenmerken: [kenmerk("tempo", true)],
+    actiefTeam: TEAM,
+    leden: [ik, ander],
+    gedeeldPerUid: {},
+    eigenUid: "ik",
+    extraProfielen: 2,
+  });
+  assert.equal(stap.id, "klaar");
+});

@@ -23,6 +23,7 @@ export default function Start() {
     gedeeldPerUid: teamOverzicht.gedeeld,
     eigenUid: gebruiker && gebruiker.uid,
     teamcode: teamOverzicht.team && teamOverzicht.team.code,
+    extraProfielen: (teamOverzicht.profielleden || []).length,
   });
 
   return (

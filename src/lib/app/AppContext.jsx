@@ -24,6 +24,7 @@ import {
   bewaarSectie as bewaarSectieInDb,
   haalGebruiker,
   haalGedeeldVanTeam,
+  haalProfielleden,
   haalTeam,
   haalTeamleden,
   haalHandleiding,
@@ -78,7 +79,13 @@ export function AppProvider({ children }) {
   const [profiel, setProfiel] = useState(null);
   const [gegevensKlaar, setGegevensKlaar] = useState(false);
   const [voorstellen, setVoorstellen] = useState([]);
-  const [teamOverzicht, setTeamOverzicht] = useState({ team: null, leden: [], gedeeld: {}, laden: true });
+  const [teamOverzicht, setTeamOverzicht] = useState({
+    team: null,
+    leden: [],
+    gedeeld: {},
+    profielleden: [],
+    laden: true,
+  });
   const [actiefTeamSleutel, setActiefTeamSleutel] = useState(() => leesOpslag(SLEUTEL_TEAM));
 
   // Een uitnodigingslink draagt de teamcode mee: /app?code=ABCD-1234. Die halen
@@ -225,19 +232,20 @@ function terugkeeradres() {
    */
   const laadTeamOverzicht = useCallback(async (l) => {
     if (!l) {
-      setTeamOverzicht({ team: null, leden: [], gedeeld: {}, laden: false });
+      setTeamOverzicht({ team: null, leden: [], gedeeld: {}, profielleden: [], laden: false });
       return;
     }
     setTeamOverzicht((t) => ({ ...t, laden: true }));
     try {
-      const [team, leden, gedeeld] = await Promise.all([
+      const [team, leden, gedeeld, profielleden] = await Promise.all([
         haalTeam(l.orgId, l.teamId),
         haalTeamleden(l.orgId, l.teamId),
         haalGedeeldVanTeam(l.orgId, l.teamId),
+        haalProfielleden(l.orgId, l.teamId).catch(() => []),
       ]);
-      setTeamOverzicht({ team, leden, gedeeld, laden: false });
+      setTeamOverzicht({ team, leden, gedeeld, profielleden, laden: false });
     } catch {
-      setTeamOverzicht({ team: null, leden: [], gedeeld: {}, laden: false });
+      setTeamOverzicht({ team: null, leden: [], gedeeld: {}, profielleden: [], laden: false });
     }
   }, []);
 

@@ -36,6 +36,10 @@ const teamRef = (orgId, teamId) => doc(db, "organisaties", orgId, "teams", teamI
 const ledenCol = (orgId, teamId) => collection(db, "organisaties", orgId, "teams", teamId, "leden");
 const lidRef = (orgId, teamId, uid) => doc(db, "organisaties", orgId, "teams", teamId, "leden", uid);
 const gedeeldCol = (orgId, teamId) => collection(db, "organisaties", orgId, "teams", teamId, "gedeeld");
+const profielledenCol = (orgId, teamId) =>
+  collection(db, "organisaties", orgId, "teams", teamId, "profielleden");
+const profiellidRef = (orgId, teamId, id) =>
+  doc(db, "organisaties", orgId, "teams", teamId, "profielleden", id);
 const gedeeldRef = (orgId, teamId, uid) => doc(db, "organisaties", orgId, "teams", teamId, "gedeeld", uid);
 const profielRef = (uid) => doc(db, "profielen", uid);
 const kenmerkenCol = (uid) => collection(db, "profielen", uid, "kenmerken");
@@ -412,6 +416,44 @@ export async function haalGedeeldVanTeam(orgId, teamId) {
 export async function haalGedeeldVanPersoon(orgId, teamId, uid) {
   const snap = await getDoc(gedeeldRef(orgId, teamId, uid));
   return snap.exists() ? { uid, ...snap.data() } : null;
+}
+
+/* ------------------------------------------------------- profielen van de beheerder */
+
+/**
+ * Een profiel dat een beheerder zelf toevoegt.
+ *
+ * Bedoeld voor mensen die nog geen account hebben, of om een team compleet te
+ * maken bij een sessie. Het staat los van de profielen van echte gebruikers en
+ * is voor het hele team leesbaar, want het is per definitie gedeelde informatie:
+ * de beheerder zet het er neer om ermee te werken.
+ *
+ * Bij zo'n profiel hoort altijd wie het heeft toegevoegd. De app laat dat zien,
+ * zodat niemand denkt dat de persoon zelf dit heeft ingevuld en bevestigd.
+ */
+export async function bewaarProfiellid({ orgId, teamId, id, naam, kenmerken, insights, toegevoegdDoor, toegevoegdDoorNaam }) {
+  const profielId = id || doc(profielledenCol(orgId, teamId)).id;
+  const gegevens = {
+    naam: naam || "",
+    kenmerken: (kenmerken || []).filter((k) => k && k.kenmerkId && k.waarde && k.zin),
+    insights: insights || null,
+    toegevoegdDoor,
+    toegevoegdDoorNaam: toegevoegdDoorNaam || "",
+    bijgewerktOp: serverTimestamp(),
+  };
+  await setDoc(profiellidRef(orgId, teamId, profielId), gegevens, { merge: true });
+  return { id: profielId, ...gegevens };
+}
+
+export async function haalProfielleden(orgId, teamId) {
+  const snap = await getDocs(profielledenCol(orgId, teamId));
+  return snap.docs
+    .map((d) => ({ id: d.id, ...d.data(), doorBeheerder: true }))
+    .sort((a, b) => String(a.naam || "").localeCompare(String(b.naam || "")));
+}
+
+export async function verwijderProfiellid({ orgId, teamId, id }) {
+  await deleteDoc(profiellidRef(orgId, teamId, id));
 }
 
 /* ------------------------------------------------------------- adviessessies */
