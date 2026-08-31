@@ -113,7 +113,10 @@
 
 .tk-menu a {
   flex: 0 0 auto;
-  padding: 9px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
   border-radius: 999px;
   font-size: 14px;
   font-weight: 600;
@@ -472,5 +475,136 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+  }
+}
+
+/* Het icoon draagt geen betekenis die de tekst niet ook draagt; het is er om
+   het onderdeel sneller te herkennen dan lezen kost. */
+.tk-nav-icoon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tk-nav-icoon svg {
+  display: block;
+}
+
+/* Eén stipje zolang je profiel nog niet af is. Geen getal en geen uitroepteken:
+   het wijst waar nog iets ligt zonder er een opdracht van te maken. */
+.tk-nav-stip {
+  position: absolute;
+  top: -1px;
+  right: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tk-teal);
+  border: 1.5px solid var(--tk-navy);
+}
+
+/* De vaste balk onderaan op een telefoon. Vier onderdelen, elk een kwart breed,
+   dus nooit horizontaal schuiven. Hij staat onderaan omdat je duim daar is en
+   omdat de bovenkant van het scherm bij een telefoon in één hand niet meer
+   bereikbaar is. */
+.tk-onderbalk {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  background: rgba(13, 27, 42, 0.97);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--tk-lijn);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tk-onderbalk a {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 9px 2px 8px;
+  color: var(--tk-zacht);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-top: 2px solid transparent;
+  margin-top: -1px;
+}
+
+.tk-onderbalk a.actief {
+  color: var(--tk-teal);
+  border-top-color: var(--tk-teal);
+}
+
+.tk-onderbalk .tk-nav-tekst {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Een aanklikbare regel in een kaart: titel, stand, uitleg. Wordt gebruikt op
+   het startscherm en op Ik. */
+.tk-regel {
+  display: block;
+  padding: 14px 0;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.tk-regel:first-of-type {
+  border-top: 0;
+  padding-top: 4px;
+}
+
+.tk-regel:hover strong {
+  color: var(--tk-teal);
+}
+
+.tk-regel strong {
+  font-size: 16px;
+}
+
+.tk-regel-primair strong {
+  font-size: 17px;
+}
+
+/* Wat af is, hoort niet meer als kaart in beeld te staan. Eén regel volstaat. */
+.tk-af {
+  margin: 18px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--tk-zacht);
+}
+
+.tk-af span {
+  color: var(--tk-teal);
+  font-weight: 800;
+  margin-right: 6px;
+}
+
+.tk-af a {
+  color: var(--tk-teal);
+}
+
+@media (max-width: 720px) {
+  .tk-menu {
+    display: none;
+  }
+
+  .tk-onderbalk {
+    display: flex;
+  }
+
+  /* Ruimte onder de inhoud, anders valt de laatste regel achter de balk. */
+  .tk-app {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
   }
 }

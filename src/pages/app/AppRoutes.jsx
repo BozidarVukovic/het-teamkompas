@@ -5,7 +5,7 @@
 // welkomscherm.
 
 import { Helmet } from "react-helmet-async";
-import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AppProvider, useApp } from "../../lib/app/AppContext";
 import Inloggen from "./Inloggen";
 import Welkom from "./Welkom";
@@ -15,6 +15,8 @@ import MijnProfiel from "./MijnProfiel";
 import MijnHandleiding from "./MijnHandleiding";
 import MijnTeam from "./MijnTeam";
 import MijnGegevens from "./MijnGegevens";
+import Ik from "./Ik";
+import Navigatie from "../../components/app/Navigatie";
 import "../../styles/app.css";
 
 function Laden({ tekst = "Even laden..." }) {
@@ -26,14 +28,6 @@ function Laden({ tekst = "Even laden..." }) {
   );
 }
 
-const MENU = [
-  { pad: "/app", label: "Start", exact: true },
-  { pad: "/app/samenwerken", label: "Samenwerken met..." },
-  { pad: "/app/profiel", label: "Mijn profiel" },
-  { pad: "/app/handleiding", label: "Mijn handleiding" },
-  { pad: "/app/team", label: "Mijn team" },
-  { pad: "/app/gegevens", label: "Mijn gegevens" },
-];
 
 function Schil({ children }) {
   const { lidmaatschappen, actiefTeam, kiesTeam, logUit } = useApp();
@@ -67,18 +61,7 @@ function Schil({ children }) {
         </div>
       </header>
 
-      <nav className="tk-menu" aria-label="Onderdelen">
-        {MENU.map((item) => (
-          <NavLink
-            key={item.pad}
-            to={item.pad}
-            end={item.exact}
-            className={({ isActive }) => (isActive ? "actief" : undefined)}
-          >
-            {item.label}
-          </NavLink>
-        ))}
-      </nav>
+      <Navigatie />
 
       {children}
     </div>
@@ -129,6 +112,7 @@ function Poort() {
         <Route path="handleiding" element={<MijnHandleiding />} />
         <Route path="team" element={<MijnTeam />} />
         <Route path="gegevens" element={<MijnGegevens />} />
+        <Route path="ik" element={<Ik />} />
         <Route path="welkom" element={<Welkom />} />
         <Route path="inloggen" element={<Navigate to="/app" replace />} />
         <Route path="*" element={<Navigate to="/app" replace />} />
