@@ -188,6 +188,15 @@ export default function MijnTeam() {
                   </p>
                 </div>
                 <div className="tk-knoppen">
+                  {g && !eigen && (
+                    <Link
+                      className="tk-knop tk-knop-klein"
+                      to={`/app/samenwerken?met=${encodeURIComponent(l.uid)}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      Samenwerken met {(l.naam || "deze collega").split(" ")[0]}
+                    </Link>
+                  )}
                   {g && (
                     <button
                       type="button"
@@ -281,6 +290,14 @@ export default function MijnTeam() {
                   {pl.toegevoegdDoorNaam || "een beheerder"}
                 </p>
               </div>
+              <div className="tk-knoppen">
+              <Link
+                className="tk-knop tk-knop-klein"
+                to={`/app/samenwerken?met=${encodeURIComponent(pl.id)}`}
+                style={{ textDecoration: "none" }}
+              >
+                Samenwerken met {(pl.naam || "dit profiel").split(" ")[0]}
+              </Link>
               <button
                 type="button"
                 className="tk-knop tk-knop-rand tk-knop-klein"
@@ -296,6 +313,7 @@ export default function MijnTeam() {
               >
                 Verwijderen
               </button>
+              </div>
             </div>
           ))}
 

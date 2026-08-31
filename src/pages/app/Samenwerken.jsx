@@ -4,8 +4,8 @@
 // gebruiken we uitsluitend wat die persoon zelf met dit team heeft gedeeld;
 // aan de brondata komen we niet, en dat kan technisch ook niet.
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import {
   beoordeelAdviessessie,
@@ -29,6 +29,7 @@ function initialen(naam) {
 
 export default function Samenwerken() {
   const { gebruiker, actiefTeam, kenmerken, teamOverzicht } = useApp();
+  const [zoek] = useSearchParams();
 
   const [leden, setLeden] = useState([]);
   const [gedeeld, setGedeeld] = useState({});
@@ -82,6 +83,17 @@ export default function Samenwerken() {
       String(a.naam || "").localeCompare(String(b.naam || ""))
     );
   }, [leden, gebruiker, teamOverzicht.profielleden]);
+
+  // Vanaf de teampagina kom je hier binnen met een collega al gekozen
+  // (/app/samenwerken?met=...). Dat gebeurt één keer: daarna bepaalt je eigen
+  // keuze wat er staat, ook als het adres nog steeds die naam draagt.
+  const gevolgd = useRef(false);
+  const gevraagd = zoek.get("met");
+  useEffect(() => {
+    if (gevolgd.current || !gevraagd || anderen.length === 0) return;
+    gevolgd.current = true;
+    if (anderen.some((l) => l.sleutel === gevraagd)) setGekozenUid(gevraagd);
+  }, [gevraagd, anderen]);
 
   const gekozen = anderen.find((l) => l.sleutel === gekozenUid) || null;
   const gekozenGedeeld = gekozen

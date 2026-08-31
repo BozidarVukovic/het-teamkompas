@@ -18,6 +18,7 @@ import { KLEUREN, insightsSamenvatting, kleur } from "../../lib/app/insights";
 import InsightsUpload from "../../components/app/InsightsUpload";
 import Voortgang from "../../components/app/Voortgang";
 import { TE_DOEN, bepaalVoortgang, vraagtAandacht } from "../../lib/app/voortgang";
+import { zichtbaarheidVan } from "../../lib/app/zichtbaarheid";
 
 function bronLabel(bron) {
   const b = BRONNEN.find((x) => x.id === bron);
@@ -70,6 +71,11 @@ function KenmerkKaart({ kenmerk, nummer, totaal, huidig, lidmaatschappen, onKies
   const gekozenOptie = huidig && huidig.waarde ? kenmerk.opties.find((o) => o.id === huidig.waarde) : null;
   const [open, setOpen] = useState(!gekozenOptie);
 
+  // Bij elk punt staat wie het kan zien. "Privé" is geen tussenstand die je nog
+  // moet afmaken; het is een geldige keuze, en die hoort er net zo duidelijk te
+  // staan als het delen zelf.
+  const zichtbaarheid = zichtbaarheidVan(huidig, lidmaatschappen);
+
   return (
     <div style={{ padding: "16px 0", borderTop: "1px solid var(--tk-lijn)" }}>
       <div style={{ display: "flex", gap: 10, alignItems: "baseline", flexWrap: "wrap" }}>
@@ -81,6 +87,11 @@ function KenmerkKaart({ kenmerk, nummer, totaal, huidig, lidmaatschappen, onKies
         </span>
         <strong style={{ fontSize: 15.5 }}>{kenmerk.label}</strong>
         {gekozenOptie && <span className="tk-bron">{bronLabel(huidig.bron)}</span>}
+        {gekozenOptie && huidig.bevestigd !== "nee" && (
+          <span className={`tk-privacy ${zichtbaarheid.gedeeld ? "tk-privacy-gedeeld" : "tk-privacy-prive"}`}>
+            {zichtbaarheid.label}
+          </span>
+        )}
       </div>
 
       {gekozenOptie && !open ? (
