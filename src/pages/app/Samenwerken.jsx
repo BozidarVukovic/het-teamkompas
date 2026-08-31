@@ -14,7 +14,7 @@ import {
   logAdviessessie,
 } from "../../lib/app/opslag";
 import { vraagAdvies } from "../../lib/app/advies/adviesService";
-import { SITUATIES } from "../../data/app/situaties";
+import { situatiesPerGroep } from "../../data/app/situaties";
 import VolgendeStap from "../../components/app/VolgendeStap";
 
 function initialen(naam) {
@@ -210,21 +210,26 @@ export default function Samenwerken() {
       {gekozen && !advies && (
         <>
           <p className="tk-label">2. Wat speelt er?</p>
-          <div className="tk-keuzes" style={{ marginBottom: 22 }}>
-            {SITUATIES.map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                className={`tk-keuze${situatieId === s.id ? " gekozen" : ""}`}
-                onClick={() => kiesSituatie(s.id)}
-              >
-                <span>
-                  {s.label}
-                  <small>{s.uitleg}</small>
-                </span>
-              </button>
-            ))}
-          </div>
+          {situatiesPerGroep().map((groep) => (
+            <div key={groep.id} style={{ marginBottom: 18 }}>
+              <div className="tk-fijn" style={{ marginBottom: 8 }}>{groep.label}</div>
+              <div className="tk-keuzes">
+                {groep.situaties.map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    className={`tk-keuze${situatieId === s.id ? " gekozen" : ""}`}
+                    onClick={() => kiesSituatie(s.id)}
+                  >
+                    <span>
+                      {s.label}
+                      <small>{s.uitleg}</small>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
         </>
       )}
 
@@ -232,14 +237,14 @@ export default function Samenwerken() {
         <>
           <div className="tk-advies">
             <div className="tk-stap">{advies.situatie ? advies.situatie.label : "Advies"}</div>
-            <h2 style={{ margin: "0 0 6px", fontSize: 20 }}>
-              In het gesprek met {advies.naamAnder}
+            <h2 style={{ margin: "0 0 10px", fontSize: 20 }}>
+              Jullie samenwerking
             </h2>
-            {advies.situatie && (
-              <p style={{ color: "var(--tk-zacht)", marginTop: 0, lineHeight: 1.65 }}>
-                {advies.situatie.opening}
+            {advies.samenvatting.map((zin) => (
+              <p key={zin} style={{ color: "var(--tk-zacht)", margin: "0 0 8px", lineHeight: 1.7 }}>
+                {zin}
               </p>
-            )}
+            ))}
 
             {advies.opmerkingen.map((o) => (
               <div className="tk-melding" key={o} style={{ marginTop: 12 }}>
@@ -247,17 +252,40 @@ export default function Samenwerken() {
               </div>
             ))}
 
-            {advies.blokken.map((b) => (
-              <div className="tk-advies-blok" key={`${b.soort}-${b.kenmerkId}`}>
-                <h3>{b.kenmerk}</h3>
-                <p>{b.duiding}</p>
-                <p>{b.suggestie}</p>
-                {b.voorbeeldzin && <p className="tk-citaat">“{b.voorbeeldzin}”</p>}
+            {advies.helpt.length > 0 && (
+              <div className="tk-advies-blok">
+                <h3>Wat waarschijnlijk helpt</h3>
+                <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
+                  {advies.helpt.map((h) => (
+                    <li key={h} style={{ marginBottom: 6 }}>{h}</li>
+                  ))}
+                </ul>
               </div>
-            ))}
+            )}
 
-            {advies.blokken.length > 0 && (
-              <p style={{ marginTop: 16, lineHeight: 1.7 }}>{advies.afsluiter}</p>
+            {advies.letOp.length > 0 && (
+              <div className="tk-advies-blok">
+                <h3>Waar je op kunt letten</h3>
+                <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
+                  {advies.letOp.map((l) => (
+                    <li key={l} style={{ marginBottom: 6 }}>{l}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {advies.vraag && (
+              <div className="tk-advies-blok">
+                <h3>Probeer deze vraag</h3>
+                <p className="tk-citaat" style={{ margin: 0 }}>“{advies.vraag}”</p>
+              </div>
+            )}
+
+            {advies.actie && (
+              <div className="tk-advies-blok">
+                <h3>Kleine actie</h3>
+                <p style={{ margin: 0, lineHeight: 1.7 }}>{advies.actie}</p>
+              </div>
             )}
 
             {gekozen && gekozen.doorBeheerder && (

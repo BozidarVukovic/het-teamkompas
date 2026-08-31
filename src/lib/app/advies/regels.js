@@ -16,8 +16,12 @@
 import { BRON_GEWICHT, kenmerk, optieVan } from "../../../data/app/kenmerken.js";
 import { situatie } from "../../../data/app/situaties.js";
 import { BEHOEFTEN, CONTRASTEN, ADVIESKADER } from "../../../data/app/adviesblokken.js";
+import { actieVoor } from "../../../data/app/acties.js";
 
-export const MAX_BLOKKEN = 2;
+// Drie punten die helpen, hooguit twee dingen om op te letten. Meer dan dat
+// onthoudt niemand vlak voor een gesprek.
+export const MAX_BLOKKEN = 3;
+export const MAX_LETOP = 2;
 
 /**
  * Zet de naam van de ander in de tekst. De blokken zijn geschreven met
@@ -158,17 +162,66 @@ export function steltAdviesSamen({ mijnKenmerken = [], hunKenmerken = [], situat
     (s ? s.id.length : 0) % ADVIESKADER.afsluiters.length
   ];
 
+  const blokken = gekozen.map((b) => ({
+    soort: b.soort,
+    kenmerk: kenmerk(b.kenmerkId) ? kenmerk(b.kenmerkId).label : b.kenmerkId,
+    kenmerkId: b.kenmerkId,
+    hunWaarde: b.hunWaarde,
+    duiding: metNaam(b.duiding, naamAnder),
+    suggestie: metNaam(b.suggestie, naamAnder),
+    voorbeeldzin: b.voorbeeldzin,
+  }));
+
+  /* --- Het gesprek in vijf stukken ------------------------------------- */
+
+  // Een samenvatting van hooguit drie zinnen: waar deze situatie meestal op
+  // vastloopt, waar het bij deze twee mensen over gaat, en of hun voorkeuren
+  // daarin uit elkaar liggen. Bewust zonder de duidingen zelf — die staan
+  // hieronder bij "waar je op kunt letten" en hoeven niet dubbel.
+  const themas = blokken
+    .map((b) => (b.kenmerk || "").toLowerCase())
+    .filter(Boolean);
+  const themaLijst =
+    themas.length <= 1
+      ? themas[0]
+      : `${themas.slice(0, -1).join(", ")} en ${themas[themas.length - 1]}`;
+
+  const samenvatting = [];
+  if (s) samenvatting.push(s.opening);
+  if (themaLijst) {
+    samenvatting.push(`Tussen jou en ${naamAnder} gaat het hier vooral over ${themaLijst}.`);
+  }
+  if (blokken.some((b) => b.soort === "contrast")) {
+    samenvatting.push("Op die punten liggen jullie voorkeuren uit elkaar.");
+  }
+
+  // Wat waarschijnlijk helpt: de suggesties, hooguit drie.
+  const helpt = blokken.map((b) => b.suggestie).filter(Boolean);
+
+  // Waar je op kunt letten: alleen de contrasten, want daar zit de wrijving.
+  const letOp = blokken
+    .filter((b) => b.soort === "contrast")
+    .slice(0, MAX_LETOP)
+    .map((b) => b.duiding);
+
+  // De vraag komt van de situatie; die is bedoeld om te openen zonder oordeel.
+  const vraag = s ? s.vraag : null;
+
+  // De actie sluit aan bij wat de ander nodig heeft, als we daar iets over
+  // weten. Zo niet, dan die van de situatie — altijd bruikbaar.
+  const eerste = blokken[0];
+  const actie =
+    (eerste && actieVoor(eerste.kenmerkId, eerste.hunWaarde)) || (s ? s.actie : null);
+
   return {
     situatie: s ? { id: s.id, label: s.label, opening: s.opening } : null,
     naamAnder,
-    blokken: gekozen.map((b) => ({
-      soort: b.soort,
-      kenmerk: kenmerk(b.kenmerkId) ? kenmerk(b.kenmerkId).label : b.kenmerkId,
-      kenmerkId: b.kenmerkId,
-      duiding: metNaam(b.duiding, naamAnder),
-      suggestie: b.suggestie,
-      voorbeeldzin: b.voorbeeldzin,
-    })),
+    samenvatting,
+    helpt,
+    letOp,
+    vraag,
+    actie,
+    blokken,
     opmerkingen,
     afsluiter,
     transparantie: ADVIESKADER.transparantie,

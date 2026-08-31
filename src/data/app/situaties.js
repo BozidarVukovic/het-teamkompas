@@ -4,70 +4,183 @@
 // gebruikt die volgorde om te bepalen welk verschil tussen twee mensen het
 // eerst wordt besproken — zodat een advies over feedback geven niet begint bij
 // een verschil in werkritme.
+//
+// Bij elke situatie horen ook een vraag en een kleine actie. De vraag opent het
+// gesprek zonder er een oordeel in te leggen; de actie is klein genoeg om
+// vandaag nog te doen en beschrijft gedrag, geen houding. De advieslogica kan
+// ze vervangen door iets dat specifieker past bij het verschil dat speelt.
+
+export const SITUATIEGROEPEN = [
+  { id: "bespreken", label: "Iets bespreken" },
+  { id: "spanning", label: "Verschil of spanning" },
+  { id: "vooruit", label: "Samen verder" },
+];
 
 export const SITUATIES = [
-  {
-    id: "feedback-geven",
-    label: "Ik wil feedback geven",
-    uitleg: "Je hebt iets gezien of gehoord dat je wilt bespreken.",
-    kenmerken: ["feedback", "spanning", "contact", "misverstand"],
-    opening: "Bij feedback bepaalt de vorm vaak of het aankomt.",
-  },
-  {
-    id: "verschil-van-mening",
-    label: "We verschillen van mening",
-    uitleg: "Jullie kijken anders naar hetzelfde onderwerp.",
-    kenmerken: ["denken", "besluitvorming", "tempo", "context"],
-    opening: "Een verschil van mening loopt vaker vast op tempo dan op inhoud.",
-  },
-  {
-    id: "iets-moeilijks",
-    label: "Ik wil iets moeilijks bespreken",
-    uitleg: "Er is een onderwerp dat je liever niet uitstelt, maar dat spannend voelt.",
-    kenmerken: ["spanning", "feedback", "contact", "energieverlies"],
-    opening: "Bij een moeilijk gesprek helpt het om te weten wat de ander nodig heeft om te kunnen luisteren.",
-  },
-  {
-    id: "iets-nodig",
-    label: "Ik heb iets van deze persoon nodig",
-    uitleg: "Je wacht op iets, of je hebt hulp of een besluit nodig.",
-    kenmerken: ["context", "structuur", "tempo", "energieverlies"],
-    opening: "Wat je vraagt komt beter aan wanneer het aansluit bij hoe de ander werkt.",
-  },
-  {
-    id: "irritatie",
-    label: "Ik merk irritatie",
-    uitleg: "Er zit iets tussen dat je nog niet hebt uitgesproken.",
-    kenmerken: ["misverstand", "spanning", "contact", "aanspreken"],
-    opening: "Irritatie komt vaak voort uit een verschil in stijl dat niet is besproken.",
-  },
-  {
-    id: "besluit-nemen",
-    label: "We moeten samen een besluit nemen",
-    uitleg: "Er ligt een keuze waar jullie allebei achter moeten staan.",
-    kenmerken: ["besluitvorming", "tempo", "context", "denken"],
-    opening: "Een besluit houdt stand wanneer allebei duidelijk is wat er nodig was om erachter te staan.",
-  },
-  {
-    id: "benaderen",
-    label: "Ik wil begrijpen hoe ik deze persoon kan benaderen",
-    uitleg: "Je wilt weten wat wel en niet werkt voordat je iets aankaart.",
-    kenmerken: ["contact", "denken", "feedback", "misverstand"],
-    opening: "Hoe je iemand benadert, bepaalt vaak meer dan wat je zegt.",
-  },
+  /* ------------------------------------------------------------ bespreken */
   {
     id: "bespreekbaar-maken",
+    groep: "bespreken",
     label: "Ik wil iets bespreekbaar maken",
     uitleg: "Er speelt iets dat nog niet op tafel ligt.",
     kenmerken: ["spanning", "contact", "energieverlies", "aanspreken"],
     opening: "Iets bespreekbaar maken begint bij het moment en de vorm, niet bij het argument.",
+    vraag: "Heb je zin om ergens even bij stil te staan waar ik over loop te denken?",
+    actie: "Vraag eerst of het nu uitkomt, voordat je begint over wat je wilt bespreken.",
+  },
+  {
+    id: "iets-moeilijks",
+    groep: "bespreken",
+    label: "Ik wil een lastig gesprek voorbereiden",
+    uitleg: "Er is een onderwerp dat je liever niet uitstelt, maar dat spannend voelt.",
+    kenmerken: ["spanning", "feedback", "contact", "energieverlies"],
+    opening: "Bij een moeilijk gesprek helpt het om te weten wat de ander nodig heeft om te kunnen luisteren.",
+    vraag: "Ik wil iets met je bespreken dat ik lastig vind. Hoe pak ik dat het beste bij jou aan?",
+    actie: "Schrijf in één zin op wat je wilt bereiken, voordat je het gesprek begint.",
+  },
+  {
+    id: "feedback-geven",
+    groep: "bespreken",
+    label: "Ik wil feedback geven",
+    uitleg: "Je hebt iets gezien of gehoord dat je wilt bespreken.",
+    kenmerken: ["feedback", "spanning", "contact", "misverstand"],
+    opening: "Bij feedback bepaalt de vorm vaak of het aankomt.",
+    vraag: "Hoe kijk jij hier zelf naar, voordat ik vertel hoe ik het zie?",
+    actie: "Noem één concreet moment in plaats van een patroon. Zeg wat je zag, niet wat je eruit opmaakte.",
+  },
+  {
+    id: "feedback-ontvangen",
+    groep: "bespreken",
+    label: "Ik wil feedback ontvangen",
+    uitleg: "Je wilt weten hoe de ander de samenwerking ervaart.",
+    kenmerken: ["feedback", "denken", "contact", "aanspreken"],
+    opening: "Feedback vragen levert meer op als je duidelijk maakt waar je het over wilt hebben.",
+    vraag: "Wat zou ik anders kunnen doen waar jij last van hebt of profijt van zou hebben?",
+    actie: "Vraag naar één ding, niet naar een algemene indruk. Zeg daarna niets terug behalve een vraag om verduidelijking.",
+  },
+  {
+    id: "iets-nodig",
+    groep: "bespreken",
+    label: "Ik wil hulp of iets vragen",
+    uitleg: "Je wacht op iets, of je hebt hulp of een besluit nodig.",
+    kenmerken: ["context", "structuur", "tempo", "energieverlies"],
+    opening: "Wat je vraagt komt beter aan wanneer het aansluit bij hoe de ander werkt.",
+    vraag: "Wat heb je van mij nodig om dit te kunnen oppakken?",
+    actie: "Zeg er meteen bij wanneer je het nodig hebt en hoeveel werk je denkt dat het is.",
+  },
+
+  /* ------------------------------------------------------------- spanning */
+  {
+    id: "irritatie",
+    groep: "spanning",
+    label: "Ik merk irritatie",
+    uitleg: "Er zit iets tussen dat je nog niet hebt uitgesproken.",
+    kenmerken: ["misverstand", "spanning", "contact", "aanspreken"],
+    opening: "Irritatie komt vaak voort uit een verschil in stijl dat niet is besproken.",
+    vraag: "Er zit iets tussen ons dat ik niet goed kan plaatsen. Merk jij dat ook?",
+    actie: "Benoem wat je bij jezelf merkt, niet wat de ander doet. Begin met “ik merk dat ik...”.",
+  },
+  {
+    id: "elkaar-niet-begrijpen",
+    groep: "spanning",
+    label: "We begrijpen elkaar niet goed",
+    uitleg: "Jullie praten langs elkaar heen zonder dat duidelijk is waarom.",
+    kenmerken: ["misverstand", "context", "denken", "contact"],
+    opening: "Langs elkaar heen praten gaat zelden over de inhoud en meestal over wat ieder vanzelfsprekend vindt.",
+    vraag: "Kunnen we even teruggaan: wat versta jij precies onder wat we hier bespreken?",
+    actie: "Vat samen wat je de ander hebt horen zeggen en vraag of dat klopt, voordat je je eigen punt maakt.",
+  },
+  {
+    id: "verschil-van-mening",
+    groep: "spanning",
+    label: "We verschillen van mening",
+    uitleg: "Jullie kijken anders naar hetzelfde onderwerp.",
+    kenmerken: ["denken", "besluitvorming", "tempo", "context"],
+    opening: "Een verschil van mening loopt vaker vast op tempo dan op inhoud.",
+    vraag: "Waar zit voor jou het zwaarste punt in deze keuze?",
+    actie: "Benoem eerst waar jullie het wél over eens zijn, voordat je het verschil aansnijdt.",
+  },
+  {
+    id: "weerstand",
+    groep: "spanning",
+    label: "Ik merk weerstand",
+    uitleg: "De ander lijkt niet mee te willen, en je weet niet goed waarom.",
+    kenmerken: ["besluitvorming", "spanning", "energieverlies", "context"],
+    opening: "Weerstand is meestal geen onwil, maar een bezwaar dat nog niet is gehoord.",
+    vraag: "Wat zou er voor jou moeten kloppen voordat dit een goed idee is?",
+    actie: "Vraag door tot je het bezwaar kunt navertellen zonder het te weerleggen.",
+  },
+  {
+    id: "grens-aangeven",
+    groep: "spanning",
+    label: "Ik wil een grens aangeven",
+    uitleg: "Je wilt duidelijk maken wat voor jou niet werkt.",
+    kenmerken: ["energieverlies", "aanspreken", "contact", "spanning"],
+    opening: "Een grens landt beter als hij gaat over wat jij nodig hebt, niet over wat de ander fout doet.",
+    vraag: "Ik wil je iets uitleggen over hoe ik werk. Mag ik dat even doen?",
+    actie: "Zeg wat je wél kunt bieden naast wat je niet doet. Eén zin voor allebei.",
+  },
+  {
+    id: "conflict-voorkomen",
+    groep: "spanning",
+    label: "Ik wil een conflict voorkomen",
+    uitleg: "Je voelt dat het de verkeerde kant op gaat en wilt dat keren.",
+    kenmerken: ["spanning", "misverstand", "feedback", "contact"],
+    opening: "Een conflict voorkomen lukt zelden door het onderwerp te vermijden; wel door het moment te kiezen.",
+    vraag: "Zullen we hier later op terugkomen, als we er allebei rustiger in zitten?",
+    actie: "Spreek een moment af om erop terug te komen en houd je daaraan. Uitstel zonder afspraak is ontwijken.",
+  },
+
+  /* -------------------------------------------------------------- vooruit */
+  {
+    id: "besluit-nemen",
+    groep: "vooruit",
+    label: "We moeten samen een besluit nemen",
+    uitleg: "Er ligt een keuze waar jullie allebei achter moeten staan.",
+    kenmerken: ["besluitvorming", "tempo", "context", "denken"],
+    opening: "Een besluit houdt stand wanneer allebei duidelijk is wat er nodig was om erachter te staan.",
+    vraag: "Wat heb jij nodig om achter dit besluit te kunnen staan?",
+    actie: "Maak expliciet wie beslist en wanneer, voordat jullie de inhoud in duiken.",
+  },
+  {
+    id: "overtuigen",
+    groep: "vooruit",
+    label: "Ik wil de ander meekrijgen",
+    uitleg: "Je hebt een voorstel en wilt dat de ander erin meegaat.",
+    kenmerken: ["besluitvorming", "context", "denken", "tempo"],
+    opening: "Mensen gaan zelden mee op argumenten alleen; wel als hun bezwaar eerst serieus is genomen.",
+    vraag: "Wat zou jou hierin tegenhouden?",
+    actie: "Stel twee vragen voordat je je voorstel doet, en gebruik het antwoord in hoe je het brengt.",
+  },
+  {
+    id: "herhaling",
+    groep: "vooruit",
+    label: "We blijven over hetzelfde praten",
+    uitleg: "Hetzelfde onderwerp komt telkens terug zonder dat er iets verandert.",
+    kenmerken: ["besluitvorming", "structuur", "denken", "energieverlies"],
+    opening: "Wat blijft terugkomen is meestal niet onbesproken, maar onbesloten.",
+    vraag: "Wat zou er moeten gebeuren zodat dit onderwerp klaar is?",
+    actie: "Schrijf in één zin op wat er precies besloten moet worden, en leg die zin voor.",
+  },
+  {
+    id: "benaderen",
+    groep: "vooruit",
+    label: "Ik wil weten hoe ik deze persoon kan benaderen",
+    uitleg: "Je wilt weten wat wel en niet werkt voordat je iets aankaart.",
+    kenmerken: ["contact", "denken", "feedback", "misverstand"],
+    opening: "Hoe je iemand benadert, bepaalt vaak meer dan wat je zegt.",
+    vraag: "Hoe wil jij het liefst dat ik iets bij je aankaart?",
+    actie: "Vraag het gewoon een keer, buiten een lastig moment om. Dat kost een minuut en scheelt later veel.",
   },
   {
     id: "aanvullen",
+    groep: "vooruit",
     label: "Ik wil weten hoe we elkaar beter kunnen aanvullen",
     uitleg: "Het gaat goed, en je wilt er meer uit halen.",
     kenmerken: ["energie", "structuur", "denken", "besluitvorming"],
     opening: "Elkaar aanvullen werkt het best wanneer je benoemt waar je verschilt.",
+    vraag: "Waar zou jij mij het liefst voor inschakelen, en waarvoor liever niet?",
+    actie: "Spreek voor één taak af wie wat oppakt, op basis van wat jullie het liefst doen.",
   },
 ];
 
@@ -76,3 +189,10 @@ export function situatie(id) {
 }
 
 export const SITUATIE_IDS = SITUATIES.map((s) => s.id);
+
+export function situatiesPerGroep() {
+  return SITUATIEGROEPEN.map((g) => ({
+    ...g,
+    situaties: SITUATIES.filter((s) => s.groep === g.id),
+  })).filter((g) => g.situaties.length > 0);
+}
