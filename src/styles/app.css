@@ -938,3 +938,48 @@ a.tk-optie {
   font-size: 12.5px;
   font-weight: 600;
 }
+
+/* Wat iemand deelt: twaalf korte regels in één blok.
+   Twaalf losse citaatblokken met witruimte ertussen werden een muur waar je
+   doorheen moest scrollen om bij de knop te komen. Als lijst met één streep
+   ernaast lees je ze in één keer. */
+/* Lucht tussen de knoppen en wat eronder staat te lezen. */
+.tk-optie-uit .tk-label {
+  margin-top: 18px;
+}
+
+.tk-zinnen {
+  margin: 8px 0 0;
+  padding: 2px 0 2px 16px;
+  list-style: none;
+  border-left: 2px solid rgba(0, 168, 150, 0.45);
+}
+
+.tk-zinnen li {
+  margin: 0 0 7px;
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--tk-tekst);
+}
+
+.tk-zinnen li:last-child {
+  margin-bottom: 0;
+}
+
+/* Een stukje handleiding: het kopje en de tekst horen bij elkaar, dus staan ze
+   dicht op elkaar en is er ruimte tussen de stukjes. */
+.tk-sectie {
+  margin-top: 12px;
+}
+
+.tk-sectie strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.tk-sectie p {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--tk-zacht);
+}

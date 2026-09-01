@@ -19,8 +19,48 @@ import { bewaarProfiellid, verwijderProfiellid } from "../../lib/app/opslag";
 import { kenmerkenUitInsights } from "../../lib/app/insights";
 import { deelzin } from "../../data/app/kenmerken";
 import { initialen, voornaam } from "../../lib/app/naam";
+import { gedeeldSamengevat } from "../../lib/app/gedeeld";
 import InsightsUpload from "../../components/app/InsightsUpload";
 import VolgendeStap from "../../components/app/VolgendeStap";
+
+/**
+ * Wat iemand met dit team deelde.
+ *
+ * De twaalf punten als korte regels onder elkaar in één blok — twaalf losse
+ * citaatblokken met witruimte ertussen werden een muur. Daaronder alleen de
+ * stukjes handleiding die iets toevoegen; zie gedeeld.js.
+ */
+function Gedeeld({ gedeeld }) {
+  const { zinnen, secties } = gedeeldSamengevat(gedeeld);
+  if (zinnen.length === 0 && secties.length === 0) return null;
+
+  return (
+    <>
+      {zinnen.length > 0 && (
+        <>
+          <div className="tk-label">Wat deze collega deelt</div>
+          <ul className="tk-zinnen">
+            {zinnen.map((zin) => (
+              <li key={zin}>{zin}</li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {secties.length > 0 && (
+        <>
+          <div className="tk-label">In eigen woorden</div>
+          {secties.map((s) => (
+            <div key={s.sectieId} className="tk-sectie">
+              <strong>{s.titel}</strong>
+              <p>{s.tekst}</p>
+            </div>
+          ))}
+        </>
+      )}
+    </>
+  );
+}
 
 /** Eén regel in de ledenlijst, met wat eronder tevoorschijn komt. */
 function Persoon({ sleutel, naam: hunNaam, achter, onder, uitgeklapt, onKlik, children }) {
@@ -183,38 +223,9 @@ export default function MijnTeam() {
                   setPaneel(null);
                 }}
               >
-                {!g && (
-                  <p className="tk-fijn" style={{ marginTop: 0 }}>
-                    {eigen
-                      ? "Je hebt zelf nog niets met dit team gedeeld."
-                      : "Zodra deze collega iets deelt, staat het hier."}
-                  </p>
-                )}
-
-                {g && (
-                  <>
-                    {g.kenmerken.map((k) => (
-                      <p key={k.kenmerkId} className="tk-citaat" style={{ marginBottom: 10 }}>
-                        {k.zin}
-                      </p>
-                    ))}
-                    {g.handleiding.map((s) => (
-                      <div key={s.sectieId} style={{ marginBottom: 12 }}>
-                        <div className="tk-label" style={{ marginBottom: 4 }}>{s.titel}</div>
-                        <p style={{ margin: 0, lineHeight: 1.65 }}>{s.tekst}</p>
-                      </div>
-                    ))}
-                  </>
-                )}
-
-                {ikBenBeheerder && !eigen && voorstellen[l.uid] && (
-                  <p className="tk-fijn">
-                    Er staat een voorstel klaar dat {voornaam(l.naam, "deze collega")} nog moet
-                    overnemen.
-                  </p>
-                )}
-
-                <div className="tk-knoppen" style={{ marginTop: 4 }}>
+                {/* De knoppen staan boven de tekst: je klapt iemand open om
+                    iets te doen, niet om twintig blokken te lezen. */}
+                <div className="tk-knoppen">
                   {g && !eigen && (
                     <Link
                       className="tk-knop tk-knop-klein"
@@ -239,6 +250,23 @@ export default function MijnTeam() {
                     </button>
                   )}
                 </div>
+
+                {ikBenBeheerder && !eigen && voorstellen[l.uid] && (
+                  <p className="tk-fijn">
+                    Er staat een voorstel klaar dat {voornaam(l.naam, "deze collega")} nog moet
+                    overnemen.
+                  </p>
+                )}
+
+                {!g && (
+                  <p className="tk-fijn">
+                    {eigen
+                      ? "Je hebt zelf nog niets met dit team gedeeld."
+                      : "Zodra deze collega iets deelt, staat het hier."}
+                  </p>
+                )}
+
+                {g && <Gedeeld gedeeld={g} />}
 
                 {uploadVoor === l.uid && (
                   <div style={{ marginTop: 14 }}>
@@ -280,18 +308,7 @@ export default function MijnTeam() {
                   setPaneel(null);
                 }}
               >
-                <p className="tk-fijn" style={{ marginTop: 0 }}>
-                  Dit profiel komt uit een Insights-rapport dat een beheerder heeft geüpload.{" "}
-                  {voornaam(pl.naam, "Deze persoon")} heeft het niet zelf ingevuld of bevestigd.
-                </p>
-
-                {(pl.kenmerken || []).map((k) => (
-                  <p key={k.kenmerkId} className="tk-citaat" style={{ marginBottom: 10 }}>
-                    {k.zin}
-                  </p>
-                ))}
-
-                <div className="tk-knoppen" style={{ marginTop: 4 }}>
+                <div className="tk-knoppen">
                   <Link
                     className="tk-knop tk-knop-klein"
                     to={`/app/samenwerken?met=${encodeURIComponent(pl.id)}`}
@@ -318,6 +335,13 @@ export default function MijnTeam() {
                     </button>
                   )}
                 </div>
+
+                <p className="tk-fijn">
+                  Dit profiel komt uit een Insights-rapport dat een beheerder heeft geüpload.{" "}
+                  {voornaam(pl.naam, "Deze persoon")} heeft het niet zelf ingevuld of bevestigd.
+                </p>
+
+                <Gedeeld gedeeld={{ kenmerken: pl.kenmerken || [] }} />
               </Persoon>
             );
           })}
