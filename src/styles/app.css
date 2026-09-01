@@ -686,6 +686,11 @@
   margin-bottom: 22px;
 }
 
+/* Staat er een stapaanduiding boven een groep, dan hoort daar lucht tussen. */
+.tk-label + .tk-groep {
+  margin-top: 16px;
+}
+
 .tk-groep-kop {
   font-size: 12px;
   font-weight: 800;
@@ -982,4 +987,43 @@ a.tk-optie {
   margin: 0;
   line-height: 1.6;
   color: var(--tk-zacht);
+}
+
+/* Je kunt meerdere mensen aanvinken; het vinkje laat zien wie erbij hoort. */
+.tk-vink {
+  margin-left: auto;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--tk-lijn);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: transparent;
+}
+
+.tk-vink.aan {
+  border-color: var(--tk-teal);
+  background: var(--tk-teal);
+  color: var(--tk-navy);
+}
+
+/* Meerdere mensen in de kop boven een groepsadvies, licht overlappend. */
+.tk-bollen {
+  display: flex;
+  flex: 0 0 auto;
+}
+
+.tk-bollen .tk-bol {
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+  border: 2px solid var(--tk-navy-2);
+  margin-left: -10px;
+}
+
+.tk-bollen .tk-bol:first-child {
+  margin-left: 0;
 }

@@ -13,11 +13,22 @@ import {
   haalTeamleden,
   logAdviessessie,
 } from "../../lib/app/opslag";
-import { vraagAdvies } from "../../lib/app/advies/adviesService";
+import { vraagAdvies, vraagGroepsadvies } from "../../lib/app/advies/adviesService";
 import { situatiesPerGroep } from "../../data/app/situaties";
 import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
+import { MINIMUM_GROEP } from "../../lib/app/advies/groepsregels";
+import { voornaam } from "../../lib/app/naam";
 import { initialen } from "../../lib/app/naam";
 import VolgendeStap from "../../components/app/VolgendeStap";
+
+/** "Nikki, Eva en Aad" — leesbaar, ook bij één of bij zeven. */
+function namenLijst(collegas) {
+  const namen = collegas.map((c) => voornaam(c.naam, "een collega"));
+  if (namen.length === 0) return "";
+  if (namen.length === 1) return namen[0];
+  if (namen.length > 4) return `${namen.slice(0, 3).join(", ")} en ${namen.length - 3} anderen`;
+  return `${namen.slice(0, -1).join(", ")} en ${namen[namen.length - 1]}`;
+}
 
 export default function Samenwerken() {
   const { gebruiker, actiefTeam, kenmerken, teamOverzicht } = useApp();
@@ -28,7 +39,9 @@ export default function Samenwerken() {
   const [laden, setLaden] = useState(true);
   const [fout, setFout] = useState("");
 
-  const [gekozenUid, setGekozenUid] = useState(null);
+  // Meerdere mensen tegelijk mag; kies je er één, dan verandert er niets aan
+  // hoe het altijd al werkte.
+  const [gekozenUids, setGekozenUids] = useState([]);
   const [situatieId, setSituatieId] = useState(null);
   const [advies, setAdvies] = useState(null);
   const [sessieId, setSessieId] = useState(null);
@@ -78,26 +91,48 @@ export default function Samenwerken() {
   useEffect(() => {
     if (gevolgd.current || !gevraagd || anderen.length === 0) return;
     gevolgd.current = true;
-    if (anderen.some((l) => l.sleutel === gevraagd)) setGekozenUid(gevraagd);
+    if (anderen.some((l) => l.sleutel === gevraagd)) setGekozenUids([gevraagd]);
   }, [gevraagd, anderen]);
 
-  const gekozen = anderen.find((l) => l.sleutel === gekozenUid) || null;
+  const geselecteerd = anderen.filter((l) => gekozenUids.includes(l.sleutel));
+  const gekozen = geselecteerd.length === 1 ? geselecteerd[0] : null;
+  const isGroep = geselecteerd.length + 1 >= MINIMUM_GROEP;
+
+  const wisselPersoon = (sleutel) => {
+    setGekozenUids((huidig) =>
+      huidig.includes(sleutel) ? huidig.filter((s) => s !== sleutel) : [...huidig, sleutel]
+    );
+    opnieuw();
+  };
+
+  const alsKenmerken = (lijst) =>
+    (lijst || []).map((k) => ({
+      kenmerkId: k.kenmerkId,
+      waarde: k.waarde,
+      bron: "user_confirmation",
+    }));
 
   const maakAdvies = useCallback(
     async (situatie) => {
-      if (!gekozen) return;
-      const hunKenmerken = (gekozen.kenmerken || []).map((k) => ({
-        kenmerkId: k.kenmerkId,
-        waarde: k.waarde,
-        bron: "user_confirmation",
-      }));
+      if (geselecteerd.length === 0) return;
 
-      const uitkomst = await vraagAdvies({
-        mijnKenmerken: kenmerken,
-        hunKenmerken,
-        situatieId: situatie,
-        naamAnder: gekozen.naam || "je collega",
-      });
+      // Eén collega: contrast tussen jullie twee. Meerdere: spreiding over de
+      // groep. Dat zijn twee verschillende vragen, dus twee routes.
+      const uitkomst = isGroep
+        ? await vraagGroepsadvies({
+            mijnKenmerken: kenmerken,
+            deelnemers: geselecteerd.map((c) => ({
+              naam: c.naam || "een collega",
+              kenmerken: alsKenmerken(c.kenmerken),
+            })),
+            situatieId: situatie,
+          })
+        : await vraagAdvies({
+            mijnKenmerken: kenmerken,
+            hunKenmerken: alsKenmerken(geselecteerd[0].kenmerken),
+            situatieId: situatie,
+            naamAnder: geselecteerd[0].naam || "je collega",
+          });
 
       setAdvies(uitkomst);
       setBeoordeeld(null);
@@ -105,14 +140,14 @@ export default function Samenwerken() {
         const id = await logAdviessessie({
           uid: gebruiker.uid,
           situatieId: situatie,
-          aantalBlokken: uitkomst.blokken.length,
+          aantalBlokken: (uitkomst.blokken || uitkomst.uiteen || []).length,
         });
         setSessieId(id);
       } catch {
         setSessieId(null);
       }
     },
-    [gekozen, kenmerken, gebruiker]
+    [geselecteerd, isGroep, kenmerken, gebruiker]
   );
 
   const kiesSituatie = (id) => {
@@ -179,47 +214,64 @@ export default function Samenwerken() {
         </div>
       )}
 
-      {anderen.length > 0 && !gekozen && (
+      {anderen.length > 0 && !advies && (
         <>
           <p className="tk-label">Met wie speelt het?</p>
-          <div className="tk-lijst" style={{ marginBottom: 22 }}>
-            {anderen.map((l) => (
-              <button
-                key={l.sleutel}
-                type="button"
-                className={`tk-persoon${gekozenUid === l.sleutel ? " gekozen" : ""}`}
-                onClick={() => {
-                  setGekozenUid(l.sleutel);
-                  opnieuw();
-                }}
-              >
-                <span className="tk-bol">{initialen(l.naam)}</span>
-                <span>
-                  {l.naam || "Teamgenoot"}
-                  <small style={{ display: "block", color: "var(--tk-zacht)", fontSize: 12.5 }}>
-                    {collegaInEenZin(l)}
-                  </small>
-                </span>
-              </button>
-            ))}
+          <div className="tk-lijst" style={{ marginBottom: 14 }}>
+            {anderen.map((l) => {
+              const aan = gekozenUids.includes(l.sleutel);
+              return (
+                <button
+                  key={l.sleutel}
+                  type="button"
+                  className={`tk-persoon${aan ? " gekozen" : ""}`}
+                  aria-pressed={aan}
+                  onClick={() => wisselPersoon(l.sleutel)}
+                >
+                  <span className="tk-bol">{initialen(l.naam)}</span>
+                  <span>
+                    {l.naam || "Teamgenoot"}
+                    <small style={{ display: "block", color: "var(--tk-zacht)", fontSize: 12.5 }}>
+                      {collegaInEenZin(l)}
+                    </small>
+                  </span>
+                  <span className={`tk-vink${aan ? " aan" : ""}`} aria-hidden="true">
+                    {aan ? "✓" : ""}
+                  </span>
+                </button>
+              );
+            })}
           </div>
+
+          <p className="tk-fijn" style={{ marginBottom: 22 }}>
+            {gekozenUids.length === 0
+              ? "Kies één collega, of meerdere als je een overleg of sessie voorbereidt."
+              : isGroep
+                ? `Advies over jou en ${geselecteerd.length} collega's samen: waar jullie voorkeuren uiteenlopen en wat daarbij helpt. Er staat nergens wie wat koos.`
+                : "Vink er nog iemand aan als het over een groep gaat."}
+          </p>
         </>
       )}
 
       {anderen.length === 0 && <VolgendeStap />}
 
-      {gekozen && (
+      {advies && geselecteerd.length > 0 && (
         <div className="tk-gekozen">
-          <span className="tk-bol">{initialen(gekozen.naam)}</span>
+          <span className="tk-bollen">
+            {geselecteerd.slice(0, 3).map((c) => (
+              <span className="tk-bol" key={c.sleutel}>{initialen(c.naam)}</span>
+            ))}
+            {geselecteerd.length > 3 && <span className="tk-bol">+{geselecteerd.length - 3}</span>}
+          </span>
           <span className="tk-gekozen-tekst">
-            <strong>{gekozen.naam || "Teamgenoot"}</strong>
-            <small>{advies && advies.situatie ? advies.situatie.label : "Wat speelt er?"}</small>
+            <strong>{namenLijst(geselecteerd)}</strong>
+            <small>{advies.situatie ? advies.situatie.label : "Advies"}</small>
           </span>
           <button
             type="button"
             className="tk-knop tk-knop-rand tk-knop-klein"
             onClick={() => {
-              setGekozenUid(null);
+              setGekozenUids([]);
               opnieuw();
             }}
           >
@@ -228,9 +280,10 @@ export default function Samenwerken() {
         </div>
       )}
 
-      {gekozen && !advies && (
+      {geselecteerd.length > 0 && !advies && (
         <>
-          {situatiesPerGroep().map((groep) => (
+          <p className="tk-label">Wat speelt er?</p>
+          {situatiesPerGroep({ voorGroep: isGroep }).map((groep) => (
             <section key={groep.id} className="tk-groep">
               <h2 className="tk-groep-kop">{groep.label}</h2>
               <div className="tk-groep-lijst">
@@ -281,11 +334,14 @@ export default function Samenwerken() {
               </div>
             )}
 
-            {advies.letOp.length > 0 && (
+            {/* Bij één collega gaat dit over het contrast tussen jullie twee;
+                bij een groep over waar de voorkeuren uiteenlopen. Andere vraag,
+                andere kop. */}
+            {(advies.letOp || advies.uiteen || []).length > 0 && (
               <div className="tk-advies-blok">
-                <h3>Waar je op kunt letten</h3>
+                <h3>{advies.soort === "groep" ? "Waar de groep uiteenloopt" : "Waar je op kunt letten"}</h3>
                 <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
-                  {advies.letOp.map((l) => (
+                  {(advies.letOp || advies.uiteen).map((l) => (
                     <li key={l} style={{ marginBottom: 6 }}>{l}</li>
                   ))}
                 </ul>
@@ -306,7 +362,7 @@ export default function Samenwerken() {
               </div>
             )}
 
-            {gekozen && gekozen.doorBeheerder && (
+            {advies.soort !== "groep" && gekozen && gekozen.doorBeheerder && (
               <p className="tk-fijn" style={{ marginTop: 16 }}>
                 Dit profiel is toegevoegd door {gekozen.toegevoegdDoorNaam || "een beheerder"} op
                 basis van een Insights-profiel. {gekozen.naam} heeft het niet zelf ingevuld of

@@ -5,6 +5,13 @@
 // eerst wordt besproken — zodat een advies over feedback geven niet begint bij
 // een verschil in werkritme.
 //
+// Een situatie kan ook over meerdere mensen tegelijk gaan. Waar dat zo is,
+// staat er een openingszin voor een groep bij — de gewone opening is geschreven
+// voor twee mensen ("wanneer allebei duidelijk is") en dat klopt dan niet meer.
+// Twee situaties zijn per definitie één-op-één: feedback geef je aan iemand, en
+// "hoe kan ik deze persoon benaderen" gaat over één persoon. Die worden bij een
+// groep niet aangeboden in plaats van dat we ze forceren.
+//
 // Bij elke situatie horen ook een vraag en een kleine actie. De vraag opent het
 // gesprek zonder er een oordeel in te leggen; de actie is klein genoeg om
 // vandaag nog te doen en beschrijft gedrag, geen houding. De advieslogica kan
@@ -20,6 +27,9 @@ export const SITUATIES = [
   /* ------------------------------------------------------------ bespreken */
   {
     id: "bespreekbaar-maken",
+    voorGroep: true,
+    groepsopening:
+      "Iets bespreekbaar maken in een groep begint bij het moment en de vorm, niet bij het argument.",
     groep: "bespreken",
     label: "Ik wil iets bespreekbaar maken",
     uitleg: "Er speelt iets dat nog niet op tafel ligt.",
@@ -30,6 +40,9 @@ export const SITUATIES = [
   },
   {
     id: "iets-moeilijks",
+    voorGroep: true,
+    groepsopening:
+      "Bij een moeilijk onderwerp helpt het om te weten wat de mensen om tafel nodig hebben om te kunnen luisteren.",
     groep: "bespreken",
     label: "Ik wil een lastig gesprek voorbereiden",
     uitleg: "Er is een onderwerp dat je liever niet uitstelt, maar dat spannend voelt.",
@@ -40,6 +53,7 @@ export const SITUATIES = [
   },
   {
     id: "feedback-geven",
+    voorGroep: false,
     groep: "bespreken",
     label: "Ik wil feedback geven",
     uitleg: "Je hebt iets gezien of gehoord dat je wilt bespreken.",
@@ -50,6 +64,9 @@ export const SITUATIES = [
   },
   {
     id: "feedback-ontvangen",
+    voorGroep: true,
+    groepsopening:
+      "Feedback vragen aan meerdere mensen levert meer op als je duidelijk maakt waar je het over wilt hebben.",
     groep: "bespreken",
     label: "Ik wil feedback ontvangen",
     uitleg: "Je wilt weten hoe de ander de samenwerking ervaart.",
@@ -60,6 +77,9 @@ export const SITUATIES = [
   },
   {
     id: "iets-nodig",
+    voorGroep: true,
+    groepsopening:
+      "Wat je vraagt komt beter aan wanneer het aansluit bij hoe deze mensen werken.",
     groep: "bespreken",
     label: "Ik wil hulp of iets vragen",
     uitleg: "Je wacht op iets, of je hebt hulp of een besluit nodig.",
@@ -72,6 +92,9 @@ export const SITUATIES = [
   /* ------------------------------------------------------------- spanning */
   {
     id: "irritatie",
+    voorGroep: true,
+    groepsopening:
+      "Irritatie in een groep komt vaak voort uit een verschil in stijl dat niet is besproken.",
     groep: "spanning",
     label: "Ik merk irritatie",
     uitleg: "Er zit iets tussen dat je nog niet hebt uitgesproken.",
@@ -82,6 +105,9 @@ export const SITUATIES = [
   },
   {
     id: "elkaar-niet-begrijpen",
+    voorGroep: true,
+    groepsopening:
+      "Langs elkaar heen praten gaat zelden over de inhoud en meestal over wat ieder vanzelfsprekend vindt.",
     groep: "spanning",
     label: "We begrijpen elkaar niet goed",
     uitleg: "Jullie praten langs elkaar heen zonder dat duidelijk is waarom.",
@@ -92,6 +118,9 @@ export const SITUATIES = [
   },
   {
     id: "verschil-van-mening",
+    voorGroep: true,
+    groepsopening:
+      "Een verschil van mening in een groep loopt vaker vast op tempo dan op inhoud.",
     groep: "spanning",
     label: "We verschillen van mening",
     uitleg: "Jullie kijken anders naar hetzelfde onderwerp.",
@@ -102,6 +131,9 @@ export const SITUATIES = [
   },
   {
     id: "weerstand",
+    voorGroep: true,
+    groepsopening:
+      "Weerstand is meestal geen onwil, maar een bezwaar dat nog niet is gehoord — en in een groep blijft dat makkelijker onuitgesproken.",
     groep: "spanning",
     label: "Ik merk weerstand",
     uitleg: "De ander lijkt niet mee te willen, en je weet niet goed waarom.",
@@ -112,6 +144,9 @@ export const SITUATIES = [
   },
   {
     id: "grens-aangeven",
+    voorGroep: true,
+    groepsopening:
+      "Een grens landt beter als hij gaat over wat jij nodig hebt, niet over wat de groep fout doet.",
     groep: "spanning",
     label: "Ik wil een grens aangeven",
     uitleg: "Je wilt duidelijk maken wat voor jou niet werkt.",
@@ -122,6 +157,9 @@ export const SITUATIES = [
   },
   {
     id: "conflict-voorkomen",
+    voorGroep: true,
+    groepsopening:
+      "Een conflict voorkomen lukt zelden door het onderwerp te vermijden; wel door het moment te kiezen.",
     groep: "spanning",
     label: "Ik wil een conflict voorkomen",
     uitleg: "Je voelt dat het de verkeerde kant op gaat en wilt dat keren.",
@@ -134,6 +172,9 @@ export const SITUATIES = [
   /* -------------------------------------------------------------- vooruit */
   {
     id: "besluit-nemen",
+    voorGroep: true,
+    groepsopening:
+      "Een besluit houdt stand wanneer voor iedereen duidelijk is wat er nodig was om erachter te staan.",
     groep: "vooruit",
     label: "We moeten samen een besluit nemen",
     uitleg: "Er ligt een keuze waar jullie allebei achter moeten staan.",
@@ -144,6 +185,10 @@ export const SITUATIES = [
   },
   {
     id: "overtuigen",
+    voorGroep: true,
+    groepsopening:
+      "Mensen gaan zelden mee op argumenten alleen; wel als hun bezwaar eerst serieus is genomen.",
+    groepslabel: "Ik wil de groep meekrijgen",
     groep: "vooruit",
     label: "Ik wil de ander meekrijgen",
     uitleg: "Je hebt een voorstel en wilt dat de ander erin meegaat.",
@@ -154,6 +199,9 @@ export const SITUATIES = [
   },
   {
     id: "herhaling",
+    voorGroep: true,
+    groepsopening:
+      "Wat blijft terugkomen is meestal niet onbesproken, maar onbesloten.",
     groep: "vooruit",
     label: "We blijven over hetzelfde praten",
     uitleg: "Hetzelfde onderwerp komt telkens terug zonder dat er iets verandert.",
@@ -164,6 +212,7 @@ export const SITUATIES = [
   },
   {
     id: "benaderen",
+    voorGroep: false,
     groep: "vooruit",
     label: "Ik wil weten hoe ik deze persoon kan benaderen",
     uitleg: "Je wilt weten wat wel en niet werkt voordat je iets aankaart.",
@@ -174,6 +223,10 @@ export const SITUATIES = [
   },
   {
     id: "aanvullen",
+    voorGroep: true,
+    groepsopening:
+      "Elkaar aanvullen werkt het best wanneer je benoemt waar je verschilt.",
+    groepslabel: "Ik wil weten hoe we elkaar beter kunnen aanvullen",
     groep: "vooruit",
     label: "Ik wil weten hoe we elkaar beter kunnen aanvullen",
     uitleg: "Het gaat goed, en je wilt er meer uit halen.",
@@ -190,9 +243,25 @@ export function situatie(id) {
 
 export const SITUATIE_IDS = SITUATIES.map((s) => s.id);
 
-export function situatiesPerGroep() {
+/**
+ * De situaties per groep.
+ *
+ * `voorGroep` laat alleen de situaties zien die over meerdere mensen kunnen
+ * gaan, en zet dan het label dat daarbij hoort — "Ik wil de ander meekrijgen"
+ * heet bij een groep anders.
+ */
+export function situatiesPerGroep({ voorGroep = false } = {}) {
   return SITUATIEGROEPEN.map((g) => ({
     ...g,
-    situaties: SITUATIES.filter((s) => s.groep === g.id),
+    situaties: SITUATIES
+      .filter((s) => s.groep === g.id)
+      .filter((s) => (voorGroep ? s.voorGroep !== false && Boolean(s.groepsopening) : true))
+      .map((s) => (voorGroep && s.groepslabel ? { ...s, label: s.groepslabel } : s)),
   })).filter((g) => g.situaties.length > 0);
+}
+
+/** De openingszin die past bij één collega of bij een groep. */
+export function openingVan(s, voorGroep = false) {
+  if (!s) return null;
+  return voorGroep && s.groepsopening ? s.groepsopening : s.opening;
 }

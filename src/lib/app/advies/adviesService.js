@@ -9,6 +9,7 @@
 //   profieldata → advieslogica → servicelaag → interface
 
 import { steltAdviesSamen } from "./regels.js";
+import { steltGroepsadviesSamen } from "./groepsregels.js";
 
 /** De ingebouwde strategie: regels, geen AI. */
 const regelStrategie = {
@@ -17,6 +18,11 @@ const regelStrategie = {
   beschrijving: "Vaste beslisregels en vooraf geschreven teksten. Geen taalmodel, geen externe dienst.",
   async advies(invoer) {
     return steltAdviesSamen(invoer);
+  },
+  // Advies over een groep werkt anders: geen contrast tussen twee mensen, maar
+  // spreiding over meerdere. Zie groepsregels.js.
+  async groepsadvies(invoer) {
+    return steltGroepsadviesSamen(invoer);
   },
 };
 
@@ -57,6 +63,22 @@ export function beschikbareStrategieen() {
 export async function vraagAdvies(invoer) {
   const strategie = actieveStrategie();
   const uitkomst = await strategie.advies(invoer);
+  return { ...uitkomst, strategie: strategie.id };
+}
+
+/**
+ * Vraagt advies over meerdere mensen tegelijk.
+ *
+ * `invoer` bevat je eigen kenmerken en, per deelnemer, uitsluitend wat diegene
+ * met dit team heeft gedeeld. Een strategie die dit niet kan, valt terug op
+ * niets in plaats van op een advies dat over de verkeerde vraag gaat.
+ */
+export async function vraagGroepsadvies(invoer) {
+  const strategie = actieveStrategie();
+  if (typeof strategie.groepsadvies !== "function") {
+    throw new Error(`Strategie ${strategie.id} kan geen advies over een groep geven.`);
+  }
+  const uitkomst = await strategie.groepsadvies(invoer);
   return { ...uitkomst, strategie: strategie.id };
 }
 
