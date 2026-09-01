@@ -10,8 +10,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { steltGroepsadviesSamen, bepaalSpreiding, MINIMUM_GROEP } from "../src/lib/app/advies/groepsregels.js";
-import { SPREIDING } from "../src/data/app/groepsblokken.js";
-import { KENMERK_IDS } from "../src/data/app/kenmerken.js";
+import { SPREIDING, vraagtVan } from "../src/data/app/groepsblokken.js";
+import { KENMERK_IDS, KENMERKEN } from "../src/data/app/kenmerken.js";
 import { SITUATIES, situatiesPerGroep } from "../src/data/app/situaties.js";
 
 const k = (kenmerkId, waarde) => ({ kenmerkId, waarde, bron: "user_confirmation" });
@@ -68,6 +68,23 @@ test("de situatie bepaalt welk verschil bovenaan komt", () => {
   assert.equal(begrijpen[0], "context", "bij langs elkaar heen praten telt context het zwaarst");
 });
 
+test("de samenvatting noemt precies de onderwerpen die eronder worden uitgewerkt", () => {
+  const a = groep();
+  const genoemd = a.samenvatting.find((z) => z.includes("lopen de voorkeuren uiteen"));
+  assert.ok(genoemd, "de samenvatting hoort de onderwerpen te noemen");
+
+  a.uiteen.forEach((punt) => {
+    assert.ok(
+      genoemd.toLowerCase().includes(punt.onderwerp.toLowerCase()),
+      `${punt.onderwerp} wordt uitgewerkt maar niet genoemd`
+    );
+  });
+
+  // En andersom: er wordt niets genoemd dat niet wordt uitgewerkt.
+  const uitgewerkt = a.uiteen.map((p) => p.onderwerp.toLowerCase());
+  assert.equal(uitgewerkt.length, a.gebruikteKenmerken.length);
+});
+
 test("het advies noemt de onderwerpen en geeft er iets bij dat helpt", () => {
   const a = groep();
   assert.ok(a.samenvatting.join(" ").includes("lopen de voorkeuren uiteen"));
@@ -89,7 +106,13 @@ test("dezelfde invoer geeft altijd hetzelfde advies", () => {
 
 test("er staat geen naam bij een voorkeur", () => {
   const a = groep();
-  const tekst = [...a.samenvatting, ...a.helpt, ...a.uiteen, a.vraag, a.actie]
+  const tekst = [
+    ...a.samenvatting,
+    ...a.helpt,
+    ...a.uiteen.flatMap((p) => [p.onderwerp, p.duiding, ...p.voorkeuren.flatMap((v) => [v.label, v.vraagt])]),
+    a.vraag,
+    a.actie,
+  ]
     .filter(Boolean)
     .join(" ");
 
@@ -100,11 +123,23 @@ test("er staat geen naam bij een voorkeur", () => {
 
 test("er wordt niet geteld hoeveel mensen wat kozen", () => {
   const a = groep();
-  const tekst = [...a.samenvatting, ...a.helpt, ...a.uiteen].join(" ");
+  const tekst = [
+    ...a.samenvatting,
+    ...a.helpt,
+    ...a.uiteen.flatMap((p) => [p.duiding, ...p.voorkeuren.map((v) => v.vraagt)]),
+  ].join(" ");
   assert.doesNotMatch(
     tekst,
     /\b(meerderheid|minderheid|de meesten|iedereen behalve|als enige|één persoon)\b/i
   );
+
+  // En nergens een aantal per voorkeur: dat zou hetzelfde doen zonder het woord.
+  a.uiteen.forEach((punt) => {
+    punt.voorkeuren.forEach((v) => {
+      assert.equal(v.aantal, undefined, "een voorkeur hoort geen aantal te dragen");
+      assert.deepEqual(Object.keys(v).sort(), ["label", "vraagt"]);
+    });
+  });
 });
 
 test("de uitkomst bevat geen lijst van wie welke voorkeur koos", () => {
@@ -149,6 +184,46 @@ test("de teksten oordelen niet over mensen", () => {
   });
 });
 
+test("bij elk verschil staat welke voorkeuren er in déze groep zitten", () => {
+  const a = groep();
+  const punt = a.uiteen[0];
+
+  assert.ok(punt.onderwerp, "het onderwerp hoort erbij te staan");
+  assert.ok(punt.duiding, "wat er gebeurt hoort erbij te staan");
+  assert.ok(punt.voorkeuren.length >= 2, "bij een verschil zitten er minstens twee voorkeuren in");
+  punt.voorkeuren.forEach((v) => {
+    assert.ok(v.label, "een voorkeur zonder leesbaar label zegt niets");
+    assert.ok(v.vraagt && v.vraagt.length > 20, `${v.label}: er hoort bij te staan wat het vraagt`);
+  });
+});
+
+test("alleen de voorkeuren die er echt zijn, staan erbij", () => {
+  // Niemand in deze groep koos "dat hangt van het onderwerp af" bij tempo.
+  const a = groep("besluit-nemen");
+  const tempo = a.uiteen.find((p) => p.kenmerkId === "tempo");
+  const labels = tempo.voorkeuren.map((v) => v.label);
+
+  assert.ok(labels.includes("Ik werk graag snel naar een besluit toe"));
+  assert.ok(labels.includes("Ik wil eerst tijd om na te denken"));
+  assert.ok(!labels.includes("Dat hangt van het onderwerp af"), "een voorkeur die niemand koos hoort er niet te staan");
+});
+
+test("de voorkeuren staan in de volgorde van het profiel, niet op aantal", () => {
+  // Drie mensen kiezen "snel", één "bedachtzaam". Zou er op aantal gesorteerd
+  // worden, dan wordt zichtbaar wie in de minderheid is.
+  const a = steltGroepsadviesSamen({
+    mijnKenmerken: [k("tempo", "bedachtzaam")],
+    deelnemers: [
+      { naam: "A", kenmerken: [k("tempo", "snel")] },
+      { naam: "B", kenmerken: [k("tempo", "snel")] },
+      { naam: "C", kenmerken: [k("tempo", "snel")] },
+    ],
+    situatieId: "besluit-nemen",
+  });
+  const labels = a.uiteen[0].voorkeuren.map((v) => v.label);
+  assert.deepEqual(labels, ["Ik werk graag snel naar een besluit toe", "Ik wil eerst tijd om na te denken"]);
+});
+
 /* ------------------------------------------------------------ volledigheid */
 
 test("elk kenmerk heeft een tekst voor als de groep erop uiteenloopt", () => {
@@ -156,6 +231,16 @@ test("elk kenmerk heeft een tekst voor als de groep erop uiteenloopt", () => {
     assert.ok(SPREIDING[id], `${id} mist een spreidingstekst`);
     assert.ok(SPREIDING[id].duiding.length > 40, `${id}: duiding is te kort om iets te zeggen`);
     assert.ok(SPREIDING[id].suggestie.length > 30, `${id}: suggestie is te kort om iets te doen`);
+  });
+});
+
+test("elke voorkeur die iemand kan kiezen, heeft een zin over wat die vraagt", () => {
+  KENMERKEN.forEach((k) => {
+    k.opties.forEach((o) => {
+      const zin = vraagtVan(k.id, o.id);
+      assert.ok(zin, `${k.id}.${o.id} mist een zin`);
+      assert.ok(zin.length > 20, `${k.id}.${o.id}: te kort om iets mee te kunnen`);
+    });
   });
 });
 

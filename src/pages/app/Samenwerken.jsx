@@ -334,17 +334,43 @@ export default function Samenwerken() {
               </div>
             )}
 
-            {/* Bij één collega gaat dit over het contrast tussen jullie twee;
-                bij een groep over waar de voorkeuren uiteenlopen. Andere vraag,
-                andere kop. */}
-            {(advies.letOp || advies.uiteen || []).length > 0 && (
+            {/* Bij één collega gaat dit over het contrast tussen jullie twee. */}
+            {advies.soort !== "groep" && (advies.letOp || []).length > 0 && (
               <div className="tk-advies-blok">
-                <h3>{advies.soort === "groep" ? "Waar de groep uiteenloopt" : "Waar je op kunt letten"}</h3>
+                <h3>Waar je op kunt letten</h3>
                 <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
-                  {(advies.letOp || advies.uiteen).map((l) => (
+                  {advies.letOp.map((l) => (
                     <li key={l} style={{ marginBottom: 6 }}>{l}</li>
                   ))}
                 </ul>
+              </div>
+            )}
+
+            {/* Bij een groep: per punt wat er gebeurt, en welke voorkeuren er
+                in deze groep zitten met wat elk daarvan vraagt. Zonder wie en
+                zonder aantallen. */}
+            {advies.soort === "groep" && (advies.uiteen || []).length > 0 && (
+              <div className="tk-advies-blok">
+                <h3>Waar de groep uiteenloopt</h3>
+                {advies.uiteen.map((punt) => (
+                  <div key={punt.kenmerkId} className="tk-punt">
+                    <strong className="tk-punt-kop">{punt.onderwerp}</strong>
+                    <p className="tk-punt-duiding">{punt.duiding}</p>
+                    {punt.voorkeuren.length > 0 && (
+                      <>
+                        <div className="tk-punt-label">In deze groep zit</div>
+                        <ul className="tk-voorkeuren">
+                          {punt.voorkeuren.map((v) => (
+                            <li key={v.label}>
+                              <span className="tk-voorkeur">{v.label}</span>
+                              <span className="tk-voorkeur-vraagt">{v.vraagt}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
 

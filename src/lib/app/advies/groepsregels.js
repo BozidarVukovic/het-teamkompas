@@ -17,11 +17,11 @@
 // Volledig deterministisch, net als het advies voor één collega: dezelfde
 // invoer geeft altijd hetzelfde advies. Geen taalmodel.
 
-import { kenmerk } from "../../../data/app/kenmerken.js";
+import { kenmerk, optieVan } from "../../../data/app/kenmerken.js";
 import { situatie, openingVan } from "../../../data/app/situaties.js";
 import { ADVIESKADER } from "../../../data/app/adviesblokken.js";
-import { spreidingVoor } from "../../../data/app/groepsblokken.js";
-import { bepaalWaarden, MAX_BLOKKEN, MAX_LETOP } from "./regels.js";
+import { spreidingVoor, vraagtVan } from "../../../data/app/groepsblokken.js";
+import { bepaalWaarden, MAX_BLOKKEN } from "./regels.js";
 
 /** Vanaf hoeveel mensen is dit een groep? Bij twee blijft het één-op-één. */
 export const MINIMUM_GROEP = 3;
@@ -50,6 +50,9 @@ export function bepaalSpreiding(profielen = [], situatieId = null) {
       if (!perKenmerk.has(kenmerkId)) perKenmerk.set(kenmerkId, { mensen: 0, waarden: new Set() });
       const rij = perKenmerk.get(kenmerkId);
       rij.mensen += 1;
+      // Een Set: welke voorkeuren aanwezig zijn, niet hoeveel mensen elke
+      // voorkeur heeft. Zodra je dat gaat tellen ontstaat er een meerderheid,
+      // en dus een afwijkende.
       rij.waarden.add(waarde);
     });
   });
@@ -62,12 +65,24 @@ export function bepaalSpreiding(profielen = [], situatieId = null) {
     // groep. Dat is geen overeenkomst en geen verschil.
     if (rij.mensen < 2) return;
 
+    // De voorkeuren staan in de volgorde waarin ze in het profiel staan, niet
+    // op aantal. Dat houdt de volgorde stabiel en zegt niets over hoeveel
+    // mensen wat kozen.
+    const opties = ((kenmerk(kenmerkId) || {}).opties || []).map((o) => o.id);
+    const aanwezig = [...rij.waarden].sort(
+      (a, b) => opties.indexOf(a) - opties.indexOf(b) || String(a).localeCompare(b)
+    );
+
     const rijGegevens = {
       kenmerkId,
       label: (kenmerk(kenmerkId) || {}).label || kenmerkId,
       mensen: rij.mensen,
       verschillende: rij.waarden.size,
       positie: positie(kenmerkId),
+      voorkeuren: aanwezig.map((waarde) => ({
+        label: (optieVan(kenmerkId, waarde) || {}).label || waarde,
+        vraagt: vraagtVan(kenmerkId, waarde),
+      })),
     };
 
     if (rij.waarden.size > 1) uiteen.push(rijGegevens);
@@ -156,7 +171,20 @@ export function steltGroepsadviesSamen({ mijnKenmerken = [], deelnemers = [], si
     .filter((r) => r.duiding && r.suggestie);
 
   const helpt = blokken.map((b) => b.suggestie);
-  const uiteenlopend = blokken.slice(0, MAX_LETOP).map((b) => b.duiding);
+
+  // Per punt: wat er gebeurt, en welke voorkeuren er in deze groep zitten met
+  // wat elk daarvan vraagt. Dat laatste maakt het advies over déze mensen in
+  // plaats van over verschillen in het algemeen — zonder te zeggen wie wat
+  // koos en zonder aantallen.
+  // Evenveel punten als de samenvatting er noemt. Stonden er drie onderwerpen
+  // in de zin en werden er twee uitgewerkt, dan mis je er één zonder te weten
+  // welke.
+  const uiteenlopend = blokken.map((b) => ({
+    kenmerkId: b.kenmerkId,
+    onderwerp: b.label,
+    duiding: b.duiding,
+    voorkeuren: (b.voorkeuren || []).filter((v) => v.vraagt),
+  }));
 
   return {
     soort: "groep",

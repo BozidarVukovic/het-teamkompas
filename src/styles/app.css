@@ -1027,3 +1027,67 @@ a.tk-optie {
 .tk-bollen .tk-bol:first-child {
   margin-left: 0;
 }
+
+/* Eén punt waarop een groep uiteenloopt: wat er gebeurt, en welke voorkeuren
+   er in deze groep zitten met wat elk daarvan vraagt. */
+.tk-punt {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.tk-punt:first-of-type {
+  margin-top: 4px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.tk-punt-kop {
+  display: block;
+  font-size: 15.5px;
+  margin-bottom: 4px;
+}
+
+.tk-punt-duiding {
+  margin: 0;
+  line-height: 1.7;
+  color: var(--tk-zacht);
+}
+
+.tk-punt-label {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--tk-zacht);
+  margin: 14px 0 8px;
+}
+
+/* De voorkeuren staan in de volgorde van het profiel, niet op aantal. Er staat
+   nergens hoeveel mensen wat kozen; dat zou een meerderheid maken. */
+.tk-voorkeuren {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.tk-voorkeuren li {
+  padding-left: 14px;
+  border-left: 2px solid rgba(0, 168, 150, 0.45);
+}
+
+.tk-voorkeur {
+  display: block;
+  font-weight: 600;
+  font-size: 14.5px;
+}
+
+.tk-voorkeur-vraagt {
+  display: block;
+  color: var(--tk-zacht);
+  font-size: 13.5px;
+  line-height: 1.55;
+  margin-top: 2px;
+}
