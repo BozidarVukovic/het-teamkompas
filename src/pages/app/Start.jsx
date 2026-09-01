@@ -92,7 +92,7 @@ export default function Start() {
             dan één team horen; teams zien niets van elkaar.
           </p>
           <div className="tk-knoppen">
-            <Link className="tk-knop tk-knop-klein" to="/app/welkom" style={{ textDecoration: "none" }}>
+            <Link className="tk-knop tk-knop-klein" to="/app/welkom?extra=1" style={{ textDecoration: "none" }}>
               Meedoen met dit team
             </Link>
             <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={vergeetUitnodiging}>

@@ -5,7 +5,7 @@
 // welkomscherm.
 
 import { Helmet } from "react-helmet-async";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useSearchParams } from "react-router-dom";
 import { AppProvider, useApp } from "../../lib/app/AppContext";
 import Inloggen from "./Inloggen";
 import Welkom from "./Welkom";
@@ -17,6 +17,7 @@ import MijnTeam from "./MijnTeam";
 import MijnGegevens from "./MijnGegevens";
 import Ik from "./Ik";
 import Navigatie from "../../components/app/Navigatie";
+import { welkombestemming } from "../../lib/app/welkom";
 import "../../styles/app.css";
 
 function Laden({ tekst = "Even laden..." }) {
@@ -68,6 +69,21 @@ function Schil({ children }) {
   );
 }
 
+// Het welkomscherm hoort niet op te duiken bij wie al een team heeft en er
+// niet zelf om vroeg. Zie welkom.js voor de regel.
+function WelkomOfStart() {
+  const { lidmaatschappen, uitnodigingscode } = useApp();
+  const [zoek] = useSearchParams();
+
+  const naar = welkombestemming({
+    lidmaatschappen,
+    uitnodigingscode,
+    extra: zoek.get("extra") === "1",
+  });
+
+  return naar ? <Navigate to={naar} replace /> : <Welkom />;
+}
+
 function Poort() {
   const { authKlaar, gegevensKlaar, gebruiker, lidmaatschappen, isInloglink } = useApp();
   const locatie = useLocation();
@@ -113,7 +129,7 @@ function Poort() {
         <Route path="team" element={<MijnTeam />} />
         <Route path="gegevens" element={<MijnGegevens />} />
         <Route path="ik" element={<Ik />} />
-        <Route path="welkom" element={<Welkom />} />
+        <Route path="welkom" element={<WelkomOfStart />} />
         <Route path="inloggen" element={<Navigate to="/app" replace />} />
         <Route path="*" element={<Navigate to="/app" replace />} />
       </Routes>

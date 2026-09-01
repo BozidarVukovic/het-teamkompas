@@ -113,18 +113,35 @@ export function AppProvider({ children }) {
   /* ------------------------------------------------------------- inloggen */
 
   useEffect(() => {
+    let vorigeUid = null;
+
     const stop = onAuthStateChanged(auth, (u) => {
+      const uid = u ? u.uid : null;
+      const gewisseld = uid !== vorigeUid;
+      vorigeUid = uid;
+
       setGebruiker(u || null);
       setAuthKlaar(true);
-      if (!u) {
-        setGebruikerDoc(null);
-        setKenmerken([]);
-        setHandleiding({});
-        setProfiel(null);
-        setVoorstellen([]);
-        setGegevensKlaar(true);
-      }
+      if (!gewisseld) return;
+
+      // Bij elke wissel gaan de gegevens van de vorige situatie weg — ook bij
+      // inloggen, niet alleen bij uitloggen. Deden we dat niet, dan was er na
+      // opnieuw inloggen één render waarin de app een ingelogde gebruiker zag
+      // met nul teams: de gegevens van de vorige waren al gewist en die van de
+      // nieuwe nog niet binnen. Op grond daarvan stuurde hij door naar het
+      // welkomscherm, en dat adres bleef staan als de gegevens er eenmaal
+      // waren. Je logde in en kwam uit bij "Bij een ander team aansluiten".
+      setGebruikerDoc(null);
+      setKenmerken([]);
+      setHandleiding({});
+      setProfiel(null);
+      setVoorstellen([]);
+
+      // Zonder gebruiker valt er niets op te halen en zijn we meteen klaar.
+      // Mét gebruiker begint het ophalen juist, dus zijn we dat nog niet.
+      setGegevensKlaar(!u);
     });
+
     return () => stop();
   }, []);
 

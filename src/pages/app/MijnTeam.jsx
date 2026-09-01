@@ -385,7 +385,7 @@ export default function MijnTeam() {
             : "Je bent lid van dit team."}
         </p>
         <p className="tk-fijn">
-          <Link to="/app/welkom" style={{ color: "var(--tk-teal)" }}>
+          <Link to="/app/welkom?extra=1" style={{ color: "var(--tk-teal)" }}>
             Zelf bij een ander team aansluiten
           </Link>
         </p>
