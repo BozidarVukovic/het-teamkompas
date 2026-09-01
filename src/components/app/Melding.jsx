@@ -4,16 +4,23 @@
 // overal hetzelfde uitziet en je hem overal op dezelfde plek verwacht.
 
 export default function Melding({ melding, onSluiten = null }) {
-  if (!melding || !melding.tekst) return null;
+  if (!melding) return null;
 
-  const fout = melding.soort === "fout";
+  // Een losse zin telt als een geslaagde melding. Zonder dit verdween er één
+  // stil van het scherm doordat er ergens nog een tekst werd doorgegeven waar
+  // een object werd verwacht — precies het soort fout dat je pas maanden later
+  // opmerkt, want er komt geen waarschuwing en het scherm blijft werken.
+  const inhoud = typeof melding === "string" ? { soort: "goed", tekst: melding } : melding;
+  if (!inhoud.tekst) return null;
+
+  const fout = inhoud.soort === "fout";
 
   return (
     <div
       className={`tk-melding ${fout ? "tk-melding-fout" : "tk-melding-goed"}`}
       role={fout ? "alert" : "status"}
     >
-      <span>{melding.tekst}</span>
+      <span>{inhoud.tekst}</span>
       {onSluiten && (
         <button type="button" className="tk-melding-sluiten" onClick={onSluiten} aria-label="Melding sluiten">
           ×

@@ -488,9 +488,10 @@ export default function MijnTeam() {
                 });
 
                 await herlaadTeam();
-                setProfielMelding(
-                  `${profielNaam.trim() || "Het profiel"} staat in het team met ${kenmerken.length} punten. Je kunt er meteen advies over vragen.`
-                );
+                setProfielMelding({
+                  soort: "goed",
+                  tekst: `${profielNaam.trim() || "Het profiel"} staat in het team met ${kenmerken.length} punten. Je kunt er meteen advies over vragen.`,
+                });
                 setProfielNaam("");
                 setPaneel(null);
               }}
