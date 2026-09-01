@@ -505,8 +505,26 @@
     <priority>0.75</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/blog/samenwerking-verslechtert-onder-druk</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/ai-maakt-onduidelijkheid-zichtbaar</loc>
+    <lastmod>2026-08-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/wanneer-helpen-omslaat-in-overnemen</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/kennisbank</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
