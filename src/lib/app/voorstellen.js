@@ -13,8 +13,7 @@
 
 import { collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import { SECTIE_IDS } from "../../data/app/handleiding";
-import { KLEUR_IDS } from "./insights";
+import { schoonVoorstel } from "./voorstelOpschonen";
 
 const voorstelRef = (orgId, teamId, uid) =>
   doc(db, "organisaties", orgId, "teams", teamId, "profielvoorstellen", uid);
@@ -22,22 +21,6 @@ const voorstelRef = (orgId, teamId, uid) =>
 const voorstellenCol = (orgId, teamId) =>
   collection(db, "organisaties", orgId, "teams", teamId, "profielvoorstellen");
 
-/** Houdt alleen over wat we kennen; onbekende velden komen de database niet in. */
-function schoonVoorstel({ voorkeurskleur, tweedeKleur, type, teksten }) {
-  const schoneTeksten = {};
-  Object.keys(teksten || {}).forEach((sectieId) => {
-    if (!SECTIE_IDS.includes(sectieId)) return;
-    const tekst = String(teksten[sectieId] || "").trim();
-    if (tekst) schoneTeksten[sectieId] = tekst.slice(0, 1000);
-  });
-
-  return {
-    voorkeurskleur: KLEUR_IDS.includes(voorkeurskleur) ? voorkeurskleur : null,
-    tweedeKleur: KLEUR_IDS.includes(tweedeKleur) ? tweedeKleur : null,
-    type: type || null,
-    teksten: schoneTeksten,
-  };
-}
 
 export async function bewaarVoorstel({ orgId, teamId, uid, vanUid, vanNaam, voorstel }) {
   const schoon = schoonVoorstel(voorstel);

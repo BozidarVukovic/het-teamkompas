@@ -23,6 +23,7 @@ import { db } from "../firebase";
 import { deelzin } from "../../data/app/kenmerken";
 import { SECTIES, sectie } from "../../data/app/handleiding";
 import { haalVoorstel, verwijderVoorstel } from "./voorstellen";
+import { stelGedeeldeKopieSamen } from "./gedeeldeKopie";
 
 /* ------------------------------------------------------------------ paden */
 
@@ -393,36 +394,23 @@ export async function verwijderSectie(uid, sectieId) {
  * restanten van eerder delen.
  */
 export async function werkGedeeldBij({ uid, naam, orgId, teamId, kenmerken, handleiding }) {
-  const sleutel = teamsleutel(orgId, teamId);
+  // Wát er in de kopie komt, staat in gedeeldeKopie.js — een pure functie, met
+  // tests. Hier wordt er alleen nog mee geschreven of verwijderd.
+  const kopie = stelGedeeldeKopieSamen({
+    naam,
+    sleutel: teamsleutel(orgId, teamId),
+    kenmerken,
+    handleiding,
+  });
 
-  const gedeeldeKenmerken = (kenmerken || [])
-    .filter((k) => k.waarde && (k.gedeeldMet || []).includes(sleutel) && k.bevestigd !== "nee")
-    .map((k) => ({
-      kenmerkId: k.kenmerkId,
-      waarde: k.waarde,
-      zin: deelzin(k.kenmerkId, k.waarde) || "",
-    }))
-    .filter((k) => k.zin);
-
-  const gedeeldeSecties = SECTIES.map((s) => handleiding && handleiding[s.id])
-    .filter((s) => s && s.tekst && (s.gedeeldMet || []).includes(sleutel))
-    .map((s) => ({
-      sectieId: s.sectieId,
-      titel: (sectie(s.sectieId) || {}).titel || s.sectieId,
-      tekst: s.tekst,
-    }));
-
-  if (gedeeldeKenmerken.length === 0 && gedeeldeSecties.length === 0) {
+  if (!kopie) {
+    // Niets aangevinkt betekent geen kopie, niet een lege kopie. Zo blijven er
+    // geen restanten van eerder delen achter.
     await deleteDoc(gedeeldRef(orgId, teamId, uid)).catch(() => {});
     return null;
   }
 
-  const gegevens = {
-    naam: naam || "",
-    kenmerken: gedeeldeKenmerken,
-    handleiding: gedeeldeSecties,
-    bijgewerktOp: serverTimestamp(),
-  };
+  const gegevens = { ...kopie, bijgewerktOp: serverTimestamp() };
   await setDoc(gedeeldRef(orgId, teamId, uid), gegevens);
   return gegevens;
 }

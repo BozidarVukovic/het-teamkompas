@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/sync-sitemap-blogs.mjs && node scripts/sync-sitemap-kennisbank.mjs && node scripts/valideer-kennisbank.mjs && node scripts/valideer-teamscan.mjs && node scripts/valideer-teamdag.mjs && node scripts/valideer-regels.mjs && node scripts/valideer-foutafhandeling.mjs && vite build && node scripts/generate-seo-pages.js",
+    "build": "node scripts/sync-sitemap-blogs.mjs && node scripts/sync-sitemap-kennisbank.mjs && node scripts/valideer-kennisbank.mjs && node scripts/valideer-teamscan.mjs && node scripts/valideer-teamdag.mjs && node scripts/valideer-regels.mjs && node scripts/valideer-regeldekking.mjs && node scripts/valideer-foutafhandeling.mjs && vite build && node scripts/generate-seo-pages.js",
     "preview": "vite preview",
     "test:scroll": "node scripts/test-scrollmanager.mjs",
     "test:free-scan": "node --test tests/freeScanScoring.test.mjs",
@@ -19,7 +19,8 @@
     "test:app": "node --test tests/adviesApp.test.mjs",
     "valideer:regels": "node scripts/valideer-regels.mjs",
     "test:insights": "node --test tests/insightsPdf.test.mjs",
-    "valideer:foutafhandeling": "node scripts/valideer-foutafhandeling.mjs"
+    "valideer:foutafhandeling": "node scripts/valideer-foutafhandeling.mjs",
+    "valideer:regeldekking": "node scripts/valideer-regeldekking.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

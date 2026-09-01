@@ -35,7 +35,18 @@ async function emulatorDraait() {
 const draait = await emulatorDraait();
 
 if (!draait) {
-  test("securityregels (overgeslagen: emulator draait niet)", { skip: true }, () => {});
+  // Overslaan mag, stil overslaan niet. Zonder deze regels ziet een run zonder
+  // dekking er hetzelfde uit als een run mét, en dat is precies hoe twee
+  // collecties maandenlang ongetest konden blijven.
+  console.error("");
+  console.error("  ┌──────────────────────────────────────────────────────────────┐");
+  console.error("  │  LET OP: de securityregels zijn NIET getest.                 │");
+  console.error("  │  De Firestore-emulator draait niet, dus de gedragstests op   │");
+  console.error("  │  firestore.rules zijn overgeslagen. Draai `npm run           │");
+  console.error("  │  test:regels` voordat je nieuwe regels uitrolt.              │");
+  console.error("  └──────────────────────────────────────────────────────────────┘");
+  console.error("");
+  test("securityregels (OVERGESLAGEN — emulator draait niet)", { skip: true }, () => {});
 } else {
   const omgeving = await initializeTestEnvironment({
     projectId: "teamkompas-regeltest",
@@ -60,6 +71,8 @@ if (!draait) {
     omgeving.authenticatedContext("maker", { email: "bozidar@mijnteamkompas.nl" }).firestore();
 
   const padGedeeld = (team, uid) => `organisaties/${ORG}/teams/${team}/gedeeld/${uid}`;
+  const padProfiellid = (team, id) => `organisaties/${ORG}/teams/${team}/profielleden/${id}`;
+  const padVoorstel = (team, uid) => `organisaties/${ORG}/teams/${team}/profielvoorstellen/${uid}`;
   const padLid = (team, uid) => `organisaties/${ORG}/teams/${team}/leden/${uid}`;
 
   // Uitgangssituatie: twee teams, Anna en Bram in team A, Cato beheerder van
@@ -239,7 +252,99 @@ if (!draait) {
     await assertSucceeds(deleteDoc(doc(anna(), "adviessessies/s6")));
   });
 
-  test("17. de makers mogen wel meelezen, maar niets van iemand veranderen", async () => {
+  /* --------- profielen die een beheerder zelf toevoegt en klaarzet --------- */
+
+  test("17. alleen een beheerder kan een profiel aan het team toevoegen", async () => {
+    await zetKlaar();
+    const profiel = { naam: "Eva", kenmerken: [], toegevoegdDoor: "cato" };
+
+    // Cato beheert team A.
+    await assertSucceeds(setDoc(doc(cato(), padProfiellid(TEAM_A, "p1")), profiel));
+    // Anna is gewoon lid en kan dat niet.
+    await assertFails(setDoc(doc(anna(), padProfiellid(TEAM_A, "p2")), { ...profiel, toegevoegdDoor: "anna" }));
+    // Dana zit in een ander team en kan er helemaal niet bij.
+    await assertFails(setDoc(doc(dana(), padProfiellid(TEAM_A, "p3")), { ...profiel, toegevoegdDoor: "dana" }));
+  });
+
+  test("18. een beheerder kan een profiel niet op andermans naam zetten", async () => {
+    await zetKlaar();
+    // "toegevoegd door" moet degene zijn die het toevoegt; anders staat er bij
+    // een profiel een naam die het er niet heeft neergezet.
+    await assertFails(
+      setDoc(doc(cato(), padProfiellid(TEAM_A, "p4")), { naam: "Eva", toegevoegdDoor: "anna" })
+    );
+  });
+
+  test("19. teamgenoten kunnen een toegevoegd profiel lezen, buitenstaanders niet", async () => {
+    await zetKlaar();
+    await assertSucceeds(setDoc(doc(cato(), padProfiellid(TEAM_A, "p5")), { naam: "Eva", toegevoegdDoor: "cato" }));
+
+    await assertSucceeds(getDoc(doc(anna(), padProfiellid(TEAM_A, "p5"))));
+    await assertFails(getDoc(doc(dana(), padProfiellid(TEAM_A, "p5"))));
+    await assertFails(getDoc(doc(gast(), padProfiellid(TEAM_A, "p5"))));
+  });
+
+  test("20. een lid kan een toegevoegd profiel niet weggooien", async () => {
+    await zetKlaar();
+    await assertSucceeds(setDoc(doc(cato(), padProfiellid(TEAM_A, "p6")), { naam: "Eva", toegevoegdDoor: "cato" }));
+    await assertFails(deleteDoc(doc(anna(), padProfiellid(TEAM_A, "p6"))));
+    await assertSucceeds(deleteDoc(doc(cato(), padProfiellid(TEAM_A, "p6"))));
+  });
+
+  test("21. een beheerder kan een voorstel klaarzetten, maar alleen voor een teamgenoot", async () => {
+    await zetKlaar();
+    const voorstel = { vanUid: "cato", vanNaam: "Cato", voorkeurskleur: "blauw", teksten: {} };
+
+    await assertSucceeds(setDoc(doc(cato(), padVoorstel(TEAM_A, "anna")), voorstel));
+    // Dana zit niet in team A; er hoort geen voorstel voor haar te kunnen staan.
+    await assertFails(setDoc(doc(cato(), padVoorstel(TEAM_A, "dana")), voorstel));
+    // En een gewoon lid kan sowieso niets klaarzetten.
+    await assertFails(
+      setDoc(doc(anna(), padVoorstel(TEAM_A, "bram")), { ...voorstel, vanUid: "anna" })
+    );
+  });
+
+  test("22. een voorstel is voor degene over wie het gaat, niet voor de rest van het team", async () => {
+    await zetKlaar();
+    const voorstel = { vanUid: "cato", vanNaam: "Cato", voorkeurskleur: "blauw", teksten: {} };
+    await assertSucceeds(setDoc(doc(cato(), padVoorstel(TEAM_A, "anna")), voorstel));
+
+    // Anna zelf en de beheerder die het neerzette mogen het zien.
+    await assertSucceeds(getDoc(doc(anna(), padVoorstel(TEAM_A, "anna"))));
+    await assertSucceeds(getDoc(doc(cato(), padVoorstel(TEAM_A, "anna"))));
+    // Bram is teamgenoot, maar dit gaat over Anna.
+    await assertFails(getDoc(doc(bram(), padVoorstel(TEAM_A, "anna"))));
+  });
+
+  test("23. een voorstel geeft de beheerder geen weg naar het profiel zelf", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(cato(), padVoorstel(TEAM_A, "anna")), {
+        vanUid: "cato",
+        vanNaam: "Cato",
+        voorkeurskleur: "blauw",
+        teksten: {},
+      })
+    );
+
+    // Dit is de kern: klaarzetten mag, meekijken niet. Er wordt nooit iets in
+    // andermans profiel geschreven en er is geen weg naartoe.
+    await assertFails(getDoc(doc(cato(), "profielen/anna")));
+    await assertFails(getDoc(doc(cato(), "profielen/anna/kenmerken/tempo")));
+    await assertFails(getDoc(doc(cato(), "handleidingen/anna")));
+    await assertFails(setDoc(doc(cato(), "profielen/anna/kenmerken/tempo"), { waarde: "snel" }));
+  });
+
+  test("24. degene over wie een voorstel gaat, kan het zelf weggooien", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(cato(), padVoorstel(TEAM_A, "anna")), { vanUid: "cato", voorkeurskleur: "blauw", teksten: {} })
+    );
+    await assertFails(deleteDoc(doc(bram(), padVoorstel(TEAM_A, "anna"))));
+    await assertSucceeds(deleteDoc(doc(anna(), padVoorstel(TEAM_A, "anna"))));
+  });
+
+  test("25. de makers mogen wel meelezen, maar niets van iemand veranderen", async () => {
     await zetKlaar();
     await assertSucceeds(setDoc(doc(anna(), "adviessessies/s5"), { uid: "anna", situatie: "herhaling" }));
     await assertFails(setDoc(doc(maker(), "adviessessies/s5"), { uid: "anna", bruikbaar: true }));
