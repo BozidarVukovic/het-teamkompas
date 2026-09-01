@@ -33,7 +33,7 @@ function Regel({ naar, titel, uitleg, stand = null, klaar = false }) {
 }
 
 export default function Ik() {
-  const { naam, gebruiker, kenmerken, actiefTeam, handleiding } = useApp();
+  const { naam, functie, gebruiker, kenmerken, actiefTeam, handleiding } = useApp();
   const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding });
   const handleidingKlaar = voortgang.handleidingSecties >= voortgang.handleidingVan;
 
@@ -43,7 +43,10 @@ export default function Ik() {
         <span className="tk-bol tk-bol-groot">{initialen(naam)}</span>
         <div style={{ minWidth: 0 }}>
           <h1 className="tk-kop" style={{ marginBottom: 2 }}>{naam || "Ik"}</h1>
-          <p className="tk-onderkop" style={{ margin: 0 }}>{gebruiker && gebruiker.email}</p>
+          <p className="tk-onderkop" style={{ margin: 0 }}>
+            {functie ? `${functie} · ` : ""}
+            {gebruiker && gebruiker.email}
+          </p>
         </div>
       </header>
 
@@ -78,7 +81,7 @@ export default function Ik() {
           <Regel
             naar="/app/gegevens"
             titel="Mijn gegevens"
-            uitleg="Je naam, je teams, en alles wat er van je is opgeslagen."
+            uitleg="Je naam, je functie, je teams, en alles wat er van je is opgeslagen."
           />
         </div>
       </section>

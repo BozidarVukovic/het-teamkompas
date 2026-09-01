@@ -210,10 +210,9 @@ export default function MijnTeam() {
                 naam={l.naam || "Teamgenoot"}
                 achter={eigen ? "(jij)" : null}
                 onder={[
+                  l.functie || null,
                   l.rol === "beheerder" ? "Beheerder" : null,
-                  g
-                    ? `${g.kenmerken.length} punten gedeeld`
-                    : "Heeft nog niets gedeeld",
+                  g ? `${g.kenmerken.length} punten gedeeld` : "Heeft nog niets gedeeld",
                 ]
                   .filter(Boolean)
                   .join(" · ")}

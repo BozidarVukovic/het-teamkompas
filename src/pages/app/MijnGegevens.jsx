@@ -7,12 +7,19 @@ import { useApp } from "../../lib/app/AppContext";
 import { exporteerEigenGegevens } from "../../lib/app/opslag";
 
 export default function MijnGegevens() {
-  const { gebruiker, naam, zetNaam, lidmaatschappen, kenmerken, handleiding, verwijderAlles } = useApp();
+  const { gebruiker, naam, functie, zetProfielgegevens, lidmaatschappen, kenmerken, handleiding, verwijderAlles } =
+    useApp();
 
   const [nieuweNaam, setNieuweNaam] = useState(naam || "");
+  const [nieuweFunctie, setNieuweFunctie] = useState(functie || "");
   const [bezig, setBezig] = useState(false);
   const [melding, setMelding] = useState("");
   const [bevestig, setBevestig] = useState("");
+
+  // Bewaren mag pas als er echt iets veranderd is, en een naam is verplicht.
+  const naamKlaar = nieuweNaam.trim().length >= 2;
+  const ietsGewijzigd =
+    naamKlaar && (nieuweNaam.trim() !== naam || nieuweFunctie.trim() !== functie);
 
   const gedeeldeKenmerken = kenmerken.filter((k) => (k.gedeeldMet || []).length > 0).length;
   const geschrevenSecties = Object.values(handleiding).filter((s) => s && s.tekst).length;
@@ -50,30 +57,54 @@ export default function MijnGegevens() {
       {melding && <div className="tk-melding tk-melding-goed">{melding}</div>}
 
       <div className="tk-kaart">
-        <h2>Je naam</h2>
+        <h2>Naam en functie</h2>
         <p>Dit is wat je teamgenoten van je zien.</p>
+
+        <label className="tk-label" htmlFor="tk-naam">Je naam</label>
         <input
+          id="tk-naam"
           className="tk-invoer"
           value={nieuweNaam}
           onChange={(e) => setNieuweNaam(e.target.value)}
-          aria-label="Je naam"
+          placeholder="Voornaam"
         />
-        <div className="tk-knoppen" style={{ marginTop: 12 }}>
+
+        <label className="tk-label" htmlFor="tk-functie" style={{ marginTop: 14 }}>
+          Je functie <span style={{ fontWeight: 500, textTransform: "none", letterSpacing: 0 }}>(optioneel)</span>
+        </label>
+        <input
+          id="tk-functie"
+          className="tk-invoer"
+          value={nieuweFunctie}
+          onChange={(e) => setNieuweFunctie(e.target.value)}
+          placeholder="Bijvoorbeeld: teamleider, adviseur, projectleider"
+          maxLength={60}
+        />
+        <p className="tk-fijn" style={{ marginTop: 8 }}>
+          Je functie helpt teamgenoten plaatsen vanuit welke rol je meedoet. Hij speelt geen rol in
+          het advies: dat gaat over hoe jullie samenwerken, niet over wie boven wie staat. Laat hem
+          leeg als je liever niets invult, en haal hem later gerust weer weg.
+        </p>
+
+        <div className="tk-knoppen" style={{ marginTop: 14 }}>
           <button
             type="button"
             className="tk-knop tk-knop-klein"
-            disabled={bezig || nieuweNaam.trim().length < 2 || nieuweNaam.trim() === naam}
+            disabled={bezig || !ietsGewijzigd}
             onClick={async () => {
               setBezig(true);
               try {
-                await zetNaam(nieuweNaam.trim());
-                setMelding("Je naam is bijgewerkt. Deel je iets, dan gaat de nieuwe naam mee bij de eerstvolgende wijziging.");
+                await zetProfielgegevens({
+                  naam: nieuweNaam.trim(),
+                  functie: nieuweFunctie.trim(),
+                });
+                setMelding("Je gegevens zijn bijgewerkt. Je teamgenoten zien dit meteen.");
               } finally {
                 setBezig(false);
               }
             }}
           >
-            Naam bewaren
+            Bewaren
           </button>
         </div>
       </div>
@@ -81,7 +112,7 @@ export default function MijnGegevens() {
       <div className="tk-kaart">
         <h2>Wat we van je bewaren</h2>
         <div className="tk-rij">
-          <span>Je naam en e-mailadres</span>
+          <span>Je naam{functie ? ", functie" : ""} en e-mailadres</span>
           <span className="tk-fijn">Voor inloggen en herkenning in je team</span>
         </div>
         <div className="tk-rij">

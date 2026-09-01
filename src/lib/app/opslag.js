@@ -226,6 +226,35 @@ export async function verwijderTeam({ uid, orgId, teamId, code }) {
   await setDoc(gebruikerRef(uid), { lidmaatschappen: over }, { merge: true });
 }
 
+/**
+ * Zet je naam en functie in elk team waar je lid van bent.
+ *
+ * Je naam staat op drie plekken: in je eigen gebruikersdocument, in het
+ * lid-document per team, en in de kopie die je met een team deelt. Alleen de
+ * eerste bijwerken is niet genoeg — dan blijven je teamgenoten de oude naam
+ * zien tot je toevallig iets aan je profiel verandert.
+ *
+ * Je functie is optioneel en gaat mee naar je teams, want daar is hij voor.
+ * Leeg laten betekent leeg wegschrijven, zodat weghalen ook echt weghalen is.
+ */
+export async function werkLidgegevensBij({ uid, lidmaatschappen = [], naam = "", functie = "" }) {
+  const velden = { naam, functie };
+
+  await Promise.all(
+    (lidmaatschappen || []).map((l) =>
+      setDoc(lidRef(l.orgId, l.teamId, uid), velden, { merge: true }).catch(() => {})
+    )
+  );
+
+  // De gedeelde kopie bestaat alleen als je iets deelt. Bestaat hij niet, dan
+  // valt er niets bij te werken en is dat geen fout.
+  await Promise.all(
+    (lidmaatschappen || []).map((l) =>
+      updateDoc(gedeeldRef(l.orgId, l.teamId, uid), { naam }).catch(() => {})
+    )
+  );
+}
+
 export async function haalTeamleden(orgId, teamId) {
   const snap = await getDocs(ledenCol(orgId, teamId));
   return snap.docs

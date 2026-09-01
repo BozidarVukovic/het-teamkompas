@@ -35,14 +35,28 @@ export function collegasVan({ leden = [], gedeeld = {}, profielleden = [], eigen
     .sort((a, b) => String(a.naam || "").localeCompare(String(b.naam || ""), "nl"));
 }
 
-/** Eén regel onder een naam: wat deze persoon heeft gedeeld, en van wie het komt. */
+/**
+ * Eén regel onder een naam: wie het is en wat er van diegene bekend is.
+ *
+ * De functie staat vooraan als iemand er een heeft ingevuld. Hij zegt vanuit
+ * welke rol iemand meedoet, en dat is bruikbaarder dan een aantal.
+ */
 export function collegaInEenZin(collega) {
   if (!collega) return "";
-  if (collega.punten === 0) return "Heeft nog niets gedeeld";
 
-  const punten = `${collega.punten} ${collega.punten === 1 ? "punt" : "punten"}`;
-  if (collega.doorBeheerder) {
-    return `${punten} · toegevoegd door ${collega.toegevoegdDoorNaam || "een beheerder"}`;
+  const delen = [];
+  if (collega.functie) delen.push(collega.functie);
+
+  if (collega.punten === 0) {
+    delen.push("Heeft nog niets gedeeld");
+  } else {
+    const punten = `${collega.punten} ${collega.punten === 1 ? "punt" : "punten"}`;
+    delen.push(
+      collega.doorBeheerder
+        ? `${punten} · toegevoegd door ${collega.toegevoegdDoorNaam || "een beheerder"}`
+        : `${punten} gedeeld`
+    );
   }
-  return `${punten} gedeeld`;
+
+  return delen.join(" · ");
 }

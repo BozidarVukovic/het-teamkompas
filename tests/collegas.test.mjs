@@ -58,6 +58,21 @@ test("de regel onder een naam zegt waar het vandaan komt", () => {
   assert.equal(zin("Eva"), "1 punt · toegevoegd door Bozidar");
 });
 
+test("een ingevulde functie staat vooraan", () => {
+  assert.equal(
+    collegaInEenZin({ functie: "Teamleider", punten: 3 }),
+    "Teamleider · 3 punten gedeeld"
+  );
+  assert.equal(
+    collegaInEenZin({ functie: "Adviseur", punten: 0 }),
+    "Adviseur · Heeft nog niets gedeeld"
+  );
+});
+
+test("zonder functie blijft de regel zoals hij was", () => {
+  assert.equal(collegaInEenZin({ punten: 3 }), "3 punten gedeeld");
+});
+
 test("één punt is geen punten", () => {
   assert.equal(collegaInEenZin({ punten: 1 }), "1 punt gedeeld");
   assert.equal(collegaInEenZin({ punten: 2 }), "2 punten gedeeld");

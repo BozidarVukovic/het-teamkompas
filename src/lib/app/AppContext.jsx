@@ -38,6 +38,7 @@ import {
   verwijderEigenGegevens as verwijderEigenGegevensInDb,
   werkAlleGedeeldBij,
   werkGebruikerBij,
+  werkLidgegevensBij,
   wisInsights as wisInsightsInDb,
 } from "./opslag";
 
@@ -279,6 +280,7 @@ function terugkeeradres() {
   /* --------------------------------------------------------------- acties */
 
   const naam = (gebruikerDoc && gebruikerDoc.naam) || "";
+  const functie = (gebruikerDoc && gebruikerDoc.functie) || "";
 
   const synchroniseerGedeeld = useCallback(
     async (nieuweKenmerken, nieuweHandleiding) => {
@@ -294,13 +296,38 @@ function terugkeeradres() {
     [gebruiker, naam, lidmaatschappen]
   );
 
-  const zetNaam = useCallback(
-    async (nieuweNaam) => {
+  /**
+   * Je naam en je functie: het eerste is verplicht, het tweede optioneel.
+   *
+   * Allebei gaan ze mee naar elk team waar je lid van bent — daar is een
+   * functie voor. Wat je met een team deelt aan kenmerken en handleiding staat
+   * hier los van; dat blijft jouw keuze per punt.
+   */
+  const zetProfielgegevens = useCallback(
+    async ({ naam: nieuweNaam, functie: nieuweFunctie } = {}) => {
       if (!gebruiker) return;
-      await werkGebruikerBij(gebruiker.uid, { naam: nieuweNaam });
-      setGebruikerDoc((d) => ({ ...(d || {}), naam: nieuweNaam }));
+
+      const velden = {};
+      if (nieuweNaam !== undefined) velden.naam = nieuweNaam;
+      if (nieuweFunctie !== undefined) velden.functie = nieuweFunctie;
+      if (Object.keys(velden).length === 0) return;
+
+      await werkGebruikerBij(gebruiker.uid, velden);
+      setGebruikerDoc((d) => ({ ...(d || {}), ...velden }));
+
+      await werkLidgegevensBij({
+        uid: gebruiker.uid,
+        lidmaatschappen,
+        naam: velden.naam !== undefined ? velden.naam : naam,
+        functie: velden.functie !== undefined ? velden.functie : functie,
+      });
     },
-    [gebruiker]
+    [gebruiker, lidmaatschappen, naam, functie]
+  );
+
+  const zetNaam = useCallback(
+    (nieuweNaam) => zetProfielgegevens({ naam: nieuweNaam }),
+    [zetProfielgegevens]
   );
 
   const bewaarKenmerk = useCallback(
@@ -481,6 +508,7 @@ function terugkeeradres() {
       gegevensKlaar,
       gebruikerDoc,
       naam,
+      functie,
       lidmaatschappen,
       actiefTeam,
       kenmerken,
@@ -500,6 +528,7 @@ function terugkeeradres() {
       voltooiInloggen,
       logUit,
       zetNaam,
+      zetProfielgegevens,
       bewaarKenmerk,
       bewaarMeerKenmerken,
       bewaarSectie,
@@ -513,7 +542,7 @@ function terugkeeradres() {
       herlaad: () => (gebruiker ? laadGegevens(gebruiker.uid, gebruiker.email) : null),
     }),
     [
-      gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, lidmaatschappen, actiefTeam,
+      gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, functie, lidmaatschappen, actiefTeam,
       kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, laadTeamOverzicht, voorstellen, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
