@@ -846,3 +846,42 @@
 .tk-stille-knop:hover {
   text-decoration: underline;
 }
+
+/* De kop van "Ik": wie je bent, in de vorm van een naamkaartje. */
+.tk-ikkop {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.tk-bol-groot {
+  width: 56px;
+  height: 56px;
+  font-size: 20px;
+}
+
+/* Een regel in een groepslijst kan ook een link zijn. */
+a.tk-optie {
+  text-decoration: none;
+  color: var(--tk-tekst);
+}
+
+/* Waar je staat bij dit onderdeel, rechts op de regel. */
+.tk-optie-stand {
+  margin-left: auto;
+  flex: 0 0 auto;
+  color: var(--tk-zacht);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.tk-optie-stand.klaar {
+  color: var(--tk-teal);
+  font-weight: 600;
+}
+
+.tk-optie-stand + .tk-optie-pijl {
+  margin-left: 10px;
+}
+
