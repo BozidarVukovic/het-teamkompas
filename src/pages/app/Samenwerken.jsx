@@ -15,17 +15,8 @@ import {
 } from "../../lib/app/opslag";
 import { vraagAdvies } from "../../lib/app/advies/adviesService";
 import { situatiesPerGroep } from "../../data/app/situaties";
+import { initialen } from "../../lib/app/naam";
 import VolgendeStap from "../../components/app/VolgendeStap";
-
-function initialen(naam) {
-  return String(naam || "?")
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((d) => d[0])
-    .join("")
-    .toUpperCase();
-}
 
 export default function Samenwerken() {
   const { gebruiker, actiefTeam, kenmerken, teamOverzicht } = useApp();

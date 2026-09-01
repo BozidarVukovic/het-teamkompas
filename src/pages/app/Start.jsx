@@ -15,6 +15,7 @@ import VolgendeStap from "../../components/app/VolgendeStap";
 import Voortgang from "../../components/app/Voortgang";
 import { bepaalVolgendeStap } from "../../lib/app/volgendeStap";
 import { bepaalVoortgang } from "../../lib/app/voortgang";
+import { voornaam } from "../../lib/app/naam";
 
 // De drie dingen waarvoor je de app opent. Meer keuzes maken het startscherm
 // niet rijker, alleen trager.
@@ -57,7 +58,6 @@ export default function Start() {
   const { gebruiker, naam, actiefTeam, kenmerken, handleiding, teamOverzicht, uitnodigingscode, vergeetUitnodiging } =
     useApp();
 
-  const voornaam = (naam || "").trim().split(/\s+/)[0];
 
   const stap = bepaalVolgendeStap({
     kenmerken,
@@ -73,7 +73,7 @@ export default function Start() {
 
   return (
     <div className="tk-inhoud">
-      <h1 className="tk-kop">Hallo {voornaam || "daar"}</h1>
+      <h1 className="tk-kop">Hallo {voornaam(naam, "daar")}</h1>
       <p className="tk-onderkop">Waarmee kunnen we je vandaag helpen?</p>
 
       {actiefTeam && (

@@ -729,3 +729,114 @@
 .tk-optie:hover .tk-optie-pijl {
   color: var(--tk-teal);
 }
+
+/* Een persoon als regel in de lijst, met wat eronder tevoorschijn komt. */
+.tk-persoonrij {
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.tk-persoonrij:first-child {
+  border-top: 0;
+}
+
+.tk-persoonrij .tk-optie {
+  border-top: 0;
+}
+
+.tk-optie-persoon {
+  padding: 12px 16px;
+}
+
+.tk-optie-tekst {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tk-optie-tekst small {
+  color: var(--tk-zacht);
+  font-size: 12.5px;
+}
+
+/* Een opengeklapte persoon is één blok: de regel en wat eronder staat delen
+   dezelfde tint, zodat je ziet dat het bij elkaar hoort. */
+.tk-optie.open,
+.tk-optie-uit {
+  background: rgba(0, 168, 150, 0.07);
+}
+
+.tk-optie-uit {
+  padding: 2px 16px 16px;
+}
+
+.tk-optie-uit .tk-citaat {
+  margin-top: 0;
+}
+
+.tk-optie-uit > p:first-child {
+  margin-top: 0;
+}
+
+/* Uitnodigen en profiel toevoegen zijn acties, geen secties. Als regel onder de
+   mensen staan ze waar je ze zoekt, zonder het scherm te vullen met uitleg voor
+   iets wat je een paar keer doet en daarna nooit meer. */
+.tk-optie-toevoegen {
+  color: var(--tk-teal);
+  font-weight: 600;
+}
+
+.tk-optie-plus {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 1px dashed rgba(0, 168, 150, 0.45);
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Een regel die je opendraait voor uitleg die je meestal niet nodig hebt. */
+.tk-uitklap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--tk-teal);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Het einde van de pagina: waar je bent, en de knop om weg te gaan. Zulke
+   dingen horen niet in een kaart die om aandacht vraagt. */
+.tk-stil {
+  margin-top: 34px;
+  padding-top: 18px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.tk-stil .tk-groep-kop {
+  margin-left: 0;
+}
+
+.tk-stille-knop {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--tk-rood);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tk-stille-knop:hover {
+  text-decoration: underline;
+}
