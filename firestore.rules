@@ -207,14 +207,22 @@ service cloud.firestore {
     }
 
     // Adviessessies zijn persoonlijk. We slaan alleen op dat een advies is
-    // opgevraagd en of het bruikbaar was, nooit de inhoud van het advies.
+    // opgevraagd, bij welke situatie, of het bruikbaar was en — als het dat
+    // niet was — wat er miste. Nooit over wie het ging of wat er stond.
+    //
+    // Een teambeheerder kan hier niet bij, en dat is geen omissie. Zou een
+    // leidinggevende kunnen zien wie welk advies opvroeg, dan vraagt niemand
+    // nog advies over wat er echt speelt.
+    //
+    // De makers van de app mogen de hele collectie wel lezen, want dit is de
+    // enige manier om te zien welke adviezen raak zijn en welke niet.
     match /adviessessies/{sessieId} {
-      // Bewust get in plaats van read: doorzoeken van deze collectie mag niet.
-      allow get: if ingelogd() && resource.data.uid == request.auth.uid;
+      allow get: if isAdmin() || (ingelogd() && resource.data.uid == request.auth.uid);
       allow create: if ingelogd() && request.resource.data.uid == request.auth.uid;
       allow update: if ingelogd() && resource.data.uid == request.auth.uid;
       allow delete: if ingelogd() && resource.data.uid == request.auth.uid;
-      allow list: if false;
+      // Doorzoeken kan alleen de makers, nooit een teambeheerder of teamgenoot.
+      allow list: if isAdmin();
     }
 
     // Alles wat niet expliciet hierboven staat, blijft dicht

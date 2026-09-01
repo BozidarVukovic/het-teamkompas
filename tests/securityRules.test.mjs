@@ -55,6 +55,9 @@ if (!draait) {
   const cato = () => omgeving.authenticatedContext("cato").firestore();   // beheerder van team A
   const dana = () => omgeving.authenticatedContext("dana").firestore();   // lid van team B
   const gast = () => omgeving.unauthenticatedContext().firestore();
+  // De makers van de app; isAdmin() in de regels kijkt naar het e-mailadres.
+  const maker = () =>
+    omgeving.authenticatedContext("maker", { email: "bozidar@mijnteamkompas.nl" }).firestore();
 
   const padGedeeld = (team, uid) => `organisaties/${ORG}/teams/${team}/gedeeld/${uid}`;
   const padLid = (team, uid) => `organisaties/${ORG}/teams/${team}/leden/${uid}`;
@@ -197,6 +200,34 @@ if (!draait) {
     await assertSucceeds(setDoc(doc(anna(), "adviessessies/s1"), { uid: "anna", situatie: "feedback-geven" }));
     await assertFails(getDoc(doc(bram(), "adviessessies/s1")));
     await assertFails(setDoc(doc(bram(), "adviessessies/s2"), { uid: "anna", situatie: "x" }));
+  });
+
+  test("14. een teambeheerder kan niet zien wie welk advies opvroeg", async () => {
+    await zetKlaar();
+    await assertSucceeds(setDoc(doc(anna(), "adviessessies/s3"), { uid: "anna", situatie: "irritatie" }));
+
+    // Cato beheert team A, waar Anna in zit. Dat geeft geen enkele weg naar
+    // Anna's adviessessies — niet naar één, en niet naar de hele lijst.
+    await assertFails(getDoc(doc(cato(), "adviessessies/s3")));
+    await assertFails(getDocs(collection(cato(), "adviessessies")));
+  });
+
+  test("15. de makers mogen de sessies wel doorzoeken, want anders meten ze niets", async () => {
+    await zetKlaar();
+    await assertSucceeds(setDoc(doc(anna(), "adviessessies/s4"), { uid: "anna", situatie: "weerstand" }));
+    await assertSucceeds(getDocs(collection(maker(), "adviessessies")));
+    await assertSucceeds(getDoc(doc(maker(), "adviessessies/s4")));
+  });
+
+  test("16. de makers mogen wel meelezen, maar niets van iemand veranderen", async () => {
+    await zetKlaar();
+    await assertSucceeds(setDoc(doc(anna(), "adviessessies/s5"), { uid: "anna", situatie: "herhaling" }));
+    await assertFails(setDoc(doc(maker(), "adviessessies/s5"), { uid: "anna", bruikbaar: true }));
+    await assertFails(deleteDoc(doc(maker(), "adviessessies/s5")));
+
+    // En nergens bij het profiel of de handleiding van een gebruiker.
+    await assertFails(getDoc(doc(maker(), "profielen/anna/kenmerken/tempo")));
+    await assertFails(getDoc(doc(maker(), "handleidingen/anna/secties/werk")));
   });
 
   test.after(async () => {

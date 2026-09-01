@@ -132,8 +132,11 @@ export default function MijnGegevens() {
           <span className="tk-fijn">Teams zien niets van elkaar</span>
         </div>
         <p className="tk-fijn" style={{ marginTop: 12 }}>
-          We bewaren daarnaast dát je advies hebt opgevraagd en of je het bruikbaar vond — nooit
-          over wie het ging of wat er stond. Er is geen scoring, geen ranglijst en geen profilering.
+          We bewaren daarnaast dát je advies hebt opgevraagd, bij welke situatie, en of je het
+          bruikbaar vond — nooit over wie het ging of wat er stond. Vond je een advies niet
+          bruikbaar, dan kun je er één zin bij schrijven; die lezen de makers van de app om het
+          advies te verbeteren. Je teamgenoten en je beheerder zien daar niets van. Er is geen
+          scoring, geen ranglijst en geen profilering.
         </p>
       </div>
 

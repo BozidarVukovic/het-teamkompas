@@ -502,9 +502,36 @@ export async function logAdviessessie({ uid, situatieId, aantalBlokken }) {
   return ref.id;
 }
 
-export async function beoordeelAdviessessie(sessieId, bruikbaar) {
+export async function beoordeelAdviessessie(sessieId, bruikbaar, toelichting) {
   if (!sessieId) return;
-  await updateDoc(doc(db, "adviessessies", sessieId), { bruikbaar });
+  const velden = { bruikbaar };
+  // Alleen wat iemand echt heeft ingetypt slaan we op; een leeg veld is geen
+  // antwoord en hoort niet als lege string in de database te belanden.
+  const tekst = String(toelichting || "").trim();
+  if (tekst) velden.toelichting = tekst.slice(0, 500);
+  await updateDoc(doc(db, "adviessessies", sessieId), velden);
+}
+
+/**
+ * Alle adviessessies, voor de makers van de app.
+ *
+ * Alleen de velden die iets zeggen over het gebruik van de app. De uid gaat
+ * mee om verschillende mensen te kunnen tellen, maar wordt nergens getoond en
+ * is met opzet niet naar een naam te herleiden — daar bestaat geen weg voor.
+ */
+export async function haalAdviessessies() {
+  const snap = await getDocs(collection(db, "adviessessies"));
+  return snap.docs.map((d) => {
+    const g = d.data();
+    return {
+      id: d.id,
+      uid: g.uid || null,
+      situatieId: g.situatieId || null,
+      bruikbaar: typeof g.bruikbaar === "boolean" ? g.bruikbaar : null,
+      toelichting: g.toelichting || "",
+      opgevraagdOp: g.opgevraagdOp || null,
+    };
+  });
 }
 
 /* -------------------------------------------------- eigen gegevens beheren */

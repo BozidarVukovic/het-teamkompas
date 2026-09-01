@@ -46,6 +46,7 @@ import ReflectiekaartFormulier from "./ReflectiekaartFormulier";
 import { Analytics } from "@vercel/analytics/react";
 import PageScans from "./pages/admin/PageScans";
 import PageGratisTeamscan from "./pages/admin/PageGratisTeamscan";
+import PageAppgebruik from "./pages/admin/PageAppgebruik";
 import GratisTeamscan, { GratisTeamscanReport } from "./pages/public/GratisTeamscan";
 import {
   berekenScanScoresVoorMeting,
@@ -9282,6 +9283,7 @@ function AdminDashboard({ onLogout }) {
     { label:"Reflectiekaart leads", icon:"📥", badge: nieuwReflectieCount > 0 ? String(nieuwReflectieCount) : null, section:null },
     { label:"Nieuwsbrief",        icon:"📧", section:null },
     { label:"Klanten",            icon:"🏢", section:null },
+    { label:"Appgebruik",         icon:"🧭", section:"Samenwerkomgeving" },
     { label:"Scans",              icon:"📝", section:"Trajecten" },
     { label:"Metingen",           icon:"📋", section:null },
     { label:"Rapportages",        icon:"📈", section:null },
@@ -9293,6 +9295,7 @@ function AdminDashboard({ onLogout }) {
     if (activeNav === "Contactaanvragen")     return <PageContactaanvragen />;
     if (activeNav === "Teamscan aanvragen")   return <FunnelDashboard />;
     if (activeNav === "Gratis teamscan")      return <PageGratisTeamscan />;
+    if (activeNav === "Appgebruik")           return <PageAppgebruik />;
     if (activeNav === "Reflectiekaart leads") return <PageReflectieLeads />;
     if (activeNav === "Nieuwsbrief")          return <PageNieuwsbrief />;
     if (activeNav === "Klanten")              return <PageKlanten />;

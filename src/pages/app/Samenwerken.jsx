@@ -33,6 +33,8 @@ export default function Samenwerken() {
   const [advies, setAdvies] = useState(null);
   const [sessieId, setSessieId] = useState(null);
   const [beoordeeld, setBeoordeeld] = useState(null);
+  const [toelichting, setToelichting] = useState("");
+  const [toelichtingVerstuurd, setToelichtingVerstuurd] = useState(false);
 
   useEffect(() => {
     if (!actiefTeam) return;
@@ -123,6 +125,8 @@ export default function Samenwerken() {
     setAdvies(null);
     setSessieId(null);
     setBeoordeeld(null);
+    setToelichting("");
+    setToelichtingVerstuurd(false);
   };
 
   const beoordeel = async (bruikbaar) => {
@@ -131,6 +135,17 @@ export default function Samenwerken() {
       await beoordeelAdviessessie(sessieId, bruikbaar);
     } catch {
       /* een oordeel is prettig om te weten, maar nooit blokkerend */
+    }
+  };
+
+  const stuurToelichting = async () => {
+    const tekst = toelichting.trim();
+    if (!tekst) return;
+    setToelichtingVerstuurd(true);
+    try {
+      await beoordeelAdviessessie(sessieId, false, tekst);
+    } catch {
+      /* ook dit mag nooit in de weg zitten */
     }
   };
 
@@ -314,11 +329,53 @@ export default function Samenwerken() {
                 </button>
               </div>
             ) : (
-              <p style={{ marginBottom: 0 }}>
-                {beoordeeld
-                  ? "Fijn. We bewaren alleen dát je het bruikbaar vond, niet waar het over ging."
-                  : "Duidelijk. We bewaren alleen dát het niet paste, niet waar het over ging."}
-              </p>
+              <>
+                <p style={{ marginBottom: 0 }}>
+                  {beoordeeld
+                    ? "Fijn. We bewaren alleen dát je het bruikbaar vond, niet waar het over ging."
+                    : "Duidelijk. We bewaren alleen dát het niet paste, niet waar het over ging."}
+                </p>
+
+                {/* Dát iets niet paste zegt weinig; wat er miste zegt alles.
+                    Optioneel, want niemand hoort een formulier in te vullen om
+                    van een advies af te komen. */}
+                {beoordeeld === false && !toelichtingVerstuurd && (
+                  <div style={{ marginTop: 14 }}>
+                    <label className="tk-label" htmlFor="tk-toelichting">
+                      Wat miste er? <span style={{ fontWeight: 500, textTransform: "none", letterSpacing: 0 }}>(optioneel)</span>
+                    </label>
+                    <textarea
+                      id="tk-toelichting"
+                      className="tk-tekstvak"
+                      rows={2}
+                      maxLength={500}
+                      value={toelichting}
+                      onChange={(e) => setToelichting(e.target.value)}
+                      placeholder="Bijvoorbeeld: te algemeen, of het ging over het verkeerde punt."
+                    />
+                    <p className="tk-fijn" style={{ margin: "8px 0 0" }}>
+                      Dit lezen de makers van Mijn Teamkompas om het advies te verbeteren. Je
+                      teamgenoten en je beheerder zien het niet. Schrijf er geen namen in.
+                    </p>
+                    <div className="tk-knoppen" style={{ marginTop: 12 }}>
+                      <button
+                        type="button"
+                        className="tk-knop tk-knop-klein"
+                        disabled={toelichting.trim().length === 0}
+                        onClick={stuurToelichting}
+                      >
+                        Versturen
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {toelichtingVerstuurd && (
+                  <p className="tk-fijn" style={{ marginTop: 10, marginBottom: 0 }}>
+                    Dank je. Daar kunnen we wat mee.
+                  </p>
+                )}
+              </>
             )}
             <div className="tk-knoppen" style={{ marginTop: 14 }}>
               <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={opnieuw}>
