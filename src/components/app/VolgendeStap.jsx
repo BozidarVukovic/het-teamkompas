@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { AANTAL_STAPPEN, bepaalVolgendeStap } from "../../lib/app/volgendeStap";
+import { bruikbareKenmerken, sleutelVan } from "../../lib/app/telling";
 import useActie from "./useActie";
 import Melding from "./Melding";
 
@@ -68,8 +69,8 @@ export default function VolgendeStap({ variant = "klein", verbergAls = null }) {
   }
 
   const deelAlles = async () => {
-    const sleutel = actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : null;
-    const bruikbaar = kenmerken.filter((k) => k.waarde && k.bevestigd !== "nee");
+    const sleutel = sleutelVan(actiefTeam);
+    const bruikbaar = bruikbareKenmerken(kenmerken);
     if (!sleutel || bruikbaar.length === 0) return;
     await voerUit("alles delen met je team", () =>
       bewaarMeerKenmerken(
@@ -130,6 +131,7 @@ export default function VolgendeStap({ variant = "klein", verbergAls = null }) {
             </Link>
           </div>
         )}
+        <Melding melding={melding} onSluiten={wisMelding} />
       </div>
     );
   }

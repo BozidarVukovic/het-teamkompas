@@ -13,6 +13,8 @@
 //
 // Pure functie, geen React: te testen zonder browser en zonder database.
 
+import { telKenmerken } from "./telling.js";
+
 export const AANTAL_STAPPEN = 3;
 
 /**
@@ -34,11 +36,12 @@ export function bepaalVolgendeStap({
   teamcode = null,
   extraProfielen = 0,
 } = {}) {
-  const bruikbaar = kenmerken.filter((k) => k.waarde && k.bevestigd !== "nee");
-  const sleutel = actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : null;
-  const gedeeld = sleutel
-    ? bruikbaar.filter((k) => (k.gedeeldMet || []).includes(sleutel)).length
-    : 0;
+  // Zelfde telling als de voortgangsbalk en het profielscherm; zie telling.js.
+  // Elk scherm zelf laten tellen gaf hetzelfde antwoord, maar niet omdat ze
+  // hetzelfde deden.
+  const geteld = telKenmerken({ kenmerken, actiefTeam });
+  const bruikbaar = geteld.bruikbaar;
+  const gedeeld = geteld.aantalGedeeld;
   const teamNaam = (actiefTeam && actiefTeam.teamNaam) || "je team";
   // Profielen die een beheerder zelf toevoegde tellen gewoon mee: daar valt
   // net zo goed advies over te vragen.

@@ -7,12 +7,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
-import {
-  beoordeelAdviessessie,
-  haalGedeeldVanTeam,
-  haalTeamleden,
-  logAdviessessie,
-} from "../../lib/app/opslag";
+import { beoordeelAdviessessie, logAdviessessie } from "../../lib/app/opslag";
 import { vraagAdvies, vraagGroepsadvies } from "../../lib/app/advies/adviesService";
 import { situatiesPerGroep } from "../../data/app/situaties";
 import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
@@ -34,10 +29,9 @@ export default function Samenwerken() {
   const { gebruiker, actiefTeam, kenmerken, teamOverzicht } = useApp();
   const [zoek] = useSearchParams();
 
-  const [leden, setLeden] = useState([]);
-  const [gedeeld, setGedeeld] = useState({});
-  const [laden, setLaden] = useState(true);
-  const [fout, setFout] = useState("");
+  // De teamgegevens staan al in de context; die nog een keer ophalen leverde
+  // een tweede kopie op die na een wijziging uit de pas ging lopen.
+  const { leden, gedeeld, laden } = teamOverzicht;
 
   // Meerdere mensen tegelijk mag; kies je er één, dan verandert er niets aan
   // hoe het altijd al werkte.
@@ -49,25 +43,6 @@ export default function Samenwerken() {
   const [toelichting, setToelichting] = useState("");
   const [toelichtingVerstuurd, setToelichtingVerstuurd] = useState(false);
 
-  useEffect(() => {
-    if (!actiefTeam) return;
-    let actueel = true;
-    setLaden(true);
-    Promise.all([
-      haalTeamleden(actiefTeam.orgId, actiefTeam.teamId),
-      haalGedeeldVanTeam(actiefTeam.orgId, actiefTeam.teamId),
-    ])
-      .then(([l, g]) => {
-        if (!actueel) return;
-        setLeden(l);
-        setGedeeld(g);
-      })
-      .catch(() => actueel && setFout("De teamgegevens konden niet worden opgehaald."))
-      .finally(() => actueel && setLaden(false));
-    return () => {
-      actueel = false;
-    };
-  }, [actiefTeam]);
 
   // Echte teamgenoten en de profielen die een beheerder heeft toegevoegd staan
   // in één lijst: over allebei valt evengoed advies te vragen. Diezelfde lijst
@@ -201,8 +176,6 @@ export default function Samenwerken() {
           jullie allebei hebben gedeeld.
         </p>
       )}
-
-      {fout && <div className="tk-melding tk-melding-fout">{fout}</div>}
 
       {anderen.length === 0 && (
         <div className="tk-kaart">

@@ -8,13 +8,16 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { AANTAL_STAPPEN, bepaalVolgendeStap } from "../src/lib/app/volgendeStap.js";
+import { kenmerk as kenmerkUitData } from "../src/data/app/kenmerken.js";
 
 const TEAM = { orgId: "org1", teamId: "teamA", teamNaam: "Thuis" };
 const SLEUTEL = "org1/teamA";
 
+// Het eerste geldige antwoord bij dit kenmerk. "snel" bestaat alleen bij tempo,
+// en een antwoord dat niet bij het kenmerk hoort telt nergens mee.
 const kenmerk = (id, gedeeld = false, bevestigd = null) => ({
   kenmerkId: id,
-  waarde: "snel",
+  waarde: kenmerkUitData(id).opties[0].id,
   bevestigd,
   gedeeldMet: gedeeld ? [SLEUTEL] : [],
 });

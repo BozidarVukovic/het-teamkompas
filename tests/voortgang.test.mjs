@@ -14,16 +14,22 @@ import {
   vraagtAandacht,
   STAPPEN_PER_KENMERK,
 } from "../src/lib/app/voortgang.js";
-import { KENMERK_IDS } from "../src/data/app/kenmerken.js";
+import { KENMERK_IDS, kenmerk } from "../src/data/app/kenmerken.js";
 import { SECTIES } from "../src/data/app/handleiding.js";
 
 const TEAM = { orgId: "org1", teamId: "teamA", teamNaam: "Thuis" };
 const SLEUTEL = "org1/teamA";
 
+// Elk kenmerk krijgt zijn eigen eerste antwoord. Eerder stond hier overal
+// "snel", wat alleen bij tempo bestaat — een kenmerk met een antwoord dat er
+// niet bij hoort telt nergens mee, want er valt geen leesbare zin van te maken
+// en je collega ziet het dus ook niet.
+const eersteWaarde = (id) => kenmerk(id).opties[0].id;
+
 const maak = ({ aantal = KENMERK_IDS.length, bevestigd = null, gedeeld = false } = {}) =>
   KENMERK_IDS.slice(0, aantal).map((id) => ({
     kenmerkId: id,
-    waarde: "snel",
+    waarde: eersteWaarde(id),
     bevestigd,
     gedeeldMet: gedeeld ? [SLEUTEL] : [],
   }));

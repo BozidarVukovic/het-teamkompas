@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { useApp } from "../../lib/app/AppContext";
 import { exporteerEigenGegevens } from "../../lib/app/opslag";
+import { gedeeldeKenmerken as gedeeldeKenmerkenVoor } from "../../lib/app/telling";
 import useActie from "../../components/app/useActie";
 import Melding from "../../components/app/Melding";
 
@@ -22,7 +23,14 @@ export default function MijnGegevens() {
   const ietsGewijzigd =
     naamKlaar && (nieuweNaam.trim() !== naam || nieuweFunctie.trim() !== functie);
 
-  const gedeeldeKenmerken = kenmerken.filter((k) => (k.gedeeldMet || []).length > 0).length;
+  // Dit telde alles met een vinkje. De kopie die je teamgenoten écht zien
+  // filtert strenger, dus kon hier "12 gedeeld" staan terwijl je collega er
+  // tien zag. Nu dezelfde telling als overal; zie telling.js.
+  // Optellen per team zou een punt dat je met twee teams deelt dubbel tellen.
+  // Het gaat hier om hoeveel van je punten ergens zichtbaar zijn.
+  const gedeeldeKenmerken = new Set(
+    lidmaatschappen.flatMap((l) => gedeeldeKenmerkenVoor(kenmerken, l).map((k) => k.kenmerkId))
+  ).size;
   const geschrevenSecties = Object.values(handleiding).filter((s) => s && s.tekst).length;
 
   const exporteer = () =>

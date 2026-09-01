@@ -19,6 +19,7 @@ import InsightsUpload from "../../components/app/InsightsUpload";
 import Voortgang from "../../components/app/Voortgang";
 import { TE_DOEN, bepaalVoortgang, vraagtAandacht } from "../../lib/app/voortgang";
 import { zichtbaarheidVan } from "../../lib/app/zichtbaarheid";
+import { telKenmerken, sleutelVan } from "../../lib/app/telling";
 import useActie from "../../components/app/useActie";
 import Melding from "../../components/app/Melding";
 
@@ -174,6 +175,7 @@ function KenmerkKaart({ kenmerk, nummer, totaal, huidig, lidmaatschappen, onKies
 export default function MijnProfiel() {
   const {
     kenmerken,
+    handleiding,
     profiel,
     actiefTeam,
     lidmaatschappen,
@@ -219,12 +221,18 @@ export default function MijnProfiel() {
     return uit;
   }, []);
 
-  const bruikbaar = kenmerken.filter((k) => k.waarde && k.bevestigd !== "nee");
-  const sleutel = actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : null;
-  const gedeeld = sleutel ? bruikbaar.filter((k) => (k.gedeeldMet || []).includes(sleutel)).length : 0;
+  // Zelfde telling als de voortgangsbalk en de volgende stap; zie telling.js.
+  const geteld = telKenmerken({ kenmerken, actiefTeam });
+  const bruikbaar = geteld.bruikbaar;
+  const sleutel = sleutelVan(actiefTeam);
+  const gedeeld = geteld.aantalGedeeld;
   const insights = (profiel && profiel.insights) || null;
 
-  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding: {} });
+  // Met de echte handleiding, net als de <Voortgang> hieronder op ditzelfde
+  // scherm. Stond hier een leeg object, dan berekenden twee dingen op één
+  // pagina een andere voortgang — nu onzichtbaar, maar wachtend op de eerste
+  // keer dat dit scherm iets over de handleiding toont.
+  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding });
   const onderdeel = doen ? voortgang.onderdelen.find((o) => o.id === doen) : null;
 
   const vraagtNogAandacht = (kenmerkId) =>

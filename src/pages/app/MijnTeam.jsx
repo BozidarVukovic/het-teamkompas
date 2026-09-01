@@ -13,7 +13,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
-import { haalGedeeldVanTeam, haalTeam, haalTeamleden } from "../../lib/app/opslag";
 import { bewaarVoorstel, haalVoorstellen } from "../../lib/app/voorstellen";
 import { bewaarProfiellid, verwijderProfiellid } from "../../lib/app/opslag";
 import { kenmerkenUitInsights } from "../../lib/app/insights";
@@ -95,10 +94,12 @@ export default function MijnTeam() {
   const { gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam, verwijderTeam, teamOverzicht, herlaadTeam } =
     useApp();
 
-  const [team, setTeam] = useState(null);
-  const [leden, setLeden] = useState([]);
-  const [gedeeld, setGedeeld] = useState({});
-  const [laden, setLaden] = useState(true);
+  // Team, leden en gedeeld staan al in de context. Hier stond een tweede kopie
+  // in eigen state; herlaadTeam() ververste alleen de context-kopie, dus na het
+  // toevoegen of verwijderen van een profiel liepen de ledenlijst en de
+  // volgende stap op ditzelfde scherm uit elkaar.
+  const { team, leden, gedeeld, laden } = teamOverzicht;
+
   const [open, setOpen] = useState(null);
   const [paneel, setPaneel] = useState(null); // "uitnodigen" | "profiel" | null
   const [bevestigVerlaten, setBevestigVerlaten] = useState(false);
@@ -140,23 +141,11 @@ export default function MijnTeam() {
   useEffect(() => {
     if (!actiefTeam) return;
     let actueel = true;
-    setLaden(true);
-    Promise.all([
-      haalTeam(actiefTeam.orgId, actiefTeam.teamId),
-      haalTeamleden(actiefTeam.orgId, actiefTeam.teamId),
-      haalGedeeldVanTeam(actiefTeam.orgId, actiefTeam.teamId),
-      // Alleen een beheerder mag deze lijst opvragen; voor een lid mislukt hij
-      // en dat is precies de bedoeling.
-      haalVoorstellen({ orgId: actiefTeam.orgId, teamId: actiefTeam.teamId }).catch(() => ({})),
-    ])
-      .then(([t, l, g, v]) => {
-        if (!actueel) return;
-        setTeam(t);
-        setLeden(l);
-        setGedeeld(g);
-        setVoorstellen(v);
-      })
-      .finally(() => actueel && setLaden(false));
+    // Alleen een beheerder mag deze lijst opvragen; voor een lid mislukt hij
+    // en dat is precies de bedoeling.
+    haalVoorstellen({ orgId: actiefTeam.orgId, teamId: actiefTeam.teamId })
+      .then((v) => actueel && setVoorstellen(v))
+      .catch(() => {});
     return () => {
       actueel = false;
     };

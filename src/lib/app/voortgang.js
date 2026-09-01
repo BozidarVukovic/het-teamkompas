@@ -16,6 +16,7 @@
 
 import { KENMERK_IDS } from "../../data/app/kenmerken.js";
 import { SECTIES } from "../../data/app/handleiding.js";
+import { telKenmerken, sleutelVan } from "./telling.js";
 
 export const STAPPEN_PER_KENMERK = 3;
 
@@ -39,26 +40,20 @@ export function vraagtAandacht({ kenmerk, doen, sleutel = null }) {
 }
 
 export function bepaalVoortgang({ kenmerken = [], actiefTeam = null, handleiding = {} } = {}) {
-  const sleutel = actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : null;
+  // Wat meetelt en wat gedeeld is, wordt op één plek bepaald; zie telling.js.
+  // Deed elk scherm dat zelf, dan gaven ze verschillende getallen zodra er een
+  // kenmerk in de opslag stond dat niet meer bestaat.
+  const geteld = telKenmerken({ kenmerken, actiefTeam });
+  const { ingevuld, nagelopen, van } = geteld;
+  const gedeeld = geteld.aantalGedeeld;
 
+  // Voor de lijst met wat er nog te doen is, is ook het rúwe kenmerk nodig —
+  // ook een weggestreepte, want die vraagt nergens meer aandacht.
+  const sleutel = sleutelVan(actiefTeam);
   const perId = {};
-  kenmerken.forEach((k) => {
+  (kenmerken || []).forEach((k) => {
     if (k && k.kenmerkId) perId[k.kenmerkId] = k;
   });
-
-  let ingevuld = 0;
-  let nagelopen = 0;
-  let gedeeld = 0;
-
-  KENMERK_IDS.forEach((id) => {
-    const k = perId[id];
-    if (!k || !k.waarde || k.bevestigd === "nee") return;
-    ingevuld += 1;
-    if (k.bevestigd) nagelopen += 1;
-    if (sleutel && (k.gedeeldMet || []).includes(sleutel)) gedeeld += 1;
-  });
-
-  const van = KENMERK_IDS.length;
   const behaald = ingevuld + nagelopen + gedeeld;
   const totaal = van * STAPPEN_PER_KENMERK;
   const percentage = totaal === 0 ? 0 : Math.round((behaald / totaal) * 100);
