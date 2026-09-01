@@ -1091,3 +1091,27 @@ a.tk-optie {
   line-height: 1.55;
   margin-top: 2px;
 }
+
+/* Een melding heeft ruimte voor een kruisje rechts. */
+.tk-melding {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tk-melding-sluiten {
+  margin-left: auto;
+  flex: 0 0 auto;
+  background: none;
+  border: 0;
+  color: inherit;
+  opacity: 0.6;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+.tk-melding-sluiten:hover {
+  opacity: 1;
+}

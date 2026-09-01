@@ -8,6 +8,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
+import useActie from "../../components/app/useActie";
+import Melding from "../../components/app/Melding";
 
 export default function Welkom() {
   const { naam, zetNaam, maakTeam, doeMee, gebruiker, logUit, uitnodigingscode, vergeetUitnodiging, lidmaatschappen } =
@@ -24,55 +26,43 @@ export default function Welkom() {
   const [code, setCode] = useState(uitnodigingscode || "");
   const [organisatieNaam, setOrganisatieNaam] = useState("");
   const [teamNaam, setTeamNaam] = useState("");
-  const [bezig, setBezig] = useState(false);
-  const [fout, setFout] = useState("");
+  const { bezig, melding, setMelding, voerUit, wisMelding } = useActie();
 
   const naamKlaar = mijnNaam.trim().length >= 2;
 
   const bewaarNaam = async (e) => {
     e.preventDefault();
-    setBezig(true);
-    try {
-      await zetNaam(mijnNaam.trim());
-    } finally {
-      setBezig(false);
-    }
+    await voerUit("je naam bewaren", () => zetNaam(mijnNaam.trim()));
   };
 
   const meedoen = async (e) => {
     e.preventDefault();
-    setFout("");
-    setBezig(true);
-    try {
+    await voerUit("meedoen met dit team", async () => {
       const uitkomst = await doeMee({ code: code.trim().toUpperCase(), mijnNaam: mijnNaam.trim() });
-      if (!uitkomst) setFout("Deze teamcode kennen we niet. Controleer of hij precies zo is overgenomen.");
-      else {
-        vergeetUitnodiging();
-        navigeer("/app", { replace: true });
+      if (!uitkomst) {
+        // Een onbekende code is geen storing maar een tikfout, en verdient een
+        // eigen zin in plaats van "probeer het zo nog eens".
+        setMelding({
+          soort: "fout",
+          tekst: "Deze teamcode kennen we niet. Controleer of hij precies zo is overgenomen.",
+        });
+        return;
       }
-    } catch {
-      setFout("Meedoen lukte niet. Controleer de code en probeer het opnieuw.");
-    } finally {
-      setBezig(false);
-    }
+      vergeetUitnodiging();
+      navigeer("/app", { replace: true });
+    });
   };
 
   const aanmaken = async (e) => {
     e.preventDefault();
-    setFout("");
-    setBezig(true);
-    try {
+    await voerUit("het team aanmaken", async () => {
       await maakTeam({
         organisatieNaam: organisatieNaam.trim(),
         teamNaam: teamNaam.trim(),
         mijnNaam: mijnNaam.trim(),
       });
       navigeer("/app", { replace: true });
-    } catch {
-      setFout("Aanmaken lukte niet. Probeer het zo nog eens.");
-    } finally {
-      setBezig(false);
-    }
+    });
   };
 
   if (!naam) {
@@ -80,6 +70,7 @@ export default function Welkom() {
       <div className="tk-inhoud tk-smal" style={{ paddingTop: 56 }}>
         <div className="tk-stap">Stap 1 van 2</div>
         <h1 className="tk-kop">Welkom</h1>
+        <Melding melding={melding} onSluiten={wisMelding} />
         <p className="tk-onderkop">
           Je bent ingelogd als {gebruiker && gebruiker.email}. Hoe mogen je teamgenoten je noemen?
         </p>
@@ -133,7 +124,7 @@ export default function Welkom() {
         </div>
       )}
 
-      {fout && <div className="tk-melding tk-melding-fout">{fout}</div>}
+      <Melding melding={melding} onSluiten={wisMelding} />
 
       {uitnodigingscode && (
         <div className="tk-melding tk-melding-goed">

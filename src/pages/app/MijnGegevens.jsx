@@ -5,6 +5,8 @@
 import { useState } from "react";
 import { useApp } from "../../lib/app/AppContext";
 import { exporteerEigenGegevens } from "../../lib/app/opslag";
+import useActie from "../../components/app/useActie";
+import Melding from "../../components/app/Melding";
 
 export default function MijnGegevens() {
   const { gebruiker, naam, functie, zetProfielgegevens, lidmaatschappen, kenmerken, handleiding, verwijderAlles } =
@@ -12,8 +14,7 @@ export default function MijnGegevens() {
 
   const [nieuweNaam, setNieuweNaam] = useState(naam || "");
   const [nieuweFunctie, setNieuweFunctie] = useState(functie || "");
-  const [bezig, setBezig] = useState(false);
-  const [melding, setMelding] = useState("");
+  const { bezig, melding, voerUit, wisMelding } = useActie();
   const [bevestig, setBevestig] = useState("");
 
   // Bewaren mag pas als er echt iets veranderd is, en een naam is verplicht.
@@ -24,10 +25,8 @@ export default function MijnGegevens() {
   const gedeeldeKenmerken = kenmerken.filter((k) => (k.gedeeldMet || []).length > 0).length;
   const geschrevenSecties = Object.values(handleiding).filter((s) => s && s.tekst).length;
 
-  const exporteer = async () => {
-    setBezig(true);
-    setMelding("");
-    try {
+  const exporteer = () =>
+    voerUit("je gegevens downloaden", async () => {
       const gegevens = await exporteerEigenGegevens(gebruiker.uid);
       const blob = new Blob([JSON.stringify(gegevens, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -38,13 +37,7 @@ export default function MijnGegevens() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      setMelding("Je gegevens zijn gedownload.");
-    } catch {
-      setMelding("Exporteren lukte niet. Probeer het zo nog eens.");
-    } finally {
-      setBezig(false);
-    }
-  };
+    }, "Je gegevens zijn gedownload.");
 
   return (
     <div className="tk-inhoud">
@@ -54,7 +47,7 @@ export default function MijnGegevens() {
         bewaard wordt.
       </p>
 
-      {melding && <div className="tk-melding tk-melding-goed">{melding}</div>}
+      <Melding melding={melding} onSluiten={wisMelding} />
 
       <div className="tk-kaart">
         <h2>Naam en functie</h2>
@@ -91,18 +84,17 @@ export default function MijnGegevens() {
             type="button"
             className="tk-knop tk-knop-klein"
             disabled={bezig || !ietsGewijzigd}
-            onClick={async () => {
-              setBezig(true);
-              try {
-                await zetProfielgegevens({
-                  naam: nieuweNaam.trim(),
-                  functie: nieuweFunctie.trim(),
-                });
-                setMelding("Je gegevens zijn bijgewerkt. Je teamgenoten zien dit meteen.");
-              } finally {
-                setBezig(false);
-              }
-            }}
+            onClick={() =>
+              voerUit(
+                "je gegevens bewaren",
+                () =>
+                  zetProfielgegevens({
+                    naam: nieuweNaam.trim(),
+                    functie: nieuweFunctie.trim(),
+                  }),
+                "Je gegevens zijn bijgewerkt. Je teamgenoten zien dit meteen."
+              )
+            }
           >
             Bewaren
           </button>
@@ -175,14 +167,7 @@ export default function MijnGegevens() {
             type="button"
             className="tk-knop tk-knop-klein tk-knop-gevaar"
             disabled={bevestig !== "VERWIJDEREN" || bezig}
-            onClick={async () => {
-              setBezig(true);
-              try {
-                await verwijderAlles();
-              } finally {
-                setBezig(false);
-              }
-            }}
+            onClick={() => voerUit("alles verwijderen", () => verwijderAlles())}
           >
             Definitief verwijderen
           </button>

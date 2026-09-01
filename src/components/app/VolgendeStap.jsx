@@ -8,6 +8,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { AANTAL_STAPPEN, bepaalVolgendeStap } from "../../lib/app/volgendeStap";
+import useActie from "./useActie";
+import Melding from "./Melding";
 
 function Stippen({ nu }) {
   if (nu > AANTAL_STAPPEN) return null;
@@ -42,7 +44,7 @@ export default function VolgendeStap({ variant = "klein", verbergAls = null }) {
     bewaarMeerKenmerken,
   } = useApp();
 
-  const [bezig, setBezig] = useState(false);
+  const { bezig, melding, voerUit, wisMelding } = useActie();
   const [gekopieerd, setGekopieerd] = useState(false);
 
   const stap = bepaalVolgendeStap({
@@ -69,17 +71,14 @@ export default function VolgendeStap({ variant = "klein", verbergAls = null }) {
     const sleutel = actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : null;
     const bruikbaar = kenmerken.filter((k) => k.waarde && k.bevestigd !== "nee");
     if (!sleutel || bruikbaar.length === 0) return;
-    setBezig(true);
-    try {
-      await bewaarMeerKenmerken(
+    await voerUit("alles delen met je team", () =>
+      bewaarMeerKenmerken(
         bruikbaar.map((k) => ({
           ...k,
           gedeeldMet: [...new Set([...(k.gedeeldMet || []), sleutel])],
         }))
-      );
-    } finally {
-      setBezig(false);
-    }
+      )
+    );
   };
 
   const kopieer = async () => {
@@ -156,6 +155,7 @@ export default function VolgendeStap({ variant = "klein", verbergAls = null }) {
       )}
 
       <div className="tk-knoppen">{knop}</div>
+      <Melding melding={melding} onSluiten={wisMelding} />
     </div>
   );
 }

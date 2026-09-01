@@ -8,6 +8,7 @@ import { useRef, useState } from "react";
 import { KLEUREN, kleur } from "../../lib/app/insights";
 import { leesInsightsPdf } from "../../lib/app/insightsPdf";
 import { sectie } from "../../data/app/handleiding";
+import { omschrijfFout } from "../../lib/app/meldingen";
 
 const ZEKERHEID = {
   hoog: {
@@ -100,6 +101,7 @@ export default function InsightsUpload({
   const bevestig = async () => {
     if (!voorkeurskleur) return;
     setOpslaan(true);
+    setFout("");
     try {
       await onBevestig({
         voorkeurskleur,
@@ -109,6 +111,12 @@ export default function InsightsUpload({
       });
       setUitkomst(null);
       setBestandsnaam("");
+    } catch (err) {
+      // Mislukt het opslaan, dan bleef het gelezen profiel gewoon staan en
+      // gebeurde er verder niets. Je zag alleen een knop die weer aanging.
+      // De uitkomst blijft nu staan, zodat je het opnieuw kunt proberen zonder
+      // de PDF nog een keer te hoeven kiezen.
+      setFout(omschrijfFout(err, "dit profiel opslaan"));
     } finally {
       setOpslaan(false);
     }

@@ -22,6 +22,8 @@ import { initialen, voornaam } from "../../lib/app/naam";
 import { gedeeldSamengevat } from "../../lib/app/gedeeld";
 import InsightsUpload from "../../components/app/InsightsUpload";
 import VolgendeStap from "../../components/app/VolgendeStap";
+import useActie from "../../components/app/useActie";
+import Melding from "../../components/app/Melding";
 
 /**
  * Wat iemand met dit team deelde.
@@ -100,10 +102,12 @@ export default function MijnTeam() {
   const [open, setOpen] = useState(null);
   const [paneel, setPaneel] = useState(null); // "uitnodigen" | "profiel" | null
   const [bevestigVerlaten, setBevestigVerlaten] = useState(false);
-  const [bezigOpruimen, setBezigOpruimen] = useState(false);
+  const { bezig: bezigOpruimen, melding: opruimMelding, voerUit: voerOpruimenUit, wisMelding: wisOpruimMelding } =
+    useActie();
   const [toonStappen, setToonStappen] = useState(false);
   const [profielNaam, setProfielNaam] = useState("");
-  const [profielMelding, setProfielMelding] = useState("");
+  const { melding: profielMelding, setMelding: setProfielMelding, voerUit: voerProfielUit, wisMelding: wisProfielMelding } =
+    useActie();
   const [voorstellen, setVoorstellen] = useState({});
   const [uploadVoor, setUploadVoor] = useState(null);
   const [gekopieerd, setGekopieerd] = useState(null);
@@ -192,7 +196,7 @@ export default function MijnTeam() {
       <h1 className="tk-kop">{actiefTeam.teamNaam || "Mijn team"}</h1>
       <p className="tk-onderkop">{onderkop}</p>
 
-      {profielMelding && <div className="tk-melding tk-melding-goed">{profielMelding}</div>}
+      <Melding melding={profielMelding} onSluiten={wisProfielMelding} />
 
       {/* ---------------------------------------------------------- de mensen */}
       <section className="tk-groep">
@@ -319,16 +323,21 @@ export default function MijnTeam() {
                     <button
                       type="button"
                       className="tk-knop tk-knop-rand tk-knop-klein"
-                      onClick={async () => {
-                        await verwijderProfiellid({
-                          orgId: actiefTeam.orgId,
-                          teamId: actiefTeam.teamId,
-                          id: pl.id,
-                        });
-                        await herlaadTeam();
-                        setOpen(null);
-                        setProfielMelding(`Het profiel van ${pl.naam} is verwijderd.`);
-                      }}
+                      onClick={() =>
+                        voerProfielUit(
+                          `het profiel van ${pl.naam} verwijderen`,
+                          async () => {
+                            await verwijderProfiellid({
+                              orgId: actiefTeam.orgId,
+                              teamId: actiefTeam.teamId,
+                              id: pl.id,
+                            });
+                            await herlaadTeam();
+                            setOpen(null);
+                          },
+                          `Het profiel van ${pl.naam} is verwijderd.`
+                        )
+                      }
                     >
                       Verwijderen
                     </button>
@@ -530,22 +539,19 @@ export default function MijnTeam() {
                 type="button"
                 className="tk-knop tk-knop-klein tk-knop-gevaar"
                 disabled={bezigOpruimen}
-                onClick={async () => {
-                  setBezigOpruimen(true);
-                  try {
-                    if (kanVerwijderen) {
-                      await verwijderTeam({
-                        orgId: actiefTeam.orgId,
-                        teamId: actiefTeam.teamId,
-                        code: team && team.code,
-                      });
-                    } else {
-                      await verlaatTeam({ orgId: actiefTeam.orgId, teamId: actiefTeam.teamId });
-                    }
-                  } finally {
-                    setBezigOpruimen(false);
-                  }
-                }}
+                onClick={() =>
+                  voerOpruimenUit(
+                    kanVerwijderen ? "dit team verwijderen" : "dit team verlaten",
+                    () =>
+                      kanVerwijderen
+                        ? verwijderTeam({
+                            orgId: actiefTeam.orgId,
+                            teamId: actiefTeam.teamId,
+                            code: team && team.code,
+                          })
+                        : verlaatTeam({ orgId: actiefTeam.orgId, teamId: actiefTeam.teamId })
+                  )
+                }
               >
                 {bezigOpruimen ? "Bezig..." : kanVerwijderen ? "Ja, verwijder dit team" : "Ja, verlaat dit team"}
               </button>
@@ -557,6 +563,7 @@ export default function MijnTeam() {
                 Toch niet
               </button>
             </div>
+            <Melding melding={opruimMelding} onSluiten={wisOpruimMelding} />
           </>
         ) : (
           <button type="button" className="tk-stille-knop" onClick={() => setBevestigVerlaten(true)}>

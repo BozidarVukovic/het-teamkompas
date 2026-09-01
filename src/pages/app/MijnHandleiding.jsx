@@ -6,36 +6,38 @@
 import { useMemo, useState } from "react";
 import { useApp } from "../../lib/app/AppContext";
 import VolgendeStap from "../../components/app/VolgendeStap";
+import useActie from "../../components/app/useActie";
+import Melding from "../../components/app/Melding";
 import { SECTIES, conceptVoorSectie } from "../../data/app/handleiding";
 import { bepaalWaarden } from "../../lib/app/advies/regels";
 
 function Sectie({ sectie, opgeslagen, concept, uitProfiel, lidmaatschappen, bewaar }) {
   const [tekst, setTekst] = useState((opgeslagen && opgeslagen.tekst) || "");
-  const [bezig, setBezig] = useState(false);
+  const { bezig, melding, voerUit, wisMelding } = useActie();
   const [bewaardOp, setBewaardOp] = useState(false);
   const [toonProfiel, setToonProfiel] = useState(false);
 
   const gedeeldMet = (opgeslagen && opgeslagen.gedeeldMet) || [];
 
   const opslaan = async (nieuweGedeeldMet) => {
-    setBezig(true);
-    try {
-      await bewaar({
+    const gelukt = await voerUit(`"${sectie.titel}" bewaren`, () =>
+      bewaar({
         sectieId: sectie.id,
         tekst,
         gedeeldMet: nieuweGedeeldMet || gedeeldMet,
-      });
-      setBewaardOp(true);
-      setTimeout(() => setBewaardOp(false), 2200);
-    } finally {
-      setBezig(false);
-    }
+      })
+    );
+    if (!gelukt) return;
+    setBewaardOp(true);
+    setTimeout(() => setBewaardOp(false), 2200);
   };
 
   return (
     <div className="tk-kaart">
       <h2>{sectie.titel}</h2>
       <p>{sectie.uitleg}</p>
+
+      <Melding melding={melding} onSluiten={wisMelding} />
 
       <textarea
         className="tk-tekstvak"

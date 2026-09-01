@@ -19,6 +19,8 @@ import InsightsUpload from "../../components/app/InsightsUpload";
 import Voortgang from "../../components/app/Voortgang";
 import { TE_DOEN, bepaalVoortgang, vraagtAandacht } from "../../lib/app/voortgang";
 import { zichtbaarheidVan } from "../../lib/app/zichtbaarheid";
+import useActie from "../../components/app/useActie";
+import Melding from "../../components/app/Melding";
 
 function bronLabel(bron) {
   const b = BRONNEN.find((x) => x.id === bron);
@@ -193,8 +195,7 @@ export default function MijnProfiel() {
   const [zoekParams, setZoekParams] = useSearchParams();
   const gevraagd = zoekParams.get("doen");
   const doen = TE_DOEN.includes(gevraagd) ? gevraagd : null;
-  const [melding, setMelding] = useState("");
-  const [bezig, setBezig] = useState(false);
+  const { bezig, melding, voerUit, wisMelding } = useActie();
 
   const perId = useMemo(() => {
     const uit = {};
@@ -278,47 +279,45 @@ export default function MijnProfiel() {
       (k) => k && k.waarde && !k.bevestigd && k.bevestigd !== "nee"
     );
     if (open.length === 0) return;
-    setBezig(true);
-    try {
-      await bewaarMeerKenmerken(open.map((k) => ({ ...k, bevestigd: "sterk" })));
-      setMelding(
-        `${open.length} ${open.length === 1 ? "punt" : "punten"} bevestigd. Loop ze gerust nog een keer na; aanpassen kan altijd.`
-      );
-    } finally {
-      setBezig(false);
-    }
+    await voerUit(
+      "je punten bevestigen",
+      () => bewaarMeerKenmerken(open.map((k) => ({ ...k, bevestigd: "sterk" }))),
+      `${open.length} ${open.length === 1 ? "punt" : "punten"} bevestigd. Loop ze gerust nog een keer na; aanpassen kan altijd.`
+    );
   };
 
   const deelAlles = async (aan) => {
     if (!sleutel || bruikbaar.length === 0) return;
-    setBezig(true);
-    try {
-      await bewaarMeerKenmerken(
-        bruikbaar.map((k) => ({
-          ...k,
-          gedeeldMet: aan
-            ? [...new Set([...(k.gedeeldMet || []), sleutel])]
-            : (k.gedeeldMet || []).filter((s) => s !== sleutel),
-        }))
-      );
-      setMelding(
-        aan
-          ? `Alles gedeeld met ${actiefTeam.teamNaam || "je team"}. Je teamgenoten zien nu ${bruikbaar.length} punten over de samenwerking met jou.`
-          : "Je deelt nu niets meer met dit team."
-      );
-    } finally {
-      setBezig(false);
-    }
+    await voerUit(
+      aan ? "alles delen met je team" : "het delen intrekken",
+      () =>
+        bewaarMeerKenmerken(
+          bruikbaar.map((k) => ({
+            ...k,
+            gedeeldMet: aan
+              ? [...new Set([...(k.gedeeldMet || []), sleutel])]
+              : (k.gedeeldMet || []).filter((s) => s !== sleutel),
+          }))
+        ),
+      aan
+        ? `Alles gedeeld met ${actiefTeam.teamNaam || "je team"}. Je teamgenoten zien nu ${bruikbaar.length} punten over de samenwerking met jou.`
+        : "Je deelt nu niets meer met dit team."
+    );
   };
 
   const naUpload = async (gelezen) => {
+    // InsightsUpload vangt een fout hier zelf op en laat het gelezen profiel
+    // staan, zodat je het opnieuw kunt proberen zonder de PDF nog eens te
+    // kiezen. Gooien mag dus, en hoort ook.
     const aantal = await neemInsightsOver(gelezen);
     setModus("zelf");
-    setMelding(
-      aantal > 0
-        ? `Klaar — ${aantal} punten ingevuld op basis van je profiel. Loop ze hieronder na en pas aan wat niet klopt.`
-        : "Je profiel is bewaard. Je eigen antwoorden hebben we laten staan."
-    );
+    setMelding({
+      soort: "goed",
+      tekst:
+        aantal > 0
+          ? `Klaar — ${aantal} punten ingevuld op basis van je profiel. Loop ze hieronder na en pas aan wat niet klopt.`
+          : "Je profiel is bewaard. Je eigen antwoorden hebben we laten staan.",
+    });
   };
 
   /* ------------------------------------------------------------- weergave */
@@ -363,7 +362,7 @@ export default function MijnProfiel() {
         Niets hiervan is zichtbaar voor anderen, behalve wat je zelf deelt.
       </p>
 
-      {melding && <div className="tk-melding tk-melding-goed">{melding}</div>}
+      <Melding melding={melding} onSluiten={wisMelding} />
 
       {doen && onderdeel ? (
         <div className="tk-kaart" style={{ borderColor: "rgba(0,168,150,0.45)" }}>
@@ -434,12 +433,15 @@ export default function MijnProfiel() {
               className="tk-knop tk-knop-klein"
               disabled={bezig}
               onClick={async () => {
-                setBezig(true);
-                try {
-                  const aantal = await neemVoorstelOver(v);
-                  setMelding(`Overgenomen — ${aantal} punten ingevuld. Loop ze hieronder na.`);
-                } finally {
-                  setBezig(false);
+                let aantal = 0;
+                await voerUit("het voorstel overnemen", async () => {
+                  aantal = await neemVoorstelOver(v);
+                });
+                if (aantal) {
+                  setMelding({
+                    soort: "goed",
+                    tekst: `Overgenomen — ${aantal} punten ingevuld. Loop ze hieronder na.`,
+                  });
                 }
               }}
             >
@@ -449,15 +451,13 @@ export default function MijnProfiel() {
               type="button"
               className="tk-knop tk-knop-rand tk-knop-klein"
               disabled={bezig}
-              onClick={async () => {
-                setBezig(true);
-                try {
-                  await wijsVoorstelAf(v);
-                  setMelding("Het voorstel is weggegooid. Er is niets van bewaard.");
-                } finally {
-                  setBezig(false);
-                }
-              }}
+              onClick={() =>
+                voerUit(
+                  "het voorstel weggooien",
+                  () => wijsVoorstelAf(v),
+                  "Het voorstel is weggegooid. Er is niets van bewaard."
+                )
+              }
             >
               Nee, dank je
             </button>
@@ -557,10 +557,13 @@ export default function MijnProfiel() {
               <button
                 type="button"
                 className="tk-knop tk-knop-rand tk-knop-klein"
-                onClick={async () => {
-                  await wisInsights();
-                  setMelding("Je Insights-profiel is gewist. De punten die je hebt ingevuld, blijven staan.");
-                }}
+                onClick={() =>
+                  voerUit(
+                    "je Insights-gegevens wissen",
+                    () => wisInsights(),
+                    "Je Insights-profiel is gewist. De punten die je hebt ingevuld, blijven staan."
+                  )
+                }
               >
                 Insights-gegevens wissen
               </button>
@@ -592,13 +595,16 @@ export default function MijnProfiel() {
                   className="tk-keuze"
                   disabled={bezig}
                   onClick={async () => {
-                    setBezig(true);
-                    try {
+                    let aantal = 0;
+                    await voerUit(`${k.label.toLowerCase()} kiezen`, async () => {
                       await bewaarInsights({ voorkeurskleur: k.id, tweedeKleur: null });
-                      const aantal = await neemInsightsOver({ voorkeurskleur: k.id, tweedeKleur: null, teksten: {} });
-                      setMelding(`${aantal} punten ingevuld op basis van ${k.label.toLowerCase()}. Loop ze hierboven na.`);
-                    } finally {
-                      setBezig(false);
+                      aantal = await neemInsightsOver({ voorkeurskleur: k.id, tweedeKleur: null, teksten: {} });
+                    });
+                    if (aantal) {
+                      setMelding({
+                        soort: "goed",
+                        tekst: `${aantal} punten ingevuld op basis van ${k.label.toLowerCase()}. Loop ze hierboven na.`,
+                      });
                     }
                   }}
                 >
