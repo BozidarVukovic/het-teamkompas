@@ -80,11 +80,15 @@ export default function Samenwerken() {
     opnieuw();
   };
 
-  const alsKenmerken = (lijst) =>
+  // Wat een teamgenoot deelt heeft die persoon zelf bevestigd; dat weegt het
+  // zwaarst. Een profiel dat een beheerder toevoegde komt uit een PDF en is
+  // door niemand bevestigd — dat stond ook zo op het scherm, maar in de
+  // advieslogica woog het even zwaar. Nu staat er wat het is.
+  const alsKenmerken = (lijst, doorBeheerder = false) =>
     (lijst || []).map((k) => ({
       kenmerkId: k.kenmerkId,
       waarde: k.waarde,
-      bron: "user_confirmation",
+      bron: doorBeheerder ? "insights_discovery" : "user_confirmation",
     }));
 
   const maakAdvies = useCallback(
@@ -98,13 +102,13 @@ export default function Samenwerken() {
             mijnKenmerken: kenmerken,
             deelnemers: geselecteerd.map((c) => ({
               naam: c.naam || "een collega",
-              kenmerken: alsKenmerken(c.kenmerken),
+              kenmerken: alsKenmerken(c.kenmerken, c.doorBeheerder),
             })),
             situatieId: situatie,
           })
         : await vraagAdvies({
             mijnKenmerken: kenmerken,
-            hunKenmerken: alsKenmerken(geselecteerd[0].kenmerken),
+            hunKenmerken: alsKenmerken(geselecteerd[0].kenmerken, geselecteerd[0].doorBeheerder),
             // Wat deze collega zelf schreef en met dit team deelde. Bij een
             // groep laten we dit weg: één iemand citeren wijst iemand aan.
             hunHandleiding: geselecteerd[0].handleiding,
