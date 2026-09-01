@@ -23,6 +23,11 @@ export const BEHOEFTEN = {
       suggestie: "Kom met een voorstel in plaats van een open vraag, en zeg erbij wat je van hem of haar nodig hebt.",
       voorbeeldzin: "Mijn voorstel is dit. Kun jij zeggen of je daarin meegaat, of wat er dan nog moet gebeuren?",
     },
+    gemiddeld: {
+      duiding: "Je collega heeft aangegeven dat het per onderwerp verschilt hoe snel een besluit kan vallen.",
+      suggestie: "Vraag aan het begin of dit een onderwerp is om nu te beslissen of om even te laten bezinken.",
+      voorbeeldzin: "Is dit iets waar we nu uit kunnen komen, of wil je er even over nadenken?",
+    },
   },
   context: {
     veel: {
@@ -52,12 +57,22 @@ export const BEHOEFTEN = {
       suggestie: "Spreek het doel af en laat de invulling open, in plaats van de aanpak voor te schrijven.",
       voorbeeldzin: "Dit is wat er moet gebeuren. Hoe je het aanpakt, laat ik aan jou.",
     },
+    gemengd: {
+      duiding: "Je collega werkt graag binnen duidelijke kaders, met ruimte in de uitvoering.",
+      suggestie: "Leg vast wat er moet gebeuren en wanneer het klaar is, en laat het hoe open.",
+      voorbeeldzin: "Dit is wat er moet liggen en wanneer. Hoe je het aanpakt, bepaal jij.",
+    },
   },
   denken: {
     alleen: {
       duiding: "Je collega denkt eerst voor zichzelf na en komt daarna met een reactie.",
       suggestie: "Stel je vraag en laat een stilte vallen, of geef hem of haar bedenktijd tot een volgend moment.",
       voorbeeldzin: "Denk er gerust even over. Ik hoor het graag als je zover bent.",
+    },
+    wisselend: {
+      duiding: "Je collega heeft aangegeven dat het per onderwerp verschilt of hardop denken helpt of juist niet.",
+      suggestie: "Vraag welke van de twee dit is voordat je begint, in plaats van het te raden.",
+      voorbeeldzin: "Zullen we dit samen doordenken, of wil je er liever eerst zelf naar kijken?",
     },
     hardop: {
       duiding: "Je collega denkt het beste hardop, in gesprek.",
@@ -70,6 +85,11 @@ export const BEHOEFTEN = {
       duiding: "Voor je collega hoort even bijpraten bij goed samenwerken.",
       suggestie: "Begin niet meteen bij het onderwerp; neem een minuut voor hoe het gaat.",
       voorbeeldzin: "Voordat we de inhoud in duiken: hoe gaat het eigenlijk met je?",
+    },
+    beide: {
+      duiding: "Je collega begint graag met iets persoonlijks en gaat daarna naar de inhoud.",
+      suggestie: "Neem één vraag over hoe het gaat, wacht het antwoord af, en stap dan over.",
+      voorbeeldzin: "Hoe gaat het met je? En dan wil ik het daarna even hebben over dat overleg.",
     },
     taak: {
       duiding: "Je collega begint een overleg het liefst meteen bij de inhoud.",
@@ -334,6 +354,134 @@ export const CONTRASTEN = {
         duiding: "Jij brengt feedback graag rustig; je collega hoort het liever zonder omhaal. Je zorgvuldige aanloop kan dan spannender maken dan nodig.",
         suggestie: "Zeg in de eerste zin waar het over gaat.",
         voorbeeldzin: "Ik wil iets met je bespreken over gisteren. Niets ernstigs, wel belangrijk.",
+      },
+    },
+  },
+  // Vier kenmerken hadden geen enkel contrastblok, terwijl situaties.js ze juist
+  // bovenaan meerdere prioriteitenlijsten zet. Ze konden dus nooit in "waar je
+  // op kunt letten" komen. Hieronder staan niet alle combinaties, maar de
+  // combinaties waar werkelijk iets wringt — de rest is verschil zonder
+  // gevolgen, en daar hoort geen advies bij.
+  energie: {
+    afronden: {
+      nieuw: {
+        duiding: "Jij krijgt energie van iets afmaken; je collega van nieuwe ideeën en mogelijkheden. Daardoor komt er steeds iets bij terwijl jij juist wilt afsluiten.",
+        suggestie: "Spreek af wat er af moet voordat er iets nieuws bij mag, en zet dat op papier.",
+        voorbeeldzin: "Goede ideeën. Zullen we ze parkeren tot dit stuk klaar is?",
+      },
+    },
+    nieuw: {
+      afronden: {
+        duiding: "Jij krijgt energie van nieuwe mogelijkheden; je collega van dingen afmaken. Wat voor jou meedenken is, kan voor de ander voelen als werk dat erbij komt.",
+        suggestie: "Zeg erbij of iets een idee is of een voorstel, zodat de ander weet of er iets mee moet.",
+        voorbeeldzin: "Dit is hardop denken, geen voorstel. Er hoeft nu niets mee te gebeuren.",
+      },
+    },
+    samen: {
+      verdieping: {
+        duiding: "Jij pakt dingen graag samen op; je collega duikt er liever alleen goed in. Meedenken kan dan aanvoelen als onderbreken.",
+        suggestie: "Vraag of iemand er eerst zelf in wil duiken, en spreek een moment af om samen te kijken.",
+        voorbeeldzin: "Wil je er eerst zelf naar kijken? Dan bespreken we het donderdag samen.",
+      },
+    },
+    verdieping: {
+      samen: {
+        duiding: "Jij duikt ergens graag alleen in; je collega krijgt energie van samen optrekken. Jouw stilte kan dan lezen als afstand.",
+        suggestie: "Zeg wanneer je weer bovenkomt, zodat de ander niet hoeft te raden of het nog loopt.",
+        voorbeeldzin: "Ik ga er even goed in duiken. Vrijdag laat ik zien wat ik heb.",
+      },
+    },
+  },
+  energieverlies: {
+    langoverleg: {
+      onduidelijk: {
+        duiding: "Jij verliest energie aan lange overleggen zonder besluit; je collega aan onduidelijkheid. Jij wilt dus korter praten, de ander juist langer.",
+        suggestie: "Zet een eindtijd op het gesprek en sluit af met wie wat doet. Dan is het kort én duidelijk.",
+        voorbeeldzin: "Zullen we hier een half uur voor nemen en eindigen met wie wat oppakt?",
+      },
+    },
+    onduidelijk: {
+      langoverleg: {
+        duiding: "Jij verliest energie aan onduidelijkheid; je collega aan overleggen die maar doorgaan. Jouw behoefte om het uit te praten kan de ander uitputten.",
+        suggestie: "Schrijf vooraf op wat er precies duidelijk moet worden, zodat het gesprek daarover gaat en niet over de rest.",
+        voorbeeldzin: "Ik wil twee dingen helder hebben. Verder hoeven we het er niet over te hebben.",
+      },
+    },
+    onderbreking: {
+      conflict: {
+        duiding: "Jij verliest energie als je steeds wordt onderbroken; je collega aan spanning die blijft hangen. Wat voor jou uitstel is, is voor de ander laten liggen.",
+        suggestie: "Spreek een vast moment af waarop dit soort dingen wél besproken worden, zodat uitstellen niet ontwijken wordt.",
+        voorbeeldzin: "Ik wil er zeker over praten. Zullen we er vanmiddag om vier uur even voor zitten?",
+      },
+    },
+    conflict: {
+      onderbreking: {
+        duiding: "Jij verliest energie aan onuitgesproken spanning; je collega aan onderbroken worden. Meteen iets aankaarten helpt jou en kost de ander juist.",
+        suggestie: "Zeg wat er speelt en vraag wanneer het uitkomt, in plaats van het gesprek nu te voeren.",
+        voorbeeldzin: "Er zit me iets dwars over vanochtend. Wanneer komt het jou uit om dat te bespreken?",
+      },
+    },
+  },
+  aanspreken: {
+    tempo: {
+      stil: {
+        duiding: "Jij hoort het graag als je te snel gaat; je collega als hij niets zegt. Jullie wachten dus allebei op een signaal dat de ander niet uit zichzelf geeft.",
+        suggestie: "Vraag het rechtstreeks in plaats van te wachten tot het vanzelf komt.",
+        voorbeeldzin: "Ik hoor je weinig. Wat vind jij hiervan?",
+      },
+    },
+    stil: {
+      tempo: {
+        duiding: "Jij wilt aangesproken worden als je stil blijft; je collega als hij te snel gaat. Blijf je wachten op ruimte, dan komt die er misschien niet vanzelf.",
+        suggestie: "Zeg op het moment zelf dat je iets wilt inbrengen, ook als het gesprek al doorloopt.",
+        voorbeeldzin: "Mag ik hier even op inhaken voordat we verdergaan?",
+      },
+    },
+    detail: {
+      toezegging: {
+        duiding: "Jij wilt het horen als je te lang in details blijft; je collega als hij iets niet nakomt. Jullie letten dus op verschillende dingen bij elkaar.",
+        suggestie: "Sluit af met wie wat toezegt, en vraag halverwege of het niveau nog klopt.",
+        voorbeeldzin: "Zitten we nog op het goede niveau? En zullen we straks vastleggen wie wat doet?",
+      },
+    },
+    toezegging: {
+      detail: {
+        duiding: "Jij wilt aangesproken worden als je iets niet nakomt; je collega als hij te ver in de details zakt. Wat voor de een zorgvuldigheid is, kan voor de ander uitstel lijken.",
+        suggestie: "Spreek af wanneer iets af is, niet alleen hoe grondig het moet zijn.",
+        voorbeeldzin: "Wanneer is dit wat jou betreft klaar genoeg om te versturen?",
+      },
+    },
+  },
+  misverstand: {
+    kortaf: {
+      stilte: {
+        duiding: "Jij komt weleens kortaf over; je collega merkt dat stilte bij hem als desinteresse wordt gelezen. Samen kan dat een gesprek stiller maken dan bedoeld.",
+        suggestie: "Zeg erbij dat je met de inhoud bezig bent, en vraag naar wat de ander denkt in plaats van de stilte te laten staan.",
+        voorbeeldzin: "Ik klink misschien kort, dat zit in het onderwerp. Wat is jouw beeld hierbij?",
+      },
+      twijfel: {
+        duiding: "Jij komt weleens kortaf over; bij je collega worden vragen soms gelezen als twijfel. Een korte reactie op een vraag kan dan harder aankomen dan bedoeld.",
+        suggestie: "Beantwoord de vraag en zeg erbij dat je hem terecht vindt.",
+        voorbeeldzin: "Goede vraag. Kort antwoord: dit is waarom we het zo doen.",
+      },
+    },
+    stilte: {
+      kortaf: {
+        duiding: "Bij jou wordt stilte weleens gelezen als desinteresse; je collega komt soms kortaf over. Jullie kunnen elkaar dan allebei verkeerd inschatten.",
+        suggestie: "Zeg wat je stilte betekent, en vraag na wat een korte reactie betekende.",
+        voorbeeldzin: "Ik ben aan het meedenken, ik zeg alleen even niets. Hoe bedoelde je dat net?",
+      },
+    },
+    enthousiasme: {
+      kortaf: {
+        duiding: "Bij jou wordt enthousiasme weleens gelezen als toezegging; je collega komt soms kortaf over. Jij kunt een korte reactie dan opvatten als afwijzing terwijl die er niet is.",
+        suggestie: "Maak expliciet of je iets toezegt of alleen leuk vindt, en vraag na hoe een korte reactie bedoeld was.",
+        voorbeeldzin: "Ik vind het een goed idee; of ik het oppak weet ik nog niet. Hoe kijk jij ernaar?",
+      },
+      twijfel: {
+        duiding: "Bij jou wordt enthousiasme weleens gelezen als toezegging; bij je collega worden vragen soms gelezen als twijfel. Een vraag over jouw idee kan dan zwaarder landen dan bedoeld.",
+        suggestie: "Zeg dat je de vraag waardeert en wat je nog niet hebt toegezegd.",
+        voorbeeldzin: "Fijn dat je doorvraagt. Ik heb er nog niets over beloofd, ik denk hardop.",
       },
     },
   },

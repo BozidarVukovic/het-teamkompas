@@ -88,6 +88,66 @@ test("geen enkele adviestekst gebruikt stellige of typerende taal", () => {
   });
 });
 
+/* ------------------------------------------------------- dekking van de teksten */
+
+test("elke voorkeur die iemand kan kiezen, heeft een adviestekst", () => {
+  // Hier zat een gat: de vier middenopties ("dat hangt van het onderwerp af",
+  // "kaders maar ruimte", "dat wisselt per onderwerp", "kort persoonlijk dan
+  // de inhoud") hadden er geen. Wie die deelde kreeg een leeg adviesscherm.
+  KENMERKEN.forEach((k) => {
+    k.opties.forEach((o) => {
+      const blok = BEHOEFTEN[k.id] && BEHOEFTEN[k.id][o.id];
+      assert.ok(blok, `${k.id}.${o.id} (${o.label}) heeft geen behoeftetekst`);
+      assert.ok(blok.duiding && blok.suggestie, `${k.id}.${o.id} is niet compleet`);
+    });
+  });
+});
+
+test("elk kenmerk heeft minstens één contrasttekst", () => {
+  // Vier kenmerken hadden er geen, terwijl situaties.js ze juist bovenaan zet.
+  // Ze konden dus nooit in "waar je op kunt letten" komen.
+  KENMERKEN.forEach((k) => {
+    const perMijn = CONTRASTEN[k.id];
+    assert.ok(perMijn, `${k.id} heeft geen enkele contrasttekst`);
+    assert.ok(Object.keys(perMijn).length > 0, `${k.id} heeft een lege contrastlijst`);
+  });
+});
+
+test("elke contrasttekst hangt aan bestaande voorkeuren", () => {
+  // Een typfout in een waarde levert tekst op die nooit verschijnt en die je
+  // pas maanden later mist.
+  Object.entries(CONTRASTEN).forEach(([kenmerkId, perMijn]) => {
+    Object.entries(perMijn).forEach(([mijn, perHun]) => {
+      assert.ok(optieVan(kenmerkId, mijn), `${kenmerkId}.${mijn} bestaat niet als voorkeur`);
+      Object.keys(perHun).forEach((hun) => {
+        assert.ok(optieVan(kenmerkId, hun), `${kenmerkId}.${mijn}.${hun} bestaat niet als voorkeur`);
+      });
+    });
+  });
+});
+
+test("een collega die alleen middenopties deelt, krijgt toch een bruikbaar advies", () => {
+  // Dit pad ontstaat vanzelf: de Insights-vertaling geeft "structuur: gemengd"
+  // aan elk geel en elk rood profiel.
+  const advies = steltAdviesSamen({
+    mijnKenmerken: [
+      { kenmerkId: "tempo", waarde: "snel", bron: "user_confirmation" },
+      { kenmerkId: "denken", waarde: "hardop", bron: "user_confirmation" },
+    ],
+    hunKenmerken: [
+      { kenmerkId: "tempo", waarde: "gemiddeld", bron: "insights_discovery" },
+      { kenmerkId: "structuur", waarde: "gemengd", bron: "insights_discovery" },
+      { kenmerkId: "denken", waarde: "wisselend", bron: "insights_discovery" },
+      { kenmerkId: "contact", waarde: "beide", bron: "insights_discovery" },
+    ],
+    situatieId: "iets-nodig",
+    naamAnder: "Nikki",
+  });
+
+  assert.ok(advies.helpt.length > 0, "hier hoort iets te staan dat helpt");
+  assert.ok(advies.blokken.length > 0, "er hoort minstens één punt te zijn");
+});
+
 /* ------------------------------------------------------- gewicht van bronnen */
 
 test("een bevestigde voorkeur wint van een suggestie uit het profiel", () => {
