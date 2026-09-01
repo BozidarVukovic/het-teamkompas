@@ -754,6 +754,12 @@
   gap: 2px;
 }
 
+/* "(jij)" hoort bij de naam, maar is geen deel van de naam. */
+.tk-achter {
+  font-weight: 500;
+  color: var(--tk-zacht);
+}
+
 .tk-optie-tekst small {
   color: var(--tk-zacht);
   font-size: 12.5px;

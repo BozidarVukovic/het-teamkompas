@@ -4,15 +4,20 @@
 // dan gingen ze na verloop van tijd uiteenlopen: "Anne-Marie de Vries" wordt op
 // het ene scherm AD en op het andere AM.
 
-/** De eerste letters van maximaal twee naamdelen, in hoofdletters. */
+/**
+ * De eerste letters van maximaal twee naamdelen, in hoofdletters.
+ *
+ * Alleen delen die met een letter beginnen tellen mee. Achter een naam staat in
+ * de app soms iets tussen haakjes — "Bozidar (jij)" — en dat leverde anders een
+ * bol op met "B(" erin.
+ */
 export function initialen(naam) {
   const delen = String(naam || "")
     .trim()
     .split(/\s+/)
-    .filter(Boolean)
+    .filter((d) => /^\p{L}/u.test(d))
     .slice(0, 2)
-    .map((d) => d[0])
-    .filter(Boolean);
+    .map((d) => d[0]);
 
   return delen.length === 0 ? "?" : delen.join("").toUpperCase();
 }

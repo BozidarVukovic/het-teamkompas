@@ -23,7 +23,7 @@ import InsightsUpload from "../../components/app/InsightsUpload";
 import VolgendeStap from "../../components/app/VolgendeStap";
 
 /** Eén regel in de ledenlijst, met wat eronder tevoorschijn komt. */
-function Persoon({ sleutel, naam: hunNaam, onder, uitgeklapt, onKlik, children }) {
+function Persoon({ sleutel, naam: hunNaam, achter, onder, uitgeklapt, onKlik, children }) {
   return (
     <div className="tk-persoonrij">
       <button
@@ -34,7 +34,10 @@ function Persoon({ sleutel, naam: hunNaam, onder, uitgeklapt, onKlik, children }
       >
         <span className="tk-bol">{initialen(hunNaam)}</span>
         <span className="tk-optie-tekst">
-          <strong>{hunNaam}</strong>
+          <strong>
+            {hunNaam}
+            {achter ? <span className="tk-achter"> {achter}</span> : null}
+          </strong>
           <small>{onder}</small>
         </span>
         <span className="tk-optie-pijl" aria-hidden="true">
@@ -164,7 +167,8 @@ export default function MijnTeam() {
               <Persoon
                 key={sleutel}
                 sleutel={sleutel}
-                naam={`${l.naam || "Teamgenoot"}${eigen ? " (jij)" : ""}`}
+                naam={l.naam || "Teamgenoot"}
+                achter={eigen ? "(jij)" : null}
                 onder={[
                   l.rol === "beheerder" ? "Beheerder" : null,
                   g
