@@ -12,14 +12,17 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   serverTimestamp,
   setDoc,
   updateDoc,
+  where,
   writeBatch,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { deelzin } from "../../data/app/kenmerken";
 import { SECTIES, sectie } from "../../data/app/handleiding";
+import { haalVoorstel, verwijderVoorstel } from "./voorstellen";
 
 /* ------------------------------------------------------------------ paden */
 
@@ -512,6 +515,12 @@ export async function beoordeelAdviessessie(sessieId, bruikbaar, toelichting) {
   await updateDoc(doc(db, "adviessessies", sessieId), velden);
 }
 
+/** De adviessessies van één persoon. Nodig om ze te kunnen meenemen en wissen. */
+export async function haalEigenAdviessessies(uid) {
+  const snap = await getDocs(query(collection(db, "adviessessies"), where("uid", "==", uid)));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
 /**
  * Alle adviessessies, voor de makers van de app.
  *
@@ -538,17 +547,27 @@ export async function haalAdviessessies() {
 
 /** Alles wat van deze gebruiker is opgeslagen, als leesbaar object. */
 export async function exporteerEigenGegevens(uid) {
-  const [gebruiker, profiel, kenmerken, handleiding] = await Promise.all([
+  const [gebruiker, profiel, kenmerken, handleiding, adviessessies] = await Promise.all([
     haalGebruiker(uid),
     haalProfiel(uid),
     haalKenmerken(uid),
     haalHandleiding(uid),
+    // Hier staat je uid in, dus het hoort in je export. Zonder dit klopte de
+    // zin "hieronder staat precies wat er van je bewaard wordt" niet.
+    haalEigenAdviessessies(uid).catch(() => []),
   ]);
 
   const gedeeld = {};
+  const voorstellen = {};
   for (const l of (gebruiker && gebruiker.lidmaatschappen) || []) {
+    const naam = `${l.orgNaam || l.orgId} – ${l.teamNaam || l.teamId}`;
     const eigen = await haalGedeeldVanPersoon(l.orgId, l.teamId, uid);
-    if (eigen) gedeeld[`${l.orgNaam || l.orgId} – ${l.teamNaam || l.teamId}`] = eigen;
+    if (eigen) gedeeld[naam] = eigen;
+
+    // Een voorstel dat een facilitator voor je klaarzette, staat op jouw naam
+    // en gaat over jou. Dus ook dat is van jou.
+    const voorstel = await haalVoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => null);
+    if (voorstel) voorstellen[naam] = voorstel;
   }
 
   return {
@@ -558,6 +577,8 @@ export async function exporteerEigenGegevens(uid) {
     kenmerken,
     handleiding,
     gedeeldMetTeams: gedeeld,
+    profielvoorstellen: voorstellen,
+    adviessessies,
   };
 }
 
@@ -569,16 +590,24 @@ export async function verwijderEigenGegevens(uid) {
   for (const l of lidmaatschappen) {
     await deleteDoc(gedeeldRef(l.orgId, l.teamId, uid)).catch(() => {});
     await deleteDoc(lidRef(l.orgId, l.teamId, uid)).catch(() => {});
+    // Een voorstel dat iemand voor je klaarzette gaat over jou en staat op
+    // jouw naam. Bleef het staan, dan bleef er profielinformatie over jou
+    // achter op een plek waar een beheerder bij kan.
+    await verwijderVoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => {});
   }
 
-  const [kenmerkenSnap, sectiesSnap] = await Promise.all([
+  const [kenmerkenSnap, sectiesSnap, sessies] = await Promise.all([
     getDocs(kenmerkenCol(uid)),
     getDocs(sectiesCol(uid)),
+    // Hier staat je uid in. Lieten we ze staan, dan bleef er na "alles
+    // verwijderen" een spoor achter dat je zelf niet kunt vinden.
+    haalEigenAdviessessies(uid).catch(() => []),
   ]);
 
   const batch = writeBatch(db);
   kenmerkenSnap.docs.forEach((d) => batch.delete(d.ref));
   sectiesSnap.docs.forEach((d) => batch.delete(d.ref));
+  sessies.forEach((s) => batch.delete(doc(db, "adviessessies", s.id)));
   batch.delete(profielRef(uid));
   batch.delete(handleidingRef(uid));
   batch.delete(gebruikerRef(uid));

@@ -221,8 +221,13 @@ service cloud.firestore {
       allow create: if ingelogd() && request.resource.data.uid == request.auth.uid;
       allow update: if ingelogd() && resource.data.uid == request.auth.uid;
       allow delete: if ingelogd() && resource.data.uid == request.auth.uid;
-      // Doorzoeken kan alleen de makers, nooit een teambeheerder of teamgenoot.
-      allow list: if isAdmin();
+      // Doorzoeken kan de makers, en verder alleen jezelf in je eigen sessies.
+      // Dat laatste is nodig om ze te kunnen exporteren en verwijderen: zonder
+      // die regel bewaart de app iets van je dat je zelf niet kunt vinden.
+      // Firestore keurt een zoekopdracht in zijn geheel af zodra er één
+      // document uit zou komen dat deze regel niet doorstaat, dus een lijst
+      // zonder filter op de eigen uid mislukt gewoon.
+      allow list: if isAdmin() || (ingelogd() && resource.data.uid == request.auth.uid);
     }
 
     // Alles wat niet expliciet hierboven staat, blijft dicht

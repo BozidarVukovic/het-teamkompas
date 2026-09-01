@@ -131,12 +131,20 @@ export default function MijnGegevens() {
           <span>{lidmaatschappen.length} {lidmaatschappen.length === 1 ? "team" : "teams"}</span>
           <span className="tk-fijn">Teams zien niets van elkaar</span>
         </div>
+        <div className="tk-rij">
+          <span>Je adviessessies</span>
+          <span className="tk-fijn">Welke situatie, en of het hielp</span>
+        </div>
         <p className="tk-fijn" style={{ marginTop: 12 }}>
-          We bewaren daarnaast dát je advies hebt opgevraagd, bij welke situatie, en of je het
-          bruikbaar vond — nooit over wie het ging of wat er stond. Vond je een advies niet
+          Van een adviessessie bewaren we dát je advies hebt opgevraagd, bij welke situatie, en of
+          je het bruikbaar vond — nooit over wie het ging of wat er stond. Vond je een advies niet
           bruikbaar, dan kun je er één zin bij schrijven; die lezen de makers van de app om het
           advies te verbeteren. Je teamgenoten en je beheerder zien daar niets van. Er is geen
           scoring, geen ranglijst en geen profilering.
+        </p>
+        <p className="tk-fijn">
+          Staat er een profielvoorstel voor je klaar dat een facilitator heeft neergezet, dan hoort
+          dat er ook bij. Het zit in je download en verdwijnt mee als je alles verwijdert.
         </p>
       </div>
 

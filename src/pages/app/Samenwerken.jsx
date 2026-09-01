@@ -130,6 +130,9 @@ export default function Samenwerken() {
         : await vraagAdvies({
             mijnKenmerken: kenmerken,
             hunKenmerken: alsKenmerken(geselecteerd[0].kenmerken),
+            // Wat deze collega zelf schreef en met dit team deelde. Bij een
+            // groep laten we dit weg: één iemand citeren wijst iemand aan.
+            hunHandleiding: geselecteerd[0].handleiding,
             situatieId: situatie,
             naamAnder: geselecteerd[0].naam || "je collega",
           });
@@ -369,6 +372,20 @@ export default function Samenwerken() {
                         </ul>
                       </>
                     )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Wat deze collega er zelf over schreef. Staat vlak voor de vraag,
+                want dit is het laatste dat je wilt lezen voordat je begint. */}
+            {(advies.eigenWoorden || []).length > 0 && (
+              <div className="tk-advies-blok">
+                <h3>Wat {voornaam(gekozen && gekozen.naam, "je collega")} er zelf over schreef</h3>
+                {advies.eigenWoorden.map((w) => (
+                  <div key={w.sectieId} className="tk-sectie">
+                    <strong>{w.titel}</strong>
+                    <p>{w.tekst}</p>
                   </div>
                 ))}
               </div>

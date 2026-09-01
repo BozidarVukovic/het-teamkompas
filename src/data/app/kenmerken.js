@@ -13,6 +13,12 @@
 export const BRONNEN = [
   { id: "insights_discovery", label: "Uit je Insights Discovery-profiel", gewicht: 2, uitleg: "Afgeleid uit wat je bij je profiel hebt ingevuld." },
   { id: "manual", label: "Zelf ingevuld", gewicht: 3, uitleg: "Je hebt dit zelf opgeschreven." },
+  // Gereserveerd. Er is nog geen weg waarlangs geschreven tekst een
+  // kenmerkwaarde wordt; dat zou interpretatie van vrije tekst vragen en die
+  // is er in versie 0.1 bewust niet. Wat je in je handleiding schrijft komt
+  // wél in het advies terecht, maar als citaat naast het punt dat erover gaat
+  // — zie eigenWoordenBij() in advies/regels.js. Deze bron wordt daarom nergens
+  // in de app weggeschreven; alleen de testpersonen gebruiken hem.
   { id: "hand_in_handleiding", label: "Uit je hand-in-handleiding", gewicht: 3, uitleg: "Overgenomen uit wat je in je handleiding hebt gezet." },
   { id: "user_confirmation", label: "Door jou bevestigd", gewicht: 4, uitleg: "Je hebt dit gelezen en bevestigd dat het klopt." },
 ];

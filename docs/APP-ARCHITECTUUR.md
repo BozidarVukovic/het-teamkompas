@@ -113,13 +113,32 @@ van één leverancier.
 
 ## Volgorde van gewicht
 
-Spreken bronnen elkaar tegen, dan geldt: expliciet bevestigde gebruikersvoorkeur (4) boven
-hand-in-handleiding (3) en zelf ingevuld (3), boven het Insights Discovery-profiel (2), boven
-algemene regelgebaseerde logica. Bij gelijk gewicht wint de meest recente bevestiging. Een kenmerk
-dat iemand met "nee, dat klopt niet" heeft weggestreept, telt niet mee en wordt niet gedeeld.
+Spreken bronnen elkaar tegen, dan geldt: expliciet bevestigde gebruikersvoorkeur (4) boven zelf
+ingevuld (3), boven het Insights Discovery-profiel (2), boven algemene regelgebaseerde logica. Bij
+gelijk gewicht wint de meest recente bevestiging. Een kenmerk dat iemand met "nee, dat klopt niet"
+heeft weggestreept, telt niet mee en wordt niet gedeeld.
 
 Het Insights-profiel is optioneel. Zonder profiel vult iemand de punten zelf in en werkt alles
-hetzelfde. De hand-in-handleiding is ook optioneel; de app is er nergens van afhankelijk.
+hetzelfde.
+
+### Wat de hand-in-handleiding doet, en wat niet
+
+Hier stond lang dat de handleiding als bron met gewicht 3 meewoog. Dat klopte niet. De bron bestaat
+in `BRONNEN`, maar er is geen weg waarlangs geschreven tekst een kenmerkwaarde wordt — dat zou
+interpretatie van vrije tekst vragen, en versie 0.1 heeft daar bewust geen taalmodel voor. In de
+praktijk kon iemand tien secties over zichzelf schrijven zonder dat er één letter aan het advies
+veranderde.
+
+Wat de handleiding wél doet: elke sectie hoort bij een of meer kenmerken (`SECTIES[].kenmerken` in
+`src/data/app/handleiding.js`). Gaat een adviespunt over hetzelfde kenmerk als een sectie die die
+persoon met dit team heeft gedeeld, dan komt die sectie er letterlijk bij te staan onder "Wat
+[naam] er zelf over schreef". Hooguit twee per advies. Geen gewicht, geen afleiding, geen
+samenvatting — hun eigen woorden naast de regel die erover gaat.
+
+Bij een groepsadvies gebeurt dit niet: één iemand citeren wijst iemand aan, en dat is precies wat
+`groepsregels.js` moet voorkomen.
+
+De handleiding blijft optioneel; de app is er nergens van afhankelijk.
 
 ## Wat er niet gebeurt
 

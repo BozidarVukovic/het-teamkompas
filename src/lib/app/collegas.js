@@ -17,6 +17,9 @@ export function collegasVan({ leden = [], gedeeld = {}, profielleden = [], eigen
       sleutel: l.uid,
       doorBeheerder: false,
       kenmerken: ((gedeeld || {})[l.uid] || {}).kenmerken || [],
+      // Wat iemand in eigen woorden schreef en met dit team deelde. Het advies
+      // citeert daaruit; zie regels.js.
+      handleiding: ((gedeeld || {})[l.uid] || {}).handleiding || [],
     }));
 
   const toegevoegd = (profielleden || [])
@@ -28,6 +31,9 @@ export function collegasVan({ leden = [], gedeeld = {}, profielleden = [], eigen
       doorBeheerder: true,
       toegevoegdDoorNaam: pl.toegevoegdDoorNaam,
       kenmerken: pl.kenmerken || [],
+      // Een toegevoegd profiel komt uit een Insights-rapport; er zijn geen
+      // eigen woorden, want die persoon heeft niets geschreven.
+      handleiding: [],
     }));
 
   return [...echt, ...toegevoegd]

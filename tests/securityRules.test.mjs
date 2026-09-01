@@ -17,7 +17,7 @@ import {
   assertFails,
 } from "@firebase/rules-unit-testing";
 import {
-  doc, getDoc, setDoc, deleteDoc, collection, getDocs, query,
+  doc, getDoc, setDoc, deleteDoc, collection, getDocs, query, where,
 } from "firebase/firestore";
 
 const HOST = "127.0.0.1";
@@ -219,7 +219,27 @@ if (!draait) {
     await assertSucceeds(getDoc(doc(maker(), "adviessessies/s4")));
   });
 
-  test("16. de makers mogen wel meelezen, maar niets van iemand veranderen", async () => {
+  test("16. je kunt je eigen adviessessies opvragen om ze te kunnen wissen", async () => {
+    await zetKlaar();
+    await assertSucceeds(setDoc(doc(anna(), "adviessessies/s6"), { uid: "anna", situatie: "irritatie" }));
+    await assertSucceeds(setDoc(doc(bram(), "adviessessies/s7"), { uid: "bram", situatie: "weerstand" }));
+
+    // Met een filter op je eigen uid mag het.
+    await assertSucceeds(
+      getDocs(query(collection(anna(), "adviessessies"), where("uid", "==", "anna")))
+    );
+    // Zonder filter, of met dat van een ander, niet.
+    await assertFails(getDocs(collection(anna(), "adviessessies")));
+    await assertFails(
+      getDocs(query(collection(anna(), "adviessessies"), where("uid", "==", "bram")))
+    );
+
+    // En wissen kan alleen je eigen sessie.
+    await assertFails(deleteDoc(doc(anna(), "adviessessies/s7")));
+    await assertSucceeds(deleteDoc(doc(anna(), "adviessessies/s6")));
+  });
+
+  test("17. de makers mogen wel meelezen, maar niets van iemand veranderen", async () => {
     await zetKlaar();
     await assertSucceeds(setDoc(doc(anna(), "adviessessies/s5"), { uid: "anna", situatie: "herhaling" }));
     await assertFails(setDoc(doc(maker(), "adviessessies/s5"), { uid: "anna", bruikbaar: true }));

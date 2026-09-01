@@ -4,17 +4,30 @@
 // komt geen taalmodel aan te pas. De uitkomst is opgebouwd uit de teksten in
 // adviesblokken.js.
 //
-// Volgorde van gewicht, zoals vastgelegd in de opdracht:
+// Volgorde van gewicht:
 //   1. wat de gebruiker expliciet heeft bevestigd
-//   2. de hand-in-handleiding
+//   2. zelf ingevuld
 //   3. het Insights Discovery-profiel
 //   4. algemene samenwerkingslogica
 //
 // Spreken bronnen elkaar tegen, dan wint de meest expliciete en, bij gelijk
 // gewicht, de meest recent bevestigde.
+//
+// De hand-in-handleiding stond hier lang als tweede in de rij. Dat klopte niet:
+// er is geen weg waarlangs geschreven tekst een kenmerkwaarde wordt, en die
+// bron werd in de hele app nergens weggeschreven. Iemand kon tien secties over
+// zichzelf schrijven zonder dat er één letter aan het advies veranderde,
+// terwijl er wel stond dat het het advies persoonlijker maakt.
+//
+// Wat de handleiding nu wél doet: waar een adviespunt over hetzelfde onderwerp
+// gaat als een sectie die iemand deelde, komt die sectie er letterlijk bij te
+// staan. Geen gewicht, geen afleiding, geen interpretatie — hun eigen woorden
+// naast de regel die erover gaat. Dat is wat een handleiding kan zijn zonder
+// dat een taalmodel hem hoeft te lezen.
 
 import { BRON_GEWICHT, kenmerk, optieVan } from "../../../data/app/kenmerken.js";
 import { situatie } from "../../../data/app/situaties.js";
+import { sectie } from "../../../data/app/handleiding.js";
 import { BEHOEFTEN, CONTRASTEN, ADVIESKADER } from "../../../data/app/adviesblokken.js";
 import { actieVoor } from "../../../data/app/acties.js";
 
@@ -22,6 +35,40 @@ import { actieVoor } from "../../../data/app/acties.js";
 // onthoudt niemand vlak voor een gesprek.
 export const MAX_BLOKKEN = 3;
 export const MAX_LETOP = 2;
+
+// Twee citaten is genoeg. Meer en het advies wordt een bloemlezing in plaats
+// van iets waar je vlak voor een gesprek nog even naar kijkt.
+export const MAX_EIGEN_WOORDEN = 2;
+
+/**
+ * Wat deze collega zelf schreef over de onderwerpen waar het advies over gaat.
+ *
+ * `handleiding` is wat diegene met dit team deelde: [{ sectieId, titel, tekst }].
+ * Een sectie hoort bij een adviespunt wanneer het kenmerk van dat punt in die
+ * sectie thuishoort — dat staat vast in handleiding.js en wordt hier niet
+ * afgeleid of geraden.
+ */
+export function eigenWoordenBij(kenmerkIds = [], handleiding = []) {
+  const gedeeld = (handleiding || []).filter((s) => s && s.sectieId && s.tekst);
+  const uit = [];
+  const gezien = new Set();
+
+  kenmerkIds.forEach((kenmerkId) => {
+    gedeeld.forEach((s) => {
+      if (gezien.has(s.sectieId)) return;
+      const hoort = (sectie(s.sectieId) || {}).kenmerken || [];
+      if (!hoort.includes(kenmerkId)) return;
+      gezien.add(s.sectieId);
+      uit.push({
+        sectieId: s.sectieId,
+        titel: s.titel || (sectie(s.sectieId) || {}).titel || s.sectieId,
+        tekst: s.tekst,
+      });
+    });
+  });
+
+  return uit.slice(0, MAX_EIGEN_WOORDEN);
+}
 
 /**
  * Zet de naam van de ander in de tekst. De blokken zijn geschreven met
@@ -144,7 +191,13 @@ export function verzamelBlokken(mijn, hun, situatieId) {
  * Van de ander gebruiken we uitsluitend wat met dit team is gedeeld — dat
  * filteren gebeurt in de laag erboven, niet hier.
  */
-export function steltAdviesSamen({ mijnKenmerken = [], hunKenmerken = [], situatieId, naamAnder = "je collega" }) {
+export function steltAdviesSamen({
+  mijnKenmerken = [],
+  hunKenmerken = [],
+  hunHandleiding = [],
+  situatieId,
+  naamAnder = "je collega",
+}) {
   const s = situatie(situatieId);
   const mijn = bepaalWaarden(mijnKenmerken);
   const hun = bepaalWaarden(hunKenmerken);
@@ -213,9 +266,15 @@ export function steltAdviesSamen({ mijnKenmerken = [], hunKenmerken = [], situat
   const actie =
     (eerste && actieVoor(eerste.kenmerkId, eerste.hunWaarde)) || (s ? s.actie : null);
 
+  // Wat deze collega zelf schreef over precies deze onderwerpen. Letterlijk,
+  // want het zijn hun woorden en die vat je niet samen.
+  const eigenWoorden = eigenWoordenBij(gekozen.map((b) => b.kenmerkId), hunHandleiding);
+
   return {
+    soort: "persoon",
     situatie: s ? { id: s.id, label: s.label, opening: s.opening } : null,
     naamAnder,
+    eigenWoorden,
     samenvatting,
     helpt,
     letOp,
