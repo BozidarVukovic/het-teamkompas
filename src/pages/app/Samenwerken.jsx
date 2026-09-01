@@ -15,6 +15,7 @@ import {
 } from "../../lib/app/opslag";
 import { vraagAdvies } from "../../lib/app/advies/adviesService";
 import { situatiesPerGroep } from "../../data/app/situaties";
+import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
 import { initialen } from "../../lib/app/naam";
 import VolgendeStap from "../../components/app/VolgendeStap";
 
@@ -54,26 +55,18 @@ export default function Samenwerken() {
   }, [actiefTeam]);
 
   // Echte teamgenoten en de profielen die een beheerder heeft toegevoegd staan
-  // in één lijst: over allebei valt evengoed advies te vragen. Bij een
-  // toegevoegd profiel staat er wel bij door wie het is neergezet.
-  const anderen = useMemo(() => {
-    const echt = leden
-      .filter((l) => l.uid !== (gebruiker && gebruiker.uid))
-      .map((l) => ({ ...l, sleutel: l.uid }));
-
-    const toegevoegd = (teamOverzicht.profielleden || []).map((pl) => ({
-      uid: pl.id,
-      sleutel: pl.id,
-      naam: pl.naam,
-      doorBeheerder: true,
-      toegevoegdDoorNaam: pl.toegevoegdDoorNaam,
-      kenmerken: pl.kenmerken || [],
-    }));
-
-    return [...echt, ...toegevoegd].sort((a, b) =>
-      String(a.naam || "").localeCompare(String(b.naam || ""))
-    );
-  }, [leden, gebruiker, teamOverzicht.profielleden]);
+  // in één lijst: over allebei valt evengoed advies te vragen. Diezelfde lijst
+  // staat op het startscherm; zie collegas.js.
+  const anderen = useMemo(
+    () =>
+      collegasVan({
+        leden,
+        gedeeld,
+        profielleden: teamOverzicht.profielleden,
+        eigenUid: gebruiker && gebruiker.uid,
+      }),
+    [leden, gedeeld, gebruiker, teamOverzicht.profielleden]
+  );
 
   // Vanaf de teampagina kom je hier binnen met een collega al gekozen
   // (/app/samenwerken?met=...). Dat gebeurt één keer: daarna bepaalt je eigen
@@ -87,16 +80,11 @@ export default function Samenwerken() {
   }, [gevraagd, anderen]);
 
   const gekozen = anderen.find((l) => l.sleutel === gekozenUid) || null;
-  const gekozenGedeeld = gekozen
-    ? gekozen.doorBeheerder
-      ? { kenmerken: gekozen.kenmerken }
-      : gedeeld[gekozen.uid]
-    : null;
 
   const maakAdvies = useCallback(
     async (situatie) => {
       if (!gekozen) return;
-      const hunKenmerken = ((gekozenGedeeld && gekozenGedeeld.kenmerken) || []).map((k) => ({
+      const hunKenmerken = (gekozen.kenmerken || []).map((k) => ({
         kenmerkId: k.kenmerkId,
         waarde: k.waarde,
         bron: "user_confirmation",
@@ -122,7 +110,7 @@ export default function Samenwerken() {
         setSessieId(null);
       }
     },
-    [gekozen, gekozenGedeeld, kenmerken, gebruiker]
+    [gekozen, kenmerken, gebruiker]
   );
 
   const kiesSituatie = (id) => {
@@ -180,34 +168,25 @@ export default function Samenwerken() {
         <>
           <p className="tk-label">Met wie speelt het?</p>
           <div className="tk-lijst" style={{ marginBottom: 22 }}>
-            {anderen.map((l) => {
-              const punten = l.doorBeheerder
-                ? (l.kenmerken || []).length
-                : (gedeeld[l.uid] && gedeeld[l.uid].kenmerken.length) || 0;
-              return (
-                <button
-                  key={l.sleutel}
-                  type="button"
-                  className={`tk-persoon${gekozenUid === l.sleutel ? " gekozen" : ""}`}
-                  onClick={() => {
-                    setGekozenUid(l.sleutel);
-                    opnieuw();
-                  }}
-                >
-                  <span className="tk-bol">{initialen(l.naam)}</span>
-                  <span>
-                    {l.naam || "Teamgenoot"}
-                    <small style={{ display: "block", color: "var(--tk-zacht)", fontSize: 12.5 }}>
-                      {punten === 0
-                        ? "Heeft nog niets gedeeld"
-                        : l.doorBeheerder
-                          ? `${punten} punten · toegevoegd door ${l.toegevoegdDoorNaam || "een beheerder"}`
-                          : `${punten} punten gedeeld`}
-                    </small>
-                  </span>
-                </button>
-              );
-            })}
+            {anderen.map((l) => (
+              <button
+                key={l.sleutel}
+                type="button"
+                className={`tk-persoon${gekozenUid === l.sleutel ? " gekozen" : ""}`}
+                onClick={() => {
+                  setGekozenUid(l.sleutel);
+                  opnieuw();
+                }}
+              >
+                <span className="tk-bol">{initialen(l.naam)}</span>
+                <span>
+                  {l.naam || "Teamgenoot"}
+                  <small style={{ display: "block", color: "var(--tk-zacht)", fontSize: 12.5 }}>
+                    {collegaInEenZin(l)}
+                  </small>
+                </span>
+              </button>
+            ))}
           </div>
         </>
       )}

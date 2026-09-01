@@ -23,6 +23,15 @@
   box-sizing: border-box;
 }
 
+/* Bij een paginawissel verplaatst ScrollManager de focus naar de kop, zodat
+   schermlezers bovenaan beginnen. Die kop is niets om naartoe te tabben, dus
+   de focusring hoort er niet omheen te staan — in Safari verscheen er een
+   kader om "Hallo Bozidar". Knoppen en links houden hun ring gewoon. */
+.tk-app [tabindex="-1"]:focus,
+.tk-app [tabindex="-1"]:focus-visible {
+  outline: none;
+}
+
 .tk-balk {
   position: sticky;
   top: 0;
@@ -885,3 +894,47 @@ a.tk-optie {
   margin-left: 10px;
 }
 
+/* Je collega's als bollen met hun naam eronder.
+   Het startscherm verwees eerst naar dezelfde plekken als het menu. Dit is wat
+   het menu niet kan geven: de mensen zelf, met één tik naar het advies. */
+.tk-mensen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 4px;
+}
+
+.tk-mens {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 90px;
+  padding: 12px 3px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--tk-tekst);
+}
+
+.tk-mens:hover {
+  background: var(--tk-teal-dim);
+}
+
+.tk-bol-mens {
+  width: 52px;
+  height: 52px;
+  font-size: 18px;
+}
+
+.tk-bol-leeg {
+  background: transparent;
+  border-style: dashed;
+}
+
+.tk-mens-naam {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+  font-weight: 600;
+}

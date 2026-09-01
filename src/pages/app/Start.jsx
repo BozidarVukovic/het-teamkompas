@@ -1,13 +1,13 @@
 // Het startscherm.
 //
-// Twee vragen moeten hier binnen een seconde beantwoord zijn: waar ben ik, en
-// wat kan ik hier doen. Daaronder pas de rest.
+// Een startscherm dat alleen doorverwijst naar dezelfde plekken als het menu,
+// voegt niets toe. Dus staat hier wat het menu niet kan geven: je collega's bij
+// naam. Eén tik brengt je bij het advies over die persoon — de tussenstap waar
+// je diegene nog een keer moest aanwijzen, is weg.
 //
-// Zolang je profiel nog niet af is, is er precies één ding dat logisch is om nu
-// te doen, en dat staat groot in beeld. Welke stap dat is, wordt bepaald in
-// volgendeStap.js — dezelfde logica die onderaan de andere pagina's meeloopt,
-// zodat de app overal hetzelfde zegt. Is je profiel wel af, dan verdwijnt die
-// hele blokkade en blijft er één regel over: compleet.
+// Zolang je profiel niet af is, staat daarboven de ene stap die dan logisch is.
+// Welke dat is, wordt bepaald in volgendeStap.js — dezelfde logica die onderaan
+// de andere pagina's meeloopt, zodat de app overal hetzelfde zegt.
 
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
@@ -15,41 +15,15 @@ import VolgendeStap from "../../components/app/VolgendeStap";
 import Voortgang from "../../components/app/Voortgang";
 import { bepaalVolgendeStap } from "../../lib/app/volgendeStap";
 import { bepaalVoortgang } from "../../lib/app/voortgang";
-import { voornaam } from "../../lib/app/naam";
+import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
+import { initialen, voornaam } from "../../lib/app/naam";
 
-// De drie dingen waarvoor je de app opent. Meer keuzes maken het startscherm
-// niet rijker, alleen trager.
-const ACTIES = [
-  {
-    naar: "/app/samenwerken",
-    titel: "Samenwerken met een collega",
-    uitleg: "Kies een collega en een situatie. Je krijgt een gesprekssuggestie en één kleine actie.",
-    primair: true,
-  },
-  {
-    naar: "/app/team",
-    titel: "Mijn team bekijken",
-    uitleg: "Wie doen er mee, en wat hebben zij over zichzelf gedeeld?",
-  },
-  {
-    naar: "/app/ik",
-    titel: "Mijn profiel bijwerken",
-    uitleg: "Je punten nalopen, je handleiding schrijven of je gegevens beheren.",
-  },
-];
-
-function Actie({ actie }) {
+/** Een collega als bol met een naam eronder. Eén tik en je bent bij het advies. */
+function Mens({ naar, ini, label, onder, gestippeld = false }) {
   return (
-    <Link
-      to={actie.naar}
-      className={actie.primair ? "tk-regel tk-regel-primair" : "tk-regel"}
-      style={{ textDecoration: "none", color: "inherit", display: "block" }}
-    >
-      <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-        <strong>{actie.titel}</strong>
-        <span aria-hidden="true" style={{ marginLeft: "auto", color: "var(--tk-zacht)" }}>›</span>
-      </div>
-      <p className="tk-fijn" style={{ margin: "6px 0 0" }}>{actie.uitleg}</p>
+    <Link to={naar} className="tk-mens" title={onder || undefined}>
+      <span className={`tk-bol tk-bol-mens${gestippeld ? " tk-bol-leeg" : ""}`}>{ini}</span>
+      <span className="tk-mens-naam">{label}</span>
     </Link>
   );
 }
@@ -58,30 +32,33 @@ export default function Start() {
   const { gebruiker, naam, actiefTeam, kenmerken, handleiding, teamOverzicht, uitnodigingscode, vergeetUitnodiging } =
     useApp();
 
+  const eigenUid = gebruiker && gebruiker.uid;
 
   const stap = bepaalVolgendeStap({
     kenmerken,
     actiefTeam,
     leden: teamOverzicht.leden,
     gedeeldPerUid: teamOverzicht.gedeeld,
-    eigenUid: gebruiker && gebruiker.uid,
+    eigenUid,
     teamcode: teamOverzicht.team && teamOverzicht.team.code,
     extraProfielen: (teamOverzicht.profielleden || []).length,
   });
 
   const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding });
 
+  const collegas = collegasVan({
+    leden: teamOverzicht.leden,
+    gedeeld: teamOverzicht.gedeeld,
+    profielleden: teamOverzicht.profielleden,
+    eigenUid,
+  });
+
+  const mensen = collegas.length + 1;
+
   return (
     <div className="tk-inhoud">
       <h1 className="tk-kop">Hallo {voornaam(naam, "daar")}</h1>
       <p className="tk-onderkop">Waarmee kunnen we je vandaag helpen?</p>
-
-      {actiefTeam && (
-        <p className="tk-fijn" style={{ marginTop: -4 }}>
-          Huidig team: {actiefTeam.teamNaam || "je team"}
-          {actiefTeam.orgNaam ? ` (${actiefTeam.orgNaam})` : ""}
-        </p>
-      )}
 
       {uitnodigingscode && (
         <div className="tk-kaart" style={{ borderColor: "rgba(0,168,150,0.45)" }}>
@@ -102,18 +79,9 @@ export default function Start() {
         </div>
       )}
 
-      <div className="tk-kaart">
-        {ACTIES.map((a) => (
-          <Actie key={a.naar} actie={a} />
-        ))}
-      </div>
-
-      {voortgang.compleet ? (
-        <p className="tk-af">
-          <span aria-hidden="true">✓</span> Je profiel is compleet en gedeeld met je team.{" "}
-          <Link to="/app/ik">Bekijken</Link>
-        </p>
-      ) : (
+      {/* Is je profiel nog niet af, dan is er precies één ding dat logisch is om
+          nu te doen. Dat staat vóór alles wat je daarna kunt. */}
+      {!voortgang.compleet && (
         <>
           <VolgendeStap variant="groot" />
           {!teamOverzicht.laden && stap.nummer > 1 && (
@@ -121,6 +89,55 @@ export default function Start() {
           )}
         </>
       )}
+
+      <section className="tk-groep">
+        <h2 className="tk-groep-kop">Samenwerken met</h2>
+        <div className="tk-mensen">
+          {collegas.map((c) => (
+            <Mens
+              key={c.sleutel}
+              naar={`/app/samenwerken?met=${encodeURIComponent(c.sleutel)}`}
+              ini={initialen(c.naam)}
+              label={voornaam(c.naam, "Collega")}
+              onder={collegaInEenZin(c)}
+            />
+          ))}
+          <Mens naar="/app/team" ini="+" label="Uitnodigen" gestippeld />
+        </div>
+        <p className="tk-fijn" style={{ margin: "12px 0 0" }}>
+          {collegas.length === 0
+            ? "Zodra een collega meedoet en iets deelt, staat diegene hier."
+            : "Kies een collega en wat er speelt. Je krijgt een gesprekssuggestie en één kleine actie."}
+        </p>
+      </section>
+
+      <section className="tk-groep">
+        <h2 className="tk-groep-kop">Meer</h2>
+        <div className="tk-groep-lijst">
+          <Link to="/app/team" className="tk-optie">
+            <span className="tk-optie-tekst">
+              <strong>Mijn team</strong>
+              <small>{actiefTeam ? actiefTeam.teamNaam || "Je team" : "Je hebt nog geen team"}</small>
+            </span>
+            <span className="tk-optie-stand">
+              {mensen} {mensen === 1 ? "persoon" : "mensen"}
+            </span>
+            <span className="tk-optie-pijl" aria-hidden="true">›</span>
+          </Link>
+
+          <Link to="/app/ik" className="tk-optie">
+            <span className="tk-optie-tekst">
+              <strong>Mijn profiel</strong>
+              <small>Wat jij over jezelf deelt met je team.</small>
+            </span>
+            <span className={`tk-optie-stand${voortgang.compleet ? " klaar" : ""}`}>
+              {voortgang.compleet && <span aria-hidden="true">✓ </span>}
+              {voortgang.gedeeld} van {voortgang.van}
+            </span>
+            <span className="tk-optie-pijl" aria-hidden="true">›</span>
+          </Link>
+        </div>
+      </section>
 
       <p className="tk-fijn" style={{ marginBottom: 40 }}>
         Adviezen komen uit vaste regels en vooraf geschreven teksten, niet uit een taalmodel. Ze zijn
