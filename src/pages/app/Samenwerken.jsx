@@ -161,10 +161,14 @@ export default function Samenwerken() {
   return (
     <div className="tk-inhoud">
       <h1 className="tk-kop">Samenwerken met...</h1>
-      <p className="tk-onderkop">
-        Kies met wie het speelt en wat er aan de hand is. Je krijgt een advies op basis van wat
-        jullie allebei hebben gedeeld.
-      </p>
+      {/* De uitleg gaat over de keuze die je nog moet maken. Heb je iemand
+          gekozen, dan legt hij iets uit wat je al gedaan hebt. */}
+      {!gekozen && (
+        <p className="tk-onderkop">
+          Kies met wie het speelt en wat er aan de hand is. Je krijgt een advies op basis van wat
+          jullie allebei hebben gedeeld.
+        </p>
+      )}
 
       {fout && <div className="tk-melding tk-melding-fout">{fout}</div>}
 
@@ -181,9 +185,9 @@ export default function Samenwerken() {
         </div>
       )}
 
-      {anderen.length > 0 && (
+      {anderen.length > 0 && !gekozen && (
         <>
-          <p className="tk-label">1. Met wie speelt het?</p>
+          <p className="tk-label">Met wie speelt het?</p>
           <div className="tk-lijst" style={{ marginBottom: 22 }}>
             {anderen.map((l) => {
               const punten = l.doorBeheerder
@@ -219,28 +223,45 @@ export default function Samenwerken() {
 
       {anderen.length === 0 && <VolgendeStap />}
 
+      {gekozen && (
+        <div className="tk-gekozen">
+          <span className="tk-bol">{initialen(gekozen.naam)}</span>
+          <span className="tk-gekozen-tekst">
+            <strong>{gekozen.naam || "Teamgenoot"}</strong>
+            <small>{advies && advies.situatie ? advies.situatie.label : "Wat speelt er?"}</small>
+          </span>
+          <button
+            type="button"
+            className="tk-knop tk-knop-rand tk-knop-klein"
+            onClick={() => {
+              setGekozenUid(null);
+              opnieuw();
+            }}
+          >
+            Wijzigen
+          </button>
+        </div>
+      )}
+
       {gekozen && !advies && (
         <>
-          <p className="tk-label">2. Wat speelt er?</p>
           {situatiesPerGroep().map((groep) => (
-            <div key={groep.id} style={{ marginBottom: 18 }}>
-              <div className="tk-fijn" style={{ marginBottom: 8 }}>{groep.label}</div>
-              <div className="tk-keuzes">
+            <section key={groep.id} className="tk-groep">
+              <h2 className="tk-groep-kop">{groep.label}</h2>
+              <div className="tk-groep-lijst">
                 {groep.situaties.map((s) => (
                   <button
                     key={s.id}
                     type="button"
-                    className={`tk-keuze${situatieId === s.id ? " gekozen" : ""}`}
+                    className="tk-optie"
                     onClick={() => kiesSituatie(s.id)}
                   >
-                    <span>
-                      {s.label}
-                      <small>{s.uitleg}</small>
-                    </span>
+                    <span>{s.label}</span>
+                    <span className="tk-optie-pijl" aria-hidden="true">›</span>
                   </button>
                 ))}
               </div>
-            </div>
+            </section>
           ))}
         </>
       )}

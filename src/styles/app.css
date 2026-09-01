@@ -632,3 +632,100 @@
     padding-bottom: calc(72px + env(safe-area-inset-bottom));
   }
 }
+
+/* Wie je hebt gekozen, samengevat in één regel.
+   De hele lijst met collega's laten staan nadat je er een hebt aangewezen,
+   verdubbelt het scherm zonder iets toe te voegen. Wat je koos blijft zichtbaar
+   — daar gaat het advies straks over — en veranderen kan met één knop. */
+.tk-gekozen {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--tk-navy-2);
+  border: 1px solid var(--tk-lijn);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 22px;
+}
+
+.tk-gekozen-tekst {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tk-gekozen-tekst strong {
+  font-size: 16px;
+}
+
+.tk-gekozen-tekst small {
+  color: var(--tk-zacht);
+  font-size: 12.5px;
+}
+
+.tk-gekozen .tk-knop {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+/* Een groep keuzes als één blok met een kop erboven.
+   Zestien situaties als losse kaarten met uitleg werden een muur waar je
+   doorheen moest scrollen. Als strakke regels onder een kop zie je in één
+   oogopslag welke kant je op wilt, en pas daarna welke zin er precies past. */
+.tk-groep {
+  margin-bottom: 22px;
+}
+
+.tk-groep-kop {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tk-zacht);
+  margin: 0 0 8px 4px;
+}
+
+.tk-groep-lijst {
+  background: var(--tk-navy-2);
+  border: 1px solid var(--tk-lijn);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.tk-optie {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--tk-lijn);
+  padding: 14px 16px;
+  color: var(--tk-tekst);
+  font-size: 15.5px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.tk-optie:first-child {
+  border-top: 0;
+}
+
+.tk-optie:hover,
+.tk-optie:focus-visible {
+  background: var(--tk-teal-dim);
+  color: var(--tk-tekst);
+}
+
+.tk-optie-pijl {
+  margin-left: auto;
+  color: var(--tk-zacht);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.tk-optie:hover .tk-optie-pijl {
+  color: var(--tk-teal);
+}
