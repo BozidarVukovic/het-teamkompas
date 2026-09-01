@@ -123,7 +123,7 @@ export async function maakOrganisatieMetTeam({ uid, naam, organisatieNaam, teamN
     sindsOp: serverTimestamp(),
   });
 
-  const lidmaatschap = { orgId, teamId, orgNaam: organisatieNaam, teamNaam, rol: "beheerder" };
+  const lidmaatschap = { orgId, teamId, orgNaam: organisatieNaam, teamNaam };
   await voegLidmaatschapToe(uid, lidmaatschap);
   return lidmaatschap;
 }
@@ -175,7 +175,6 @@ export async function treedToeMetCode({ uid, naam, code }) {
     teamId: gevonden.teamId,
     orgNaam: gevonden.orgNaam,
     teamNaam,
-    rol: "lid",
   };
   await voegLidmaatschapToe(uid, lidmaatschap);
   return lidmaatschap;
@@ -257,6 +256,24 @@ export async function werkLidgegevensBij({ uid, lidmaatschappen = [], naam = "",
       updateDoc(gedeeldRef(l.orgId, l.teamId, uid), { naam }).catch(() => {})
     )
   );
+}
+
+/**
+ * Zet de rol van iemand in dit team op "lid" of "beheerder".
+ *
+ * Alleen een beheerder mag dit; firestore.rules houdt de rest tegen. De vraag
+ * of het in dít geval verstandig is — je mag nooit de laatste beheerder
+ * wegnemen — wordt beantwoord in teamrollen.js, voordat we hier komen.
+ *
+ * De rol staat uitsluitend in het ledendocument. Hij stond ook in het
+ * lidmaatschap in je eigen gebruikersdocument, en dat kon niet kloppen: als een
+ * beheerder jou promoveert, kan hij jouw gebruikersdocument niet schrijven, dus
+ * bleef daar "lid" staan. Niets las het gelukkig, maar een veld dat structureel
+ * kan liegen hoort er niet te zijn. Nu is er één plek, en dat is dezelfde plek
+ * waar de securityregels naar kijken.
+ */
+export async function zetTeamrol({ orgId, teamId, uid, rol }) {
+  await updateDoc(lidRef(orgId, teamId, uid), { rol });
 }
 
 export async function haalTeamleden(orgId, teamId) {

@@ -148,7 +148,12 @@ service cloud.firestore {
               // of iemand treedt toe met de juiste code
               || get(/databases/$(database)/documents/teamcodes/$(request.resource.data.code)).data.teamId == teamId
             );
-          allow update: if ikBen(uid) || isTeambeheerder(orgId, teamId);
+          // Je eigen regel bijwerken mag — naam en functie — maar je rol niet.
+          // Zonder die voorwaarde kon elk teamlid zichzelf beheerder maken door
+          // rol: "beheerder" naar zijn eigen document te schrijven. Alleen een
+          // beheerder kan een rol veranderen.
+          allow update: if isTeambeheerder(orgId, teamId)
+            || (ikBen(uid) && request.resource.data.rol == resource.data.rol);
           allow delete: if ikBen(uid) || isTeambeheerder(orgId, teamId);
         }
 

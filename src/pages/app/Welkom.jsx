@@ -6,7 +6,7 @@
 // meerdere teams, en iemand kan bij meer dan één team horen.
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import useActie from "../../components/app/useActie";
 import Melding from "../../components/app/Melding";
@@ -21,8 +21,14 @@ export default function Welkom() {
   const heeftAlEenTeam = (lidmaatschappen || []).length > 0;
   const navigeer = useNavigate();
 
+  // Wie hier komt om een team aan te maken, hoeft dat niet nog eens te kiezen.
+  // Dat is vooral de facilitator: die zet regelmatig een nieuw team op, en
+  // kwam daar tot nu toe alleen via een link die "aansluiten" heette.
+  const [zoek] = useSearchParams();
+  const wilNieuw = zoek.get("nieuw") === "1";
+
   const [mijnNaam, setMijnNaam] = useState(naam || "");
-  const [keuze, setKeuze] = useState(uitnodigingscode ? "code" : null);
+  const [keuze, setKeuze] = useState(uitnodigingscode ? "code" : wilNieuw ? "nieuw" : null);
   const [code, setCode] = useState(uitnodigingscode || "");
   const [organisatieNaam, setOrganisatieNaam] = useState("");
   const [teamNaam, setTeamNaam] = useState("");
@@ -105,12 +111,18 @@ export default function Welkom() {
     <div className="tk-inhoud tk-smal" style={{ paddingTop: 56 }}>
       <div className="tk-stap">{heeftAlEenTeam ? "Nog een team" : "Stap 2 van 2"}</div>
       <h1 className="tk-kop">
-        {heeftAlEenTeam ? "Bij een ander team aansluiten" : "Bij welk team hoor je?"}
+        {!heeftAlEenTeam
+          ? "Bij welk team hoor je?"
+          : wilNieuw
+            ? "Een nieuw team aanmaken"
+            : "Bij een ander team aansluiten"}
       </h1>
       <p className="tk-onderkop">
-        {heeftAlEenTeam
-          ? "Je hoort al bij een team. Hier sluit je aan bij nóg een team, bijvoorbeeld bij een andere klant of afdeling. Wil je juist iemand uitnodigen voor je huidige team? Dat doe je bij Mijn team."
-          : "Teams staan technisch los van elkaar. Wat je met het ene team deelt, is voor een ander team niet zichtbaar."}
+        {!heeftAlEenTeam
+          ? "Teams staan technisch los van elkaar. Wat je met het ene team deelt, is voor een ander team niet zichtbaar."
+          : wilNieuw
+            ? "Je wordt beheerder van dit team en krijgt een code om anderen uit te nodigen. Begeleid je het team? Je kunt de profielen alvast klaarzetten en de beheerdersrol later overdragen aan de teamleider."
+            : "Je hoort al bij een team. Hier sluit je aan bij nóg een team, bijvoorbeeld bij een andere klant of afdeling. Wil je juist iemand uitnodigen voor je huidige team? Dat doe je bij Mijn team."}
       </p>
 
       {heeftAlEenTeam && (

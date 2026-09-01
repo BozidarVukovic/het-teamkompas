@@ -14,7 +14,15 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { bewaarVoorstel, haalVoorstellen } from "../../lib/app/voorstellen";
-import { bewaarProfiellid, verwijderProfiellid } from "../../lib/app/opslag";
+import { bewaarProfiellid, verwijderProfiellid, zetTeamrol } from "../../lib/app/opslag";
+import {
+  BEHEERDER,
+  LID,
+  isBeheerder,
+  magRolWijzigen,
+  magVertrekken,
+  overdrachtstekst,
+} from "../../lib/app/teamrollen";
 import { kenmerkenUitInsights } from "../../lib/app/insights";
 import { deelzin } from "../../data/app/kenmerken";
 import { initialen, voornaam } from "../../lib/app/naam";
@@ -110,6 +118,13 @@ export default function MijnTeam() {
   const { melding: profielMelding, setMelding: setProfielMelding, voerUit: voerProfielUit, wisMelding: wisProfielMelding } =
     useActie();
   const [voorstellen, setVoorstellen] = useState({});
+  const [rolVoor, setRolVoor] = useState(null);
+  const {
+    bezig: bezigRol,
+    melding: rolMelding,
+    voerUit: voerRolUit,
+    wisMelding: wisRolMelding,
+  } = useActie();
   const [uploadVoor, setUploadVoor] = useState(null);
   const [gekopieerd, setGekopieerd] = useState(null);
 
@@ -151,14 +166,67 @@ export default function MijnTeam() {
     };
   }, [actiefTeam]);
 
-  const ikBenBeheerder = useMemo(() => {
-    const ik = leden.find((l) => l.uid === (gebruiker && gebruiker.uid));
-    return ik && ik.rol === "beheerder";
-  }, [leden, gebruiker]);
+  const mijnUid = gebruiker && gebruiker.uid;
+  const ikBenBeheerder = useMemo(() => isBeheerder(leden, mijnUid), [leden, mijnUid]);
 
   // Echt opruimen kan alleen wie het team beheert en er als enige in zit; een
   // team mag nooit onder de voeten van anderen weg kunnen verdwijnen.
   const kanVerwijderen = ikBenBeheerder && leden.length <= 1;
+
+  // De laatste beheerder mag niet weglopen bij een team met anderen erin; dan
+  // blijft er een team achter dat niemand meer kan beheren. Zie teamrollen.js.
+  const vertrek = useMemo(() => magVertrekken({ leden, uid: mijnUid }), [leden, mijnUid]);
+
+  /**
+   * Iemand beheerder maken, of die rol weer weghalen.
+   *
+   * De regel staat in teamrollen.js en firestore.rules houdt hem ook echt
+   * tegen; deze functie zorgt alleen dat het scherm klopt met wat er gebeurt.
+   */
+  const wijzigRol = (l, nieuweRol) => {
+    const oordeel = magRolWijzigen({
+      leden,
+      doorUid: mijnUid,
+      doelUid: l.uid,
+      nieuweRol,
+    });
+    if (!oordeel.mag) return;
+
+    const eigen = l.uid === mijnUid;
+    const hun = voornaam(l.naam, "deze collega");
+    const Hun = voornaam(l.naam, "Deze collega");
+
+    voerRolUit(
+      nieuweRol === BEHEERDER ? `${hun} beheerder maken` : "de beheerdersrol aanpassen",
+      async () => {
+        await zetTeamrol({
+          orgId: actiefTeam.orgId,
+          teamId: actiefTeam.teamId,
+          uid: l.uid,
+          rol: nieuweRol,
+        });
+        await herlaadTeam();
+        setRolVoor(null);
+      },
+      nieuweRol === BEHEERDER
+        ? `${Hun} is nu beheerder van dit team.`
+        : eigen
+          ? "Je bent nu gewoon lid van dit team."
+          : `${Hun} is nu gewoon lid van dit team.`
+    );
+  };
+
+  /** Wat er op het bevestigingsscherm staat, per geval. */
+  const rolUitleg = (l) => {
+    const eigen = l.uid === mijnUid;
+    const hun = voornaam(l.naam, "deze collega");
+    const Hun = voornaam(l.naam, "Deze collega");
+
+    if (l.rol !== BEHEERDER) return overdrachtstekst(Hun);
+    if (eigen)
+      return "Je kunt daarna geen mensen meer uitnodigen en geen profielen meer toevoegen. Je blijft gewoon lid: wat je deelt en wat je van teamgenoten ziet, verandert niet.";
+    return `${Hun} kan daarna geen mensen meer uitnodigen en geen profielen meer toevoegen, en blijft gewoon lid van het team. Je kunt ${hun} later weer beheerder maken.`;
+  };
 
   const profielleden = teamOverzicht.profielleden || [];
 
@@ -186,6 +254,7 @@ export default function MijnTeam() {
       <p className="tk-onderkop">{onderkop}</p>
 
       <Melding melding={profielMelding} onSluiten={wisProfielMelding} />
+      <Melding melding={rolMelding} onSluiten={wisRolMelding} />
 
       {/* ---------------------------------------------------------- de mensen */}
       <section className="tk-groep">
@@ -213,6 +282,9 @@ export default function MijnTeam() {
                 onKlik={() => {
                   setOpen(open === sleutel ? null : sleutel);
                   setPaneel(null);
+                  // Een half beantwoorde vraag hoort niet te blijven staan tot
+                  // je deze persoon toevallig weer openklapt.
+                  setRolVoor(null);
                 }}
               >
                 {/* De knoppen staan boven de tekst: je klapt iemand open om
@@ -241,7 +313,67 @@ export default function MijnTeam() {
                       {uploadVoor === l.uid ? "Sluiten" : "Insights-profiel klaarzetten"}
                     </button>
                   )}
+                  {/* Beheerder maken of die rol weghalen. Een facilitator die
+                      een team opzet, moet het kunnen overdragen; en niemand
+                      mag de laatste beheerder wegnemen. */}
+                  {ikBenBeheerder &&
+                    magRolWijzigen({
+                      leden,
+                      doorUid: mijnUid,
+                      doelUid: l.uid,
+                      nieuweRol: l.rol === BEHEERDER ? LID : BEHEERDER,
+                    }).mag && (
+                      <button
+                        type="button"
+                        className="tk-knop tk-knop-rand tk-knop-klein"
+                        onClick={() => setRolVoor(rolVoor === l.uid ? null : l.uid)}
+                      >
+                        {rolVoor === l.uid
+                          ? "Sluiten"
+                          : l.rol === BEHEERDER
+                            ? eigen
+                              ? "Beheerder-rol teruggeven"
+                              : "Beheerder-rol weghalen"
+                            : `${voornaam(l.naam, "Deze collega")} beheerder maken`}
+                      </button>
+                    )}
                 </div>
+
+                {rolVoor === l.uid && (
+                  <div className="tk-kaart" style={{ marginTop: 12 }}>
+                    <p style={{ marginTop: 0 }}>{rolUitleg(l)}</p>
+                    <div className="tk-knoppen">
+                      <button
+                        type="button"
+                        className="tk-knop tk-knop-klein"
+                        disabled={bezigRol}
+                        onClick={() => wijzigRol(l, l.rol === BEHEERDER ? LID : BEHEERDER)}
+                      >
+                        {bezigRol
+                          ? "Bezig..."
+                          : l.rol === BEHEERDER
+                            ? eigen
+                              ? "Ja, geef de rol terug"
+                              : "Ja, haal de rol weg"
+                            : `Ja, maak ${voornaam(l.naam, "deze collega")} beheerder`}
+                      </button>
+                      <button
+                        type="button"
+                        className="tk-knop tk-knop-rand tk-knop-klein"
+                        onClick={() => setRolVoor(null)}
+                      >
+                        Toch niet
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {eigen && ikBenBeheerder && !vertrek.mag && (
+                  <p className="tk-fijn">
+                    Je bent de enige beheerder van dit team. Maak eerst iemand anders beheerder;
+                    daarna kun je de rol teruggeven of vertrekken.
+                  </p>
+                )}
 
                 {ikBenBeheerder && !eigen && voorstellen[l.uid] && (
                   <p className="tk-fijn">
@@ -508,14 +640,39 @@ export default function MijnTeam() {
         <p className="tk-fijn">
           {ikBenBeheerder
             ? "Je bent beheerder. Dat gaat over de teamgegevens; het geeft je geen inzage in de profielen van anderen."
-            : "Je bent lid van dit team."}{" "}
-          <Link to="/app/welkom?extra=1" style={{ color: "var(--tk-teal)" }}>
+            : "Je bent lid van dit team."}
+          {lidmaatschappen.length > 1
+            ? ` Je hoort bij ${lidmaatschappen.length} teams; wissel bovenin om een ander te zien.`
+            : ""}
+        </p>
+
+        {/* Een nieuw team aanmaken zat verstopt achter een link die "Bij een
+            ander team aansluiten" heette. Voor wie teams begeleidt is dat juist
+            de meest gebruikte weg, dus staat hij er nu gewoon naast. */}
+        <div className="tk-knoppen">
+          <Link
+            className="tk-knop tk-knop-rand tk-knop-klein"
+            to={"/app/welkom?extra=1&nieuw=1"}
+            style={{ textDecoration: "none" }}
+          >
+            Een nieuw team aanmaken
+          </Link>
+          <Link
+            className="tk-knop tk-knop-rand tk-knop-klein"
+            to="/app/welkom?extra=1"
+            style={{ textDecoration: "none" }}
+          >
             Bij een ander team aansluiten
           </Link>
-          {lidmaatschappen.length > 1
-            ? ` — je hoort bij ${lidmaatschappen.length} teams; wissel bovenin om een ander te zien.`
-            : "."}
-        </p>
+        </div>
+
+        {ikBenBeheerder && (
+          <p className="tk-fijn">
+            Begeleid je dit team van buitenaf? Zet het op, voeg de profielen toe, en maak daarna de
+            teamleider beheerder. Daarna kun je zelf vertrekken zonder dat het team stuurloos
+            achterblijft.
+          </p>
+        )}
 
         {bevestigVerlaten ? (
           <>
@@ -555,10 +712,12 @@ export default function MijnTeam() {
             </div>
             <Melding melding={opruimMelding} onSluiten={wisOpruimMelding} />
           </>
-        ) : (
+        ) : vertrek.mag ? (
           <button type="button" className="tk-stille-knop" onClick={() => setBevestigVerlaten(true)}>
             {kanVerwijderen ? "Dit team verwijderen" : "Dit team verlaten"}
           </button>
+        ) : (
+          <p className="tk-fijn">{vertrek.reden}</p>
         )}
       </section>
 

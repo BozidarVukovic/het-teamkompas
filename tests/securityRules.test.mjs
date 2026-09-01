@@ -17,7 +17,7 @@ import {
   assertFails,
 } from "@firebase/rules-unit-testing";
 import {
-  doc, getDoc, setDoc, deleteDoc, collection, getDocs, query, where,
+  doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, query, where,
 } from "firebase/firestore";
 
 const HOST = "127.0.0.1";
@@ -353,6 +353,59 @@ if (!draait) {
     // En nergens bij het profiel of de handleiding van een gebruiker.
     await assertFails(getDoc(doc(maker(), "profielen/anna/kenmerken/tempo")));
     await assertFails(getDoc(doc(maker(), "handleidingen/anna/secties/werk")));
+  });
+
+  /* ------------------------------------------------------- de beheerdersrol */
+
+  test("26. een teamlid kan zichzelf geen beheerder maken", async () => {
+    await zetKlaar();
+    // Dit was een echt gat: de regel liet elk lid zijn eigen ledendocument
+    // bijwerken, dus ook het veld waar "beheerder" in staat. Wie de app-code
+    // omzeilde, kon zichzelf het beheer van een team geven.
+    await assertFails(updateDoc(doc(anna(), padLid(TEAM_A, "anna")), { rol: "beheerder" }));
+    await assertFails(
+      setDoc(doc(anna(), padLid(TEAM_A, "anna")), { naam: "Anna", rol: "beheerder" })
+    );
+  });
+
+  test("27. een teamlid mag wel de eigen naam en functie bijwerken", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(anna(), padLid(TEAM_A, "anna")), { naam: "Anna B", functie: "Adviseur" }, { merge: true })
+    );
+  });
+
+  test("28. een beheerder kan de rol van een teamgenoot zetten en weer weghalen", async () => {
+    await zetKlaar();
+    await assertSucceeds(updateDoc(doc(cato(), padLid(TEAM_A, "anna")), { rol: "beheerder" }));
+    // En terugdraaien kan ook, anders is overdragen een eenrichtingsweg.
+    await assertSucceeds(updateDoc(doc(cato(), padLid(TEAM_A, "anna")), { rol: "lid" }));
+  });
+
+  test("29. alleen een beheerder van dít team kan rollen aanpassen", async () => {
+    await zetKlaar();
+    // Bram is teamgenoot, maar geen beheerder.
+    await assertFails(updateDoc(doc(bram(), padLid(TEAM_A, "anna")), { rol: "beheerder" }));
+    // Dana zit in een ander team.
+    await assertFails(updateDoc(doc(dana(), padLid(TEAM_A, "anna")), { rol: "beheerder" }));
+    // En een gast al helemaal niet.
+    await assertFails(updateDoc(doc(gast(), padLid(TEAM_A, "anna")), { rol: "beheerder" }));
+  });
+
+  test("30. wie beheerder is geworden, kan daarna ook echt beheren", async () => {
+    await zetKlaar();
+    await assertSucceeds(updateDoc(doc(cato(), padLid(TEAM_A, "anna")), { rol: "beheerder" }));
+
+    // De rol betekent iets: profielen toevoegen mag nu. Maar hij geeft nog
+    // steeds geen weg naar het profiel van een teamgenoot.
+    await assertSucceeds(
+      setDoc(doc(anna(), padProfiellid(TEAM_A, "p9")), {
+        naam: "Gast",
+        kenmerken: [],
+        toegevoegdDoor: "anna",
+      })
+    );
+    await assertFails(getDoc(doc(anna(), "profielen/bram")));
   });
 
   test.after(async () => {
