@@ -13,7 +13,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
-import { bewaarVoorstel, haalVoorstellen } from "../../lib/app/voorstellen";
+import {
+  bewaarHandleidingvoorstel,
+  bewaarVoorstel,
+  haalHandleidingvoorstellen,
+  haalVoorstellen,
+} from "../../lib/app/voorstellen";
 import { bewaarProfiellid, verwijderProfiellid } from "../../lib/app/opslag";
 import {
   BEGELEIDER,
@@ -32,6 +37,7 @@ import { deelzin } from "../../data/app/kenmerken";
 import { initialen, voornaam } from "../../lib/app/naam";
 import { gedeeldSamengevat } from "../../lib/app/gedeeld";
 import InsightsUpload from "../../components/app/InsightsUpload";
+import HandleidingKlaarzetten from "../../components/app/HandleidingKlaarzetten";
 import VolgendeStap from "../../components/app/VolgendeStap";
 import useActie from "../../components/app/useActie";
 import Melding from "../../components/app/Melding";
@@ -133,6 +139,8 @@ export default function MijnTeam() {
     wisMelding: wisRolMelding,
   } = useActie();
   const [uploadVoor, setUploadVoor] = useState(null);
+  const [tekstVoor, setTekstVoor] = useState(null);
+  const [tekstvoorstellen, setTekstvoorstellen] = useState({});
   const [gekopieerd, setGekopieerd] = useState(null);
 
   // De link draagt de code mee, zodat de ontvanger niets hoeft over te typen.
@@ -167,6 +175,9 @@ export default function MijnTeam() {
     // en dat is precies de bedoeling.
     haalVoorstellen({ orgId: actiefTeam.orgId, teamId: actiefTeam.teamId })
       .then((v) => actueel && setVoorstellen(v))
+      .catch(() => {});
+    haalHandleidingvoorstellen({ orgId: actiefTeam.orgId, teamId: actiefTeam.teamId })
+      .then((v) => actueel && setTekstvoorstellen(v))
       .catch(() => {});
     return () => {
       actueel = false;
@@ -313,6 +324,7 @@ export default function MijnTeam() {
           // je deze persoon toevallig weer openklapt.
           setRolVoor(null);
           setBegeleidVoor(false);
+          setTekstVoor(null);
         }}
       >
         {/* De knoppen staan boven de tekst: je klapt iemand open om
@@ -339,6 +351,25 @@ export default function MijnTeam() {
               onClick={() => setUploadVoor(uploadVoor === l.uid ? null : l.uid)}
             >
               {uploadVoor === l.uid ? "Sluiten" : "Insights-profiel klaarzetten"}
+            </button>
+          )}
+          {/* De woorden die een team in een sessie zelf opschreef zijn het
+              waardevolste wat er is, en verdwijnen anders in een presentatie.
+              Hier zet je ze klaar; de eigenaar bevestigt. */}
+          {ikBenBeheerder && !eigen && (
+            <button
+              type="button"
+              className="tk-knop tk-knop-rand tk-knop-klein"
+              onClick={() => {
+                setTekstVoor(tekstVoor === l.uid ? null : l.uid);
+                setUploadVoor(null);
+              }}
+            >
+              {tekstVoor === l.uid
+                ? "Sluiten"
+                : tekstvoorstellen[l.uid]
+                  ? "Handleidingtekst aanpassen"
+                  : "Handleidingtekst klaarzetten"}
             </button>
           )}
           {/* Beheerder maken of die rol weghalen. Een facilitator die
@@ -455,9 +486,36 @@ export default function MijnTeam() {
 
         {ikBenBeheerder && !eigen && voorstellen[l.uid] && (
           <p className="tk-fijn">
-            Er staat een voorstel klaar dat {voornaam(l.naam, "deze collega")} nog moet
+            Er staat een profielvoorstel klaar dat {voornaam(l.naam, "deze collega")} nog moet
             overnemen.
           </p>
+        )}
+
+        {ikBenBeheerder && !eigen && tekstvoorstellen[l.uid] && (
+          <p className="tk-fijn">
+            Er staat handleidingtekst klaar bij{" "}
+            {Object.keys(tekstvoorstellen[l.uid].secties || {}).length} stukjes.{" "}
+            {voornaam(l.naam, "Deze collega")} ziet die bij Mijn handleiding.
+          </p>
+        )}
+
+        {tekstVoor === l.uid && (
+          <HandleidingKlaarzetten
+            voorWie={voornaam(l.naam, "deze collega")}
+            bestaand={tekstvoorstellen[l.uid]}
+            onSluit={() => setTekstVoor(null)}
+            onBewaar={async (secties) => {
+              await bewaarHandleidingvoorstel({
+                orgId: actiefTeam.orgId,
+                teamId: actiefTeam.teamId,
+                uid: l.uid,
+                vanUid: gebruiker.uid,
+                vanNaam: naam,
+                secties,
+              });
+              setTekstvoorstellen((v) => ({ ...v, [l.uid]: { uid: l.uid, secties } }));
+            }}
+          />
         )}
 
         {!g && l.rol !== BEGELEIDER && (

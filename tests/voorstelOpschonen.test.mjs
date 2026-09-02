@@ -8,7 +8,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { schoonVoorstel } from "../src/lib/app/voorstelOpschonen.js";
+import { MAX_TEKENS, schoneSecties, schoonVoorstel } from "../src/lib/app/voorstelOpschonen.js";
 import { SECTIE_IDS } from "../src/data/app/handleiding.js";
 import { KLEUR_IDS } from "../src/lib/app/insights.js";
 
@@ -56,4 +56,45 @@ test("zonder gegevens komt er een leeg voorstel in plaats van een fout", () => {
   const uit = schoonVoorstel({});
   assert.equal(uit.voorkeurskleur, null);
   assert.deepEqual(uit.teksten, {});
+});
+
+/* ------------------------------- tekst die een facilitator klaarzet */
+
+// Dit is dezelfde soort schrijfactie op andermans naam, maar met tekst die uit
+// een teamsessie komt in plaats van uit een PDF. Wat er niet doorheen hoort,
+// hoort er ook hier niet doorheen.
+
+test("bekende secties komen er doorheen, verzonnen secties niet", () => {
+  const uit = schoneSecties({
+    [SECTIE]: "Ik werk het liefst met een duidelijk doel.",
+    "verzonnen-sectie": "Dit hoort hier niet.",
+  });
+  assert.deepEqual(Object.keys(uit), [SECTIE]);
+  assert.equal(uit[SECTIE], "Ik werk het liefst met een duidelijk doel.");
+});
+
+test("lege en spaties-alleen secties verdwijnen", () => {
+  const uit = schoneSecties({ [SECTIE]: "   ", [SECTIE_IDS[1]]: "" });
+  assert.deepEqual(uit, {});
+});
+
+test("tekst wordt afgekapt op de maximumlengte", () => {
+  const uit = schoneSecties({ [SECTIE]: "a".repeat(MAX_TEKENS + 500) });
+  assert.equal(uit[SECTIE].length, MAX_TEKENS);
+});
+
+test("witruimte om de tekst heen gaat eraf", () => {
+  const uit = schoneSecties({ [SECTIE]: "  Kom met feiten.  " });
+  assert.equal(uit[SECTIE], "Kom met feiten.");
+});
+
+test("niets erin is niets eruit, zonder te klappen", () => {
+  assert.deepEqual(schoneSecties(), {});
+  assert.deepEqual(schoneSecties(null), {});
+  assert.deepEqual(schoneSecties({}), {});
+});
+
+test("een niet-tekstwaarde wordt tekst, geen object in de database", () => {
+  const uit = schoneSecties({ [SECTIE]: 42 });
+  assert.equal(uit[SECTIE], "42");
 });

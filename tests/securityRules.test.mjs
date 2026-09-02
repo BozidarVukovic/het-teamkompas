@@ -73,6 +73,7 @@ if (!draait) {
   const padGedeeld = (team, uid) => `organisaties/${ORG}/teams/${team}/gedeeld/${uid}`;
   const padProfiellid = (team, id) => `organisaties/${ORG}/teams/${team}/profielleden/${id}`;
   const padVoorstel = (team, uid) => `organisaties/${ORG}/teams/${team}/profielvoorstellen/${uid}`;
+  const padTekst = (team, uid) => `organisaties/${ORG}/teams/${team}/handleidingvoorstellen/${uid}`;
   const padLid = (team, uid) => `organisaties/${ORG}/teams/${team}/leden/${uid}`;
 
   // Uitgangssituatie: twee teams, Anna en Bram in team A, Cato beheerder van
@@ -498,6 +499,50 @@ if (!draait) {
         rol: "beheerder",
       })
     );
+  });
+
+  /* ------------------------------- tekst voor iemands handleiding */
+
+  test("37. een beheerder kan handleidingtekst klaarzetten, de eigenaar leest hem", async () => {
+    await zetKlaar();
+    const tekst = { secties: { "hoe-ik-werk": "Ik werk het liefst met een duidelijk doel." }, vanUid: "cato" };
+    await assertSucceeds(setDoc(doc(cato(), padTekst(TEAM_A, "anna")), tekst));
+
+    // Anna en degene die het klaarzette mogen het zien.
+    await assertSucceeds(getDoc(doc(anna(), padTekst(TEAM_A, "anna"))));
+    await assertSucceeds(getDoc(doc(cato(), padTekst(TEAM_A, "anna"))));
+    // Bram is teamgenoot, maar dit gaat over Anna.
+    await assertFails(getDoc(doc(bram(), padTekst(TEAM_A, "anna"))));
+  });
+
+  test("38. een gewoon lid kan geen tekst op andermans naam klaarzetten", async () => {
+    await zetKlaar();
+    await assertFails(
+      setDoc(doc(bram(), padTekst(TEAM_A, "anna")), { secties: { "hoe-ik-werk": "..." }, vanUid: "bram" })
+    );
+    // Ook niet door te doen alsof het van de beheerder komt.
+    await assertFails(
+      setDoc(doc(bram(), padTekst(TEAM_A, "anna")), { secties: { "hoe-ik-werk": "..." }, vanUid: "cato" })
+    );
+  });
+
+  test("39. klaargezette tekst geeft geen weg naar de handleiding zelf", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(cato(), padTekst(TEAM_A, "anna")), { secties: { "hoe-ik-werk": "..." }, vanUid: "cato" })
+    );
+    // Klaarzetten mag; meekijken in wat Anna er zelf van maakt niet.
+    await assertFails(getDoc(doc(cato(), "handleidingen/anna")));
+    await assertFails(setDoc(doc(cato(), "handleidingen/anna"), { secties: {} }));
+  });
+
+  test("40. de eigenaar kan de klaargezette tekst zelf weghalen", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(cato(), padTekst(TEAM_A, "anna")), { secties: { "hoe-ik-werk": "..." }, vanUid: "cato" })
+    );
+    await assertFails(deleteDoc(doc(bram(), padTekst(TEAM_A, "anna"))));
+    await assertSucceeds(deleteDoc(doc(anna(), padTekst(TEAM_A, "anna"))));
   });
 
   test.after(async () => {

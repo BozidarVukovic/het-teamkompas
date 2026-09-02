@@ -22,7 +22,7 @@ import {
 import { db } from "../firebase";
 import { deelzin } from "../../data/app/kenmerken";
 import { SECTIES, sectie } from "../../data/app/handleiding";
-import { haalVoorstel, verwijderVoorstel } from "./voorstellen";
+import { haalVoorstel, verwijderHandleidingvoorstel, verwijderVoorstel } from "./voorstellen";
 import { stelGedeeldeKopieSamen } from "./gedeeldeKopie";
 
 /* ------------------------------------------------------------------ paden */
@@ -204,8 +204,12 @@ async function voegLidmaatschapToe(uid, lidmaatschap) {
 }
 
 export async function verlaatTeam({ uid, orgId, teamId }) {
-  // Eerst weghalen wat gedeeld is, daarna het lidmaatschap zelf.
+  // Eerst weghalen wat gedeeld is, daarna het lidmaatschap zelf. Een voorstel
+  // dat nog voor je klaarstond gaat mee: dat gaat over jou en heeft in een team
+  // waar je niet meer in zit niets te zoeken.
   await deleteDoc(gedeeldRef(orgId, teamId, uid)).catch(() => {});
+  await verwijderVoorstel({ orgId, teamId, uid }).catch(() => {});
+  await verwijderHandleidingvoorstel({ orgId, teamId, uid }).catch(() => {});
   await deleteDoc(lidRef(orgId, teamId, uid));
 
   const gebruiker = await haalGebruiker(uid);
@@ -637,6 +641,9 @@ export async function verwijderEigenGegevens(uid) {
     // jouw naam. Bleef het staan, dan bleef er profielinformatie over jou
     // achter op een plek waar een beheerder bij kan.
     await verwijderVoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => {});
+    // Zelfde verhaal voor tekst die een facilitator voor je klaarzette: het
+    // zijn jouw woorden en ze horen niet achter te blijven.
+    await verwijderHandleidingvoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => {});
   }
 
   const [kenmerkenSnap, sectiesSnap, sessies] = await Promise.all([

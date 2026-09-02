@@ -200,6 +200,26 @@ service cloud.firestore {
           allow delete: if isTeambeheerder(orgId, teamId);
         }
 
+        // Tekst die een facilitator uit een teamsessie voor iemand klaarzet,
+        // bestemd voor diens hand-in-handleiding. Eigen collectie, want het is
+        // een eigen levensloop: het profielvoorstel komt uit een Insights-PDF
+        // en verdwijnt zodra het is overgenomen, dit komt uit wat iemand zelf
+        // in een sessie heeft opgeschreven en blijft staan tot die persoon zegt
+        // dat hij ermee klaar is. Ze in één document stoppen zou betekenen dat
+        // het overnemen van het ene het andere weggooit.
+        //
+        // Het is en blijft een voorstel: er wordt nooit in de handleiding van
+        // iemand anders geschreven. Dat kan technisch ook niet — handleidingen
+        // zijn alleen leesbaar en schrijfbaar voor de eigenaar zelf.
+        match /handleidingvoorstellen/{uid} {
+          allow get: if ikBen(uid) || isTeambeheerder(orgId, teamId);
+          allow list: if isTeambeheerder(orgId, teamId);
+          allow create, update: if isTeambeheerder(orgId, teamId)
+            && exists(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/leden/$(uid))
+            && request.resource.data.vanUid == request.auth.uid;
+          allow delete: if ikBen(uid) || isTeambeheerder(orgId, teamId);
+        }
+
         match /profielvoorstellen/{uid} {
           allow get: if ikBen(uid) || isTeambeheerder(orgId, teamId);
           allow list: if isTeambeheerder(orgId, teamId);

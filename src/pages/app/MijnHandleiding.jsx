@@ -11,7 +11,7 @@ import Melding from "../../components/app/Melding";
 import { SECTIES, conceptVoorSectie } from "../../data/app/handleiding";
 import { bepaalWaarden } from "../../lib/app/advies/regels";
 
-function Sectie({ sectie, opgeslagen, concept, uitProfiel, lidmaatschappen, bewaar }) {
+function Sectie({ sectie, opgeslagen, concept, uitProfiel, klaargezet, lidmaatschappen, bewaar }) {
   const [tekst, setTekst] = useState((opgeslagen && opgeslagen.tekst) || "");
   const { bezig, melding, voerUit, wisMelding } = useActie();
   const [bewaardOp, setBewaardOp] = useState(false);
@@ -38,6 +38,39 @@ function Sectie({ sectie, opgeslagen, concept, uitProfiel, lidmaatschappen, bewa
       <p>{sectie.uitleg}</p>
 
       <Melding melding={melding} onSluiten={wisMelding} />
+
+      {/* Tekst die iemand uit een teamsessie voor je heeft klaargezet. Hij
+          staat bewust bóven het tekstvak en gaat er niet vanzelf in: het zijn
+          jouw woorden, maar je moet ze kunnen nalezen en bijstellen voordat ze
+          ergens staan. */}
+      {klaargezet && (
+        <div className="tk-melding" style={{ marginBottom: 12 }}>
+          <p className="tk-fijn" style={{ marginTop: 0 }}>
+            {klaargezet.vanNaam ? `${klaargezet.vanNaam} heeft` : "Iemand uit je team heeft"} dit
+            voor je klaargezet uit een teamsessie. Er staat nog niets: het komt pas in je
+            handleiding als jij het bewaart.
+          </p>
+          <p style={{ margin: "0 0 10px" }}>{klaargezet.tekst}</p>
+          <div className="tk-knoppen">
+            <button
+              type="button"
+              className="tk-knop tk-knop-rand tk-knop-klein"
+              onClick={() => setTekst(klaargezet.tekst)}
+            >
+              In het tekstvak zetten
+            </button>
+            {tekst && tekst !== klaargezet.tekst && (
+              <button
+                type="button"
+                className="tk-knop tk-knop-rand tk-knop-klein"
+                onClick={() => setTekst(`${tekst.trim()} ${klaargezet.tekst}`)}
+              >
+                Eronder plakken
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       <textarea
         className="tk-tekstvak"
@@ -126,7 +159,20 @@ function Sectie({ sectie, opgeslagen, concept, uitProfiel, lidmaatschappen, bewa
 }
 
 export default function MijnHandleiding() {
-  const { handleiding, kenmerken, lidmaatschappen, begeleideTeams, bewaarSectie, profiel } = useApp();
+  const {
+    handleiding, kenmerken, lidmaatschappen, begeleideTeams, bewaarSectie, profiel,
+    tekstvoorstellen, wijsTekstvoorstelAf, actiefTeam,
+  } = useApp();
+  const { bezig: bezigVoorstel, melding: voorstelMelding, voerUit: voerVoorstelUit, wisMelding: wisVoorstelMelding } =
+    useActie();
+
+  // Er kan uit meer dan één team tekst voor je klaarstaan. We tonen die van het
+  // team waar je nu in werkt; anders zou je bij twee klanten twee versies van
+  // dezelfde sectie naast elkaar zien zonder te weten welke waarbij hoort.
+  const klaargezet = (tekstvoorstellen || []).find(
+    (v) => actiefTeam && v.orgId === actiefTeam.orgId && v.teamId === actiefTeam.teamId
+  );
+  const klaargezetteSecties = (klaargezet && klaargezet.secties) || {};
 
   // Een team dat je begeleidt hoort niet bij de teams waarmee je iets deelt:
   // je doet er zelf niet aan mee.
@@ -145,6 +191,38 @@ export default function MijnHandleiding() {
         en wat je deelt. Alles overslaan mag ook; de app werkt gewoon zonder.
       </p>
 
+      {klaargezet && (
+        <div className="tk-kaart" style={{ borderColor: "rgba(0,168,150,0.45)" }}>
+          <h2 style={{ marginTop: 0 }}>Er staat tekst voor je klaar</h2>
+          <p>
+            {klaargezet.vanNaam || "Iemand uit je team"} heeft bij{" "}
+            {Object.keys(klaargezetteSecties).length}{" "}
+            {Object.keys(klaargezetteSecties).length === 1 ? "stukje" : "stukjes"} neergezet wat jij
+            zelf in een teamsessie hebt opgeschreven. Het staat hieronder bij het stukje waar het
+            hoort. Lees het na, pas aan wat niet meer klopt, en bewaar wat je wilt houden.
+          </p>
+          <p className="tk-fijn">
+            Er staat nog niets in je handleiding. Dat gebeurt pas als jij op Bewaren klikt, en delen
+            is daarna nog een aparte keuze.
+          </p>
+          <Melding melding={voorstelMelding} onSluiten={wisVoorstelMelding} />
+          <button
+            type="button"
+            className="tk-knop tk-knop-rand tk-knop-klein"
+            disabled={bezigVoorstel}
+            onClick={() =>
+              voerVoorstelUit(
+                "de klaargezette tekst weghalen",
+                () => wijsTekstvoorstelAf(klaargezet),
+                "Weggehaald. Wat je zelf hebt bewaard, blijft gewoon staan."
+              )
+            }
+          >
+            Ik ben ze langsgelopen — weghalen
+          </button>
+        </div>
+      )}
+
       {SECTIES.map((s) => (
         <Sectie
           key={s.id}
@@ -152,6 +230,11 @@ export default function MijnHandleiding() {
           opgeslagen={handleiding[s.id]}
           concept={conceptVoorSectie(s.id, waarden)}
           uitProfiel={uitProfiel[s.id]}
+          klaargezet={
+            klaargezetteSecties[s.id]
+              ? { tekst: klaargezetteSecties[s.id], vanNaam: klaargezet.vanNaam }
+              : null
+          }
           lidmaatschappen={deelbareTeams}
           bewaar={bewaarSectie}
         />

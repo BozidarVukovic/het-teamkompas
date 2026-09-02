@@ -15,7 +15,12 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 import { kenmerkenUitInsights } from "./insights";
-import { haalVoorstel, verwijderVoorstel } from "./voorstellen";
+import {
+  haalHandleidingvoorstel,
+  haalVoorstel,
+  verwijderHandleidingvoorstel,
+  verwijderVoorstel,
+} from "./voorstellen";
 import { BEGELEIDER } from "./teamrollen";
 import {
   bewaarInsights as bewaarInsightsInDb,
@@ -84,6 +89,7 @@ export function AppProvider({ children }) {
   const [gegevensKlaar, setGegevensKlaar] = useState(false);
   const [voorstellen, setVoorstellen] = useState([]);
   const [mijnRollen, setMijnRollen] = useState({});
+  const [tekstvoorstellen, setTekstvoorstellen] = useState([]);
   const [teamOverzicht, setTeamOverzicht] = useState({
     team: null,
     leden: [],
@@ -214,10 +220,19 @@ function terugkeeradres() {
     // we op zodat de app het kan tonen; overnemen doet de gebruiker zelf.
     const lidmaatschappenUitDoc = (doc && doc.lidmaatschappen) || [];
 
-    const [openstaandeVoorstellen, rollen] = await Promise.all([
+    const [openstaandeVoorstellen, openstaandeTeksten, rollen] = await Promise.all([
       Promise.all(
         lidmaatschappenUitDoc.map((l) =>
           haalVoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => null)
+        )
+      ),
+      // Tekst die een facilitator uit een teamsessie voor je klaarzette. Staat
+      // los van het profielvoorstel: dat komt uit een Insights-PDF en verdwijnt
+      // zodra je het overneemt, dit zijn je eigen woorden en blijft staan tot
+      // jij zegt dat je ermee klaar bent.
+      Promise.all(
+        lidmaatschappenUitDoc.map((l) =>
+          haalHandleidingvoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => null)
         )
       ),
       // Je rol per team; zie haalEigenRollen. Nodig om te weten in welke teams
@@ -231,6 +246,7 @@ function terugkeeradres() {
     setHandleiding(eigenHandleiding);
     setProfiel(eigenProfiel);
     setVoorstellen(openstaand);
+    setTekstvoorstellen(openstaandeTeksten.filter(Boolean));
     setMijnRollen(rollen);
     setGegevensKlaar(true);
     return doc;
@@ -445,6 +461,29 @@ function terugkeeradres() {
     ]
   );
 
+  /**
+   * De klaargezette handleidingtekst wegdoen.
+   *
+   * Overnemen gebeurt per stukje in het tekstvak, want het zijn jouw woorden en
+   * je moet ze kunnen bijstellen voordat ze ergens staan. Ben je ze langsgelopen,
+   * dan haal je het voorstel hier weg — daarna staat er niets meer over jou op
+   * een plek waar de beheerder bij kan.
+   */
+  const wijsTekstvoorstelAf = useCallback(
+    async (voorstel) => {
+      if (!gebruiker || !voorstel) return;
+      await verwijderHandleidingvoorstel({
+        orgId: voorstel.orgId,
+        teamId: voorstel.teamId,
+        uid: gebruiker.uid,
+      });
+      setTekstvoorstellen((lijst) =>
+        lijst.filter((v) => !(v.orgId === voorstel.orgId && v.teamId === voorstel.teamId))
+      );
+    },
+    [gebruiker]
+  );
+
   const bewaarInsights = useCallback(
     async (insights) => {
       if (!gebruiker) return;
@@ -601,6 +640,8 @@ function terugkeeradres() {
       zetRol,
       herlaadTeam: () => laadTeamOverzicht(actiefTeam),
       voorstellen,
+      tekstvoorstellen,
+      wijsTekstvoorstelAf,
       neemInsightsOver,
       neemVoorstelOver,
       wijsVoorstelAf,
@@ -625,7 +666,7 @@ function terugkeeradres() {
     }),
     [
       gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, functie, lidmaatschappen, actiefTeam,
-      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, laadTeamOverzicht, voorstellen, neemInsightsOver, neemVoorstelOver,
+      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
       wisInsights, maakTeam, doeMee, verlaatTeam, verwijderTeam, verwijderAlles, laadGegevens,
