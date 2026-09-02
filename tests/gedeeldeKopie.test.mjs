@@ -8,7 +8,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { stelGedeeldeKopieSamen } from "../src/lib/app/gedeeldeKopie.js";
+import { sectiesAlsLijst, stelGedeeldeKopieSamen } from "../src/lib/app/gedeeldeKopie.js";
 import { KENMERKEN, deelzin } from "../src/data/app/kenmerken.js";
 import { SECTIES } from "../src/data/app/handleiding.js";
 
@@ -137,4 +137,34 @@ test("alleen een handleidingsectie is genoeg voor een kopie", () => {
   const kopie = maak({ handleiding: { [SECTIES[0].id]: sectie(SECTIES[0].id) } });
   assert.ok(kopie);
   assert.deepEqual(kopie.kenmerken, []);
+});
+
+/* ------------------------------ eigen woorden bij een toegevoegd profiel */
+
+// Bij een profiel dat een beheerder toevoegde is er geen eigenaar die per
+// sectie een vinkje zet. Wat de beheerder erin zet, ziet het team. De vorm moet
+// wel dezelfde zijn als bij een echte teamgenoot, anders moet de advieslogica
+// onderscheid gaan maken tussen de twee.
+test("sectiesAlsLijst geeft dezelfde vorm als een gedeelde kopie", () => {
+  const lijst = sectiesAlsLijst({ "hoe-ik-werk": "Ik werk het liefst met een duidelijk doel." });
+  assert.equal(lijst.length, 1);
+  assert.deepEqual(Object.keys(lijst[0]).sort(), ["sectieId", "tekst", "titel"]);
+  assert.equal(lijst[0].sectieId, "hoe-ik-werk");
+  assert.equal(lijst[0].titel, SECTIES.find((s) => s.id === "hoe-ik-werk").titel);
+});
+
+test("sectiesAlsLijst houdt de volgorde van de app aan, niet van het object", () => {
+  const laatste = SECTIES[SECTIES.length - 1].id;
+  const eerste = SECTIES[0].id;
+  const lijst = sectiesAlsLijst({ [laatste]: "Laatste.", [eerste]: "Eerste." });
+  assert.deepEqual(lijst.map((s) => s.sectieId), [eerste, laatste]);
+});
+
+test("sectiesAlsLijst laat lege en onbekende stukjes weg", () => {
+  const lijst = sectiesAlsLijst({
+    [SECTIES[0].id]: "   ",
+    "bestaat-niet": "Dit hoort er niet in.",
+  });
+  assert.deepEqual(lijst, []);
+  assert.deepEqual(sectiesAlsLijst(), []);
 });

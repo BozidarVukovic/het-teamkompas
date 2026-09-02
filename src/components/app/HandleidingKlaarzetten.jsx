@@ -16,7 +16,13 @@ import { MAX_TEKENS } from "../../lib/app/voorstelOpschonen";
 import useActie from "./useActie";
 import Melding from "./Melding";
 
-export default function HandleidingKlaarzetten({ voorWie, bestaand = null, onBewaar, onSluit }) {
+export default function HandleidingKlaarzetten({
+  voorWie,
+  bestaand = null,
+  directBijProfiel = false,
+  onBewaar,
+  onSluit,
+}) {
   const [secties, setSecties] = useState(() => ({ ...((bestaand && bestaand.secties) || {}) }));
   const { bezig, melding, setMelding, voerUit, wisMelding } = useActie();
 
@@ -34,24 +40,39 @@ export default function HandleidingKlaarzetten({ voorWie, bestaand = null, onBew
     voerUit(
       `de tekst voor ${voorWie} klaarzetten`,
       () => onBewaar(secties),
-      `De tekst staat klaar voor ${voorWie}. ${
-        gevuld === 1 ? "Eén stukje" : `${gevuld} stukjes`
-      } — ${voorWie} ziet het bij Mijn handleiding en bepaalt zelf wat ervan blijft staan.`
+      directBijProfiel
+        ? `De tekst staat bij het profiel van ${voorWie}. Het team ziet het meteen, en het advies citeert eruit.`
+        : `De tekst staat klaar voor ${voorWie}. ${
+            gevuld === 1 ? "Eén stukje" : `${gevuld} stukjes`
+          } — ${voorWie} ziet het bij Mijn handleiding en bepaalt zelf wat ervan blijft staan.`
     );
   };
 
   return (
     <div className="tk-kaart" style={{ marginTop: 12 }}>
-      <h3 style={{ marginTop: 0 }}>Handleidingtekst klaarzetten voor {voorWie}</h3>
+      <h3 style={{ marginTop: 0 }}>
+        {directBijProfiel
+          ? `Eigen woorden van ${voorWie}`
+          : `Handleidingtekst klaarzetten voor ${voorWie}`}
+      </h3>
       <p className="tk-fijn">
         Heeft het team in een sessie een hand-in-handleiding gemaakt? Plak hier per stukje wat{" "}
         {voorWie} zelf heeft opgeschreven. Laat leeg wat je niet hebt.
       </p>
-      <p className="tk-fijn">
-        Het gaat niet meteen in het profiel van {voorWie}: het staat klaar als voorstel, met jouw
-        naam erbij. {voorWie} leest het na, past aan wat niet meer klopt, en bepaalt zelf wat er
-        blijft staan en wat gedeeld wordt.
-      </p>
+      {directBijProfiel ? (
+        <p className="tk-fijn">
+          Dit is een toegevoegd profiel, dus er is niemand die het kan bevestigen: {voorWie} heeft
+          nog geen account. Wat je hier neerzet, ziet het team meteen — met erbij dat jij het hebt
+          toegevoegd en dat {voorWie} het niet zelf heeft bevestigd. Zet er dus alleen in wat{" "}
+          {voorWie} zelf heeft opgeschreven en met dit team heeft gedeeld.
+        </p>
+      ) : (
+        <p className="tk-fijn">
+          Het gaat niet meteen in het profiel van {voorWie}: het staat klaar als voorstel, met jouw
+          naam erbij. {voorWie} leest het na, past aan wat niet meer klopt, en bepaalt zelf wat er
+          blijft staan en wat gedeeld wordt.
+        </p>
+      )}
 
       <Melding melding={melding} onSluiten={wisMelding} />
 
@@ -73,7 +94,7 @@ export default function HandleidingKlaarzetten({ voorWie, bestaand = null, onBew
 
       <div className="tk-knoppen" style={{ marginTop: 16 }}>
         <button type="button" className="tk-knop tk-knop-klein" disabled={bezig} onClick={bewaren}>
-          {bezig ? "Bezig..." : `Klaarzetten voor ${voorWie}`}
+          {bezig ? "Bezig..." : directBijProfiel ? "Bewaren bij dit profiel" : `Klaarzetten voor ${voorWie}`}
         </button>
         <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={onSluit}>
           Sluiten

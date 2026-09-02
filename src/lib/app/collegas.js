@@ -37,9 +37,10 @@ export function collegasVan({ leden = [], gedeeld = {}, profielleden = [], eigen
       doorBeheerder: true,
       toegevoegdDoorNaam: pl.toegevoegdDoorNaam,
       kenmerken: pl.kenmerken || [],
-      // Een toegevoegd profiel komt uit een Insights-rapport; er zijn geen
-      // eigen woorden, want die persoon heeft niets geschreven.
-      handleiding: [],
+      // Bij een toegevoegd profiel kan een beheerder tekst hebben overgenomen
+      // uit een teamsessie: woorden die die persoon zelf schreef, maar niet in
+      // de app heeft bevestigd. Staat er niets, dan blijft het leeg.
+      handleiding: pl.handleiding || [],
     }));
 
   return [...echt, ...toegevoegd]

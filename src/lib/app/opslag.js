@@ -510,11 +510,25 @@ export async function haalGedeeldVanPersoon(orgId, teamId, uid) {
  * Bij zo'n profiel hoort altijd wie het heeft toegevoegd. De app laat dat zien,
  * zodat niemand denkt dat de persoon zelf dit heeft ingevuld en bevestigd.
  */
-export async function bewaarProfiellid({ orgId, teamId, id, naam, kenmerken, insights, toegevoegdDoor, toegevoegdDoorNaam }) {
+export async function bewaarProfiellid({
+  orgId,
+  teamId,
+  id,
+  naam,
+  kenmerken,
+  handleiding,
+  insights,
+  toegevoegdDoor,
+  toegevoegdDoorNaam,
+}) {
   const profielId = id || doc(profielledenCol(orgId, teamId)).id;
   const gegevens = {
     naam: naam || "",
     kenmerken: (kenmerken || []).filter((k) => k && k.kenmerkId && k.waarde && k.zin),
+    // Wat iemand in een teamsessie zelf opschreef. Bij een toegevoegd profiel
+    // is er geen eigenaar die per sectie een vinkje zet, dus staat er geen
+    // gedeeldMet bij: wat de beheerder erin zet, ziet het team.
+    ...(handleiding ? { handleiding: handleiding.filter((s) => s && s.sectieId && s.tekst) } : {}),
     insights: insights || null,
     toegevoegdDoor,
     toegevoegdDoorNaam: toegevoegdDoorNaam || "",

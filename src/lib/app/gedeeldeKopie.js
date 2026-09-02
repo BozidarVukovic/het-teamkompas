@@ -24,6 +24,23 @@ import { SECTIES, sectie } from "../../data/app/handleiding.js";
  * @returns het document dat bij dit team hoort, of null als er niets te delen
  *          valt. Null betekent: verwijder de kopie.
  */
+/**
+ * Losse stukjes tekst omzetten naar de vorm die een teamgenoot te zien krijgt.
+ *
+ * Wordt gebruikt voor profielen die een beheerder zelf toevoegt: daar is geen
+ * eigenaar die per sectie een vinkje zet, dus is er ook geen gedeeldMet om op
+ * te filteren. Wat de beheerder erin zet, staat erin.
+ *
+ * Zelfde vorm en zelfde volgorde als bij een echte teamgenoot, zodat de
+ * advieslogica geen onderscheid hoeft te maken tussen de twee.
+ */
+export function sectiesAlsLijst(secties = {}) {
+  return SECTIES.map((s) => {
+    const tekst = String((secties || {})[s.id] || "").trim();
+    return tekst ? { sectieId: s.id, titel: s.titel, tekst } : null;
+  }).filter(Boolean);
+}
+
 export function stelGedeeldeKopieSamen({ naam = "", sleutel, kenmerken = [], handleiding = {} } = {}) {
   if (!sleutel) return null;
 

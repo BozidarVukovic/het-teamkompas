@@ -20,6 +20,7 @@ import {
   haalVoorstellen,
 } from "../../lib/app/voorstellen";
 import { bewaarProfiellid, verwijderProfiellid } from "../../lib/app/opslag";
+import { sectiesAlsLijst } from "../../lib/app/gedeeldeKopie";
 import {
   BEGELEIDER,
   BEHEERDER,
@@ -140,6 +141,7 @@ export default function MijnTeam() {
   } = useActie();
   const [uploadVoor, setUploadVoor] = useState(null);
   const [tekstVoor, setTekstVoor] = useState(null);
+  const [tekstBijProfiel, setTekstBijProfiel] = useState(null);
   const [tekstvoorstellen, setTekstvoorstellen] = useState({});
   const [gekopieerd, setGekopieerd] = useState(null);
 
@@ -581,13 +583,20 @@ export default function MijnTeam() {
                 key={sleutel}
                 sleutel={sleutel}
                 naam={pl.naam}
-                onder={`${(pl.kenmerken || []).length} punten · toegevoegd door ${
-                  pl.toegevoegdDoorNaam || "een beheerder"
-                }`}
+                onder={[
+                  `${(pl.kenmerken || []).length} punten`,
+                  (pl.handleiding || []).length > 0
+                    ? `${(pl.handleiding || []).length} in eigen woorden`
+                    : null,
+                  `toegevoegd door ${pl.toegevoegdDoorNaam || "een beheerder"}`,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
                 uitgeklapt={open === sleutel}
                 onKlik={() => {
                   setOpen(open === sleutel ? null : sleutel);
                   setPaneel(null);
+                  setTekstBijProfiel(null);
                 }}
               >
                 <div className="tk-knoppen">
@@ -598,6 +607,23 @@ export default function MijnTeam() {
                   >
                     Samenwerken met {voornaam(pl.naam, "dit profiel")}
                   </Link>
+                  {/* Bij een toegevoegd profiel is er niemand om iets te
+                      bevestigen: die persoon heeft nog geen account. De tekst
+                      die hij in een teamsessie zelf schreef, kan hier dus recht-
+                      streeks bij het profiel — met erbij dat het zo gegaan is. */}
+                  {ikBenBeheerder && (
+                    <button
+                      type="button"
+                      className="tk-knop tk-knop-rand tk-knop-klein"
+                      onClick={() => setTekstBijProfiel(tekstBijProfiel === pl.id ? null : pl.id)}
+                    >
+                      {tekstBijProfiel === pl.id
+                        ? "Sluiten"
+                        : (pl.handleiding || []).length > 0
+                          ? "Eigen woorden aanpassen"
+                          : "Eigen woorden toevoegen"}
+                    </button>
+                  )}
                   {ikBenBeheerder && (
                     <button
                       type="button"
@@ -623,12 +649,49 @@ export default function MijnTeam() {
                   )}
                 </div>
 
+                {tekstBijProfiel === pl.id && (
+                  <HandleidingKlaarzetten
+                    voorWie={voornaam(pl.naam, "deze persoon")}
+                    directBijProfiel
+                    bestaand={{
+                      secties: Object.fromEntries(
+                        (pl.handleiding || []).map((s) => [s.sectieId, s.tekst])
+                      ),
+                    }}
+                    onSluit={() => setTekstBijProfiel(null)}
+                    onBewaar={async (secties) => {
+                      await bewaarProfiellid({
+                        orgId: actiefTeam.orgId,
+                        teamId: actiefTeam.teamId,
+                        id: pl.id,
+                        naam: pl.naam,
+                        kenmerken: pl.kenmerken || [],
+                        handleiding: sectiesAlsLijst(secties),
+                        insights: pl.insights || null,
+                        toegevoegdDoor: gebruiker.uid,
+                        toegevoegdDoorNaam: naam,
+                      });
+                      await herlaadTeam();
+                      setTekstBijProfiel(null);
+                    }}
+                  />
+                )}
+
                 <p className="tk-fijn">
                   Dit profiel komt uit een Insights-rapport dat een beheerder heeft geüpload.{" "}
-                  {voornaam(pl.naam, "Deze persoon")} heeft het niet zelf ingevuld of bevestigd.
+                  {voornaam(pl.naam, "Deze persoon")} heeft het niet zelf ingevuld of bevestigd
+                  {(pl.handleiding || []).length > 0
+                    ? " — ook de tekst hieronder niet, al zijn dat wel de eigen woorden uit een teamsessie."
+                    : ""}
+                  .{" "}
+                  {(pl.handleiding || []).length > 0
+                    ? `Zodra ${voornaam(pl.naam, "deze persoon")} zelf meedoet, kun je de tekst als voorstel klaarzetten en dit profiel weghalen.`
+                    : ""}
                 </p>
 
-                <Gedeeld gedeeld={{ kenmerken: pl.kenmerken || [] }} />
+                <Gedeeld
+                  gedeeld={{ kenmerken: pl.kenmerken || [], handleiding: pl.handleiding || [] }}
+                />
               </Persoon>
             );
           })}
