@@ -26,7 +26,7 @@ function namenLijst(collegas) {
 }
 
 export default function Samenwerken() {
-  const { gebruiker, actiefTeam, kenmerken, teamOverzicht } = useApp();
+  const { gebruiker, actiefTeam, kenmerken, teamOverzicht, ikBegeleid } = useApp();
   const [zoek] = useSearchParams();
 
   // De teamgegevens staan al in de context; die nog een keer ophalen leverde
@@ -105,6 +105,9 @@ export default function Samenwerken() {
               kenmerken: alsKenmerken(c.kenmerken, c.doorBeheerder),
             })),
             situatieId: situatie,
+            // Begeleid je dit team, dan hoor je niet bij de groep en telt jouw
+            // voorkeur niet mee in de spreiding.
+            ikDoeMee: !ikBegeleid,
           })
         : await vraagAdvies({
             mijnKenmerken: kenmerken,
@@ -129,7 +132,7 @@ export default function Samenwerken() {
         setSessieId(null);
       }
     },
-    [geselecteerd, isGroep, kenmerken, gebruiker]
+    [geselecteerd, isGroep, kenmerken, gebruiker, ikBegeleid]
   );
 
   const kiesSituatie = (id) => {

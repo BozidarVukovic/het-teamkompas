@@ -333,3 +333,59 @@ test("zonder gegevens komt er een leeg advies in plaats van een fout", () => {
 test("drie is het minimum voor een groep; daaronder blijft het één-op-één", () => {
   assert.equal(MINIMUM_GROEP, 3);
 });
+
+/* ------------------------------------------------- de begeleider telt niet mee */
+
+// Wie een team begeleidt, hoort er niet bij. Zijn eigen voorkeur mag dus niet
+// in de spreiding van dat team terechtkomen: anders kijkt een facilitator naar
+// een beeld van zijn klant waar hijzelf in verwerkt zit.
+test("de voorkeur van een begeleider zit niet in de spreiding van het team", () => {
+  const deelnemers = [
+    { naam: "Nikki", kenmerken: NIKKI },
+    { naam: "Aad", kenmerken: AAD },
+    { naam: "Bo", kenmerken: [k("tempo", "snel"), k("denken", "hardop"), k("context", "kort")] },
+  ];
+
+  // Iedereen in het team wil hetzelfde tempo; alleen de begeleider wijkt af.
+  const begeleider = [k("tempo", "bedachtzaam")];
+
+  const meedoen = steltGroepsadviesSamen({
+    mijnKenmerken: begeleider,
+    deelnemers,
+    situatieId: "besluit-nemen",
+  });
+  const begeleiden = steltGroepsadviesSamen({
+    mijnKenmerken: begeleider,
+    deelnemers,
+    situatieId: "besluit-nemen",
+    ikDoeMee: false,
+  });
+
+  const tempoIn = (advies) => (advies.uiteen || []).some((u) => u.kenmerkId === "tempo");
+
+  // Doe je mee, dan loopt tempo uiteen — dat is precies de bedoeling.
+  assert.equal(tempoIn(meedoen), true);
+  // Begeleid je, dan is het een team dat het over tempo eens is.
+  assert.equal(tempoIn(begeleiden), false);
+});
+
+test("zonder de begeleider blijft het advies verder gewoon werken", () => {
+  const advies = steltGroepsadviesSamen({
+    mijnKenmerken: [],
+    deelnemers: [
+      { naam: "Nikki", kenmerken: NIKKI },
+      { naam: "Eva", kenmerken: EVA },
+      { naam: "Aad", kenmerken: AAD },
+    ],
+    situatieId: "besluit-nemen",
+    ikDoeMee: false,
+  });
+
+  assert.ok((advies.uiteen || []).length > 0);
+  // En nog steeds geen naam bij een voorkeur. (Wie je hebt geselecteerd mag het
+  // scherm wel noemen; het gaat erom dat een voorkeur nooit aan iemand hangt.)
+  const bijVoorkeuren = JSON.stringify(advies.uiteen);
+  ["Nikki", "Eva", "Aad"].forEach((naam) => {
+    assert.equal(bijVoorkeuren.includes(naam), false, `${naam} hoort niet bij een voorkeur te staan`);
+  });
+});

@@ -14,6 +14,10 @@
 // Jij hoort bij de groep. Loopt jouw voorkeur als enige uit de pas, dan komt
 // dat er net zo goed uit — en dat is precies de bedoeling.
 //
+// Tenzij je het team begeleidt. Dan hoor je er niet bij, en telt jouw voorkeur
+// niet mee in de spreiding: anders kijkt een facilitator naar een beeld van de
+// klant waar hijzelf in verwerkt zit.
+//
 // Volledig deterministisch, net als het advies voor één collega: dezelfde
 // invoer geeft altijd hetzelfde advies. Geen taalmodel.
 
@@ -114,7 +118,12 @@ function opsomming(woorden = []) {
  * de anderen, met uitsluitend wat zij met dit team hebben gedeeld. Jij telt mee
  * als lid van de groep — dit gaat over jullie, niet over hen.
  */
-export function steltGroepsadviesSamen({ mijnKenmerken = [], deelnemers = [], situatieId } = {}) {
+export function steltGroepsadviesSamen({
+  mijnKenmerken = [],
+  deelnemers = [],
+  situatieId,
+  ikDoeMee = true,
+} = {}) {
   const s = situatie(situatieId);
 
   const anderen = (deelnemers || []).map((d) => ({
@@ -123,7 +132,7 @@ export function steltGroepsadviesSamen({ mijnKenmerken = [], deelnemers = [], si
   }));
 
   const mijn = { naam: "jij", waarden: bepaalWaarden(mijnKenmerken) };
-  const profielen = [mijn, ...anderen];
+  const profielen = ikDoeMee ? [mijn, ...anderen] : anderen;
 
   const { uiteen, gedeeld } = bepaalSpreiding(profielen, situatieId);
 
