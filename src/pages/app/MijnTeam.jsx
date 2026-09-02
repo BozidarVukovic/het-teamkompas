@@ -39,6 +39,7 @@ import { initialen, voornaam } from "../../lib/app/naam";
 import { gedeeldSamengevat } from "../../lib/app/gedeeld";
 import InsightsUpload from "../../components/app/InsightsUpload";
 import HandleidingKlaarzetten from "../../components/app/HandleidingKlaarzetten";
+import Teamafspraken from "../../components/app/Teamafspraken";
 import VolgendeStap from "../../components/app/VolgendeStap";
 import useActie from "../../components/app/useActie";
 import Melding from "../../components/app/Melding";
@@ -806,6 +807,9 @@ export default function MijnTeam() {
           <div className="tk-groep-lijst">{begeleidt.map(persoonsrij)}</div>
         </section>
       )}
+
+      {/* -------------------------------------------------- onze afspraken */}
+      <Teamafspraken magVerwijderen={ikBenBeheerder} />
 
       {/* -------------------------------------------- profiel zelf toevoegen */}
       {paneel === "profiel" && ikBenBeheerder && (

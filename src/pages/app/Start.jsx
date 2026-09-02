@@ -16,6 +16,7 @@ import Voortgang from "../../components/app/Voortgang";
 import { bepaalVolgendeStap } from "../../lib/app/volgendeStap";
 import { bepaalVoortgang } from "../../lib/app/voortgang";
 import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
+import { uitgelichteAfspraak } from "../../lib/app/afspraken";
 import { initialen, voornaam } from "../../lib/app/naam";
 
 /** Een collega als bol met een naam eronder. Eén tik en je bent bij het advies. */
@@ -59,6 +60,13 @@ export default function Start() {
   // Jezelf meetellen klopt alleen als je meedoet. Begeleid je dit team, dan
   // ben je de tiende persoon niet — je staat er buiten.
   const mensen = collegas.length + (ikBegeleid ? 0 : 1);
+
+  // Afspraken verdwijnen niet doordat mensen het oneens zijn, maar doordat
+  // niemand ze meer ziet. Er staat er daarom elke dag één op de plek waar
+  // iedereen binnenkomt — welke het is hangt aan de datum, zodat ze langs
+  // iedereen rouleren in plaats van bij elke verversing te verspringen.
+  const afspraken = teamOverzicht.afspraken || [];
+  const afspraakVandaag = uitgelichteAfspraak(afspraken);
 
   return (
     <div className="tk-inhoud">
@@ -118,6 +126,23 @@ export default function Start() {
             : "Kies een collega en wat er speelt. Je krijgt een gesprekssuggestie en één kleine actie."}
         </p>
       </section>
+
+      {afspraakVandaag && (
+        <section className="tk-groep">
+          <h2 className="tk-groep-kop">Onze afspraak</h2>
+          <Link to="/app/team" className="tk-optie" style={{ alignItems: "flex-start" }}>
+            <span className="tk-optie-tekst">
+              <strong style={{ fontSize: 16.5, lineHeight: 1.55 }}>{afspraakVandaag.tekst}</strong>
+              <small>
+                {afspraken.length === 1
+                  ? "Jullie enige afspraak."
+                  : `Een van jullie ${afspraken.length} afspraken.`}
+              </small>
+            </span>
+            <span className="tk-optie-pijl" aria-hidden="true">›</span>
+          </Link>
+        </section>
+      )}
 
       <section className="tk-groep">
         <h2 className="tk-groep-kop">Meer</h2>

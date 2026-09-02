@@ -74,6 +74,7 @@ if (!draait) {
   const padProfiellid = (team, id) => `organisaties/${ORG}/teams/${team}/profielleden/${id}`;
   const padVoorstel = (team, uid) => `organisaties/${ORG}/teams/${team}/profielvoorstellen/${uid}`;
   const padTekst = (team, uid) => `organisaties/${ORG}/teams/${team}/handleidingvoorstellen/${uid}`;
+  const padAfspraak = (team, id) => `organisaties/${ORG}/teams/${team}/afspraken/${id}`;
   const padLid = (team, uid) => `organisaties/${ORG}/teams/${team}/leden/${uid}`;
 
   // Uitgangssituatie: twee teams, Anna en Bram in team A, Cato beheerder van
@@ -543,6 +544,90 @@ if (!draait) {
     );
     await assertFails(deleteDoc(doc(bram(), padTekst(TEAM_A, "anna"))));
     await assertSucceeds(deleteDoc(doc(anna(), padTekst(TEAM_A, "anna"))));
+  });
+
+  /* ------------------------------------------------- teamafspraken */
+
+  test("41. iedereen in het team kan een afspraak opschrijven en bijstellen", async () => {
+    await zetKlaar();
+    // Van het team samen: een afspraak die alleen de beheerder kan opschrijven
+    // is er een van bovenaf, en daar verliest hij zijn kracht op.
+    await assertSucceeds(
+      setDoc(doc(anna(), padAfspraak(TEAM_A, "a1")), {
+        tekst: "We spreken af wie wat wanneer doet.",
+        doorUid: "anna",
+        doorNaam: "Anna",
+      })
+    );
+    // En een teamgenoot mag hem bijstellen.
+    await assertSucceeds(
+      setDoc(
+        doc(bram(), padAfspraak(TEAM_A, "a1")),
+        { tekst: "We spreken af wie wat wanneer doet, en houden ons daaraan.", doorUid: "anna" },
+        { merge: true }
+      )
+    );
+  });
+
+  test("42. wie de afspraak opschreef blijft staan, ook na bijstellen", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(anna(), padAfspraak(TEAM_A, "a2")), {
+        tekst: "We laten elkaar uitpraten.",
+        doorUid: "anna",
+      })
+    );
+    // Een afspraak waarvan de herkomst kan veranderen is geen afspraak meer.
+    await assertFails(
+      setDoc(doc(bram(), padAfspraak(TEAM_A, "a2")), {
+        tekst: "We laten elkaar uitpraten.",
+        doorUid: "bram",
+      })
+    );
+  });
+
+  test("43. je schrijft een afspraak op je eigen naam, niet op die van een ander", async () => {
+    await zetKlaar();
+    await assertFails(
+      setDoc(doc(bram(), padAfspraak(TEAM_A, "a3")), {
+        tekst: "Dit heeft Anna vast gezegd.",
+        doorUid: "anna",
+      })
+    );
+  });
+
+  test("44. een lege afspraak komt er niet in", async () => {
+    await zetKlaar();
+    await assertFails(
+      setDoc(doc(anna(), padAfspraak(TEAM_A, "a4")), { tekst: "", doorUid: "anna" })
+    );
+    await assertFails(
+      setDoc(doc(anna(), padAfspraak(TEAM_A, "a4")), { tekst: "x".repeat(201), doorUid: "anna" })
+    );
+  });
+
+  test("45. alleen de beheerder haalt een afspraak weg", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(anna(), padAfspraak(TEAM_A, "a5")), { tekst: "We beginnen op tijd.", doorUid: "anna" })
+    );
+    // Ook niet wie hem zelf opschreef: er hoort niets stilletjes van tafel te
+    // verdwijnen.
+    await assertFails(deleteDoc(doc(anna(), padAfspraak(TEAM_A, "a5"))));
+    await assertSucceeds(deleteDoc(doc(cato(), padAfspraak(TEAM_A, "a5"))));
+  });
+
+  test("46. afspraken blijven binnen het team", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(anna(), padAfspraak(TEAM_A, "a6")), { tekst: "We houden het kort.", doorUid: "anna" })
+    );
+    // Dana zit in team B en heeft hier niets te zoeken.
+    await assertFails(getDoc(doc(dana(), padAfspraak(TEAM_A, "a6"))));
+    await assertFails(
+      setDoc(doc(dana(), padAfspraak(TEAM_A, "a7")), { tekst: "Van buiten.", doorUid: "dana" })
+    );
+    await assertFails(getDoc(doc(gast(), padAfspraak(TEAM_A, "a6"))));
   });
 
   test.after(async () => {

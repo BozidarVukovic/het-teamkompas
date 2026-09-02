@@ -24,6 +24,7 @@ import { deelzin } from "../../data/app/kenmerken";
 import { SECTIES, sectie } from "../../data/app/handleiding";
 import { haalVoorstel, verwijderHandleidingvoorstel, verwijderVoorstel } from "./voorstellen";
 import { stelGedeeldeKopieSamen } from "./gedeeldeKopie";
+import { schoneAfspraak } from "./afspraken";
 
 /* ------------------------------------------------------------------ paden */
 
@@ -40,6 +41,10 @@ const teamRef = (orgId, teamId) => doc(db, "organisaties", orgId, "teams", teamI
 const ledenCol = (orgId, teamId) => collection(db, "organisaties", orgId, "teams", teamId, "leden");
 const lidRef = (orgId, teamId, uid) => doc(db, "organisaties", orgId, "teams", teamId, "leden", uid);
 const gedeeldCol = (orgId, teamId) => collection(db, "organisaties", orgId, "teams", teamId, "gedeeld");
+const afsprakenCol = (orgId, teamId) =>
+  collection(db, "organisaties", orgId, "teams", teamId, "afspraken");
+const afspraakRef = (orgId, teamId, id) =>
+  doc(db, "organisaties", orgId, "teams", teamId, "afspraken", id);
 const profielledenCol = (orgId, teamId) =>
   collection(db, "organisaties", orgId, "teams", teamId, "profielleden");
 const profiellidRef = (orgId, teamId, id) =>
@@ -316,6 +321,49 @@ export async function haalEigenRollen(uid, lidmaatschappen = []) {
   );
 
   return Object.fromEntries(paren.filter(Boolean));
+}
+
+/* ------------------------------------------------------- teamafspraken */
+
+/**
+ * Wat het team met elkaar heeft afgesproken.
+ *
+ * Van het team samen, niet van één persoon: iedereen mag schrijven, en er staat
+ * bij wie het opschreef. Zie afspraken.js voor waarom dat zo is.
+ */
+export async function haalAfspraken(orgId, teamId) {
+  const snap = await getDocs(afsprakenCol(orgId, teamId));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function bewaarAfspraak({ orgId, teamId, id, tekst, toelichting, uid, naam }) {
+  const schoon = schoneAfspraak({ tekst, toelichting });
+  if (!schoon) throw new Error("Een afspraak heeft in elk geval een zin nodig.");
+
+  const afspraakId = id || doc(afsprakenCol(orgId, teamId)).id;
+
+  // Bij het bijstellen van een bestaande afspraak blijft doorUid en doorNaam
+  // staan; wie hem oorspronkelijk opschreef verandert niet. De securityregels
+  // dwingen dat ook af — dit is de app-kant van dezelfde afspraak.
+  const velden = id
+    ? { ...schoon, bijgewerktDoorNaam: naam || "", bijgewerktOp: serverTimestamp() }
+    : {
+        ...schoon,
+        doorUid: uid,
+        doorNaam: naam || "",
+        aangemaaktOp: serverTimestamp(),
+        bijgewerktOp: serverTimestamp(),
+      };
+
+  // Een lege toelichting hoort weg te zijn, niet leeg te blijven staan.
+  if (id && !schoon.toelichting) velden.toelichting = "";
+
+  await setDoc(afspraakRef(orgId, teamId, afspraakId), velden, { merge: true });
+  return { id: afspraakId, ...velden };
+}
+
+export async function verwijderAfspraak({ orgId, teamId, id }) {
+  await deleteDoc(afspraakRef(orgId, teamId, id));
 }
 
 export async function haalTeamleden(orgId, teamId) {

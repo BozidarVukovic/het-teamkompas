@@ -28,8 +28,11 @@ import {
   bewaarKenmerk as bewaarKenmerkInDb,
   bewaarKenmerken as bewaarKenmerkenInDb,
   bewaarSectie as bewaarSectieInDb,
+  bewaarAfspraak as bewaarAfspraakInDb,
+  haalAfspraken,
   haalEigenRollen,
   haalGebruiker,
+  verwijderAfspraak as verwijderAfspraakInDb,
   haalGedeeldVanTeam,
   haalProfielleden,
   haalTeam,
@@ -95,6 +98,7 @@ export function AppProvider({ children }) {
     leden: [],
     gedeeld: {},
     profielleden: [],
+    afspraken: [],
     laden: true,
   });
   const [actiefTeamSleutel, setActiefTeamSleutel] = useState(() => leesOpslag(SLEUTEL_TEAM));
@@ -308,20 +312,25 @@ function terugkeeradres() {
    */
   const laadTeamOverzicht = useCallback(async (l) => {
     if (!l) {
-      setTeamOverzicht({ team: null, leden: [], gedeeld: {}, profielleden: [], laden: false });
+      setTeamOverzicht({
+        team: null, leden: [], gedeeld: {}, profielleden: [], afspraken: [], laden: false,
+      });
       return;
     }
     setTeamOverzicht((t) => ({ ...t, laden: true }));
     try {
-      const [team, leden, gedeeld, profielleden] = await Promise.all([
+      const [team, leden, gedeeld, profielleden, afspraken] = await Promise.all([
         haalTeam(l.orgId, l.teamId),
         haalTeamleden(l.orgId, l.teamId),
         haalGedeeldVanTeam(l.orgId, l.teamId),
         haalProfielleden(l.orgId, l.teamId).catch(() => []),
+        haalAfspraken(l.orgId, l.teamId).catch(() => []),
       ]);
-      setTeamOverzicht({ team, leden, gedeeld, profielleden, laden: false });
+      setTeamOverzicht({ team, leden, gedeeld, profielleden, afspraken, laden: false });
     } catch {
-      setTeamOverzicht({ team: null, leden: [], gedeeld: {}, profielleden: [], laden: false });
+      setTeamOverzicht({
+        team: null, leden: [], gedeeld: {}, profielleden: [], afspraken: [], laden: false,
+      });
     }
   }, []);
 
@@ -498,6 +507,41 @@ function terugkeeradres() {
     [gebruiker]
   );
 
+  /**
+   * Een teamafspraak opschrijven of bijstellen.
+   *
+   * Van het team samen: iedereen mag het, en er staat bij wie hem opschreef.
+   * Geef je een id mee, dan stel je een bestaande bij en blijft de herkomst
+   * staan; zonder id komt er een nieuwe bij. Zie afspraken.js.
+   */
+  const bewaarAfspraak = useCallback(
+    async ({ id, tekst, toelichting }) => {
+      if (!gebruiker || !actiefTeam) return null;
+      const uit = await bewaarAfspraakInDb({
+        orgId: actiefTeam.orgId,
+        teamId: actiefTeam.teamId,
+        id,
+        tekst,
+        toelichting,
+        uid: gebruiker.uid,
+        naam,
+      });
+      await laadTeamOverzicht(actiefTeam);
+      return uit;
+    },
+    [gebruiker, actiefTeam, naam, laadTeamOverzicht]
+  );
+
+  /** Een afspraak weghalen. Alleen de beheerder; zie firestore.rules. */
+  const verwijderAfspraak = useCallback(
+    async (id) => {
+      if (!actiefTeam) return;
+      await verwijderAfspraakInDb({ orgId: actiefTeam.orgId, teamId: actiefTeam.teamId, id });
+      await laadTeamOverzicht(actiefTeam);
+    },
+    [actiefTeam, laadTeamOverzicht]
+  );
+
   const bewaarInsights = useCallback(
     async (insights) => {
       if (!gebruiker) return;
@@ -652,6 +696,8 @@ function terugkeeradres() {
       ikBegeleid,
       begeleideTeams,
       zetRol,
+      bewaarAfspraak,
+      verwijderAfspraak,
       herlaadTeam: () => laadTeamOverzicht(actiefTeam),
       voorstellen,
       tekstvoorstellen,
@@ -680,7 +726,7 @@ function terugkeeradres() {
     }),
     [
       gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, functie, lidmaatschappen, actiefTeam,
-      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
+      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, bewaarAfspraak, verwijderAfspraak, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
       wisInsights, maakTeam, doeMee, verlaatTeam, verwijderTeam, verwijderAlles, laadGegevens,

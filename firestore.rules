@@ -200,6 +200,32 @@ service cloud.firestore {
           allow delete: if isTeambeheerder(orgId, teamId);
         }
 
+        // Wat het team met elkaar heeft afgesproken.
+        //
+        // Het enige in deze app dat van het team samen is in plaats van van één
+        // persoon. Vandaar dat iedereen mag schrijven: een afspraak die alleen
+        // de beheerder kan opschrijven is er een van bovenaf, en daar verliest
+        // hij zijn kracht op.
+        //
+        // Twee dingen liggen wel vast. Wie hem oorspronkelijk opschreef blijft
+        // staan, ook als iemand anders hem bijstelt — een afspraak waarvan de
+        // herkomst kan veranderen is geen afspraak meer. En weghalen kan alleen
+        // de beheerder, zodat er niets stilletjes van tafel verdwijnt.
+        match /afspraken/{afspraakId} {
+          allow read: if isTeamlid(orgId, teamId);
+          allow create: if isTeamlid(orgId, teamId)
+            && request.resource.data.doorUid == request.auth.uid
+            && request.resource.data.tekst is string
+            && request.resource.data.tekst.size() > 0
+            && request.resource.data.tekst.size() <= 200;
+          allow update: if isTeamlid(orgId, teamId)
+            && request.resource.data.doorUid == resource.data.doorUid
+            && request.resource.data.tekst is string
+            && request.resource.data.tekst.size() > 0
+            && request.resource.data.tekst.size() <= 200;
+          allow delete: if isTeambeheerder(orgId, teamId);
+        }
+
         // Tekst die een facilitator uit een teamsessie voor iemand klaarzet,
         // bestemd voor diens hand-in-handleiding. Eigen collectie, want het is
         // een eigen levensloop: het profielvoorstel komt uit een Insights-PDF
