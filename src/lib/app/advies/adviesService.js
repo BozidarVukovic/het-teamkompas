@@ -10,6 +10,7 @@
 
 import { steltAdviesSamen } from "./regels.js";
 import { steltGroepsadviesSamen } from "./groepsregels.js";
+import { steltDuoadviesSamen } from "./tweeanderen.js";
 
 /** De ingebouwde strategie: regels, geen AI. */
 const regelStrategie = {
@@ -23,6 +24,11 @@ const regelStrategie = {
   // spreiding over meerdere. Zie groepsregels.js.
   async groepsadvies(invoer) {
     return steltGroepsadviesSamen(invoer);
+  },
+  // Advies over twee anderen: niet jij en een collega, maar twee collega's
+  // onderling. Voor wie een team begeleidt of leidt. Zie tweeanderen.js.
+  async duoadvies(invoer) {
+    return steltDuoadviesSamen(invoer);
   },
 };
 
@@ -73,6 +79,15 @@ export async function vraagAdvies(invoer) {
  * met dit team heeft gedeeld. Een strategie die dit niet kan, valt terug op
  * niets in plaats van op een advies dat over de verkeerde vraag gaat.
  */
+export async function vraagDuoadvies(invoer) {
+  const strategie = actieveStrategie();
+  if (typeof strategie.duoadvies !== "function") {
+    throw new Error(`Strategie ${strategie.id} kan geen advies over twee anderen geven.`);
+  }
+  const uitkomst = await strategie.duoadvies(invoer);
+  return { ...uitkomst, strategie: strategie.id };
+}
+
 export async function vraagGroepsadvies(invoer) {
   const strategie = actieveStrategie();
   if (typeof strategie.groepsadvies !== "function") {

@@ -8,7 +8,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { beoordeelAdviessessie, logAdviessessie } from "../../lib/app/opslag";
-import { vraagAdvies, vraagGroepsadvies } from "../../lib/app/advies/adviesService";
+import { vraagAdvies, vraagDuoadvies, vraagGroepsadvies } from "../../lib/app/advies/adviesService";
 import { situatiesPerGroep } from "../../data/app/situaties";
 import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
 import { MINIMUM_GROEP } from "../../lib/app/advies/groepsregels";
@@ -23,6 +23,76 @@ function namenLijst(collegas) {
   if (namen.length === 1) return namen[0];
   if (namen.length > 4) return `${namen.slice(0, 3).join(", ")} en ${namen.length - 3} anderen`;
   return `${namen.slice(0, -1).join(", ")} en ${namen[namen.length - 1]}`;
+}
+
+/**
+ * Advies over twee anderen: waar zij iets anders nodig hebben.
+ *
+ * Andere vorm dan het gewone advies, omdat het een andere vraag is. Er staat
+ * geen "wat jij moet doen" in en geen oordeel over wie zich moet aanpassen —
+ * alleen wat ze allebei zelf hebben gedeeld, naast elkaar, en wat elk daarvan
+ * vraagt. Zie tweeanderen.js.
+ */
+function DuoInhoud({ advies }) {
+  return (
+    <>
+      <div className="tk-stap">{advies.situatie ? advies.situatie.label : "Advies"}</div>
+      <h2 style={{ margin: "0 0 10px", fontSize: 20 }}>
+        {advies.namen[0]} en {advies.namen[1]}
+      </h2>
+      {advies.situatie && (
+        <p style={{ color: "var(--tk-zacht)", margin: "0 0 8px", lineHeight: 1.7 }}>
+          {advies.situatie.opening}
+        </p>
+      )}
+
+      {advies.opmerkingen.map((o) => (
+        <div className="tk-melding" key={o} style={{ marginTop: 12 }}>
+          {o}
+        </div>
+      ))}
+
+      {advies.verschillen.length > 0 && (
+        <div className="tk-advies-blok">
+          <h3>Waar ze iets anders nodig hebben</h3>
+          {advies.verschillen.map((rij) => (
+            <div key={rij.kenmerkId} style={{ marginBottom: 20 }}>
+              <div className="tk-label">{rij.label}</div>
+              {rij.kanten.map((k) => (
+                <div key={k.naam} style={{ marginTop: 10 }}>
+                  <strong style={{ fontSize: 14.5 }}>{k.naam}</strong>
+                  <p style={{ margin: "2px 0 0", lineHeight: 1.7, fontStyle: "italic" }}>
+                    &ldquo;{k.deelt}&rdquo;
+                  </p>
+                  {k.vraagt && (
+                    <p className="tk-fijn" style={{ margin: "4px 0 0" }}>{k.vraagt}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {advies.gelijk.length > 0 && (
+        <div className="tk-advies-blok">
+          <h3>Waar ze het eens zijn</h3>
+          <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
+            {advies.gelijk.map((rij) => (
+              <li key={rij.kenmerkId} style={{ marginBottom: 6 }}>
+                <strong>{rij.label}</strong> — allebei: &ldquo;{rij.kanten[0].deelt}&rdquo;
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div className="tk-advies-blok">
+        <h3>Wat je hiermee doet</h3>
+        <p style={{ margin: 0, lineHeight: 1.7 }}>{advies.afsluiter}</p>
+      </div>
+    </>
+  );
 }
 
 export default function Samenwerken() {
@@ -71,7 +141,13 @@ export default function Samenwerken() {
 
   const geselecteerd = anderen.filter((l) => gekozenUids.includes(l.sleutel));
   const gekozen = geselecteerd.length === 1 ? geselecteerd[0] : null;
-  const isGroep = geselecteerd.length + 1 >= MINIMUM_GROEP;
+  // Bij precies twee anderen is er nog een derde vraag mogelijk: niet hoe jij
+  // met hen werkt, maar hoe zij op elkaar landen. Dat is de vraag van wie een
+  // team begeleidt of leidt.
+  const [overHen, setOverHen] = useState(false);
+  const kanOverHen = geselecteerd.length === 2;
+  const isDuo = kanOverHen && overHen;
+  const isGroep = !isDuo && geselecteerd.length + 1 >= MINIMUM_GROEP;
 
   const wisselPersoon = (sleutel) => {
     setGekozenUids((huidig) =>
@@ -97,7 +173,19 @@ export default function Samenwerken() {
 
       // Eén collega: contrast tussen jullie twee. Meerdere: spreiding over de
       // groep. Dat zijn twee verschillende vragen, dus twee routes.
-      const uitkomst = isGroep
+      const uitkomst = isDuo
+        ? await vraagDuoadvies({
+            eerste: {
+              naam: geselecteerd[0].naam || "de een",
+              kenmerken: alsKenmerken(geselecteerd[0].kenmerken, geselecteerd[0].doorBeheerder),
+            },
+            tweede: {
+              naam: geselecteerd[1].naam || "de ander",
+              kenmerken: alsKenmerken(geselecteerd[1].kenmerken, geselecteerd[1].doorBeheerder),
+            },
+            situatieId: situatie,
+          })
+        : isGroep
         ? await vraagGroepsadvies({
             mijnKenmerken: kenmerken,
             deelnemers: geselecteerd.map((c) => ({
@@ -132,7 +220,7 @@ export default function Samenwerken() {
         setSessieId(null);
       }
     },
-    [geselecteerd, isGroep, kenmerken, gebruiker, ikBegeleid]
+    [geselecteerd, isDuo, isGroep, kenmerken, gebruiker, ikBegeleid]
   );
 
   const kiesSituatie = (id) => {
@@ -229,9 +317,11 @@ export default function Samenwerken() {
           <p className="tk-fijn" style={{ marginBottom: 22 }}>
             {gekozenUids.length === 0
               ? "Kies één collega, of meerdere als je een overleg of sessie voorbereidt."
-              : isGroep
-                ? `Advies over jou en ${geselecteerd.length} collega's samen: waar jullie voorkeuren uiteenlopen en wat daarbij helpt. Er staat nergens wie wat koos.`
-                : "Vink er nog iemand aan als het over een groep gaat."}
+              : isDuo
+                ? `Advies over ${geselecteerd[0].naam} en ${geselecteerd[1].naam} onderling: waar zij iets anders nodig hebben, in hun eigen woorden. Jij komt er niet in voor.`
+                : isGroep
+                  ? `Advies over jou en ${geselecteerd.length} collega's samen: waar jullie voorkeuren uiteenlopen en wat daarbij helpt. Er staat nergens wie wat koos.`
+                  : "Vink er nog iemand aan als het over een groep gaat."}
           </p>
         </>
       )}
@@ -263,6 +353,34 @@ export default function Samenwerken() {
         </div>
       )}
 
+      {kanOverHen && !advies && (
+        <div className="tk-keuzes" style={{ marginBottom: 18 }}>
+          <button
+            type="button"
+            className={`tk-keuze${!overHen ? " gekozen" : ""}`}
+            onClick={() => setOverHen(false)}
+          >
+            <span>
+              Over mij en hen
+              <small>Hoe jij met deze twee samenwerkt.</small>
+            </span>
+          </button>
+          <button
+            type="button"
+            className={`tk-keuze${overHen ? " gekozen" : ""}`}
+            onClick={() => setOverHen(true)}
+          >
+            <span>
+              Over hen onderling
+              <small>
+                Waar {geselecteerd[0].naam} en {geselecteerd[1].naam} iets anders nodig hebben — in
+                hun eigen woorden.
+              </small>
+            </span>
+          </button>
+        </div>
+      )}
+
       {geselecteerd.length > 0 && !advies && (
         <>
           <p className="tk-label">Wat speelt er?</p>
@@ -290,6 +408,7 @@ export default function Samenwerken() {
       {advies && (
         <>
           <div className="tk-advies">
+            {advies.soort === "duo" ? <DuoInhoud advies={advies} /> : (<>
             <div className="tk-stap">{advies.situatie ? advies.situatie.label : "Advies"}</div>
             <h2 style={{ margin: "0 0 10px", fontSize: 20 }}>
               Jullie samenwerking
@@ -392,6 +511,8 @@ export default function Samenwerken() {
                 bevestigd — houd daar rekening mee.
               </p>
             )}
+
+            </>)}
 
             <p className="tk-fijn" style={{ marginTop: 16 }}>{advies.transparantie}</p>
           </div>
