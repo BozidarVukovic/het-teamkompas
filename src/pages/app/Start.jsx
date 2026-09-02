@@ -89,7 +89,10 @@ export default function Start() {
       {!voortgang.compleet && (
         <>
           <VolgendeStap variant="groot" />
-          {!teamOverzicht.laden && stap.nummer > 1 && (
+          {/* De voortgangsbalk gaat over jouw profiel in dit team. Begeleid je
+              het, dan hoort je profiel er niet bij en zegt een percentage hier
+              niets. */}
+          {!ikBegeleid && !teamOverzicht.laden && stap.nummer > 1 && (
             <Voortgang variant="klein" toonOnderdelen={false} />
           )}
         </>
@@ -130,23 +133,23 @@ export default function Start() {
             <span className="tk-optie-pijl" aria-hidden="true">›</span>
           </Link>
 
-          <Link to="/app/ik" className="tk-optie">
-            <span className="tk-optie-tekst">
-              <strong>Mijn profiel</strong>
-              <small>
-                {ikBegeleid
-                  ? "Je profiel. Je deelt hier niets mee; je begeleidt dit team."
-                  : "Wat jij over jezelf deelt met je team."}
-              </small>
-            </span>
-            {/* "0 van 12 gedeeld" is geen tekortkoming als je niet meedoet.
-                Dan zegt de stand hoe ver je profiel zelf is. */}
-            <span className={`tk-optie-stand${voortgang.compleet ? " klaar" : ""}`}>
-              {voortgang.compleet && <span aria-hidden="true">✓ </span>}
-              {ikBegeleid ? voortgang.nagelopen : voortgang.gedeeld} van {voortgang.van}
-            </span>
-            <span className="tk-optie-pijl" aria-hidden="true">›</span>
-          </Link>
+          {/* Bij een team dat je begeleidt hoort deze regel niet. Hij gaat
+              over wat je met dít team deelt, en dat doe je niet — dan is "0 van
+              12" geen stand maar een vraag die niet gesteld hoort te worden.
+              Je profiel blijft bereikbaar via Ik. */}
+          {!ikBegeleid && (
+            <Link to="/app/ik" className="tk-optie">
+              <span className="tk-optie-tekst">
+                <strong>Mijn profiel</strong>
+                <small>Wat jij over jezelf deelt met je team.</small>
+              </span>
+              <span className={`tk-optie-stand${voortgang.compleet ? " klaar" : ""}`}>
+                {voortgang.compleet && <span aria-hidden="true">✓ </span>}
+                {voortgang.gedeeld} van {voortgang.van}
+              </span>
+              <span className="tk-optie-pijl" aria-hidden="true">›</span>
+            </Link>
+          )}
         </div>
       </section>
 

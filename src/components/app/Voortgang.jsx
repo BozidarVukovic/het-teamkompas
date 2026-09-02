@@ -57,8 +57,11 @@ function Onderdeel({ onderdeel }) {
 }
 
 export default function Voortgang({ variant = "groot", toonOnderdelen = true }) {
-  const { kenmerken, actiefTeam, handleiding } = useApp();
-  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding });
+  const { kenmerken, actiefTeam, handleiding, ikBegeleid } = useApp();
+  // Begeleid je dit team, dan telt "gedeeld" niet mee — je doet er niet aan mee
+  // en deelt er dus niets. Zonder dit stond hier 67% met "je deelt er 0 van de
+  // 12" over een team waar de gebruiker helemaal niet in zit.
+  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding, ikBegeleid });
 
   return (
     <div className="tk-kaart">

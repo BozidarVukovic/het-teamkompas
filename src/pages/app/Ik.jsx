@@ -53,7 +53,13 @@ export default function Ik() {
       {/* De uitsplitsing in ingevuld, nagelopen en gedeeld helpt zolang er iets
           te doen is. Staat alles op honderd procent, dan is het een uitleg van
           werk dat al gedaan is. */}
-      {voortgang.compleet ? (
+      {ikBegeleid ? (
+        <p className="tk-fijn">
+          Je begeleidt {actiefTeam ? actiefTeam.teamNaam || "dit team" : "dit team"} en doet er zelf
+          niet aan mee, dus je deelt er niets mee. Je profiel is en blijft van jou; in teams waar je
+          wél aan meedoet, bepaal je per punt wat je deelt.
+        </p>
+      ) : voortgang.compleet ? (
         <p className="tk-af">
           <span aria-hidden="true">✓</span> Je profiel is compleet en gedeeld met je team.
         </p>
@@ -67,8 +73,16 @@ export default function Ik() {
           <Regel
             naar="/app/profiel"
             titel="Mijn profiel"
-            uitleg="Twaalf punten over hoe jij werkt, gedeeld met je team."
-            stand={`${voortgang.gedeeld} van ${voortgang.van}`}
+            uitleg={
+              ikBegeleid
+                ? "Twaalf punten over hoe jij werkt. Privé zolang je alleen teams begeleidt."
+                : "Twaalf punten over hoe jij werkt, gedeeld met je team."
+            }
+            stand={
+              ikBegeleid
+                ? `${voortgang.ingevuld} van ${voortgang.van} ingevuld`
+                : `${voortgang.gedeeld} van ${voortgang.van}`
+            }
             klaar={voortgang.compleet}
           />
           <Regel

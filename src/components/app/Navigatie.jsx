@@ -59,7 +59,10 @@ export default function Navigatie() {
 
   // Eén stipje bij "Ik" zolang je profiel nog niet af is. Geen getal, geen
   // uitroepteken: het wijst waar nog iets ligt zonder erop te hameren.
-  const stip = !voortgang.compleet;
+  //
+  // Bij een team dat je begeleidt wijst het nergens heen: je profiel hoort niet
+  // bij dit team en er valt niets te delen. Dan geen stip.
+  const stip = !ikBegeleid && !voortgang.compleet;
 
   const items = ONDERDELEN.map((o) => {
     const actief = isActief(o, locatie.pathname);
