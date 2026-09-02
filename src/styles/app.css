@@ -305,6 +305,44 @@
   margin-top: 3px;
 }
 
+/* Een vinkje met uitleg eronder: dezelfde rustige regel als een keuze, maar
+   het is er één die je aan of uit zet in plaats van een van meerdere. */
+.tk-keuzevakje {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
+  background: var(--tk-navy);
+  border: 1px solid var(--tk-lijn);
+  border-radius: 13px;
+  padding: 14px 16px;
+  color: var(--tk-tekst);
+  font-size: 15px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.tk-keuzevakje:hover {
+  border-color: rgba(0, 168, 150, 0.4);
+}
+
+.tk-keuzevakje input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  flex: 0 0 auto;
+  accent-color: var(--tk-teal);
+  cursor: pointer;
+}
+
+.tk-keuzevakje small {
+  display: block;
+  color: var(--tk-zacht);
+  font-size: 13px;
+  margin-top: 3px;
+}
+
 .tk-bron {
   display: inline-block;
   font-size: 11.5px;

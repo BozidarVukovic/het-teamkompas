@@ -29,8 +29,10 @@ function Mens({ naar, ini, label, onder, gestippeld = false }) {
 }
 
 export default function Start() {
-  const { gebruiker, naam, actiefTeam, kenmerken, handleiding, teamOverzicht, uitnodigingscode, vergeetUitnodiging } =
-    useApp();
+  const {
+    gebruiker, naam, actiefTeam, kenmerken, handleiding, teamOverzicht, ikBegeleid,
+    uitnodigingscode, vergeetUitnodiging,
+  } = useApp();
 
   const eigenUid = gebruiker && gebruiker.uid;
 
@@ -42,9 +44,10 @@ export default function Start() {
     eigenUid,
     teamcode: teamOverzicht.team && teamOverzicht.team.code,
     extraProfielen: (teamOverzicht.profielleden || []).length,
+    ikBegeleid,
   });
 
-  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding });
+  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding, ikBegeleid });
 
   const collegas = collegasVan({
     leden: teamOverzicht.leden,

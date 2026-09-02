@@ -93,10 +93,13 @@ service cloud.firestore {
       );
     }
 
+    // Een begeleider beheert het team net zo goed als een beheerder; het
+    // verschil is dat hij er zelf niet aan meedoet. Dat onderscheid zit in wat
+    // de app toont, niet in wat er mag.
     function isTeambeheerder(orgId, teamId) {
       return ingelogd() && get(
         /databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/leden/$(request.auth.uid)
-      ).data.rol == "beheerder";
+      ).data.rol in ["beheerder", "begeleider"];
     }
 
     // Het eigen gebruikersdocument: naam, e-mail en de lijst met lidmaatschappen.
@@ -141,12 +144,29 @@ service cloud.firestore {
         match /leden/{uid} {
           allow read: if isTeamlid(orgId, teamId);
           allow create: if ikBen(uid)
-            && request.resource.data.rol in ["lid", "beheerder"]
+            && request.resource.data.rol in ["lid", "beheerder", "begeleider"]
             && (
-              // de eerste die het team aanmaakt, wordt beheerder
-              request.resource.data.rol == "beheerder"
-              // of iemand treedt toe met de juiste code
-              || get(/databases/$(database)/documents/teamcodes/$(request.resource.data.code)).data.teamId == teamId
+              // De maker van het team beheert het ook — als beheerder die
+              // meedoet, of als begeleider die dat niet doet.
+              //
+              // Die tweede voorwaarde is niet vrijblijvend. Zonder de controle
+              // op aangemaaktDoor kon iedere ingelogde gebruiker een
+              // ledendocument met rol "beheerder" wegschrijven onder een
+              // wíllekeurig bestaand team, en zo het beheer van een team van
+              // iemand anders overnemen — inclusief alles wat daar gedeeld is.
+              // Het teamdocument wordt vlak vóór dit document aangemaakt, dus
+              // voor de echte maker staat het er al.
+              (
+                request.resource.data.rol in ["beheerder", "begeleider"]
+                && get(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)).data.aangemaaktDoor == request.auth.uid
+              )
+              // Of iemand treedt toe met de juiste code, en dan als lid. Een
+              // code is bedoeld om mee te doen, niet om te beheren.
+              || (
+                request.resource.data.rol == "lid"
+                && get(/databases/$(database)/documents/teamcodes/$(request.resource.data.code)).data.teamId == teamId
+                && get(/databases/$(database)/documents/teamcodes/$(request.resource.data.code)).data.orgId == orgId
+              )
             );
           // Je eigen regel bijwerken mag — naam en functie — maar je rol niet.
           // Zonder die voorwaarde kon elk teamlid zichzelf beheerder maken door

@@ -14,11 +14,15 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { bewaarVoorstel, haalVoorstellen } from "../../lib/app/voorstellen";
-import { bewaarProfiellid, verwijderProfiellid, zetTeamrol } from "../../lib/app/opslag";
+import { bewaarProfiellid, verwijderProfiellid } from "../../lib/app/opslag";
 import {
+  BEGELEIDER,
   BEHEERDER,
   LID,
-  isBeheerder,
+  begeleiders,
+  begeleidingstekst,
+  deelnemers,
+  magBeheren,
   magRolWijzigen,
   magVertrekken,
   overdrachtstekst,
@@ -99,8 +103,10 @@ function Persoon({ sleutel, naam: hunNaam, achter, onder, uitgeklapt, onKlik, ch
 }
 
 export default function MijnTeam() {
-  const { gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam, verwijderTeam, teamOverzicht, herlaadTeam } =
-    useApp();
+  const {
+    gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam, verwijderTeam,
+    teamOverzicht, herlaadTeam, ikBegeleid, zetRol,
+  } = useApp();
 
   // Team, leden en gedeeld staan al in de context. Hier stond een tweede kopie
   // in eigen state; herlaadTeam() ververste alleen de context-kopie, dus na het
@@ -119,6 +125,7 @@ export default function MijnTeam() {
     useActie();
   const [voorstellen, setVoorstellen] = useState({});
   const [rolVoor, setRolVoor] = useState(null);
+  const [begeleidVoor, setBegeleidVoor] = useState(false);
   const {
     bezig: bezigRol,
     melding: rolMelding,
@@ -167,7 +174,7 @@ export default function MijnTeam() {
   }, [actiefTeam]);
 
   const mijnUid = gebruiker && gebruiker.uid;
-  const ikBenBeheerder = useMemo(() => isBeheerder(leden, mijnUid), [leden, mijnUid]);
+  const ikBenBeheerder = useMemo(() => magBeheren(leden, mijnUid), [leden, mijnUid]);
 
   // Echt opruimen kan alleen wie het team beheert en er als enige in zit; een
   // team mag nooit onder de voeten van anderen weg kunnen verdwijnen.
@@ -176,6 +183,14 @@ export default function MijnTeam() {
   // De laatste beheerder mag niet weglopen bij een team met anderen erin; dan
   // blijft er een team achter dat niemand meer kan beheren. Zie teamrollen.js.
   const vertrek = useMemo(() => magVertrekken({ leden, uid: mijnUid }), [leden, mijnUid]);
+
+  // Hoeveel punten je op dit moment met dit team deelt. Nodig voor de
+  // waarschuwing bij begeleiden: die kopie verdwijnt, en dat mag je niet pas
+  // achteraf ontdekken.
+  const aantalGedeeld = ((gedeeld[mijnUid] || {}).kenmerken || []).length;
+
+  // De mensen die het team begeleiden staan apart; zie teamrollen.js.
+  const begeleidt = useMemo(() => begeleiders(leden), [leden]);
 
   /**
    * Iemand beheerder maken, of die rol weer weghalen.
@@ -196,25 +211,34 @@ export default function MijnTeam() {
     const hun = voornaam(l.naam, "deze collega");
     const Hun = voornaam(l.naam, "Deze collega");
 
+    const teamNaam = actiefTeam.teamNaam || "dit team";
+    const gelukt =
+      nieuweRol === BEGELEIDER
+        ? `Je begeleidt ${teamNaam} nu. Je staat niet meer tussen de teamgenoten.`
+        : nieuweRol === BEHEERDER
+          ? eigen
+            ? `Je doet weer mee in ${teamNaam}.`
+            : `${Hun} is nu beheerder van dit team.`
+          : eigen
+            ? "Je bent nu gewoon lid van dit team."
+            : `${Hun} is nu gewoon lid van dit team.`;
+
     voerRolUit(
-      nieuweRol === BEHEERDER ? `${hun} beheerder maken` : "de beheerdersrol aanpassen",
+      nieuweRol === BEGELEIDER
+        ? "instellen dat je dit team begeleidt"
+        : nieuweRol === BEHEERDER && !eigen
+          ? `${hun} beheerder maken`
+          : "de beheerdersrol aanpassen",
       async () => {
-        await zetTeamrol({
-          orgId: actiefTeam.orgId,
-          teamId: actiefTeam.teamId,
-          uid: l.uid,
-          rol: nieuweRol,
-        });
-        await herlaadTeam();
+        await zetRol({ uid: l.uid, rol: nieuweRol });
         setRolVoor(null);
+        setBegeleidVoor(false);
       },
-      nieuweRol === BEHEERDER
-        ? `${Hun} is nu beheerder van dit team.`
-        : eigen
-          ? "Je bent nu gewoon lid van dit team."
-          : `${Hun} is nu gewoon lid van dit team.`
+      gelukt
     );
   };
+
+  const BEHEERDER_ROLLEN = [BEHEERDER, BEGELEIDER];
 
   /** Wat er op het bevestigingsscherm staat, per geval. */
   const rolUitleg = (l) => {
@@ -222,7 +246,7 @@ export default function MijnTeam() {
     const hun = voornaam(l.naam, "deze collega");
     const Hun = voornaam(l.naam, "Deze collega");
 
-    if (l.rol !== BEHEERDER) return overdrachtstekst(Hun);
+    if (!BEHEERDER_ROLLEN.includes(l.rol)) return overdrachtstekst(Hun);
     if (eigen)
       return "Je kunt daarna geen mensen meer uitnodigen en geen profielen meer toevoegen. Je blijft gewoon lid: wat je deelt en wat je van teamgenoten ziet, verandert niet.";
     return `${Hun} kan daarna geen mensen meer uitnodigen en geen profielen meer toevoegen, en blijft gewoon lid van het team. Je kunt ${hun} later weer beheerder maken.`;
@@ -238,15 +262,245 @@ export default function MijnTeam() {
   if (!actiefTeam) return <div className="tk-inhoud"><p className="tk-onderkop">Je hebt nog geen team.</p></div>;
   if (laden) return <div className="tk-inhoud"><p className="tk-onderkop">Even laden...</p></div>;
 
+  const meedoeners = deelnemers(leden);
   const onderkop = [
     actiefTeam.orgNaam,
-    `${leden.length} ${leden.length === 1 ? "lid" : "leden"}`,
+    `${meedoeners.length} ${meedoeners.length === 1 ? "lid" : "leden"}`,
     profielleden.length > 0
       ? `${profielleden.length} toegevoegd ${profielleden.length === 1 ? "profiel" : "profielen"}`
       : null,
   ]
     .filter(Boolean)
     .join(" · ");
+
+  /**
+   * Eén persoon in de lijst. Wordt twee keer gebruikt: voor de mensen die
+   * meedoen en voor wie het team begeleidt. Dezelfde rij, want de knoppen
+   * eronder zijn dezelfde — alleen de plek op het scherm verschilt.
+   */
+  const persoonsrij = (l) => {
+    const eigen = l.uid === (gebruiker && gebruiker.uid);
+    const g = gedeeld[l.uid];
+    const sleutel = `lid-${l.uid}`;
+
+    return (
+      <Persoon
+        key={sleutel}
+        sleutel={sleutel}
+        naam={l.naam || "Teamgenoot"}
+        achter={eigen ? "(jij)" : null}
+        onder={[
+          l.functie || null,
+          l.rol === BEGELEIDER
+            ? "Begeleidt dit team"
+            : l.rol === BEHEERDER
+              ? "Beheerder"
+              : null,
+          // Een begeleider deelt hier niets, en dat is geen tekortkoming.
+          l.rol === BEGELEIDER
+            ? "Doet zelf niet mee"
+            : g
+              ? `${g.kenmerken.length} punten gedeeld`
+              : "Heeft nog niets gedeeld",
+        ]
+          .filter(Boolean)
+          .join(" · ")}
+        uitgeklapt={open === sleutel}
+        onKlik={() => {
+          setOpen(open === sleutel ? null : sleutel);
+          setPaneel(null);
+          // Een half beantwoorde vraag hoort niet te blijven staan tot
+          // je deze persoon toevallig weer openklapt.
+          setRolVoor(null);
+          setBegeleidVoor(false);
+        }}
+      >
+        {/* De knoppen staan boven de tekst: je klapt iemand open om
+            iets te doen, niet om twintig blokken te lezen. */}
+        <div className="tk-knoppen">
+          {g && !eigen && (
+            <Link
+              className="tk-knop tk-knop-klein"
+              to={`/app/samenwerken?met=${encodeURIComponent(l.uid)}`}
+              style={{ textDecoration: "none" }}
+            >
+              Samenwerken met {voornaam(l.naam, "deze collega")}
+            </Link>
+          )}
+          {eigen && (
+            <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/profiel" style={{ textDecoration: "none" }}>
+              Mijn profiel aanpassen
+            </Link>
+          )}
+          {ikBenBeheerder && !eigen && (
+            <button
+              type="button"
+              className="tk-knop tk-knop-rand tk-knop-klein"
+              onClick={() => setUploadVoor(uploadVoor === l.uid ? null : l.uid)}
+            >
+              {uploadVoor === l.uid ? "Sluiten" : "Insights-profiel klaarzetten"}
+            </button>
+          )}
+          {/* Beheerder maken of die rol weghalen. Een facilitator die
+              een team opzet, moet het kunnen overdragen; en niemand
+              mag de laatste beheerder wegnemen. */}
+          {ikBenBeheerder &&
+            magRolWijzigen({
+              leden,
+              doorUid: mijnUid,
+              doelUid: l.uid,
+              nieuweRol: l.rol === BEHEERDER ? LID : BEHEERDER,
+            }).mag && (
+              <button
+                type="button"
+                className="tk-knop tk-knop-rand tk-knop-klein"
+                onClick={() => setRolVoor(rolVoor === l.uid ? null : l.uid)}
+              >
+                {rolVoor === l.uid
+                  ? "Sluiten"
+                  : l.rol === BEHEERDER
+                    ? eigen
+                      ? "Beheerder-rol teruggeven"
+                      : "Beheerder-rol weghalen"
+                    : `${voornaam(l.naam, "Deze collega")} beheerder maken`}
+              </button>
+            )}
+        </div>
+
+        {/* Begeleiden zet je alleen voor jezelf aan of uit: of jij bij dit
+            team hoort, is niet iets wat een ander over je beslist. */}
+        {eigen && ikBenBeheerder && (
+          <div className="tk-knoppen">
+            <button
+              type="button"
+              className="tk-knop tk-knop-rand tk-knop-klein"
+              onClick={() => {
+                setBegeleidVoor(!begeleidVoor);
+                setRolVoor(null);
+              }}
+            >
+              {begeleidVoor
+                ? "Sluiten"
+                : ikBegeleid
+                  ? "Ik doe zelf mee in dit team"
+                  : "Ik begeleid dit team"}
+            </button>
+          </div>
+        )}
+
+        {eigen && begeleidVoor && (
+          <div className="tk-kaart" style={{ marginTop: 12 }}>
+            <p style={{ marginTop: 0 }}>
+              {begeleidingstekst(!ikBegeleid, actiefTeam.teamNaam || "dit team", aantalGedeeld)}
+            </p>
+            <div className="tk-knoppen">
+              <button
+                type="button"
+                className="tk-knop tk-knop-klein"
+                disabled={bezigRol}
+                onClick={() => wijzigRol(l, ikBegeleid ? BEHEERDER : BEGELEIDER)}
+              >
+                {bezigRol
+                  ? "Bezig..."
+                  : ikBegeleid
+                    ? "Ja, ik doe weer mee"
+                    : "Ja, ik begeleid dit team"}
+              </button>
+              <button
+                type="button"
+                className="tk-knop tk-knop-rand tk-knop-klein"
+                onClick={() => setBegeleidVoor(false)}
+              >
+                Toch niet
+              </button>
+            </div>
+          </div>
+        )}
+
+        {rolVoor === l.uid && (
+          <div className="tk-kaart" style={{ marginTop: 12 }}>
+            <p style={{ marginTop: 0 }}>{rolUitleg(l)}</p>
+            <div className="tk-knoppen">
+              <button
+                type="button"
+                className="tk-knop tk-knop-klein"
+                disabled={bezigRol}
+                onClick={() => wijzigRol(l, l.rol === BEHEERDER ? LID : BEHEERDER)}
+              >
+                {bezigRol
+                  ? "Bezig..."
+                  : l.rol === BEHEERDER
+                    ? eigen
+                      ? "Ja, geef de rol terug"
+                      : "Ja, haal de rol weg"
+                    : `Ja, maak ${voornaam(l.naam, "deze collega")} beheerder`}
+              </button>
+              <button
+                type="button"
+                className="tk-knop tk-knop-rand tk-knop-klein"
+                onClick={() => setRolVoor(null)}
+              >
+                Toch niet
+              </button>
+            </div>
+          </div>
+        )}
+
+        {eigen && ikBenBeheerder && !vertrek.mag && (
+          <p className="tk-fijn">
+            Je bent de enige beheerder van dit team. Maak eerst iemand anders beheerder;
+            daarna kun je de rol teruggeven of vertrekken.
+          </p>
+        )}
+
+        {ikBenBeheerder && !eigen && voorstellen[l.uid] && (
+          <p className="tk-fijn">
+            Er staat een voorstel klaar dat {voornaam(l.naam, "deze collega")} nog moet
+            overnemen.
+          </p>
+        )}
+
+        {!g && l.rol !== BEGELEIDER && (
+          <p className="tk-fijn">
+            {eigen
+              ? "Je hebt zelf nog niets met dit team gedeeld."
+              : "Zodra deze collega iets deelt, staat het hier."}
+          </p>
+        )}
+
+        {l.rol === BEGELEIDER && (
+          <p className="tk-fijn">
+            {eigen
+              ? "Je begeleidt dit team en doet er zelf niet aan mee. Je staat niet in de lijst met wie de anderen kunnen samenwerken, en je deelt hier niets."
+              : "Deze persoon begeleidt het team en doet er zelf niet aan mee."}
+          </p>
+        )}
+
+        {g && <Gedeeld gedeeld={g} />}
+
+        {uploadVoor === l.uid && (
+          <div style={{ marginTop: 14 }}>
+            <InsightsUpload
+              voorWie={l.naam || "deze persoon"}
+              knopLabel="Als voorstel klaarzetten"
+              onBevestig={async (gelezen) => {
+                await bewaarVoorstel({
+                  orgId: actiefTeam.orgId,
+                  teamId: actiefTeam.teamId,
+                  uid: l.uid,
+                  vanUid: gebruiker.uid,
+                  vanNaam: naam,
+                  voorstel: gelezen,
+                });
+                setVoorstellen((v) => ({ ...v, [l.uid]: { uid: l.uid } }));
+                setUploadVoor(null);
+              }}
+            />
+          </div>
+        )}
+      </Persoon>
+    );
+  };
 
   return (
     <div className="tk-inhoud">
@@ -260,161 +514,7 @@ export default function MijnTeam() {
       <section className="tk-groep">
         <h2 className="tk-groep-kop">Wie doen er mee</h2>
         <div className="tk-groep-lijst">
-          {leden.map((l) => {
-            const eigen = l.uid === (gebruiker && gebruiker.uid);
-            const g = gedeeld[l.uid];
-            const sleutel = `lid-${l.uid}`;
-
-            return (
-              <Persoon
-                key={sleutel}
-                sleutel={sleutel}
-                naam={l.naam || "Teamgenoot"}
-                achter={eigen ? "(jij)" : null}
-                onder={[
-                  l.functie || null,
-                  l.rol === "beheerder" ? "Beheerder" : null,
-                  g ? `${g.kenmerken.length} punten gedeeld` : "Heeft nog niets gedeeld",
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
-                uitgeklapt={open === sleutel}
-                onKlik={() => {
-                  setOpen(open === sleutel ? null : sleutel);
-                  setPaneel(null);
-                  // Een half beantwoorde vraag hoort niet te blijven staan tot
-                  // je deze persoon toevallig weer openklapt.
-                  setRolVoor(null);
-                }}
-              >
-                {/* De knoppen staan boven de tekst: je klapt iemand open om
-                    iets te doen, niet om twintig blokken te lezen. */}
-                <div className="tk-knoppen">
-                  {g && !eigen && (
-                    <Link
-                      className="tk-knop tk-knop-klein"
-                      to={`/app/samenwerken?met=${encodeURIComponent(l.uid)}`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      Samenwerken met {voornaam(l.naam, "deze collega")}
-                    </Link>
-                  )}
-                  {eigen && (
-                    <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/profiel" style={{ textDecoration: "none" }}>
-                      Mijn profiel aanpassen
-                    </Link>
-                  )}
-                  {ikBenBeheerder && !eigen && (
-                    <button
-                      type="button"
-                      className="tk-knop tk-knop-rand tk-knop-klein"
-                      onClick={() => setUploadVoor(uploadVoor === l.uid ? null : l.uid)}
-                    >
-                      {uploadVoor === l.uid ? "Sluiten" : "Insights-profiel klaarzetten"}
-                    </button>
-                  )}
-                  {/* Beheerder maken of die rol weghalen. Een facilitator die
-                      een team opzet, moet het kunnen overdragen; en niemand
-                      mag de laatste beheerder wegnemen. */}
-                  {ikBenBeheerder &&
-                    magRolWijzigen({
-                      leden,
-                      doorUid: mijnUid,
-                      doelUid: l.uid,
-                      nieuweRol: l.rol === BEHEERDER ? LID : BEHEERDER,
-                    }).mag && (
-                      <button
-                        type="button"
-                        className="tk-knop tk-knop-rand tk-knop-klein"
-                        onClick={() => setRolVoor(rolVoor === l.uid ? null : l.uid)}
-                      >
-                        {rolVoor === l.uid
-                          ? "Sluiten"
-                          : l.rol === BEHEERDER
-                            ? eigen
-                              ? "Beheerder-rol teruggeven"
-                              : "Beheerder-rol weghalen"
-                            : `${voornaam(l.naam, "Deze collega")} beheerder maken`}
-                      </button>
-                    )}
-                </div>
-
-                {rolVoor === l.uid && (
-                  <div className="tk-kaart" style={{ marginTop: 12 }}>
-                    <p style={{ marginTop: 0 }}>{rolUitleg(l)}</p>
-                    <div className="tk-knoppen">
-                      <button
-                        type="button"
-                        className="tk-knop tk-knop-klein"
-                        disabled={bezigRol}
-                        onClick={() => wijzigRol(l, l.rol === BEHEERDER ? LID : BEHEERDER)}
-                      >
-                        {bezigRol
-                          ? "Bezig..."
-                          : l.rol === BEHEERDER
-                            ? eigen
-                              ? "Ja, geef de rol terug"
-                              : "Ja, haal de rol weg"
-                            : `Ja, maak ${voornaam(l.naam, "deze collega")} beheerder`}
-                      </button>
-                      <button
-                        type="button"
-                        className="tk-knop tk-knop-rand tk-knop-klein"
-                        onClick={() => setRolVoor(null)}
-                      >
-                        Toch niet
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {eigen && ikBenBeheerder && !vertrek.mag && (
-                  <p className="tk-fijn">
-                    Je bent de enige beheerder van dit team. Maak eerst iemand anders beheerder;
-                    daarna kun je de rol teruggeven of vertrekken.
-                  </p>
-                )}
-
-                {ikBenBeheerder && !eigen && voorstellen[l.uid] && (
-                  <p className="tk-fijn">
-                    Er staat een voorstel klaar dat {voornaam(l.naam, "deze collega")} nog moet
-                    overnemen.
-                  </p>
-                )}
-
-                {!g && (
-                  <p className="tk-fijn">
-                    {eigen
-                      ? "Je hebt zelf nog niets met dit team gedeeld."
-                      : "Zodra deze collega iets deelt, staat het hier."}
-                  </p>
-                )}
-
-                {g && <Gedeeld gedeeld={g} />}
-
-                {uploadVoor === l.uid && (
-                  <div style={{ marginTop: 14 }}>
-                    <InsightsUpload
-                      voorWie={l.naam || "deze persoon"}
-                      knopLabel="Als voorstel klaarzetten"
-                      onBevestig={async (gelezen) => {
-                        await bewaarVoorstel({
-                          orgId: actiefTeam.orgId,
-                          teamId: actiefTeam.teamId,
-                          uid: l.uid,
-                          vanUid: gebruiker.uid,
-                          vanNaam: naam,
-                          voorstel: gelezen,
-                        });
-                        setVoorstellen((v) => ({ ...v, [l.uid]: { uid: l.uid } }));
-                        setUploadVoor(null);
-                      }}
-                    />
-                  </div>
-                )}
-              </Persoon>
-            );
-          })}
+          {deelnemers(leden).map(persoonsrij)}
 
           {profielleden.map((pl) => {
             const sleutel = `profiel-${pl.id}`;
@@ -568,6 +668,22 @@ export default function MijnTeam() {
             </ol>
           )}
         </div>
+      )}
+
+      {/* ------------------------------------------------------- begeleiding */}
+      {begeleidt.length > 0 && (
+        <section className="tk-groep">
+          <h2 className="tk-groep-kop">
+            {begeleidt.length === 1 ? "Begeleiding" : "Begeleiders"}
+          </h2>
+          <p className="tk-fijn" style={{ marginTop: -6 }}>
+            {begeleidt.length === 1 ? "Deze persoon zet" : "Deze mensen zetten"} het team op en
+            {begeleidt.length === 1 ? " beheert" : " beheren"} het, maar
+            {begeleidt.length === 1 ? " doet" : " doen"} er zelf niet aan mee. Je kunt er dus ook
+            geen advies over de samenwerking mee vragen.
+          </p>
+          <div className="tk-groep-lijst">{begeleidt.map(persoonsrij)}</div>
+        </section>
       )}
 
       {/* -------------------------------------------- profiel zelf toevoegen */}

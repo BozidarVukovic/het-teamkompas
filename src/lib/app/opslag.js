@@ -91,7 +91,13 @@ export function nieuweTeamcode() {
  * team. Beheerder zijn geeft geen enkel inzicht in profielen van anderen; het
  * gaat alleen over de teamgegevens zelf.
  */
-export async function maakOrganisatieMetTeam({ uid, naam, organisatieNaam, teamNaam }) {
+export async function maakOrganisatieMetTeam({
+  uid,
+  naam,
+  organisatieNaam,
+  teamNaam,
+  begeleid = false,
+}) {
   const orgId = doc(collection(db, "organisaties")).id;
   const teamId = doc(collection(db, "organisaties", orgId, "teams")).id;
   const code = nieuweTeamcode();
@@ -116,9 +122,13 @@ export async function maakOrganisatieMetTeam({ uid, naam, organisatieNaam, teamN
     aangemaaktOp: serverTimestamp(),
   });
 
+  // Wie een team begeleidt, beheert het wel maar doet er niet aan mee. Dat is
+  // meteen bij het aanmaken de juiste rol: anders komt de facilitator eerst
+  // tussen de mensen van zijn klant te staan en moet hij zich daar daarna weer
+  // uit halen.
   await setDoc(lidRef(orgId, teamId, uid), {
     naam,
-    rol: "beheerder",
+    rol: begeleid ? "begeleider" : "beheerder",
     code,
     sindsOp: serverTimestamp(),
   });
@@ -274,6 +284,34 @@ export async function werkLidgegevensBij({ uid, lidmaatschappen = [], naam = "",
  */
 export async function zetTeamrol({ orgId, teamId, uid, rol }) {
   await updateDoc(lidRef(orgId, teamId, uid), { rol });
+}
+
+/**
+ * Je eigen rol per team.
+ *
+ * De rol staat in het ledendocument — dezelfde plek waar de securityregels naar
+ * kijken — en dus per team apart. Hij stond ooit ook in het lidmaatschap in je
+ * eigen gebruikersdocument, maar dat kon niet kloppen: een beheerder die jou
+ * promoveert kan jouw gebruikersdocument niet schrijven.
+ *
+ * Mislukt het ophalen voor een team, dan blijft dat team hier weg. De app leest
+ * dat als "gewoon lid", en dat is de veilige kant: iemand ten onrechte als
+ * begeleider behandelen zou zijn gedeelde punten verbergen.
+ */
+export async function haalEigenRollen(uid, lidmaatschappen = []) {
+  const paren = await Promise.all(
+    (lidmaatschappen || []).map(async (l) => {
+      try {
+        const snap = await getDoc(lidRef(l.orgId, l.teamId, uid));
+        if (!snap.exists()) return null;
+        return [teamsleutel(l.orgId, l.teamId), snap.data().rol || "lid"];
+      } catch {
+        return null;
+      }
+    })
+  );
+
+  return Object.fromEntries(paren.filter(Boolean));
 }
 
 export async function haalTeamleden(orgId, teamId) {

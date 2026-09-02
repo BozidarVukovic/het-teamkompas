@@ -13,6 +13,11 @@
 // Twaalf kenmerken maal drie is zesendertig punten. Wie zijn Insights-profiel
 // uploadt zit meteen op een derde; wie alles naloopt op twee derde; wie deelt op
 // honderd procent. Die volgorde is precies de volgorde waarin het werkt.
+//
+// Eén uitzondering: wie een team begeleidt, doet er zelf niet aan mee. Delen is
+// dan niet iets wat je nog moet doen maar iets wat niet van toepassing is. Voor
+// die persoon telt de derde stap niet mee — anders staat er "je deelt er 0 van
+// de 12" over een team waar hij helemaal niet in zit.
 
 import { KENMERK_IDS } from "../../data/app/kenmerken.js";
 import { SECTIES } from "../../data/app/handleiding.js";
@@ -39,7 +44,12 @@ export function vraagtAandacht({ kenmerk, doen, sleutel = null }) {
   return false;
 }
 
-export function bepaalVoortgang({ kenmerken = [], actiefTeam = null, handleiding = {} } = {}) {
+export function bepaalVoortgang({
+  kenmerken = [],
+  actiefTeam = null,
+  handleiding = {},
+  ikBegeleid = false,
+} = {}) {
   // Wat meetelt en wat gedeeld is, wordt op één plek bepaald; zie telling.js.
   // Deed elk scherm dat zelf, dan gaven ze verschillende getallen zodra er een
   // kenmerk in de opslag stond dat niet meer bestaat.
@@ -54,8 +64,9 @@ export function bepaalVoortgang({ kenmerken = [], actiefTeam = null, handleiding
   (kenmerken || []).forEach((k) => {
     if (k && k.kenmerkId) perId[k.kenmerkId] = k;
   });
-  const behaald = ingevuld + nagelopen + gedeeld;
-  const totaal = van * STAPPEN_PER_KENMERK;
+  const stappen = ikBegeleid ? STAPPEN_PER_KENMERK - 1 : STAPPEN_PER_KENMERK;
+  const behaald = ingevuld + nagelopen + (ikBegeleid ? 0 : gedeeld);
+  const totaal = van * stappen;
   const percentage = totaal === 0 ? 0 : Math.round((behaald / totaal) * 100);
 
   const secties = SECTIES.filter((s) => handleiding[s.id] && handleiding[s.id].tekst).length;
@@ -79,15 +90,21 @@ export function bepaalVoortgang({ kenmerken = [], actiefTeam = null, handleiding
       knop: "Nalopen wat nog open staat",
       naar: "/app/profiel?doen=nagelopen",
     },
-    {
-      id: "gedeeld",
-      label: "Gedeeld",
-      aantal: gedeeld,
-      van,
-      uitleg: "Hoeveel punten je teamgenoten kunnen zien. Zonder delen kan niemand er rekening mee houden.",
-      knop: "Delen wat nog niet gedeeld is",
-      naar: "/app/profiel?doen=gedeeld",
-    },
+    // Delen hoort niet in de lijst als je dit team alleen begeleidt.
+    ...(ikBegeleid
+      ? []
+      : [
+          {
+            id: "gedeeld",
+            label: "Gedeeld",
+            aantal: gedeeld,
+            van,
+            uitleg:
+              "Hoeveel punten je teamgenoten kunnen zien. Zonder delen kan niemand er rekening mee houden.",
+            knop: "Delen wat nog niet gedeeld is",
+            naar: "/app/profiel?doen=gedeeld",
+          },
+        ]),
   ];
 
   // "Open" is wat je nú kunt doen, niet wat er rekenkundig nog ontbreekt. Je
@@ -110,6 +127,7 @@ export function bepaalVoortgang({ kenmerken = [], actiefTeam = null, handleiding
     ingevuld,
     nagelopen,
     gedeeld,
+    ikBegeleid,
     compleet: behaald === totaal,
     onderdelen,
     volgende,
@@ -121,7 +139,11 @@ export function bepaalVoortgang({ kenmerken = [], actiefTeam = null, handleiding
 /** Eén korte zin over waar je staat. */
 export function voortgangInEenZin(voortgang) {
   if (!voortgang || voortgang.percentage === 0) return "Je profiel is nog leeg.";
-  if (voortgang.compleet) return "Je profiel is compleet en gedeeld met je team.";
+  if (voortgang.compleet) {
+    return voortgang.ikBegeleid
+      ? "Je profiel is compleet. Je begeleidt dit team, dus je deelt er zelf niets mee."
+      : "Je profiel is compleet en gedeeld met je team.";
+  }
   if (voortgang.ingevuld < voortgang.van) {
     return `Er staat bij ${voortgang.ingevuld} van de ${voortgang.van} punten een antwoord.`;
   }

@@ -16,12 +16,14 @@ import {
 import { auth } from "../firebase";
 import { kenmerkenUitInsights } from "./insights";
 import { haalVoorstel, verwijderVoorstel } from "./voorstellen";
+import { BEGELEIDER } from "./teamrollen";
 import {
   bewaarInsights as bewaarInsightsInDb,
   bewaarProfielteksten,
   bewaarKenmerk as bewaarKenmerkInDb,
   bewaarKenmerken as bewaarKenmerkenInDb,
   bewaarSectie as bewaarSectieInDb,
+  haalEigenRollen,
   haalGebruiker,
   haalGedeeldVanTeam,
   haalProfielleden,
@@ -38,6 +40,7 @@ import {
   verwijderEigenGegevens as verwijderEigenGegevensInDb,
   werkAlleGedeeldBij,
   werkGebruikerBij,
+  zetTeamrol as zetTeamrolInDb,
   werkLidgegevensBij,
   wisInsights as wisInsightsInDb,
 } from "./opslag";
@@ -80,6 +83,7 @@ export function AppProvider({ children }) {
   const [profiel, setProfiel] = useState(null);
   const [gegevensKlaar, setGegevensKlaar] = useState(false);
   const [voorstellen, setVoorstellen] = useState([]);
+  const [mijnRollen, setMijnRollen] = useState({});
   const [teamOverzicht, setTeamOverzicht] = useState({
     team: null,
     leden: [],
@@ -208,19 +212,26 @@ function terugkeeradres() {
 
     // Staat er ergens een profielvoorstel van een facilitator klaar? Dat halen
     // we op zodat de app het kan tonen; overnemen doet de gebruiker zelf.
-    const openstaand = (
-      await Promise.all(
-        ((doc && doc.lidmaatschappen) || []).map((l) =>
+    const lidmaatschappenUitDoc = (doc && doc.lidmaatschappen) || [];
+
+    const [openstaandeVoorstellen, rollen] = await Promise.all([
+      Promise.all(
+        lidmaatschappenUitDoc.map((l) =>
           haalVoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => null)
         )
-      )
-    ).filter(Boolean);
+      ),
+      // Je rol per team; zie haalEigenRollen. Nodig om te weten in welke teams
+      // je meedoet en welke je alleen begeleidt.
+      haalEigenRollen(uid, lidmaatschappenUitDoc).catch(() => ({})),
+    ]);
+    const openstaand = openstaandeVoorstellen.filter(Boolean);
 
     setGebruikerDoc(doc);
     setKenmerken(eigenKenmerken);
     setHandleiding(eigenHandleiding);
     setProfiel(eigenProfiel);
     setVoorstellen(openstaand);
+    setMijnRollen(rollen);
     setGegevensKlaar(true);
     return doc;
   }, []);
@@ -242,6 +253,23 @@ function terugkeeradres() {
     );
     return gevonden || lidmaatschappen[0];
   }, [lidmaatschappen, actiefTeamSleutel]);
+
+  // Begeleid je een team, dan doe je er zelf niet aan mee: je hoort niet tussen
+  // de teamgenoten en de app vraagt je niet je profiel met die klant te delen.
+  // De rol staat in het ledendocument — dezelfde plek waar de securityregels
+  // naar kijken — en wordt hier één keer per team afgeleid, zodat elk scherm
+  // hetzelfde zegt. Ook voor teams waar je nu niet in werkt: op je profiel
+  // staat een vinkje per team, en daar hoort een team dat je begeleidt niet bij.
+  const begeleideTeams = useMemo(
+    () =>
+      Object.keys(mijnRollen || {}).filter((sleutel) => mijnRollen[sleutel] === BEGELEIDER),
+    [mijnRollen]
+  );
+
+  const ikBegeleid = useMemo(
+    () => Boolean(actiefTeam) && begeleideTeams.includes(`${actiefTeam.orgId}/${actiefTeam.teamId}`),
+    [actiefTeam, begeleideTeams]
+  );
 
   /**
    * Het team waar je nu in werkt: wie erin zitten en wat zij gedeeld hebben.
@@ -367,6 +395,56 @@ function terugkeeradres() {
     [gebruiker, handleiding, kenmerken, synchroniseerGedeeld]
   );
 
+  /**
+   * Zet de rol van iemand in het team waar je nu in werkt.
+   *
+   * Eén bijzonderheid: wie zichzelf op begeleiden zet, doet niet meer mee aan
+   * dit team. Dan hoort er ook niets meer van hem gedeeld te staan. Alleen de
+   * gedeelde kopie weggooien is niet genoeg — dan blijven de vinkjes op je
+   * eigen profiel staan en zegt het profielscherm dat je nog deelt terwijl je
+   * teamgenoten niets zien. De vinkjes gaan dus eerst weg, en de kopie volgt
+   * daar vanzelf uit.
+   */
+  const zetRol = useCallback(
+    async ({ uid, rol }) => {
+      if (!gebruiker || !actiefTeam) return;
+      const { orgId, teamId } = actiefTeam;
+      const sleutel = `${orgId}/${teamId}`;
+
+      if (rol === BEGELEIDER && uid === gebruiker.uid) {
+        const zonderDitTeam = (lijst) => (lijst || []).filter((s) => s !== sleutel);
+
+        const geraakteKenmerken = kenmerken
+          .filter((k) => (k.gedeeldMet || []).includes(sleutel))
+          .map((k) => ({ ...k, gedeeldMet: zonderDitTeam(k.gedeeldMet) }));
+
+        const geraakteSecties = Object.values(handleiding || {})
+          .filter((s) => s && (s.gedeeldMet || []).includes(sleutel))
+          .map((s) => ({ ...s, gedeeldMet: zonderDitTeam(s.gedeeldMet) }));
+
+        if (geraakteKenmerken.length > 0) await bewaarMeerKenmerken(geraakteKenmerken);
+        for (const sectie of geraakteSecties) await bewaarSectie(sectie);
+      }
+
+      await zetTeamrolInDb({ orgId, teamId, uid, rol });
+      // Je eigen rol staat ook in de kaart die bij het inloggen is opgehaald.
+      // Die hier meteen bijwerken scheelt een volledige herlaadronde — en zonder
+      // dit blijft het profielscherm een vinkje tonen voor een team dat je net
+      // bent gaan begeleiden.
+      if (uid === gebruiker.uid) setMijnRollen((r) => ({ ...r, [sleutel]: rol }));
+      await laadTeamOverzicht(actiefTeam);
+    },
+    [
+      gebruiker,
+      actiefTeam,
+      kenmerken,
+      handleiding,
+      bewaarMeerKenmerken,
+      bewaarSectie,
+      laadTeamOverzicht,
+    ]
+  );
+
   const bewaarInsights = useCallback(
     async (insights) => {
       if (!gebruiker) return;
@@ -443,7 +521,7 @@ function terugkeeradres() {
   );
 
   const maakTeam = useCallback(
-    async ({ organisatieNaam, teamNaam, mijnNaam }) => {
+    async ({ organisatieNaam, teamNaam, mijnNaam, begeleid = false }) => {
       if (!gebruiker) return null;
       if (mijnNaam && mijnNaam !== naam) await zetNaam(mijnNaam);
       const lidmaatschap = await maakOrganisatieMetTeam({
@@ -451,6 +529,7 @@ function terugkeeradres() {
         naam: mijnNaam || naam,
         organisatieNaam,
         teamNaam,
+        begeleid,
       });
       await laadGegevens(gebruiker.uid, gebruiker.email);
       kiesTeam(`${lidmaatschap.orgId}/${lidmaatschap.teamId}`);
@@ -517,6 +596,9 @@ function terugkeeradres() {
       uitnodigingscode,
       vergeetUitnodiging,
       teamOverzicht,
+      ikBegeleid,
+      begeleideTeams,
+      zetRol,
       herlaadTeam: () => laadTeamOverzicht(actiefTeam),
       voorstellen,
       neemInsightsOver,
@@ -543,7 +625,7 @@ function terugkeeradres() {
     }),
     [
       gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, functie, lidmaatschappen, actiefTeam,
-      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, laadTeamOverzicht, voorstellen, neemInsightsOver, neemVoorstelOver,
+      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, laadTeamOverzicht, voorstellen, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
       wisInsights, maakTeam, doeMee, verlaatTeam, verwijderTeam, verwijderAlles, laadGegevens,

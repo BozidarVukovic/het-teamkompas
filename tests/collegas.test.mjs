@@ -83,3 +83,50 @@ test("zonder gegevens is de lijst leeg in plaats van kapot", () => {
   assert.deepEqual(collegasVan({ leden: null, profielleden: null }), []);
   assert.equal(collegaInEenZin(null), "");
 });
+
+/* ----------------------------------------------------------- begeleiders */
+
+// Wie een team begeleidt, hoort niet bij de mensen waarmee je samenwerkt. Dit
+// is de reden dat de rol bestaat: een facilitator die een team opzet, kwam er
+// zelf tussen te staan — en de app vroeg hem zijn profiel met zijn klant te
+// delen.
+test("wie het team begeleidt staat niet in de lijst met collega's", () => {
+  const lijst = collegasVan({
+    leden: [
+      { uid: "bo", naam: "Bo", rol: "begeleider" },
+      { uid: "nikki", naam: "Nikki", rol: "lid" },
+      { uid: "eva", naam: "Eva", rol: "beheerder" },
+    ],
+    gedeeld: {},
+    eigenUid: "nikki",
+  });
+
+  assert.deepEqual(lijst.map((c) => c.uid), ["eva"]);
+});
+
+test("een beheerder staat er wel gewoon bij — die doet mee", () => {
+  const lijst = collegasVan({
+    leden: [
+      { uid: "bo", naam: "Bo", rol: "beheerder" },
+      { uid: "nikki", naam: "Nikki", rol: "lid" },
+    ],
+    gedeeld: {},
+    eigenUid: "nikki",
+  });
+
+  assert.deepEqual(lijst.map((c) => c.uid), ["bo"]);
+});
+
+test("een begeleider ziet de mensen van het team wel", () => {
+  const lijst = collegasVan({
+    leden: [
+      { uid: "bo", naam: "Bo", rol: "begeleider" },
+      { uid: "nikki", naam: "Nikki", rol: "lid" },
+      { uid: "eva", naam: "Eva", rol: "lid" },
+    ],
+    gedeeld: {},
+    eigenUid: "bo",
+  });
+
+  assert.deepEqual(lijst.map((c) => c.uid), ["eva", "nikki"]);
+});

@@ -70,7 +70,17 @@ function Keuze({ onKies }) {
 
 /* ------------------------------------------------------------- één kenmerk */
 
-function KenmerkKaart({ kenmerk, nummer, totaal, huidig, lidmaatschappen, onKies, onBevestig, onDelen }) {
+function KenmerkKaart({
+  kenmerk,
+  nummer,
+  totaal,
+  huidig,
+  lidmaatschappen,
+  deelbareTeams,
+  onKies,
+  onBevestig,
+  onDelen,
+}) {
   const gekozenOptie = huidig && huidig.waarde ? kenmerk.opties.find((o) => o.id === huidig.waarde) : null;
   const [open, setOpen] = useState(!gekozenOptie);
 
@@ -149,9 +159,9 @@ function KenmerkKaart({ kenmerk, nummer, totaal, huidig, lidmaatschappen, onKies
         </>
       )}
 
-      {gekozenOptie && huidig.bevestigd !== "nee" && lidmaatschappen.length > 0 && (
+      {gekozenOptie && huidig.bevestigd !== "nee" && deelbareTeams.length > 0 && (
         <div style={{ marginTop: 10 }}>
-          {lidmaatschappen.map((l) => {
+          {deelbareTeams.map((l) => {
             const s = `${l.orgId}/${l.teamId}`;
             return (
               <label className="tk-schakelaar" key={s} style={{ marginRight: 16 }}>
@@ -178,6 +188,8 @@ export default function MijnProfiel() {
     handleiding,
     profiel,
     actiefTeam,
+    ikBegeleid,
+    begeleideTeams,
     lidmaatschappen,
     bewaarKenmerk,
     bewaarMeerKenmerken,
@@ -232,7 +244,13 @@ export default function MijnProfiel() {
   // scherm. Stond hier een leeg object, dan berekenden twee dingen op één
   // pagina een andere voortgang — nu onzichtbaar, maar wachtend op de eerste
   // keer dat dit scherm iets over de handleiding toont.
-  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding });
+  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding, ikBegeleid });
+
+  // Een team dat je begeleidt hoort niet in de deel-vinkjes: je doet er niet
+  // aan mee, dus er valt niets met dat team te delen.
+  const deelbareTeams = (lidmaatschappen || []).filter(
+    (l) => !(begeleideTeams || []).includes(`${l.orgId}/${l.teamId}`)
+  );
   const onderdeel = doen ? voortgang.onderdelen.find((o) => o.id === doen) : null;
 
   const vraagtNogAandacht = (kenmerkId) =>
@@ -507,6 +525,7 @@ export default function MijnProfiel() {
                 kenmerk={k}
                 huidig={perId[k.id]}
                 lidmaatschappen={lidmaatschappen}
+                deelbareTeams={deelbareTeams}
                 nummer={nummerVan[k.id]}
                 totaal={KENMERKEN.length}
                 onKies={kiesWaarde}
@@ -518,7 +537,17 @@ export default function MijnProfiel() {
         );
       })}
 
-      {(!doen || doen === "gedeeld") && actiefTeam && bruikbaar.length > 0 && (
+      {ikBegeleid && actiefTeam && (
+        <div className="tk-kaart">
+          <h2>Je begeleidt {actiefTeam.teamNaam || "dit team"}</h2>
+          <p style={{ marginBottom: 0 }}>
+            Je doet zelf niet mee in dit team, dus je deelt er niets mee. Je profiel blijft
+            gewoon van jou — en in teams waar je wél aan meedoet, kun je het delen zoals altijd.
+          </p>
+        </div>
+      )}
+
+      {!ikBegeleid && (!doen || doen === "gedeeld") && actiefTeam && bruikbaar.length > 0 && (
         <div className="tk-kaart">
           <h2>Klaar? Deel het met {actiefTeam.teamNaam || "je team"}</h2>
           <p>

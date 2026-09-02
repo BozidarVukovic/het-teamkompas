@@ -126,7 +126,13 @@ function Sectie({ sectie, opgeslagen, concept, uitProfiel, lidmaatschappen, bewa
 }
 
 export default function MijnHandleiding() {
-  const { handleiding, kenmerken, lidmaatschappen, bewaarSectie, profiel } = useApp();
+  const { handleiding, kenmerken, lidmaatschappen, begeleideTeams, bewaarSectie, profiel } = useApp();
+
+  // Een team dat je begeleidt hoort niet bij de teams waarmee je iets deelt:
+  // je doet er zelf niet aan mee.
+  const deelbareTeams = (lidmaatschappen || []).filter(
+    (l) => !(begeleideTeams || []).includes(`${l.orgId}/${l.teamId}`)
+  );
   const uitProfiel = (profiel && profiel.insightsTeksten) || {};
 
   const waarden = useMemo(() => bepaalWaarden(kenmerken), [kenmerken]);
@@ -146,7 +152,7 @@ export default function MijnHandleiding() {
           opgeslagen={handleiding[s.id]}
           concept={conceptVoorSectie(s.id, waarden)}
           uitProfiel={uitProfiel[s.id]}
-          lidmaatschappen={lidmaatschappen}
+          lidmaatschappen={deelbareTeams}
           bewaar={bewaarSectie}
         />
       ))}

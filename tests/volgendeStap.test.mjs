@@ -185,3 +185,60 @@ test("toegevoegde profielen tellen mee in het aantal teamgenoten", () => {
   });
   assert.equal(stap.id, "klaar");
 });
+
+/* ----------------------------------------------------------- begeleiden */
+
+// Een begeleider hoort niet te lezen "deel het met je team" over een team waar
+// hij zelf niet in zit. Dat stond er wel, en het was de aanleiding voor de rol.
+test("een begeleider wordt niet gevraagd zijn profiel te delen", () => {
+  const stap = bepaalVolgendeStap({
+    kenmerken: [],
+    actiefTeam: { orgId: "o", teamId: "t", teamNaam: "HR Beleid" },
+    leden: [{ uid: "bo", rol: "begeleider" }],
+    eigenUid: "bo",
+    ikBegeleid: true,
+    teamcode: "ABCD-1234",
+  });
+
+  assert.equal(stap.id, "team-klaarzetten");
+  assert.match(stap.kop, /HR Beleid/);
+  assert.doesNotMatch(stap.uitleg, /deel/i);
+});
+
+test("een begeleider met mensen die nog niets deelden, wacht", () => {
+  const stap = bepaalVolgendeStap({
+    kenmerken: [],
+    actiefTeam: { orgId: "o", teamId: "t", teamNaam: "HR Beleid" },
+    leden: [{ uid: "bo", rol: "begeleider" }, { uid: "nikki", rol: "lid" }],
+    eigenUid: "bo",
+    ikBegeleid: true,
+  });
+
+  assert.equal(stap.id, "wachten");
+});
+
+test("een begeleider met een gevuld team is klaar om voor te bereiden", () => {
+  const stap = bepaalVolgendeStap({
+    kenmerken: [],
+    actiefTeam: { orgId: "o", teamId: "t", teamNaam: "HR Beleid" },
+    leden: [{ uid: "bo", rol: "begeleider" }, { uid: "nikki", rol: "lid" }],
+    gedeeldPerUid: { nikki: { kenmerken: [] } },
+    eigenUid: "bo",
+    ikBegeleid: true,
+  });
+
+  assert.equal(stap.id, "klaar");
+  assert.equal(stap.naar, "/app/samenwerken");
+});
+
+test("een begeleider telt voor de anderen niet als teamgenoot", () => {
+  // Voor Nikki is Bo geen collega, dus dit team voelt leeg — en dat klopt.
+  const stap = bepaalVolgendeStap({
+    kenmerken: [kenmerk("tempo", true)],
+    actiefTeam: TEAM,
+    leden: [{ uid: "bo", rol: "begeleider" }, { uid: "nikki", rol: "lid" }],
+    eigenUid: "nikki",
+  });
+
+  assert.equal(stap.id, "uitnodigen");
+});

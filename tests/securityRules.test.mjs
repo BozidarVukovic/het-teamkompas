@@ -408,6 +408,98 @@ if (!draait) {
     await assertFails(getDoc(doc(anna(), "profielen/bram")));
   });
 
+  test("31. een begeleider mag het team beheren", async () => {
+    await zetKlaar();
+    await assertSucceeds(updateDoc(doc(cato(), padLid(TEAM_A, "cato")), { rol: "begeleider" }));
+
+    // Begeleiden is een andere plek in het team, geen minder recht: profielen
+    // toevoegen en voorstellen klaarzetten blijft gewoon mogelijk.
+    await assertSucceeds(
+      setDoc(doc(cato(), padProfiellid(TEAM_A, "p7")), {
+        naam: "Gast",
+        kenmerken: [],
+        toegevoegdDoor: "cato",
+      })
+    );
+    await assertSucceeds(
+      setDoc(doc(cato(), padVoorstel(TEAM_A, "anna")), { vanUid: "cato", teksten: {} })
+    );
+  });
+
+  test("32. een begeleider komt nog steeds niet bij andermans profiel", async () => {
+    await zetKlaar();
+    await assertSucceeds(updateDoc(doc(cato(), padLid(TEAM_A, "cato")), { rol: "begeleider" }));
+    await assertFails(getDoc(doc(cato(), "profielen/anna")));
+    await assertFails(getDoc(doc(cato(), "profielen/anna/kenmerken/tempo")));
+    await assertFails(getDoc(doc(cato(), "handleidingen/anna")));
+  });
+
+  test("33. een gewoon lid kan zichzelf ook geen begeleider maken", async () => {
+    await zetKlaar();
+    // Begeleider is een beheerrol; wie hem zelf kon pakken, kon het team
+    // overnemen langs de achterdeur.
+    await assertFails(updateDoc(doc(anna(), padLid(TEAM_A, "anna")), { rol: "begeleider" }));
+  });
+
+  test("34. met een teamcode treed je toe als lid, niet als beheerder", async () => {
+    await zetKlaar();
+    // De code is bedoeld om mee te doen. Wie hem heeft, hoort daarmee nog niet
+    // het team te kunnen beheren.
+    await assertFails(
+      setDoc(doc(bram(), padLid(TEAM_A, "bram2")), {
+        naam: "Bram",
+        rol: "beheerder",
+        code: "CODE-TEAM-A",
+      })
+    );
+    // Toetreden met de code mag wel, als lid.
+    await assertSucceeds(
+      setDoc(doc(dana(), padLid(TEAM_A, "dana")), {
+        naam: "Dana",
+        rol: "lid",
+        code: "CODE-TEAM-A",
+      })
+    );
+  });
+
+  test("35. je kunt jezelf niet tot beheerder van andermans team benoemen", async () => {
+    await zetKlaar();
+    // Dit was een gat, en een groot: de regel liet iedereen een ledendocument
+    // met rol "beheerder" wegschrijven onder een willekeurig team, zonder code
+    // en zonder uitnodiging. Daarmee kon je het beheer van een team van iemand
+    // anders overnemen en alles lezen wat daar gedeeld is. Nu moet je het team
+    // ook echt hebben aangemaakt.
+    await assertFails(
+      setDoc(doc(dana(), padLid(TEAM_A, "dana")), { naam: "Dana", rol: "beheerder" })
+    );
+    await assertFails(
+      setDoc(doc(dana(), padLid(TEAM_A, "dana")), { naam: "Dana", rol: "begeleider" })
+    );
+    // En daarna nog steeds niets van dat team kunnen lezen.
+    await assertFails(getDoc(doc(dana(), padGedeeld(TEAM_A, "anna"))));
+  });
+
+  test("36. wie het team aanmaakt, mag zichzelf wel beheerder of begeleider maken", async () => {
+    await zetKlaar();
+    await omgeving.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, `organisaties/${ORG}/teams/teamC`), {
+        naam: "Team C",
+        aangemaaktDoor: "dana",
+      });
+    });
+
+    const padC = `organisaties/${ORG}/teams/teamC/leden/dana`;
+    await assertSucceeds(setDoc(doc(dana(), padC), { naam: "Dana", rol: "begeleider" }));
+    // Maar iemand anders die het team niet aanmaakte, kan er niet in.
+    await assertFails(
+      setDoc(doc(bram(), `organisaties/${ORG}/teams/teamC/leden/bram`), {
+        naam: "Bram",
+        rol: "beheerder",
+      })
+    );
+  });
+
   test.after(async () => {
     await omgeving.cleanup();
   });

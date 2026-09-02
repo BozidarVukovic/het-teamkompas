@@ -33,8 +33,8 @@ function Regel({ naar, titel, uitleg, stand = null, klaar = false }) {
 }
 
 export default function Ik() {
-  const { naam, functie, gebruiker, kenmerken, actiefTeam, handleiding } = useApp();
-  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding });
+  const { naam, functie, gebruiker, kenmerken, actiefTeam, handleiding, ikBegeleid } = useApp();
+  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding, ikBegeleid });
   const handleidingKlaar = voortgang.handleidingSecties >= voortgang.handleidingVan;
 
   return (

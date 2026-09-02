@@ -32,6 +32,7 @@ export default function Welkom() {
   const [code, setCode] = useState(uitnodigingscode || "");
   const [organisatieNaam, setOrganisatieNaam] = useState("");
   const [teamNaam, setTeamNaam] = useState("");
+  const [begeleid, setBegeleid] = useState(false);
   const { bezig, melding, setMelding, voerUit, wisMelding } = useActie();
 
   const naamKlaar = mijnNaam.trim().length >= 2;
@@ -66,6 +67,7 @@ export default function Welkom() {
         organisatieNaam: organisatieNaam.trim(),
         teamNaam: teamNaam.trim(),
         mijnNaam: mijnNaam.trim(),
+        begeleid,
       });
       navigeer("/app", { replace: true });
     });
@@ -208,6 +210,24 @@ export default function Welkom() {
             placeholder="Naam van je team"
             required
           />
+
+          {/* Voor wie een team van een klant opzet. Zonder deze keuze komt de
+              begeleider zelf tussen de mensen van die klant te staan, en vraagt
+              de app hem zijn profiel met ze te delen. */}
+          <label className="tk-keuzevakje" style={{ marginTop: 16 }}>
+            <input
+              type="checkbox"
+              checked={begeleid}
+              onChange={(e) => setBegeleid(e.target.checked)}
+            />
+            <span>
+              Ik begeleid dit team en doe er zelf niet aan mee
+              <small>
+                Je beheert het team — uitnodigen, profielen toevoegen — maar je staat niet tussen
+                de teamgenoten en deelt hier zelf niets. Je kunt dit later omzetten.
+              </small>
+            </span>
+          </label>
           <div className="tk-knoppen" style={{ marginTop: 14 }}>
             <button
               className="tk-knop"

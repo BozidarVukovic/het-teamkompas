@@ -42,6 +42,7 @@ export default function VolgendeStap({ variant = "klein", verbergAls = null }) {
     kenmerken,
     actiefTeam,
     teamOverzicht,
+    ikBegeleid,
     bewaarMeerKenmerken,
   } = useApp();
 
@@ -56,6 +57,7 @@ export default function VolgendeStap({ variant = "klein", verbergAls = null }) {
     eigenUid: gebruiker && gebruiker.uid,
     teamcode: teamOverzicht.team && teamOverzicht.team.code,
     extraProfielen: (teamOverzicht.profielleden || []).length,
+    ikBegeleid,
   });
 
   // Op de pagina waar de stap toch al naartoe wijst, voegt hij niets toe.

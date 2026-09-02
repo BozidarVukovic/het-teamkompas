@@ -8,10 +8,16 @@
 // Eén plek, zodat het startscherm en "Samenwerken met..." dezelfde mensen in
 // dezelfde volgorde tonen. Stonden ze los, dan kon je op het ene scherm iemand
 // zien die op het andere ontbrak.
+//
+// Wie het team begeleidt staat er niet bij. Die is er om het team op te zetten,
+// niet om erin samen te werken — en hij deelt met dit team ook niets. Zonder
+// deze uitzondering staat de facilitator tussen de mensen van zijn klant.
+
+import { doetMee } from "./teamrollen.js";
 
 export function collegasVan({ leden = [], gedeeld = {}, profielleden = [], eigenUid = null } = {}) {
   const echt = (leden || [])
-    .filter((l) => l && l.uid && l.uid !== eigenUid)
+    .filter((l) => l && l.uid && l.uid !== eigenUid && doetMee(l))
     .map((l) => ({
       ...l,
       sleutel: l.uid,

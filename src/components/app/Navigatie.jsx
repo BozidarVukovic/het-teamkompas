@@ -54,8 +54,8 @@ const ICONEN = {
 
 export default function Navigatie() {
   const locatie = useLocation();
-  const { kenmerken, actiefTeam, handleiding } = useApp();
-  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding });
+  const { kenmerken, actiefTeam, handleiding, ikBegeleid } = useApp();
+  const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding, ikBegeleid });
 
   // Eén stipje bij "Ik" zolang je profiel nog niet af is. Geen getal, geen
   // uitroepteken: het wijst waar nog iets ligt zonder erop te hameren.
