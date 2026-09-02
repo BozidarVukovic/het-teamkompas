@@ -630,6 +630,69 @@ if (!draait) {
     await assertFails(getDoc(doc(gast(), padAfspraak(TEAM_A, "a6"))));
   });
 
+  /* ------------------------------------------------------------ experimenten */
+
+  test("47. een experiment is van jou alleen, ook voor je teamgenoten", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(anna(), "experimenten/x1"), { uid: "anna", actie: "Vraag eerst wat de ander al probeerde." })
+    );
+
+    // Bram zit met Anna in hetzelfde team. Dat geeft geen weg naar wat zij met
+    // zichzelf heeft afgesproken.
+    await assertFails(getDoc(doc(bram(), "experimenten/x1")));
+    await assertFails(setDoc(doc(bram(), "experimenten/x2"), { uid: "anna", actie: "iets" }));
+    await assertFails(getDoc(doc(gast(), "experimenten/x1")));
+  });
+
+  test("48. ook een beheerder ziet niet wat iemand aan zichzelf probeert te veranderen", async () => {
+    await zetKlaar();
+    await assertSucceeds(setDoc(doc(anna(), "experimenten/x3"), { uid: "anna", actie: "Wacht drie tellen." }));
+
+    await assertFails(getDoc(doc(cato(), "experimenten/x3")));
+    await assertFails(getDocs(collection(cato(), "experimenten")));
+  });
+
+  test("49. de makers mogen hier evenmin bij, anders dan bij adviessessies", async () => {
+    await zetKlaar();
+    await assertSucceeds(setDoc(doc(anna(), "experimenten/x4"), { uid: "anna", actie: "Zeg het hardop." }));
+
+    // Bij een adviessessie staat alleen dát er advies is gevraagd. Hier staat
+    // wat iemand aan zichzelf probeert te veranderen en wat daarvan terechtkwam.
+    // Dat is niets voor een dashboard.
+    await assertFails(getDoc(doc(maker(), "experimenten/x4")));
+    await assertFails(getDocs(collection(maker(), "experimenten")));
+  });
+
+  test("50. een experiment zonder actie komt er niet in", async () => {
+    await zetKlaar();
+    await assertFails(setDoc(doc(anna(), "experimenten/x5"), { uid: "anna", actie: "" }));
+    await assertFails(setDoc(doc(anna(), "experimenten/x6"), { uid: "anna" }));
+    await assertFails(
+      setDoc(doc(anna(), "experimenten/x7"), { uid: "anna", actie: "a".repeat(401) })
+    );
+  });
+
+  test("51. je kunt je eigen experimenten opvragen, terugblikken en wissen", async () => {
+    await zetKlaar();
+    await assertSucceeds(setDoc(doc(anna(), "experimenten/x8"), { uid: "anna", actie: "Stel één vraag meer." }));
+    await assertSucceeds(setDoc(doc(bram(), "experimenten/x9"), { uid: "bram", actie: "Vat het samen." }));
+
+    // Met een filter op je eigen uid mag het; zonder filter of met dat van een
+    // ander niet.
+    await assertSucceeds(getDocs(query(collection(anna(), "experimenten"), where("uid", "==", "anna"))));
+    await assertFails(getDocs(collection(anna(), "experimenten")));
+    await assertFails(getDocs(query(collection(anna(), "experimenten"), where("uid", "==", "bram"))));
+
+    // Terugblikken op je eigen experiment kan; het aan een ander toeschrijven niet.
+    await assertSucceeds(updateDoc(doc(anna(), "experimenten/x8"), { uitkomst: "hou-ik-vast", tekst: "Hielp." }));
+    await assertFails(updateDoc(doc(anna(), "experimenten/x8"), { uid: "bram" }));
+    await assertFails(updateDoc(doc(anna(), "experimenten/x9"), { uitkomst: "past-niet" }));
+
+    await assertFails(deleteDoc(doc(anna(), "experimenten/x9")));
+    await assertSucceeds(deleteDoc(doc(anna(), "experimenten/x8")));
+  });
+
   test.after(async () => {
     await omgeving.cleanup();
   });

@@ -29,9 +29,12 @@ import {
   bewaarKenmerken as bewaarKenmerkenInDb,
   bewaarSectie as bewaarSectieInDb,
   bewaarAfspraak as bewaarAfspraakInDb,
+  blikTerug as blikTerugInDb,
   haalAfspraken,
+  haalEigenExperimenten,
   haalEigenRollen,
   haalGebruiker,
+  startExperiment as startExperimentInDb,
   verwijderAfspraak as verwijderAfspraakInDb,
   haalGedeeldVanTeam,
   haalProfielleden,
@@ -93,6 +96,7 @@ export function AppProvider({ children }) {
   const [voorstellen, setVoorstellen] = useState([]);
   const [mijnRollen, setMijnRollen] = useState({});
   const [tekstvoorstellen, setTekstvoorstellen] = useState([]);
+  const [experimenten, setExperimenten] = useState([]);
   const [teamOverzicht, setTeamOverzicht] = useState({
     team: null,
     leden: [],
@@ -238,12 +242,15 @@ function terugkeeradres() {
     // we op zodat de app het kan tonen; overnemen doet de gebruiker zelf.
     const lidmaatschappenUitDoc = (doc && doc.lidmaatschappen) || [];
 
-    const [openstaandeVoorstellen, openstaandeTeksten, rollen] = await Promise.all([
+    const [openstaandeVoorstellen, eigenExperimenten, openstaandeTeksten, rollen] = await Promise.all([
       Promise.all(
         lidmaatschappenUitDoc.map((l) =>
           haalVoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => null)
         )
       ),
+      // Wat je aan jezelf probeert te veranderen. Strikt van jou: niet zichtbaar
+      // voor je team en ook niet voor de makers.
+      haalEigenExperimenten(uid).catch(() => []),
       // Tekst die een facilitator uit een teamsessie voor je klaarzette. Staat
       // los van het profielvoorstel: dat komt uit een Insights-PDF en verdwijnt
       // zodra je het overneemt, dit zijn je eigen woorden en blijft staan tot
@@ -265,6 +272,7 @@ function terugkeeradres() {
     setProfiel(eigenProfiel);
     setVoorstellen(openstaand);
     setTekstvoorstellen(openstaandeTeksten.filter(Boolean));
+    setExperimenten(eigenExperimenten);
     setMijnRollen(rollen);
     setGegevensKlaar(true);
     return doc;
@@ -542,6 +550,36 @@ function terugkeeradres() {
     [actiefTeam, laadTeamOverzicht]
   );
 
+  /**
+   * Een kleine actie dertig dagen proberen.
+   *
+   * Waar het advies over ging slaan we niet op — geen naam, geen collega. Wat
+   * er blijft staan is de actie. Zie experimenten.js.
+   */
+  const startExperiment = useCallback(
+    async ({ actie, situatieId, situatieLabel }) => {
+      if (!gebruiker) return null;
+      const id = await startExperimentInDb({
+        uid: gebruiker.uid,
+        actie,
+        situatieId,
+        situatieLabel,
+      });
+      setExperimenten(await haalEigenExperimenten(gebruiker.uid).catch(() => experimenten));
+      return id;
+    },
+    [gebruiker, experimenten]
+  );
+
+  const blikTerug = useCallback(
+    async ({ id, uitkomst, tekst }) => {
+      if (!gebruiker) return;
+      await blikTerugInDb({ id, uitkomst, tekst });
+      setExperimenten(await haalEigenExperimenten(gebruiker.uid).catch(() => experimenten));
+    },
+    [gebruiker, experimenten]
+  );
+
   const bewaarInsights = useCallback(
     async (insights) => {
       if (!gebruiker) return;
@@ -698,6 +736,9 @@ function terugkeeradres() {
       zetRol,
       bewaarAfspraak,
       verwijderAfspraak,
+      experimenten,
+      startExperiment,
+      blikTerug,
       herlaadTeam: () => laadTeamOverzicht(actiefTeam),
       voorstellen,
       tekstvoorstellen,
@@ -726,7 +767,7 @@ function terugkeeradres() {
     }),
     [
       gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, functie, lidmaatschappen, actiefTeam,
-      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, bewaarAfspraak, verwijderAfspraak, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
+      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, bewaarAfspraak, verwijderAfspraak, experimenten, startExperiment, blikTerug, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
       wisInsights, maakTeam, doeMee, verlaatTeam, verwijderTeam, verwijderAlles, laadGegevens,

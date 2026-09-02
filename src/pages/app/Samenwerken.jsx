@@ -7,6 +7,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
+import { LOOPTIJD_DAGEN } from "../../lib/app/experimenten";
 import { beoordeelAdviessessie, logAdviessessie } from "../../lib/app/opslag";
 import { vraagAdvies, vraagDuoadvies, vraagGroepsadvies } from "../../lib/app/advies/adviesService";
 import { situatiesPerGroep } from "../../data/app/situaties";
@@ -96,7 +97,7 @@ function DuoInhoud({ advies }) {
 }
 
 export default function Samenwerken() {
-  const { gebruiker, actiefTeam, kenmerken, teamOverzicht, ikBegeleid } = useApp();
+  const { gebruiker, actiefTeam, kenmerken, teamOverzicht, ikBegeleid, startExperiment } = useApp();
   const [zoek] = useSearchParams();
 
   // De teamgegevens staan al in de context; die nog een keer ophalen leverde
@@ -112,6 +113,12 @@ export default function Samenwerken() {
   const [beoordeeld, setBeoordeeld] = useState(null);
   const [toelichting, setToelichting] = useState("");
   const [toelichtingVerstuurd, setToelichtingVerstuurd] = useState(false);
+
+  // Een advies lezen duurt een minuut; er iets mee doen duurt langer. Wie de
+  // kleine actie wil vasthouden, zegt dat hier — en krijgt er over dertig
+  // dagen één keer een vraag over terug.
+  const [experimentGestart, setExperimentGestart] = useState(false);
+  const [bezigMetExperiment, setBezigMetExperiment] = useState(false);
 
 
   // Echte teamgenoten en de profielen die een beheerder heeft toegevoegd staan
@@ -209,6 +216,7 @@ export default function Samenwerken() {
 
       setAdvies(uitkomst);
       setBeoordeeld(null);
+      setExperimentGestart(false);
       try {
         const id = await logAdviessessie({
           uid: gebruiker.uid,
@@ -222,6 +230,24 @@ export default function Samenwerken() {
     },
     [geselecteerd, isDuo, isGroep, kenmerken, gebruiker, ikBegeleid]
   );
+
+  // Wat er wordt opgeslagen is de zin zelf, plus welke situatie het was. Niet
+  // over wie het ging: dat is precies zo geregeld als bij een adviessessie.
+  const houdVast = async () => {
+    if (!advies || !advies.actie || bezigMetExperiment) return;
+    setBezigMetExperiment(true);
+    try {
+      await startExperiment({
+        actie: advies.actie,
+        situatieId,
+        situatieLabel: advies.situatie ? advies.situatie.label : "",
+      });
+      setExperimentGestart(true);
+    } catch {
+      /* niet kunnen opslaan mag het advies niet in de weg zitten */
+    }
+    setBezigMetExperiment(false);
+  };
 
   const kiesSituatie = (id) => {
     setSituatieId(id);
@@ -501,6 +527,25 @@ export default function Samenwerken() {
               <div className="tk-advies-blok">
                 <h3>Kleine actie</h3>
                 <p style={{ margin: 0, lineHeight: 1.7 }}>{advies.actie}</p>
+
+                {/* Geen doel en geen teller: je zegt alleen dat je het gaat
+                    proberen. Over dertig dagen vraagt de app er één keer naar. */}
+                {experimentGestart ? (
+                  <p className="tk-fijn" style={{ margin: "12px 0 0" }}>
+                    <span aria-hidden="true">✓</span> Je houdt dit {LOOPTIJD_DAGEN} dagen vast. Het
+                    staat bij Ik; alleen jij ziet het.
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    className="tk-knop tk-knop-rand tk-knop-klein"
+                    style={{ marginTop: 12 }}
+                    disabled={bezigMetExperiment}
+                    onClick={houdVast}
+                  >
+                    {bezigMetExperiment ? "Bezig..." : `Dit ga ik ${LOOPTIJD_DAGEN} dagen proberen`}
+                  </button>
+                )}
               </div>
             )}
 

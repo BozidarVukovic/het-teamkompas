@@ -301,6 +301,27 @@ service cloud.firestore {
       allow list: if isAdmin() || (ingelogd() && resource.data.uid == request.auth.uid);
     }
 
+    // Een experiment: één kleine actie die je dertig dagen probeert.
+    //
+    // Strikt van jou, en van niemand anders — ook niet van de makers. Een
+    // adviessessie mogen zij opgeteld inzien omdat daar niets persoonlijks in
+    // staat; hier staat wel iets persoonlijks: wat jij aan jezelf probeert te
+    // veranderen en wat je daarvan vond. Zodra iemand daarover meekijkt wordt
+    // een experiment een prestatie, en dan doet niemand het meer eerlijk.
+    match /experimenten/{experimentId} {
+      allow get: if ingelogd() && resource.data.uid == request.auth.uid;
+      allow list: if ingelogd() && resource.data.uid == request.auth.uid;
+      allow create: if ingelogd()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.actie is string
+        && request.resource.data.actie.size() > 0
+        && request.resource.data.actie.size() <= 400;
+      allow update: if ingelogd()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == resource.data.uid;
+      allow delete: if ingelogd() && resource.data.uid == request.auth.uid;
+    }
+
     // Alles wat niet expliciet hierboven staat, blijft dicht
     match /{document=**} {
       allow read, write: if false;

@@ -8,11 +8,20 @@
 // regel over. Onderaan de drie onderdelen als lijst, met per onderdeel in één
 // oogopslag waar je staat.
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import Voortgang from "../../components/app/Voortgang";
 import { bepaalVoortgang } from "../../lib/app/voortgang";
 import { initialen } from "../../lib/app/naam";
+import {
+  LOOPTIJD_DAGEN,
+  MAX_TERUGBLIK,
+  UITKOMSTEN,
+  isTerugblikKlaar,
+  sorteerExperimenten,
+  standInEenZin,
+} from "../../lib/app/experimenten";
 
 function Regel({ naar, titel, uitleg, stand = null, klaar = false }) {
   return (
@@ -32,8 +41,119 @@ function Regel({ naar, titel, uitleg, stand = null, klaar = false }) {
   );
 }
 
+/**
+ * Eén experiment: wat je gaat proberen, hoe lang het loopt, en na afloop de
+ * ene vraag die erbij hoort.
+ *
+ * Er staat met opzet geen teller bij en geen "je bent er nog niet". De app
+ * weet niet wat je gedaan hebt, en gaat daar ook niet naar raden.
+ */
+function Experiment({ experiment, opTerugblik }) {
+  const [open, setOpen] = useState(false);
+  const [uitkomst, setUitkomst] = useState(null);
+  const [tekst, setTekst] = useState("");
+  const [bezig, setBezig] = useState(false);
+
+  const klaar = isTerugblikKlaar(experiment);
+  const uitkomstLabel = (UITKOMSTEN.find((u) => u.id === experiment.uitkomst) || {}).label;
+
+  const bewaar = async () => {
+    if (!uitkomst || bezig) return;
+    setBezig(true);
+    try {
+      await opTerugblik({ id: experiment.id, uitkomst, tekst });
+    } catch {
+      /* lukt het niet, dan blijft het experiment gewoon staan */
+    }
+    setBezig(false);
+  };
+
+  return (
+    <div className="tk-kaart">
+      <p style={{ margin: 0, fontSize: 16.5, lineHeight: 1.6 }}>{experiment.actie}</p>
+      <p className="tk-fijn" style={{ margin: "8px 0 0" }}>
+        {standInEenZin(experiment)}
+        {experiment.situatieLabel ? ` · ${experiment.situatieLabel}` : ""}
+      </p>
+
+      {experiment.terugblikOp && uitkomstLabel && (
+        <p style={{ marginBottom: 0 }}>
+          <strong>{uitkomstLabel}</strong>
+          {experiment.tekst ? ` — ${experiment.tekst}` : ""}
+        </p>
+      )}
+
+      {klaar && !open && (
+        <button
+          type="button"
+          className="tk-knop tk-knop-klein"
+          style={{ marginTop: 12 }}
+          onClick={() => setOpen(true)}
+        >
+          Terugblikken
+        </button>
+      )}
+
+      {klaar && open && (
+        <div style={{ marginTop: 14 }}>
+          <p className="tk-label">Wat doe je hiermee?</p>
+          <div className="tk-keuzes">
+            {UITKOMSTEN.map((u) => (
+              <button
+                key={u.id}
+                type="button"
+                className={`tk-keuze${uitkomst === u.id ? " gekozen" : ""}`}
+                aria-pressed={uitkomst === u.id}
+                onClick={() => setUitkomst(u.id)}
+              >
+                <span>{u.label}</span>
+              </button>
+            ))}
+          </div>
+
+          <label className="tk-label" htmlFor="tk-terugblik" style={{ marginTop: 14, display: "block" }}>
+            Wat merkte je?{" "}
+            <span style={{ fontWeight: 500, textTransform: "none", letterSpacing: 0 }}>(optioneel)</span>
+          </label>
+          <textarea
+            id="tk-terugblik"
+            className="tk-tekstvak"
+            rows={3}
+            maxLength={MAX_TERUGBLIK}
+            value={tekst}
+            onChange={(e) => setTekst(e.target.value)}
+            placeholder="Bijvoorbeeld: het werkte vooral als ik het aan het begin van een overleg deed."
+          />
+
+          <div className="tk-knoppen" style={{ marginTop: 10 }}>
+            <button
+              type="button"
+              className="tk-knop tk-knop-klein"
+              disabled={!uitkomst || bezig}
+              onClick={bewaar}
+            >
+              {bezig ? "Bezig..." : "Bewaren"}
+            </button>
+            <button
+              type="button"
+              className="tk-knop tk-knop-rand tk-knop-klein"
+              onClick={() => setOpen(false)}
+            >
+              Later
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Ik() {
-  const { naam, functie, gebruiker, kenmerken, actiefTeam, handleiding, ikBegeleid } = useApp();
+  const {
+    naam, functie, gebruiker, kenmerken, actiefTeam, handleiding, ikBegeleid,
+    experimenten, blikTerug,
+  } = useApp();
+  const rij = sorteerExperimenten(experimenten);
   const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding, ikBegeleid });
   const handleidingKlaar = voortgang.handleidingSecties >= voortgang.handleidingVan;
 
@@ -99,6 +219,19 @@ export default function Ik() {
           />
         </div>
       </section>
+
+      {rij.length > 0 && (
+        <section className="tk-groep">
+          <h2 className="tk-groep-kop">Wat ik probeer</h2>
+          <p className="tk-fijn" style={{ margin: "0 0 12px" }}>
+            Kleine acties uit een advies die je {LOOPTIJD_DAGEN} dagen vasthoudt. Ze staan niet in
+            je team en er wordt niets bijgehouden behalve wat je zelf schrijft.
+          </p>
+          {rij.map((e) => (
+            <Experiment key={e.id} experiment={e} opTerugblik={blikTerug} />
+          ))}
+        </section>
+      )}
 
       <p className="tk-fijn" style={{ marginBottom: 40 }}>
         Je teamgenoten zien alleen wat je zelf hebt gedeeld. Wat je invult maar niet deelt, blijft

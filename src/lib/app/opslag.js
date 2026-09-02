@@ -7,6 +7,7 @@
 // intrekken is een verwijderactie.
 
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -25,6 +26,7 @@ import { SECTIES, sectie } from "../../data/app/handleiding";
 import { haalVoorstel, verwijderHandleidingvoorstel, verwijderVoorstel } from "./voorstellen";
 import { stelGedeeldeKopieSamen } from "./gedeeldeKopie";
 import { schoneAfspraak } from "./afspraken";
+import { schoneTerugblik } from "./experimenten";
 
 /* ------------------------------------------------------------------ paden */
 
@@ -625,6 +627,50 @@ export async function beoordeelAdviessessie(sessieId, bruikbaar, toelichting) {
 }
 
 /** De adviessessies van één persoon. Nodig om ze te kunnen meenemen en wissen. */
+/* --------------------------------------------------------- experimenten */
+
+/**
+ * Eén kleine actie die je dertig dagen probeert.
+ *
+ * Strikt van jou. Niet zichtbaar voor je team en ook niet voor de makers: zodra
+ * iemand meekijkt bij wat je aan jezelf probeert te veranderen, wordt het een
+ * prestatie in plaats van een experiment. Zie experimenten.js.
+ *
+ * Waar het advies over ging slaan we niet op — geen naam, geen collega. Wat er
+ * blijft staan is de actie en wat jij ervan vond.
+ */
+export async function startExperiment({ uid, actie, situatieId, situatieLabel }) {
+  const schoon = String(actie || "").trim().slice(0, 400);
+  if (!schoon) throw new Error("Een experiment heeft een actie nodig.");
+
+  const ref = await addDoc(collection(db, "experimenten"), {
+    uid,
+    actie: schoon,
+    situatieId: situatieId || null,
+    situatieLabel: situatieLabel || "",
+    gestartOp: serverTimestamp(),
+    terugblikOp: null,
+  });
+  return ref.id;
+}
+
+export async function haalEigenExperimenten(uid) {
+  const snap = await getDocs(query(collection(db, "experimenten"), where("uid", "==", uid)));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function blikTerug({ id, uitkomst, tekst }) {
+  const schoon = schoneTerugblik({ uitkomst, tekst });
+  await updateDoc(doc(db, "experimenten", id), {
+    ...schoon,
+    terugblikOp: serverTimestamp(),
+  });
+}
+
+export async function verwijderExperiment(id) {
+  await deleteDoc(doc(db, "experimenten", id));
+}
+
 export async function haalEigenAdviessessies(uid) {
   const snap = await getDocs(query(collection(db, "adviessessies"), where("uid", "==", uid)));
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -656,7 +702,7 @@ export async function haalAdviessessies() {
 
 /** Alles wat van deze gebruiker is opgeslagen, als leesbaar object. */
 export async function exporteerEigenGegevens(uid) {
-  const [gebruiker, profiel, kenmerken, handleiding, adviessessies] = await Promise.all([
+  const [gebruiker, profiel, kenmerken, handleiding, adviessessies, experimenten] = await Promise.all([
     haalGebruiker(uid),
     haalProfiel(uid),
     haalKenmerken(uid),
@@ -664,6 +710,7 @@ export async function exporteerEigenGegevens(uid) {
     // Hier staat je uid in, dus het hoort in je export. Zonder dit klopte de
     // zin "hieronder staat precies wat er van je bewaard wordt" niet.
     haalEigenAdviessessies(uid).catch(() => []),
+    haalEigenExperimenten(uid).catch(() => []),
   ]);
 
   const gedeeld = {};
@@ -688,6 +735,7 @@ export async function exporteerEigenGegevens(uid) {
     gedeeldMetTeams: gedeeld,
     profielvoorstellen: voorstellen,
     adviessessies,
+    experimenten,
   };
 }
 
@@ -708,18 +756,21 @@ export async function verwijderEigenGegevens(uid) {
     await verwijderHandleidingvoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => {});
   }
 
-  const [kenmerkenSnap, sectiesSnap, sessies] = await Promise.all([
+  const [kenmerkenSnap, sectiesSnap, sessies, experimenten] = await Promise.all([
     getDocs(kenmerkenCol(uid)),
     getDocs(sectiesCol(uid)),
     // Hier staat je uid in. Lieten we ze staan, dan bleef er na "alles
     // verwijderen" een spoor achter dat je zelf niet kunt vinden.
     haalEigenAdviessessies(uid).catch(() => []),
+    // Wat je aan jezelf probeerde te veranderen hoort net zo goed weg te gaan.
+    haalEigenExperimenten(uid).catch(() => []),
   ]);
 
   const batch = writeBatch(db);
   kenmerkenSnap.docs.forEach((d) => batch.delete(d.ref));
   sectiesSnap.docs.forEach((d) => batch.delete(d.ref));
   sessies.forEach((s) => batch.delete(doc(db, "adviessessies", s.id)));
+  experimenten.forEach((e) => batch.delete(doc(db, "experimenten", e.id)));
   batch.delete(profielRef(uid));
   batch.delete(handleidingRef(uid));
   batch.delete(gebruikerRef(uid));
