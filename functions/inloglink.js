@@ -86,6 +86,28 @@ async function magVersturen(db, email) {
   });
 }
 
+/**
+ * Zet de link op ons eigen domein.
+ *
+ * Firebase maakt een link naar mijn-teamkompas-6de84.firebaseapp.com. Die mail
+ * komt dan van auth.mijnteamkompas.nl maar wijst naar een heel ander domein —
+ * en firebaseapp.com is een gedeeld domein waar veel phishing vandaan komt. Dat
+ * is precies het patroon waar spamfilters op letten: afzender en bestemming die
+ * niet bij elkaar horen. Voor de ontvanger ziet het er ook niet uit als iets van
+ * ons.
+ *
+ * De ontvangende kant heeft dat domein niet nodig. signInWithEmailLink() in de
+ * browser leest alleen `mode` en `oobCode` uit de adresbalk en wisselt die bij
+ * Firebase in; welke host ervoor staat doet er niet toe. Dus houden we de hele
+ * queryreeks en zetten er ons eigen adres voor.
+ */
+function eigenLink(firebaseLink, terug) {
+  const bron = new URL(firebaseLink);
+  const doel = new URL(terug);
+  doel.search = bron.search;
+  return doel.toString();
+}
+
 /** De mail zelf. Nederlands, "je", en één ding om te doen. */
 function mailtekst({ link, teamNaam }) {
   const over = teamNaam
@@ -167,10 +189,11 @@ exports.stuurInloglink = onCall({ secrets: [RESEND_API_KEY] }, async (request) =
   const gevraagd = String((request.data && request.data.terug) || "");
   const terug = TERUG_TOEGESTAAN.includes(gevraagd) ? gevraagd : TERUG_STANDAARD;
 
-  const link = await admin.auth().generateSignInWithEmailLink(email, {
+  const vanFirebase = await admin.auth().generateSignInWithEmailLink(email, {
     url: terug,
     handleCodeInApp: true,
   });
+  const link = eigenLink(vanFirebase, terug);
 
   const { html, plat } = mailtekst({ link, teamNaam });
 
