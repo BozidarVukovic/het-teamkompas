@@ -27,6 +27,7 @@ import { haalVoorstel, verwijderHandleidingvoorstel, verwijderVoorstel } from ".
 import { stelGedeeldeKopieSamen } from "./gedeeldeKopie";
 import { schoneAfspraak } from "./afspraken";
 import { schoneTerugblik } from "./experimenten";
+import { schoneReflectie } from "./reflecties";
 
 /* ------------------------------------------------------------------ paden */
 
@@ -671,6 +672,37 @@ export async function verwijderExperiment(id) {
   await deleteDoc(doc(db, "experimenten", id));
 }
 
+/**
+ * Terugkijken op een gesprek.
+ *
+ * Wat erin gaat: bij welke situatie het was, hoe je erop terugkijkt, en wat je
+ * er zelf over schrijft. Wat er niet in gaat: met wie het gesprek was. Dat is
+ * dezelfde grens als bij een adviessessie, en de app kent die persoon hier ook
+ * niet — bij het loggen van een sessie wordt hij al niet meegegeven.
+ */
+export async function bewaarReflectie({ uid, sessieId, situatieId, situatieLabel, terugblik, tekst }) {
+  const schoon = schoneReflectie({ terugblik, tekst });
+  if (!schoon) throw new Error("Kies eerst hoe je erop terugkijkt.");
+  const ref = await addDoc(collection(db, "reflecties"), {
+    uid,
+    sessieId: sessieId || null,
+    situatieId: situatieId || null,
+    situatieLabel: situatieLabel || "",
+    ...schoon,
+    gemaaktOp: serverTimestamp(),
+  });
+  return ref.id;
+}
+
+export async function haalEigenReflecties(uid) {
+  const snap = await getDocs(query(collection(db, "reflecties"), where("uid", "==", uid)));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function verwijderReflectie(id) {
+  await deleteDoc(doc(db, "reflecties", id));
+}
+
 export async function haalEigenAdviessessies(uid) {
   const snap = await getDocs(query(collection(db, "adviessessies"), where("uid", "==", uid)));
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -702,7 +734,8 @@ export async function haalAdviessessies() {
 
 /** Alles wat van deze gebruiker is opgeslagen, als leesbaar object. */
 export async function exporteerEigenGegevens(uid) {
-  const [gebruiker, profiel, kenmerken, handleiding, adviessessies, experimenten] = await Promise.all([
+  const [gebruiker, profiel, kenmerken, handleiding, adviessessies, experimenten, reflecties] =
+    await Promise.all([
     haalGebruiker(uid),
     haalProfiel(uid),
     haalKenmerken(uid),
@@ -711,6 +744,7 @@ export async function exporteerEigenGegevens(uid) {
     // zin "hieronder staat precies wat er van je bewaard wordt" niet.
     haalEigenAdviessessies(uid).catch(() => []),
     haalEigenExperimenten(uid).catch(() => []),
+    haalEigenReflecties(uid).catch(() => []),
   ]);
 
   const gedeeld = {};
@@ -736,6 +770,7 @@ export async function exporteerEigenGegevens(uid) {
     profielvoorstellen: voorstellen,
     adviessessies,
     experimenten,
+    reflecties,
   };
 }
 
@@ -756,7 +791,7 @@ export async function verwijderEigenGegevens(uid) {
     await verwijderHandleidingvoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => {});
   }
 
-  const [kenmerkenSnap, sectiesSnap, sessies, experimenten] = await Promise.all([
+  const [kenmerkenSnap, sectiesSnap, sessies, experimenten, reflecties] = await Promise.all([
     getDocs(kenmerkenCol(uid)),
     getDocs(sectiesCol(uid)),
     // Hier staat je uid in. Lieten we ze staan, dan bleef er na "alles
@@ -764,6 +799,8 @@ export async function verwijderEigenGegevens(uid) {
     haalEigenAdviessessies(uid).catch(() => []),
     // Wat je aan jezelf probeerde te veranderen hoort net zo goed weg te gaan.
     haalEigenExperimenten(uid).catch(() => []),
+    // En hoe je op je gesprekken terugkeek.
+    haalEigenReflecties(uid).catch(() => []),
   ]);
 
   const batch = writeBatch(db);
@@ -771,6 +808,7 @@ export async function verwijderEigenGegevens(uid) {
   sectiesSnap.docs.forEach((d) => batch.delete(d.ref));
   sessies.forEach((s) => batch.delete(doc(db, "adviessessies", s.id)));
   experimenten.forEach((e) => batch.delete(doc(db, "experimenten", e.id)));
+  reflecties.forEach((r) => batch.delete(doc(db, "reflecties", r.id)));
   batch.delete(profielRef(uid));
   batch.delete(handleidingRef(uid));
   batch.delete(gebruikerRef(uid));

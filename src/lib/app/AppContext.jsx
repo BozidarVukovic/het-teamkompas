@@ -29,9 +29,12 @@ import {
   bewaarKenmerken as bewaarKenmerkenInDb,
   bewaarSectie as bewaarSectieInDb,
   bewaarAfspraak as bewaarAfspraakInDb,
+  bewaarReflectie as bewaarReflectieInDb,
   blikTerug as blikTerugInDb,
   haalAfspraken,
+  haalEigenAdviessessies,
   haalEigenExperimenten,
+  haalEigenReflecties,
   haalEigenRollen,
   haalGebruiker,
   startExperiment as startExperimentInDb,
@@ -97,6 +100,8 @@ export function AppProvider({ children }) {
   const [mijnRollen, setMijnRollen] = useState({});
   const [tekstvoorstellen, setTekstvoorstellen] = useState([]);
   const [experimenten, setExperimenten] = useState([]);
+  const [sessies, setSessies] = useState([]);
+  const [reflecties, setReflecties] = useState([]);
   const [teamOverzicht, setTeamOverzicht] = useState({
     team: null,
     leden: [],
@@ -242,7 +247,14 @@ function terugkeeradres() {
     // we op zodat de app het kan tonen; overnemen doet de gebruiker zelf.
     const lidmaatschappenUitDoc = (doc && doc.lidmaatschappen) || [];
 
-    const [openstaandeVoorstellen, eigenExperimenten, openstaandeTeksten, rollen] = await Promise.all([
+    const [
+      openstaandeVoorstellen,
+      eigenExperimenten,
+      openstaandeTeksten,
+      rollen,
+      eigenSessies,
+      eigenReflecties,
+    ] = await Promise.all([
       Promise.all(
         lidmaatschappenUitDoc.map((l) =>
           haalVoorstel({ orgId: l.orgId, teamId: l.teamId, uid }).catch(() => null)
@@ -263,6 +275,10 @@ function terugkeeradres() {
       // Je rol per team; zie haalEigenRollen. Nodig om te weten in welke teams
       // je meedoet en welke je alleen begeleidt.
       haalEigenRollen(uid, lidmaatschappenUitDoc).catch(() => ({})),
+      // Waar je advies over vroeg, om na een dag of wat te kunnen vragen hoe
+      // dat gesprek ging. Er staat geen persoon bij, en dat blijft zo.
+      haalEigenAdviessessies(uid).catch(() => []),
+      haalEigenReflecties(uid).catch(() => []),
     ]);
     const openstaand = openstaandeVoorstellen.filter(Boolean);
 
@@ -273,6 +289,8 @@ function terugkeeradres() {
     setVoorstellen(openstaand);
     setTekstvoorstellen(openstaandeTeksten.filter(Boolean));
     setExperimenten(eigenExperimenten);
+    setSessies(eigenSessies);
+    setReflecties(eigenReflecties);
     setMijnRollen(rollen);
     setGegevensKlaar(true);
     return doc;
@@ -571,6 +589,30 @@ function terugkeeradres() {
     [gebruiker, experimenten]
   );
 
+  /**
+   * Terugkijken op een gesprek dat je hebt gevoerd.
+   *
+   * De sessie waar het bij hoort gaat mee, zodat dezelfde vraag niet morgen
+   * opnieuw gesteld wordt. Wie erbij was, gaat niet mee — dat weet de app niet
+   * en het hoort ook niet ergens te komen staan. Zie reflecties.js.
+   */
+  const bewaarReflectie = useCallback(
+    async ({ sessieId, situatieId, situatieLabel, terugblik, tekst }) => {
+      if (!gebruiker) return null;
+      const id = await bewaarReflectieInDb({
+        uid: gebruiker.uid,
+        sessieId,
+        situatieId,
+        situatieLabel,
+        terugblik,
+        tekst,
+      });
+      setReflecties(await haalEigenReflecties(gebruiker.uid).catch(() => reflecties));
+      return id;
+    },
+    [gebruiker, reflecties]
+  );
+
   const blikTerug = useCallback(
     async ({ id, uitkomst, tekst }) => {
       if (!gebruiker) return;
@@ -739,6 +781,9 @@ function terugkeeradres() {
       experimenten,
       startExperiment,
       blikTerug,
+      sessies,
+      reflecties,
+      bewaarReflectie,
       herlaadTeam: () => laadTeamOverzicht(actiefTeam),
       voorstellen,
       tekstvoorstellen,
@@ -767,7 +812,7 @@ function terugkeeradres() {
     }),
     [
       gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, functie, lidmaatschappen, actiefTeam,
-      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, bewaarAfspraak, verwijderAfspraak, experimenten, startExperiment, blikTerug, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
+      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, bewaarAfspraak, verwijderAfspraak, experimenten, startExperiment, blikTerug, sessies, reflecties, bewaarReflectie, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
       wisInsights, maakTeam, doeMee, verlaatTeam, verwijderTeam, verwijderAlles, laadGegevens,

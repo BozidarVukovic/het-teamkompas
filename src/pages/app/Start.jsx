@@ -18,6 +18,8 @@ import { bepaalVoortgang } from "../../lib/app/voortgang";
 import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
 import { uitgelichteAfspraak } from "../../lib/app/afspraken";
 import { isTerugblikKlaar, standInEenZin, watNuSpeelt } from "../../lib/app/experimenten";
+import { openstaandeSessie, waaroverInEenZin } from "../../lib/app/reflecties";
+import { situatie } from "../../data/app/situaties";
 import { initialen, voornaam } from "../../lib/app/naam";
 
 /** Een collega als bol met een naam eronder. Eén tik en je bent bij het advies. */
@@ -33,7 +35,7 @@ function Mens({ naar, ini, label, onder, gestippeld = false }) {
 export default function Start() {
   const {
     gebruiker, naam, actiefTeam, kenmerken, handleiding, teamOverzicht, ikBegeleid,
-    uitnodigingscode, vergeetUitnodiging, experimenten,
+    uitnodigingscode, vergeetUitnodiging, experimenten, sessies, reflecties,
   } = useApp();
 
   const eigenUid = gebruiker && gebruiker.uid;
@@ -74,6 +76,12 @@ export default function Start() {
   // loopt, en na dertig dagen één vraag. Verder rekent de app niet mee.
   const experiment = watNuSpeelt(experimenten);
   const terugblikAanDeBeurt = experiment && isTerugblikKlaar(experiment);
+
+  // De app hielp je vóór een gesprek en zei daarna niets meer, terwijl je juist
+  // dán iets weet. Vanaf de dag erna staat hier één keer de vraag hoe het ging;
+  // na twee weken vervalt hij vanzelf. Zie reflecties.js.
+  const teBespreken = openstaandeSessie({ sessies, reflecties });
+  const teBesprekenLabel = teBespreken ? (situatie(teBespreken.situatieId) || {}).label : "";
 
   return (
     <div className="tk-inhoud">
@@ -145,6 +153,21 @@ export default function Start() {
                   ? "Jullie enige afspraak."
                   : `Een van jullie ${afspraken.length} afspraken.`}
               </small>
+            </span>
+            <span className="tk-optie-pijl" aria-hidden="true">›</span>
+          </Link>
+        </section>
+      )}
+
+      {teBespreken && (
+        <section className="tk-groep">
+          <h2 className="tk-groep-kop">Hoe ging dat?</h2>
+          <Link to="/app/ik" className="tk-optie" style={{ alignItems: "flex-start" }}>
+            <span className="tk-optie-tekst">
+              <strong style={{ fontSize: 16.5, lineHeight: 1.55 }}>
+                Kijk je even terug op dat gesprek?
+              </strong>
+              <small>{waaroverInEenZin(teBespreken, teBesprekenLabel)}</small>
             </span>
             <span className="tk-optie-pijl" aria-hidden="true">›</span>
           </Link>

@@ -22,6 +22,15 @@ import {
   sorteerExperimenten,
   standInEenZin,
 } from "../../lib/app/experimenten";
+import {
+  MAX_TEKST,
+  TERUGBLIKKEN,
+  openstaandeSessie,
+  sorteerReflecties,
+  terugblikLabel,
+  waaroverInEenZin,
+} from "../../lib/app/reflecties";
+import { situatie } from "../../data/app/situaties";
 
 function Regel({ naar, titel, uitleg, stand = null, klaar = false }) {
   return (
@@ -148,12 +157,92 @@ function Experiment({ experiment, opTerugblik }) {
   );
 }
 
+/**
+ * De ene vraag na een gesprek: hoe kijk je erop terug?
+ *
+ * Vier antwoorden waarvan er één "ik heb het niet gevoerd" is, en een veld dat
+ * leeg mag blijven. Er staat nergens een vraag over de ander — wat hier komt te
+ * staan gaat over jou.
+ */
+function Terugkijken({ sessie, label, opBewaren }) {
+  const [terugblik, setTerugblik] = useState(null);
+  const [tekst, setTekst] = useState("");
+  const [bezig, setBezig] = useState(false);
+
+  const bewaar = async () => {
+    if (!terugblik || bezig) return;
+    setBezig(true);
+    try {
+      await opBewaren({
+        sessieId: sessie.id,
+        situatieId: sessie.situatieId,
+        situatieLabel: label,
+        terugblik,
+        tekst,
+      });
+    } catch {
+      /* lukt het niet, dan blijft de vraag gewoon staan */
+    }
+    setBezig(false);
+  };
+
+  return (
+    <div className="tk-kaart">
+      <h2 style={{ marginTop: 0 }}>Hoe kijk je erop terug?</h2>
+      <p className="tk-fijn" style={{ marginTop: -4 }}>{waaroverInEenZin(sessie, label)}</p>
+
+      <div className="tk-keuzes">
+        {TERUGBLIKKEN.map((k) => (
+          <button
+            key={k.id}
+            type="button"
+            className={`tk-keuze${terugblik === k.id ? " gekozen" : ""}`}
+            aria-pressed={terugblik === k.id}
+            onClick={() => setTerugblik(k.id)}
+          >
+            <span>{k.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <label className="tk-label" htmlFor="tk-reflectie" style={{ marginTop: 16, display: "block" }}>
+        Wat viel je op?{" "}
+        <span style={{ fontWeight: 500, textTransform: "none", letterSpacing: 0 }}>(optioneel)</span>
+      </label>
+      <textarea
+        id="tk-reflectie"
+        className="tk-tekstvak"
+        rows={3}
+        maxLength={MAX_TEKST}
+        value={tekst}
+        onChange={(e) => setTekst(e.target.value)}
+        placeholder="Schrijf op wat je opviel aan het gesprek en aan jezelf."
+      />
+
+      <div className="tk-knoppen" style={{ marginTop: 10 }}>
+        <button
+          type="button"
+          className="tk-knop tk-knop-klein"
+          disabled={!terugblik || bezig}
+          onClick={bewaar}
+        >
+          {bezig ? "Bezig..." : "Bewaren"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function Ik() {
   const {
     naam, functie, gebruiker, kenmerken, actiefTeam, handleiding, ikBegeleid,
-    experimenten, blikTerug,
+    experimenten, blikTerug, sessies, reflecties, bewaarReflectie,
   } = useApp();
   const rij = sorteerExperimenten(experimenten);
+
+  const teBespreken = openstaandeSessie({ sessies, reflecties });
+  const teBesprekenLabel = teBespreken ? (situatie(teBespreken.situatieId) || {}).label : "";
+  const gemaakt = sorteerReflecties(reflecties);
   const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding, ikBegeleid });
   const handleidingKlaar = voortgang.handleidingSecties >= voortgang.handleidingVan;
 
@@ -229,6 +318,34 @@ export default function Ik() {
           </p>
           {rij.map((e) => (
             <Experiment key={e.id} experiment={e} opTerugblik={blikTerug} />
+          ))}
+        </section>
+      )}
+
+      {(teBespreken || gemaakt.length > 0) && (
+        <section className="tk-groep">
+          <h2 className="tk-groep-kop">Terugkijken</h2>
+          <p className="tk-fijn" style={{ margin: "0 0 12px" }}>
+            Na een gesprek waar je advies bij vroeg, vraagt de app één keer hoe het ging. Wat je
+            antwoordt is van jou; je team ziet het niet.
+          </p>
+
+          {teBespreken && (
+            <Terugkijken
+              sessie={teBespreken}
+              label={teBesprekenLabel}
+              opBewaren={bewaarReflectie}
+            />
+          )}
+
+          {gemaakt.map((r) => (
+            <div className="tk-kaart" key={r.id}>
+              <div className="tk-label">{r.situatieLabel || "Een gesprek"}</div>
+              <p style={{ margin: "6px 0 0", fontSize: 16, lineHeight: 1.6 }}>
+                {terugblikLabel(r.terugblik)}
+              </p>
+              {r.tekst && <p style={{ marginBottom: 0 }}>{r.tekst}</p>}
+            </div>
           ))}
         </section>
       )}

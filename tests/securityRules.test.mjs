@@ -693,6 +693,55 @@ if (!draait) {
     await assertSucceeds(deleteDoc(doc(anna(), "experimenten/x8")));
   });
 
+  /* --------------------------------------------------------- reflecties */
+
+  test("52. een reflectie is van jou alleen", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(anna(), "reflecties/r1"), {
+        uid: "anna",
+        terugblik: "beter",
+        tekst: "Het hielp om eerst te vragen of het uitkwam.",
+      })
+    );
+
+    await assertFails(getDoc(doc(bram(), "reflecties/r1")));
+    await assertFails(getDoc(doc(cato(), "reflecties/r1")));
+    await assertFails(getDoc(doc(gast(), "reflecties/r1")));
+    await assertFails(setDoc(doc(bram(), "reflecties/r2"), { uid: "anna", terugblik: "anders" }));
+  });
+
+  test("53. ook de makers kijken hier niet mee", async () => {
+    await zetKlaar();
+    await assertSucceeds(setDoc(doc(anna(), "reflecties/r3"), { uid: "anna", terugblik: "anders" }));
+
+    // Hier staat hoe een gesprek ging, in iemands eigen woorden. Net als bij
+    // een experiment: geen dashboard.
+    await assertFails(getDoc(doc(maker(), "reflecties/r3")));
+    await assertFails(getDocs(collection(maker(), "reflecties")));
+  });
+
+  test("54. een reflectie zonder antwoord komt er niet in", async () => {
+    await zetKlaar();
+    await assertFails(setDoc(doc(anna(), "reflecties/r4"), { uid: "anna", terugblik: "" }));
+    await assertFails(setDoc(doc(anna(), "reflecties/r5"), { uid: "anna", tekst: "alleen woorden" }));
+  });
+
+  test("55. je kunt je eigen reflecties opvragen en wissen", async () => {
+    await zetKlaar();
+    await assertSucceeds(setDoc(doc(anna(), "reflecties/r6"), { uid: "anna", terugblik: "beter" }));
+    await assertSucceeds(setDoc(doc(bram(), "reflecties/r7"), { uid: "bram", terugblik: "anders" }));
+
+    await assertSucceeds(getDocs(query(collection(anna(), "reflecties"), where("uid", "==", "anna"))));
+    await assertFails(getDocs(collection(anna(), "reflecties")));
+    await assertFails(getDocs(query(collection(anna(), "reflecties"), where("uid", "==", "bram"))));
+
+    // En je schrijft er die van een ander niet op je eigen naam bij.
+    await assertFails(updateDoc(doc(anna(), "reflecties/r6"), { uid: "bram" }));
+    await assertFails(deleteDoc(doc(anna(), "reflecties/r7")));
+    await assertSucceeds(deleteDoc(doc(anna(), "reflecties/r6")));
+  });
+
   test.after(async () => {
     await omgeving.cleanup();
   });
