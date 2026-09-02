@@ -16,7 +16,7 @@ export const MAX_ONDERDELEN = 4;
 export const ONDERDELEN = [
   { id: "start", pad: "/app", label: "Start", exact: true, paden: ["/app"] },
   { id: "samenwerken", pad: "/app/samenwerken", label: "Samenwerken", paden: ["/app/samenwerken"] },
-  { id: "team", pad: "/app/team", label: "Team", paden: ["/app/team"] },
+  { id: "team", pad: "/app/team", label: "Team", paden: ["/app/team", "/app/teambeeld"] },
   {
     id: "ik",
     pad: "/app/ik",

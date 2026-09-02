@@ -808,6 +808,20 @@ export default function MijnTeam() {
         </section>
       )}
 
+      {/* ----------------------------------------------------- teambeeld */}
+      <section className="tk-groep">
+        <h2 className="tk-groep-kop">Hoe dit team in elkaar zit</h2>
+        <div className="tk-groep-lijst">
+          <Link to="/app/teambeeld" className="tk-optie">
+            <span className="tk-optie-tekst">
+              <strong>Ons teambeeld</strong>
+              <small>Waar jullie uiteenlopen en waar niet. Zonder namen.</small>
+            </span>
+            <span className="tk-optie-pijl" aria-hidden="true">›</span>
+          </Link>
+        </div>
+      </section>
+
       {/* -------------------------------------------------- onze afspraken */}
       <Teamafspraken magVerwijderen={ikBenBeheerder} />
 
