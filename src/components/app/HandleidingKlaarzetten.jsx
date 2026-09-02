@@ -24,19 +24,15 @@ export default function HandleidingKlaarzetten({
   onSluit,
 }) {
   const [secties, setSecties] = useState(() => ({ ...((bestaand && bestaand.secties) || {}) }));
-  const { bezig, melding, setMelding, voerUit, wisMelding } = useActie();
+  const { bezig, melding, voerUit, wisMelding } = useActie();
 
   const zet = (id, waarde) => setSecties((s) => ({ ...s, [id]: waarde.slice(0, MAX_TEKENS) }));
   const gevuld = SECTIES.filter((s) => (secties[s.id] || "").trim()).length;
 
   const bewaren = () => {
-    if (gevuld === 0) {
-      setMelding({
-        soort: "fout",
-        tekst: "Er staat nog niets in. Vul minstens één stukje in.",
-      });
-      return;
-    }
+    // De knop staat uit zolang er niets staat, dus hier komen we alleen als er
+    // echt iets is. Deze controle blijft staan voor het geval dat verandert.
+    if (gevuld === 0) return;
     voerUit(
       `de tekst voor ${voorWie} klaarzetten`,
       () => onBewaar(secties),
@@ -87,20 +83,27 @@ export default function HandleidingKlaarzetten({
             className="tk-tekstvak"
             value={secties[s.id] || ""}
             onChange={(e) => zet(s.id, e.target.value)}
-            placeholder={s.voorbeeld}
+            placeholder={`Plak hier wat ${voorWie} hierover heeft opgeschreven — of laat leeg`}
           />
         </div>
       ))}
 
       <div className="tk-knoppen" style={{ marginTop: 16 }}>
-        <button type="button" className="tk-knop tk-knop-klein" disabled={bezig} onClick={bewaren}>
+        <button
+          type="button"
+          className="tk-knop tk-knop-klein"
+          disabled={bezig || gevuld === 0}
+          onClick={bewaren}
+        >
           {bezig ? "Bezig..." : directBijProfiel ? "Bewaren bij dit profiel" : `Klaarzetten voor ${voorWie}`}
         </button>
         <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={onSluit}>
           Sluiten
         </button>
         <span className="tk-fijn" style={{ alignSelf: "center" }}>
-          {gevuld} van {SECTIES.length} ingevuld
+          {gevuld === 0
+            ? "Nog niets ingevuld — de grijze zinnen zijn voorbeelden."
+            : `${gevuld} van ${SECTIES.length} ingevuld`}
         </span>
       </div>
     </div>

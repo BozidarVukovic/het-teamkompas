@@ -216,6 +216,16 @@
   line-height: 1.5;
 }
 
+/* Een voorbeeldzin in een leeg veld moet er als voorbeeld uitzien. Zonder deze
+   regel neemt de browser een grijs dat op dit donkere navy nauwelijks afwijkt
+   van gewone tekst, en dan lijkt een leeg formulier ingevuld. */
+.tk-invoer::placeholder,
+.tk-tekstvak::placeholder {
+  color: var(--tk-zacht);
+  opacity: 0.55;
+  font-style: italic;
+}
+
 .tk-invoer:focus,
 .tk-tekstvak:focus {
   outline: 2px solid rgba(0, 168, 150, 0.55);
