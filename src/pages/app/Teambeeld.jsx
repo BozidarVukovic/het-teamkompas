@@ -4,42 +4,73 @@
 // telt ontstaat er een meerderheid en dus een afwijkende, en dan is dit scherm
 // onbruikbaar in een team. Zie teambeeld.js.
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { collegasVan } from "../../lib/app/collegas";
 import { dekkingInEenZin, steltTeambeeldSamen } from "../../lib/app/teambeeld";
 import { spreidingVoor } from "../../data/app/groepsblokken";
 
-function Kenmerk({ rij, uiteen }) {
+/**
+ * Eén kenmerk als één regel, die je opendraait.
+ *
+ * Twaalf kenmerken als twaalf volle kaarten onder elkaar is een muur: alles
+ * roept even hard en daardoor lees je niets. Dicht zie je waar het over gaat en
+ * hoe breed het ligt; open zie je wat erin zit en wat helpt. Er staat er één
+ * tegelijk open, zodat het scherm kort blijft.
+ */
+function Kenmerk({ rij, uiteen, open, onKlik }) {
   const blok = spreidingVoor(rij.kenmerkId) || {};
 
+  // Dicht is er ruimte voor één korte regel. Loopt het uiteen, dan is dat hoe
+  // breed het ligt; zitten jullie op één lijn, dan is het gewoon de voorkeur
+  // zelf — dat zegt meer dan "1 manier".
+  const onder = uiteen
+    ? `${rij.voorkeuren.length} manieren in dit team`
+    : (rij.voorkeuren[0] && rij.voorkeuren[0].label) || "Hierin zitten jullie dicht bij elkaar";
+
   return (
-    <div className="tk-kaart">
-      <div className="tk-label">{rij.label}</div>
-      <p style={{ margin: "6px 0 0", fontSize: 16, lineHeight: 1.6 }}>
-        {uiteen
-          ? blok.duiding || "Hierin verschillen jullie van elkaar."
-          : "Hierin zitten jullie dicht bij elkaar."}
-      </p>
+    <div className="tk-persoonrij">
+      <button
+        type="button"
+        className={`tk-optie${open ? " open" : ""}`}
+        onClick={onKlik}
+        aria-expanded={open}
+      >
+        <span className="tk-optie-tekst">
+          <strong>{rij.label}</strong>
+          <small>{onder}</small>
+        </span>
+        <span className="tk-optie-pijl" aria-hidden="true">{open ? "⌄" : "›"}</span>
+      </button>
 
-      <div className="tk-label" style={{ marginTop: 16 }}>
-        {uiteen ? "Wat er in dit team zit" : "Wat jullie delen"}
-      </div>
-      <ul className="tk-zinnen">
-        {rij.voorkeuren.map((v) => (
-          <li key={v.label}>
-            <strong>{v.label}</strong>
-            {v.vraagt ? ` — ${v.vraagt}` : ""}
-          </li>
-        ))}
-      </ul>
+      {open && (
+        <div className="tk-optie-uit">
+          <p style={{ margin: 0, lineHeight: 1.6 }}>
+            {uiteen
+              ? blok.duiding || "Hierin verschillen jullie van elkaar."
+              : "Hierin zitten jullie dicht bij elkaar."}
+          </p>
 
-      {uiteen && blok.suggestie && (
-        <>
-          <div className="tk-label" style={{ marginTop: 16 }}>Wat helpt</div>
-          <p style={{ margin: "6px 0 0", lineHeight: 1.6 }}>{blok.suggestie}</p>
-        </>
+          <div className="tk-label" style={{ marginTop: 14 }}>
+            {uiteen ? "Wat er in dit team zit" : "Wat jullie delen"}
+          </div>
+          <ul className="tk-zinnen">
+            {rij.voorkeuren.map((v) => (
+              <li key={v.label}>
+                <strong>{v.label}</strong>
+                {v.vraagt ? ` — ${v.vraagt}` : ""}
+              </li>
+            ))}
+          </ul>
+
+          {uiteen && blok.suggestie && (
+            <>
+              <div className="tk-label" style={{ marginTop: 14 }}>Wat helpt</div>
+              <p style={{ margin: "6px 0 0", lineHeight: 1.6 }}>{blok.suggestie}</p>
+            </>
+          )}
+        </div>
       )}
     </div>
   );
@@ -70,6 +101,11 @@ export default function Teambeeld() {
   );
 
   const toegevoegd = collegas.filter((c) => c.doorBeheerder).length;
+
+  // Eén kenmerk tegelijk open. Alles tegelijk open is precies de muur waar dit
+  // scherm vanaf moest.
+  const [openKenmerk, setOpenKenmerk] = useState(null);
+  const draai = (id) => setOpenKenmerk((huidig) => (huidig === id ? null : id));
 
   if (!actiefTeam) {
     return (
@@ -110,26 +146,42 @@ export default function Teambeeld() {
           {beeld.uiteen.length > 0 && (
             <section className="tk-groep">
               <h2 className="tk-groep-kop">Waar jullie uiteenlopen</h2>
-              <p className="tk-fijn" style={{ marginTop: -6 }}>
+              <p className="tk-fijn" style={{ margin: "-6px 0 12px" }}>
                 Hier zit meer dan één voorkeur in het team. Dat is geen probleem om op te lossen,
-                maar iets om te benoemen als het schuurt.
+                maar iets om te benoemen als het schuurt. Tik een regel aan voor wat erin zit.
               </p>
-              {beeld.uiteen.map((rij) => (
-                <Kenmerk key={rij.kenmerkId} rij={rij} uiteen />
-              ))}
+              <div className="tk-groep-lijst">
+                {beeld.uiteen.map((rij) => (
+                  <Kenmerk
+                    key={rij.kenmerkId}
+                    rij={rij}
+                    uiteen
+                    open={openKenmerk === rij.kenmerkId}
+                    onKlik={() => draai(rij.kenmerkId)}
+                  />
+                ))}
+              </div>
             </section>
           )}
 
           {beeld.gedeeld.length > 0 && (
             <section className="tk-groep">
               <h2 className="tk-groep-kop">Waar jullie op één lijn zitten</h2>
-              <p className="tk-fijn" style={{ marginTop: -6 }}>
+              <p className="tk-fijn" style={{ margin: "-6px 0 12px" }}>
                 Hier wil iedereen ongeveer hetzelfde. Dat maakt veel vanzelfsprekend — en het
                 betekent dat jullie het als laatste merken wanneer het een keer anders moet.
               </p>
-              {beeld.gedeeld.map((rij) => (
-                <Kenmerk key={rij.kenmerkId} rij={rij} uiteen={false} />
-              ))}
+              <div className="tk-groep-lijst">
+                {beeld.gedeeld.map((rij) => (
+                  <Kenmerk
+                    key={rij.kenmerkId}
+                    rij={rij}
+                    uiteen={false}
+                    open={openKenmerk === rij.kenmerkId}
+                    onKlik={() => draai(rij.kenmerkId)}
+                  />
+                ))}
+              </div>
             </section>
           )}
         </>
