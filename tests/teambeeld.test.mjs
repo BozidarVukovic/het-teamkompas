@@ -11,6 +11,7 @@ import assert from "node:assert/strict";
 import {
   MINIMUM_TEAMBEELD,
   dekkingInEenZin,
+  spreidingskaart,
   steltTeambeeldSamen,
 } from "../src/lib/app/teambeeld.js";
 import { KENMERKEN } from "../src/data/app/kenmerken.js";
@@ -113,4 +114,74 @@ test("de dekkingszin zegt eerlijk hoeveel het beeld waard is", () => {
   assert.match(dekkingInEenZin({ meegeteld: 1, stil: 2 }), /pas vanaf twee/);
   assert.match(dekkingInEenZin({ meegeteld: 9, stil: 0 }), /alle 9 mensen/);
   assert.match(dekkingInEenZin({ meegeteld: 3, stil: 6 }), /3 van de 9/);
+});
+
+/* --------------------------------------------------- de spreidingskaart */
+
+// Het plaatje is de plek waar één verkeerd getal het hele scherm onbruikbaar
+// maakt. Een gevuld vakje betekent "deze voorkeur zit in dit team" — nooit
+// hoeveel mensen hem hebben, want dan lees je in één oogopslag wie de
+// afwijkende is.
+
+test("de kaart toont alle voorkeuren van een kenmerk, aanwezig én afwezig", () => {
+  const beeld = steltTeambeeldSamen({
+    deelnemers: [deelnemer("a", SNEL), deelnemer("b", ANDERS)],
+    mijnKenmerken: SNEL,
+  });
+  const kaart = spreidingskaart(beeld);
+
+  const tempo = kaart.find((r) => r.kenmerkId === "tempo");
+  const alleOpties = KENMERKEN.find((k) => k.id === "tempo").opties;
+  assert.equal(tempo.opties.length, alleOpties.length);
+  assert.equal(tempo.van, alleOpties.length);
+  assert.equal(tempo.aanwezig, 2);
+  assert.equal(tempo.opties.filter((o) => o.aanwezig).length, 2);
+});
+
+test("een vakje zegt of een voorkeur voorkomt, niet hoe vaak", () => {
+  // Drie mensen met dezelfde voorkeur en één met een andere. Zou er ergens een
+  // aantal staan, dan is er een meerderheid en dus een afwijkende.
+  const beeld = steltTeambeeldSamen({
+    deelnemers: [deelnemer("a", SNEL), deelnemer("b", SNEL), deelnemer("c", ANDERS)],
+    mijnKenmerken: SNEL,
+  });
+  const tempo = spreidingskaart(beeld).find((r) => r.kenmerkId === "tempo");
+
+  tempo.opties.forEach((o) => {
+    assert.deepEqual(Object.keys(o).sort(), ["aanwezig", "label", "waarde"]);
+    assert.equal(typeof o.aanwezig, "boolean");
+  });
+  // Twee voorkeuren aanwezig, ongeacht dat er drie mensen op de ene zitten.
+  assert.equal(tempo.aanwezig, 2);
+});
+
+test("de kaart staat van breed naar smal", () => {
+  const beeld = steltTeambeeldSamen({
+    deelnemers: [deelnemer("a", SNEL), deelnemer("b", ANDERS)],
+    mijnKenmerken: SNEL,
+  });
+  const kaart = spreidingskaart(beeld);
+
+  for (let i = 1; i < kaart.length; i += 1) {
+    assert.ok(
+      kaart[i - 1].aanwezig >= kaart[i].aanwezig,
+      "een bredere rij hoort niet onder een smallere te staan"
+    );
+  }
+});
+
+test("in de kaart staat geen naam", () => {
+  const beeld = steltTeambeeldSamen({
+    deelnemers: [deelnemer("Nikki", SNEL), deelnemer("Eva", ANDERS)],
+    mijnKenmerken: SNEL,
+  });
+  const alles = JSON.stringify(spreidingskaart(beeld));
+  ["Nikki", "Eva", "jij"].forEach((naam) => {
+    assert.equal(alles.includes(naam), false, `${naam} hoort niet in de kaart te staan`);
+  });
+});
+
+test("zonder beeld is er geen kaart", () => {
+  assert.deepEqual(spreidingskaart({}), []);
+  assert.deepEqual(spreidingskaart(), []);
 });

@@ -17,6 +17,7 @@
 // op een punt allemaal hetzelfde wil, heeft daar veel vanzelfsprekend — en merkt
 // het daardoor het laatst als het een keer anders moet.
 
+import { kenmerk } from "../../data/app/kenmerken.js";
 import { bepaalSpreiding } from "./advies/groepsregels.js";
 import { bepaalWaarden } from "./advies/regels.js";
 
@@ -52,12 +53,28 @@ export function steltTeambeeldSamen({
 
   const { uiteen, gedeeld } = bepaalSpreiding(gevuld, null);
 
+  // Welke voorkeuren er per kenmerk in dit team voorkomen, als kale ids. Het
+  // groepsadvies draagt die bewust niet — daar staan namen naast, en dan is een
+  // ruwe waarde al gauw iemands antwoord. Hier staan geen namen, en het
+  // overzicht heeft ze nodig om te laten zien welke voorkeuren er níét in
+  // zitten. Een Set per kenmerk, dus nooit hoe vaak.
+  const aanwezig = {};
+  gevuld.forEach((p) => {
+    Object.keys(p.waarden || {}).forEach((kenmerkId) => {
+      const waarde = p.waarden[kenmerkId] && p.waarden[kenmerkId].waarde;
+      if (!waarde) return;
+      if (!aanwezig[kenmerkId]) aanwezig[kenmerkId] = new Set();
+      aanwezig[kenmerkId].add(waarde);
+    });
+  });
+
   return {
     meegeteld: gevuld.length,
     stil,
     genoeg: gevuld.length >= MINIMUM_TEAMBEELD,
     uiteen,
     gedeeld,
+    aanwezig,
   };
 }
 
@@ -73,4 +90,49 @@ export function dekkingInEenZin({ meegeteld = 0, stil = 0 } = {}) {
   if (meegeteld === 1) return "Er is er één die iets deelde. Verschil zie je pas vanaf twee.";
   if (stil === 0) return `Dit beeld gaat over alle ${meegeteld} mensen in dit team.`;
   return `Dit beeld gaat over ${meegeteld} van de ${meegeteld + stil} mensen; de rest deelde nog niets.`;
+}
+
+/**
+ * Het teambeeld als één plaatje: per kenmerk hoeveel van de mogelijke
+ * voorkeuren er in dit team zitten.
+ *
+ * Wat je hieraan ziet is één ding, en dat is precies het ding: waar is dit team
+ * breed en waar smal. Een kenmerk waar drie van de drie voorkeuren aanwezig
+ * zijn, vraagt iets anders van jullie dan een kenmerk waar iedereen hetzelfde
+ * wil.
+ *
+ * Wat je er niet aan ziet, en ook niet mag zien: hoeveel mensen achter een
+ * voorkeur staan. Een gevuld vakje betekent "dit zit in dit team", niet "zoveel
+ * mensen". Zou dat er wel staan, dan lees je in één oogopslag wie de afwijkende
+ * is — en dan is dit scherm onbruikbaar in een team.
+ *
+ * Elke rij heeft zijn eigen voorkeuren en zijn eigen aantal; het is dus geen
+ * matrix met een gedeelde as. De derde plek bij tempo betekent iets anders dan
+ * de derde plek bij feedback.
+ */
+export function spreidingskaart(beeld = {}) {
+  const rijen = [...(beeld.uiteen || []), ...(beeld.gedeeld || [])];
+
+  return rijen
+    .map((rij) => {
+      const aanwezig = (beeld.aanwezig || {})[rij.kenmerkId] || new Set();
+      const opties = ((kenmerk(rij.kenmerkId) || {}).opties || []).map((o) => ({
+        waarde: o.id,
+        label: o.label,
+        aanwezig: aanwezig.has(o.id),
+      }));
+
+      return {
+        kenmerkId: rij.kenmerkId,
+        label: rij.label,
+        opties,
+        aanwezig: opties.filter((o) => o.aanwezig).length,
+        van: opties.length,
+      };
+    })
+    .filter((rij) => rij.van > 0)
+    // Breed bovenaan: daar zit wat dit team het meest bezighoudt. Bij gelijke
+    // breedte blijft de volgorde van het beeld eronder staan, zodat de kaart en
+    // de blokken erna dezelfde volgorde houden.
+    .sort((a, b) => b.aanwezig - a.aanwezig || b.van - a.van);
 }
