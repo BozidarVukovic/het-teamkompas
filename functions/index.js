@@ -925,3 +925,8 @@ exports.healthCheck = onRequest(async (req, res) => {
     res.status(503).json({ ok: false, fout: "database-onbereikbaar" });
   }
 });
+
+// De inlogmail van de samenwerkomgeving. Staat in een eigen bestand omdat het
+// een los verhaal is: het maakt en verstuurt de inloglink zelf in plaats van
+// dat aan Firebase over te laten. Zie functions/inloglink.js.
+exports.stuurInloglink = require("./inloglink").stuurInloglink;

@@ -9,10 +9,10 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import {
   isSignInWithEmailLink,
   onAuthStateChanged,
-  sendSignInLinkToEmail,
   signInWithEmailLink,
   signOut,
 } from "firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { auth } from "../firebase";
 import { kenmerkenUitInsights } from "./insights";
 import {
@@ -171,13 +171,27 @@ function terugkeeradres() {
   return `${window.location.origin}/app/inloggen`;
 }
 
+  /**
+   * Vraagt een inloglink aan.
+   *
+   * Ging via Firebase zelf, gaat nu via onze eigen functie. Reden: de afzender
+   * van Firebase is noreply@<project>.firebaseapp.com, en die mail belandt bij
+   * vrijwel iedereen in de spammap. Het sjabloon van de inloglink is bovendien
+   * als enige niet aan te passen — vandaar de Engelse datum en het "u".
+   *
+   * Het inloggen zelf is niet veranderd: dezelfde link, dezelfde eenmalige
+   * code, dezelfde controle door Firebase. Alleen het versturen is van ons.
+   */
   const stuurInloglink = useCallback(async (email) => {
     const schoon = String(email || "").trim().toLowerCase();
     if (!schoon) throw new Error("Vul een e-mailadres in.");
-    await sendSignInLinkToEmail(auth, schoon, {
-      url: terugkeeradres(),
-      handleCodeInApp: true,
+
+    const functies = getFunctions(undefined, "us-central1");
+    await httpsCallable(functies, "stuurInloglink")({
+      email: schoon,
+      terug: terugkeeradres(),
     });
+
     schrijfOpslag(SLEUTEL_EMAIL, schoon);
     return schoon;
   }, []);
