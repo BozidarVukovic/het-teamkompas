@@ -8,55 +8,8 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { collegasVan } from "../../lib/app/collegas";
-import { dekkingInEenZin, spreidingskaart, steltTeambeeldSamen } from "../../lib/app/teambeeld";
+import { dekkingInEenZin, steltTeambeeldSamen } from "../../lib/app/teambeeld";
 import { spreidingVoor } from "../../data/app/groepsblokken";
-
-/**
- * Het hele beeld in één plaatje: per kenmerk hoeveel van de mogelijke
- * voorkeuren er in dit team zitten. Breed bovenaan.
- *
- * Een gevuld vakje betekent "deze voorkeur zit in dit team", niet "zoveel
- * mensen". Elk vakje heeft een titel met de voorkeur erin, zodat het verschil
- * niet alleen aan kleur hangt — en de blokken hieronder schrijven dezelfde
- * gegevens voluit.
- */
-function Kaart({ rijen }) {
-  if (rijen.length === 0) return null;
-
-  return (
-    <div className="tk-kaart">
-      <div className="tk-label">Waar dit team breed is en waar smal</div>
-      <p className="tk-fijn" style={{ margin: "6px 0 14px" }}>
-        Elk vakje is een manier waarop je het kunt willen. Gevuld betekent dat die in dit team
-        voorkomt — niet hoeveel mensen hem hebben.
-      </p>
-
-      {rijen.map((rij) => (
-        <div className="tk-kaart-rij" key={rij.kenmerkId}>
-          <span className="tk-kaart-naam">{rij.label}</span>
-          <span
-            className="tk-kaart-vakjes"
-            role="img"
-            aria-label={`${rij.label}: ${rij.aanwezig} van de ${rij.van} voorkeuren komen voor in dit team`}
-          >
-            {rij.opties.map((o) => (
-              <span
-                key={o.waarde}
-                className={`tk-kaart-vakje${o.aanwezig ? " aan" : ""}`}
-                title={`${o.aanwezig ? "Komt voor" : "Komt niet voor"}: ${o.label}`}
-              />
-            ))}
-          </span>
-          <span className="tk-kaart-stand">
-            {rij.aanwezig === 1
-              ? "iedereen wil hier ongeveer hetzelfde"
-              : `${rij.aanwezig} van de ${rij.van} manieren zitten in dit team`}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function Kenmerk({ rij, uiteen }) {
   const blok = spreidingVoor(rij.kenmerkId) || {};
@@ -116,7 +69,6 @@ export default function Teambeeld() {
     [collegas, kenmerken, ikBegeleid]
   );
 
-  const kaart = useMemo(() => spreidingskaart(beeld), [beeld]);
   const toegevoegd = collegas.filter((c) => c.doorBeheerder).length;
 
   if (!actiefTeam) {
@@ -154,8 +106,6 @@ export default function Teambeeld() {
               ? ` ${toegevoegd} ${toegevoegd === 1 ? "profiel is" : "profielen zijn"} toegevoegd uit een Insights-rapport en niet door die ${toegevoegd === 1 ? "persoon" : "personen"} zelf bevestigd.`
               : ""}
           </p>
-
-          <Kaart rijen={kaart} />
 
           {beeld.uiteen.length > 0 && (
             <section className="tk-groep">
