@@ -56,7 +56,9 @@ export default function Start() {
     eigenUid,
   });
 
-  const mensen = collegas.length + 1;
+  // Jezelf meetellen klopt alleen als je meedoet. Begeleid je dit team, dan
+  // ben je de tiende persoon niet — je staat er buiten.
+  const mensen = collegas.length + (ikBegeleid ? 0 : 1);
 
   return (
     <div className="tk-inhoud">
@@ -131,11 +133,17 @@ export default function Start() {
           <Link to="/app/ik" className="tk-optie">
             <span className="tk-optie-tekst">
               <strong>Mijn profiel</strong>
-              <small>Wat jij over jezelf deelt met je team.</small>
+              <small>
+                {ikBegeleid
+                  ? "Je profiel. Je deelt hier niets mee; je begeleidt dit team."
+                  : "Wat jij over jezelf deelt met je team."}
+              </small>
             </span>
+            {/* "0 van 12 gedeeld" is geen tekortkoming als je niet meedoet.
+                Dan zegt de stand hoe ver je profiel zelf is. */}
             <span className={`tk-optie-stand${voortgang.compleet ? " klaar" : ""}`}>
               {voortgang.compleet && <span aria-hidden="true">✓ </span>}
-              {voortgang.gedeeld} van {voortgang.van}
+              {ikBegeleid ? voortgang.nagelopen : voortgang.gedeeld} van {voortgang.van}
             </span>
             <span className="tk-optie-pijl" aria-hidden="true">›</span>
           </Link>
