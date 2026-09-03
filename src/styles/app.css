@@ -12,6 +12,18 @@
   --tk-lijn: rgba(255, 255, 255, 0.09);
   --tk-rood: #e2725b;
 
+  /* Twee snelheden, één curve. Vlot is voor aanraking: je tikt en het antwoord
+     is er meteen. Rustig is voor wat opendraait, want daar moet je kunnen
+     volgen waar de inhoud vandaan komt. De curve begint snel en loopt zacht
+     uit — dat leest als iets dat tot stilstand komt, niet als iets dat stopt. */
+  --tk-vlot: 140ms;
+  --tk-rustig: 240ms;
+  --tk-soepel: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  /* Hoe groot een vingertop is. Wat je ziet en wat je kunt raken zijn twee
+     verschillende dingen; dit gaat over het tweede. */
+  --tk-raak: 44px;
+
   min-height: 100vh;
   background: var(--tk-navy);
   color: var(--tk-tekst);
@@ -91,6 +103,7 @@
 }
 
 .tk-teamkiezer {
+  min-height: var(--tk-raak);
   background: var(--tk-navy-3);
   color: var(--tk-tekst);
   border: 1px solid var(--tk-lijn);
@@ -125,6 +138,10 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  /* Dit menu bestaat alleen op een breed scherm, waar je met een muis werkt;
+     daar is 40 genoeg en kost 44 alleen maar hoogte aan een balk die meeplakt.
+     Op een telefoon staat de onderbalk, en die is wel op een duim gemaakt. */
+  min-height: 40px;
   padding: 8px 14px;
   border-radius: 999px;
   font-size: 14px;
@@ -247,6 +264,13 @@
   cursor: pointer;
   background: var(--tk-teal);
   color: #04241f;
+
+  /* inline-flex zodat de tekst in het midden blijft staan zodra de knop door
+     de minimumhoogte hoger wordt dan zijn eigen regel. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tk-raak);
 }
 
 .tk-knop:disabled {
@@ -260,8 +284,10 @@
   border: 1px solid var(--tk-lijn);
 }
 
+/* Klein gaat over hoe hij eruitziet, niet over hoe groot hij is om te raken:
+   kleinere letter, smallere vorm, maar dezelfde 44 pixels om op te tikken. */
 .tk-knop-klein {
-  padding: 8px 14px;
+  padding: 8px 16px;
   font-size: 13.5px;
 }
 
@@ -605,6 +631,7 @@
 .tk-onderbalk a {
   flex: 1 1 0;
   min-width: 0;
+  min-height: 48px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -781,11 +808,21 @@
   color: var(--tk-tekst);
 }
 
+/* Eén pijl die kantelt, geen twee verschillende tekens. Van "›" naar "⌄"
+   springen is geen beweging maar een sprong: er valt niets aan te volgen. */
 .tk-optie-pijl {
   margin-left: auto;
+  display: inline-block;
   color: var(--tk-zacht);
   font-size: 18px;
   line-height: 1;
+  transition: transform var(--tk-rustig) var(--tk-soepel),
+    color var(--tk-vlot) var(--tk-soepel);
+}
+
+.tk-optie.open .tk-optie-pijl,
+.tk-uitklap[aria-expanded="true"] .tk-optie-pijl {
+  transform: rotate(90deg);
 }
 
 .tk-optie:hover .tk-optie-pijl {
@@ -872,6 +909,7 @@
   align-items: center;
   gap: 6px;
   margin-top: 14px;
+  min-height: var(--tk-raak);
   padding: 0;
   background: none;
   border: 0;
@@ -895,6 +933,9 @@
 }
 
 .tk-stille-knop {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tk-raak);
   padding: 0;
   background: none;
   border: 0;
@@ -1147,16 +1188,21 @@ a.tk-optie {
   gap: 12px;
 }
 
+/* Een kruisje van 20 bij 24 is te klein om te raken. Padding erbij en
+   evenveel negatieve marge eraf: het vlak wordt 44, de melding schuift niet. */
 .tk-melding-sluiten {
-  margin-left: auto;
+  margin: -12px -10px -12px auto;
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: 0;
   color: inherit;
   opacity: 0.6;
   font-size: 20px;
   line-height: 1;
-  padding: 0 2px;
+  padding: 12px;
   cursor: pointer;
 }
 
@@ -1164,3 +1210,68 @@ a.tk-optie {
   opacity: 1;
 }
 
+
+/* ============================================================== beweging ==
+
+   Hier zat niets: elke hover sprong hard van kleur en alles wat verscheen
+   plofte in beeld. Beweging is geen versiering — het is de uitleg bij een
+   verandering. Je ziet dat je iets raakte, en je ziet waar inhoud vandaan komt
+   in plaats van dat hij er ineens staat.
+
+   Alles staat in :where(), zodat de specificiteit nul blijft en geen enkele
+   bestaande regel erdoor wordt overruled. */
+
+.tk-app :where(a, button, select, input, textarea, .tk-optie, .tk-keuze,
+  .tk-keuzevakje, .tk-persoon, .tk-mens, .tk-bol) {
+  transition:
+    background-color var(--tk-vlot) var(--tk-soepel),
+    border-color var(--tk-vlot) var(--tk-soepel),
+    color var(--tk-vlot) var(--tk-soepel),
+    opacity var(--tk-vlot) var(--tk-soepel),
+    transform var(--tk-vlot) var(--tk-soepel);
+}
+
+/* Indrukken. Een knop die 4% krimpt terwijl je vinger erop staat, bevestigt
+   dat je raak tikte — op een telefoon is dat het enige wat je terugkrijgt
+   voordat het scherm verandert. */
+.tk-app .tk-knop:not(:disabled):active,
+.tk-app .tk-mens:active,
+.tk-app .tk-melding-sluiten:active {
+  transform: scale(0.96);
+}
+
+/* Een rij die de volle breedte heeft, hoort niet te krimpen — dat leest als
+   wegschuiven. Die licht op zolang je hem vasthoudt. */
+.tk-app :where(.tk-optie, .tk-keuze, .tk-keuzevakje, .tk-persoon):active {
+  background: rgba(0, 168, 150, 0.18);
+}
+
+/* Wat opendraait komt van onder de regel vandaan, niet uit het niets. */
+@keyframes tk-vouw-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.tk-optie-uit,
+.tk-melding {
+  animation: tk-vouw-open var(--tk-rustig) var(--tk-soepel) both;
+}
+
+/* Wie beweging heeft uitgezet, hoort er niets van te merken. Dit staat er niet
+   voor de vorm: voor sommige mensen veroorzaakt schuivende beeldopbouw echt
+   klachten. */
+@media (prefers-reduced-motion: reduce) {
+  .tk-app *,
+  .tk-app *::before,
+  .tk-app *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

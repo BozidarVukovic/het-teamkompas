@@ -41,7 +41,7 @@ function Kenmerk({ rij, uiteen, open, onKlik }) {
           <strong>{rij.label}</strong>
           <small>{onder}</small>
         </span>
-        <span className="tk-optie-pijl" aria-hidden="true">{open ? "⌄" : "›"}</span>
+        <span className="tk-optie-pijl" aria-hidden="true">›</span>
       </button>
 
       {open && (

@@ -101,9 +101,7 @@ function Persoon({ sleutel, naam: hunNaam, achter, onder, uitgeklapt, onKlik, ch
           </strong>
           <small>{onder}</small>
         </span>
-        <span className="tk-optie-pijl" aria-hidden="true">
-          {uitgeklapt ? "⌄" : "›"}
-        </span>
+        <span className="tk-optie-pijl" aria-hidden="true">›</span>
       </button>
       {uitgeklapt && <div className="tk-optie-uit" key={sleutel}>{children}</div>}
     </div>
@@ -706,9 +704,7 @@ export default function MijnTeam() {
             >
               <span className="tk-optie-plus" aria-hidden="true">+</span>
               <span>Iemand uitnodigen</span>
-              <span className="tk-optie-pijl" aria-hidden="true">
-                {paneel === "uitnodigen" ? "⌄" : "›"}
-              </span>
+              <span className="tk-optie-pijl" aria-hidden="true">›</span>
             </button>
           )}
 
@@ -721,9 +717,7 @@ export default function MijnTeam() {
             >
               <span className="tk-optie-plus" aria-hidden="true">+</span>
               <span>Profiel toevoegen uit een Insights-rapport</span>
-              <span className="tk-optie-pijl" aria-hidden="true">
-                {paneel === "profiel" ? "⌄" : "›"}
-              </span>
+              <span className="tk-optie-pijl" aria-hidden="true">›</span>
             </button>
           )}
         </div>
@@ -772,8 +766,13 @@ export default function MijnTeam() {
             Diegene vult daarna zijn eigen profiel in en bepaalt zelf wat er gedeeld wordt.
           </p>
 
-          <button type="button" className="tk-uitklap" onClick={() => setToonStappen((t) => !t)}>
-            {toonStappen ? "⌄" : "›"} Wat moet de ander doen?
+          <button
+            type="button"
+            className="tk-uitklap"
+            aria-expanded={toonStappen}
+            onClick={() => setToonStappen((t) => !t)}
+          >
+            <span className="tk-optie-pijl" aria-hidden="true">›</span> Wat moet de ander doen?
           </button>
 
           {toonStappen && (
