@@ -71,7 +71,7 @@ export default function MijnGegevens() {
         />
 
         <label className="tk-label" htmlFor="tk-functie" style={{ marginTop: 14 }}>
-          Je functie <span style={{ fontWeight: 500, textTransform: "none", letterSpacing: 0 }}>(optioneel)</span>
+          Je functie <span className="tk-optioneel">(optioneel)</span>
         </label>
         <input
           id="tk-functie"
@@ -182,7 +182,7 @@ export default function MijnGegevens() {
         </div>
       </div>
 
-      <p className="tk-fijn" style={{ marginBottom: 40 }}>
+      <p className="tk-fijn tk-voetnoot">
         Vragen over je gegevens? Mail naar info@mijnteamkompas.nl.
       </p>
     </div>

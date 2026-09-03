@@ -89,7 +89,7 @@ export default function Start() {
       <p className="tk-onderkop">Waarmee kunnen we je vandaag helpen?</p>
 
       {uitnodigingscode && (
-        <div className="tk-kaart" style={{ borderColor: "rgba(0,168,150,0.45)" }}>
+        <div className="tk-kaart tk-kaart-klaar">
           <h2>Je hebt een uitnodiging</h2>
           <p>
             Er staat een uitnodiging voor je klaar met de code{" "}
@@ -97,7 +97,7 @@ export default function Start() {
             dan één team horen; teams zien niets van elkaar.
           </p>
           <div className="tk-knoppen">
-            <Link className="tk-knop tk-knop-klein" to="/app/welkom?extra=1" style={{ textDecoration: "none" }}>
+            <Link className="tk-knop tk-knop-klein" to="/app/welkom?extra=1">
               Meedoen met dit team
             </Link>
             <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={vergeetUitnodiging}>
@@ -147,7 +147,7 @@ export default function Start() {
           <h2 className="tk-groep-kop">Onze afspraak</h2>
           <Link to="/app/team" className="tk-optie" style={{ alignItems: "flex-start" }}>
             <span className="tk-optie-tekst">
-              <strong style={{ fontSize: 16.5, lineHeight: 1.55 }}>{afspraakVandaag.tekst}</strong>
+              <strong style={{ fontSize: "var(--tk-t-lead)", lineHeight: 1.55 }}>{afspraakVandaag.tekst}</strong>
               <small>
                 {afspraken.length === 1
                   ? "Jullie enige afspraak."
@@ -164,7 +164,7 @@ export default function Start() {
           <h2 className="tk-groep-kop">Hoe ging dat?</h2>
           <Link to="/app/ik" className="tk-optie" style={{ alignItems: "flex-start" }}>
             <span className="tk-optie-tekst">
-              <strong style={{ fontSize: 16.5, lineHeight: 1.55 }}>
+              <strong style={{ fontSize: "var(--tk-t-lead)", lineHeight: 1.55 }}>
                 Kijk je even terug op dat gesprek?
               </strong>
               <small>{waaroverInEenZin(teBespreken, teBesprekenLabel)}</small>
@@ -179,7 +179,7 @@ export default function Start() {
           <h2 className="tk-groep-kop">Wat ik probeer</h2>
           <Link to="/app/ik" className="tk-optie" style={{ alignItems: "flex-start" }}>
             <span className="tk-optie-tekst">
-              <strong style={{ fontSize: 16.5, lineHeight: 1.55 }}>{experiment.actie}</strong>
+              <strong style={{ fontSize: "var(--tk-t-lead)", lineHeight: 1.55 }}>{experiment.actie}</strong>
               <small>{standInEenZin(experiment)}</small>
             </span>
             {terugblikAanDeBeurt && <span className="tk-optie-stand">Terugblik</span>}
@@ -225,7 +225,7 @@ export default function Start() {
         </div>
       </section>
 
-      <p className="tk-fijn" style={{ marginBottom: 40 }}>
+      <p className="tk-fijn tk-voetnoot">
         Adviezen komen uit vaste regels en vooraf geschreven teksten, niet uit een taalmodel. Ze zijn
         bedoeld als startpunt voor een gesprek, niet als oordeel over iemand.
       </p>

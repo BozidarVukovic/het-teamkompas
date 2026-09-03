@@ -129,10 +129,10 @@ export default function Welkom() {
 
       {heeftAlEenTeam && (
         <div className="tk-knoppen" style={{ marginBottom: 20 }}>
-          <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/team" style={{ textDecoration: "none" }}>
+          <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/team">
             Terug naar mijn team
           </Link>
-          <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app" style={{ textDecoration: "none" }}>
+          <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app">
             Naar start
           </Link>
         </div>

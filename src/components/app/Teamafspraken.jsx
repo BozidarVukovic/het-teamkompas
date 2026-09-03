@@ -110,7 +110,7 @@ export default function Teamafspraken({ magVerwijderen = false }) {
               />
             ) : (
               <div className="tk-kaart" style={{ marginBottom: 0 }}>
-                <p style={{ margin: 0, fontSize: 16.5, lineHeight: 1.55 }}>{a.tekst}</p>
+                <p style={{ margin: 0, fontSize: "var(--tk-t-lead)", lineHeight: 1.55 }}>{a.tekst}</p>
                 {a.toelichting && (
                   <p className="tk-fijn" style={{ marginTop: 8 }}>{a.toelichting}</p>
                 )}

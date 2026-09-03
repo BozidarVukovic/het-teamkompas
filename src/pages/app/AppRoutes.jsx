@@ -24,7 +24,7 @@ import "../../styles/app.css";
 function Laden({ tekst = "Even laden..." }) {
   return (
     <div className="tk-inhoud" style={{ paddingTop: 80, textAlign: "center" }}>
-      <div style={{ fontSize: 30, marginBottom: 10 }}>🧭</div>
+      <div style={{ fontSize: "var(--tk-t-titel)", marginBottom: 10 }}>🧭</div>
       <p className="tk-onderkop">{tekst}</p>
     </div>
   );

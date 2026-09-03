@@ -41,7 +41,7 @@ function Staaf({ kleurId, waarde, maximum, eenheid }) {
   if (!k) return null;
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-      <span style={{ width: 96, fontSize: 13.5, flex: "0 0 auto" }}>{k.label}</span>
+      <span style={{ width: 96, fontSize: "var(--tk-t-klein)", flex: "0 0 auto" }}>{k.label}</span>
       <span style={{ flex: 1, height: 9, borderRadius: 5, background: "rgba(255,255,255,0.07)" }}>
         <span
           aria-hidden="true"
@@ -202,7 +202,7 @@ export default function InsightsUpload({
               <button
                 type="button"
                 onClick={() => setAanpassen(true)}
-                style={{ background: "none", border: 0, color: "var(--tk-teal)", cursor: "pointer", padding: 0, font: "inherit" }}
+                className="tk-tekstknop"
               >
                 Aanpassen
               </button>
@@ -220,7 +220,7 @@ export default function InsightsUpload({
                     className={`tk-keuze${voorkeurskleur === k.id ? " gekozen" : ""}`}
                     onClick={() => setVoorkeurskleur(k.id)}
                   >
-                    <span aria-hidden="true" style={{ width: 14, height: 14, borderRadius: 4, background: k.kleur, flex: "0 0 auto", marginTop: 4 }} />
+                    <span aria-hidden="true" className="tk-kleurstip" style={{ background: k.kleur }} />
                     <span>
                       {k.label}
                       <small>{k.omschrijving}</small>
@@ -238,7 +238,7 @@ export default function InsightsUpload({
                     className={`tk-keuze${tweedeKleur === k.id ? " gekozen" : ""}`}
                     onClick={() => setTweedeKleur(tweedeKleur === k.id ? "" : k.id)}
                   >
-                    <span aria-hidden="true" style={{ width: 14, height: 14, borderRadius: 4, background: k.kleur, flex: "0 0 auto", marginTop: 4 }} />
+                    <span aria-hidden="true" className="tk-kleurstip" style={{ background: k.kleur }} />
                     <span>{k.label}</span>
                   </button>
                 ))}
@@ -267,7 +267,7 @@ export default function InsightsUpload({
               <button
                 type="button"
                 onClick={() => setToonDiagnose(!toonDiagnose)}
-                style={{ background: "none", border: 0, color: "var(--tk-teal)", cursor: "pointer", padding: 0, font: "inherit" }}
+                className="tk-tekstknop"
               >
                 {toonDiagnose ? "Verberg details" : "Waarom niet?"}
               </button>
@@ -275,7 +275,7 @@ export default function InsightsUpload({
           )}
 
           {toonDiagnose && (
-            <div className="tk-melding" style={{ fontFamily: "ui-monospace, Menlo, monospace", fontSize: 12 }}>
+            <div className="tk-melding" style={{ fontFamily: "ui-monospace, Menlo, monospace", fontSize: "var(--tk-t-fijn)" }}>
               {uitkomst.diagnose.length > 0 ? (
                 <>
                   <p className="tk-fijn" style={{ marginTop: 0 }}>

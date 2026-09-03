@@ -20,6 +20,22 @@
   --tk-rustig: 240ms;
   --tk-soepel: cubic-bezier(0.2, 0.7, 0.3, 1);
 
+  /* Negen stappen, en geen enkele waarde daarbuiten.
+     Er stonden twintig verschillende groottes in deze app, verdeeld over 76
+     declaraties, met stappen van een halve pixel — en geen enkele variabele.
+     Het verschil tussen 13 en 13,5 pixels lees je niet als betekenis maar als
+     slordigheid. De namen gaan over de rol, niet over het getal: waar de tekst
+     staat bepaalt welke je pakt. */
+  --tk-t-mini: 11.5px;    /* het label onder een icoon in de balk */
+  --tk-t-fijn: 12.5px;    /* voetnoot, kopje boven een blok */
+  --tk-t-klein: 13.5px;   /* secundair, en de kleine knoppen */
+  --tk-t-basis: 15px;     /* lopende tekst */
+  --tk-t-lead: 16.5px;    /* de eerste regel van een rij, met nadruk */
+  --tk-t-kop: 18px;       /* de kop van een kaart */
+  --tk-t-sectie: 20px;    /* de kop van een blok */
+  --tk-t-groot: 23px;     /* een getal dat het onderwerp is */
+  --tk-t-titel: 27px;     /* de titel van een pagina */
+
   /* Hoe groot een vingertop is. Wat je ziet en wat je kunt raken zijn twee
      verschillende dingen; dit gaat over het tweede. */
   --tk-raak: 44px;
@@ -62,7 +78,7 @@
   letter-spacing: 0.01em;
   color: var(--tk-tekst);
   text-decoration: none;
-  font-size: 16px;
+  font-size: var(--tk-t-lead);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -88,7 +104,7 @@
 }
 
 .tk-teamwissel > span {
-  font-size: 12px;
+  font-size: var(--tk-t-fijn);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -109,7 +125,7 @@
   border: 1px solid var(--tk-lijn);
   border-radius: 10px;
   padding: 8px 10px;
-  font-size: 13px;
+  font-size: var(--tk-t-klein);
   max-width: 220px;
 }
 
@@ -144,7 +160,7 @@
   min-height: 40px;
   padding: 8px 14px;
   border-radius: 999px;
-  font-size: 14px;
+  font-size: var(--tk-t-basis);
   font-weight: 600;
   color: var(--tk-zacht);
   text-decoration: none;
@@ -173,7 +189,7 @@
 }
 
 .tk-kop {
-  font-size: 27px;
+  font-size: var(--tk-t-titel);
   line-height: 1.2;
   margin: 0 0 8px;
   font-weight: 800;
@@ -181,7 +197,7 @@
 
 .tk-onderkop {
   color: var(--tk-zacht);
-  font-size: 15px;
+  font-size: var(--tk-t-basis);
   line-height: 1.65;
   margin: 0 0 24px;
 }
@@ -195,7 +211,7 @@
 }
 
 .tk-kaart h2 {
-  font-size: 17px;
+  font-size: var(--tk-t-kop);
   margin: 0 0 6px;
   font-weight: 700;
 }
@@ -203,7 +219,7 @@
 .tk-kaart p {
   color: var(--tk-zacht);
   line-height: 1.65;
-  font-size: 14.5px;
+  font-size: var(--tk-t-basis);
   margin: 0 0 12px;
 }
 
@@ -213,7 +229,7 @@
 
 .tk-label {
   display: block;
-  font-size: 13px;
+  font-size: var(--tk-t-klein);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -229,7 +245,7 @@
   border-radius: 12px;
   color: var(--tk-tekst);
   padding: 12px 14px;
-  font-size: 15px;
+  font-size: var(--tk-t-basis);
   line-height: 1.5;
 }
 
@@ -259,11 +275,14 @@
   border: 0;
   border-radius: 999px;
   padding: 12px 22px;
-  font-size: 15px;
+  font-size: var(--tk-t-basis);
   font-weight: 700;
   cursor: pointer;
   background: var(--tk-teal);
   color: #04241f;
+  /* Een knop die een <Link> is, hoort geen onderstreping te krijgen. Dat stond
+     dertien keer los in de JSX. */
+  text-decoration: none;
 
   /* inline-flex zodat de tekst in het midden blijft staan zodra de knop door
      de minimumhoogte hoger wordt dan zijn eigen regel. */
@@ -288,7 +307,7 @@
    kleinere letter, smallere vorm, maar dezelfde 44 pixels om op te tikken. */
 .tk-knop-klein {
   padding: 8px 16px;
-  font-size: 13.5px;
+  font-size: var(--tk-t-klein);
 }
 
 .tk-knop-gevaar {
@@ -320,7 +339,7 @@
   border-radius: 13px;
   padding: 14px 16px;
   color: var(--tk-tekst);
-  font-size: 15px;
+  font-size: var(--tk-t-basis);
   line-height: 1.5;
   cursor: pointer;
 }
@@ -337,7 +356,7 @@
 .tk-keuze small {
   display: block;
   color: var(--tk-zacht);
-  font-size: 13px;
+  font-size: var(--tk-t-klein);
   margin-top: 3px;
 }
 
@@ -354,7 +373,7 @@
   border-radius: 13px;
   padding: 14px 16px;
   color: var(--tk-tekst);
-  font-size: 15px;
+  font-size: var(--tk-t-basis);
   line-height: 1.5;
   cursor: pointer;
 }
@@ -375,13 +394,13 @@
 .tk-keuzevakje small {
   display: block;
   color: var(--tk-zacht);
-  font-size: 13px;
+  font-size: var(--tk-t-klein);
   margin-top: 3px;
 }
 
 .tk-bron {
   display: inline-block;
-  font-size: 11.5px;
+  font-size: var(--tk-t-mini);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -395,7 +414,7 @@
    maar naast het punt zelf, want daar wordt de keuze gemaakt. */
 .tk-privacy {
   display: inline-block;
-  font-size: 11.5px;
+  font-size: var(--tk-t-mini);
   font-weight: 700;
   letter-spacing: 0.04em;
   border-radius: 999px;
@@ -432,7 +451,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 13.5px;
+  font-size: var(--tk-t-klein);
   color: var(--tk-zacht);
   cursor: pointer;
   white-space: nowrap;
@@ -441,7 +460,7 @@
 .tk-melding {
   border-radius: 12px;
   padding: 13px 15px;
-  font-size: 14px;
+  font-size: var(--tk-t-basis);
   line-height: 1.6;
   margin-bottom: 16px;
   border: 1px solid var(--tk-lijn);
@@ -477,7 +496,7 @@
 }
 
 .tk-advies-blok h3 {
-  font-size: 13px;
+  font-size: var(--tk-t-klein);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--tk-teal);
@@ -487,7 +506,7 @@
 .tk-advies-blok p {
   margin: 0 0 10px;
   line-height: 1.7;
-  font-size: 15px;
+  font-size: var(--tk-t-basis);
 }
 
 .tk-citaat {
@@ -500,7 +519,7 @@
 }
 
 .tk-fijn {
-  font-size: 12.5px;
+  font-size: var(--tk-t-fijn);
   color: var(--tk-zacht);
   line-height: 1.6;
 }
@@ -522,7 +541,7 @@
   padding: 14px 16px;
   color: var(--tk-tekst);
   cursor: pointer;
-  font-size: 15px;
+  font-size: var(--tk-t-basis);
 }
 
 .tk-persoon:hover {
@@ -549,14 +568,14 @@
 
 .tk-code {
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 20px;
+  font-size: var(--tk-t-sectie);
   letter-spacing: 0.12em;
   font-weight: 700;
   color: var(--tk-teal);
 }
 
 .tk-stap {
-  font-size: 12.5px;
+  font-size: var(--tk-t-fijn);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--tk-teal);
@@ -566,7 +585,7 @@
 
 @media (max-width: 640px) {
   .tk-kop {
-    font-size: 23px;
+    font-size: var(--tk-t-groot);
   }
 
   .tk-inhoud {
@@ -640,7 +659,7 @@
   padding: 9px 2px 8px;
   color: var(--tk-zacht);
   text-decoration: none;
-  font-size: 11px;
+  font-size: var(--tk-t-mini);
   font-weight: 600;
   letter-spacing: 0.01em;
   border-top: 2px solid transparent;
@@ -677,17 +696,17 @@
 }
 
 .tk-regel strong {
-  font-size: 16px;
+  font-size: var(--tk-t-lead);
 }
 
 .tk-regel-primair strong {
-  font-size: 17px;
+  font-size: var(--tk-t-kop);
 }
 
 /* Wat af is, hoort niet meer als kaart in beeld te staan. Eén regel volstaat. */
 .tk-af {
   margin: 18px 0;
-  font-size: 14px;
+  font-size: var(--tk-t-basis);
   line-height: 1.6;
   color: var(--tk-zacht);
 }
@@ -740,12 +759,12 @@
 }
 
 .tk-gekozen-tekst strong {
-  font-size: 16px;
+  font-size: var(--tk-t-lead);
 }
 
 .tk-gekozen-tekst small {
   color: var(--tk-zacht);
-  font-size: 12.5px;
+  font-size: var(--tk-t-fijn);
 }
 
 .tk-gekozen .tk-knop {
@@ -767,7 +786,7 @@
 }
 
 .tk-groep-kop {
-  font-size: 12px;
+  font-size: var(--tk-t-fijn);
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -793,7 +812,7 @@
   border-top: 1px solid var(--tk-lijn);
   padding: 14px 16px;
   color: var(--tk-tekst);
-  font-size: 15.5px;
+  font-size: var(--tk-t-lead);
   font-family: inherit;
   cursor: pointer;
 }
@@ -814,7 +833,7 @@
   margin-left: auto;
   display: inline-block;
   color: var(--tk-zacht);
-  font-size: 18px;
+  font-size: var(--tk-t-kop);
   line-height: 1;
   transition: transform var(--tk-rustig) var(--tk-soepel),
     color var(--tk-vlot) var(--tk-soepel);
@@ -861,7 +880,7 @@
 
 .tk-optie-tekst small {
   color: var(--tk-zacht);
-  font-size: 12.5px;
+  font-size: var(--tk-t-fijn);
 }
 
 /* Een opengeklapte persoon is één blok: de regel en wat eronder staat delen
@@ -899,7 +918,7 @@
   flex: 0 0 auto;
   border-radius: 50%;
   border: 1px dashed rgba(0, 168, 150, 0.45);
-  font-size: 18px;
+  font-size: var(--tk-t-kop);
   line-height: 1;
 }
 
@@ -915,7 +934,7 @@
   border: 0;
   color: var(--tk-teal);
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--tk-t-klein);
   font-weight: 600;
   cursor: pointer;
 }
@@ -941,7 +960,7 @@
   border: 0;
   color: var(--tk-rood);
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--tk-t-klein);
   font-weight: 600;
   cursor: pointer;
 }
@@ -961,7 +980,7 @@
 .tk-bol-groot {
   width: 56px;
   height: 56px;
-  font-size: 20px;
+  font-size: var(--tk-t-sectie);
 }
 
 /* Een regel in een groepslijst kan ook een link zijn. */
@@ -975,7 +994,7 @@ a.tk-optie {
   margin-left: auto;
   flex: 0 0 auto;
   color: var(--tk-zacht);
-  font-size: 13px;
+  font-size: var(--tk-t-klein);
   white-space: nowrap;
 }
 
@@ -1016,7 +1035,7 @@ a.tk-optie {
 .tk-bol-mens {
   width: 52px;
   height: 52px;
-  font-size: 18px;
+  font-size: var(--tk-t-kop);
 }
 
 .tk-bol-leeg {
@@ -1029,7 +1048,7 @@ a.tk-optie {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 12.5px;
+  font-size: var(--tk-t-fijn);
   font-weight: 600;
 }
 
@@ -1068,7 +1087,7 @@ a.tk-optie {
 
 .tk-sectie strong {
   display: block;
-  font-size: 13px;
+  font-size: var(--tk-t-klein);
   margin-bottom: 2px;
 }
 
@@ -1088,7 +1107,7 @@ a.tk-optie {
   border: 1.5px solid var(--tk-lijn);
   display: grid;
   place-items: center;
-  font-size: 12px;
+  font-size: var(--tk-t-fijn);
   font-weight: 800;
   color: transparent;
 }
@@ -1108,7 +1127,7 @@ a.tk-optie {
 .tk-bollen .tk-bol {
   width: 32px;
   height: 32px;
-  font-size: 12px;
+  font-size: var(--tk-t-fijn);
   border: 2px solid var(--tk-navy-2);
   margin-left: -10px;
 }
@@ -1133,7 +1152,7 @@ a.tk-optie {
 
 .tk-punt-kop {
   display: block;
-  font-size: 15.5px;
+  font-size: var(--tk-t-lead);
   margin-bottom: 4px;
 }
 
@@ -1144,7 +1163,7 @@ a.tk-optie {
 }
 
 .tk-punt-label {
-  font-size: 11.5px;
+  font-size: var(--tk-t-mini);
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -1170,13 +1189,13 @@ a.tk-optie {
 .tk-voorkeur {
   display: block;
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: var(--tk-t-basis);
 }
 
 .tk-voorkeur-vraagt {
   display: block;
   color: var(--tk-zacht);
-  font-size: 13.5px;
+  font-size: var(--tk-t-klein);
   line-height: 1.55;
   margin-top: 2px;
 }
@@ -1200,7 +1219,7 @@ a.tk-optie {
   border: 0;
   color: inherit;
   opacity: 0.6;
-  font-size: 20px;
+  font-size: var(--tk-t-sectie);
   line-height: 1;
   padding: 12px;
   cursor: pointer;
@@ -1274,4 +1293,59 @@ a.tk-optie {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ===================================================== herhaalde patronen ==
+
+   Dit stond allemaal als inline style in de JSX, op meerdere plekken hetzelfde
+   overgetypt. Een patroon dat vijf keer voorkomt is geen uitzondering meer maar
+   een onderdeel, en dat hoort hier te staan. */
+
+/* Een kaart met iets wat op je ligt te wachten: een voorstel, een uitnodiging.
+   De rand is het enige verschil — het blijft een gewone kaart. */
+.tk-kaart-klaar {
+  border-color: rgba(0, 168, 150, 0.45);
+}
+
+/* "(optioneel)" achter een label. Het label is hoofdletters met spatiëring;
+   dit hoort dat niet te zijn, want het is geen label maar een opmerking. */
+.tk-optioneel {
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Het kleurstipje van een Insights-kleur. */
+.tk-kleurstip {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  flex: 0 0 auto;
+  margin-top: 4px;
+}
+
+/* De laatste regel van een pagina: waar de belofte staat, met lucht eronder
+   zodat hij niet tegen de onderbalk aan plakt. */
+.tk-voetnoot {
+  margin-bottom: 40px;
+}
+
+/* Een knop die een woord in een zin is. Werd drie keer inline nagebouwd.
+
+   Deze krijgt met opzet geen 44 pixels: twee van de drie staan middenin een
+   lopende zin, en een raakvlak van 44 duwt de regel uit elkaar. Een woord in
+   een zin tik je aan zoals je een link in een zin aantikt — daar geldt de
+   regel voor losstaande knoppen niet. */
+.tk-tekstknop {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--tk-teal);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tk-tekstknop:hover {
+  text-decoration: underline;
 }

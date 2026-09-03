@@ -100,7 +100,7 @@ function Sectie({ sectie, opgeslagen, concept, uitProfiel, klaargezet, lidmaatsc
           <button
             type="button"
             onClick={() => setToonProfiel(!toonProfiel)}
-            style={{ background: "none", border: 0, color: "var(--tk-teal)", cursor: "pointer", padding: 0, font: "inherit" }}
+            className="tk-tekstknop"
           >
             {toonProfiel ? "Verberg" : "Bekijk"} wat je Insights-profiel hierover zegt ({uitProfiel.length})
           </button>
@@ -115,7 +115,7 @@ function Sectie({ sectie, opgeslagen, concept, uitProfiel, klaargezet, lidmaatsc
                   <button
                     type="button"
                     className="tk-knop tk-knop-rand tk-knop-klein"
-                    style={{ flex: "0 0 auto", padding: "3px 10px", fontSize: 12 }}
+                    style={{ flex: "0 0 auto", padding: "3px 10px", fontSize: "var(--tk-t-fijn)" }}
                     onClick={() => setTekst(tekst ? `${tekst.trim()} ${punt}` : punt)}
                   >
                     Neem over
@@ -192,7 +192,7 @@ export default function MijnHandleiding() {
       </p>
 
       {klaargezet && (
-        <div className="tk-kaart" style={{ borderColor: "rgba(0,168,150,0.45)" }}>
+        <div className="tk-kaart tk-kaart-klaar">
           <h2 style={{ marginTop: 0 }}>Er staat tekst voor je klaar</h2>
           <p>
             {klaargezet.vanNaam || "Iemand uit je team"} heeft bij{" "}
@@ -242,7 +242,7 @@ export default function MijnHandleiding() {
 
       <VolgendeStap />
 
-      <p className="tk-fijn" style={{ marginBottom: 40 }}>
+      <p className="tk-fijn tk-voetnoot">
         Wat je hier deelt, komt woordelijk bij je teamgenoten terecht. Schrijf dus op wat je ook
         hardop zou zeggen.
       </p>

@@ -335,13 +335,12 @@ export default function MijnTeam() {
             <Link
               className="tk-knop tk-knop-klein"
               to={`/app/samenwerken?met=${encodeURIComponent(l.uid)}`}
-              style={{ textDecoration: "none" }}
             >
               Samenwerken met {voornaam(l.naam, "deze collega")}
             </Link>
           )}
           {eigen && (
-            <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/profiel" style={{ textDecoration: "none" }}>
+            <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/profiel">
               Mijn profiel aanpassen
             </Link>
           )}
@@ -602,7 +601,6 @@ export default function MijnTeam() {
                   <Link
                     className="tk-knop tk-knop-klein"
                     to={`/app/samenwerken?met=${encodeURIComponent(pl.id)}`}
-                    style={{ textDecoration: "none" }}
                   >
                     Samenwerken met {voornaam(pl.naam, "dit profiel")}
                   </Link>
@@ -907,14 +905,12 @@ export default function MijnTeam() {
           <Link
             className="tk-knop tk-knop-rand tk-knop-klein"
             to={"/app/welkom?extra=1&nieuw=1"}
-            style={{ textDecoration: "none" }}
           >
             Een nieuw team aanmaken
           </Link>
           <Link
             className="tk-knop tk-knop-rand tk-knop-klein"
             to="/app/welkom?extra=1"
-            style={{ textDecoration: "none" }}
           >
             Bij een ander team aansluiten
           </Link>

@@ -96,7 +96,7 @@ export default function VolgendeStap({ variant = "klein", verbergAls = null }) {
   };
 
   const knop = stap.naar ? (
-    <Link className="tk-knop" to={stap.naar} style={{ textDecoration: "none", display: "inline-block" }}>
+    <Link className="tk-knop" to={stap.naar}>
       {stap.knop}
     </Link>
   ) : (
@@ -109,7 +109,7 @@ export default function VolgendeStap({ variant = "klein", verbergAls = null }) {
     return (
       <div className="tk-advies" style={{ marginBottom: 26 }}>
         <Stippen nu={stap.nummer} />
-        <h2 style={{ margin: "0 0 10px", fontSize: 22, lineHeight: 1.25 }}>{stap.kop}</h2>
+        <h2 style={{ margin: "0 0 10px", fontSize: "var(--tk-t-groot)", lineHeight: 1.25 }}>{stap.kop}</h2>
         <p style={{ color: "var(--tk-zacht)", lineHeight: 1.7, margin: "0 0 18px" }}>{stap.uitleg}</p>
 
         {stap.code && (

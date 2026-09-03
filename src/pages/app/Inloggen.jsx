@@ -123,7 +123,7 @@ export default function Inloggen() {
   if (afhandelen) {
     return (
       <div className="tk-inhoud tk-smal" style={{ paddingTop: 70, textAlign: "center" }}>
-        <div style={{ fontSize: 30, marginBottom: 10 }}>🧭</div>
+        <div style={{ fontSize: "var(--tk-t-titel)", marginBottom: 10 }}>🧭</div>
         <p className="tk-onderkop">Je wordt aangemeld...</p>
       </div>
     );

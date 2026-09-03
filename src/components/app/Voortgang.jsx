@@ -42,10 +42,10 @@ function Onderdeel({ onderdeel }) {
   return (
     <div style={{ padding: "12px 0", borderTop: "1px solid var(--tk-lijn)" }}>
       <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 6 }}>
-        <span aria-hidden="true" style={{ color: klaar ? "var(--tk-teal)" : "var(--tk-zacht)", fontSize: 14 }}>
+        <span aria-hidden="true" style={{ color: klaar ? "var(--tk-teal)" : "var(--tk-zacht)", fontSize: "var(--tk-t-basis)" }}>
           {klaar ? "✓" : "○"}
         </span>
-        <strong style={{ fontSize: 15 }}>{onderdeel.label}</strong>
+        <strong style={{ fontSize: "var(--tk-t-basis)" }}>{onderdeel.label}</strong>
         <span className="tk-fijn" style={{ marginLeft: "auto", whiteSpace: "nowrap" }}>
           {onderdeel.aantal} van {onderdeel.van}
         </span>
@@ -70,7 +70,7 @@ export default function Voortgang({ variant = "groot", toonOnderdelen = true }) 
         <span
           style={{
             marginLeft: "auto",
-            fontSize: 26,
+            fontSize: "var(--tk-t-titel)",
             fontWeight: 800,
             color: voortgang.compleet ? "var(--tk-teal)" : "var(--tk-tekst)",
             lineHeight: 1,
@@ -97,7 +97,6 @@ export default function Voortgang({ variant = "groot", toonOnderdelen = true }) 
           <Link
             className="tk-knop tk-knop-klein"
             to={voortgang.volgende.naar}
-            style={{ textDecoration: "none" }}
           >
             {voortgang.volgende.knop} ({voortgang.volgende.open})
           </Link>

@@ -41,8 +41,8 @@ function Keuze({ onKies }) {
 
       <button type="button" className="tk-keuze" style={{ padding: 20, marginBottom: 12 }} onClick={() => onKies("insights")}>
         <span>
-          <strong style={{ fontSize: 17 }}>Ik heb een Insights Discovery-profiel</strong>
-          <small style={{ fontSize: 14, marginTop: 6 }}>
+          <strong style={{ fontSize: "var(--tk-t-kop)" }}>Ik heb een Insights Discovery-profiel</strong>
+          <small style={{ fontSize: "var(--tk-t-basis)", marginTop: 6 }}>
             Upload het PDF-bestand. Wat daarin over jouw manier van werken staat, gebruiken we om de
             twaalf punten alvast in te vullen. Daarna loop je ze na en pas je aan wat niet klopt.
             Ongeveer een minuut.
@@ -52,8 +52,8 @@ function Keuze({ onKies }) {
 
       <button type="button" className="tk-keuze" style={{ padding: 20 }} onClick={() => onKies("zelf")}>
         <span>
-          <strong style={{ fontSize: 17 }}>Zelf invullen</strong>
-          <small style={{ fontSize: 14, marginTop: 6 }}>
+          <strong style={{ fontSize: "var(--tk-t-kop)" }}>Zelf invullen</strong>
+          <small style={{ fontSize: "var(--tk-t-basis)", marginTop: 6 }}>
             Twaalf korte vragen over hoe jij werkt en samenwerkt. Jij bepaalt elk antwoord. Ongeveer
             vijf minuten.
           </small>
@@ -98,7 +98,7 @@ function KenmerkKaart({
         >
           {nummer} / {totaal}
         </span>
-        <strong style={{ fontSize: 15.5 }}>{kenmerk.label}</strong>
+        <strong style={{ fontSize: "var(--tk-t-lead)" }}>{kenmerk.label}</strong>
         {gekozenOptie && <span className="tk-bron">{bronLabel(huidig.bron)}</span>}
         {gekozenOptie && huidig.bevestigd !== "nee" && (
           <span className={`tk-privacy ${zichtbaarheid.gedeeld ? "tk-privacy-gedeeld" : "tk-privacy-prive"}`}>
@@ -391,7 +391,7 @@ export default function MijnProfiel() {
       <Melding melding={melding} onSluiten={wisMelding} />
 
       {doen && onderdeel ? (
-        <div className="tk-kaart" style={{ borderColor: "rgba(0,168,150,0.45)" }}>
+        <div className="tk-kaart tk-kaart-klaar">
           <div className="tk-label" style={{ color: "var(--tk-teal)", marginBottom: 6 }}>
             {onderdeel.label}
           </div>
@@ -431,7 +431,6 @@ export default function MijnProfiel() {
                 <Link
                   className="tk-knop tk-knop-rand tk-knop-klein"
                   to="/app/profiel?doen=nagelopen"
-                  style={{ textDecoration: "none" }}
                 >
                   Eerst stuk voor stuk bekijken
                 </Link>
@@ -442,7 +441,7 @@ export default function MijnProfiel() {
       })()}
 
       {voorstellen.map((v) => (
-        <div className="tk-kaart" key={`${v.orgId}/${v.teamId}`} style={{ borderColor: "rgba(0,168,150,0.45)" }}>
+        <div className="tk-kaart tk-kaart-klaar" key={`${v.orgId}/${v.teamId}`}>
           <h2>Er staat een profielvoorstel voor je klaar</h2>
           <p>
             {v.vanNaam || "Iemand uit je team"} heeft jouw Insights-profiel ingelezen en een voorstel
@@ -492,7 +491,7 @@ export default function MijnProfiel() {
       ))}
 
       {doen && openPunten.length === 0 && (
-        <div className="tk-kaart" style={{ borderColor: "rgba(0,168,150,0.45)" }}>
+        <div className="tk-kaart tk-kaart-klaar">
           <h2>Dit deel is klaar</h2>
           <p>
             Er staat niets meer open bij "{onderdeel ? onderdeel.label.toLowerCase() : doen}".
@@ -502,7 +501,7 @@ export default function MijnProfiel() {
           </p>
           <div className="tk-knoppen">
             {voortgang.volgende && (
-              <Link className="tk-knop tk-knop-klein" to={voortgang.volgende.naar} style={{ textDecoration: "none" }}>
+              <Link className="tk-knop tk-knop-klein" to={voortgang.volgende.naar}>
                 {voortgang.volgende.knop} ({voortgang.volgende.open})
               </Link>
             )}
@@ -573,7 +572,7 @@ export default function MijnProfiel() {
               </button>
             )}
             {gedeeld > 0 && (
-              <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/samenwerken" style={{ textDecoration: "none" }}>
+              <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/samenwerken">
                 Advies vragen
               </Link>
             )}
@@ -645,7 +644,7 @@ export default function MijnProfiel() {
                     }
                   }}
                 >
-                  <span aria-hidden="true" style={{ width: 14, height: 14, borderRadius: 4, background: k.kleur, flex: "0 0 auto", marginTop: 4 }} />
+                  <span aria-hidden="true" className="tk-kleurstip" style={{ background: k.kleur }} />
                   <span>
                     {k.label}
                     <small>{k.omschrijving}</small>
@@ -660,7 +659,7 @@ export default function MijnProfiel() {
 
       <VolgendeStap />
 
-      <p className="tk-fijn" style={{ marginBottom: 40 }}>
+      <p className="tk-fijn tk-voetnoot">
         Wat je hier invult zijn voorkeuren in samenwerking, geen oordeel over wie je bent. Je kunt
         elk antwoord op elk moment aanpassen of intrekken.
       </p>

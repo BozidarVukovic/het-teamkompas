@@ -187,7 +187,7 @@ export default function Teambeeld() {
         </>
       )}
 
-      <p className="tk-fijn" style={{ marginBottom: 40 }}>
+      <p className="tk-fijn tk-voetnoot">
         Dit beeld verandert mee zodra iemand zijn profiel bijstelt of iets anders gaat delen. Het is
         een momentopname, geen typering van dit team.
       </p>

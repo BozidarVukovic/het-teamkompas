@@ -38,7 +38,7 @@ function DuoInhoud({ advies }) {
   return (
     <>
       <div className="tk-stap">{advies.situatie ? advies.situatie.label : "Advies"}</div>
-      <h2 style={{ margin: "0 0 10px", fontSize: 20 }}>
+      <h2 style={{ margin: "0 0 10px", fontSize: "var(--tk-t-sectie)" }}>
         {advies.namen[0]} en {advies.namen[1]}
       </h2>
       {advies.situatie && (
@@ -61,7 +61,7 @@ function DuoInhoud({ advies }) {
               <div className="tk-label">{rij.label}</div>
               {rij.kanten.map((k) => (
                 <div key={k.naam} style={{ marginTop: 10 }}>
-                  <strong style={{ fontSize: 14.5 }}>{k.naam}</strong>
+                  <strong style={{ fontSize: "var(--tk-t-basis)" }}>{k.naam}</strong>
                   <p style={{ margin: "2px 0 0", lineHeight: 1.7, fontStyle: "italic" }}>
                     &ldquo;{k.deelt}&rdquo;
                   </p>
@@ -305,7 +305,7 @@ export default function Samenwerken() {
             Nodig je collega's uit met de teamcode. Zodra iemand meedoet en iets deelt, kun je hier
             advies vragen.
           </p>
-          <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/team" style={{ textDecoration: "none" }}>
+          <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/team">
             Naar de teamcode
           </Link>
         </div>
@@ -328,7 +328,7 @@ export default function Samenwerken() {
                   <span className="tk-bol">{initialen(l.naam)}</span>
                   <span>
                     {l.naam || "Teamgenoot"}
-                    <small style={{ display: "block", color: "var(--tk-zacht)", fontSize: 12.5 }}>
+                    <small style={{ display: "block", color: "var(--tk-zacht)", fontSize: "var(--tk-t-fijn)" }}>
                       {collegaInEenZin(l)}
                     </small>
                   </span>
@@ -436,7 +436,7 @@ export default function Samenwerken() {
           <div className="tk-advies">
             {advies.soort === "duo" ? <DuoInhoud advies={advies} /> : (<>
             <div className="tk-stap">{advies.situatie ? advies.situatie.label : "Advies"}</div>
-            <h2 style={{ margin: "0 0 10px", fontSize: 20 }}>
+            <h2 style={{ margin: "0 0 10px", fontSize: "var(--tk-t-sectie)" }}>
               Jullie samenwerking
             </h2>
             {advies.samenvatting.map((zin) => (
@@ -587,7 +587,7 @@ export default function Samenwerken() {
                 {beoordeeld === false && !toelichtingVerstuurd && (
                   <div style={{ marginTop: 14 }}>
                     <label className="tk-label" htmlFor="tk-toelichting">
-                      Wat miste er? <span style={{ fontWeight: 500, textTransform: "none", letterSpacing: 0 }}>(optioneel)</span>
+                      Wat miste er? <span className="tk-optioneel">(optioneel)</span>
                     </label>
                     <textarea
                       id="tk-toelichting"

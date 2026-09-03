@@ -79,7 +79,7 @@ function Experiment({ experiment, opTerugblik }) {
 
   return (
     <div className="tk-kaart">
-      <p style={{ margin: 0, fontSize: 16.5, lineHeight: 1.6 }}>{experiment.actie}</p>
+      <p style={{ margin: 0, fontSize: "var(--tk-t-lead)", lineHeight: 1.6 }}>{experiment.actie}</p>
       <p className="tk-fijn" style={{ margin: "8px 0 0" }}>
         {standInEenZin(experiment)}
         {experiment.situatieLabel ? ` · ${experiment.situatieLabel}` : ""}
@@ -122,7 +122,7 @@ function Experiment({ experiment, opTerugblik }) {
 
           <label className="tk-label" htmlFor="tk-terugblik" style={{ marginTop: 14, display: "block" }}>
             Wat merkte je?{" "}
-            <span style={{ fontWeight: 500, textTransform: "none", letterSpacing: 0 }}>(optioneel)</span>
+            <span className="tk-optioneel">(optioneel)</span>
           </label>
           <textarea
             id="tk-terugblik"
@@ -207,7 +207,7 @@ function Terugkijken({ sessie, label, opBewaren }) {
 
       <label className="tk-label" htmlFor="tk-reflectie" style={{ marginTop: 16, display: "block" }}>
         Wat viel je op?{" "}
-        <span style={{ fontWeight: 500, textTransform: "none", letterSpacing: 0 }}>(optioneel)</span>
+        <span className="tk-optioneel">(optioneel)</span>
       </label>
       <textarea
         id="tk-reflectie"
@@ -341,7 +341,7 @@ export default function Ik() {
           {gemaakt.map((r) => (
             <div className="tk-kaart" key={r.id}>
               <div className="tk-label">{r.situatieLabel || "Een gesprek"}</div>
-              <p style={{ margin: "6px 0 0", fontSize: 16, lineHeight: 1.6 }}>
+              <p style={{ margin: "6px 0 0", fontSize: "var(--tk-t-lead)", lineHeight: 1.6 }}>
                 {terugblikLabel(r.terugblik)}
               </p>
               {r.tekst && <p style={{ marginBottom: 0 }}>{r.tekst}</p>}
@@ -350,7 +350,7 @@ export default function Ik() {
         </section>
       )}
 
-      <p className="tk-fijn" style={{ marginBottom: 40 }}>
+      <p className="tk-fijn tk-voetnoot">
         Je teamgenoten zien alleen wat je zelf hebt gedeeld. Wat je invult maar niet deelt, blijft
         van jou.
       </p>
