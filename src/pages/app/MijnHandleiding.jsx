@@ -202,8 +202,7 @@ export default function MijnHandleiding() {
             hoort. Lees het na, pas aan wat niet meer klopt, en bewaar wat je wilt houden.
           </p>
           <p className="tk-fijn">
-            Er staat nog niets in je handleiding. Dat gebeurt pas als jij op Bewaren klikt, en delen
-            is daarna nog een aparte keuze.
+            Er staat nog niets in je handleiding. Dat gebeurt pas als jij op Bewaren klikt.
           </p>
           <Melding melding={voorstelMelding} onSluiten={wisVoorstelMelding} />
           <button

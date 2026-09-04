@@ -148,7 +148,7 @@ export default function Teambeeld() {
               <h2 className="tk-groep-kop">Waar jullie uiteenlopen</h2>
               <p className="tk-fijn" style={{ margin: "-6px 0 12px" }}>
                 Hier zit meer dan één voorkeur in het team. Dat is geen probleem om op te lossen,
-                maar iets om te benoemen als het schuurt. Tik een regel aan voor wat erin zit.
+                maar iets om te benoemen als het schuurt.
               </p>
               <div className="tk-groep-lijst">
                 {beeld.uiteen.map((rij) => (

@@ -750,7 +750,6 @@ export default function MijnTeam() {
 
                   <p className="tk-fijn" style={{ marginTop: 14, marginBottom: 0 }}>
                     De uitnodiging bevat een link met de code erin, dus de ander hoeft niets over te typen.
-                    Diegene vult daarna zijn eigen profiel in en bepaalt zelf wat er gedeeld wordt.
                   </p>
 
                   <button
@@ -865,8 +864,7 @@ export default function MijnTeam() {
           <p className="tk-fijn" style={{ marginTop: -6 }}>
             {begeleidt.length === 1 ? "Deze persoon zet" : "Deze mensen zetten"} het team op en
             {begeleidt.length === 1 ? " beheert" : " beheren"} het, maar
-            {begeleidt.length === 1 ? " doet" : " doen"} er zelf niet aan mee. Je kunt er dus ook
-            geen advies over de samenwerking mee vragen.
+            {begeleidt.length === 1 ? " doet" : " doen"} er zelf niet aan mee.
           </p>
           <div className="tk-groep-lijst">{begeleidt.map(persoonsrij)}</div>
         </section>
@@ -920,14 +918,6 @@ export default function MijnTeam() {
             Bij een ander team aansluiten
           </Link>
         </div>
-
-        {ikBenBeheerder && (
-          <p className="tk-fijn">
-            Begeleid je dit team van buitenaf? Zet het op, voeg de profielen toe, en maak daarna de
-            teamleider beheerder. Daarna kun je zelf vertrekken zonder dat het team stuurloos
-            achterblijft.
-          </p>
-        )}
 
         {bevestigVerlaten ? (
           <>

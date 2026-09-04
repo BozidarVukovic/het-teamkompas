@@ -58,11 +58,6 @@ function Keuze({ onKies }) {
           </small>
         </span>
       </button>
-
-      <p className="tk-fijn" style={{ marginTop: 18 }}>
-        Je kunt altijd wisselen. Ook na een upload blijft elk punt aanpasbaar, en zonder profiel werkt
-        alles net zo goed.
-      </p>
     </>
   );
 }
@@ -727,8 +722,7 @@ export default function MijnProfiel() {
       )}
 
       <p className="tk-fijn tk-voetnoot">
-        Wat je hier invult zijn voorkeuren in samenwerking, geen oordeel over wie je bent. Je kunt
-        elk antwoord op elk moment aanpassen of intrekken.
+        Wat je hier invult zijn voorkeuren in samenwerking, geen oordeel over wie je bent.
       </p>
     </div>
   );

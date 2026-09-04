@@ -82,9 +82,8 @@ export default function MijnGegevens() {
           maxLength={60}
         />
         <p className="tk-fijn" style={{ marginTop: 8 }}>
-          Je functie helpt teamgenoten plaatsen vanuit welke rol je meedoet. Hij speelt geen rol in
-          het advies: dat gaat over hoe jullie samenwerken, niet over wie boven wie staat. Laat hem
-          leeg als je liever niets invult, en haal hem later gerust weer weg.
+          Helpt teamgenoten plaatsen vanuit welke rol je meedoet. Speelt geen rol in het advies:
+          dat gaat over hoe jullie samenwerken, niet over wie boven wie staat.
         </p>
 
         <div className="tk-knoppen" style={{ marginTop: 14 }}>
@@ -141,10 +140,6 @@ export default function MijnGegevens() {
           bruikbaar, dan kun je er één zin bij schrijven; die lezen de makers van de app om het
           advies te verbeteren. Je teamgenoten en je beheerder zien daar niets van. Er is geen
           scoring, geen ranglijst en geen profilering.
-        </p>
-        <p className="tk-fijn">
-          Staat er een profielvoorstel voor je klaar dat een facilitator heeft neergezet, dan hoort
-          dat er ook bij. Het zit in je download en verdwijnt mee als je alles verwijdert.
         </p>
       </div>
 

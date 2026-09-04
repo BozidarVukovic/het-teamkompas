@@ -313,8 +313,7 @@ export default function Ik() {
         <section className="tk-groep">
           <h2 className="tk-groep-kop">Wat ik probeer</h2>
           <p className="tk-fijn" style={{ margin: "0 0 12px" }}>
-            Kleine acties uit een advies die je {LOOPTIJD_DAGEN} dagen vasthoudt. Ze staan niet in
-            je team en er wordt niets bijgehouden behalve wat je zelf schrijft.
+            Kleine acties uit een advies die je {LOOPTIJD_DAGEN} dagen vasthoudt. Alleen jij ziet ze.
           </p>
           {rij.map((e) => (
             <Experiment key={e.id} experiment={e} opTerugblik={blikTerug} />
@@ -326,8 +325,7 @@ export default function Ik() {
         <section className="tk-groep">
           <h2 className="tk-groep-kop">Terugkijken</h2>
           <p className="tk-fijn" style={{ margin: "0 0 12px" }}>
-            Na een gesprek waar je advies bij vroeg, vraagt de app één keer hoe het ging. Wat je
-            antwoordt is van jou; je team ziet het niet.
+            Na een gesprek waar je advies bij vroeg, vraagt de app één keer hoe het ging.
           </p>
 
           {teBespreken && (
@@ -349,11 +347,6 @@ export default function Ik() {
           ))}
         </section>
       )}
-
-      <p className="tk-fijn tk-voetnoot">
-        Je teamgenoten zien alleen wat je zelf hebt gedeeld. Wat je invult maar niet deelt, blijft
-        van jou.
-      </p>
     </div>
   );
 }
