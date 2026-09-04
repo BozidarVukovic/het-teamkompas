@@ -111,7 +111,7 @@ function Persoon({ sleutel, naam: hunNaam, achter, onder, uitgeklapt, onKlik, ch
 export default function MijnTeam() {
   const {
     gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam, verwijderTeam, vernieuwCode,
-    teamOverzicht, herlaadTeam, ikBegeleid, zetRol,
+    teamOverzicht, herlaadTeam, ikBegeleid, zetRol, magTeams,
   } = useApp();
 
   // Team, leden en gedeeld staan al in de context. Hier stond een tweede kopie
@@ -1046,12 +1046,14 @@ export default function MijnTeam() {
             ander team aansluiten" heette. Voor wie teams begeleidt is dat juist
             de meest gebruikte weg, dus staat hij er nu gewoon naast. */}
         <div className="tk-knoppen">
-          <Link
-            className="tk-knop tk-knop-rand tk-knop-klein"
-            to={"/app/welkom?extra=1&nieuw=1"}
-          >
-            Een nieuw team aanmaken
-          </Link>
+          {magTeams && (
+            <Link
+              className="tk-knop tk-knop-rand tk-knop-klein"
+              to={"/app/welkom?extra=1&nieuw=1"}
+            >
+              Een nieuw team aanmaken
+            </Link>
+          )}
           <Link
             className="tk-knop tk-knop-rand tk-knop-klein"
             to="/app/welkom?extra=1"

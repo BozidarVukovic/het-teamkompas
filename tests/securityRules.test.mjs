@@ -96,8 +96,16 @@ if (!draait) {
       await setDoc(doc(db, padGedeeld(TEAM_A, "anna")), { naam: "Anna", onderdelen: [{ titel: "Zo communiceer ik", tekst: "Graag vooraf context." }] });
       await setDoc(doc(db, padGedeeld(TEAM_B, "dana")), { naam: "Dana", onderdelen: [] });
       await setDoc(doc(db, "teamcodes/CODE-TEAM-A"), { orgId: ORG, teamId: TEAM_A, aangemaaktDoor: "cato" });
+      await setDoc(doc(db, "begeleiders/frits@example.nl"), { naam: "Frits" });
     });
   }
+
+  // Frits begeleidt teams en staat daarom op de begeleiderslijst. Zijn context
+  // draagt een e-mailadres, want daar kijken de regels naar.
+  const frits = () =>
+    omgeving.authenticatedContext("frits", { email: "frits@example.nl" }).firestore();
+  const buitenstaander = () =>
+    omgeving.authenticatedContext("olga", { email: "olga@example.nl" }).firestore();
 
   test("1. een gebruiker kan het eigen profiel lezen", async () => {
     await zetKlaar();
@@ -861,6 +869,61 @@ if (!draait) {
         code: "CODE-TEAM-A",
       })
     );
+  });
+
+  // ── Wie mag er een team beginnen ─────────────────────────────────────────
+  //
+  // De app is op uitnodiging. Meedoen met een bestaand team kan met een geldige
+  // code; zelf een organisatie met een team opzetten is voor wie op de
+  // begeleiderslijst staat.
+
+  test("63. wie niet op de begeleiderslijst staat, begint geen eigen organisatie", async () => {
+    await zetKlaar();
+    await assertFails(
+      setDoc(doc(buitenstaander(), "organisaties/eigen-org"), {
+        naam: "Van mezelf",
+        eigenaar: "olga",
+      })
+    );
+    // Ook een bestaand teamlid zonder plek op de lijst kan dat niet.
+    await assertFails(
+      setDoc(doc(anna(), "organisaties/org-van-anna"), { naam: "Anna bv", eigenaar: "anna" })
+    );
+    await assertFails(
+      setDoc(doc(anna(), `organisaties/${ORG}/teams/nieuwteam`), {
+        naam: "Stiekem team",
+        aangemaaktDoor: "anna",
+      })
+    );
+  });
+
+  test("64. een begeleider zet wel een organisatie met een team op", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(frits(), "organisaties/org-van-frits"), { naam: "Klant bv", eigenaar: "frits" })
+    );
+    await assertSucceeds(
+      setDoc(doc(frits(), "organisaties/org-van-frits/teams/team1"), {
+        naam: "Het team",
+        aangemaaktDoor: "frits",
+      })
+    );
+  });
+
+  test("65. de begeleiderslijst is niet in te zien of aan te vullen", async () => {
+    await zetKlaar();
+    // Je mag opvragen of jíj erop staat, want daar hangt een knop van af.
+    await assertSucceeds(getDoc(doc(frits(), "begeleiders/frits@example.nl")));
+    await assertSucceeds(getDoc(doc(buitenstaander(), "begeleiders/olga@example.nl")));
+    // Maar niet of een ander erop staat, en de lijst doorzoeken evenmin.
+    await assertFails(getDoc(doc(buitenstaander(), "begeleiders/frits@example.nl")));
+    await assertFails(getDocs(collection(frits(), "begeleiders")));
+    // En jezelf toevoegen kan al helemaal niet.
+    await assertFails(setDoc(doc(buitenstaander(), "begeleiders/olga@example.nl"), { naam: "Olga" }));
+    await assertFails(deleteDoc(doc(frits(), "begeleiders/frits@example.nl")));
+    // De makers beheren de lijst.
+    await assertSucceeds(setDoc(doc(maker(), "begeleiders/nieuw@example.nl"), { naam: "Nieuw" }));
+    await assertSucceeds(getDocs(collection(maker(), "begeleiders")));
   });
 
   test.after(async () => {

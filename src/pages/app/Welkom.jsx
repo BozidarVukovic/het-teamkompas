@@ -12,7 +12,7 @@ import useActie from "../../components/app/useActie";
 import Melding from "../../components/app/Melding";
 
 export default function Welkom() {
-  const { naam, zetNaam, maakTeam, doeMee, gebruiker, logUit, uitnodigingscode, vergeetUitnodiging, lidmaatschappen } =
+  const { naam, zetNaam, maakTeam, doeMee, gebruiker, logUit, uitnodigingscode, vergeetUitnodiging, lidmaatschappen, magTeams } =
     useApp();
 
   // Ditzelfde scherm doet twee dingen: het is de laatste stap van het aanmelden
@@ -147,6 +147,10 @@ export default function Welkom() {
         </div>
       )}
 
+      {/* Een nieuw team beginnen is voor wie teams begeleidt. Voor de rest is
+          er één weg naar binnen: de code uit de uitnodiging. Die keuze staat er
+          dan ook niet, want een knop die daarna wordt geweigerd is erger dan
+          geen knop. */}
       <div className="tk-keuzes" style={{ marginBottom: 18 }}>
         <button
           type="button"
@@ -158,17 +162,26 @@ export default function Welkom() {
             <small>Iemand uit je team heeft je een code van acht tekens gestuurd.</small>
           </span>
         </button>
-        <button
-          type="button"
-          className={`tk-keuze${keuze === "nieuw" ? " gekozen" : ""}`}
-          onClick={() => setKeuze("nieuw")}
-        >
-          <span>
-            Ik maak een nieuw team aan
-            <small>Je wordt beheerder en krijgt een code om anderen uit te nodigen.</small>
-          </span>
-        </button>
+        {magTeams && (
+          <button
+            type="button"
+            className={`tk-keuze${keuze === "nieuw" ? " gekozen" : ""}`}
+            onClick={() => setKeuze("nieuw")}
+          >
+            <span>
+              Ik maak een nieuw team aan
+              <small>Je wordt beheerder en krijgt een code om anderen uit te nodigen.</small>
+            </span>
+          </button>
+        )}
       </div>
+
+      {!magTeams && !heeftAlEenTeam && (
+        <p className="tk-fijn" style={{ marginTop: -6, marginBottom: 18 }}>
+          Mijn Teamkompas werkt op uitnodiging. Heb je geen code? Vraag hem bij degene die het
+          team beheert.
+        </p>
+      )}
 
       {keuze === "code" && (
         <form className="tk-kaart" onSubmit={meedoen}>
@@ -190,7 +203,7 @@ export default function Welkom() {
         </form>
       )}
 
-      {keuze === "nieuw" && (
+      {keuze === "nieuw" && magTeams && (
         <form className="tk-kaart" onSubmit={aanmaken}>
           <label className="tk-label" htmlFor="tk-org">Organisatie</label>
           <input

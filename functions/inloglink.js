@@ -48,6 +48,41 @@ const PER_DAG_TOTAAL = 300;
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+// De app is op uitnodiging. Deze twee adressen komen er altijd in, ook als de
+// begeleiderslijst leeg of stuk is; anders kun je jezelf buitensluiten uit je
+// eigen omgeving en is er geen weg meer terug.
+const ALTIJD_TOEGESTAAN = ["bozidar@mijnteamkompas.nl", "edmond@mijnteamkompas.nl"];
+
+/**
+ * Mag dit adres een inloglink krijgen?
+ *
+ * Drie manieren, en meer zijn er niet:
+ *
+ * 1. Er zit een geldige teamcode bij. Dan kom je binnen via een uitnodiging
+ *    van iemand die het team beheert, en dat is precies de bedoelde route.
+ * 2. Het adres heeft al een account. Wie eenmaal meedoet, moet terug kunnen
+ *    inloggen zonder telkens een nieuwe uitnodiging nodig te hebben.
+ * 3. Het adres staat op de begeleiderslijst: /begeleiders/{email} in Firestore.
+ *    Dat zijn de mensen die zelf teams opzetten.
+ *
+ * Klopt geen van drieën, dan gaat er geen mail weg. De browser krijgt wel
+ * hetzelfde antwoord als anders; zie de opmerking bij de functie hieronder.
+ */
+async function magInloggen(db, email, code) {
+  if (ALTIJD_TOEGESTAAN.includes(email)) return true;
+
+  if (code) {
+    const codeDoc = await db.collection("teamcodes").doc(code).get().catch(() => null);
+    if (codeDoc && codeDoc.exists) return true;
+  }
+
+  const bestaand = await admin.auth().getUserByEmail(email).catch(() => null);
+  if (bestaand) return true;
+
+  const begeleider = await db.collection("begeleiders").doc(email).get().catch(() => null);
+  return Boolean(begeleider && begeleider.exists);
+}
+
 const sleutelVan = (email) => crypto.createHash("sha256").update(email).digest("hex");
 const vandaag = () => new Date().toISOString().slice(0, 10);
 
@@ -209,6 +244,7 @@ function mailtekst({ link, teamNaam }) {
 exports.stuurInloglink = onCall({ secrets: [RESEND_API_KEY] }, async (request) => {
   const email = String((request.data && request.data.email) || "").trim().toLowerCase();
   const teamNaam = String((request.data && request.data.teamNaam) || "").trim().slice(0, 80);
+  const code = String((request.data && request.data.code) || "").trim().toUpperCase().slice(0, 20);
 
   if (!EMAIL.test(email) || email.length > 254) {
     throw new HttpsError("invalid-argument", "Dat lijkt geen geldig e-mailadres.");
@@ -216,6 +252,18 @@ exports.stuurInloglink = onCall({ secrets: [RESEND_API_KEY] }, async (request) =
 
   const db = admin.firestore();
   if (!(await magVersturen(db, email))) return { verstuurd: true };
+
+  // Geen uitnodiging, geen account, niet op de lijst: dan gaat er niets weg.
+  //
+  // Het antwoord blijft hetzelfde als bij een geslaagde verzending. Zou hier
+  // een foutmelding komen, dan kan iemand van buitenaf adressen langslopen en
+  // uit het verschil afleiden wie er een account heeft. Dat iemand Mijn
+  // Teamkompas gebruikt, is niets om aan een vreemde prijs te geven. Het
+  // inlogscherm vertelt daarom vooraf dat de app op uitnodiging werkt.
+  if (!(await magInloggen(db, email, code))) {
+    console.log("Inloglink geweigerd: geen uitnodiging, geen account, niet op de lijst.");
+    return { verstuurd: true };
+  }
 
   const gevraagd = String((request.data && request.data.terug) || "");
   const terug = TERUG_TOEGESTAAN.includes(gevraagd) ? gevraagd : TERUG_STANDAARD;

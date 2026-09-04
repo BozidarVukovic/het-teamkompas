@@ -102,6 +102,31 @@ service cloud.firestore {
       ).data.rol in ["beheerder", "begeleider"];
     }
 
+    // Wie mag er zelf een organisatie met een team opzetten?
+    //
+    // De app is op uitnodiging. Zonder deze grens kon iedereen die een account
+    // had een eigen organisatie beginnen, en stond er van alles in de database
+    // dat niets met een begeleid team te maken had. Meedoen met een bestaand
+    // team blijft gewoon open: daar heb je een geldige teamcode voor nodig.
+    //
+    // De lijst staat in Firestore, zodat er geen nieuwe uitrol van de regels
+    // nodig is om iemand toe te voegen. De twee makers staan er los van, zodat
+    // een lege of verwijderde lijst niemand buitensluit.
+    match /begeleiders/{email} {
+      // Je mag opvragen of jíj erop staat; de app verbergt de knop anders.
+      allow get: if ingelogd() && request.auth.token.email == email;
+      allow list: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    function magTeamsMaken() {
+      return isAdmin() || (
+        ingelogd() && exists(
+          /databases/$(database)/documents/begeleiders/$(request.auth.token.email)
+        )
+      );
+    }
+
     // Het eigen gebruikersdocument: naam, e-mail en de lijst met lidmaatschappen.
     // Niemand anders kan dit lezen, ook een teambeheerder niet.
     match /gebruikers/{uid} {
@@ -145,7 +170,7 @@ service cloud.firestore {
       // een naam en het moment van aanmaken.
       allow get: if ingelogd();
       allow list: if false;
-      allow create: if ingelogd()
+      allow create: if magTeamsMaken()
         && request.resource.data.eigenaar == request.auth.uid;
       allow update, delete: if ingelogd()
         && resource.data.eigenaar == request.auth.uid;
@@ -153,7 +178,7 @@ service cloud.firestore {
       match /teams/{teamId} {
         allow get: if isTeamlid(orgId, teamId);
         allow list: if false;
-        allow create: if ingelogd()
+        allow create: if magTeamsMaken()
           && request.resource.data.aangemaaktDoor == request.auth.uid;
         allow update: if isTeambeheerder(orgId, teamId);
         allow delete: if isTeambeheerder(orgId, teamId);

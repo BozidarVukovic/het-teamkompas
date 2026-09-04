@@ -151,6 +151,34 @@ export async function maakOrganisatieMetTeam({
 }
 
 /**
+ * Mag dit adres zelf een organisatie met een team opzetten?
+ *
+ * De app is op uitnodiging: meedoen met een bestaand team kan met een code,
+ * maar een nieuw team beginnen is voor de mensen die teams begeleiden. Die
+ * staan in /begeleiders. De regels dwingen dit af; deze functie bepaalt alleen
+ * of de app de knop laat zien, zodat niemand op een weigering stuit.
+ *
+ * Een leesfout betekent hier "nee". Dat is de veilige kant: hooguit ontbreekt
+ * een knop, en dan valt op dat er iets niet klopt.
+ */
+// Dezelfde twee adressen als in de regels en in de inlogfunctie. Ze staan hier
+// los van de lijst, zodat een lege of verwijderde lijst de makers niet uit hun
+// eigen omgeving sluit.
+const ALTIJD_BEGELEIDER = ["bozidar@mijnteamkompas.nl", "edmond@mijnteamkompas.nl"];
+
+export async function magTeamsMaken(email) {
+  const schoon = String(email || "").trim().toLowerCase();
+  if (!schoon) return false;
+  if (ALTIJD_BEGELEIDER.includes(schoon)) return true;
+  try {
+    const snap = await getDoc(doc(db, "begeleiders", schoon));
+    return snap.exists();
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Geeft een team een nieuwe code en trekt de oude in.
  *
  * Een teamcode gaat rond in mailtjes en groepsapps en blijft daar jaren staan.

@@ -48,6 +48,7 @@ import {
   haalProfiel,
   maakGebruiker,
   maakOrganisatieMetTeam,
+  magTeamsMaken as magTeamsMakenInDb,
   treedToeMetCode,
   vernieuwTeamcode as vernieuwTeamcodeInDb,
   verlaatTeam as verlaatTeamInDb,
@@ -204,11 +205,16 @@ function terugkeeradres() {
     await httpsCallable(functies, "stuurInloglink")({
       email: schoon,
       terug: terugkeeradres(),
+      // De app is op uitnodiging. Zit er een teamcode in de link waarmee
+      // iemand hier kwam, dan gaat die mee: de functie stuurt alleen een
+      // inloglink bij een geldige uitnodiging, een bestaand account of een
+      // adres van een begeleider.
+      code: uitnodigingscode || "",
     });
 
     schrijfOpslag(SLEUTEL_EMAIL, schoon);
     return schoon;
-  }, []);
+  }, [uitnodigingscode]);
 
   const isInloglink = useCallback(() => isSignInWithEmailLink(auth, window.location.href), []);
 
@@ -365,6 +371,23 @@ function terugkeeradres() {
     if (!gebruiker) return;
     laadTeamOverzicht(actiefTeam);
   }, [gebruiker, actiefTeam, laadTeamOverzicht]);
+
+  // Zelf een team opzetten is voor wie teams begeleidt. Staat dit op false, dan
+  // laat de app die keuze niet zien; de regels weigeren hem hoe dan ook.
+  const [magTeams, setMagTeams] = useState(false);
+  useEffect(() => {
+    let geldig = true;
+    if (!gebruiker) {
+      setMagTeams(false);
+      return () => {};
+    }
+    magTeamsMakenInDb(gebruiker.email).then((mag) => {
+      if (geldig) setMagTeams(mag);
+    });
+    return () => {
+      geldig = false;
+    };
+  }, [gebruiker]);
 
   const kiesTeam = useCallback((sleutel) => {
     setActiefTeamSleutel(sleutel);
@@ -822,6 +845,7 @@ function terugkeeradres() {
       verlaatTeam,
       verwijderTeam,
       vernieuwCode,
+      magTeams,
       verwijderAlles,
       herlaad: () => (gebruiker ? laadGegevens(gebruiker.uid, gebruiker.email) : null),
     }),
@@ -830,7 +854,7 @@ function terugkeeradres() {
       kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, bewaarAfspraak, verwijderAfspraak, experimenten, startExperiment, blikTerug, sessies, reflecties, bewaarReflectie, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
-      wisInsights, maakTeam, doeMee, verlaatTeam, verwijderTeam, vernieuwCode, verwijderAlles, laadGegevens,
+      wisInsights, maakTeam, doeMee, verlaatTeam, verwijderTeam, vernieuwCode, magTeams, verwijderAlles, laadGegevens,
     ]
   );
 

@@ -38,7 +38,7 @@ function foutmelding(err) {
 }
 
 export default function Inloggen() {
-  const { stuurInloglink, isInloglink, voltooiInloggen, gebruiker } = useApp();
+  const { stuurInloglink, isInloglink, voltooiInloggen, gebruiker, uitnodigingscode } = useApp();
   const navigeer = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -185,6 +185,23 @@ export default function Inloggen() {
 
       {fout && <div className="tk-melding tk-melding-fout">{fout}</div>}
 
+      {/* De app werkt op uitnodiging: zonder geldige teamcode, bestaand account
+          of plek op de begeleiderslijst gaat er geen link weg. Dat staat hier,
+          want anders zit iemand op een mail te wachten die nooit komt. Zit de
+          code al in de link waarmee iemand hier kwam, dan is er niets uit te
+          leggen en zeggen we dat gewoon. */}
+      {uitnodigingscode ? (
+        <div className="tk-melding tk-melding-goed">
+          Je bent uitgenodigd voor een team. Vul je e-mailadres in en je bent zo binnen.
+        </div>
+      ) : (
+        <div className="tk-melding">
+          Mijn Teamkompas werkt op uitnodiging. Heb je nog geen account, open dan de link uit de
+          uitnodiging van je team; de teamcode staat daar al in. Heb je hier al eerder ingelogd,
+          dan kun je hieronder gewoon verder.
+        </div>
+      )}
+
       {/* Wie hier voor het eerst komt, ziet anders alleen een invoerveld en
           moet maar raden waarvoor hij zich aanmeldt. Dit blok staat vóór het
           formulier, want die vraag komt eerder dan het e-mailadres. */}
@@ -226,6 +243,13 @@ export default function Inloggen() {
             komt daar vaak terecht. Markeer hem als "geen ongewenste e-mail", dan gaat het de
             volgende keer vanzelf goed.
           </p>
+          {!uitnodigingscode && (
+            <p className="tk-fijn" style={{ marginBottom: 12 }}>
+              Blijft het stil en heb je hier nog nooit ingelogd? Dan is dit adres nog niet
+              uitgenodigd. Open de link uit de uitnodiging van je team, of vraag die op bij degene
+              die het team beheert.
+            </p>
+          )}
           <button
             type="button"
             className="tk-knop tk-knop-rand tk-knop-klein"
