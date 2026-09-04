@@ -1330,6 +1330,18 @@ a.tk-optie {
   margin-bottom: 40px;
 }
 
+/* Het volgnummer voor een kenmerk. Tabulaire cijfers, zodat 1 en 12 even
+   breed zijn en de labels erachter recht onder elkaar beginnen. Het is een
+   plaats in een lijst, geen score — dus zacht, en niet groter dan nodig. */
+.tk-nummer {
+  flex: 0 0 auto;
+  min-width: 18px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
 /* Een knop die een woord in een zin is. Werd drie keer inline nagebouwd.
 
    Deze krijgt met opzet geen 44 pixels: twee van de drie staan middenin een

@@ -12,7 +12,6 @@
 import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
-import VolgendeStap from "../../components/app/VolgendeStap";
 import { BEVESTIGING, BRONNEN, CATEGORIEEN, KENMERKEN } from "../../data/app/kenmerken";
 import { KLEUREN, insightsSamenvatting, kleur } from "../../lib/app/insights";
 import InsightsUpload from "../../components/app/InsightsUpload";
@@ -70,77 +69,85 @@ function Keuze({ onKies }) {
 
 /* ------------------------------------------------------------- één kenmerk */
 
-function KenmerkKaart({
+/**
+ * Eén kenmerk als één regel, die je opendraait.
+ *
+ * Dit stond als twaalf blokken in vier volle kaarten onder elkaar: bij elk punt
+ * de vraag, vier antwoordknoppen, drie bevestigingsknoppen en een deel-vinkje,
+ * allemaal tegelijk in beeld. Je zag geen profiel, je zag een formulier.
+ *
+ * Dicht staat er wat je erover deelt — de zin zelf, in jouw woorden. Open staat
+ * het formulier. Er staat er één tegelijk open.
+ */
+function KenmerkRij({
   kenmerk,
   nummer,
-  totaal,
   huidig,
   lidmaatschappen,
   deelbareTeams,
+  open,
+  onOpen,
   onKies,
   onBevestig,
   onDelen,
 }) {
   const gekozenOptie = huidig && huidig.waarde ? kenmerk.opties.find((o) => o.id === huidig.waarde) : null;
-  const [open, setOpen] = useState(!gekozenOptie);
+  const ingevuld = gekozenOptie && huidig.bevestigd !== "nee";
 
   // Bij elk punt staat wie het kan zien. "Privé" is geen tussenstand die je nog
   // moet afmaken; het is een geldige keuze, en die hoort er net zo duidelijk te
   // staan als het delen zelf.
   const zichtbaarheid = zichtbaarheidVan(huidig, lidmaatschappen);
 
-  return (
-    <div style={{ padding: "16px 0", borderTop: "1px solid var(--tk-lijn)" }}>
-      <div style={{ display: "flex", gap: 10, alignItems: "baseline", flexWrap: "wrap" }}>
-        <span
-          className="tk-fijn"
-          style={{ fontVariantNumeric: "tabular-nums", minWidth: 42, flex: "0 0 auto" }}
-        >
-          {nummer} / {totaal}
-        </span>
-        <strong style={{ fontSize: "var(--tk-t-lead)" }}>{kenmerk.label}</strong>
-        {gekozenOptie && <span className="tk-bron">{bronLabel(huidig.bron)}</span>}
-        {gekozenOptie && huidig.bevestigd !== "nee" && (
-          <span className={`tk-privacy ${zichtbaarheid.gedeeld ? "tk-privacy-gedeeld" : "tk-privacy-prive"}`}>
-            {zichtbaarheid.label}
-          </span>
-        )}
-      </div>
+  // Dicht is er ruimte voor één woord rechts. Wat je moet weten in volgorde:
+  // is het ingevuld, klopt het volgens jou, en wie ziet het.
+  const stand = !ingevuld ? "" : !huidig.bevestigd ? "Nog bevestigen" : zichtbaarheid.label;
+  const standKlaar = Boolean(ingevuld && huidig.bevestigd && zichtbaarheid.gedeeld);
 
-      {gekozenOptie && !open ? (
-        <div style={{ marginTop: 8 }}>
-          <p className="tk-citaat" style={{ margin: "0 0 10px" }}>{gekozenOptie.deelbaarAls}</p>
-          <div className="tk-knoppen">
-            <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={() => setOpen(true)}>
-              Aanpassen
-            </button>
-            {huidig.bevestigd !== "sterk" && (
-              <button type="button" className="tk-knop tk-knop-klein" onClick={() => onBevestig(kenmerk.id, "sterk")}>
-                Klopt
-              </button>
-            )}
-          </div>
-        </div>
-      ) : (
-        <>
-          <p className="tk-fijn" style={{ margin: "6px 0 10px" }}>{kenmerk.vraag}</p>
+  return (
+    <div className="tk-persoonrij">
+      <button
+        type="button"
+        className={`tk-optie${open ? " open" : ""}`}
+        onClick={onOpen}
+        aria-expanded={open}
+      >
+        <span className="tk-nummer" aria-hidden="true">{nummer}</span>
+        <span className="tk-optie-tekst">
+          <strong>{kenmerk.label}</strong>
+          <small>{ingevuld ? gekozenOptie.deelbaarAls : kenmerk.vraag}</small>
+        </span>
+        {stand && <span className={`tk-optie-stand${standKlaar ? " klaar" : ""}`}>{stand}</span>}
+        <span className="tk-optie-pijl" aria-hidden="true">›</span>
+      </button>
+
+      {open && (
+        <div className="tk-optie-uit">
+          {ingevuld && (
+            <p className="tk-fijn" style={{ margin: "0 0 10px" }}>
+              <span className="tk-bron">{bronLabel(huidig.bron)}</span>{" "}
+              <span className={`tk-privacy ${zichtbaarheid.gedeeld ? "tk-privacy-gedeeld" : "tk-privacy-prive"}`}>
+                {zichtbaarheid.label}
+              </span>
+            </p>
+          )}
+
+          <p className="tk-fijn" style={{ margin: "0 0 10px" }}>{kenmerk.vraag}</p>
           <div className="tk-keuzes">
             {kenmerk.opties.map((o) => (
               <button
                 key={o.id}
                 type="button"
                 className={`tk-keuze${huidig && huidig.waarde === o.id && huidig.bevestigd !== "nee" ? " gekozen" : ""}`}
-                onClick={() => {
-                  onKies(kenmerk.id, o.id);
-                  setOpen(false);
-                }}
+                onClick={() => onKies(kenmerk.id, o.id)}
               >
                 <span>{o.label}</span>
               </button>
             ))}
           </div>
+
           {gekozenOptie && (
-            <div className="tk-knoppen" style={{ marginTop: 10 }}>
+            <div className="tk-knoppen" style={{ marginTop: 12 }}>
               {BEVESTIGING.map((b) => (
                 <button
                   key={b.id}
@@ -151,29 +158,26 @@ function KenmerkKaart({
                   {b.label}
                 </button>
               ))}
-              <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={() => setOpen(false)}>
-                Klaar
-              </button>
             </div>
           )}
-        </>
-      )}
 
-      {gekozenOptie && huidig.bevestigd !== "nee" && deelbareTeams.length > 0 && (
-        <div style={{ marginTop: 10 }}>
-          {deelbareTeams.map((l) => {
-            const s = `${l.orgId}/${l.teamId}`;
-            return (
-              <label className="tk-schakelaar" key={s} style={{ marginRight: 16 }}>
-                <input
-                  type="checkbox"
-                  checked={(huidig.gedeeldMet || []).includes(s)}
-                  onChange={() => onDelen(kenmerk.id, s)}
-                />
-                Delen met {l.teamNaam || "team"}
-              </label>
-            );
-          })}
+          {ingevuld && deelbareTeams.length > 0 && (
+            <div style={{ marginTop: 12 }}>
+              {deelbareTeams.map((l) => {
+                const s = `${l.orgId}/${l.teamId}`;
+                return (
+                  <label className="tk-schakelaar" key={s} style={{ marginRight: 16 }}>
+                    <input
+                      type="checkbox"
+                      checked={(huidig.gedeeldMet || []).includes(s)}
+                      onChange={() => onDelen(kenmerk.id, s)}
+                    />
+                    Delen met {l.teamNaam || "team"}
+                  </label>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -203,13 +207,18 @@ export default function MijnProfiel() {
 
   const [modus, setModus] = useState(null);
 
+  // Eén punt tegelijk open, en het Insights-blok apart. Alles tegelijk open is
+  // precies het formulier waar dit scherm vanaf moest.
+  const [openPunt, setOpenPunt] = useState(null);
+  const [toonInsights, setToonInsights] = useState(false);
+
   // Kom je hier via een knop als "nalopen wat nog open staat", dan tonen we
   // alleen de punten die dat aangaat. Zonder dat beland je boven aan een lijst
   // van twaalf en mag je zelf zoeken wat er nog moet.
   const [zoekParams, setZoekParams] = useSearchParams();
   const gevraagd = zoekParams.get("doen");
   const doen = TE_DOEN.includes(gevraagd) ? gevraagd : null;
-  const { bezig, melding, voerUit, wisMelding } = useActie();
+  const { bezig, melding, setMelding, voerUit, wisMelding } = useActie();
 
   const perId = useMemo(() => {
     const uit = {};
@@ -258,6 +267,24 @@ export default function MijnProfiel() {
 
   const openPunten = doen ? KENMERKEN.filter((k) => vraagtNogAandacht(k.id)) : KENMERKEN;
 
+  // Er stonden tot zes gevulde knoppen tegelijk op dit scherm: bevestigen,
+  // overnemen, delen, uploaden, de volgende stap, en per punt een "Klopt".
+  // Alles even hard, dus je wist niet waar je moest klikken. Nu is er precies
+  // één ding dat nu aan de beurt is; de rest blijft bereikbaar maar omlijnd.
+  const nalopen = voortgang.onderdelen.find((o) => o.id === "nagelopen");
+  const kanDelen = Boolean(
+    !ikBegeleid && actiefTeam && bruikbaar.length > 0 && (!doen || doen === "gedeeld")
+  );
+  const watNu = doen && openPunten.length === 0
+    ? null
+    : voorstellen.length > 0
+      ? "voorstel"
+      : nalopen && nalopen.open > 0
+        ? "nalopen"
+        : kanDelen && gedeeld < bruikbaar.length
+          ? "delen"
+          : null;
+
   const toonAlles = () => {
     zoekParams.delete("doen");
     setZoekParams(zoekParams, { replace: true });
@@ -266,6 +293,7 @@ export default function MijnProfiel() {
   /* --------------------------------------------------------------- acties */
 
   const kiesWaarde = async (kenmerkId, waarde) => {
+    setOpenPunt(null);
     const bestaand = perId[kenmerkId] || {};
     await bewaarKenmerk({
       kenmerkId,
@@ -412,33 +440,26 @@ export default function MijnProfiel() {
         <Voortgang variant="klein" />
       )}
 
-      {(() => {
-        const nalopen = voortgang.onderdelen.find((o) => o.id === "nagelopen");
-        if (!nalopen || nalopen.open === 0) return null;
-        return (
-          <div className="tk-kaart">
-            <h2>Klopt dit allemaal?</h2>
-            <p>
-              Er staan {nalopen.open} {nalopen.open === 1 ? "punt" : "punten"} die je nog niet hebt
-              bevestigd. Herken je jezelf erin, bevestig ze dan in één keer — aanpassen kan daarna
-              nog steeds, punt voor punt.
-            </p>
-            <div className="tk-knoppen">
-              <button type="button" className="tk-knop tk-knop-klein" disabled={bezig} onClick={bevestigAlles}>
-                {bezig ? "Bezig..." : `Ja, alles klopt (${nalopen.open})`}
-              </button>
-              {!doen && (
-                <Link
-                  className="tk-knop tk-knop-rand tk-knop-klein"
-                  to="/app/profiel?doen=nagelopen"
-                >
-                  Eerst stuk voor stuk bekijken
-                </Link>
-              )}
-            </div>
+      {watNu === "nalopen" && (
+        <div className="tk-kaart tk-kaart-klaar">
+          <h2>Klopt dit allemaal?</h2>
+          <p>
+            Er staan {nalopen.open} {nalopen.open === 1 ? "punt" : "punten"} die je nog niet hebt
+            bevestigd. Herken je jezelf erin, bevestig ze dan in één keer — aanpassen kan daarna
+            nog steeds, punt voor punt.
+          </p>
+          <div className="tk-knoppen">
+            <button type="button" className="tk-knop tk-knop-klein" disabled={bezig} onClick={bevestigAlles}>
+              {bezig ? "Bezig..." : `Ja, alles klopt (${nalopen.open})`}
+            </button>
+            {!doen && (
+              <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/profiel?doen=nagelopen">
+                Eerst stuk voor stuk bekijken
+              </Link>
+            )}
           </div>
-        );
-      })()}
+        </div>
+      )}
 
       {voorstellen.map((v) => (
         <div className="tk-kaart tk-kaart-klaar" key={`${v.orgId}/${v.teamId}`}>
@@ -512,27 +533,32 @@ export default function MijnProfiel() {
         </div>
       )}
 
+      {/* Vier lijsten van regels in plaats van vier volle kaarten met twaalf
+          formulieren erin. Wat je ziet is je profiel; het invullen zit erachter. */}
       {CATEGORIEEN.map((categorie) => {
         const groep = openPunten.filter((k) => k.categorie === categorie.id);
         if (groep.length === 0) return null;
         return (
-          <div className="tk-kaart" key={categorie.id}>
-            <h2>{categorie.label}</h2>
-            {groep.map((k) => (
-              <KenmerkKaart
-                key={k.id}
-                kenmerk={k}
-                huidig={perId[k.id]}
-                lidmaatschappen={lidmaatschappen}
-                deelbareTeams={deelbareTeams}
-                nummer={nummerVan[k.id]}
-                totaal={KENMERKEN.length}
-                onKies={kiesWaarde}
-                onBevestig={zetBevestiging}
-                onDelen={wisselDelen}
-              />
-            ))}
-          </div>
+          <section className="tk-groep" key={categorie.id}>
+            <h2 className="tk-groep-kop">{categorie.label}</h2>
+            <div className="tk-groep-lijst">
+              {groep.map((k) => (
+                <KenmerkRij
+                  key={k.id}
+                  kenmerk={k}
+                  huidig={perId[k.id]}
+                  lidmaatschappen={lidmaatschappen}
+                  deelbareTeams={deelbareTeams}
+                  nummer={nummerVan[k.id]}
+                  open={openPunt === k.id}
+                  onOpen={() => setOpenPunt((h) => (h === k.id ? null : k.id))}
+                  onKies={kiesWaarde}
+                  onBevestig={zetBevestiging}
+                  onDelen={wisselDelen}
+                />
+              ))}
+            </div>
+          </section>
         );
       })}
 
@@ -546,7 +572,7 @@ export default function MijnProfiel() {
         </div>
       )}
 
-      {!ikBegeleid && (!doen || doen === "gedeeld") && actiefTeam && bruikbaar.length > 0 && (
+      {kanDelen && (
         <div className="tk-kaart">
           <h2>Klaar? Deel het met {actiefTeam.teamNaam || "je team"}</h2>
           <p>
@@ -562,7 +588,12 @@ export default function MijnProfiel() {
           </p>
           <div className="tk-knoppen">
             {gedeeld < bruikbaar.length && (
-              <button type="button" className="tk-knop tk-knop-klein" disabled={bezig} onClick={() => deelAlles(true)}>
+              <button
+                type="button"
+                className={`tk-knop tk-knop-klein${watNu === "delen" ? "" : " tk-knop-rand"}`}
+                disabled={bezig}
+                onClick={() => deelAlles(true)}
+              >
                 Alles delen
               </button>
             )}
@@ -580,84 +611,120 @@ export default function MijnProfiel() {
         </div>
       )}
 
+      {/* Insights is een route naar je profiel, niet je profiel zelf. Als volle
+          kaart met vier kleurknoppen stond hij even hard te roepen als de punten
+          zelf; als regel die je opendraait staat hij er voor wie hem zoekt. */}
       {!doen && (
-      <div className="tk-kaart">
-        <h2>Insights Discovery</h2>
-        {insights ? (
-          <>
-            <p>{insightsSamenvatting(insights)}</p>
-            <div className="tk-knoppen">
-              <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={() => setModus("insights")}>
-                Ander profiel inlezen
-              </button>
+        <section className="tk-groep">
+          <h2 className="tk-groep-kop">Insights Discovery</h2>
+          <div className="tk-groep-lijst">
+            <div className="tk-persoonrij">
               <button
                 type="button"
-                className="tk-knop tk-knop-rand tk-knop-klein"
-                onClick={() =>
-                  voerUit(
-                    "je Insights-gegevens wissen",
-                    () => wisInsights(),
-                    "Je Insights-profiel is gewist. De punten die je hebt ingevuld, blijven staan."
-                  )
-                }
+                className={`tk-optie${toonInsights ? " open" : ""}`}
+                onClick={() => setToonInsights((v) => !v)}
+                aria-expanded={toonInsights}
               >
-                Insights-gegevens wissen
+                <span className="tk-optie-tekst">
+                  <strong>{insights ? "Je Insights-profiel" : "Een Insights-profiel gebruiken"}</strong>
+                  <small>
+                    {insights
+                      ? insightsSamenvatting(insights)
+                      : "Upload je PDF, of kies de kleur die je het meest in jezelf herkent."}
+                  </small>
+                </span>
+                <span className="tk-optie-pijl" aria-hidden="true">›</span>
               </button>
-            </div>
-          </>
-        ) : (
-          <>
-            <p>
-              Heb je ooit een Insights Discovery-profiel gemaakt? Upload het PDF-bestand, dan vullen
-              we de punten hierboven alvast in. Geen profiel, of niet bij de hand? Kies dan zelf
-              welke omschrijving het beste bij je past.
-            </p>
-            <div className="tk-knoppen" style={{ marginBottom: 14 }}>
-              <button type="button" className="tk-knop tk-knop-klein" onClick={() => setModus("insights")}>
-                Profiel-PDF uploaden
-              </button>
-            </div>
-            <div className="tk-label">Wat past het beste bij jou?</div>
-            <p className="tk-fijn" style={{ margin: "0 0 10px" }}>
-              Insights Discovery onderscheidt vier manieren van werken. Kies degene die je het meest
-              in jezelf herkent; we vullen daarmee de punten hierboven in en jij corrigeert wat niet
-              klopt.
-            </p>
-            <div className="tk-keuzes">
-              {KLEUREN.map((k) => (
-                <button
-                  key={k.id}
-                  type="button"
-                  className="tk-keuze"
-                  disabled={bezig}
-                  onClick={async () => {
-                    let aantal = 0;
-                    await voerUit(`${k.label.toLowerCase()} kiezen`, async () => {
-                      await bewaarInsights({ voorkeurskleur: k.id, tweedeKleur: null });
-                      aantal = await neemInsightsOver({ voorkeurskleur: k.id, tweedeKleur: null, teksten: {} });
-                    });
-                    if (aantal) {
-                      setMelding({
-                        soort: "goed",
-                        tekst: `${aantal} punten ingevuld op basis van ${k.label.toLowerCase()}. Loop ze hierboven na.`,
-                      });
-                    }
-                  }}
-                >
-                  <span aria-hidden="true" className="tk-kleurstip" style={{ background: k.kleur }} />
-                  <span>
-                    {k.label}
-                    <small>{k.omschrijving}</small>
-                  </span>
-                </button>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-      )}
 
-      <VolgendeStap />
+              {toonInsights && (
+                <div className="tk-optie-uit">
+                  {insights ? (
+                    <div className="tk-knoppen">
+                      <button
+                        type="button"
+                        className="tk-knop tk-knop-rand tk-knop-klein"
+                        onClick={() => setModus("insights")}
+                      >
+                        Ander profiel inlezen
+                      </button>
+                      <button
+                        type="button"
+                        className="tk-knop tk-knop-rand tk-knop-klein"
+                        onClick={() =>
+                          voerUit(
+                            "je Insights-gegevens wissen",
+                            () => wisInsights(),
+                            "Je Insights-profiel is gewist. De punten die je hebt ingevuld, blijven staan."
+                          )
+                        }
+                      >
+                        Insights-gegevens wissen
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <p style={{ marginTop: 0 }}>
+                        Heb je ooit een Insights Discovery-profiel gemaakt? Upload het PDF-bestand, dan
+                        vullen we de punten hierboven alvast in. Geen profiel, of niet bij de hand? Kies
+                        dan zelf welke omschrijving het beste bij je past.
+                      </p>
+                      <div className="tk-knoppen" style={{ marginBottom: 16 }}>
+                        <button
+                          type="button"
+                          className="tk-knop tk-knop-rand tk-knop-klein"
+                          onClick={() => setModus("insights")}
+                        >
+                          Profiel-PDF uploaden
+                        </button>
+                      </div>
+
+                      <div className="tk-label">Wat past het beste bij jou?</div>
+                      <p className="tk-fijn" style={{ margin: "0 0 10px" }}>
+                        Insights Discovery onderscheidt vier manieren van werken. Kies degene die je het
+                        meest in jezelf herkent; we vullen daarmee de punten hierboven in en jij
+                        corrigeert wat niet klopt.
+                      </p>
+                      <div className="tk-keuzes">
+                        {KLEUREN.map((k) => (
+                          <button
+                            key={k.id}
+                            type="button"
+                            className="tk-keuze"
+                            disabled={bezig}
+                            onClick={async () => {
+                              let aantal = 0;
+                              await voerUit(`${k.label.toLowerCase()} kiezen`, async () => {
+                                await bewaarInsights({ voorkeurskleur: k.id, tweedeKleur: null });
+                                aantal = await neemInsightsOver({
+                                  voorkeurskleur: k.id,
+                                  tweedeKleur: null,
+                                  teksten: {},
+                                });
+                              });
+                              if (aantal) {
+                                setMelding({
+                                  soort: "goed",
+                                  tekst: `${aantal} punten ingevuld op basis van ${k.label.toLowerCase()}. Loop ze hierboven na.`,
+                                });
+                              }
+                            }}
+                          >
+                            <span aria-hidden="true" className="tk-kleurstip" style={{ background: k.kleur }} />
+                            <span>
+                              {k.label}
+                              <small>{k.omschrijving}</small>
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       <p className="tk-fijn tk-voetnoot">
         Wat je hier invult zijn voorkeuren in samenwerking, geen oordeel over wie je bent. Je kunt
