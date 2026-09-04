@@ -351,8 +351,15 @@
   min-height: var(--tk-raak);
 }
 
+/* Een uitgeschakelde knop is geen flauwe versie van een gewone knop maar een
+   ander ding: er valt hier nu niets te doen. Met opacity 0.45 werd oranje een
+   modderig bruin -- het zag eruit als een kapotte knop, niet als een
+   uitgeschakelde. En de tekst haalde 2,26:1, dus je kon niet eens lezen waar de
+   knop op wacht. Een eigen, vlakke kleur haalt 5,69:1 en zegt wat het is. */
 .tk-knop:disabled {
-  opacity: 0.45;
+  background: var(--tk-navy-3);
+  color: var(--tk-zacht);
+  border-color: transparent;
   cursor: not-allowed;
 }
 
