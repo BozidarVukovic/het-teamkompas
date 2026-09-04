@@ -553,9 +553,10 @@
   font-size: var(--tk-t-basis);
   line-height: 1.6;
   margin-bottom: 16px;
-  border: 1px solid var(--tk-lijn);
-  background: var(--tk-navy-2);
+  border: 0;
+  background: var(--tk-vlak);
   color: var(--tk-zacht);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
 }
 
 .tk-melding-fout {
@@ -625,13 +626,14 @@
   gap: 12px;
   width: 100%;
   text-align: left;
-  background: var(--tk-navy-2);
-  border: 1px solid var(--tk-lijn);
-  border-radius: 14px;
+  background: var(--tk-vlak);
+  border: 0;
+  border-radius: 18px;
   padding: 14px 16px;
   color: var(--tk-tekst);
   cursor: pointer;
   font-size: var(--tk-t-basis);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
 }
 
 @media (hover: hover) {
@@ -848,9 +850,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: var(--tk-navy-2);
-  border: 1px solid var(--tk-lijn);
-  border-radius: 14px;
+  background: var(--tk-vlak);
+  border: 0;
+  border-radius: 18px;
   padding: 12px 14px;
   margin-bottom: 22px;
 }
@@ -1231,7 +1233,11 @@ a.tk-optie {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 1.5px solid var(--tk-lijn);
+  /* Dit rondje is het enige dat zegt dat je hier kunt kiezen, en dat je er
+     meer dan een mag aanvinken. Met de lijnkleur haalde het 1,31:1 tegen het
+     vlak eronder -- zichtbaar als je weet dat het er staat. Nu 3,57:1, de norm
+     voor een bedieningselement. */
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
   display: grid;
   place-items: center;
   font-size: var(--tk-t-fijn);
