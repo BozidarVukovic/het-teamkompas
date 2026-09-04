@@ -295,6 +295,10 @@ export default function MijnTeam() {
     const g = gedeeld[l.uid];
     const sleutel = `lid-${l.uid}`;
 
+    // Staat er een ja-of-nee-vraag open in deze rij? Dan is dat het enige
+    // waar het nu over gaat.
+    const bevestigingOpen = rolVoor === l.uid || (eigen && begeleidVoor);
+
     return (
       <Persoon
         key={sleutel}
@@ -328,8 +332,10 @@ export default function MijnTeam() {
           setTekstVoor(null);
         }}
       >
-        {/* De knoppen staan boven de tekst: je klapt iemand open om
-            iets te doen, niet om twintig blokken te lezen. */}
+        {/* De knoppen staan boven de tekst: je klapt iemand open om iets te
+            doen, niet om twintig blokken te lezen. Zolang er een bevestiging
+            openstaat verdwijnen ze: één vraag tegelijk. */}
+        {!bevestigingOpen && (
         <div className="tk-knoppen">
           {g && !eigen && (
             <Link
@@ -397,10 +403,11 @@ export default function MijnTeam() {
               </button>
             )}
         </div>
+        )}
 
         {/* Begeleiden zet je alleen voor jezelf aan of uit: of jij bij dit
             team hoort, is niet iets wat een ander over je beslist. */}
-        {eigen && ikBenBeheerder && (
+        {eigen && ikBenBeheerder && !bevestigingOpen && (
           <div className="tk-knoppen">
             <button
               type="button"
@@ -694,100 +701,160 @@ export default function MijnTeam() {
           })}
 
           {team && team.code && (
-            <button
-              type="button"
-              className={`tk-optie tk-optie-toevoegen${paneel === "uitnodigen" ? " open" : ""}`}
-              onClick={() => wisselPaneel("uitnodigen")}
-              aria-expanded={paneel === "uitnodigen"}
-            >
-              <span className="tk-optie-plus" aria-hidden="true">+</span>
-              <span>Iemand uitnodigen</span>
-              <span className="tk-optie-pijl" aria-hidden="true">›</span>
-            </button>
-          )}
+            <div className="tk-persoonrij">
+              <button
+                type="button"
+                className={`tk-optie tk-optie-toevoegen${paneel === "uitnodigen" ? " open" : ""}`}
+                onClick={() => wisselPaneel("uitnodigen")}
+                aria-expanded={paneel === "uitnodigen"}
+              >
+                <span className="tk-optie-plus" aria-hidden="true">+</span>
+                <span>Iemand uitnodigen</span>
+                <span className="tk-optie-pijl" aria-hidden="true">›</span>
+              </button>
+              {paneel === "uitnodigen" && (
+                <div className="tk-optie-uit">
+                  {lidmaatschappen.length > 1 && (
+                    <div className="tk-melding" style={{ marginBottom: 14 }}>
+                      Deze code hoort bij <strong>{actiefTeam.teamNaam || "dit team"}</strong>. Je hoort bij
+                      meer teams; wil je iemand voor een ander team uitnodigen, wissel dan eerst bovenin bij
+                      "Je werkt in".
+                    </div>
+                  )}
 
-          {ikBenBeheerder && (
-            <button
-              type="button"
-              className={`tk-optie tk-optie-toevoegen${paneel === "profiel" ? " open" : ""}`}
-              onClick={() => wisselPaneel("profiel")}
-              aria-expanded={paneel === "profiel"}
-            >
-              <span className="tk-optie-plus" aria-hidden="true">+</span>
-              <span>Profiel toevoegen uit een Insights-rapport</span>
-              <span className="tk-optie-pijl" aria-hidden="true">›</span>
-            </button>
-          )}
-        </div>
-      </section>
+                  <div className="tk-code" style={{ marginBottom: 14 }}>{team.code}</div>
 
-      {/* ------------------------------------------------------- uitnodigen */}
-      {paneel === "uitnodigen" && team && team.code && (
-        <div className="tk-kaart">
-          <h2 style={{ marginTop: 0 }}>Iemand uitnodigen</h2>
-          {lidmaatschappen.length > 1 && (
-            <div className="tk-melding" style={{ marginBottom: 14 }}>
-              Deze code hoort bij <strong>{actiefTeam.teamNaam || "dit team"}</strong>. Je hoort bij
-              meer teams; wil je iemand voor een ander team uitnodigen, wissel dan eerst bovenin bij
-              "Je werkt in".
+                  <div className="tk-knoppen">
+                    <button
+                      type="button"
+                      className="tk-knop tk-knop-klein"
+                      onClick={() => kopieer(uitnodigingstekst(team.code, actiefTeam.teamNaam || "ons team"), "uitnodiging")}
+                    >
+                      {gekopieerd === "uitnodiging" ? "Gekopieerd" : "Kopieer de uitnodiging"}
+                    </button>
+                    <button
+                      type="button"
+                      className="tk-knop tk-knop-rand tk-knop-klein"
+                      onClick={() => kopieer(uitnodigingslink(team.code), "link")}
+                    >
+                      {gekopieerd === "link" ? "Gekopieerd" : "Alleen de link"}
+                    </button>
+                    <button
+                      type="button"
+                      className="tk-knop tk-knop-rand tk-knop-klein"
+                      onClick={() => kopieer(team.code, "code")}
+                    >
+                      {gekopieerd === "code" ? "Gekopieerd" : "Alleen de code"}
+                    </button>
+                  </div>
+
+                  <p className="tk-fijn" style={{ marginTop: 14, marginBottom: 0 }}>
+                    De uitnodiging bevat een link met de code erin, dus de ander hoeft niets over te typen.
+                    Diegene vult daarna zijn eigen profiel in en bepaalt zelf wat er gedeeld wordt.
+                  </p>
+
+                  <button
+                    type="button"
+                    className="tk-uitklap"
+                    aria-expanded={toonStappen}
+                    onClick={() => setToonStappen((t) => !t)}
+                  >
+                    <span className="tk-optie-pijl" aria-hidden="true">›</span> Wat moet de ander doen?
+                  </button>
+
+                  {toonStappen && (
+                    <ol className="tk-fijn" style={{ margin: "6px 0 0", paddingLeft: 20, lineHeight: 1.8 }}>
+                      <li>
+                        Gaat naar <span style={{ color: "var(--tk-teal)" }}>mijnteamkompas.nl/app</span> —
+                        via jouw link staat de code er meteen in
+                      </li>
+                      <li>
+                        Vult een e-mailadres in en klikt op de inloglink in de mail — die belandt de eerste
+                        keer vaak bij ongewenste berichten
+                      </li>
+                      <li>Vult een naam in en doet mee met de code</li>
+                    </ol>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
-          <div className="tk-code" style={{ marginBottom: 14 }}>{team.code}</div>
+          {ikBenBeheerder && (
+            <div className="tk-persoonrij">
+              <button
+                type="button"
+                className={`tk-optie tk-optie-toevoegen${paneel === "profiel" ? " open" : ""}`}
+                onClick={() => wisselPaneel("profiel")}
+                aria-expanded={paneel === "profiel"}
+              >
+                <span className="tk-optie-plus" aria-hidden="true">+</span>
+                <span>Profiel toevoegen uit een Insights-rapport</span>
+                <span className="tk-optie-pijl" aria-hidden="true">›</span>
+              </button>
+              {paneel === "profiel" && (
+                <div className="tk-optie-uit">
+                  <p>
+                    Heeft iemand nog geen account, of wil je een team compleet maken voor een sessie? Vul een
+                    naam in en upload het Insights-rapport. Het profiel staat meteen in het team en je kunt
+                    er direct advies over vragen.
+                  </p>
+                  <p className="tk-fijn">
+                    Bij zo'n profiel staat altijd dat jij het hebt toegevoegd. Het is niet door die persoon
+                    zelf ingevuld of bevestigd, en het raakt zijn of haar eigen profiel niet — dat blijft van
+                    de eigenaar alleen, ook voor jou.
+                  </p>
 
-          <div className="tk-knoppen">
-            <button
-              type="button"
-              className="tk-knop tk-knop-klein"
-              onClick={() => kopieer(uitnodigingstekst(team.code, actiefTeam.teamNaam || "ons team"), "uitnodiging")}
-            >
-              {gekopieerd === "uitnodiging" ? "Gekopieerd" : "Kopieer de uitnodiging"}
-            </button>
-            <button
-              type="button"
-              className="tk-knop tk-knop-rand tk-knop-klein"
-              onClick={() => kopieer(uitnodigingslink(team.code), "link")}
-            >
-              {gekopieerd === "link" ? "Gekopieerd" : "Alleen de link"}
-            </button>
-            <button
-              type="button"
-              className="tk-knop tk-knop-rand tk-knop-klein"
-              onClick={() => kopieer(team.code, "code")}
-            >
-              {gekopieerd === "code" ? "Gekopieerd" : "Alleen de code"}
-            </button>
-          </div>
+                  <label className="tk-label" htmlFor="tk-profielnaam">Naam van deze persoon</label>
+                  <input
+                    id="tk-profielnaam"
+                    className="tk-invoer"
+                    value={profielNaam}
+                    onChange={(e) => setProfielNaam(e.target.value)}
+                    placeholder="Voornaam"
+                  />
 
-          <p className="tk-fijn" style={{ marginTop: 14, marginBottom: 0 }}>
-            De uitnodiging bevat een link met de code erin, dus de ander hoeft niets over te typen.
-            Diegene vult daarna zijn eigen profiel in en bepaalt zelf wat er gedeeld wordt.
-          </p>
+                  <div style={{ marginTop: 14 }}>
+                    <InsightsUpload
+                      knopLabel="Toevoegen en meteen delen"
+                      onBevestig={async (gelezen) => {
+                        const kenmerken = kenmerkenUitInsights(gelezen)
+                          .map((k) => ({
+                            kenmerkId: k.kenmerkId,
+                            waarde: k.waarde,
+                            zin: deelzin(k.kenmerkId, k.waarde) || "",
+                          }))
+                          .filter((k) => k.zin);
 
-          <button
-            type="button"
-            className="tk-uitklap"
-            aria-expanded={toonStappen}
-            onClick={() => setToonStappen((t) => !t)}
-          >
-            <span className="tk-optie-pijl" aria-hidden="true">›</span> Wat moet de ander doen?
-          </button>
+                        await bewaarProfiellid({
+                          orgId: actiefTeam.orgId,
+                          teamId: actiefTeam.teamId,
+                          naam: profielNaam.trim() || "Naamloos profiel",
+                          kenmerken,
+                          insights: {
+                            voorkeurskleur: gelezen.voorkeurskleur,
+                            tweedeKleur: gelezen.tweedeKleur || null,
+                          },
+                          toegevoegdDoor: gebruiker.uid,
+                          toegevoegdDoorNaam: naam,
+                        });
 
-          {toonStappen && (
-            <ol className="tk-fijn" style={{ margin: "6px 0 0", paddingLeft: 20, lineHeight: 1.8 }}>
-              <li>
-                Gaat naar <span style={{ color: "var(--tk-teal)" }}>mijnteamkompas.nl/app</span> —
-                via jouw link staat de code er meteen in
-              </li>
-              <li>
-                Vult een e-mailadres in en klikt op de inloglink in de mail — die belandt de eerste
-                keer vaak bij ongewenste berichten
-              </li>
-              <li>Vult een naam in en doet mee met de code</li>
-            </ol>
+                        await herlaadTeam();
+                        setProfielMelding({
+                          soort: "goed",
+                          tekst: `${profielNaam.trim() || "Het profiel"} staat in het team met ${kenmerken.length} punten. Je kunt er meteen advies over vragen.`,
+                        });
+                        setProfielNaam("");
+                        setPaneel(null);
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
-      )}
+      </section>
 
       {/* ------------------------------------------------------- begeleiding */}
       {begeleidt.length > 0 && (
@@ -821,68 +888,6 @@ export default function MijnTeam() {
 
       {/* -------------------------------------------------- onze afspraken */}
       <Teamafspraken magVerwijderen={ikBenBeheerder} />
-
-      {/* -------------------------------------------- profiel zelf toevoegen */}
-      {paneel === "profiel" && ikBenBeheerder && (
-        <div className="tk-kaart">
-          <h2 style={{ marginTop: 0 }}>Profiel toevoegen</h2>
-          <p>
-            Heeft iemand nog geen account, of wil je een team compleet maken voor een sessie? Vul een
-            naam in en upload het Insights-rapport. Het profiel staat meteen in het team en je kunt
-            er direct advies over vragen.
-          </p>
-          <p className="tk-fijn">
-            Bij zo'n profiel staat altijd dat jij het hebt toegevoegd. Het is niet door die persoon
-            zelf ingevuld of bevestigd, en het raakt zijn of haar eigen profiel niet — dat blijft van
-            de eigenaar alleen, ook voor jou.
-          </p>
-
-          <label className="tk-label" htmlFor="tk-profielnaam">Naam van deze persoon</label>
-          <input
-            id="tk-profielnaam"
-            className="tk-invoer"
-            value={profielNaam}
-            onChange={(e) => setProfielNaam(e.target.value)}
-            placeholder="Voornaam"
-          />
-
-          <div style={{ marginTop: 14 }}>
-            <InsightsUpload
-              knopLabel="Toevoegen en meteen delen"
-              onBevestig={async (gelezen) => {
-                const kenmerken = kenmerkenUitInsights(gelezen)
-                  .map((k) => ({
-                    kenmerkId: k.kenmerkId,
-                    waarde: k.waarde,
-                    zin: deelzin(k.kenmerkId, k.waarde) || "",
-                  }))
-                  .filter((k) => k.zin);
-
-                await bewaarProfiellid({
-                  orgId: actiefTeam.orgId,
-                  teamId: actiefTeam.teamId,
-                  naam: profielNaam.trim() || "Naamloos profiel",
-                  kenmerken,
-                  insights: {
-                    voorkeurskleur: gelezen.voorkeurskleur,
-                    tweedeKleur: gelezen.tweedeKleur || null,
-                  },
-                  toegevoegdDoor: gebruiker.uid,
-                  toegevoegdDoorNaam: naam,
-                });
-
-                await herlaadTeam();
-                setProfielMelding({
-                  soort: "goed",
-                  tekst: `${profielNaam.trim() || "Het profiel"} staat in het team met ${kenmerken.length} punten. Je kunt er meteen advies over vragen.`,
-                });
-                setProfielNaam("");
-                setPaneel(null);
-              }}
-            />
-          </div>
-        </div>
-      )}
 
       <VolgendeStap verbergAls="uitnodigen" />
 
