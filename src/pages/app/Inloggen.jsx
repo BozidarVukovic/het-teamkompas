@@ -255,7 +255,10 @@ export default function Inloggen() {
           <li>Advies vragen over de samenwerking met een collega.</li>
           <li>Zelf bepalen wat je met je team deelt, en dat weer intrekken.</li>
           <li>Eén kleine actie een maand vasthouden.</li>
-          <li>Je hebt een teamcode nodig, of je maakt zelf een team aan.</li>
+          {/* Zelf een team beginnen kan alleen vanaf de begeleiderslijst, dus
+              dat staat hier niet meer. Voor wie dit scherm leest is de teamcode
+              de enige weg naar binnen. */}
+          <li>Je hebt een teamcode nodig van iemand uit je team.</li>
         </ul>
       )}
 

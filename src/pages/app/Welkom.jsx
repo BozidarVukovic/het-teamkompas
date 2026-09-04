@@ -25,7 +25,10 @@ export default function Welkom() {
   // Dat is vooral de facilitator: die zet regelmatig een nieuw team op, en
   // kwam daar tot nu toe alleen via een link die "aansluiten" heette.
   const [zoek] = useSearchParams();
-  const wilNieuw = zoek.get("nieuw") === "1";
+  // Alleen zinvol voor wie ook werkelijk een team mag beginnen. Anders zou het
+  // adres /app/welkom?nieuw=1 een scherm opleveren dat iets belooft wat de
+  // regels daarna weigeren.
+  const wilNieuw = zoek.get("nieuw") === "1" && magTeams;
 
   const [mijnNaam, setMijnNaam] = useState(naam || "");
   const [keuze, setKeuze] = useState(uitnodigingscode ? "code" : wilNieuw ? "nieuw" : null);
