@@ -123,13 +123,6 @@ export async function maakOrganisatieMetTeam({
     aangemaaktOp: serverTimestamp(),
   });
 
-  await setDoc(teamcodeRef(code), {
-    orgId,
-    teamId,
-    aangemaaktDoor: uid,
-    aangemaaktOp: serverTimestamp(),
-  });
-
   // Wie een team begeleidt, beheert het wel maar doet er niet aan mee. Dat is
   // meteen bij het aanmaken de juiste rol: anders komt de facilitator eerst
   // tussen de mensen van zijn klant te staan en moet hij zich daar daarna weer
@@ -139,6 +132,17 @@ export async function maakOrganisatieMetTeam({
     rol: begeleid ? "begeleider" : "beheerder",
     code,
     sindsOp: serverTimestamp(),
+  });
+
+  // De teamcode komt ná het ledendocument, en die volgorde is niet vrijblijvend.
+  // De securityregels laten een code alleen aanmaken door wie het team beheert,
+  // en dat leiden ze af uit dat ledendocument. Staat het er nog niet, dan wordt
+  // de code geweigerd.
+  await setDoc(teamcodeRef(code), {
+    orgId,
+    teamId,
+    aangemaaktDoor: uid,
+    aangemaaktOp: serverTimestamp(),
   });
 
   const lidmaatschap = { orgId, teamId, orgNaam: organisatieNaam, teamNaam };

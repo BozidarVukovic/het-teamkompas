@@ -110,13 +110,32 @@ service cloud.firestore {
 
     // Een teamcode verwijst naar organisatie en team. Opvragen mag als je
     // ingelogd bent; doorzoeken niet, zodat codes niet te achterhalen zijn.
+    //
+    // Aanmaken mag alleen wie het team beheert waar de code naar wijst. Die
+    // voorwaarde is niet theoretisch. Stond er alleen dat aangemaaktDoor gelijk
+    // moest zijn aan je eigen uid, dan kon iedere ingelogde gebruiker die een
+    // orgId en teamId kende zelf een code voor dat team wegschrijven, daarmee
+    // een ledendocument aanmaken en zo bij alles komen wat dat team deelt. Een
+    // verwijderd teamlid onthoudt die twee waarden moeiteloos, en kon zich op
+    // die manier weer naar binnen schrijven.
+    //
+    // De code wordt daarom pas aangemaakt nadat het ledendocument van de
+    // beheerder bestaat; zie maakOrganisatieMetTeam in opslag.js.
     match /teamcodes/{code} {
       allow get: if ingelogd();
       allow list: if false;
-      allow create: if ingelogd()
+      allow create: if isTeambeheerder(
+          request.resource.data.orgId,
+          request.resource.data.teamId
+        )
         && request.resource.data.aangemaaktDoor == request.auth.uid;
-      allow update, delete: if ingelogd()
-        && resource.data.aangemaaktDoor == request.auth.uid;
+      // Bij wijzigen mag de code niet naar een ander team gaan wijzen: dan zou
+      // een beheerder van zijn eigen team een geldige toegangscode voor het
+      // team van een ander kunnen maken.
+      allow update: if isTeambeheerder(resource.data.orgId, resource.data.teamId)
+        && request.resource.data.orgId == resource.data.orgId
+        && request.resource.data.teamId == resource.data.teamId;
+      allow delete: if isTeambeheerder(resource.data.orgId, resource.data.teamId);
     }
 
     match /organisaties/{orgId} {

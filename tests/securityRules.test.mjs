@@ -742,6 +742,92 @@ if (!draait) {
     await assertSucceeds(deleteDoc(doc(anna(), "reflecties/r6")));
   });
 
+  // ── Teamcodes ────────────────────────────────────────────────────────────
+  //
+  // Een teamcode is de sleutel tot een team: wie er een heeft, schrijft zichzelf
+  // als lid weg en ziet daarna alles wat dat team deelt. Zolang iedereen zelf
+  // een code mocht aanmaken, was het genoeg om een orgId en teamId te kennen om
+  // binnen te komen. Deze tests leggen die route vast.
+
+  test("56. een buitenstaander kan geen teamcode maken voor het team van een ander", async () => {
+    await zetKlaar();
+    // Bram zit in team A en kent dus orgId en teamId, maar hij beheert het niet.
+    await assertFails(
+      setDoc(doc(bram(), "teamcodes/GESTOLEN"), {
+        orgId: ORG,
+        teamId: TEAM_A,
+        aangemaaktDoor: "bram",
+      })
+    );
+    // Dana zit in een heel ander team en probeert het bij team A.
+    await assertFails(
+      setDoc(doc(dana(), "teamcodes/GESTOLEN2"), {
+        orgId: ORG,
+        teamId: TEAM_A,
+        aangemaaktDoor: "dana",
+      })
+    );
+  });
+
+  test("57. een verwijderd teamlid schrijft zichzelf niet terug naar binnen", async () => {
+    await zetKlaar();
+    // Bram wordt uit team A gehaald. Hij weet het orgId en het teamId nog.
+    await assertSucceeds(deleteDoc(doc(bram(), padLid(TEAM_A, "bram"))));
+    await assertFails(getDoc(doc(bram(), padGedeeld(TEAM_A, "anna"))));
+
+    // De hele route in één keer: eigen code maken, daarmee weer lid worden.
+    await assertFails(
+      setDoc(doc(bram(), "teamcodes/TERUG"), {
+        orgId: ORG,
+        teamId: TEAM_A,
+        aangemaaktDoor: "bram",
+      })
+    );
+    await assertFails(
+      setDoc(doc(bram(), padLid(TEAM_A, "bram")), { rol: "lid", naam: "Bram", code: "TERUG" })
+    );
+    await assertFails(getDoc(doc(bram(), padGedeeld(TEAM_A, "anna"))));
+  });
+
+  test("58. de beheerder van een team maakt en verwijdert er wél een code voor", async () => {
+    await zetKlaar();
+    await assertSucceeds(
+      setDoc(doc(cato(), "teamcodes/NIEUW-A"), {
+        orgId: ORG,
+        teamId: TEAM_A,
+        aangemaaktDoor: "cato",
+      })
+    );
+    await assertSucceeds(deleteDoc(doc(cato(), "teamcodes/NIEUW-A")));
+  });
+
+  test("59. een beheerder maakt geen code voor een team dat hij niet beheert", async () => {
+    await zetKlaar();
+    // Cato beheert team A, maar heeft in team B niets te zoeken.
+    await assertFails(
+      setDoc(doc(cato(), "teamcodes/VOOR-B"), {
+        orgId: ORG,
+        teamId: TEAM_B,
+        aangemaaktDoor: "cato",
+      })
+    );
+    // En hij buigt zijn eigen code niet om naar dat andere team.
+    await assertFails(
+      updateDoc(doc(cato(), "teamcodes/CODE-TEAM-A"), { teamId: TEAM_B })
+    );
+  });
+
+  test("60. een code op naam van iemand anders zetten mag evenmin", async () => {
+    await zetKlaar();
+    await assertFails(
+      setDoc(doc(cato(), "teamcodes/OP-NAAM-VAN-ANNA"), {
+        orgId: ORG,
+        teamId: TEAM_A,
+        aangemaaktDoor: "anna",
+      })
+    );
+  });
+
   test.after(async () => {
     await omgeving.cleanup();
   });
