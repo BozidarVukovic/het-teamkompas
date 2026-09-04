@@ -3,7 +3,7 @@
 // Vul de credentials in bij "STAP 1 / 2 / 3"
 // ─────────────────────────────────────────────
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Navigate, Routes, Route, useNavigate } from "react-router-dom";
 import OnzeAanpak from "./OnzeAanpak";
@@ -19,7 +19,28 @@ import { PUB, ADM } from "./styles/tokens";
 import { useInView, useIsMobile } from "./components/shared/hooks";
 import Fade from "./components/shared/Fade";
 import LoginScreen from "./components/admin/LoginScreen";
-import AppRoutes from "./pages/app/AppRoutes";
+// De samenwerkomgeving onder /app is een eigen toepassing met een eigen
+// stijlblad en eigen schermen. Een bezoeker die een artikel komt lezen heeft er
+// geen letter van nodig, dus wordt hij pas opgehaald wanneer iemand /app opent.
+const AppRoutes = lazy(() => import("./pages/app/AppRoutes"));
+
+/** Wat er staat terwijl een apart geladen deel binnenkomt. */
+function Laadscherm() {
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#0D1B2A",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#8fa3bb",
+      }}
+    >
+      Even laden...
+    </div>
+  );
+}
 import KompasDot from "./components/shared/KompasDot";
 import ScanInvullen from "./pages/public/ScanInvullen";
 import Blog from "./pages/public/Blog";
@@ -12745,7 +12766,14 @@ export default function App() {
         <Route path="/klantenportaal/:portalToken" element={<><SeoHead page="klantenportaal" /><Klantenportaal /></>} />
         <Route path="/gespreksvoorbereider" element={<Gespreksvoorbereider />} />
         <Route path="/teamdag-generator" element={<TeamdagGenerator />} />
-        <Route path="/app/*" element={<AppRoutes />} />
+        <Route
+          path="/app/*"
+          element={
+            <Suspense fallback={<Laadscherm />}>
+              <AppRoutes />
+            </Suspense>
+          }
+        />
         <Route path="/kennisbank" element={<Kennisbank />} />
         <Route path="/kennisbank/:type/:slug" element={<KennisbankItem />} />
         <Route path="/inspiratie" element={<Blog />} />

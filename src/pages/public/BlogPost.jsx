@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import KompasDot from "../../components/shared/KompasDot";
 import NieuwsbriefFormulier from "../../components/shared/NieuwsbriefFormulier";
 import RelatedArticles from "../../components/shared/RelatedArticles";
-import { allBlogPosts, blogPosts, formatPublishDate } from "../../content/blogData";
-
-function calcReadTime(text) {
-  const words = text.trim().split(/\s+/).length;
-  return Math.max(1, Math.round(words / 200));
-}
+import {
+  allBlogPosts,
+  blogPosts,
+  formatPublishDate,
+  laadArtikelTekst,
+  leestijdVan,
+} from "../../content/blogData";
 
 function ShareButtons({ title }) {
   const [copied, setCopied] = useState(false);
@@ -73,6 +74,23 @@ export default function BlogPost() {
   const isGepland = post ? !blogPosts.some((item) => item.slug === post.slug) : false;
   const notFound = !post;
 
+  // De tekst zit niet in de hoofdbundel; die halen we op zodra iemand dit
+  // artikel opent. Alles eromheen (titel, beeld, datum, de SEO-tags) komt uit
+  // de index en staat er dus meteen. Zoekmachines krijgen bovendien de
+  // volledige tekst mee in de statische HTML; zie scripts/generate-seo-pages.js.
+  const [tekst, setTekst] = useState("");
+  useEffect(() => {
+    let geldig = true;
+    setTekst("");
+    if (!slug) return () => {};
+    laadArtikelTekst(slug).then((inhoud) => {
+      if (geldig) setTekst(inhoud);
+    });
+    return () => {
+      geldig = false;
+    };
+  }, [slug]);
+
   if (notFound) {
     return (
       <div style={{ minHeight: "100vh", background: "#f9f7f4", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -85,7 +103,7 @@ export default function BlogPost() {
   }
 
 
-  const readTime = post.readtime || calcReadTime(post.content);
+  const readTime = post.readtime || leestijdVan(post.woorden);
   const author = post.author || "Mijn Teamkompas";
 
   return (
@@ -269,8 +287,11 @@ export default function BlogPost() {
               ),
             }}
           >
-            {post.content}
+            {tekst}
           </ReactMarkdown>
+          {!tekst && (
+            <p style={{ color: "#8a8a8a", fontStyle: "italic" }}>Het artikel wordt geladen...</p>
+          )}
         </div>
 
         {/* Nieuwsbrief */}

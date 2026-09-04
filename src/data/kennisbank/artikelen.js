@@ -200,7 +200,17 @@ function vertaalTags(waarden = []) {
 
 /** Leestijd in hele minuten, afgerond op 5, 10 of 15. */
 export function leestijd(tekst = "") {
-  const woorden = tekst.split(/\s+/).filter(Boolean).length;
+  return leestijdUitWoorden(tekst.split(/\s+/).filter(Boolean).length);
+}
+
+/**
+ * Dezelfde staffel, maar vanuit een woordental.
+ *
+ * De tekst van een artikel zit niet meer in de bundel, dus op het moment dat
+ * een lijst wordt opgebouwd is die er niet. Het woordental wordt bij het bouwen
+ * één keer geteld en staat in blogIndex.json.
+ */
+export function leestijdUitWoorden(woorden = 0) {
   const minuten = Math.ceil(woorden / 220);
   if (minuten <= 5) return 5;
   if (minuten <= 10) return 10;
@@ -232,7 +242,7 @@ export function artikelNaarItem(post) {
     rollen: rollen.length ? rollen : ["teamleider", "teamlid", "hr"],
     doelen,
     werkwijzen: ["lezen", "reflecteren"],
-    tijdMinuten: leestijd(post.content),
+    tijdMinuten: leestijdUitWoorden(post.woorden),
     vorm: "individueel",
     niveau: "laag",
     voorbereiding: "Geen",

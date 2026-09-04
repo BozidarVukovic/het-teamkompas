@@ -1,29 +1,20 @@
-const rawPosts = import.meta.glob("./blog/*.md", {
-  eager: true,
-  query: "?raw",
-  import: "default",
-});
+// De artikelen, in twee delen.
+//
+// De gegevens die een lijst nodig heeft (titel, datum, beeld, categorie) staan
+// in blogIndex.json, een bestand dat bij het bouwen wordt gemaakt uit de
+// markdown. De tekst van een artikel wordt pas opgehaald wanneer iemand dat
+// artikel opent; zie laadArtikelTekst hieronder.
+//
+// Dat was eerst anders. Alle markdown kwam binnen met een eager glob, dus stond
+// de volledige tekst van elk artikel in de hoofdbundel. Iedere bezoeker
+// downloadde daarmee alle artikelen, ook wie er één kwam lezen, en dat werd bij
+// elk nieuw artikel erger.
 
-function parseList(value = "") {
-  return value.split(",").map((item) => item.trim()).filter(Boolean);
-}
+import index from "./blogIndex.json";
 
-export function parseFrontmatter(raw) {
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!match) return { data: {}, content: raw };
-  const data = {};
-  let currentKey = "";
-  match[1].split(/\r?\n/).forEach((line) => {
-    const field = line.match(/^([A-Za-z][\w-]*):\s*(.*)$/);
-    if (field) {
-      currentKey = field[1];
-      data[currentKey] = field[2].replace(/^(["'])(.*)\1$/, "$2").trim();
-    } else if (/^\s+/.test(line) && currentKey) {
-      data[currentKey] = `${data[currentKey]} ${line.trim()}`.trim();
-    }
-  });
-  return { data, content: raw.slice(match[0].length).trim() };
-}
+// Niet eager: Vite maakt hier per artikel een los bestand van en haalt het pas
+// op wanneer de functie wordt aangeroepen.
+const teksten = import.meta.glob("./blog/*.md", { query: "?raw", import: "default" });
 
 function validTime(date) {
   const time = Date.parse(date);
@@ -46,32 +37,28 @@ function isGepubliceerd(date) {
   return tijd <= vandaag.getTime();
 }
 
+/**
+ * Haalt de tekst van één artikel op.
+ *
+ * Geeft de markdown zonder frontmatter terug, of een lege tekst wanneer het
+ * artikel niet bestaat. De aanroeper hoeft dus niets af te vangen.
+ */
+export async function laadArtikelTekst(slug) {
+  const laad = teksten[`./blog/${slug}.md`];
+  if (!laad) return "";
+  const raw = await laad();
+  const match = raw.match(/^---\r?\n[\s\S]*?\r?\n---/);
+  return match ? raw.slice(match[0].length).trim() : raw.trim();
+}
+
+/** Leestijd in minuten, uit het woordental dat bij het bouwen is geteld. */
+export function leestijdVan(woorden = 0) {
+  return Math.max(1, Math.round(woorden / 200));
+}
+
 // Alle artikelen, inclusief ingeplande. Gebruikt door de detailpagina, zodat een
 // gedeelde link naar een gepland artikel blijft werken en niet op een 404 uitkomt.
-export const allBlogPosts = Object.entries(rawPosts)
-  .map(([filePath, raw]) => {
-    const { data, content } = parseFrontmatter(raw);
-    const slug = filePath.replace(/.*\//, "").replace(/\.md$/, "");
-    return {
-      slug,
-      title: data.title || "Artikel",
-      excerpt: data.description || data.lead || "",
-      publishDate: data.date || "",
-      modifiedDate: data.modified || data.date || "",
-      image: data.image || "",
-      imageAlt: data.imageAlt || `Beeld bij ${data.title || "artikel"}`,
-      category: data.category || "Samenwerking",
-      tags: parseList(data.tags),
-      featured: data.featured === "true",
-      relatedKnowledgePages: parseList(data.relatedKnowledgePages),
-      relatedServices: parseList(data.relatedServices),
-      lead: data.lead || data.description || "",
-      author: data.author || "Mijn Teamkompas",
-      readtime: data.readtime || "",
-      content,
-    };
-  })
-  .sort((a, b) => validTime(b.publishDate) - validTime(a.publishDate) || a.title.localeCompare(b.title, "nl"));
+export const allBlogPosts = index;
 
 // Wat bezoekers in de overzichten zien: alleen wat al gepubliceerd is.
 export const blogPosts = allBlogPosts.filter((post) => isGepubliceerd(post.publishDate));
