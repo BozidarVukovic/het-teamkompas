@@ -49,6 +49,7 @@ import {
   maakGebruiker,
   maakOrganisatieMetTeam,
   treedToeMetCode,
+  vernieuwTeamcode as vernieuwTeamcodeInDb,
   verlaatTeam as verlaatTeamInDb,
   verwijderTeam as verwijderTeamInDb,
   verwijderEigenGegevens as verwijderEigenGegevensInDb,
@@ -751,6 +752,19 @@ function terugkeeradres() {
     [gebruiker, kiesTeam, laadGegevens]
   );
 
+  // Een nieuwe code voor het team; de oude werkt daarna niet meer. Bedoeld voor
+  // wie teams van klanten begeleidt en niet wil dat een uitnodiging van vorig
+  // jaar nog toegang geeft.
+  const vernieuwCode = useCallback(
+    async ({ orgId, teamId, oudeCode }) => {
+      if (!gebruiker) return null;
+      const code = await vernieuwTeamcodeInDb({ uid: gebruiker.uid, orgId, teamId, oudeCode });
+      await laadTeamOverzicht(actiefTeam);
+      return code;
+    },
+    [gebruiker, actiefTeam, laadTeamOverzicht]
+  );
+
   const verwijderAlles = useCallback(async () => {
     if (!gebruiker) return;
     await verwijderEigenGegevensInDb(gebruiker.uid);
@@ -807,6 +821,7 @@ function terugkeeradres() {
       doeMee,
       verlaatTeam,
       verwijderTeam,
+      vernieuwCode,
       verwijderAlles,
       herlaad: () => (gebruiker ? laadGegevens(gebruiker.uid, gebruiker.email) : null),
     }),
@@ -815,7 +830,7 @@ function terugkeeradres() {
       kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, bewaarAfspraak, verwijderAfspraak, experimenten, startExperiment, blikTerug, sessies, reflecties, bewaarReflectie, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
-      wisInsights, maakTeam, doeMee, verlaatTeam, verwijderTeam, verwijderAlles, laadGegevens,
+      wisInsights, maakTeam, doeMee, verlaatTeam, verwijderTeam, vernieuwCode, verwijderAlles, laadGegevens,
     ]
   );
 

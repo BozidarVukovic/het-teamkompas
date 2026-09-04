@@ -110,7 +110,7 @@ function Persoon({ sleutel, naam: hunNaam, achter, onder, uitgeklapt, onKlik, ch
 
 export default function MijnTeam() {
   const {
-    gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam, verwijderTeam,
+    gebruiker, naam, actiefTeam, lidmaatschappen, verlaatTeam, verwijderTeam, vernieuwCode,
     teamOverzicht, herlaadTeam, ikBegeleid, zetRol,
   } = useApp();
 
@@ -126,6 +126,15 @@ export default function MijnTeam() {
   const { bezig: bezigOpruimen, melding: opruimMelding, voerUit: voerOpruimenUit, wisMelding: wisOpruimMelding } =
     useActie();
   const [toonStappen, setToonStappen] = useState(false);
+  // Een nieuwe code maken is klein werk met grote gevolgen: elke uitnodiging
+  // die nog rondslingert houdt er meteen mee op. Daarom een bevestigingsstap.
+  const [bevestigNieuweCode, setBevestigNieuweCode] = useState(false);
+  const {
+    bezig: bezigCode,
+    melding: codeMelding,
+    voerUit: voerCodeUit,
+    wisMelding: wisCodeMelding,
+  } = useActie();
   const [profielNaam, setProfielNaam] = useState("");
   const {
     melding: profielMelding,
@@ -848,6 +857,63 @@ export default function MijnTeam() {
                       </li>
                       <li>Vult een naam in en doet mee met de code</li>
                     </ol>
+                  )}
+
+                  {/* Een code blijft werken zolang hij bestaat, ook in een
+                      mailtje van vorig jaar. Alleen wie het team beheert kan
+                      hem intrekken; de regels laten niemand anders toe. */}
+                  {ikBenBeheerder && (
+                    <div style={{ marginTop: 18, borderTop: "1px solid var(--tk-lijn)", paddingTop: 14 }}>
+                      <Melding melding={codeMelding} onSluiten={wisCodeMelding} />
+                      {bevestigNieuweCode ? (
+                        <>
+                          <p className="tk-fijn" style={{ marginTop: 0 }}>
+                            Het team krijgt een nieuwe code. Elke uitnodiging die je eerder hebt
+                            verstuurd werkt daarna niet meer, ook de link erin. Wie al meedoet merkt
+                            er niets van en blijft gewoon in het team.
+                          </p>
+                          <div className="tk-knoppen">
+                            <button
+                              type="button"
+                              className="tk-knop tk-knop-klein"
+                              disabled={bezigCode}
+                              onClick={() =>
+                                voerCodeUit(
+                                  "een nieuwe teamcode aanmaken",
+                                  async () => {
+                                    await vernieuwCode({
+                                      orgId: actiefTeam.orgId,
+                                      teamId: actiefTeam.teamId,
+                                      oudeCode: team.code,
+                                    });
+                                    setBevestigNieuweCode(false);
+                                    setGekopieerd(null);
+                                  },
+                                  "Er staat een nieuwe code klaar. De oude werkt niet meer."
+                                )
+                              }
+                            >
+                              {bezigCode ? "Bezig..." : "Ja, maak een nieuwe code"}
+                            </button>
+                            <button
+                              type="button"
+                              className="tk-knop tk-knop-rand tk-knop-klein"
+                              onClick={() => setBevestigNieuweCode(false)}
+                            >
+                              Toch niet
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <button
+                          type="button"
+                          className="tk-stille-knop"
+                          onClick={() => setBevestigNieuweCode(true)}
+                        >
+                          Nieuwe code aanmaken
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
               )}

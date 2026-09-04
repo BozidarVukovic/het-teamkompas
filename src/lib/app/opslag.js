@@ -150,6 +150,39 @@ export async function maakOrganisatieMetTeam({
   return lidmaatschap;
 }
 
+/**
+ * Geeft een team een nieuwe code en trekt de oude in.
+ *
+ * Een teamcode gaat rond in mailtjes en groepsapps en blijft daar jaren staan.
+ * Zonder deze knop kon je een code alleen kwijtraken door het hele team te
+ * verwijderen, en bleef een oude uitnodiging bij een klant van vorig jaar dus
+ * gewoon werken.
+ *
+ * De volgorde is niet vrijblijvend. Eerst de nieuwe code aanmaken, dan het
+ * teamdocument laten wijzen naar die nieuwe, en pas daarna de oude weghalen.
+ * Klapt er onderweg iets om, dan is het team in het slechtste geval even via
+ * twee codes bereikbaar; andersom zou het team zonder werkende code komen te
+ * zitten.
+ */
+export async function vernieuwTeamcode({ uid, orgId, teamId, oudeCode }) {
+  const code = nieuweTeamcode();
+
+  await setDoc(teamcodeRef(code), {
+    orgId,
+    teamId,
+    aangemaaktDoor: uid,
+    aangemaaktOp: serverTimestamp(),
+  });
+
+  await setDoc(teamRef(orgId, teamId), { code }, { merge: true });
+
+  if (oudeCode && oudeCode !== code) {
+    await deleteDoc(teamcodeRef(oudeCode)).catch(() => {});
+  }
+
+  return code;
+}
+
 /** Zoekt het team dat bij een teamcode hoort. */
 export async function zoekTeamViaCode(code) {
   const schoon = String(code || "").trim().toUpperCase();

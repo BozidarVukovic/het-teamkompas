@@ -828,6 +828,41 @@ if (!draait) {
     );
   });
 
+  test("61. een gewoon teamlid trekt de code van het team niet in", async () => {
+    await zetKlaar();
+    // Anna zit in team A maar beheert het niet. Zij kan de code dus niet
+    // weghalen en het team ook niet naar een nieuwe code laten wijzen.
+    await assertFails(deleteDoc(doc(anna(), "teamcodes/CODE-TEAM-A")));
+    await assertFails(
+      setDoc(doc(anna(), `organisaties/${ORG}/teams/${TEAM_A}`), { code: "EIGEN" }, { merge: true })
+    );
+  });
+
+  test("62. de beheerder vernieuwt de code: nieuwe erbij, team om, oude eruit", async () => {
+    await zetKlaar();
+    // Precies de drie stappen uit vernieuwTeamcode in opslag.js.
+    await assertSucceeds(
+      setDoc(doc(cato(), "teamcodes/VERS-A"), {
+        orgId: ORG,
+        teamId: TEAM_A,
+        aangemaaktDoor: "cato",
+      })
+    );
+    await assertSucceeds(
+      setDoc(doc(cato(), `organisaties/${ORG}/teams/${TEAM_A}`), { code: "VERS-A" }, { merge: true })
+    );
+    await assertSucceeds(deleteDoc(doc(cato(), "teamcodes/CODE-TEAM-A")));
+
+    // En de ingetrokken code brengt niemand meer binnen.
+    await assertFails(
+      setDoc(doc(dana(), padLid(TEAM_A, "dana")), {
+        rol: "lid",
+        naam: "Dana",
+        code: "CODE-TEAM-A",
+      })
+    );
+  });
+
   test.after(async () => {
     await omgeving.cleanup();
   });
