@@ -5,6 +5,13 @@
   --tk-navy: #0d1b2a;
   --tk-navy-2: #14263c;
   --tk-navy-3: #1a2e4a;
+
+  /* Het vlak waar kaarten en lijsten op staan. Iets lichter dan navy-2, en met
+     opzet ondoorzichtig: een doorzichtig vlak verandert mee met het verloop
+     erachter, en daarmee ook zijn contrast. Op deze kleur haalt de zachte tekst
+     6,03:1, teal 4,86:1 en oranje 5,27:1 -- overal, ongeacht de plek op de
+     pagina. */
+  --tk-vlak: #182a42;
   --tk-teal: #00a896;
   --tk-teal-dim: rgba(0, 168, 150, 0.14);
 
@@ -50,14 +57,21 @@
   --tk-t-kop: 18px;       /* de kop van een kaart */
   --tk-t-sectie: 20px;    /* de kop van een blok */
   --tk-t-groot: 23px;     /* een getal dat het onderwerp is */
-  --tk-t-titel: 27px;     /* de titel van een pagina */
+  --tk-t-titel: 32px;     /* de titel van een pagina */
 
   /* Hoe groot een vingertop is. Wat je ziet en wat je kunt raken zijn twee
      verschillende dingen; dit gaat over het tweede. */
   --tk-raak: 44px;
 
   min-height: 100vh;
-  background: var(--tk-navy);
+
+  /* Een kleurveld in plaats van een vlakke plaat: het scherm heeft een
+     bovenkant en een onderkant. Geen background-attachment: fixed -- dat is op
+     iOS al jaren onbetrouwbaar. Het verloop hoort bij de pagina, niet bij het
+     kijkvenster, dus bovenaan de pagina is het licht en onderaan donker. */
+  background:
+    radial-gradient(125% 46% at 50% -6%, #1e3557 0%, rgba(30, 53, 87, 0) 62%),
+    linear-gradient(180deg, #15273f 0%, var(--tk-navy) 52%, #0b1725 100%);
   color: var(--tk-tekst);
   font-family: "Roboto", system-ui, sans-serif;
   padding-bottom: 64px;
@@ -84,9 +98,10 @@
   align-items: center;
   gap: 14px;
   padding: 14px 20px;
-  background: rgba(13, 27, 42, 0.94);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--tk-lijn);
+  /* Geen eigen balkkleur meer met een streep eronder, maar een waas waar de
+     inhoud onderdoor schuift. */
+  background: rgba(13, 27, 42, 0.45);
+  backdrop-filter: blur(16px);
 }
 
 /* Hetzelfde merk als op de publieke site: het kompaslogo (KompasDot, vier
@@ -261,12 +276,17 @@
   margin: 0 0 24px;
 }
 
+/* Een kaart ligt op de achtergrond; hij is er niet met een lijntje in
+   getekend. Die haarlijn van een pixel was het detail dat het meest naar een
+   website uit 2016 rook. Wat een kaart nu afbakent is zijn eigen vlak, een
+   ruimere ronding en de schaduw die hij werpt. */
 .tk-kaart {
-  background: var(--tk-navy-2);
-  border: 1px solid var(--tk-lijn);
-  border-radius: 16px;
+  background: var(--tk-vlak);
+  border: 0;
+  border-radius: 20px;
   padding: 20px;
   margin-bottom: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.26);
 }
 
 .tk-kaart h2 {
@@ -709,17 +729,22 @@
    dus nooit horizontaal schuiven. Hij staat onderaan omdat je duim daar is en
    omdat de bovenkant van het scherm bij een telefoon in één hand niet meer
    bereikbaar is. */
+/* De balk zweeft in plaats van dat hij tegen de onderrand geplakt zit, en het
+   actieve item krijgt een pil in plaats van een streepje erboven. De veilige
+   zone van de telefoon zit nu in de afstand tot de onderrand; daarom hoeft er
+   binnenin geen padding meer voor. */
 .tk-onderbalk {
   display: none;
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: 10px;
+  right: 10px;
+  bottom: calc(10px + env(safe-area-inset-bottom));
   z-index: 30;
-  background: rgba(13, 27, 42, 0.97);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid var(--tk-lijn);
-  padding-bottom: env(safe-area-inset-bottom);
+  background: rgba(19, 35, 55, 0.82);
+  backdrop-filter: blur(20px) saturate(1.3);
+  border-radius: 24px;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.44);
+  padding: 4px;
 }
 
 .tk-onderbalk a {
@@ -731,19 +756,20 @@
   align-items: center;
   justify-content: center;
   gap: 3px;
-  padding: 9px 2px 8px;
+  /* Vier tabbladen en "Samenwerken" is een lang woord: elke pixel binnen een
+     tabblad gaat van de tekst af. */
+  padding: 9px 1px 8px;
   color: var(--tk-zacht);
   text-decoration: none;
   font-size: var(--tk-t-mini);
   font-weight: 600;
   letter-spacing: 0.01em;
-  border-top: 2px solid transparent;
-  margin-top: -1px;
+  border-radius: 19px;
 }
 
 .tk-onderbalk a.actief {
   color: var(--tk-oranje);
-  border-top-color: var(--tk-oranje);
+  background: rgba(232, 130, 26, 0.15);
 }
 
 .tk-onderbalk .tk-nav-tekst {
@@ -807,9 +833,10 @@
     display: flex;
   }
 
-  /* Ruimte onder de inhoud, anders valt de laatste regel achter de balk. */
+  /* Ruimte onder de inhoud, anders valt de laatste regel achter de balk.
+     De balk zweeft nu, dus er komt zijn afstand tot de onderrand bij. */
   .tk-app {
-    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
 }
 
@@ -854,7 +881,7 @@
    doorheen moest scrollen. Als strakke regels onder een kop zie je in één
    oogopslag welke kant je op wilt, en pas daarna welke zin er precies past. */
 .tk-groep {
-  margin-bottom: 22px;
+  margin-bottom: 32px;
 }
 
 /* Staat er een stapaanduiding boven een groep, dan hoort daar lucht tussen. */
@@ -868,14 +895,15 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--tk-zacht);
-  margin: 0 0 8px 4px;
+  margin: 0 0 12px 4px;
 }
 
 .tk-groep-lijst {
-  background: var(--tk-navy-2);
-  border: 1px solid var(--tk-lijn);
-  border-radius: 14px;
+  background: var(--tk-vlak);
+  border: 0;
+  border-radius: 20px;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.26);
 }
 
 .tk-optie {
