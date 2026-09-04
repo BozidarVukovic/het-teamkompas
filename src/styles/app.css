@@ -328,6 +328,27 @@
   line-height: 1.5;
 }
 
+/* Zestien pixels, en niet de vijftien van de schaal.
+   iOS Safari zoomt in zodra je een invoerveld aanraakt waarvan de tekst kleiner
+   is dan 16 pixels -- en zoomt daarna niet vanzelf terug. De rest van de app
+   staat dan te groot en half buiten beeld: de uitlogknop valt van het scherm,
+   alinea's lopen rechts door. Dat leest als een kapotte pagina terwijl er niets
+   mis is met de opmaak. Het is geen instelling die je uit kunt zetten; de enige
+   remedie is 16 pixels. (De andere remedie, maximum-scale=1 in de viewport,
+   ontneemt mensen de mogelijkheid om in te zoomen. Dat is erger.)
+
+   Alleen op aanraakschermen, zodat de schaal op een laptop blijft zoals hij is. */
+@media (pointer: coarse) {
+  .tk-app .tk-invoer,
+  .tk-app .tk-tekstvak,
+  .tk-app .tk-teamkiezer,
+  .tk-app input,
+  .tk-app select,
+  .tk-app textarea {
+    font-size: 16px;
+  }
+}
+
 /* Een voorbeeldzin in een leeg veld moet er als voorbeeld uitzien. Zonder deze
    regel neemt de browser een grijs dat op dit donkere navy nauwelijks afwijkt
    van gewone tekst, en dan lijkt een leeg formulier ingevuld. */
