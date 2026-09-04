@@ -37,8 +37,11 @@ function Schil({ children }) {
   return (
     <div className="tk-app">
       <header className="tk-balk">
-        <a className="tk-merk" href="/app">
-          🧭 Mijn <span>Teamkompas</span>
+        <a className="tk-merk" href="/app" aria-label="Mijn Teamkompas — naar het startscherm">
+          <span aria-hidden="true">🧭</span>
+          <span className="tk-merk-woorden" aria-hidden="true">
+            Mijn <span className="tk-merk-naam">Teamkompas</span>
+          </span>
         </a>
         <div className="tk-balk-rechts">
           {lidmaatschappen.length > 1 && (

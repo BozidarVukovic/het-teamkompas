@@ -98,10 +98,34 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  /* Het merk krimpt niet en breekt niet af; de rest van de balk wijkt. */
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
-.tk-merk span {
+.tk-merk-naam {
   color: var(--tk-teal);
+}
+
+/* Op een telefoon is er geen ruimte voor drie dingen naast elkaar. Gemeten op
+   375 en 360 pixels -- de twee breedtes waar de meeste mensen op zitten -- liep
+   de teamkiezer over de uitlogknop heen. "Mijn" weglaten scheelde niet genoeg;
+   de naam moet eraf.
+
+   Wat overblijft is het kompas als weg naar huis, de teamkiezer (het enige wat
+   je hier vaak gebruikt) en Uitloggen. Waar je bent staat een regel lager toch
+   als paginatitel. De link houdt zijn naam voor schermlezers via aria-label. */
+@media (max-width: 640px) {
+  .tk-merk-woorden {
+    display: none;
+  }
+
+  .tk-merk {
+    min-width: var(--tk-raak);
+    min-height: var(--tk-raak);
+    justify-content: center;
+    font-size: var(--tk-t-sectie);
+  }
 }
 
 .tk-balk-rechts {
@@ -109,6 +133,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  /* min-width: 0 laat de teamkiezer hierbinnen daadwerkelijk krimpen. Zonder
+     dit blijft een flexkind minstens zo breed als zijn inhoud, en duwt het de
+     knop ernaast het scherm af. */
+  min-width: 0;
 }
 
 /* Een naamloos keuzemenu in de balk bepaalde stilletjes wat je op elk scherm
@@ -117,6 +145,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .tk-teamwissel > span {
@@ -143,6 +172,16 @@
   padding: 8px 10px;
   font-size: var(--tk-t-klein);
   max-width: 220px;
+  /* Dit is het onderdeel dat wijkt: een teamnaam mag afgekapt worden, een
+     uitlogknop niet. Maar niet tot nul -- onder de 90 pixels is het geen
+     keuzemenu meer maar een streepje. */
+  min-width: 90px;
+  flex: 0 1 auto;
+  text-overflow: ellipsis;
+}
+
+.tk-balk-rechts .tk-knop {
+  flex: 0 0 auto;
 }
 
 /* Het menu plakt mee met de balk erboven. Stond het los, dan schoof het bij
@@ -184,8 +223,10 @@
   white-space: nowrap;
 }
 
-.tk-menu a:hover {
-  color: var(--tk-tekst);
+@media (hover: hover) {
+  .tk-menu a:hover {
+    color: var(--tk-tekst);
+  }
 }
 
 .tk-menu a.actief {
@@ -360,8 +401,10 @@
   cursor: pointer;
 }
 
-.tk-keuze:hover {
-  border-color: rgba(0, 168, 150, 0.4);
+@media (hover: hover) {
+  .tk-keuze:hover {
+    border-color: rgba(0, 168, 150, 0.4);
+  }
 }
 
 .tk-keuze.gekozen {
@@ -394,8 +437,10 @@
   cursor: pointer;
 }
 
-.tk-keuzevakje:hover {
-  border-color: rgba(0, 168, 150, 0.4);
+@media (hover: hover) {
+  .tk-keuzevakje:hover {
+    border-color: rgba(0, 168, 150, 0.4);
+  }
 }
 
 .tk-keuzevakje input[type="checkbox"] {
@@ -560,8 +605,10 @@
   font-size: var(--tk-t-basis);
 }
 
-.tk-persoon:hover {
-  border-color: rgba(0, 168, 150, 0.4);
+@media (hover: hover) {
+  .tk-persoon:hover {
+    border-color: rgba(0, 168, 150, 0.4);
+  }
 }
 
 .tk-persoon.gekozen {
@@ -710,8 +757,10 @@
   padding-top: 4px;
 }
 
-.tk-regel:hover strong {
-  color: var(--tk-teal);
+@media (hover: hover) {
+  .tk-regel:hover strong {
+    color: var(--tk-teal);
+  }
 }
 
 .tk-regel strong {
@@ -840,10 +889,16 @@
   border-top: 0;
 }
 
-.tk-optie:hover,
 .tk-optie:focus-visible {
   background: var(--tk-teal-dim);
   color: var(--tk-tekst);
+}
+
+@media (hover: hover) {
+  .tk-optie:hover {
+    background: var(--tk-teal-dim);
+    color: var(--tk-tekst);
+  }
 }
 
 /* Eén pijl die kantelt, geen twee verschillende tekens. Van "›" naar "⌄"
@@ -863,8 +918,10 @@
   transform: rotate(90deg);
 }
 
-.tk-optie:hover .tk-optie-pijl {
-  color: var(--tk-teal);
+@media (hover: hover) {
+  .tk-optie:hover .tk-optie-pijl {
+    color: var(--tk-teal);
+  }
 }
 
 /* Een persoon als regel in de lijst, met wat eronder tevoorschijn komt. */
@@ -984,8 +1041,10 @@
   cursor: pointer;
 }
 
-.tk-stille-knop:hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  .tk-stille-knop:hover {
+    text-decoration: underline;
+  }
 }
 
 /* De kop van "Ik": wie je bent, in de vorm van een naamkaartje. */
@@ -1047,8 +1106,10 @@ a.tk-optie {
   color: var(--tk-tekst);
 }
 
-.tk-mens:hover {
-  background: var(--tk-teal-dim);
+@media (hover: hover) {
+  .tk-mens:hover {
+    background: var(--tk-teal-dim);
+  }
 }
 
 .tk-bol-mens {
@@ -1244,8 +1305,10 @@ a.tk-optie {
   cursor: pointer;
 }
 
-.tk-melding-sluiten:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .tk-melding-sluiten:hover {
+    opacity: 1;
+  }
 }
 
 
@@ -1377,6 +1440,8 @@ a.tk-optie {
   cursor: pointer;
 }
 
-.tk-tekstknop:hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  .tk-tekstknop:hover {
+    text-decoration: underline;
+  }
 }

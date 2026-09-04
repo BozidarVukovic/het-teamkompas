@@ -279,7 +279,9 @@ export default function MijnTeam() {
     actiefTeam.orgNaam,
     `${meedoeners.length} ${meedoeners.length === 1 ? "lid" : "leden"}`,
     profielleden.length > 0
-      ? `${profielleden.length} toegevoegd ${profielleden.length === 1 ? "profiel" : "profielen"}`
+      ? profielleden.length === 1
+        ? "1 toegevoegd profiel"
+        : `${profielleden.length} toegevoegde profielen`
       : null,
   ]
     .filter(Boolean)
