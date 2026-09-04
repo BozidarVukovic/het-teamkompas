@@ -18,13 +18,16 @@ import Teambeeld from "./Teambeeld";
 import MijnGegevens from "./MijnGegevens";
 import Ik from "./Ik";
 import Navigatie from "../../components/app/Navigatie";
+import KompasDot from "../../components/shared/KompasDot";
 import { welkombestemming } from "../../lib/app/welkom";
 import "../../styles/app.css";
 
 function Laden({ tekst = "Even laden..." }) {
   return (
     <div className="tk-inhoud" style={{ paddingTop: 80, textAlign: "center" }}>
-      <div style={{ fontSize: "var(--tk-t-titel)", marginBottom: 10 }}>🧭</div>
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+        <KompasDot size={30} />
+      </div>
       <p className="tk-onderkop">{tekst}</p>
     </div>
   );
@@ -38,10 +41,8 @@ function Schil({ children }) {
     <div className="tk-app">
       <header className="tk-balk">
         <a className="tk-merk" href="/app" aria-label="Mijn Teamkompas — naar het startscherm">
-          <span aria-hidden="true">🧭</span>
-          <span className="tk-merk-woorden" aria-hidden="true">
-            Mijn <span className="tk-merk-naam">Teamkompas</span>
-          </span>
+          <KompasDot size={22} />
+          <span className="tk-merk-woorden" aria-hidden="true">Mijn Teamkompas</span>
         </a>
         <div className="tk-balk-rechts">
           {lidmaatschappen.length > 1 && (

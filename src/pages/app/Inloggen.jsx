@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
+import KompasDot from "../../components/shared/KompasDot";
 
 /**
  * Vertaalt een Firebase-foutcode naar iets waar iemand wat aan heeft.
@@ -123,7 +124,9 @@ export default function Inloggen() {
   if (afhandelen) {
     return (
       <div className="tk-inhoud tk-smal" style={{ paddingTop: 70, textAlign: "center" }}>
-        <div style={{ fontSize: "var(--tk-t-titel)", marginBottom: 10 }}>🧭</div>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+          <KompasDot size={30} />
+        </div>
         <p className="tk-onderkop">Je wordt aangemeld...</p>
       </div>
     );

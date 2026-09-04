@@ -89,22 +89,24 @@
   border-bottom: 1px solid var(--tk-lijn);
 }
 
+/* Hetzelfde merk als op de publieke site: het kompaslogo (KompasDot, vier
+   kwarten in de domeinkleuren) met "Mijn Teamkompas" ernaast, wit, in dezelfde
+   maat en dikte als in global.css. De app en de site zijn nu hetzelfde ding.
+
+   Wit en niet teal: sinds teal "hier kun je aan zitten" betekent, zou een teal
+   merknaam suggereren dat daar iets te doen valt. */
 .tk-merk {
-  font-weight: 800;
   letter-spacing: 0.01em;
-  color: var(--tk-tekst);
+  color: #ffffff;
   text-decoration: none;
-  font-size: var(--tk-t-lead);
+  font-weight: 650;
+  font-size: var(--tk-t-kop);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   /* Het merk krimpt niet en breekt niet af; de rest van de balk wijkt. */
   flex: 0 0 auto;
   white-space: nowrap;
-}
-
-.tk-merk-naam {
-  color: var(--tk-teal);
 }
 
 /* Op een telefoon is er geen ruimte voor drie dingen naast elkaar. Gemeten op
