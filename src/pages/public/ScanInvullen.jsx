@@ -5,7 +5,9 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 
 import { db } from "../../lib/firebase";

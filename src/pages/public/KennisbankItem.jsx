@@ -183,7 +183,7 @@ export default function KennisbankItem() {
               </div>
               <div className="kb-filter-acties kb-geenprint">
                 {item.bestand
-                  ? <a className="kb-knop kb-knop--primair" href={item.bestand} target="_blank" rel="noopener" onClick={() => trackEvent("kennisbank_download_geopend", { id: item.id })}>Download de pdf</a>
+                  ? <a className="kb-knop kb-knop--primair" href={item.bestand} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("kennisbank_download_geopend", { id: item.id })}>Download de pdf</a>
                   : <button type="button" className="kb-knop kb-knop--primair" onClick={() => { trackEvent("kennisbank_download_geopend", { id: item.id }); window.print(); }}>Print of bewaar als pdf</button>}
               </div>
             </Blok>
@@ -208,7 +208,7 @@ export default function KennisbankItem() {
           {item.bestand && !inhoud.velden && (
             <Blok>
               <div className="kb-filter-acties kb-geenprint">
-                <a className="kb-knop kb-knop--primair" href={item.bestand} target="_blank" rel="noopener" onClick={() => trackEvent("kennisbank_download_geopend", { id: item.id })}>Download de pdf</a>
+                <a className="kb-knop kb-knop--primair" href={item.bestand} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("kennisbank_download_geopend", { id: item.id })}>Download de pdf</a>
               </div>
             </Blok>
           )}

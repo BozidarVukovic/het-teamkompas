@@ -124,7 +124,7 @@ export function kleurenUitTypenaam(typenaam) {
 
 export function naarRegels(tekst) {
   return String(tekst || "")
-    .replace(/ /g, " ")
+    .replace(/\u00A0/g, " ")
     .split(/\r?\n/)
     .map((r) => r.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"'))
     .map((r) => r.replace(/\s{2,}/g, " ").trim())
