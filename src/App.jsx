@@ -6,15 +6,15 @@
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Navigate, Routes, Route, useNavigate } from "react-router-dom";
-import OnzeAanpak from "./OnzeAanpak";
+const OnzeAanpak = lazy(() => import("./OnzeAanpak"));
 import heroContent from "./content/heroContent";
 import { trackEvent } from "./lib/analytics";
 import KlantreisKeuze from "./KlantreisKeuze";
-import Verkennen from "./Verkennen";
-import TeamscanDigitaal from "./TeamscanDigitaal";
+const Verkennen = lazy(() => import("./Verkennen"));
+const TeamscanDigitaal = lazy(() => import("./TeamscanDigitaal"));
 import ContactModal from "./ContactModal";
 import { auth, db, ADMIN_EMAILS } from "./firebase";
-import FunnelDashboard from "./FunnelDashboard";
+const FunnelDashboard = lazy(() => import("./FunnelDashboard"));
 import { PUB, ADM } from "./styles/tokens";
 import { useInView, useIsMobile } from "./components/shared/hooks";
 import Fade from "./components/shared/Fade";
@@ -42,22 +42,22 @@ function Laadscherm() {
   );
 }
 import KompasDot from "./components/shared/KompasDot";
-import ScanInvullen from "./pages/public/ScanInvullen";
+const ScanInvullen = lazy(() => import("./pages/public/ScanInvullen"));
 import Blog from "./pages/public/Blog";
 import BlogPost from "./pages/public/BlogPost";
-import Klantenportaal from "./pages/public/Klantenportaal";
-import InsightsDiscoveryProfiel from "./pages/public/InsightsDiscoveryProfiel";
-import KenniskaartTeamontwikkeling from "./pages/public/KenniskaartTeamontwikkeling";
-import BevlogenheidInHetWerk from "./pages/public/BevlogenheidInHetWerk";
-import Teamenergie from "./pages/public/Teamenergie";
-import Teamcultuur from "./pages/public/Teamcultuur";
-import EigenaarschapInTeams from "./pages/public/EigenaarschapInTeams";
-import Verandermanagement from "./pages/public/Verandermanagement";
-import ImpactVanEenTeamdag from "./pages/public/ImpactVanEenTeamdag";
-import Kennisbank from "./pages/public/Kennisbank";
-import KennisbankItem from "./pages/public/KennisbankItem";
-import Gespreksvoorbereider from "./pages/public/Gespreksvoorbereider";
-import TeamdagGenerator from "./pages/public/TeamdagGenerator";
+const Klantenportaal = lazy(() => import("./pages/public/Klantenportaal"));
+const InsightsDiscoveryProfiel = lazy(() => import("./pages/public/InsightsDiscoveryProfiel"));
+const KenniskaartTeamontwikkeling = lazy(() => import("./pages/public/KenniskaartTeamontwikkeling"));
+const BevlogenheidInHetWerk = lazy(() => import("./pages/public/BevlogenheidInHetWerk"));
+const Teamenergie = lazy(() => import("./pages/public/Teamenergie"));
+const Teamcultuur = lazy(() => import("./pages/public/Teamcultuur"));
+const EigenaarschapInTeams = lazy(() => import("./pages/public/EigenaarschapInTeams"));
+const Verandermanagement = lazy(() => import("./pages/public/Verandermanagement"));
+const ImpactVanEenTeamdag = lazy(() => import("./pages/public/ImpactVanEenTeamdag"));
+const Kennisbank = lazy(() => import("./pages/public/Kennisbank"));
+const KennisbankItem = lazy(() => import("./pages/public/KennisbankItem"));
+const Gespreksvoorbereider = lazy(() => import("./pages/public/Gespreksvoorbereider"));
+const TeamdagGenerator = lazy(() => import("./pages/public/TeamdagGenerator"));
 import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import RelatedArticles from "./components/shared/RelatedArticles";
@@ -65,10 +65,13 @@ import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
 import CookieBanner from "./components/shared/CookieBanner";
 import ReflectiekaartFormulier from "./ReflectiekaartFormulier";
 import { Analytics } from "@vercel/analytics/react";
-import PageScans from "./pages/admin/PageScans";
-import PageGratisTeamscan from "./pages/admin/PageGratisTeamscan";
-import PageAppgebruik from "./pages/admin/PageAppgebruik";
-import GratisTeamscan, { GratisTeamscanReport } from "./pages/public/GratisTeamscan";
+const PageScans = lazy(() => import("./pages/admin/PageScans"));
+const PageGratisTeamscan = lazy(() => import("./pages/admin/PageGratisTeamscan"));
+const PageAppgebruik = lazy(() => import("./pages/admin/PageAppgebruik"));
+const GratisTeamscan = lazy(() => import("./pages/public/GratisTeamscan"));
+const GratisTeamscanReport = lazy(() =>
+  import("./pages/public/GratisTeamscan").then((m) => ({ default: m.GratisTeamscanReport }))
+);
 import {
   berekenScanScoresVoorMeting,
   isVeiligheidLeiderschapVerdieping,
@@ -12736,6 +12739,10 @@ export default function App() {
 
   return (
     <HelmetProvider>
+      {/* Eén opvangnet voor alle apart geladen schermen. Wie op de homepage of
+          een artikel landt, haalt die bestanden nooit op; wie doorklikt naar de
+          teamscan, de kennisbank of het beheer krijgt ze op dat moment. */}
+      <Suspense fallback={<Laadscherm />}>
       <Routes>
         <Route path="/" element={homeElement} />
         <Route path="/deelnemen/:deelnameId" element={homeElement} />
@@ -12780,6 +12787,7 @@ export default function App() {
         <Route path="/blog" element={<Navigate to="/inspiratie" replace />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
       </Routes>
+      </Suspense>
     </HelmetProvider>
   );
 }
