@@ -47,6 +47,7 @@ export default function Inloggen() {
   const [fout, setFout] = useState("");
   const [vraagEmail, setVraagEmail] = useState(false);
   const [afhandelen, setAfhandelen] = useState(false);
+  const [toonUitleg, setToonUitleg] = useState(false);
   const alGeprobeerd = useRef(false);
 
   useEffect(() => {
@@ -178,58 +179,15 @@ export default function Inloggen() {
     <div className="tk-inhoud tk-smal" style={{ paddingTop: 60 }}>
       <div className="tk-stap">Mijn Teamkompas</div>
       <h1 className="tk-kop">Inloggen</h1>
+      {/* Eén regel, en die verandert mee met wat we van iemand weten. Kwam hij
+          via een uitnodiging, dan hoeft er niets uitgelegd te worden. */}
       <p className="tk-onderkop">
-        Inloggen gaat zonder wachtwoord. Vul je e-mailadres in, dan ontvang je een e-mail met een
-        inloglink.
+        {uitnodigingscode
+          ? "Je bent uitgenodigd voor een team. Vul je e-mailadres in, dan ontvang je een inloglink. Een wachtwoord heb je niet nodig."
+          : "Vul je e-mailadres in, dan ontvang je een inloglink. Een wachtwoord heb je niet nodig."}
       </p>
 
       {fout && <div className="tk-melding tk-melding-fout">{fout}</div>}
-
-      {/* De app werkt op uitnodiging: zonder geldige teamcode, bestaand account
-          of plek op de begeleiderslijst gaat er geen link weg. Dat staat hier,
-          want anders zit iemand op een mail te wachten die nooit komt. Zit de
-          code al in de link waarmee iemand hier kwam, dan is er niets uit te
-          leggen en zeggen we dat gewoon. */}
-      {uitnodigingscode ? (
-        <div className="tk-melding tk-melding-goed">
-          Je bent uitgenodigd voor een team. Vul je e-mailadres in en je bent zo binnen.
-        </div>
-      ) : (
-        <div className="tk-melding">
-          Mijn Teamkompas werkt op uitnodiging. Heb je nog geen account, open dan de link uit de
-          uitnodiging van je team; de teamcode staat daar al in. Heb je hier al eerder ingelogd,
-          dan kun je hieronder gewoon verder.
-        </div>
-      )}
-
-      {/* Wie hier voor het eerst komt, ziet anders alleen een invoerveld en
-          moet maar raden waarvoor hij zich aanmeldt. Dit blok staat vóór het
-          formulier, want die vraag komt eerder dan het e-mailadres. */}
-      <div className="tk-kaart">
-        <h2>Wat je hier kunt doen</h2>
-        <ul className="tk-uitleg-lijst">
-          <li>
-            <strong>Vastleggen hoe jij werkt.</strong> Waar je energie van krijgt, hoe je het liefst
-            informatie ontvangt en waar anderen je mee helpen.
-          </li>
-          <li>
-            <strong>Advies vragen over een samenwerking.</strong> Kies een collega en wat er speelt,
-            en je ziet waar jullie voorkeuren uiteenlopen en wat daarbij helpt.
-          </li>
-          <li>
-            <strong>Zelf bepalen wat je deelt.</strong> Per onderdeel kies je of je team het ziet,
-            en je kunt dat op elk moment weer intrekken.
-          </li>
-          <li>
-            <strong>Eén kleine actie vasthouden.</strong> Je spreekt met jezelf af iets te proberen;
-            een maand later vraagt de app er één keer naar.
-          </li>
-        </ul>
-        <p className="tk-fijn" style={{ marginBottom: 0 }}>
-          Je hebt een teamcode nodig van iemand uit je team, of je maakt zelf een team aan.
-          Aanmelden en de eerste stappen kosten ongeveer tien minuten.
-        </p>
-      </div>
 
       {verstuurd ? (
         <div className="tk-kaart">
@@ -279,17 +237,34 @@ export default function Inloggen() {
         </form>
       )}
 
-      <p className="tk-fijn">
-        Deze omgeving is besloten. Wat je hier invult, is van jou: je bepaalt zelf per onderdeel of
-        je het met je team deelt, en je kunt dat op elk moment weer intrekken.
-      </p>
+      {/* De uitleg staat ná het formulier en ingeklapt. Wie terugkomt zoekt het
+          invulveld en niets anders; wie hier voor het eerst is, klapt open. Zo
+          hoeft de belangrijkste knop niet onder de vouw te verdwijnen. */}
+      <button
+        type="button"
+        className="tk-uitklap"
+        aria-expanded={toonUitleg}
+        onClick={() => setToonUitleg((t) => !t)}
+      >
+        <span className="tk-optie-pijl" aria-hidden="true">›</span> Wat kun je hier doen?
+      </button>
 
-      {/* De inlogknop op de site wijst hierheen, want dit is waar de meeste
-          mensen moeten zijn. Beheerders zijn met een paar en klikken één keer
-          extra. */}
-      <p className="tk-fijn">
-        Beheer je hier een organisatie? Dan log je in via de{" "}
-        <a href="/beheer">beheeromgeving</a>.
+      {toonUitleg && (
+        <ul className="tk-uitleg-lijst" style={{ marginTop: 10 }}>
+          <li>Vastleggen hoe jij werkt en waar anderen je mee helpen.</li>
+          <li>Advies vragen over de samenwerking met een collega.</li>
+          <li>Zelf bepalen wat je met je team deelt, en dat weer intrekken.</li>
+          <li>Eén kleine actie een maand vasthouden.</li>
+          <li>Je hebt een teamcode nodig, of je maakt zelf een team aan.</li>
+        </ul>
+      )}
+
+      <p className="tk-fijn" style={{ marginTop: 18 }}>
+        Deze omgeving is besloten en werkt op uitnodiging. Wat je invult is van jou.{" "}
+        {/* De inlogknop op de site wijst hierheen, want dit is waar de meeste
+            mensen moeten zijn. Beheerders zijn met een paar en klikken één keer
+            extra. */}
+        Beheer je een organisatie? Log dan in via de <a href="/beheer">beheeromgeving</a>.
       </p>
     </div>
   );
