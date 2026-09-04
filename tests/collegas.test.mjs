@@ -6,7 +6,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { collegasVan, collegaInEenZin } from "../src/lib/app/collegas.js";
+import { collegasVan, collegaInEenZin, onderscheidendeZinnen } from "../src/lib/app/collegas.js";
 
 const LEDEN = [
   { uid: "u1", naam: "Bozidar", rol: "beheerder" },
@@ -129,4 +129,72 @@ test("een begeleider ziet de mensen van het team wel", () => {
   });
 
   assert.deepEqual(lijst.map((c) => c.uid), ["eva", "nikki"]);
+});
+
+// ------------------------------------------------- onderscheidendeZinnen
+//
+// Op het adviesscherm stond onder alle negen collega's dezelfde regel: "12
+// punten · toegevoegd door Bozidar". Je kiest daar wie het betreft, en een
+// kenmerk dat iedereen heeft, onderscheidt niemand.
+
+const TOEGEVOEGD = (naam, punten = 12) => ({
+  naam,
+  punten,
+  doorBeheerder: true,
+  toegevoegdDoorNaam: "Bozidar",
+});
+
+test("staat er onder iedereen hetzelfde, dan staat er onder niemand iets", () => {
+  const zinnen = onderscheidendeZinnen([
+    TOEGEVOEGD("Anouk"),
+    TOEGEVOEGD("Dennis"),
+    TOEGEVOEGD("Irene"),
+  ]);
+  assert.deepEqual(zinnen, ["", "", ""]);
+});
+
+test("doet er een echt teamlid mee, dan komen de regels terug", () => {
+  const zinnen = onderscheidendeZinnen([
+    TOEGEVOEGD("Anouk"),
+    { naam: "Nikki", punten: 9, doorBeheerder: false },
+  ]);
+  assert.deepEqual(zinnen, ["12 punten · toegevoegd door Bozidar", "9 punten gedeeld"]);
+});
+
+test("een verschil in aantal punten is ook een verschil", () => {
+  const zinnen = onderscheidendeZinnen([TOEGEVOEGD("Anouk", 12), TOEGEVOEGD("Dennis", 8)]);
+  assert.equal(zinnen[0], "12 punten · toegevoegd door Bozidar");
+  assert.equal(zinnen[1], "8 punten · toegevoegd door Bozidar");
+});
+
+test('"Heeft nog niets gedeeld" blijft staan, ook als het voor iedereen geldt', () => {
+  const zinnen = onderscheidendeZinnen([
+    { naam: "Anouk", punten: 0 },
+    { naam: "Dennis", punten: 0 },
+  ]);
+  assert.deepEqual(zinnen, ["Heeft nog niets gedeeld", "Heeft nog niets gedeeld"]);
+});
+
+test("deelt er een niets, dan blijven ook de regels van de anderen staan", () => {
+  const zinnen = onderscheidendeZinnen([TOEGEVOEGD("Anouk"), { naam: "Dennis", punten: 0 }]);
+  assert.equal(zinnen[0], "12 punten · toegevoegd door Bozidar");
+  assert.equal(zinnen[1], "Heeft nog niets gedeeld");
+});
+
+test("een functie maakt de regel al onderscheidend", () => {
+  const zinnen = onderscheidendeZinnen([
+    { ...TOEGEVOEGD("Anouk"), functie: "teamleider" },
+    TOEGEVOEGD("Dennis"),
+  ]);
+  assert.equal(zinnen[0], "teamleider · 12 punten · toegevoegd door Bozidar");
+  assert.equal(zinnen[1], "12 punten · toegevoegd door Bozidar");
+});
+
+test("een lijst van een blijft leeg; er is niets om van te verschillen", () => {
+  assert.deepEqual(onderscheidendeZinnen([TOEGEVOEGD("Anouk")]), [""]);
+});
+
+test("een lege lijst geeft een lege lijst", () => {
+  assert.deepEqual(onderscheidendeZinnen(), []);
+  assert.deepEqual(onderscheidendeZinnen([]), []);
 });

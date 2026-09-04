@@ -73,3 +73,30 @@ export function collegaInEenZin(collega) {
 
   return delen.join(" · ");
 }
+
+/**
+ * Dezelfde regels, maar leeg gemaakt zodra ze voor iedereen hetzelfde zijn.
+ *
+ * Op het scherm waar je kiest over wie het gaat, hoort onder een naam te staan
+ * wat die persoon van de anderen onderscheidt. Komen alle profielen uit
+ * hetzelfde Insights-rapport en zijn ze door dezelfde beheerder toegevoegd, dan
+ * staat er negen keer "12 punten · toegevoegd door Bozidar" en heb je er niets
+ * aan. Doet er één echt teamlid mee, dan verschilt de regel weer en komt hij
+ * vanzelf terug.
+ *
+ * Uitzondering: "Heeft nog niets gedeeld" blijft altijd staan. Dat is geen
+ * onderscheid maar een waarschuwing -- het zegt dat er weinig advies uit gaat
+ * komen. Die weglaten omdat hij voor iedereen geldt, verbergt precies het geval
+ * waarin je hem het hardst nodig hebt.
+ *
+ * @param {object[]} collegas
+ * @returns {string[]} even lang als de invoer, in dezelfde volgorde
+ */
+export function onderscheidendeZinnen(collegas = []) {
+  const zinnen = collegas.map((c) => collegaInEenZin(c));
+
+  const iemandDeeltNiets = collegas.some((c) => c && c.punten === 0);
+  if (iemandDeeltNiets) return zinnen;
+
+  return new Set(zinnen).size <= 1 ? zinnen.map(() => "") : zinnen;
+}

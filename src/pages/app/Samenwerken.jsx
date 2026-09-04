@@ -11,7 +11,7 @@ import { LOOPTIJD_DAGEN } from "../../lib/app/experimenten";
 import { beoordeelAdviessessie, logAdviessessie } from "../../lib/app/opslag";
 import { vraagAdvies, vraagDuoadvies, vraagGroepsadvies } from "../../lib/app/advies/adviesService";
 import { situatiesPerGroep } from "../../data/app/situaties";
-import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
+import { collegasVan, onderscheidendeZinnen } from "../../lib/app/collegas";
 import { MINIMUM_GROEP } from "../../lib/app/advies/groepsregels";
 import { voornaam } from "../../lib/app/naam";
 import { initialen } from "../../lib/app/naam";
@@ -134,6 +134,10 @@ export default function Samenwerken() {
       }),
     [leden, gedeeld, gebruiker, teamOverzicht.profielleden]
   );
+
+  // Wat er onder een naam komt, hangt af van de hele lijst: staat er onder
+  // iedereen hetzelfde, dan staat er onder niemand iets.
+  const regels = useMemo(() => onderscheidendeZinnen(anderen), [anderen]);
 
   // Vanaf de teampagina kom je hier binnen met een collega al gekozen
   // (/app/samenwerken?met=...). Dat gebeurt één keer: daarna bepaalt je eigen
@@ -315,7 +319,7 @@ export default function Samenwerken() {
         <>
           <p className="tk-label">Met wie speelt het?</p>
           <div className="tk-lijst" style={{ marginBottom: 14 }}>
-            {anderen.map((l) => {
+            {anderen.map((l, i) => {
               const aan = gekozenUids.includes(l.sleutel);
               return (
                 <button
@@ -328,9 +332,11 @@ export default function Samenwerken() {
                   <span className="tk-bol">{initialen(l.naam)}</span>
                   <span>
                     {l.naam || "Teamgenoot"}
-                    <small style={{ display: "block", color: "var(--tk-zacht)", fontSize: "var(--tk-t-fijn)" }}>
-                      {collegaInEenZin(l)}
-                    </small>
+                    {regels[i] && (
+                      <small style={{ display: "block", color: "var(--tk-zacht)", fontSize: "var(--tk-t-fijn)" }}>
+                        {regels[i]}
+                      </small>
+                    )}
                   </span>
                   <span className={`tk-vink${aan ? " aan" : ""}`} aria-hidden="true">
                     {aan ? "✓" : ""}
