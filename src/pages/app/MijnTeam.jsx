@@ -19,7 +19,7 @@ import {
   haalHandleidingvoorstellen,
   haalVoorstellen,
 } from "../../lib/app/voorstellen";
-import { bewaarProfiellid, verwijderProfiellid } from "../../lib/app/opslag";
+import { bewaarProfiellid, hernoemProfiellid, verwijderProfiellid } from "../../lib/app/opslag";
 import { sectiesAlsLijst } from "../../lib/app/gedeeldeKopie";
 import {
   BEGELEIDER,
@@ -35,7 +35,7 @@ import {
 } from "../../lib/app/teamrollen";
 import { kenmerkenUitInsights } from "../../lib/app/insights";
 import { deelzin } from "../../data/app/kenmerken";
-import { initialen, voornaam } from "../../lib/app/naam";
+import { MAX_NAAM, initialen, schoneNaam, voornaam } from "../../lib/app/naam";
 import { gedeeldSamengevat } from "../../lib/app/gedeeld";
 import InsightsUpload from "../../components/app/InsightsUpload";
 import HandleidingKlaarzetten from "../../components/app/HandleidingKlaarzetten";
@@ -127,8 +127,13 @@ export default function MijnTeam() {
     useActie();
   const [toonStappen, setToonStappen] = useState(false);
   const [profielNaam, setProfielNaam] = useState("");
-  const { melding: profielMelding, setMelding: setProfielMelding, voerUit: voerProfielUit, wisMelding: wisProfielMelding } =
-    useActie();
+  const {
+    melding: profielMelding,
+    setMelding: setProfielMelding,
+    voerUit: voerProfielUit,
+    wisMelding: wisProfielMelding,
+    bezig: bezigProfiel,
+  } = useActie();
   const [voorstellen, setVoorstellen] = useState({});
   const [rolVoor, setRolVoor] = useState(null);
   const [begeleidVoor, setBegeleidVoor] = useState(false);
@@ -141,6 +146,8 @@ export default function MijnTeam() {
   const [uploadVoor, setUploadVoor] = useState(null);
   const [tekstVoor, setTekstVoor] = useState(null);
   const [tekstBijProfiel, setTekstBijProfiel] = useState(null);
+  const [naamBijProfiel, setNaamBijProfiel] = useState(null);
+  const [nieuweNaam, setNieuweNaam] = useState("");
   const [tekstvoorstellen, setTekstvoorstellen] = useState({});
   const [gekopieerd, setGekopieerd] = useState(null);
 
@@ -621,13 +628,29 @@ export default function MijnTeam() {
                     <button
                       type="button"
                       className="tk-knop tk-knop-rand tk-knop-klein"
-                      onClick={() => setTekstBijProfiel(tekstBijProfiel === pl.id ? null : pl.id)}
+                      onClick={() => {
+                        setTekstBijProfiel(tekstBijProfiel === pl.id ? null : pl.id);
+                        setNaamBijProfiel(null);
+                      }}
                     >
                       {tekstBijProfiel === pl.id
                         ? "Sluiten"
                         : (pl.handleiding || []).length > 0
                           ? "Eigen woorden aanpassen"
                           : "Eigen woorden toevoegen"}
+                    </button>
+                  )}
+                  {ikBenBeheerder && (
+                    <button
+                      type="button"
+                      className="tk-knop tk-knop-rand tk-knop-klein"
+                      onClick={() => {
+                        setNaamBijProfiel(naamBijProfiel === pl.id ? null : pl.id);
+                        setNieuweNaam(pl.naam || "");
+                        setTekstBijProfiel(null);
+                      }}
+                    >
+                      {naamBijProfiel === pl.id ? "Sluiten" : "Naam aanpassen"}
                     </button>
                   )}
                   {ikBenBeheerder && (
@@ -654,6 +677,56 @@ export default function MijnTeam() {
                     </button>
                   )}
                 </div>
+
+                {naamBijProfiel === pl.id && (
+                  <div style={{ marginTop: 16 }}>
+                    <label className="tk-label" htmlFor={`naam-${pl.id}`}>
+                      Naam
+                    </label>
+                    <input
+                      id={`naam-${pl.id}`}
+                      className="tk-invoer"
+                      value={nieuweNaam}
+                      maxLength={MAX_NAAM}
+                      placeholder="Voor- en achternaam"
+                      onChange={(e) => setNieuweNaam(e.target.value)}
+                    />
+                    <p className="tk-fijn" style={{ margin: "8px 0 0" }}>
+                      Heten er twee mensen in dit team hetzelfde van voren, dan is de achternaam
+                      het enige waaraan je ze uit elkaar houdt.
+                    </p>
+                    <div className="tk-knoppen" style={{ marginTop: 12 }}>
+                      <button
+                        type="button"
+                        className="tk-knop tk-knop-klein"
+                        disabled={
+                          bezigProfiel ||
+                          !schoneNaam(nieuweNaam) ||
+                          schoneNaam(nieuweNaam) === pl.naam
+                        }
+                        onClick={() => {
+                          const naam = schoneNaam(nieuweNaam);
+                          voerProfielUit(
+                            "de naam bijwerken",
+                            async () => {
+                              await hernoemProfiellid({
+                                orgId: actiefTeam.orgId,
+                                teamId: actiefTeam.teamId,
+                                id: pl.id,
+                                naam,
+                              });
+                              await herlaadTeam();
+                              setNaamBijProfiel(null);
+                            },
+                            `Dit profiel heet nu ${naam}.`
+                          );
+                        }}
+                      >
+                        {bezigProfiel ? "Bezig..." : "Bewaren"}
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {tekstBijProfiel === pl.id && (
                   <HandleidingKlaarzetten

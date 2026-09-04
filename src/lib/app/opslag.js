@@ -596,6 +596,25 @@ export async function haalProfielleden(orgId, teamId) {
     .sort((a, b) => String(a.naam || "").localeCompare(String(b.naam || "")));
 }
 
+/**
+ * De naam van een toegevoegd profiel bijstellen.
+ *
+ * Een beheerder tikt een naam in bij het uploaden van een Insights-rapport, en
+ * daarna kon die nooit meer veranderen: een tikfout of een ontbrekende
+ * achternaam betekende het profiel weggooien en opnieuw uploaden, inclusief de
+ * eigen woorden die er intussen bij stonden.
+ *
+ * Met opzet updateDoc en niet bewaarProfiellid: die laatste schrijft het hele
+ * document en zou bij een lege lijst de kenmerken wissen. Hier verandert alleen
+ * de naam, en blijft toegevoegdDoor staan -- waar de securityregel op controleert.
+ */
+export async function hernoemProfiellid({ orgId, teamId, id, naam }) {
+  await updateDoc(profiellidRef(orgId, teamId, id), {
+    naam: naam || "",
+    bijgewerktOp: serverTimestamp(),
+  });
+}
+
 export async function verwijderProfiellid({ orgId, teamId, id }) {
   await deleteDoc(profiellidRef(orgId, teamId, id));
 }

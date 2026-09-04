@@ -15,7 +15,12 @@ export const MAX_ONDERDELEN = 4;
 // is nog steeds bij zichzelf, dus dan hoort "Ik" actief te zijn.
 export const ONDERDELEN = [
   { id: "start", pad: "/app", label: "Start", exact: true, paden: ["/app"] },
-  { id: "samenwerken", pad: "/app/samenwerken", label: "Samenwerken", paden: ["/app/samenwerken"] },
+  // Het tabblad heet "Advies" en de pagina "Samenwerken". Dat is geen slordigheid:
+  // "Samenwerken" heeft 93 pixels nodig en er is er in een vierdelige balk 89 op
+  // een scherm van 393 -- op 375 en 360 nog minder. Een kortere naam lost dat op
+  // elke telefoon op; een kleinere marge nergens. "Advies" is bovendien wat je
+  // daar haalt.
+  { id: "samenwerken", pad: "/app/samenwerken", label: "Advies", paden: ["/app/samenwerken"] },
   { id: "team", pad: "/app/team", label: "Team", paden: ["/app/team", "/app/teambeeld"] },
   {
     id: "ik",

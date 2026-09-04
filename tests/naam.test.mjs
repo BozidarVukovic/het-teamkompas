@@ -3,7 +3,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { initialen, korteNamen, voornaam } from "../src/lib/app/naam.js";
+import { MAX_NAAM, initialen, korteNamen, schoneNaam, voornaam } from "../src/lib/app/naam.js";
 
 test("twee naamdelen geven twee letters", () => {
   assert.equal(initialen("Bozidar Vukovic"), "BV");
@@ -103,4 +103,26 @@ test("de uitvoer is even lang als de invoer en houdt de volgorde", () => {
   const uit = korteNamen(namen);
   assert.equal(uit.length, namen.length);
   assert.deepEqual(uit, ["Zoe B.", "Aart", "Zoe V."]);
+});
+
+// --------------------------------------------------------------- schoneNaam
+
+test("spaties aan de randen en dubbele spaties gaan eruit", () => {
+  assert.equal(schoneNaam("  Jacqueline   Trompetter "), "Jacqueline Trompetter");
+  assert.equal(schoneNaam("Yvon\n\tSmit"), "Yvon Smit");
+});
+
+test("een naam die alleen uit witruimte bestaat wordt leeg", () => {
+  assert.equal(schoneNaam("   "), "");
+  assert.equal(schoneNaam(null), "");
+  assert.equal(schoneNaam(undefined), "");
+});
+
+test("langer dan MAX_NAAM wordt afgekapt", () => {
+  const lang = "a".repeat(MAX_NAAM + 20);
+  assert.equal(schoneNaam(lang).length, MAX_NAAM);
+});
+
+test("een naam die al klopt blijft ongemoeid", () => {
+  assert.equal(schoneNaam("Anne-Marie de Vries"), "Anne-Marie de Vries");
 });

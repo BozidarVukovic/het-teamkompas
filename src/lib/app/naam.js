@@ -28,6 +28,23 @@ export function voornaam(naam, terugval = "") {
   return eerste || terugval;
 }
 
+/** De langste naam die de app bewaart. */
+export const MAX_NAAM = 60;
+
+/**
+ * Een naam zoals hij de opslag in gaat: zonder spaties aan de randen, zonder
+ * dubbele spaties ertussen, en niet langer dan MAX_NAAM.
+ *
+ * Geeft een lege string terug als er niets overblijft. De aanroeper hoort daar
+ * niets mee te doen -- een profiel zonder naam is nergens meer terug te vinden.
+ */
+export function schoneNaam(naam) {
+  return String(naam || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, MAX_NAAM);
+}
+
 /** De naamdelen die met een letter beginnen. */
 function delenVan(naam) {
   return String(naam || "")
