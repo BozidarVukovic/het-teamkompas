@@ -7,10 +7,26 @@
   --tk-navy-3: #1a2e4a;
   --tk-teal: #00a896;
   --tk-teal-dim: rgba(0, 168, 150, 0.14);
+
+  /* Oranje is de actiekleur: hij zit op de gevulde knop en op het actieve item
+     in de onderbalk, en nergens anders. Teal blijft de kleur van "hier kun je
+     aan zitten". Het onderscheid dat de app miste was niet fel genoeg tegen
+     zacht, maar doen tegen kunnen.
+
+     6,33:1 op navy -- hoger dan teal. De tekst erop is donkerbruin (6,29:1);
+     wit op oranje haalt 2,75:1 en valt weg, dus dat nooit. */
+  --tk-oranje: #e8821a;
+  --tk-oranje-tekst: #2a1603;
   --tk-tekst: #e6eef7;
   --tk-zacht: #96a9c0;
   --tk-lijn: rgba(255, 255, 255, 0.09);
-  --tk-rood: #e2725b;
+  /* Rood moet zich van oranje laten onderscheiden, want ze staan naast elkaar:
+     op Mijn gegevens staat "Verwijderen" pal naast een gevulde knop. Het oude
+     koraal (#e2725b) zat daar met een verschil van 7,4 tegenaan -- onder de
+     grens van 8 waar twee kleuren nog uit elkaar te houden zijn, en voor wie
+     rood-groenblind is vallen twee warme tinten helemaal samen. Dit rood zit
+     op 10,6, en haalt bovendien 6,27:1 op navy tegen 5,63 eerst. */
+  --tk-rood: #ff6b6b;
 
   /* Twee snelheden, één curve. Vlot is voor aanraking: je tikt en het antwoord
      is er meteen. Rustig is voor wat opendraait, want daar moet je kunnen
@@ -278,8 +294,8 @@
   font-size: var(--tk-t-basis);
   font-weight: 700;
   cursor: pointer;
-  background: var(--tk-teal);
-  color: #04241f;
+  background: var(--tk-oranje);
+  color: var(--tk-oranje-tekst);
   /* Een knop die een <Link> is, hoort geen onderstreping te krijgen. Dat stond
      dertien keer los in de JSX. */
   text-decoration: none;
@@ -312,7 +328,7 @@
 
 .tk-knop-gevaar {
   background: transparent;
-  border: 1px solid rgba(226, 114, 91, 0.5);
+  border: 1px solid rgba(255, 107, 107, 0.5);
   color: var(--tk-rood);
 }
 
@@ -469,8 +485,8 @@
 }
 
 .tk-melding-fout {
-  border-color: rgba(226, 114, 91, 0.45);
-  color: #f0b6a8;
+  border-color: rgba(255, 107, 107, 0.45);
+  color: #ffb3b3;
 }
 
 .tk-melding-goed {
@@ -553,16 +569,19 @@
   border-color: var(--tk-teal);
 }
 
+/* Een vaste vulling in plaats van een waas, en witte letters. De ring houdt
+   de vorm, de letter is de inhoud; geen van beide draagt betekenis over de
+   persoon, en dat is hier het punt. */
 .tk-bol {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--tk-teal-dim);
-  border: 1px solid rgba(0, 168, 150, 0.4);
+  background: var(--tk-navy-3);
+  border: 1px solid rgba(0, 168, 150, 0.35);
   display: grid;
   place-items: center;
   font-weight: 800;
-  color: var(--tk-teal);
+  color: #ffffff;
   flex: 0 0 auto;
 }
 
@@ -667,8 +686,8 @@
 }
 
 .tk-onderbalk a.actief {
-  color: var(--tk-teal);
-  border-top-color: var(--tk-teal);
+  color: var(--tk-oranje);
+  border-top-color: var(--tk-oranje);
 }
 
 .tk-onderbalk .tk-nav-tekst {
