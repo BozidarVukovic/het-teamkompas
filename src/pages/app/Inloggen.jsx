@@ -185,6 +185,35 @@ export default function Inloggen() {
 
       {fout && <div className="tk-melding tk-melding-fout">{fout}</div>}
 
+      {/* Wie hier voor het eerst komt, ziet anders alleen een invoerveld en
+          moet maar raden waarvoor hij zich aanmeldt. Dit blok staat vóór het
+          formulier, want die vraag komt eerder dan het e-mailadres. */}
+      <div className="tk-kaart">
+        <h2>Wat je hier kunt doen</h2>
+        <ul className="tk-uitleg-lijst">
+          <li>
+            <strong>Vastleggen hoe jij werkt.</strong> Waar je energie van krijgt, hoe je het liefst
+            informatie ontvangt en waar anderen je mee helpen.
+          </li>
+          <li>
+            <strong>Advies vragen over een samenwerking.</strong> Kies een collega en wat er speelt,
+            en je ziet waar jullie voorkeuren uiteenlopen en wat daarbij helpt.
+          </li>
+          <li>
+            <strong>Zelf bepalen wat je deelt.</strong> Per onderdeel kies je of je team het ziet,
+            en je kunt dat op elk moment weer intrekken.
+          </li>
+          <li>
+            <strong>Eén kleine actie vasthouden.</strong> Je spreekt met jezelf af iets te proberen;
+            een maand later vraagt de app er één keer naar.
+          </li>
+        </ul>
+        <p className="tk-fijn" style={{ marginBottom: 0 }}>
+          Je hebt een teamcode nodig van iemand uit je team, of je maakt zelf een team aan.
+          Aanmelden en de eerste stappen kosten ongeveer tien minuten.
+        </p>
+      </div>
+
       {verstuurd ? (
         <div className="tk-kaart">
           <h2>Kijk in je mail</h2>
@@ -229,6 +258,14 @@ export default function Inloggen() {
       <p className="tk-fijn">
         Deze omgeving is besloten. Wat je hier invult, is van jou: je bepaalt zelf per onderdeel of
         je het met je team deelt, en je kunt dat op elk moment weer intrekken.
+      </p>
+
+      {/* De inlogknop op de site wijst hierheen, want dit is waar de meeste
+          mensen moeten zijn. Beheerders zijn met een paar en klikken één keer
+          extra. */}
+      <p className="tk-fijn">
+        Beheer je hier een organisatie? Dan log je in via de{" "}
+        <a href="/beheer">beheeromgeving</a>.
       </p>
     </div>
   );

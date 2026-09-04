@@ -162,7 +162,10 @@ export default function OrganizedNavigation() {
           <NavLink item={{ label: "Inspiratie", href: "/inspiratie" }} onNavigate={go} />
           <a href="/#over-ons" onClick={(e) => goAnker(e, "/#over-ons")}>Over ons</a>
           <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="site-nav__cta">Plan vrijblijvend gesprek</a>
-          <a href="/beheer" onClick={(e) => { e.preventDefault(); go("/beheer"); }} className="site-nav__login">Inloggen</a>
+          {/* Wijst naar de samenwerkomgeving en niet naar /beheer: teamleden
+              zijn met velen en beheerders met een paar. Op het inlogscherm van
+              de app staat een regel die beheerders doorstuurt. */}
+          <a href="/app" onClick={(e) => { e.preventDefault(); go("/app"); }} className="site-nav__login">Inloggen</a>
         </div>}
       </nav>
     </header>
@@ -173,7 +176,7 @@ export default function OrganizedNavigation() {
       <NavLink item={{ label: "Inspiratie", href: "/inspiratie" }} onNavigate={go} />
       <a href="/#over-ons" onClick={(e) => goAnker(e, "/#over-ons")}>Over ons</a>
       <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="mobile-nav__cta">Plan vrijblijvend gesprek</a>
-      <a href="/beheer" onClick={(e) => { e.preventDefault(); go("/beheer"); }} className="mobile-nav__login">Inloggen →</a>
+      <a href="/app" onClick={(e) => { e.preventDefault(); go("/app"); }} className="mobile-nav__login">Inloggen →</a>
     </div>}
   </>;
 }

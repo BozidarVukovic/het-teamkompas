@@ -13,6 +13,7 @@ import { vraagAdvies, vraagDuoadvies, vraagGroepsadvies } from "../../lib/app/ad
 import { situatiesPerGroep } from "../../data/app/situaties";
 import { collegasVan, onderscheidendeZinnen } from "../../lib/app/collegas";
 import { MINIMUM_GROEP } from "../../lib/app/advies/groepsregels";
+import { MEERDERE_COLLEGAS } from "../../lib/app/functies";
 import { voornaam } from "../../lib/app/naam";
 import { initialen } from "../../lib/app/naam";
 import VolgendeStap from "../../components/app/VolgendeStap";
@@ -156,14 +157,18 @@ export default function Samenwerken() {
   // met hen werkt, maar hoe zij op elkaar landen. Dat is de vraag van wie een
   // team begeleidt of leidt.
   const [overHen, setOverHen] = useState(false);
-  const kanOverHen = geselecteerd.length === 2;
+  const kanOverHen = MEERDERE_COLLEGAS && geselecteerd.length === 2;
   const isDuo = kanOverHen && overHen;
-  const isGroep = !isDuo && geselecteerd.length + 1 >= MINIMUM_GROEP;
+  const isGroep = MEERDERE_COLLEGAS && !isDuo && geselecteerd.length + 1 >= MINIMUM_GROEP;
 
+  // Met de schakelaar uit gedraagt de lijst zich als een keuzerondje: iemand
+  // anders aanklikken vervangt je vorige keuze. Nog eens op dezelfde persoon
+  // klikken maakt de keuze ongedaan, zodat je zonder omweg terug kunt.
   const wisselPersoon = (sleutel) => {
-    setGekozenUids((huidig) =>
-      huidig.includes(sleutel) ? huidig.filter((s) => s !== sleutel) : [...huidig, sleutel]
-    );
+    setGekozenUids((huidig) => {
+      if (huidig.includes(sleutel)) return huidig.filter((s) => s !== sleutel);
+      return MEERDERE_COLLEGAS ? [...huidig, sleutel] : [sleutel];
+    });
     opnieuw();
   };
 
@@ -252,6 +257,19 @@ export default function Samenwerken() {
     }
     setBezigMetExperiment(false);
   };
+
+  // Je kiest een situatie onderaan een lange lijst. Het advies komt daarna in
+  // de plaats van die lijst, terwijl de pagina blijft staan waar hij stond, en
+  // dan begin je halverwege de tekst te lezen. Daarom springen we naar de kop
+  // van het advies zodra het er is. De balk en het menu plakken bovenaan, dus
+  // die hoogte trekken we eraf.
+  const adviesTop = useRef(null);
+  const BALKHOOGTE = 110;
+  useEffect(() => {
+    if (!advies || !adviesTop.current) return;
+    const y = adviesTop.current.getBoundingClientRect().top + window.scrollY - BALKHOOGTE;
+    window.scrollTo({ top: Math.max(y, 0), behavior: "smooth" });
+  }, [advies]);
 
   const kiesSituatie = (id) => {
     setSituatieId(id);
@@ -347,13 +365,17 @@ export default function Samenwerken() {
           </div>
 
           <p className="tk-fijn" style={{ marginBottom: 22 }}>
-            {gekozenUids.length === 0
-              ? "Kies één collega, of meerdere als je een overleg of sessie voorbereidt."
-              : isDuo
-                ? `Advies over ${geselecteerd[0].naam} en ${geselecteerd[1].naam} onderling: waar zij iets anders nodig hebben, in hun eigen woorden. Jij komt er niet in voor.`
-                : isGroep
-                  ? `Advies over jou en ${geselecteerd.length} collega's samen: waar jullie voorkeuren uiteenlopen en wat daarbij helpt. Er staat nergens wie wat koos.`
-                  : "Vink er nog iemand aan als het over een groep gaat."}
+            {!MEERDERE_COLLEGAS
+              ? gekozenUids.length === 0
+                ? "Kies de collega met wie het speelt."
+                : "Kies hieronder wat er aan de hand is."
+              : gekozenUids.length === 0
+                ? "Kies één collega, of meerdere als je een overleg of sessie voorbereidt."
+                : isDuo
+                  ? `Advies over ${geselecteerd[0].naam} en ${geselecteerd[1].naam} onderling: waar zij iets anders nodig hebben, in hun eigen woorden. Jij komt er niet in voor.`
+                  : isGroep
+                    ? `Advies over jou en ${geselecteerd.length} collega's samen: waar jullie voorkeuren uiteenlopen en wat daarbij helpt. Er staat nergens wie wat koos.`
+                    : "Vink er nog iemand aan als het over een groep gaat."}
           </p>
         </>
       )}
@@ -361,7 +383,7 @@ export default function Samenwerken() {
       {anderen.length === 0 && <VolgendeStap />}
 
       {advies && geselecteerd.length > 0 && (
-        <div className="tk-gekozen">
+        <div className="tk-gekozen" ref={adviesTop}>
           <span className="tk-bollen">
             {geselecteerd.slice(0, 3).map((c) => (
               <span className="tk-bol" key={c.sleutel}>{initialen(c.naam)}</span>

@@ -1519,3 +1519,24 @@ a.tk-optie {
     text-decoration: underline;
   }
 }
+
+/* Korte opsomming met een vetgedrukt begin per regel. Staat op het inlogscherm
+   om te vertellen wat je hier straks doet; de vetgedrukte aanhef laat iemand
+   de lijst scannen zonder hem helemaal te lezen. */
+.tk-uitleg-lijst {
+  margin: 0 0 14px;
+  padding-left: 20px;
+  line-height: 1.7;
+}
+
+.tk-uitleg-lijst li {
+  margin-bottom: 10px;
+}
+
+.tk-uitleg-lijst li:last-child {
+  margin-bottom: 0;
+}
+
+.tk-uitleg-lijst strong {
+  color: #ffffff;
+}
