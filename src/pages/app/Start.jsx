@@ -20,7 +20,7 @@ import { uitgelichteAfspraak } from "../../lib/app/afspraken";
 import { isTerugblikKlaar, standInEenZin, watNuSpeelt } from "../../lib/app/experimenten";
 import { openstaandeSessie, waaroverInEenZin } from "../../lib/app/reflecties";
 import { situatie } from "../../data/app/situaties";
-import { initialen, voornaam } from "../../lib/app/naam";
+import { initialen, korteNamen, voornaam } from "../../lib/app/naam";
 
 /** Een collega als bol met een naam eronder. Eén tik en je bent bij het advies. */
 function Mens({ naar, ini, label, onder, gestippeld = false }) {
@@ -59,6 +59,10 @@ export default function Start() {
     profielleden: teamOverzicht.profielleden,
     eigenUid,
   });
+
+  // Wat er onder een bol kan staan, hangt af van de rest van de lijst:
+  // "Jacqueline" volstaat alleen als er maar een Jacqueline is.
+  const collegalabels = korteNamen(collegas.map((c) => c.naam), "Collega");
 
   // Jezelf meetellen klopt alleen als je meedoet. Begeleid je dit team, dan
   // ben je de tiende persoon niet — je staat er buiten.
@@ -124,12 +128,12 @@ export default function Start() {
       <section className="tk-groep">
         <h2 className="tk-groep-kop">Samenwerken met</h2>
         <div className="tk-mensen">
-          {collegas.map((c) => (
+          {collegas.map((c, i) => (
             <Mens
               key={c.sleutel}
               naar={`/app/samenwerken?met=${encodeURIComponent(c.sleutel)}`}
               ini={initialen(c.naam)}
-              label={voornaam(c.naam, "Collega")}
+              label={collegalabels[i]}
               onder={collegaInEenZin(c)}
             />
           ))}

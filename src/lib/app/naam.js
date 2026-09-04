@@ -27,3 +27,46 @@ export function voornaam(naam, terugval = "") {
   const eerste = String(naam || "").trim().split(/\s+/)[0];
   return eerste || terugval;
 }
+
+/** De naamdelen die met een letter beginnen. */
+function delenVan(naam) {
+  return String(naam || "")
+    .trim()
+    .split(/\s+/)
+    .filter((d) => /^\p{L}/u.test(d));
+}
+
+/**
+ * Labels voor een lijst mensen: de voornaam waar dat kan, en anders net genoeg
+ * meer om ze uit elkaar te houden.
+ *
+ * Op het startscherm staat van iedereen alleen de voornaam onder zijn bol. In
+ * een team met twee Jacquelines stonden daar twee keer dezelfde vier lettergrepen,
+ * en tik je op de verkeerde, dan krijg je advies over de verkeerde persoon.
+ *
+ * Botst een voornaam, dan komt de eerste letter van het láátste naamdeel erachter
+ * -- het laatste, want "Anne-Marie de Vries" hoort "Anne-Marie V." te worden.
+ * Heeft iemand geen tweede naamdeel, dan blijft de kale voornaam staan; die
+ * verschilt dan alsnog van de versie mét letter. Twee mensen met exact dezelfde
+ * volledige naam blijven gelijk -- daar helpt geen afkorting tegen.
+ *
+ * @param {string[]} namen
+ * @param {string} terugval label voor wie helemaal geen naam heeft
+ * @returns {string[]} even lang als de invoer, in dezelfde volgorde
+ */
+export function korteNamen(namen = [], terugval = "") {
+  const voornamen = namen.map((n) => voornaam(n, terugval));
+
+  const aantal = new Map();
+  voornamen.forEach((v) => aantal.set(v, (aantal.get(v) || 0) + 1));
+
+  return namen.map((naam, i) => {
+    const kort = voornamen[i];
+    if (aantal.get(kort) === 1) return kort;
+
+    const delen = delenVan(naam);
+    if (delen.length < 2) return kort;
+
+    return `${kort} ${delen[delen.length - 1][0].toUpperCase()}.`;
+  });
+}

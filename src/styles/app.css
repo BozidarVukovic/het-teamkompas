@@ -1132,11 +1132,21 @@ a.tk-optie {
   border-style: dashed;
 }
 
+/* De naam mag over twee regels. Op een bol van 90 pixels past "Jacqueline O."
+   niet op een regel -- gemeten: 92 pixels nodig, 84 beschikbaar -- en dan viel
+   juist de letter weg die twee Jacquelines uit elkaar houdt. Breder maken zou
+   op een smalle telefoon een kolom kosten; afbreken kost niets en werkt bij
+   elke naam en elke schermbreedte. Meer dan twee regels wordt een lap tekst
+   onder een bol, dus daar stopt het. */
 .tk-mens-naam {
   max-width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  text-align: center;
+  line-height: 1.3;
   font-size: var(--tk-t-fijn);
   font-weight: 600;
 }
