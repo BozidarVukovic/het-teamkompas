@@ -44,7 +44,27 @@ const TERUG_TOEGESTAAN = [
 // De rem. Ruim genoeg dat niemand er in de praktijk tegenaan loopt — je vraagt
 // een inloglink één keer aan, hooguit twee keer als de eerste niet aankwam.
 const PER_ADRES_PER_UUR = 5;
-const PER_DAG_TOTAAL = 300;
+
+// Per herkomst, want alleen op adres remmen helpt niet: wie steeds een ander
+// adres invult, komt telkens bij een verse teller uit. Twaalf per uur is meer
+// dan een kantoor achter één verbinding ooit nodig heeft en zet meteen een rem
+// op iemand die adressen zit af te lopen.
+const PER_IP_PER_UUR = 12;
+
+// Het dagplafond deed twee dingen tegelijk en dat ging mis. Het beschermde de
+// mailrekening, en het was tegelijk de enige noodrem — waardoor iemand met
+// driehonderd verzonnen adressen het inloggen voor iedereen kon platleggen.
+//
+// Nu zijn het twee getallen. Bij het eerste gaat er een melding naar de logs,
+// zodat je ziet dat er iets ongewoons gebeurt terwijl gewone mensen gewoon
+// kunnen inloggen. Pas bij het tweede stopt het echt, en dat getal staat er
+// alleen om te voorkomen dat een lange aanval een rekening oplevert.
+const PER_DAG_ALARM = 300;
+const PER_DAG_HARD = 3000;
+
+// Hoe lang een teller blijft staan. De documenten worden opgeruimd door een
+// TTL-regel in Firestore die naar dit veld kijkt; zie docs bij verlooptOp.
+const BEWAARDAGEN = 3;
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -86,39 +106,105 @@ async function magInloggen(db, email, code) {
 const sleutelVan = (email) => crypto.createHash("sha256").update(email).digest("hex");
 const vandaag = () => new Date().toISOString().slice(0, 10);
 
+/** Wanneer deze teller opgeruimd mag worden. De TTL-regel kijkt hiernaar. */
+const verlooptOp = () =>
+  admin.firestore.Timestamp.fromMillis(Date.now() + BEWAARDAGEN * 24 * 60 * 60 * 1000);
+
 /**
  * Mag er nu een mail naar dit adres?
  *
- * Twee tellers in één transactie: één per adres per uur, één voor alles bij
- * elkaar per dag. Het adres zelf slaan we niet op — alleen een hash. Een lijst
- * van iedereen die ooit een inloglink vroeg is niets wat hier hoort te staan.
+ * Drie tellers in één transactie: per adres per uur, per herkomst per uur, en
+ * een totaal per dag. Het adres en het IP-adres slaan we niet op, alleen een
+ * hash. Een lijst van iedereen die ooit een inloglink vroeg, met de plek waar
+ * hij vandaan kwam, is niets wat hier hoort te staan.
+ *
+ * Geeft terug wat er is opgehoogd, zodat de aanroeper het weer kan terugdraaien
+ * als de mail alsnog niet weggaat.
  */
-async function magVersturen(db, email) {
+async function magVersturen(db, email, ip) {
   const nu = Date.now();
   const uur = 60 * 60 * 1000;
   const adresRef = db.collection("inlogverzoeken").doc(sleutelVan(email));
+  const ipRef = ip ? db.collection("inlogverzoeken").doc(`ip-${sleutelVan(ip)}`) : null;
   const dagRef = db.collection("inlogverzoeken").doc(`dag-${vandaag()}`);
 
   return db.runTransaction(async (t) => {
-    const [adres, dag] = await Promise.all([t.get(adresRef), t.get(dagRef)]);
+    const [adres, herkomst, dag] = await Promise.all([
+      t.get(adresRef),
+      ipRef ? t.get(ipRef) : Promise.resolve(null),
+      t.get(dagRef),
+    ]);
 
-    const adresData = adres.exists ? adres.data() : {};
-    const begonnenOp = adresData.begonnenOp || 0;
-    const binnenHetUur = nu - begonnenOp < uur;
-    const aantal = binnenHetUur ? adresData.aantal || 0 : 0;
-    if (aantal >= PER_ADRES_PER_UUR) return false;
+    // Een uurteller die ouder is dan een uur begint gewoon opnieuw.
+    const binnenUur = (snap) => {
+      const data = snap && snap.exists ? snap.data() : {};
+      const begonnenOp = data.begonnenOp || 0;
+      const vers = nu - begonnenOp < uur;
+      return { begonnenOp: vers ? begonnenOp : nu, aantal: vers ? data.aantal || 0 : 0 };
+    };
+
+    const a = binnenUur(adres);
+    if (a.aantal >= PER_ADRES_PER_UUR) return null;
+
+    const h = binnenUur(herkomst);
+    if (ipRef && h.aantal >= PER_IP_PER_UUR) return null;
 
     const dagAantal = (dag.exists ? dag.data().aantal : 0) || 0;
-    if (dagAantal >= PER_DAG_TOTAAL) return false;
+
+    // Het harde plafond beschermt de rekening, niet de toegang. Wie hier tegenaan
+    // loopt heeft het over duizenden verzoeken op één dag.
+    if (dagAantal >= PER_DAG_HARD) {
+      console.error(`Inloglinks gestopt: het harde dagplafond van ${PER_DAG_HARD} is bereikt.`);
+      return null;
+    }
+
+    // Eén regel in de logs op het moment dat het ongewoon wordt. Geen blokkade,
+    // wel iets waar een waarschuwing op te zetten valt.
+    if (dagAantal + 1 === PER_DAG_ALARM) {
+      console.warn(
+        `Ongewoon veel inloglinkverzoeken vandaag: ${PER_DAG_ALARM}. Kijk of dit klopt.`
+      );
+    }
 
     t.set(adresRef, {
-      aantal: aantal + 1,
-      begonnenOp: binnenHetUur ? begonnenOp : nu,
+      aantal: a.aantal + 1,
+      begonnenOp: a.begonnenOp,
       laatstOp: FieldValue.serverTimestamp(),
+      verlooptOp: verlooptOp(),
     });
-    t.set(dagRef, { aantal: dagAantal + 1, laatstOp: FieldValue.serverTimestamp() });
-    return true;
+    if (ipRef) {
+      t.set(ipRef, {
+        aantal: h.aantal + 1,
+        begonnenOp: h.begonnenOp,
+        laatstOp: FieldValue.serverTimestamp(),
+        verlooptOp: verlooptOp(),
+      });
+    }
+    t.set(dagRef, {
+      aantal: dagAantal + 1,
+      laatstOp: FieldValue.serverTimestamp(),
+      verlooptOp: verlooptOp(),
+    });
+    return { adresRef, ipRef, dagRef };
   });
+}
+
+/**
+ * Draait de tellers terug.
+ *
+ * De tellers gaan omhoog vóór het versturen en niet erna. Zou je pas tellen als
+ * de mail eruit is, dan verdwijnt de rem precies op het moment dat de
+ * mailleverancier hapert — en dat is het slechtste moment om hem kwijt te zijn.
+ * Gaat de mail alsnog niet weg, dan geven we de poging hier terug, zodat een
+ * storing bij ons niemand een uur buitensluit.
+ */
+async function geefTerug(tellers) {
+  if (!tellers) return;
+  const { adresRef, ipRef, dagRef } = tellers;
+  const terug = [adresRef, ipRef, dagRef].filter(Boolean);
+  await Promise.all(
+    terug.map((ref) => ref.update({ aantal: FieldValue.increment(-1) }).catch(() => {}))
+  );
 }
 
 /**
@@ -251,7 +337,9 @@ exports.stuurInloglink = onCall({ secrets: [RESEND_API_KEY] }, async (request) =
   }
 
   const db = admin.firestore();
-  if (!(await magVersturen(db, email))) return { verstuurd: true };
+  const ip = (request.rawRequest && request.rawRequest.ip) || "";
+  const tellers = await magVersturen(db, email, ip);
+  if (!tellers) return { verstuurd: true };
 
   // Geen uitnodiging, geen account, niet op de lijst: dan gaat er niets weg.
   //
@@ -262,16 +350,27 @@ exports.stuurInloglink = onCall({ secrets: [RESEND_API_KEY] }, async (request) =
   // inlogscherm vertelt daarom vooraf dat de app op uitnodiging werkt.
   if (!(await magInloggen(db, email, code))) {
     console.log("Inloglink geweigerd: geen uitnodiging, geen account, niet op de lijst.");
+    // Een adres dat er toch niet in mag, hoort de rem voor de rest niet op te
+    // eten. De poging telt dus niet mee.
+    await geefTerug(tellers);
     return { verstuurd: true };
   }
 
   const gevraagd = String((request.data && request.data.terug) || "");
   const terug = TERUG_TOEGESTAAN.includes(gevraagd) ? gevraagd : TERUG_STANDAARD;
 
-  const vanFirebase = await admin.auth().generateSignInWithEmailLink(email, {
-    url: terug,
-    handleCodeInApp: true,
-  });
+  let vanFirebase;
+  try {
+    vanFirebase = await admin.auth().generateSignInWithEmailLink(email, {
+      url: terug,
+      handleCodeInApp: true,
+    });
+  } catch (err) {
+    // Lukt het maken van de link niet, dan is er ook niets verstuurd.
+    console.error("Inloglink maken mislukt", err && err.message);
+    await geefTerug(tellers);
+    throw new HttpsError("internal", "Het versturen van de inloglink is niet gelukt.");
+  }
   const link = eigenLink(vanFirebase, terug);
 
   const { html, plat } = mailtekst({ link, teamNaam });
@@ -297,6 +396,9 @@ exports.stuurInloglink = onCall({ secrets: [RESEND_API_KEY] }, async (request) =
     // een sleutel of een adres hoort daar niet in terecht te komen.
     const uitleg = await antwoord.text().catch(() => "");
     console.error("Resend weigerde de mail", antwoord.status, uitleg.slice(0, 500));
+    // Er ging geen mail weg, dus de poging telt niet mee. Anders zit iemand na
+    // vijf mislukte pogingen een uur vast aan een storing die niet van hem is.
+    await geefTerug(tellers);
     throw new HttpsError("internal", "Het versturen van de inloglink is niet gelukt.");
   }
 
