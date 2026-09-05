@@ -227,7 +227,7 @@ export function GratisTeamscanReport() {
         <p>Dit rapport laat jouw persoonlijke perspectief zien. Wil je onderzoeken hoe verschillende teamleden de samenwerking ervaren en waar beelden overeenkomen of verschillen? Met de volledige Teamscan ontstaat een gezamenlijk teambeeld dat als basis kan dienen voor dialoog en concrete vervolgstappen.</p>
         <div className="free-actions">
           <a className="tk-button tk-button-primary" href="/teamscan" onClick={() => emit("free_scan_report_full_scan_click")}>Ontdek de volledige Teamscan</a>
-          <a className="tk-button tk-button-secondary" href="/verkennen" onClick={() => emit("free_scan_report_contact_click")}>Plan een vrijblijvend gesprek</a>
+          <a className="tk-button tk-button-secondary" href="/verkennen" onClick={() => emit("free_scan_report_contact_click")}>Plan een vrijblijvende kennismaking</a>
         </div>
       </section>
 

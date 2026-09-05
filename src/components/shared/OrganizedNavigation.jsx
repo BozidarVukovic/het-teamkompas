@@ -153,7 +153,7 @@ export default function OrganizedNavigation() {
       <nav className="site-nav" aria-label="Hoofdnavigatie">
         <a href="/" onClick={(event) => { event.preventDefault(); go("/"); }} className="site-nav__brand"><KompasDot size={22} />Mijn Teamkompas</a>
         {mobile ? <div className="site-nav__mobile-actions">
-          <a href="/verkennen" onClick={(event) => { event.preventDefault(); go("/verkennen"); }} className="site-nav__cta site-nav__cta--small">Vrijblijvend kennismaken</a>
+          <a href="/verkennen" onClick={(event) => { event.preventDefault(); go("/verkennen"); }} className="site-nav__cta site-nav__cta--small">Kennismaken</a>
           <button ref={menuButtonRef} type="button" className="site-nav__hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-main-menu" aria-label={menuOpen ? "Menu sluiten" : "Menu openen"}>{menuOpen ? "✕" : "☰"}</button>
         </div> : <div className="site-nav__links">
           <SimpleDropdown label="Diensten" items={serviceLinks} onNavigate={go} />
@@ -161,7 +161,7 @@ export default function OrganizedNavigation() {
           <KnowledgeMenu onNavigate={go} />
           <NavLink item={{ label: "Inspiratie", href: "/inspiratie" }} onNavigate={go} />
           <a href="/#over-ons" onClick={(e) => goAnker(e, "/#over-ons")}>Over ons</a>
-          <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="site-nav__cta">Plan vrijblijvend gesprek</a>
+          <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="site-nav__cta">Plan een vrijblijvende kennismaking</a>
           {/* Wijst naar de samenwerkomgeving en niet naar /beheer: teamleden
               zijn met velen en beheerders met een paar. Op het inlogscherm van
               de app staat een regel die beheerders doorstuurt. */}
@@ -175,7 +175,7 @@ export default function OrganizedNavigation() {
       <MobileKnowledge onNavigate={go} />
       <NavLink item={{ label: "Inspiratie", href: "/inspiratie" }} onNavigate={go} />
       <a href="/#over-ons" onClick={(e) => goAnker(e, "/#over-ons")}>Over ons</a>
-      <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="mobile-nav__cta">Plan vrijblijvend gesprek</a>
+      <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="mobile-nav__cta">Plan een vrijblijvende kennismaking</a>
       <a href="/app" onClick={(e) => { e.preventDefault(); go("/app"); }} className="mobile-nav__login">Inloggen →</a>
     </div>}
   </>;

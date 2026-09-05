@@ -426,7 +426,7 @@ export default function TeamscanDigitaal() {
               ))}
             </div>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12 }}>
-              <button onClick={() => navigate("/verkennen")} style={primaryCtaStyle}>Plan ook een verkennend gesprek</button>
+              <button onClick={() => navigate("/verkennen")} style={primaryCtaStyle}>Plan een vrijblijvende kennismaking</button>
               <button onClick={() => navigate("/")} style={{ ...buttonBase, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Terug naar home</button>
             </div>
           </div>

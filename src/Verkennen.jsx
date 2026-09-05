@@ -31,7 +31,7 @@ export default function Verkennen(){
             <div onClick={()=>navigate("/")} style={{fontWeight:900, fontSize:20, cursor:"pointer", color:C.donker, display:"flex", alignItems:"center", gap:9}}><KompasDot size={22}/>Mijn Teamkompas</div>
             <div style={{display:"flex", gap:10, alignItems:"center"}}>
               <button onClick={()=>navigate("/teamscan")} style={{background:"transparent", border:`1px solid ${C.lijn}`, color:C.donker, borderRadius:10, padding:"10px 14px", fontWeight:800, cursor:"pointer"}}>Digitale teamscan</button>
-              <button onClick={()=>setOpen(true)} style={{background:C.teal, border:"none", color:C.wit, borderRadius:10, padding:"10px 16px", fontWeight:900, cursor:"pointer"}}>Plan gesprek</button>
+              <button onClick={()=>setOpen(true)} style={{background:C.teal, border:"none", color:C.wit, borderRadius:10, padding:"10px 16px", fontWeight:900, cursor:"pointer"}}>Kennismaken</button>
             </div>
           </div>
         </header>
@@ -44,7 +44,7 @@ export default function Verkennen(){
               <h1 style={{fontSize:isMobile?36:58, lineHeight:1.04, margin:"0 0 18px", letterSpacing:"-0.03em"}}>Bouw eerst vertrouwen op voordat je een team in beweging brengt.</h1>
               <p style={{fontSize:isMobile?16:18, lineHeight:1.75, color:"rgba(255,255,255,0.72)", maxWidth:680}}>Voor teams waar samenwerking schuurt, gesprekken blijven liggen of verandering niet goed landt. We starten niet met een standaardoplossing, maar met een zorgvuldige verkenning van wat er echt speelt.</p>
               <div style={{display:"flex", flexDirection:isMobile?"column":"row", gap:12, marginTop:28}}>
-                <button onClick={()=>setOpen(true)} style={{background:C.groen, color:C.wit, border:"none", borderRadius:12, padding:"15px 20px", fontWeight:900, cursor:"pointer"}}>Plan een verkennend gesprek</button>
+                <button onClick={()=>setOpen(true)} style={{background:C.groen, color:C.wit, border:"none", borderRadius:12, padding:"15px 20px", fontWeight:900, cursor:"pointer"}}>Plan een vrijblijvende kennismaking</button>
                 <button onClick={()=>navigate("/")} style={{background:"rgba(255,255,255,0.06)", color:C.wit, border:"1px solid rgba(255,255,255,0.22)", borderRadius:12, padding:"15px 20px", fontWeight:800, cursor:"pointer"}}>Terug naar overzicht</button>
               </div>
             </div>
@@ -72,7 +72,7 @@ export default function Verkennen(){
           <div style={{maxWidth:860, margin:"0 auto"}}>
             <h2 style={{fontSize:isMobile?30:42, lineHeight:1.14, margin:"0 0 12px"}}>Wil je eerst samen scherp krijgen wat er speelt?</h2>
             <p style={{fontSize:16, lineHeight:1.75, opacity:.9, margin:"0 auto 24px"}}>In 30 minuten verkennen we jullie situatie, zonder verplichting. Daarna weet je of een teamscan, teamdag of ander traject logisch is.</p>
-            <button onClick={()=>setOpen(true)} style={{background:C.wit, color:C.teal, border:"none", borderRadius:12, padding:"15px 22px", fontWeight:900, cursor:"pointer"}}>Plan een verkennend gesprek</button>
+            <button onClick={()=>setOpen(true)} style={{background:C.wit, color:C.teal, border:"none", borderRadius:12, padding:"15px 22px", fontWeight:900, cursor:"pointer"}}>Plan een vrijblijvende kennismaking</button>
           </div>
         </section>
         <ContactModal isOpen={open} onClose={()=>setOpen(false)} bron="Verkennend gesprek pagina" interesse="Verkennend gesprek" />

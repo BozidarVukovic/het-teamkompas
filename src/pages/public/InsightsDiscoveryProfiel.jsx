@@ -152,7 +152,7 @@ export default function InsightsDiscoveryProfiel() {
       <p className="tk-lead" style={{ color: "rgba(255,255,255,.76)" }}>Goede samenwerking begint met inzicht in jezelf en nieuwsgierigheid naar de ander. Een Insights Discovery-profiel geeft taal aan voorkeuren, kwaliteiten, communicatie en gedrag onder druk.</p>
       <div className="tk-actions">
         <button type="button" className="tk-button tk-button-primary" onClick={scrollToForm}>Vraag een Insights Discovery-profiel aan</button>
-        <ButtonLink href="/verkennen" variant="secondary" onClick={() => trackEvent("insights_hero_contact_click")}>Plan een verkennend gesprek</ButtonLink>
+        <ButtonLink href="/verkennen" variant="secondary" onClick={() => trackEvent("insights_hero_contact_click")}>Plan een vrijblijvende kennismaking</ButtonLink>
       </div>
     </Section>
 

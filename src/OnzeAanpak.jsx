@@ -123,7 +123,7 @@ export default function OnzeAanpakPage() {
             <h1 style={{ fontSize: isMobile ? 36 : 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>We maken zichtbaar wat samenwerking helpt of belemmert.</h1>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. De teamscan brengt vier domeinen in beeld. Insights Discovery gebruiken we als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en samenwerkt.</p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 14, alignItems: isMobile ? "stretch" : "center", flexWrap: "wrap" }}>
-              <button type="button" onClick={openModal} style={ctaStyle}>Bespreek jullie situatie</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
               <a href="/teamscan" style={{ ...ctaStyle, background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.22)", boxShadow: "none" }}>Start teamscan</a>
               <span style={{ color: "rgba(255,255,255,0.58)", fontSize: 14 }}>Van teamscan naar gesprek, duiding en concrete beweging.</span>
             </div>
@@ -240,13 +240,49 @@ export default function OnzeAanpakPage() {
           </div>
         </section>
 
+        {/* De uitgebreide route hoort hier, onder de vier stappen -- niet op de
+            homepage, waar hij naast het klantpad kwam te staan en hetzelfde
+            verhaal een tweede keer vertelde. Met het woord "kan" ervoor, en
+            dichtgeklapt: wie het detail wil, vraagt erom. */}
+        <section style={{ padding: isMobile ? "44px 22px" : "70px 60px", background: PUB.wit }}>
+          <div style={{ maxWidth: 820, margin: "0 auto" }}>
+            <SectionLabel>Voor wie het precies wil weten</SectionLabel>
+            <h2 style={{ fontSize: isMobile ? 26 : 34, lineHeight: 1.15, margin: "0 0 12px" }}>Zo kán een traject eruitzien.</h2>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: "0 0 20px" }}>
+              Geen standaardprogramma: de precieze invulling bepalen we samen, op basis van jullie
+              team en vraagstuk. Dit is de volledige route wanneer we alles inzetten.
+            </p>
+            <details style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: "6px 20px" }}>
+              <summary style={{ cursor: "pointer", padding: "14px 0", fontWeight: 800, fontSize: 16, color: PUB.donker }}>
+                De acht stappen van een volledig traject
+              </summary>
+              <ol style={{ margin: "6px 0 20px", paddingLeft: 20, display: "grid", gap: 14 }}>
+                {[
+                  ["Kennismaking en intake", "Samen scherp krijgen wat er speelt en wat nodig is."],
+                  ["Voorstel en trajectontwerp", "Een passende aanpak voor jullie team en context."],
+                  ["Teamscan uitzetten", "Veilig en gestructureerd ophalen wat teamleden ervaren."],
+                  ["Analyse van de teamscan", "Patronen, verschillen en signalen vertalen naar betekenis."],
+                  ["Insights Discovery-profielen", "Gedrag, communicatie en samenwerking concreet maken."],
+                  ["Terugkoppeling en maatwerkadvies", "Duidelijke conclusies en haalbare vervolgstappen."],
+                  ["Workshop of teamdag", "Gerichte interventie waarin inzicht wordt omgezet in gedrag."],
+                  ["Borging en follow-up", "Zorgen dat inzichten blijven landen in het dagelijks werk."],
+                ].map(([titel, tekst]) => (
+                  <li key={titel} style={{ fontSize: 15, lineHeight: 1.7, color: PUB.sub }}>
+                    <span style={{ fontWeight: 800, color: PUB.donker }}>{titel}</span> — {tekst}
+                  </li>
+                ))}
+              </ol>
+            </details>
+          </div>
+        </section>
+
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: ".95fr 1.05fr", gap: 42, alignItems: "center" }}>
             <div>
               <SectionLabel>Wat we bewust niet doen</SectionLabel>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Geen modelshow. Geen standaardtraject. Geen rapport dat in een la verdwijnt.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>We geven voldoende uitleg om vertrouwen te bouwen, maar houden de echte waarde in de begeleiding: het scherp duiden van jullie specifieke context, de teamscanuitkomsten en de gedragsvoorkeuren van het team.</p>
-              <button type="button" onClick={openModal} style={ctaStyle}>Plan een verkennend gesprek</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
             </div>
             <img src={images.zorg} alt="Samenwerking in een professionele zorgcontext" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
           </div>

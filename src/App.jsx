@@ -345,7 +345,6 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
   const navLinks = [
     ["Voor wie", "voor-wie"],
     ["Eerste stap", "eerste-stap"],
-    ["Traject", "traject"],
     ["Teamscan", "teamscan"],
     ["Contact", "contact"]
   ];
@@ -385,7 +384,7 @@ function NavBar({ isMobile, onLoginClick, openModal }) {
   };
   useEffect(() => {
     const observers = [];
-    const ids = ["voor-wie", "eerste-stap", "traject", "teamscan", "contact"];
+    const ids = ["voor-wie", "eerste-stap", "teamscan", "contact"];
     const updateActive = () => {
       const hero = document.getElementById("home");
       if (hero) {
@@ -924,7 +923,7 @@ function StickyLeadCta({ onClick, isMobile = false }) {
       }}
     >
       <button type="button" onClick={onClick} tabIndex={zichtbaar ? 0 : -1} style={{ width: "100%", border: 0, borderRadius: 999, padding: isMobile ? "12px 16px" : "14px 18px", background: PUB.oranje, color: PUB.donker, fontWeight: 900, fontSize: 14, cursor: "pointer", boxShadow: "0 18px 50px rgba(13,27,42,0.28)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-        Plan vrijblijvende kennismaking <span aria-hidden="true">→</span>
+        Plan een vrijblijvende kennismaking <span aria-hidden="true">→</span>
       </button>
     </div>
   );
@@ -1505,7 +1504,7 @@ function PublicSite({ onLoginClick }) {
               <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wanneer schakel je ons in?</div>
               <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Als gedrag, verandering of leiderschap vastloopt.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>Mijn Teamkompas helpt als de inhoud wel besproken wordt, maar het echte gesprek over samenwerking, spanning en verantwoordelijkheid nog onvoldoende op tafel komt.</p>
-              <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Bespreek jullie situatie</span>
+              <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Plan een vrijblijvende kennismaking</span>
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14, alignItems: "stretch" }}>
               {vragen.map((v, i) => (
@@ -1541,31 +1540,6 @@ function PublicSite({ onLoginClick }) {
           </div>
         </section>
 
-        <section id="traject" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.donker, color: PUB.wit }}>
-          <div style={{ maxWidth: 1220, margin: "0 auto" }}>
-            <Fade>
-              <div style={{ maxWidth: 820, marginBottom: 34 }}>
-                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Begeleid traject met fysieke begeleiding</div>
-                <h2 style={{ fontSize: isMobile ? 30 : 46, lineHeight: 1.1, color: PUB.wit, marginBottom: 14 }}>Van eerste contact tot inzicht, teamdag en borging.</h2>
-                <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)" }}>Geen enkel team is hetzelfde. Daarom kijken we altijd eerst naar jullie situatie en stemmen we de aanpak daarop af. Zo ontstaat een traject dat past bij jullie team, in plaats van een standaardoplossing.</p>
-              </div>
-            </Fade>
-            <Fade>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <img
-                  src="/processtappen.png"
-                  alt="Van eerste contact tot inzicht, teamdag en borging — 9 stappen"
-                  style={{
-                    maxWidth: isMobile ? "100%" : 540,
-                    width: "100%",
-                    borderRadius: 18,
-                    boxShadow: "0 20px 60px rgba(0,0,0,0.35)",
-                  }}
-                />
-              </div>
-            </Fade>
-          </div>
-        </section>
 
         <section id="teamscan" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".95fr 1.05fr", gap: 44, alignItems: "center" }}>
@@ -1573,7 +1547,7 @@ function PublicSite({ onLoginClick }) {
               <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>De teamscan</div>
               <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, marginBottom: 16 }}>Geen vragenlijstje, maar een startpunt voor betekenisvol gesprek.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 22 }}>De teamscan helpt patronen zichtbaar maken in samenwerking, veiligheid, energie en verbeteren. Insights Discovery gebruiken we aanvullend als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en verandert.</p>
-              <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Verken de teamscan</span>
+              <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Plan een vrijblijvende kennismaking</span>
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
               {pijlerCards.map(([titel, kleur, tekst]) => (
