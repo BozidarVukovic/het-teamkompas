@@ -64,6 +64,28 @@ export function deelnemers(leden = []) {
   return (leden || []).filter(doetMee);
 }
 
+/**
+ * De regel onder de teamnaam: waar hoort dit team bij, en wie staan erin.
+ *
+ * Een telling van nul zegt niets en leest als een fout. Een begeleider die
+ * negen profielen klaarzette zag "0 leden - 9 toegevoegde profielen": het
+ * eerste getal beschrijft dan precies de mensen die er niet zijn. Wat er niet
+ * is, laten we weg; wat er staat, staat er.
+ */
+export function teamOnderkop({ orgNaam = "", aantalLeden = 0, aantalProfielen = 0 } = {}) {
+  return [
+    orgNaam || null,
+    aantalLeden > 0 ? `${aantalLeden} ${aantalLeden === 1 ? "lid" : "leden"}` : null,
+    aantalProfielen > 0
+      ? aantalProfielen === 1
+        ? "1 toegevoegd profiel"
+        : `${aantalProfielen} toegevoegde profielen`
+      : null,
+  ]
+    .filter(Boolean)
+    .join(" \u00b7 ");
+}
+
 /** De mensen die het team begeleiden zonder eraan mee te doen. */
 export function begeleiders(leden = []) {
   return (leden || []).filter((l) => rolVan(l) === BEGELEIDER);

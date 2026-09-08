@@ -32,6 +32,7 @@ import {
   magRolWijzigen,
   magVertrekken,
   overdrachtstekst,
+  teamOnderkop,
 } from "../../lib/app/teamrollen";
 import { kenmerkenUitInsights } from "../../lib/app/insights";
 import { deelzin } from "../../data/app/kenmerken";
@@ -291,17 +292,11 @@ export default function MijnTeam() {
   if (laden) return <div className="tk-inhoud"><p className="tk-onderkop">Even laden...</p></div>;
 
   const meedoeners = deelnemers(leden);
-  const onderkop = [
-    actiefTeam.orgNaam,
-    `${meedoeners.length} ${meedoeners.length === 1 ? "lid" : "leden"}`,
-    profielleden.length > 0
-      ? profielleden.length === 1
-        ? "1 toegevoegd profiel"
-        : `${profielleden.length} toegevoegde profielen`
-      : null,
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  const onderkop = teamOnderkop({
+    orgNaam: actiefTeam.orgNaam,
+    aantalLeden: meedoeners.length,
+    aantalProfielen: profielleden.length,
+  });
 
   /**
    * Eén persoon in de lijst. Wordt twee keer gebruikt: voor de mensen die
@@ -599,6 +594,35 @@ export default function MijnTeam() {
         <div className="tk-groep-lijst">
           {deelnemers(leden).map(persoonsrij)}
 
+          {/* Een toegevoegd profiel is geen uitnodiging. De beheerder zette de
+              gegevens klaar; de persoon zelf heeft geen account, krijgt geen
+              mail en weet niet dat hij hier staat. Dat is met opzet -- bij een
+              profiel wordt geen e-mailadres bewaard, dus de app kan niemand
+              bereiken -- maar het moet wel op het scherm staan, anders lijkt
+              een team van negen profielen een team dat klaarstaat. */}
+          {profielleden.length > 0 && (
+            <div className="tk-groep-noot">
+              <p>
+                Hieronder staan de profielen die {ikBenBeheerder ? "je zelf hebt" : "een beheerder heeft"}{" "}
+                toegevoegd. Zij hebben geen account: ze kunnen niet inloggen en weten niet dat ze
+                hier staan. Wil je dat ze zelf aanvullen wat er mist, nodig ze dan uit.
+              </p>
+              {ikBenBeheerder && (
+                <button
+                  type="button"
+                  className="tk-knop tk-knop-rand tk-knop-klein"
+                  onClick={() => {
+                    setPaneel("uitnodigen");
+                    setOpen(null);
+                    document.getElementById("tk-uitnodigen")?.scrollIntoView({ block: "center" });
+                  }}
+                >
+                  Uitnodigen
+                </button>
+              )}
+            </div>
+          )}
+
           {profielleden.map((pl) => {
             const sleutel = `profiel-${pl.id}`;
             return (
@@ -788,6 +812,7 @@ export default function MijnTeam() {
             <div className="tk-persoonrij">
               <button
                 type="button"
+                id="tk-uitnodigen"
                 className={`tk-optie tk-optie-toevoegen${paneel === "uitnodigen" ? " open" : ""}`}
                 onClick={() => wisselPaneel("uitnodigen")}
                 aria-expanded={paneel === "uitnodigen"}

@@ -929,6 +929,30 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.26);
 }
 
+/* Een regel in de lijst die geen persoon is maar uitleg over wat eronder komt.
+   Zelfde scheidingslijn als de rijen eromheen, want hij hoort in de lijst; geen
+   knopgedrag, want er valt niets uit te klappen. */
+.tk-groep-noot {
+  border-top: 1px solid var(--tk-lijn);
+  padding: 14px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.tk-groep-noot:first-child {
+  border-top: 0;
+}
+
+.tk-groep-noot p {
+  flex: 1 1 240px;
+  margin: 0;
+  font-size: var(--tk-t-fijn);
+  line-height: 1.55;
+  color: var(--tk-zacht);
+}
+
 .tk-optie {
   display: flex;
   align-items: center;

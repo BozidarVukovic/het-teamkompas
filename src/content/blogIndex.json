@@ -1,5 +1,34 @@
 [
   {
+    "slug": "organisatie-tegen-slecht-leiderschap",
+    "title": "Een goede organisatie moet ook tegen slecht leiderschap kunnen",
+    "excerpt": "Sommige processen draaien alleen goed zolang die ene ervaren collega er is. Waarom vertrouwen geen organisatieontwerp is, en hoe je fouten laat opvallen.",
+    "publishDate": "2026-09-08",
+    "modifiedDate": "2026-09-08",
+    "image": "/blog/images/fouten-verdragen.jpg",
+    "imageAlt": "Illustratie bij het artikel over organisaties die fouten kunnen verdragen",
+    "category": "Leiderschap",
+    "tags": [
+      "leiderschap",
+      "eigenaarschap",
+      "samenwerking"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/eigenaarschap-in-teams",
+      "/psychologische-veiligheid",
+      "/kennis/teamcultuur"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamscan"
+    ],
+    "lead": "Een ervaren teamleider houdt precies in de gaten wat er speelt. Een projectleider kent alle afhankelijkheden uit zijn hoofd. Iemand weet wie je moet bellen als een dossier dreigt vast te lopen. Zolang die mensen er zijn, lijkt het systeem uitstekend te werken.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 758
+  },
+  {
     "slug": "geen-open-cultuur-met-gesloten-middelen",
     "title": "Je kunt geen open cultuur bouwen met gesloten middelen",
     "excerpt": "De boodschap is eigenaarschap, de werkwijze is controle. Waarom de manier waarop je verandert al laat zien welke cultuur er werkelijk gaat ontstaan.",
