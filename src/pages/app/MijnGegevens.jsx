@@ -2,9 +2,11 @@
 //
 // Geen uitzonderingen en geen kleine lettertjes: wat hier staat, is alles.
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
-import { exporteerEigenGegevens } from "../../lib/app/opslag";
+import { exporteerEigenGegevens, haalProfielleden, haalTeamleden } from "../../lib/app/opslag";
+import { magAllesVerwijderen } from "../../lib/app/teamrollen";
 import { gedeeldeKenmerken as gedeeldeKenmerkenVoor } from "../../lib/app/telling";
 import useActie from "../../components/app/useActie";
 import Melding from "../../components/app/Melding";
@@ -12,6 +14,38 @@ import Melding from "../../components/app/Melding";
 export default function MijnGegevens() {
   const { gebruiker, naam, functie, zetProfielgegevens, lidmaatschappen, kenmerken, handleiding, verwijderAlles } =
     useApp();
+
+  // Wie er in je teams zitten staat niet in de context: die kent alleen het
+  // team waar je nu in werkt. Voor deze ene knop moeten we ze alle vier kennen,
+  // dus halen we ze hier op. Lukt dat niet, dan blijft de knop dicht -- niet
+  // kunnen controleren is geen reden om het dan maar te doen.
+  const [teams, setTeams] = useState(null);
+  const [ophalenMislukt, setOphalenMislukt] = useState(false);
+
+  useEffect(() => {
+    let afgebroken = false;
+    if (!gebruiker) return undefined;
+    (async () => {
+      try {
+        const uitgezocht = await Promise.all(
+          (lidmaatschappen || []).map(async (l) => ({
+            teamNaam: l.teamNaam || "een team",
+            uid: gebruiker.uid,
+            leden: await haalTeamleden(l.orgId, l.teamId),
+            profielleden: await haalProfielleden(l.orgId, l.teamId),
+          }))
+        );
+        if (!afgebroken) setTeams(uitgezocht);
+      } catch {
+        if (!afgebroken) setOphalenMislukt(true);
+      }
+    })();
+    return () => {
+      afgebroken = true;
+    };
+  }, [gebruiker, lidmaatschappen]);
+
+  const verwijderen = useMemo(() => magAllesVerwijderen(teams || []), [teams]);
 
   const [nieuweNaam, setNieuweNaam] = useState(naam || "");
   const [nieuweFunctie, setNieuweFunctie] = useState(functie || "");
@@ -157,24 +191,47 @@ export default function MijnGegevens() {
           Hiermee verdwijnt je profiel, je handleiding, alles wat je hebt gedeeld en je
           lidmaatschap van elk team. Dit kan niet ongedaan gemaakt worden.
         </p>
-        <label className="tk-label" htmlFor="tk-bevestig">Typ VERWIJDEREN om te bevestigen</label>
-        <input
-          id="tk-bevestig"
-          className="tk-invoer"
-          value={bevestig}
-          onChange={(e) => setBevestig(e.target.value.toUpperCase())}
-          placeholder="VERWIJDEREN"
-        />
-        <div className="tk-knoppen" style={{ marginTop: 12 }}>
-          <button
-            type="button"
-            className="tk-knop tk-knop-klein tk-knop-gevaar"
-            disabled={bevestig !== "VERWIJDEREN" || bezig}
-            onClick={() => voerUit("alles verwijderen", () => verwijderAlles())}
-          >
-            Definitief verwijderen
-          </button>
-        </div>
+        {/* Eerst de vraag of het uberhaupt kan. Pas als het antwoord ja is,
+            heeft het zin om iemand VERWIJDEREN te laten typen. */}
+        {teams === null && !ophalenMislukt && <p className="tk-fijn">Je teams nakijken...</p>}
+
+        {ophalenMislukt && (
+          <p className="tk-fijn">
+            Je teams konden niet worden nagekeken, dus deze knop blijft dicht. Probeer het straks
+            opnieuw — verwijderen zonder die controle kan een team achterlaten dat niemand meer kan
+            beheren.
+          </p>
+        )}
+
+        {teams !== null && !verwijderen.mag && (
+          <p className="tk-fijn">
+            {verwijderen.reden}{" "}
+            <Link to="/app/team" style={{ color: "var(--tk-teal)" }}>Naar mijn team</Link>.
+          </p>
+        )}
+
+        {teams !== null && verwijderen.mag && (
+          <>
+            <label className="tk-label" htmlFor="tk-bevestig">Typ VERWIJDEREN om te bevestigen</label>
+            <input
+              id="tk-bevestig"
+              className="tk-invoer"
+              value={bevestig}
+              onChange={(e) => setBevestig(e.target.value.toUpperCase())}
+              placeholder="VERWIJDEREN"
+            />
+            <div className="tk-knoppen" style={{ marginTop: 12 }}>
+              <button
+                type="button"
+                className="tk-knop tk-knop-klein tk-knop-gevaar"
+                disabled={bevestig !== "VERWIJDEREN" || bezig}
+                onClick={() => voerUit("alles verwijderen", () => verwijderAlles())}
+              >
+                Definitief verwijderen
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       <p className="tk-fijn tk-voetnoot">

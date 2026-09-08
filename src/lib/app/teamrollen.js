@@ -169,6 +169,72 @@ export function magVertrekken({ leden = [], uid } = {}) {
   return { mag: true, reden: null };
 }
 
+/** "A", "A en B", "A, B en C" -- een opsomming die je hardop kunt lezen. */
+function opsomming(namen = []) {
+  if (namen.length === 0) return "";
+  if (namen.length === 1) return namen[0];
+  return `${namen.slice(0, -1).join(", ")} en ${namen[namen.length - 1]}`;
+}
+
+/**
+ * Mag je je account met alles erin weghalen?
+ *
+ * "Alles verwijderen" schrijft je uit elk team waar je in zit. Bij Team
+ * verlaten wordt gecontroleerd of er een beheerder achterblijft; langs deze
+ * tweede deur gebeurde dat niet. Een begeleider die zijn account wiste, liet
+ * een team achter met negen toegevoegde profielen en niemand die er nog iets
+ * mee kan: niet uitnodigen, niet hernoemen, niet opruimen, niet weggooien. De
+ * profielen van die negen mensen blijven dan staan zonder dat er nog iemand is
+ * die ze kan verwijderen.
+ *
+ * Daarom dezelfde regel op beide plekken, plus een tweede geval dat bij Team
+ * verlaten niet bestaat: je bent de laatste persoon, maar er staan nog
+ * profielen in. Alleen weglopen laat dan gegevens van anderen achter.
+ *
+ * @param {Array} teams  [{ teamNaam, leden, profielleden, uid }]
+ * @returns {{mag: boolean, reden: string|null, teams: string[]}}
+ */
+export function magAllesVerwijderen(teams = []) {
+  const naam = (t) => (t && t.teamNaam) || "een team";
+
+  const zonderBeheerder = (teams || [])
+    .filter((t) => !magVertrekken({ leden: t.leden, uid: t.uid }).mag)
+    .map(naam);
+
+  // De laatste persoon in een team waar nog profielen in staan. magVertrekken
+  // laat dit door -- daar gaat het over jou, hier over wat je achterlaat.
+  const metProfielen = (teams || [])
+    .filter(
+      (t) =>
+        (t.leden || []).length <= 1 &&
+        (t.profielleden || []).length > 0 &&
+        !zonderBeheerder.includes(naam(t))
+    )
+    .map(naam);
+
+  if (zonderBeheerder.length === 0 && metProfielen.length === 0) {
+    return { mag: true, reden: null, teams: [] };
+  }
+
+  const delen = [];
+  if (zonderBeheerder.length > 0) {
+    delen.push(
+      `Je bent de enige beheerder van ${opsomming(zonderBeheerder)}. Maak daar eerst iemand anders beheerder.`
+    );
+  }
+  if (metProfielen.length > 0) {
+    delen.push(
+      `In ${opsomming(metProfielen)} staan profielen die jij hebt toegevoegd, en jij bent de enige die er nog bij kan. Verwijder ${metProfielen.length === 1 ? "dat team" : "die teams"} eerst.`
+    );
+  }
+
+  return {
+    mag: false,
+    teams: [...zonderBeheerder, ...metProfielen],
+    reden: `${delen.join(" ")} Anders blijft er een team achter dat niemand meer kan beheren.`,
+  };
+}
+
 /**
  * De zin die op het bevestigingsscherm hoort bij het maken van een beheerder.
  *

@@ -24,7 +24,9 @@ import {
   magBeheren,
   magRolWijzigen,
   magVertrekken,
+  magAllesVerwijderen,
   overdrachtstekst,
+  teamOnderkop,
 } from "../src/lib/app/teamrollen.js";
 
 const lid = (uid, rol = LID, naam = uid) => ({ uid, rol, naam });
@@ -333,4 +335,72 @@ test("terug naar meedoen zegt wat er dan verandert", () => {
   const tekst = begeleidingstekst(false, "HR Beleid");
   assert.match(tekst, /doet daarna gewoon mee/);
   assert.match(tekst, /blijft het team beheren/);
+});
+
+test("de onderkop laat weg wat er niet is", () => {
+  // Het geval waar dit om begonnen is: een begeleider die profielen klaarzette
+  // en zelf niet meedoet. "0 leden" beschrijft dan de mensen die er niet zijn.
+  assert.equal(
+    teamOnderkop({ orgNaam: "Evides", aantalLeden: 0, aantalProfielen: 9 }),
+    "Evides \u00b7 9 toegevoegde profielen"
+  );
+  assert.equal(
+    teamOnderkop({ orgNaam: "Evides", aantalLeden: 1, aantalProfielen: 1 }),
+    "Evides \u00b7 1 lid \u00b7 1 toegevoegd profiel"
+  );
+  assert.equal(
+    teamOnderkop({ orgNaam: "Evides", aantalLeden: 4, aantalProfielen: 0 }),
+    "Evides \u00b7 4 leden"
+  );
+  // Alles leeg: dan blijft er niets over, en niet een reeks scheidingstekens.
+  assert.equal(teamOnderkop({}), "");
+});
+
+test("alles verwijderen laat geen onbeheerbaar team achter", () => {
+  const ik = "u1";
+  const team = (naam, leden, profielleden = []) => ({ teamNaam: naam, uid: ik, leden, profielleden });
+
+  // Gewoon lid naast anderen: niets aan de hand.
+  assert.equal(
+    magAllesVerwijderen([
+      team("Evides", [
+        { uid: ik, rol: LID },
+        { uid: "u2", rol: BEHEERDER },
+      ]),
+    ]).mag,
+    true
+  );
+
+  // De enige beheerder van een team met anderen erin. Dit is dezelfde regel
+  // die Team verlaten al hanteerde; langs deze deur ontbrak hij.
+  const enige = magAllesVerwijderen([
+    team("Evides", [
+      { uid: ik, rol: BEGELEIDER },
+      { uid: "u2", rol: LID },
+    ]),
+  ]);
+  assert.equal(enige.mag, false);
+  assert.deepEqual(enige.teams, ["Evides"]);
+  assert.match(enige.reden, /enige beheerder van Evides/);
+
+  // Alleen jij in het team, maar er staan profielen van anderen in. Weglopen
+  // laat dan gegevens achter waar niemand meer bij kan.
+  const metProfielen = magAllesVerwijderen([
+    team("Evides", [{ uid: ik, rol: BEGELEIDER }], [{ id: "p1" }, { id: "p2" }]),
+  ]);
+  assert.equal(metProfielen.mag, false);
+  assert.match(metProfielen.reden, /Verwijder dat team eerst/);
+
+  // Alleen jij, en verder niets: dan mag het.
+  assert.equal(magAllesVerwijderen([team("Leeg", [{ uid: ik, rol: BEHEERDER }])]).mag, true);
+
+  // Geen teams: ook geen bezwaar.
+  assert.equal(magAllesVerwijderen([]).mag, true);
+
+  // Twee teams die klem zitten, netjes opgesomd.
+  const twee = magAllesVerwijderen([
+    team("Evides", [{ uid: ik, rol: BEHEERDER }, { uid: "u2", rol: LID }]),
+    team("HR B&B", [{ uid: ik, rol: BEHEERDER }, { uid: "u3", rol: LID }]),
+  ]);
+  assert.match(twee.reden, /Evides en HR B&B/);
 });
