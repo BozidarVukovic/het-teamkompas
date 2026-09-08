@@ -19,6 +19,26 @@
 //
 // Pure functies: geen React, geen database, wel te testen.
 
+/**
+ * Staat de vraag aan?
+ *
+ * Uit in deze versie. De vraag komt pas twintig uur na het advies op, en de app
+ * heeft geen manier om iemand dat te laten weten -- geen mail, geen melding.
+ * Wie niet toevallig het Ik-scherm opent ziet hem dus nooit, en wie hem wel
+ * ziet wordt onderbroken door een vraag waar hij niet om vroeg. Daar komt bij
+ * dat het antwoord nergens heen gaat: het weegt niet mee in het advies, het
+ * wordt niet gedeeld, en niemand leest het terug.
+ *
+ * Wat je aan jezelf probeert te veranderen -- de experimenten hierboven op
+ * hetzelfde scherm -- heeft dat bezwaar niet: dat is een lus die je zelf hebt
+ * geopend, en die vraagt er zelf om gesloten te worden.
+ *
+ * Alles eromheen blijft staan: deze functies, hun tests, de securityregel, wat
+ * er al bewaard is, en het meenemen en verwijderen op Mijn gegevens. Zet dit op
+ * true en de vraag is terug.
+ */
+export const VRAAGT_TERUGBLIK = false;
+
 /** Pas de volgende dag vragen. Vlak na het advies is er nog geen gesprek geweest. */
 export const WACHT_UREN = 20;
 

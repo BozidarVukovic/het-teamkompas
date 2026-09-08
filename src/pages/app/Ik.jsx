@@ -11,6 +11,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
+import useActie from "../../components/app/useActie";
+import Melding from "../../components/app/Melding";
 import Voortgang from "../../components/app/Voortgang";
 import { bepaalVoortgang } from "../../lib/app/voortgang";
 import { initialen } from "../../lib/app/naam";
@@ -25,6 +27,7 @@ import {
 import {
   MAX_TEKST,
   TERUGBLIKKEN,
+  VRAAGT_TERUGBLIK,
   openstaandeSessie,
   sorteerReflecties,
   terugblikLabel,
@@ -61,20 +64,20 @@ function Experiment({ experiment, opTerugblik }) {
   const [open, setOpen] = useState(false);
   const [uitkomst, setUitkomst] = useState(null);
   const [tekst, setTekst] = useState("");
-  const [bezig, setBezig] = useState(false);
+  const { bezig, melding, voerUit, wisMelding } = useActie();
 
   const klaar = isTerugblikKlaar(experiment);
   const uitkomstLabel = (UITKOMSTEN.find((u) => u.id === experiment.uitkomst) || {}).label;
 
-  const bewaar = async () => {
+  // Hier stond een lege catch met "lukt het niet, dan blijft het gewoon staan".
+  // Dat is precies wat er misging: je koos iets, klikte Bewaren, en er gebeurde
+  // niets -- niet te onderscheiden van een kapotte knop. Nu zegt hij wat er
+  // mis is; lukt het wel, dan is het verdwijnen van de vraag de bevestiging.
+  const bewaar = () => {
     if (!uitkomst || bezig) return;
-    setBezig(true);
-    try {
-      await opTerugblik({ id: experiment.id, uitkomst, tekst });
-    } catch {
-      /* lukt het niet, dan blijft het experiment gewoon staan */
-    }
-    setBezig(false);
+    voerUit("je terugblik bewaren", () =>
+      opTerugblik({ id: experiment.id, uitkomst, tekst })
+    );
   };
 
   return (
@@ -105,6 +108,7 @@ function Experiment({ experiment, opTerugblik }) {
 
       {klaar && open && (
         <div style={{ marginTop: 14 }}>
+          <Melding melding={melding} onSluiten={wisMelding} />
           <p className="tk-label">Wat doe je hiermee?</p>
           <div className="tk-keuzes">
             {UITKOMSTEN.map((u) => (
@@ -167,29 +171,29 @@ function Experiment({ experiment, opTerugblik }) {
 function Terugkijken({ sessie, label, opBewaren }) {
   const [terugblik, setTerugblik] = useState(null);
   const [tekst, setTekst] = useState("");
-  const [bezig, setBezig] = useState(false);
+  const { bezig, melding, voerUit, wisMelding } = useActie();
 
-  const bewaar = async () => {
+  // Zelfde verhaal als bij het experiment: de lege catch maakte een mislukte
+  // opslag onzichtbaar. De vraag bleef staan alsof je niets had gedaan.
+  const bewaar = () => {
     if (!terugblik || bezig) return;
-    setBezig(true);
-    try {
-      await opBewaren({
+    voerUit("je terugblik bewaren", () =>
+      opBewaren({
         sessieId: sessie.id,
         situatieId: sessie.situatieId,
         situatieLabel: label,
         terugblik,
         tekst,
-      });
-    } catch {
-      /* lukt het niet, dan blijft de vraag gewoon staan */
-    }
-    setBezig(false);
+      })
+    );
   };
 
   return (
     <div className="tk-kaart">
       <h2 style={{ marginTop: 0 }}>Hoe kijk je erop terug?</h2>
       <p className="tk-fijn" style={{ marginTop: -4 }}>{waaroverInEenZin(sessie, label)}</p>
+
+      <Melding melding={melding} onSluiten={wisMelding} />
 
       <div className="tk-keuzes">
         {TERUGBLIKKEN.map((k) => (
@@ -240,9 +244,12 @@ export default function Ik() {
   } = useApp();
   const rij = sorteerExperimenten(experimenten);
 
-  const teBespreken = openstaandeSessie({ sessies, reflecties });
+  // Staat de vraag uit, dan is er niets te bespreken en niets terug te lezen:
+  // de hele sectie hieronder valt daarmee vanzelf weg. Zie VRAAGT_TERUGBLIK in
+  // reflecties.js voor waarom, en voor hoe je hem terugzet.
+  const teBespreken = VRAAGT_TERUGBLIK ? openstaandeSessie({ sessies, reflecties }) : null;
   const teBesprekenLabel = teBespreken ? (situatie(teBespreken.situatieId) || {}).label : "";
-  const gemaakt = sorteerReflecties(reflecties);
+  const gemaakt = VRAAGT_TERUGBLIK ? sorteerReflecties(reflecties) : [];
   const voortgang = bepaalVoortgang({ kenmerken, actiefTeam, handleiding, ikBegeleid });
   const handleidingKlaar = voortgang.handleidingSecties >= voortgang.handleidingVan;
 
