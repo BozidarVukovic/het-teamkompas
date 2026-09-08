@@ -1,5 +1,34 @@
 [
   {
+    "slug": "hard-werken-is-geen-richting",
+    "title": "Waarom hard werken niet hetzelfde is als richting hebben",
+    "excerpt": "Een volle dag met veel beweging en weinig vooruitgang. Over aandacht, urgentie en waarom zelfsturing meer vraagt dan vrijheid om zelf te beslissen.",
+    "publishDate": "2026-09-09",
+    "modifiedDate": "2026-09-09",
+    "image": "/blog/images/zelfsturing.jpg",
+    "imageAlt": "Illustratie bij het artikel over aandacht, richting en zelfsturing",
+    "category": "Leiderschap",
+    "tags": [
+      "leiderschap",
+      "eigenaarschap",
+      "teamenergie"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/eigenaarschap-in-teams",
+      "/kennis/teamenergie",
+      "/brein-en-samenwerking"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamscan"
+    ],
+    "lead": "Je beantwoordt tientallen mails, schuift van overleg naar overleg, lost tussendoor een probleem op en werkt aan het eind van de dag nog een paar actiepunten weg. Er is veel gebeurd. Vraag jezelf dan af wat je die dag dichter bij je belangrijkste doel heeft gebracht.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 685
+  },
+  {
     "slug": "organisatie-tegen-slecht-leiderschap",
     "title": "Een goede organisatie moet ook tegen slecht leiderschap kunnen",
     "excerpt": "Sommige processen draaien alleen goed zolang die ene ervaren collega er is. Waarom vertrouwen geen organisatieontwerp is, en hoe je fouten laat opvallen.",
