@@ -140,19 +140,32 @@ export default function Samenwerken() {
   // iedereen hetzelfde, dan staat er onder niemand iets.
   const regels = useMemo(() => onderscheidendeZinnen(anderen), [anderen]);
 
-  // Vanaf de teampagina kom je hier binnen met een collega al gekozen
-  // (/app/samenwerken?met=...). Dat gebeurt één keer: daarna bepaalt je eigen
-  // keuze wat er staat, ook als het adres nog steeds die naam draagt.
+  // Vanaf het startscherm en de teampagina kom je hier binnen met een collega
+  // al gekozen (/app/samenwerken?met=...). Dat gebeurt één keer: daarna bepaalt
+  // je eigen keuze wat er staat, ook als het adres nog steeds die naam draagt.
+  //
+  // Kwam je zo binnen, dan sla je de vraag "met wie?" over -- je hebt hem net
+  // beantwoord door op iemand te tikken. De lijst met alle collega's stond
+  // daarna toch weer bovenaan, en de vraag waar het om ging stond eronder,
+  // buiten beeld. Dan moet je scrollen om te zien wat je moet doen, en dat is
+  // precies één stap te veel op het scherm waar het om draait.
   const gevolgd = useRef(false);
   const gevraagd = zoek.get("met");
+  const [kortePad, setKortePad] = useState(false);
   useEffect(() => {
     if (gevolgd.current || !gevraagd || anderen.length === 0) return;
     gevolgd.current = true;
-    if (anderen.some((l) => l.sleutel === gevraagd)) setGekozenUids([gevraagd]);
+    if (anderen.some((l) => l.sleutel === gevraagd)) {
+      setGekozenUids([gevraagd]);
+      setKortePad(true);
+    }
   }, [gevraagd, anderen]);
 
   const geselecteerd = anderen.filter((l) => gekozenUids.includes(l.sleutel));
   const gekozen = geselecteerd.length === 1 ? geselecteerd[0] : null;
+  // De korte weg geldt alleen zolang er precies één iemand staat en er nog
+  // geen advies is. Zodra het advies er is neemt dat het scherm over.
+  const directNaarVraag = kortePad && Boolean(gekozen) && !advies;
   // Bij precies twee anderen is er nog een derde vraag mogelijk: niet hoe jij
   // met hen werkt, maar hoe zij op elkaar landen. Dat is de vraag van wie een
   // team begeleidt of leidt.
@@ -310,15 +323,25 @@ export default function Samenwerken() {
 
   return (
     <div className="tk-inhoud">
-      <h1 className="tk-kop">Samenwerken met...</h1>
+      {/* Kwam je hier met iemand al gekozen, dan hoort dat in de kop te staan.
+          "Samenwerken met..." met drie puntjes vraagt om een keuze die je net
+          hebt gemaakt. */}
+      <h1 className="tk-kop">
+        {directNaarVraag ? `Samenwerken met ${voornaam(gekozen.naam, "je collega")}` : "Samenwerken met..."}
+      </h1>
       {/* De uitleg gaat over de keuze die je nog moet maken. Heb je iemand
           gekozen, dan legt hij iets uit wat je al gedaan hebt. */}
-      {!gekozen && (
+      {directNaarVraag ? (
+        <p className="tk-onderkop">
+          Kies hieronder wat er speelt. Je krijgt een advies op basis van wat jullie allebei hebben
+          gedeeld.
+        </p>
+      ) : !gekozen ? (
         <p className="tk-onderkop">
           Kies met wie het speelt en wat er aan de hand is. Je krijgt een advies op basis van wat
           jullie allebei hebben gedeeld.
         </p>
-      )}
+      ) : null}
 
       {anderen.length === 0 && (
         <div className="tk-kaart">
@@ -333,7 +356,26 @@ export default function Samenwerken() {
         </div>
       )}
 
-      {anderen.length > 0 && !advies && (
+      {/* Eén regel met wie je hebt gekozen, en een uitweg. Niet de hele lijst:
+          die vraag is al beantwoord. */}
+      {directNaarVraag && (
+        <div className="tk-gekozen">
+          <span className="tk-bol">{initialen(gekozen.naam)}</span>
+          <span className="tk-gekozen-tekst">
+            <strong>{gekozen.naam}</strong>
+            <small>{regels[anderen.indexOf(gekozen)] || "Je teamgenoot"}</small>
+          </span>
+          <button
+            type="button"
+            className="tk-knop tk-knop-rand tk-knop-klein"
+            onClick={() => setKortePad(false)}
+          >
+            Iemand anders
+          </button>
+        </div>
+      )}
+
+      {anderen.length > 0 && !advies && !directNaarVraag && (
         <>
           <p className="tk-label">Met wie speelt het?</p>
           <div className="tk-lijst" style={{ marginBottom: 14 }}>
@@ -399,6 +441,7 @@ export default function Samenwerken() {
             className="tk-knop tk-knop-rand tk-knop-klein"
             onClick={() => {
               setGekozenUids([]);
+              setKortePad(false);
               opnieuw();
             }}
           >
