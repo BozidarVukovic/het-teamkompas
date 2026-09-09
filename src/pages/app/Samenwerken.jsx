@@ -178,10 +178,28 @@ export default function Samenwerken() {
   // anders aanklikken vervangt je vorige keuze. Nog eens op dezelfde persoon
   // klikken maakt de keuze ongedaan, zodat je zonder omweg terug kunt.
   const wisselPersoon = (sleutel) => {
+    const wasGekozen = gekozenUids.includes(sleutel);
     setGekozenUids((huidig) => {
       if (huidig.includes(sleutel)) return huidig.filter((s) => s !== sleutel);
       return MEERDERE_COLLEGAS ? [...huidig, sleutel] : [sleutel];
     });
+
+    // Kies je hier iemand, dan is "met wie?" beantwoord en valt de lijst weg --
+    // net als wanneer je vanaf het startscherm binnenkomt. Zonder dit stond je
+    // na "Iemand anders" weer voor dezelfde lijst met de vraag eronder, buiten
+    // beeld, en moest je alsnog scrollen.
+    //
+    // De pagina wordt korter zodra de lijst wegvalt, en je stond misschien
+    // halverwege om de juiste naam te vinden. Daarom terug naar boven: daar
+    // staat de kop met de naam die je koos, en daaronder meteen de vraag.
+    //
+    // Kun je meerdere collega's kiezen, dan gaat dit niet op -- dan ben je na
+    // één tik misschien nog niet klaar en zou de lijst onder je handen
+    // verdwijnen.
+    if (!MEERDERE_COLLEGAS) {
+      setKortePad(!wasGekozen);
+      if (!wasGekozen) window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     opnieuw();
   };
 
