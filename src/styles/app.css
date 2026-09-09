@@ -1,39 +1,53 @@
-/* De samenwerkomgeving. Donker thema, in de huisstijl van Mijn Teamkompas.
-   Alle klassen beginnen met tk- zodat er niets botst met de publieke site. */
+/* De samenwerkomgeving. Licht thema, in de huisstijl van Mijn Teamkompas.
+   Alle klassen beginnen met tk- zodat er niets botst met de publieke site.
+
+   Waarom licht: de mensen die hier binnenkomen werken de hele dag in Outlook,
+   Teams en SharePoint, en die zijn allemaal licht. Een donker scherm leest voor
+   hen niet als "modern" maar als gereedschap dat voor iemand anders gemaakt is.
+   Op een telefoon in een vergaderzaal, met daglicht op het scherm, is licht ook
+   gewoon beter leesbaar.
+
+   De namen navy-1/2/3 blijven staan. Ze zeggen nu niet "drie tinten donkerblauw"
+   maar "de pagina, en twee lagen die verder terugtreden" -- dat is altijd al
+   geweest wat ze deden. */
 
 .tk-app {
-  --tk-navy: #0d1b2a;
-  --tk-navy-2: #14263c;
-  --tk-navy-3: #1a2e4a;
+  --tk-navy: #eef2f7;      /* de pagina */
+  --tk-navy-2: #e4eaf2;    /* een vlak dat een stap terugtreedt */
+  --tk-navy-3: #dfe7f0;    /* invoervelden, bollen, uitgeschakelde knoppen */
 
-  /* Het vlak waar kaarten en lijsten op staan. Iets lichter dan navy-2, en met
-     opzet ondoorzichtig: een doorzichtig vlak verandert mee met het verloop
-     erachter, en daarmee ook zijn contrast. Op deze kleur haalt de zachte tekst
-     6,03:1, teal 4,86:1 en oranje 5,27:1 -- overal, ongeacht de plek op de
-     pagina. */
-  --tk-vlak: #182a42;
-  --tk-teal: #00a896;
-  --tk-teal-dim: rgba(0, 168, 150, 0.14);
+  /* Het vlak waar kaarten en lijsten op staan: wit, en met opzet ondoorzichtig.
+     Een doorzichtig vlak verandert mee met het verloop erachter, en daarmee ook
+     zijn contrast. Het staat op 1,12 tegen de pagina -- genoeg om een kaart als
+     kaart te zien, weinig genoeg om niet te schreeuwen. */
+  --tk-vlak: #ffffff;
+
+  /* Teal betekent "hier kun je aan zitten". Het merkteal (#00a896) haalt op wit
+     2,98:1 en is als tekst dus onleesbaar; deze donkere variant haalt 4,95:1 op
+     de pagina en 5,32:1 op een kaart, en is nog steeds onmiskenbaar teal. Het
+     merkteal zelf leeft door in het logo. */
+  --tk-teal: #00796b;
+  --tk-teal-dim: rgba(0, 121, 107, 0.10);
 
   /* Oranje is de actiekleur: hij zit op de gevulde knop en op het actieve item
-     in de onderbalk, en nergens anders. Teal blijft de kleur van "hier kun je
-     aan zitten". Het onderscheid dat de app miste was niet fel genoeg tegen
-     zacht, maar doen tegen kunnen.
-
-     6,33:1 op navy -- hoger dan teal. De tekst erop is donkerbruin (6,29:1);
-     wit op oranje haalt 2,75:1 en valt weg, dus dat nooit. */
+     in de onderbalk, en nergens anders. Als vlak blijft hij #e8821a met
+     donkerbruine tekst erop (6,29:1) -- dat werkt op elke achtergrond. Als
+     tékst haalt hij op wit 2,75:1 en valt hij weg, dus daar staat de donkere
+     variant, die 5,03:1 haalt. */
   --tk-oranje: #e8821a;
   --tk-oranje-tekst: #2a1603;
-  --tk-tekst: #e6eef7;
-  --tk-zacht: #96a9c0;
-  --tk-lijn: rgba(255, 255, 255, 0.09);
+  --tk-oranje-donker: #a75c06;
+
+  --tk-tekst: #10243a;     /* navy, geen zwart: 14,6:1 op de pagina */
+  --tk-zacht: #55677d;     /* 5,39:1 -- ruim boven de grens, ook op een kaart */
+  --tk-lijn: rgba(16, 36, 58, 0.12);
+
   /* Rood moet zich van oranje laten onderscheiden, want ze staan naast elkaar:
-     op Mijn gegevens staat "Verwijderen" pal naast een gevulde knop. Het oude
-     koraal (#e2725b) zat daar met een verschil van 7,4 tegenaan -- onder de
-     grens van 8 waar twee kleuren nog uit elkaar te houden zijn, en voor wie
-     rood-groenblind is vallen twee warme tinten helemaal samen. Dit rood zit
-     op 10,6, en haalt bovendien 6,27:1 op navy tegen 5,63 eerst. */
-  --tk-rood: #ff6b6b;
+     op Mijn gegevens staat "Verwijderen" pal naast een gevulde knop. Dit rood
+     staat op 19,4 verschil met het oranje -- ruim boven de grens van 8 waar twee
+     kleuren nog uit elkaar te houden zijn, ook voor wie rood-groenblind is. En
+     het haalt 5,23:1 op de pagina. */
+  --tk-rood: #c62828;
 
   /* Twee snelheden, één curve. Vlot is voor aanraking: je tikt en het antwoord
      is er meteen. Rustig is voor wat opendraait, want daar moet je kunnen
@@ -68,10 +82,11 @@
   /* Een kleurveld in plaats van een vlakke plaat: het scherm heeft een
      bovenkant en een onderkant. Geen background-attachment: fixed -- dat is op
      iOS al jaren onbetrouwbaar. Het verloop hoort bij de pagina, niet bij het
-     kijkvenster, dus bovenaan de pagina is het licht en onderaan donker. */
+     kijkvenster. Bovenaan een spoor koel blauwgroen, onderaan iets dieper: net
+     genoeg om te zien dat het een veld is en geen plaat. */
   background:
-    radial-gradient(125% 46% at 50% -6%, #1e3557 0%, rgba(30, 53, 87, 0) 62%),
-    linear-gradient(180deg, #15273f 0%, var(--tk-navy) 52%, #0b1725 100%);
+    radial-gradient(120% 44% at 50% -8%, #dbe9f2 0%, rgba(219, 233, 242, 0) 60%),
+    linear-gradient(180deg, #f7fafc 0%, var(--tk-navy) 46%, #e5ebf3 100%);
   color: var(--tk-tekst);
   font-family: "Roboto", system-ui, sans-serif;
   padding-bottom: 64px;
@@ -100,7 +115,7 @@
   padding: 14px 20px;
   /* Geen eigen balkkleur meer met een streep eronder, maar een waas waar de
      inhoud onderdoor schuift. */
-  background: rgba(13, 27, 42, 0.45);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(16px);
 }
 
@@ -112,7 +127,7 @@
    merknaam suggereren dat daar iets te doen valt. */
 .tk-merk {
   letter-spacing: 0.01em;
-  color: #ffffff;
+  color: var(--tk-tekst);
   text-decoration: none;
   font-weight: 650;
   font-size: var(--tk-t-kop);
@@ -210,7 +225,7 @@
   display: flex;
   gap: 6px;
   padding: 12px 20px 10px;
-  background: rgba(13, 27, 42, 0.94);
+  background: rgba(238, 242, 247, 0.94);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--tk-lijn);
   overflow-x: auto;
@@ -249,7 +264,7 @@
 .tk-menu a.actief {
   color: var(--tk-tekst);
   background: var(--tk-teal-dim);
-  border-color: rgba(0, 168, 150, 0.4);
+  border-color: rgba(0, 121, 107, 0.45);
 }
 
 .tk-inhoud {
@@ -286,7 +301,7 @@
   border-radius: 20px;
   padding: 20px;
   margin-bottom: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.26);
+  box-shadow: 0 6px 20px rgba(16, 36, 58, 0.08);
 }
 
 .tk-kaart h2 {
@@ -361,7 +376,7 @@
 
 .tk-invoer:focus,
 .tk-tekstvak:focus {
-  outline: 2px solid rgba(0, 168, 150, 0.55);
+  outline: 2px solid rgba(0, 121, 107, 0.6);
   outline-offset: 1px;
 }
 
@@ -419,7 +434,7 @@
 
 .tk-knop-gevaar {
   background: transparent;
-  border: 1px solid rgba(255, 107, 107, 0.5);
+  border: 1px solid rgba(198, 40, 40, 0.45);
   color: var(--tk-rood);
 }
 
@@ -453,7 +468,7 @@
 
 @media (hover: hover) {
   .tk-keuze:hover {
-    border-color: rgba(0, 168, 150, 0.4);
+    border-color: rgba(0, 121, 107, 0.45);
   }
 }
 
@@ -489,7 +504,7 @@
 
 @media (hover: hover) {
   .tk-keuzevakje:hover {
-    border-color: rgba(0, 168, 150, 0.4);
+    border-color: rgba(0, 121, 107, 0.45);
   }
 }
 
@@ -516,7 +531,7 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--tk-zacht);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(16, 36, 58, 0.05);
   border-radius: 999px;
   padding: 3px 9px;
 }
@@ -535,14 +550,14 @@
 
 .tk-privacy-prive {
   color: var(--tk-zacht);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(16, 36, 58, 0.05);
   border: 1px solid var(--tk-lijn);
 }
 
 .tk-privacy-gedeeld {
   color: var(--tk-teal);
   background: var(--tk-teal-dim);
-  border: 1px solid rgba(0, 168, 150, 0.35);
+  border: 1px solid rgba(0, 121, 107, 0.35);
 }
 
 .tk-rij {
@@ -577,22 +592,22 @@
   border: 0;
   background: var(--tk-vlak);
   color: var(--tk-zacht);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 5px 16px rgba(16, 36, 58, 0.07);
 }
 
 .tk-melding-fout {
-  border-color: rgba(255, 107, 107, 0.45);
-  color: #ffb3b3;
+  border-color: rgba(198, 40, 40, 0.4);
+  color: #9b1c17;
 }
 
 .tk-melding-goed {
-  border-color: rgba(0, 168, 150, 0.45);
-  color: #8fe0d3;
+  border-color: rgba(0, 121, 107, 0.45);
+  color: #00695f;
 }
 
 .tk-advies {
-  background: linear-gradient(180deg, var(--tk-navy-3), var(--tk-navy-2));
-  border: 1px solid rgba(0, 168, 150, 0.28);
+  background: linear-gradient(180deg, #ffffff, #f2faf8);
+  border: 1px solid rgba(0, 121, 107, 0.3);
   border-radius: 18px;
   padding: 22px;
   margin-bottom: 16px;
@@ -624,7 +639,7 @@
 .tk-citaat {
   border-left: 3px solid var(--tk-teal);
   padding: 8px 0 8px 14px;
-  color: #cfe6e1;
+  color: #2f5c55;
   font-style: italic;
   line-height: 1.65;
   margin: 0;
@@ -654,12 +669,12 @@
   color: var(--tk-tekst);
   cursor: pointer;
   font-size: var(--tk-t-basis);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 5px 16px rgba(16, 36, 58, 0.07);
 }
 
 @media (hover: hover) {
   .tk-persoon:hover {
-    border-color: rgba(0, 168, 150, 0.4);
+    border-color: rgba(0, 121, 107, 0.45);
   }
 }
 
@@ -676,11 +691,11 @@
   height: 36px;
   border-radius: 50%;
   background: var(--tk-navy-3);
-  border: 1px solid rgba(0, 168, 150, 0.35);
+  border: 1px solid rgba(0, 121, 107, 0.35);
   display: grid;
   place-items: center;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--tk-tekst);
   flex: 0 0 auto;
 }
 
@@ -763,10 +778,10 @@
   right: 10px;
   bottom: calc(10px + env(safe-area-inset-bottom));
   z-index: 30;
-  background: rgba(19, 35, 55, 0.82);
+  background: rgba(255, 255, 255, 0.86);
   backdrop-filter: blur(20px) saturate(1.3);
   border-radius: 24px;
-  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.44);
+  box-shadow: 0 10px 30px rgba(16, 36, 58, 0.16);
   padding: 4px;
 }
 
@@ -791,8 +806,8 @@
 }
 
 .tk-onderbalk a.actief {
-  color: var(--tk-oranje);
-  background: rgba(232, 130, 26, 0.15);
+  color: var(--tk-oranje-donker);
+  background: rgba(232, 130, 26, 0.16);
 }
 
 .tk-onderbalk .tk-nav-tekst {
@@ -926,7 +941,7 @@
   border: 0;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.26);
+  box-shadow: 0 6px 20px rgba(16, 36, 58, 0.08);
 }
 
 /* Een regel in de lijst die geen persoon is maar uitleg over wat eronder komt.
@@ -1047,7 +1062,7 @@
    dezelfde tint, zodat je ziet dat het bij elkaar hoort. */
 .tk-optie.open,
 .tk-optie-uit {
-  background: rgba(0, 168, 150, 0.07);
+  background: rgba(0, 121, 107, 0.05);
 }
 
 .tk-optie-uit {
@@ -1077,7 +1092,7 @@
   height: 36px;
   flex: 0 0 auto;
   border-radius: 50%;
-  border: 1px dashed rgba(0, 168, 150, 0.45);
+  border: 1px dashed rgba(0, 121, 107, 0.45);
   font-size: var(--tk-t-kop);
   line-height: 1;
 }
@@ -1239,7 +1254,7 @@ a.tk-optie {
   margin: 8px 0 0;
   padding: 2px 0 2px 16px;
   list-style: none;
-  border-left: 2px solid rgba(0, 168, 150, 0.45);
+  border-left: 2px solid rgba(0, 121, 107, 0.45);
 }
 
 .tk-zinnen li {
@@ -1282,7 +1297,7 @@ a.tk-optie {
      meer dan een mag aanvinken. Met de lijnkleur haalde het 1,31:1 tegen het
      vlak eronder -- zichtbaar als je weet dat het er staat. Nu 3,57:1, de norm
      voor een bedieningselement. */
-  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border: 1.5px solid rgba(16, 36, 58, 0.35);
   display: grid;
   place-items: center;
   font-size: var(--tk-t-fijn);
@@ -1361,7 +1376,7 @@ a.tk-optie {
 
 .tk-voorkeuren li {
   padding-left: 14px;
-  border-left: 2px solid rgba(0, 168, 150, 0.45);
+  border-left: 2px solid rgba(0, 121, 107, 0.45);
 }
 
 .tk-voorkeur {
@@ -1442,7 +1457,7 @@ a.tk-optie {
 /* Een rij die de volle breedte heeft, hoort niet te krimpen — dat leest als
    wegschuiven. Die licht op zolang je hem vasthoudt. */
 .tk-app :where(.tk-optie, .tk-keuze, .tk-keuzevakje, .tk-persoon):active {
-  background: rgba(0, 168, 150, 0.18);
+  background: rgba(0, 121, 107, 0.09);
 }
 
 /* Wat opendraait komt van onder de regel vandaan, niet uit het niets. */
@@ -1484,7 +1499,7 @@ a.tk-optie {
 /* Een kaart met iets wat op je ligt te wachten: een voorstel, een uitnodiging.
    De rand is het enige verschil — het blijft een gewone kaart. */
 .tk-kaart-klaar {
-  border-color: rgba(0, 168, 150, 0.45);
+  border-color: rgba(0, 121, 107, 0.45);
 }
 
 /* "(optioneel)" achter een label. Het label is hoofdletters met spatiëring;
@@ -1562,5 +1577,5 @@ a.tk-optie {
 }
 
 .tk-uitleg-lijst strong {
-  color: #ffffff;
+  color: var(--tk-tekst);
 }

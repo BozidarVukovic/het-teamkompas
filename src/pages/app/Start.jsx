@@ -8,6 +8,13 @@
 // Zolang je profiel niet af is, staat daarboven de ene stap die dan logisch is.
 // Welke dat is, wordt bepaald in volgendeStap.js — dezelfde logica die onderaan
 // de andere pagina's meeloopt, zodat de app overal hetzelfde zegt.
+//
+// Hier stonden ook "Hoe ging dat?" en "Wat ik probeer". Allebei weg: dit scherm
+// is het eerste dat iemand ziet, en het moet in één blik duidelijk maken wat er
+// te doen is. Een vraag over een gesprek van vorige week en een experiment dat
+// alleen jij ziet, staan die blik in de weg. Het experiment blijft gewoon op
+// Ik staan; de terugblikvraag staat uit (zie VRAAGT_TERUGBLIK in
+// reflecties.js).
 
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
@@ -17,9 +24,6 @@ import { bepaalVolgendeStap } from "../../lib/app/volgendeStap";
 import { bepaalVoortgang } from "../../lib/app/voortgang";
 import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
 import { uitgelichteAfspraak } from "../../lib/app/afspraken";
-import { isTerugblikKlaar, standInEenZin, watNuSpeelt } from "../../lib/app/experimenten";
-import { openstaandeSessie, waaroverInEenZin } from "../../lib/app/reflecties";
-import { situatie } from "../../data/app/situaties";
 import { initialen, korteNamen, voornaam } from "../../lib/app/naam";
 
 /** Een collega als bol met een naam eronder. Eén tik en je bent bij het advies. */
@@ -35,7 +39,7 @@ function Mens({ naar, ini, label, onder, gestippeld = false }) {
 export default function Start() {
   const {
     gebruiker, naam, actiefTeam, kenmerken, handleiding, teamOverzicht, ikBegeleid,
-    uitnodigingscode, vergeetUitnodiging, experimenten, sessies, reflecties,
+    uitnodigingscode, vergeetUitnodiging,
   } = useApp();
 
   const eigenUid = gebruiker && gebruiker.uid;
@@ -74,18 +78,6 @@ export default function Start() {
   // iedereen rouleren in plaats van bij elke verversing te verspringen.
   const afspraken = teamOverzicht.afspraken || [];
   const afspraakVandaag = uitgelichteAfspraak(afspraken);
-
-  // Wat je jezelf hebt voorgenomen staat hier ook, maar dan alleen voor jou:
-  // een experiment is niet van het team. Er staat één regel over hoe lang het
-  // loopt, en na dertig dagen één vraag. Verder rekent de app niet mee.
-  const experiment = watNuSpeelt(experimenten);
-  const terugblikAanDeBeurt = experiment && isTerugblikKlaar(experiment);
-
-  // De app hielp je vóór een gesprek en zei daarna niets meer, terwijl je juist
-  // dán iets weet. Vanaf de dag erna staat hier één keer de vraag hoe het ging;
-  // na twee weken vervalt hij vanzelf. Zie reflecties.js.
-  const teBespreken = openstaandeSessie({ sessies, reflecties });
-  const teBesprekenLabel = teBespreken ? (situatie(teBespreken.situatieId) || {}).label : "";
 
   return (
     <div className="tk-inhoud">
@@ -160,38 +152,6 @@ export default function Start() {
             </span>
             <span className="tk-optie-pijl" aria-hidden="true">›</span>
           </Link>
-        </section>
-      )}
-
-      {teBespreken && (
-        <section className="tk-groep">
-          <h2 className="tk-groep-kop">Hoe ging dat?</h2>
-          <Link to="/app/ik" className="tk-optie" style={{ alignItems: "flex-start" }}>
-            <span className="tk-optie-tekst">
-              <strong style={{ fontSize: "var(--tk-t-lead)", lineHeight: 1.55 }}>
-                Kijk je even terug op dat gesprek?
-              </strong>
-              <small>{waaroverInEenZin(teBespreken, teBesprekenLabel)}</small>
-            </span>
-            <span className="tk-optie-pijl" aria-hidden="true">›</span>
-          </Link>
-        </section>
-      )}
-
-      {experiment && (
-        <section className="tk-groep">
-          <h2 className="tk-groep-kop">Wat ik probeer</h2>
-          <Link to="/app/ik" className="tk-optie" style={{ alignItems: "flex-start" }}>
-            <span className="tk-optie-tekst">
-              <strong style={{ fontSize: "var(--tk-t-lead)", lineHeight: 1.55 }}>{experiment.actie}</strong>
-              <small>{standInEenZin(experiment)}</small>
-            </span>
-            {terugblikAanDeBeurt && <span className="tk-optie-stand">Terugblik</span>}
-            <span className="tk-optie-pijl" aria-hidden="true">›</span>
-          </Link>
-          <p className="tk-fijn" style={{ margin: "12px 0 0" }}>
-            Alleen jij ziet dit. Je team niet.
-          </p>
         </section>
       )}
 

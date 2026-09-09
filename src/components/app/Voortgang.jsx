@@ -27,7 +27,7 @@ function Balk({ percentage, hoog = 10 }) {
           height: "100%",
           width: `${Math.max(percentage === 0 ? 0 : 3, percentage)}%`,
           borderRadius: 999,
-          background: "linear-gradient(90deg, var(--tk-teal), #4fd1c5)",
+          background: "linear-gradient(90deg, var(--tk-teal), #00a896)",
           transition: "width .35s ease",
         }}
       />
