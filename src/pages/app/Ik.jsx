@@ -17,6 +17,7 @@ import Voortgang from "../../components/app/Voortgang";
 import { bepaalVoortgang } from "../../lib/app/voortgang";
 import { initialen } from "../../lib/app/naam";
 import {
+  KAN_VASTHOUDEN,
   LOOPTIJD_DAGEN,
   MAX_TERUGBLIK,
   UITKOMSTEN,
@@ -242,7 +243,9 @@ export default function Ik() {
     naam, functie, gebruiker, kenmerken, actiefTeam, handleiding, ikBegeleid,
     experimenten, blikTerug, sessies, reflecties, bewaarReflectie,
   } = useApp();
-  const rij = sorteerExperimenten(experimenten);
+  // Staat het vasthouden uit, dan is er niets te tonen en valt het blok
+  // hieronder vanzelf weg. Zie KAN_VASTHOUDEN in experimenten.js.
+  const rij = KAN_VASTHOUDEN ? sorteerExperimenten(experimenten) : [];
 
   // Staat de vraag uit, dan is er niets te bespreken en niets terug te lezen:
   // de hele sectie hieronder valt daarmee vanzelf weg. Zie VRAAGT_TERUGBLIK in

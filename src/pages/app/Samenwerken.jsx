@@ -7,7 +7,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
-import { LOOPTIJD_DAGEN } from "../../lib/app/experimenten";
+import { KAN_VASTHOUDEN, LOOPTIJD_DAGEN } from "../../lib/app/experimenten";
 import { beoordeelAdviessessie, logAdviessessie } from "../../lib/app/opslag";
 import { vraagAdvies, vraagDuoadvies, vraagGroepsadvies } from "../../lib/app/advies/adviesService";
 import { situatiesPerGroep } from "../../data/app/situaties";
@@ -557,8 +557,13 @@ export default function Samenwerken() {
                 <p style={{ margin: 0, lineHeight: 1.7 }}>{advies.actie}</p>
 
                 {/* Geen doel en geen teller: je zegt alleen dat je het gaat
-                    proberen. Over dertig dagen vraagt de app er één keer naar. */}
-                {experimentGestart ? (
+                    proberen. Over dertig dagen vraagt de app er één keer naar.
+
+                    Staat uit in deze versie: zonder een manier om iemand te
+                    bereiken komt de app er nooit op terug, en dan belooft deze
+                    knop iets wat niet gebeurt. De actie hierboven blijft staan
+                    -- dat is het advies. Zie KAN_VASTHOUDEN. */}
+                {KAN_VASTHOUDEN && (experimentGestart ? (
                   <p className="tk-fijn" style={{ margin: "12px 0 0" }}>
                     <span aria-hidden="true">✓</span> Je houdt dit {LOOPTIJD_DAGEN} dagen vast. Het
                     staat bij Ik; alleen jij ziet het.
@@ -573,7 +578,7 @@ export default function Samenwerken() {
                   >
                     {bezigMetExperiment ? "Bezig..." : `Dit ga ik ${LOOPTIJD_DAGEN} dagen proberen`}
                   </button>
-                )}
+                ))}
               </div>
             )}
 

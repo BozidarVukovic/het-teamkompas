@@ -19,6 +19,28 @@
 //
 // Pure functies: geen React, geen database, wel te testen.
 
+/**
+ * Kun je een actie vasthouden?
+ *
+ * Uit in deze versie -- om dezelfde reden als de terugblikvraag: de app kan
+ * niemand bereiken. Je zegt "dit ga ik dertig dagen proberen", en daarna is er
+ * geen mail, geen melding en geen moment waarop de app er nog iets mee doet.
+ * Wie niet uit zichzelf het Ik-scherm opent, ziet zijn eigen voornemen nooit
+ * meer terug. Een belofte die alleen bestaat als je hem toevallig opzoekt, is
+ * geen belofte.
+ *
+ * Deze schakelaar zet beide kanten tegelijk uit: de knop onder een advies en
+ * het blok op Ik. Los van elkaar is erger dan allebei -- een knop die iets
+ * belooft dat nergens meer te zien is, of een leeg blok dat nooit vult.
+ *
+ * De kleine actie zelf blijft gewoon onder elk advies staan. Die is het
+ * advies; het vasthouden was de administratie eromheen.
+ *
+ * Alles eromheen blijft staan: deze functies, hun tests, de securityregel en
+ * wat er al bewaard is. Zet dit op true en het is terug.
+ */
+export const KAN_VASTHOUDEN = false;
+
 /** Een experiment loopt dertig dagen. Lang genoeg om iets te merken, kort genoeg om te overzien. */
 export const LOOPTIJD_DAGEN = 30;
 
