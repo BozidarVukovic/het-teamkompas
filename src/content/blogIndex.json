@@ -1,5 +1,34 @@
 [
   {
+    "slug": "relationele-intelligentie",
+    "title": "Relationele intelligentie, beter samenwerken begint bij wat er tussen mensen gebeurt",
+    "excerpt": "Een gewone vraag die defensief wordt opgevat. Waarom de vraag wat er tussen jullie gebeurt meer oplevert dan de vraag waarom de ander zo doet.",
+    "publishDate": "2026-09-27",
+    "modifiedDate": "2026-09-27",
+    "image": "/blog/images/relationele-intelligentie.jpg",
+    "imageAlt": "Illustratie bij het artikel over relationele intelligentie",
+    "category": "Samenwerking",
+    "tags": [
+      "samenwerking",
+      "psychologische veiligheid",
+      "leiderschap"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/psychologische-veiligheid",
+      "/boven-en-onderstroom",
+      "/kennis/teamcultuur"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamdag"
+    ],
+    "lead": "Sommige gesprekken lopen bijna vanzelf. Je begrijpt wat de ander bedoelt, ook wanneer het niet helemaal goed wordt uitgesproken. Je merkt wanneer je moet doorvragen, wanneer luisteren beter is en wanneer er ruimte is om iets scherper te benoemen.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 812
+  },
+  {
     "slug": "een-patroon-is-nog-geen-bewezen-oorzaak",
     "title": "David Hume, een patroon is nog geen bewezen oorzaak",
     "excerpt": "Tussen daarna en daardoor zit een groot verschil. Waarom een overtuigend verhaal over cijfers en gedrag het onderzoek vaak stopzet in plaats van start.",
