@@ -1,5 +1,34 @@
 [
   {
+    "slug": "ai-verandert-ook-leiderschap",
+    "title": "AI verandert niet alleen het werk, maar ook leiderschap",
+    "excerpt": "De vraag is allang niet meer waar je AI kunt inzetten. Waarom een leidinggevende straks vooral verantwoordelijkheden, beslisruimte en ingrijpmomenten ontwerpt.",
+    "publishDate": "2026-09-17",
+    "modifiedDate": "2026-09-17",
+    "image": "/blog/images/ai-en-leiderschap.jpg",
+    "imageAlt": "Illustratie bij het artikel over AI en de veranderende rol van de leidinggevende",
+    "category": "Verandering",
+    "tags": [
+      "verandering",
+      "leiderschap",
+      "eigenaarschap"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/verandermanagement",
+      "/kennis/eigenaarschap-in-teams",
+      "/kennis/teamcultuur"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamscan"
+    ],
+    "lead": "De eerste jaren waren overzichtelijk. Een assistent hier, een proef bij personeelszaken daar, een experiment bij de klantenservice. Mensen kregen hulpmiddelen waarmee ze sneller konden schrijven, analyseren en zoeken. Inmiddels dient zich een volgende fase aan.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 894
+  },
+  {
     "slug": "wat-verstaan-we-onder-proactiviteit",
     "title": "Wat verstaan we eigenlijk onder proactiviteit?",
     "excerpt": "Vraag drie leidinggevenden wat ze bedoelen en je krijgt drie antwoorden. Over vier misverstanden, en over de voorwaarden die initiatief pas mogelijk maken.",
