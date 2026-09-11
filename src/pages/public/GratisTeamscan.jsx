@@ -21,15 +21,18 @@ function ScoreOverview({ result }) {
   return <div className="free-score-list" aria-label="Domeinscores">
     {result.themeScores.map((theme) => (
       <div className="free-score" key={theme.id}>
-        <div><strong>{theme.label}</strong><span>{theme.zone?.label || "Geen score"}</span></div>
+        <div><strong>{theme.label}</strong><span>{theme.description}</span></div>
         <div className="free-score-track">
           <i
             role="img"
-            aria-label={`${theme.label}: ${toon(theme.getoond)} van 5`}
+            aria-label={`${theme.label}: ${toon(theme.getoond)} van 5 — ${theme.zone?.label || "geen score"}`}
             style={{ width: `${theme.gemiddelde === null || theme.gemiddelde === undefined ? 0 : (theme.gemiddelde / 5) * 100}%`, background: themeColor(theme.id) }}
           />
         </div>
-        <b>{toon(theme.getoond)}</b>
+        <div className="free-score-uit">
+          <b>{toon(theme.getoond)}<small>/5</small></b>
+          <span className={`free-zone free-zone--${theme.zone?.id || "attention"}`}>{theme.zone?.label || "Geen score"}</span>
+        </div>
       </div>
     ))}
   </div>;
@@ -267,5 +270,118 @@ export default function GratisTeamscan() {
   if(phase==="landing")return <main className="free-page">{meta}<section className="free-hero"><div><span className="free-eyebrow">Gratis individuele teamscan</span><h1>Ontdek hoe jij de samenwerking binnen jouw team ervaart</h1><p>Beantwoord 24 vragen over veiligheid, communicatie, eigenaarschap, verbinding, energie en leiderschap. Je krijgt direct inzicht en een persoonlijk rapport.</p><ul><li>Gratis deelname</li><li>8–10 minuten</li><li>Persoonlijk en vertrouwelijk</li><li>Direct inzicht</li></ul><button className="tk-button tk-button-primary" disabled={busy} onClick={start}>{busy?"Even geduld…":"Start de gratis teamscan"}</button>{error&&<p role="alert" className="free-error">{error}</p>}</div><aside><b>Jouw perspectief staat centraal</b><p>De uitkomst is geen oordeel over het hele team. Je herkent sterke punten, mogelijke patronen en een concrete eerste beweging.</p></aside></section><section className="free-content"><h2>Luisteren. Meten. Bewegen.</h2><div className="free-cards">{FREE_SCAN_THEMES.map(t=><article key={t.id}><i style={{background:t.color}}/><h3>{t.label}</h3><p>{t.description}</p></article>)}</div><div className="free-info"><article><h2>Wat ontvang je?</h2><p>Een directe samenvatting, een beveiligd persoonlijk webrapport, reflectievragen en kleine experimenten die je binnen één of twee weken kunt proberen.</p></article><article><h2>Hoe gaan we met gegevens om?</h2><p>We vragen pas na de vragen om je voornaam en e-mailadres. Verwerking voor het rapport en commerciële communicatie hebben aparte, niet vooraf aangevinkte toestemmingen. Lees onze <a href="/privacyverklaring_mijnteamkompas.pdf">privacyverklaring</a>.</p></article></div><details><summary>Wat is het verschil met de volledige Teamscan?</summary><p>Deze gratis scan toont één persoonlijke beleving. De volledige scan vergelijkt veilig de perspectieven van meerdere teamleden en vormt een basis voor het teamgesprek.</p></details><button className="tk-button tk-button-primary" onClick={start}>Start mijn scan</button></section></main>;
   if(phase==="scan"){const question=FREE_SCAN_QUESTIONS[index];return <main className="free-shell">{meta}<Helmet><meta name="robots" content="noindex,nofollow"/></Helmet><div className="free-progress"><span>Vraag {index+1} van {FREE_SCAN_QUESTIONS.length}</span><progress max={FREE_SCAN_QUESTIONS.length} value={index+1}/></div><section className="free-question"><span>{FREE_SCAN_THEMES.find(t=>t.id===question.theme).label}</span><h1>{question.text}</h1><fieldset><legend className="sr-only">Kies één antwoord</legend>{FREE_SCAN_SCALE.map(o=><label key={o.value} className={answers[question.id]===o.value?"selected":""}><input type="radio" name={question.id} checked={answers[question.id]===o.value} onChange={()=>choose(o.value)}/><b>{o.value}</b>{o.label}</label>)}</fieldset>{error&&<p role="alert" className="free-error">{error}</p>}<div className="free-actions"><button disabled={index===0} onClick={()=>setIndex(i=>i-1)}>Terug</button><button className="tk-button tk-button-primary" onClick={next}>{index===23?"Naar jouw rapport":"Volgende"}</button></div></section></main>}
   if(phase==="details")return <main className="free-shell"><Helmet><meta name="robots" content="noindex,nofollow"/></Helmet><form className="free-form" onSubmit={finish}><span className="free-eyebrow">Je bent er bijna</span><h1>Nog een paar gegevens en je uitslag staat klaar</h1><p>We vragen alleen wat nodig is. Organisatie, rol en teamgrootte zijn optioneel.</p><label>Voornaam *<input required value={person.firstName} onChange={e=>setPerson({...person,firstName:e.target.value})}/></label><label>E-mailadres *<input required type="email" value={person.email} onChange={e=>setPerson({...person,email:e.target.value})}/></label><div className="free-form-grid"><label>Organisatie<input value={person.organisation} onChange={e=>setPerson({...person,organisation:e.target.value})}/></label><label>Functierol<input value={person.role} onChange={e=>setPerson({...person,role:e.target.value})}/></label></div><input className="free-hp" tabIndex="-1" autoComplete="off" value={person.hp} onChange={e=>setPerson({...person,hp:e.target.value})}/><label className="free-check"><input type="checkbox" checked={person.consentProcessing} onChange={e=>setPerson({...person,consentProcessing:e.target.checked})}/> Ik geef toestemming om mijn antwoorden te verwerken, mijn rapport tijdelijk op te slaan zodat ik het kan bekijken. *</label><label className="free-check"><input type="checkbox" checked={person.consentMarketing} onChange={e=>setPerson({...person,consentMarketing:e.target.checked})}/> Ik ontvang graag af en toe inspiratie van Mijn Teamkompas (optioneel).</label>{error&&<p role="alert" className="free-error">{error}</p>}<div className="free-actions"><button type="button" onClick={()=>setPhase("scan")}>Terug</button><button className="tk-button tk-button-primary" disabled={busy}>{busy?"Rapport wordt gemaakt…":"Bekijk mijn uitslag"}</button></div></form></main>;
-  return <main className="free-shell free-result"><Helmet><meta name="robots" content="noindex,nofollow"/></Helmet><span className="free-eyebrow">Dank je wel</span><h1>Dit is jouw persoonlijke Teamkompas</h1><p>Dit beeld weerspiegelt jouw beleving en is geen oordeel over het hele team.</p><ScoreOverview result={outcome}/><div className="free-cards"><article><h2>{outcome.sterkeKop}</h2><ul className="free-theme-list">{outcome.strengths.map(x=><li key={x.id}><span style={{background:themeColor(x.id)}} aria-hidden="true" />{x.label}<b>{toon(x.getoond)}</b></li>)}</ul></article><article><h2>{outcome.ontwikkelkansKop}</h2><ul className="free-theme-list">{outcome.ontwikkelkans&&<li><span style={{background:themeColor(outcome.ontwikkelkans.id)}} aria-hidden="true" />{outcome.ontwikkelkans.label}<b>{toon(outcome.ontwikkelkans.getoond)}</b></li>}</ul></article></div><blockquote>{outcome.reflections[0]}</blockquote>{outcome.experiments[0]&&<p><strong>Probeer deze week:</strong> {naDubbelePunt(outcome.experiments[0].eersteStap)}</p>}<p className="free-notice">{outcome.emailStatus==="sent"?"Je uitgebreide rapport is per e-mail verzonden.":"Je rapport staat klaar. Open het via onderstaande knop en bewaar de link goed."}</p><div className="free-actions"><a className="tk-button tk-button-primary" href={outcome.reportUrl}>Open volledig rapport</a><a className="tk-button tk-button-secondary" href="/teamscan" onClick={()=>emit("free_scan_result_full_scan_click")}>Ontdek de volledige Teamscan</a></div></main>;
+  // ───────────────────────────────────────────────────────── de uitslag
+  //
+  // Hier stond alleen een rij balken met zes getallen, en twee kaartjes met de
+  // hoogste en de laagste. Wie dat las wist nog steeds niet waar de schaal
+  // loopt, wat een domein betekent, of wat de combinatie van die zes cijfers
+  // zegt -- terwijl dat laatste al berekend werd en ongebruikt bleef liggen.
+  //
+  // Drie dingen erbij, in deze volgorde:
+  //   1. de schaal, zodat 2,3 een betekenis heeft
+  //   2. het verschil tussen hoog en laag, want de vorm zegt meer dan de cijfers
+  //   3. het combinatiepatroon: de enige regel op deze pagina die iets zegt wat
+  //      je zelf niet uit de balken kunt aflezen
+  //
+  // En tot slot het eerlijke gat: dit is één perspectief. Wat hier niet staat,
+  // is hoe je collega's dezelfde vragen beantwoordden. Dat is geen verkooppraat
+  // maar de werkelijke beperking van een individuele scan, en precies de reden
+  // om verder te kijken.
+  const gemeten = (outcome.themeScores || []).filter((t) => t.gemiddelde !== null && t.gemiddelde !== undefined);
+  const verschil = gemeten.length > 1
+    ? Math.round((Math.max(...gemeten.map((t) => t.gemiddelde)) - Math.min(...gemeten.map((t) => t.gemiddelde))) * 10) / 10
+    : null;
+  const patroon = (outcome.patterns || [])[0];
+
+  return (
+    <main className="free-shell free-result">
+      <Helmet><meta name="robots" content="noindex,nofollow" /></Helmet>
+
+      <span className="free-eyebrow">Dank je wel</span>
+      <h1>Dit is jouw persoonlijke Teamkompas</h1>
+      <p className="free-result__lead">
+        Zes domeinen, elk op een schaal van 1 tot 5. Dit beeld weerspiegelt jouw beleving en is
+        geen oordeel over het hele team.
+      </p>
+
+      <ScoreOverview result={outcome} />
+
+      <section className="free-opvalt">
+        <h2>Wat hierin opvalt</h2>
+        <p>
+          {outcome.gelijkmatig || verschil === null
+            ? "Je scores liggen op alle domeinen dicht bij elkaar. Er springt niets uit, in geen van beide richtingen — ook dat is een uitkomst: je ervaart de samenwerking overal ongeveer hetzelfde."
+            : `Tussen je hoogste en je laagste domein zit ${toon(verschil)} punt. Dat verschil zegt vaak meer dan de losse cijfers: het laat zien dat je binnen hetzelfde team heel verschillende dingen ervaart, afhankelijk van waar het over gaat.`}
+        </p>
+        {patroon && (
+          <article className="free-patroon">
+            <h3>{patroon.titel}</h3>
+            <p>{patroon.duiding}</p>
+            <p className="free-patroon__noot">
+              Een patroon is een mogelijke samenhang, geen verklaring. In je rapport staat waar
+              dit vandaan komt.
+            </p>
+          </article>
+        )}
+      </section>
+
+      <div className="free-cards">
+        <article>
+          <h2>{outcome.sterkeKop}</h2>
+          <ul className="free-theme-list">
+            {outcome.strengths.map((x) => (
+              <li key={x.id}><span style={{ background: themeColor(x.id) }} aria-hidden="true" />{x.label}<b>{toon(x.getoond)}</b></li>
+            ))}
+          </ul>
+          <p className="free-cards__noot">Benoem dit in je team. Wat goed werkt blijft vaak onbesproken, en verdwijnt daardoor ook het makkelijkst.</p>
+        </article>
+        <article>
+          <h2>{outcome.ontwikkelkansKop}</h2>
+          <ul className="free-theme-list">
+            {outcome.ontwikkelkans && (
+              <li><span style={{ background: themeColor(outcome.ontwikkelkans.id) }} aria-hidden="true" />{outcome.ontwikkelkans.label}<b>{toon(outcome.ontwikkelkans.getoond)}</b></li>
+            )}
+          </ul>
+          <p className="free-cards__noot">Begin hier. Eén domein tegelijk levert bijna altijd meer op dan een plan voor alle zes.</p>
+        </article>
+      </div>
+
+      <blockquote>{outcome.reflections[0]}</blockquote>
+      {outcome.experiments[0] && (
+        <p><strong>Probeer deze week:</strong> {naDubbelePunt(outcome.experiments[0].eersteStap)}</p>
+      )}
+
+      <p className="free-notice">
+        {outcome.emailStatus === "sent"
+          ? "Je uitgebreide rapport is per e-mail verzonden — met per domein een duiding, drie reflectievragen en twee experimenten."
+          : "Je uitgebreide rapport staat klaar: per domein een duiding, drie reflectievragen en twee experimenten. Bewaar de link goed."}
+      </p>
+      <div className="free-actions">
+        <a className="tk-button tk-button-primary" href={outcome.reportUrl}>Open mijn volledige rapport</a>
+      </div>
+
+      <section className="free-tease">
+        <h2>Wat dit beeld niet kan zien</h2>
+        <p>
+          Je hebt nu jouw kant van het verhaal, en die is echt. Wat je hier niet ziet, is hoe je
+          collega's dezelfde vierentwintig vragen hebben beantwoord. En juist daar, in het
+          verschil, zit meestal wat een team vooruithelpt.
+        </p>
+        <ul>
+          <li><strong>Waar jullie hetzelfde zien.</strong> Een gedeeld beeld is een stevig vertrekpunt, ook als de score laag is. Je hoeft elkaar dan niet eerst te overtuigen.</li>
+          <li><strong>Waar jullie uiteenlopen.</strong> Eén iemand ziet iets vaak maanden eerder dan de rest. Zolang niemand het meet, blijft dat verschil een onderbuikgevoel.</li>
+          <li><strong>Waar leidinggevende en team van elkaar afwijken.</strong> Dat is het verschil dat het vaakst voor verrassing zorgt — in beide richtingen.</li>
+        </ul>
+        <p className="free-tease__hoe">
+          Bij de volledige Teamscan beantwoordt het hele team dezelfde vragen. Je ziet de beelden
+          naast elkaar, zonder dat zichtbaar wordt wie wat heeft ingevuld — en dat gesprek voeren
+          we samen met jullie.
+        </p>
+        <div className="free-actions">
+          <a className="tk-button tk-button-primary" href="/teamscan" onClick={() => emit("free_scan_result_full_scan_click")}>Zo werkt de volledige Teamscan</a>
+          <a className="tk-button tk-button-secondary" href="/verkennen" onClick={() => emit("free_scan_result_contact_click")}>Plan een vrijblijvende kennismaking</a>
+        </div>
+      </section>
+    </main>
+  );
 }
