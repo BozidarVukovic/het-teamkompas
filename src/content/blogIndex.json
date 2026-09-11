@@ -1,5 +1,34 @@
 [
   {
+    "slug": "jouw-perspectief-is-niet-de-werkelijkheid",
+    "title": "Jouw perspectief is niet de werkelijkheid zelf",
+    "excerpt": "We verwarren onze uitleg van een situatie makkelijk met de situatie zelf. Over waarnemen, aannames en het risico van een verhaal dat zichzelf bevestigt.",
+    "publishDate": "2026-09-14",
+    "modifiedDate": "2026-09-14",
+    "image": "/blog/images/perspectief.jpg",
+    "imageAlt": "Illustratie bij het artikel over perspectief en interpretatie",
+    "category": "Leiderschap",
+    "tags": [
+      "leiderschap",
+      "teamcultuur",
+      "samenwerking"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/boven-en-onderstroom",
+      "/psychologische-veiligheid",
+      "/kennis/teamcultuur"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamdag"
+    ],
+    "lead": "Een medewerker zegt tijdens het overleg bijna niets. De een ziet iemand die niet gemotiveerd is. De ander ziet iemand die pas praat wanneer hij werkelijk iets toe te voegen heeft. Beiden hebben hetzelfde gezien.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 769
+  },
+  {
     "slug": "goede-strategie-begint-voor-de-actie",
     "title": "Goede strategie begint vóór de actie",
     "excerpt": "Snelheid oogt daadkrachtig en is nog geen strategie. Waarom een plan pas stand houdt wanneer zelfkennis en zicht op de buitenwereld elkaar raken.",
