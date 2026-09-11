@@ -565,8 +565,14 @@
     <priority>0.75</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/blog/verandering-begint-niet-met-uitleggen</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/kennisbank</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-09-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
