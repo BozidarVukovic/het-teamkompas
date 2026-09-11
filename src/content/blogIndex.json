@@ -1,5 +1,63 @@
 [
   {
+    "slug": "goede-strategie-begint-voor-de-actie",
+    "title": "Goede strategie begint vóór de actie",
+    "excerpt": "Snelheid oogt daadkrachtig en is nog geen strategie. Waarom een plan pas stand houdt wanneer zelfkennis en zicht op de buitenwereld elkaar raken.",
+    "publishDate": "2026-09-13",
+    "modifiedDate": "2026-09-13",
+    "image": "/blog/images/suntzu-strategie.jpg",
+    "imageAlt": "Illustratie bij het artikel over strategie, zelfkennis en omgevingsbewustzijn",
+    "category": "Verandering",
+    "tags": [
+      "verandering",
+      "leiderschap",
+      "samenwerking"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/verandermanagement",
+      "/kennis/teamcultuur",
+      "/psychologische-veiligheid"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamscan"
+    ],
+    "lead": "Er wordt een plan gepresenteerd, een project gestart of een verandering aangekondigd. Vanaf dat moment is de strategie zichtbaar. Volgens Sun Tzu was het beslissende werk toen al gedaan.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 666
+  },
+  {
+    "slug": "goed-leiderschap-laat-ruimte",
+    "title": "De beste leider is degene van wie het team zegt: dit hebben we zelf gedaan",
+    "excerpt": "Laozi beschrijft leiderschap dat nauwelijks opvalt. Over de eer die je weggeeft, en waarom terughoudendheid meer discipline vraagt dan ingrijpen.",
+    "publishDate": "2026-09-12",
+    "modifiedDate": "2026-09-12",
+    "image": "/blog/images/leiderschap-laat-ruimte.jpg",
+    "imageAlt": "Illustratie bij het artikel over leiderschap dat ruimte laat",
+    "category": "Leiderschap",
+    "tags": [
+      "leiderschap",
+      "eigenaarschap",
+      "teamcultuur"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/eigenaarschap-in-teams",
+      "/kennis/teamcultuur",
+      "/psychologische-veiligheid"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamscan"
+    ],
+    "lead": "Het traject is afgerond en het heeft opgeleverd wat ervan werd verwacht. In de evaluatie vertelt het team hoe het dat voor elkaar heeft gekregen. Jouw naam valt nauwelijks. Voor sommige leidinggevenden is dat het pijnlijkste moment van het jaar. Voor Laozi was het het bewijs.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 612
+  },
+  {
     "slug": "verandering-begint-niet-met-uitleggen",
     "title": "Waarom verandering niet begint met beter uitleggen",
     "excerpt": "Nog een presentatie, nog meer argumenten, en er verandert weinig. Waarom mensen iets moeten kunnen ervaren voordat ze anders naar hun werk gaan kijken.",
