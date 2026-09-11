@@ -1,5 +1,63 @@
 [
   {
+    "slug": "gedrag-is-nooit-alleen-van-de-persoon",
+    "title": "Waarom gedrag nooit alleen van de persoon is",
+    "excerpt": "We maken van gedrag al snel een eigenschap. Waarom dezelfde collega bij de een open is en bij de ander voorzichtig, en wat die situatie je vertelt.",
+    "publishDate": "2026-09-22",
+    "modifiedDate": "2026-09-22",
+    "image": "/blog/images/gedrag-en-context.jpg",
+    "imageAlt": "Illustratie bij het artikel over gedrag, context en relaties",
+    "category": "Leiderschap",
+    "tags": [
+      "leiderschap",
+      "teamcultuur",
+      "samenwerking"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/teamcultuur",
+      "/boven-en-onderstroom",
+      "/kennis/eigenaarschap-in-teams"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamscan"
+    ],
+    "lead": "Een medewerker neemt weinig initiatief. In overleggen zegt hij niet veel, nieuwe ideeën komen zelden van hem, en moet er iets gebeuren dan wacht hij eerder af. Na verloop van tijd ontstaat er een beeld. Hij is niet zo gemotiveerd. Hij mist eigenaarschap. Hij is nu eenmaal wat passief.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 946
+  },
+  {
+    "slug": "als-iedereen-zegt-dat-het-goed-gaat",
+    "title": "Als iedereen zegt dat het goed gaat, moet je soms extra goed luisteren",
+    "excerpt": "Weinig discussie en toch geen rust. Waarom stilte in een team zelden overeenstemming betekent, en welke vragen wel iets boven tafel krijgen.",
+    "publishDate": "2026-09-21",
+    "modifiedDate": "2026-09-21",
+    "image": "/blog/images/teamstilte.jpg",
+    "imageAlt": "Illustratie bij het artikel over stilte in teams",
+    "category": "Teamcultuur",
+    "tags": [
+      "psychologische veiligheid",
+      "teamcultuur",
+      "leiderschap"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/psychologische-veiligheid",
+      "/boven-en-onderstroom",
+      "/kennis/teamcultuur"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamdag"
+    ],
+    "lead": "\"Hoe gaat het in het team?\" \"Goed.\" \"Zijn er nog dingen die we moeten bespreken?\" \"Nee hoor.\" Een paar mensen knikken. Iemand kijkt naar zijn laptop. Een ander schuift wat op zijn stoel. De vergadering gaat verder.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 1269
+  },
+  {
     "slug": "werk-en-prive-in-balans",
     "title": "Hoe zorg je voor een goede balans tussen werk en privé?",
     "excerpt": "Beter plannen en je meldingen uitzetten lossen een capaciteitsprobleem niet op. Waarom de werk-privébalans een gedeelde verantwoordelijkheid is.",
