@@ -1,5 +1,63 @@
 [
   {
+    "slug": "wat-betekent-het-als-je-procesverantwoordelijk-bent",
+    "title": "Wat betekent het eigenlijk als je procesverantwoordelijk bent?",
+    "excerpt": "Het klinkt helder en blijkt vaak een containerbegrip. Wat een procesverantwoordelijke wel en niet doet, en waarom verantwoordelijkheid zonder invloed vastloopt.",
+    "publishDate": "2026-09-25",
+    "modifiedDate": "2026-09-25",
+    "image": "/blog/images/procesverantwoordelijkheid.jpg",
+    "imageAlt": "Illustratie bij het artikel over procesverantwoordelijkheid",
+    "category": "Samenwerking",
+    "tags": [
+      "samenwerking",
+      "eigenaarschap",
+      "teamcultuur"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/eigenaarschap-in-teams",
+      "/kennis/teamcultuur",
+      "/kennis/rollen-en-verantwoordelijkheden"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamdag"
+    ],
+    "lead": "\"Jij bent vanaf nu procesverantwoordelijk.\" Het klinkt belangrijk en het klinkt duidelijk. Meestal begint daarna de onduidelijkheid. Mag je het proces veranderen? Moet je collega's aanspreken wanneer afspraken niet worden nagekomen? Ben je verantwoordelijk voor het resultaat?",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 878
+  },
+  {
+    "slug": "een-goede-voorzitter-zorgt-niet-voor-alle-antwoorden",
+    "title": "Een goede voorzitter zorgt niet voor alle antwoorden",
+    "excerpt": "Voorzitten wordt vaak gezien als vergadertechniek. Wat een voorzitter doet waardoor een overleg van de hele groep wordt in plaats van van hemzelf.",
+    "publishDate": "2026-09-24",
+    "modifiedDate": "2026-09-24",
+    "image": "/blog/images/voorzitter.jpg",
+    "imageAlt": "Illustratie bij het artikel over voorzitten en gedeeld eigenaarschap",
+    "category": "Samenwerking",
+    "tags": [
+      "samenwerking",
+      "leiderschap",
+      "teamcultuur"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/teamcultuur",
+      "/psychologische-veiligheid",
+      "/kennis/eigenaarschap-in-teams"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamdag"
+    ],
+    "lead": "Een periodiek overleg. De voorzitter opent, licht het eerste punt toe, geeft zijn eigen inschatting en vraagt of iedereen zich daarin kan vinden. Een paar mensen knikken. Er komt een korte vraag over de planning. Binnen tien minuten ligt het besluit er en gaat de agenda door naar het volgende punt.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 781
+  },
+  {
     "slug": "status-boven-samenwerking",
     "title": "Waarom goede zorg stokt wanneer status belangrijker wordt dan samenwerking",
     "excerpt": "De patiënt ziet geen beroepsgroepen, maar één organisatie. Wat er gebeurt wanneer verschil in verantwoordelijkheid verandert in verschil in waarde.",
