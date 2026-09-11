@@ -1,5 +1,34 @@
 [
   {
+    "slug": "expertise-kan-mogelijkheden-onzichtbaar-maken",
+    "title": "Shunryu Suzuki, expertise kan mogelijkheden onzichtbaar maken",
+    "excerpt": "Ervaring laat je snel patronen herkennen en laat je soms missen wat deze situatie anders maakt. Over het moment waarop deskundigheid verandert in zekerheid.",
+    "publishDate": "2026-10-01",
+    "modifiedDate": "2026-10-01",
+    "image": "/blog/images/beginnersgeest.jpg",
+    "imageAlt": "Illustratie bij het artikel over expertise en de geest van een beginner",
+    "category": "Leiderschap",
+    "tags": [
+      "leiderschap",
+      "teamcultuur",
+      "samenwerking"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/teamcultuur",
+      "/kennis/verandermanagement",
+      "/psychologische-veiligheid"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamscan"
+    ],
+    "lead": "Een medewerker vertoont bepaald gedrag en je denkt te weten waar het vandaan komt. Een overleg loopt stroef en je herkent het probleem meteen. Een verandering lukt niet en iemand zegt dat ze dit eerder hebben geprobeerd.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 550
+  },
+  {
     "slug": "hoe-hoger-de-werkdruk-hoe-groter-de-verleiding-om-te-controleren",
     "title": "Hoe hoger de werkdruk, hoe groter de verleiding om te controleren",
     "excerpt": "Meer druk leidt tot meer sturing, en daarmee tot minder eigenaarschap. Hoe je duidelijkheid vergroot zonder de ruimte om zelf te beslissen te verkleinen.",
