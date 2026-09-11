@@ -1,5 +1,34 @@
 [
   {
+    "slug": "hoe-ziet-de-zorg-er-over-tien-jaar-uit",
+    "title": "Hoe ziet de gezondheidszorg er over tien jaar uit?",
+    "excerpt": "Niet de techniek wordt het moeilijkst, maar de samenwerking eromheen. Over zorg die verschuift van gebouwen naar netwerken en wat dat van organisaties vraagt.",
+    "publishDate": "2026-09-18",
+    "modifiedDate": "2026-09-18",
+    "image": "/blog/images/zorg-2036.jpg",
+    "imageAlt": "Illustratie bij het artikel over de gezondheidszorg over tien jaar",
+    "category": "Verandering",
+    "tags": [
+      "verandering",
+      "samenwerking",
+      "leiderschap"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/verandermanagement",
+      "/kennis/teamcultuur",
+      "/psychologische-veiligheid"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamdag"
+    ],
+    "lead": "Tien jaar geleden was videobellen met een arts uitzonderlijk. Beeldanalyse door software klonk futuristisch en wie zijn eigen gezondheidsgegevens via zijn telefoon volgde, was een uitzondering. Inmiddels is dat dagelijks werk.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 1111
+  },
+  {
     "slug": "ai-verandert-ook-leiderschap",
     "title": "AI verandert niet alleen het werk, maar ook leiderschap",
     "excerpt": "De vraag is allang niet meer waar je AI kunt inzetten. Waarom een leidinggevende straks vooral verantwoordelijkheden, beslisruimte en ingrijpmomenten ontwerpt.",
