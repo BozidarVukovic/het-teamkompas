@@ -16,6 +16,7 @@ import ContactModal from "./ContactModal";
 import { auth, db, ADMIN_EMAILS } from "./firebase";
 const FunnelDashboard = lazy(() => import("./FunnelDashboard"));
 import { PUB, ADM } from "./styles/tokens";
+import "./styles/admin-klanten.css";
 import { useInView, useIsMobile } from "./components/shared/hooks";
 import Fade from "./components/shared/Fade";
 import LoginScreen from "./components/admin/LoginScreen";
@@ -3098,10 +3099,17 @@ function PageKlanten() {
   const [gekopieerd, setGekopieerd] = useState(null);
   const [portalItem, setPortalItem] = useState({ titel: "", url: "", categorie: "Rapport", datum: "", doelgroep: "" });
   const [portalBewerkIndex, setPortalBewerkIndex] = useState(null);
+  const [zoekterm, setZoekterm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("Alle statussen");
+  const [sectorFilter, setSectorFilter] = useState("Alle sectoren");
+  const [activeKlantTab, setActiveKlantTab] = useState("Overzicht");
+  const [actieMenuOpen, setActieMenuOpen] = useState(false);
 
   useEffect(() => {
     setPortalBewerkIndex(null);
     setPortalItem({ titel: "", url: "", categorie: "Rapport", datum: "", doelgroep: "" });
+    setActiveKlantTab("Overzicht");
+    setActieMenuOpen(false);
   }, [selectedKlant?.id]);
   const [portalOpslaan, setPortalOpslaan] = useState(false);
   const [portalLinkBezig, setPortalLinkBezig] = useState(false);
@@ -3643,11 +3651,13 @@ function PageKlanten() {
   };
 
   const openTraject = (trajId) => {
+    setActiveKlantTab("Trajecten");
     setSelectedTrajectId(trajId);
     setSelectedMetingId(null);
   };
 
   const openMeting = (metingId) => {
+    setActiveKlantTab("Metingen");
     setSelectedMetingId(metingId);
     setSelectedTrajectId(null);
   };
@@ -3661,6 +3671,33 @@ function PageKlanten() {
   const geselecteerdeMeting = geselecteerdeMetingen.find(m => m.id === selectedMetingId) || null;
   const rapportagesCount = geselecteerdeTrajecten.filter(v => antwoorden.some(a => a.vragenlijstId === v.id)).length;
   const isEchteKlantRecord = selectedKlant && !String(selectedKlant.id).startsWith("klant-");
+  const klantTabs = ["Overzicht", "Trajecten", "Metingen", "Rapportages", "Klantportaal", "Tijdlijn"];
+  const statusOpties = [...new Set(klanten.map(k => k.status).filter(Boolean))].sort((a,b) => a.localeCompare(b, "nl"));
+  const sectorOpties = [...new Set(klanten.map(k => k.sector).filter(Boolean))].sort((a,b) => a.localeCompare(b, "nl"));
+  const genormaliseerdeZoekterm = zoekterm.trim().toLocaleLowerCase("nl");
+  const gefilterdeKlanten = klanten.filter(k => {
+    const matchZoekterm = !genormaliseerdeZoekterm || [k.naam, k.sector, k.contact, k.email]
+      .some(waarde => String(waarde || "").toLocaleLowerCase("nl").includes(genormaliseerdeZoekterm));
+    return matchZoekterm
+      && (statusFilter === "Alle statussen" || k.status === statusFilter)
+      && (sectorFilter === "Alle sectoren" || k.sector === sectorFilter);
+  });
+  const beschikbareRapportages = geselecteerdeTrajecten.filter(v => antwoorden.some(a => a.vragenlijstId === v.id));
+  const selecteerKlant = (klant) => {
+    setSelectedKlant(klant);
+    setSelectedTrajectId(null);
+    setSelectedMetingId(null);
+    setBewerkModus(false);
+  };
+  const activeerTabMetToets = (event, index) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const volgendeIndex = event.key === "Home" ? 0
+      : event.key === "End" ? klantTabs.length - 1
+      : (index + (event.key === "ArrowRight" ? 1 : -1) + klantTabs.length) % klantTabs.length;
+    setActiveKlantTab(klantTabs[volgendeIndex]);
+    event.currentTarget.parentElement?.querySelectorAll('[role="tab"]')[volgendeIndex]?.focus();
+  };
   const metingGem = (scores) => {
     const vals = Object.values(scores || {}).filter(v => v !== null && v !== undefined && v !== "");
     return vals.length ? (vals.reduce((a,b)=>a+parseFloat(b),0)/vals.length).toFixed(1) : "—";
@@ -3675,7 +3712,7 @@ function PageKlanten() {
       datum: fmtDate(t.aangemaakt),
       sortDate: parseDateFlexible(t.aangemaakt),
       type: "traject",
-      icon: "📝",
+      icon: "TR",
       titel: t.naam,
       subtitel: `Traject gestart · status ${t.status || "Actief"}`,
     }));
@@ -3688,7 +3725,7 @@ function PageKlanten() {
         datum: fmtDate(t.aangemaakt),
         sortDate: parseDateFlexible(t.aangemaakt),
         type: "scan",
-        icon: "✅",
+        icon: "SC",
         titel: t.naam,
         subtitel: `${count} ingevulde scan(s) ontvangen`,
       }] : [];
@@ -3700,7 +3737,7 @@ function PageKlanten() {
       datum: fmtDate(m.datum || m.aangemaakt_op),
       sortDate: parseDateFlexible(m.datum) || parseDateFlexible(m.aangemaakt_op),
       type: "meting",
-      icon: "📋",
+      icon: "ME",
       titel: m.type || "Meting",
       subtitel: m.trajectNaam ? `Meting toegevoegd · ${m.trajectNaam}` : "Meting toegevoegd",
     }));
@@ -3713,7 +3750,7 @@ function PageKlanten() {
         datum: fmtDate(t.aangemaakt),
         sortDate: parseDateFlexible(t.aangemaakt),
         type: "rapportage",
-        icon: "📄",
+        icon: "RA",
         titel: t.naam,
         subtitel: "Rapportage beschikbaar",
       }] : [];
@@ -3725,7 +3762,7 @@ function PageKlanten() {
       datum: fmtDate(c.datum || c.createdAt),
       sortDate: parseDateFlexible(c.datum) || parseDateFlexible(c.createdAt),
       type: "contact",
-      icon: "📬",
+      icon: "CO",
       titel: c.organisatie || klant.naam,
       subtitel: "Contactaanvraag ontvangen",
     }));
@@ -3738,23 +3775,25 @@ function PageKlanten() {
   if (loading) return <div style={{color:ADM.muted,padding:20}}>Laden...</div>;
 
   return (
-    <div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
-        <div style={{fontSize:13,color:ADM.muted}}>{klanten.length} klant(en)</div>
-        <button onClick={()=>setShowForm(!showForm)}
-          style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"9px 18px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
-          + Klant toevoegen
+    <div className="admin-klanten">
+      <div className="admin-klanten__toolbar">
+        <div>
+          <h2 className="admin-klanten__title">Klantenbeheer</h2>
+          <p className="admin-klanten__subtitle">{klanten.length} {klanten.length === 1 ? "klant" : "klanten"} in totaal</p>
+        </div>
+        <button className="admin-klanten__button admin-klanten__button--primary" type="button" onClick={()=>setShowForm(!showForm)} aria-expanded={showForm}>
+          <span aria-hidden="true">＋</span> Klant toevoegen
         </button>
       </div>
 
       {showForm && (
         <div style={{background:ADM.navy,border:`1px solid ${ADM.teal}`,borderRadius:12,padding:"22px",marginBottom:20}}>
           <div style={{fontWeight:600,color:ADM.white,marginBottom:16}}>Nieuwe klant toevoegen</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:12,marginBottom:16}}>
             {[["naam","Naam organisatie"],["sector","Sector"],["contact","Contactpersoon"],["email","E-mail"],["status","Status"]].map(([k,l])=>(
               <div key={k}>
                 <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:5}}>{l}</div>
-                <input value={nieuw[k]} onChange={e=>setNieuw(n=>({...n,[k]:e.target.value}))}
+                <input aria-label={l} value={nieuw[k]} onChange={e=>setNieuw(n=>({...n,[k]:e.target.value}))}
                   style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"9px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}/>
               </div>
             ))}
@@ -3772,50 +3811,64 @@ function PageKlanten() {
         </div>
       )}
 
-      <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "0.95fr 1.25fr",gap:18}}>
-        <div style={{display:"flex",flexDirection:"column",gap:12}}>
-          {klanten.map(k => (
-            <div key={k.id}
-              onClick={()=>{ setSelectedKlant(k); setSelectedTrajectId(null); setSelectedMetingId(null); setBewerkModus(false); }}
-              style={{background:ADM.navy,border:`1px solid ${selectedKlant?.id===k.id?ADM.teal:ADM.border}`,borderRadius:12,padding:"18px 20px",cursor:"pointer"}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10}}>
-                <div>
-                  <div style={{fontWeight:700,color:ADM.white,fontSize:15,marginBottom:4}}>{k.naam}</div>
-                  <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6}}>
-                    {k.sector || "Sector onbekend"} · {k.contact || "Geen contactpersoon"}
-                  </div>
-                </div>
-                <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6}}>
-                  <span style={{fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:20,background:`${statusColor(k.status)}22`,color:statusColor(k.status)}}>
-                    {k.status}
+      <div className="admin-klanten__layout">
+        <aside className="admin-klanten__master" aria-label="Klantenlijst">
+          <div className="admin-klanten__master-head">
+            <label className="admin-klanten__search-wrap">
+              <span className="admin-klanten__search-mark" aria-hidden="true">⌕</span>
+              <span className="kb-visueel-verborgen">Zoek klanten</span>
+              <input className="admin-klanten__field admin-klanten__field--search" type="search" value={zoekterm} onChange={e=>setZoekterm(e.target.value)} placeholder="Zoek op naam of contact" />
+            </label>
+            <div className="admin-klanten__filters">
+              <label style={{flex:1}}>
+                <span className="kb-visueel-verborgen">Filter op status</span>
+                <select className="admin-klanten__field" value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}>
+                  <option>Alle statussen</option>
+                  {statusOpties.map(status => <option key={status}>{status}</option>)}
+                </select>
+              </label>
+              <label style={{flex:1}}>
+                <span className="kb-visueel-verborgen">Filter op sector</span>
+                <select className="admin-klanten__field" value={sectorFilter} onChange={e=>setSectorFilter(e.target.value)}>
+                  <option>Alle sectoren</option>
+                  {sectorOpties.map(sector => <option key={sector}>{sector}</option>)}
+                </select>
+              </label>
+            </div>
+          </div>
+          <div className="admin-klanten__list" aria-label={`${gefilterdeKlanten.length} klanten gevonden`}>
+            {gefilterdeKlanten.map(k => (
+              <button key={k.id} type="button" className="admin-klanten__card" aria-current={selectedKlant?.id===k.id ? "true" : undefined} onClick={()=>selecteerKlant(k)}>
+                <span className="admin-klanten__card-top">
+                  <span>
+                    <span className="admin-klanten__card-name">{k.naam}</span>
+                    <span className="admin-klanten__card-sector">{k.sector || "Sector onbekend"}</span>
                   </span>
-                  <div style={{fontSize:20,fontWeight:700,color:k.score !== null ? scoreColor(k.score) : ADM.muted}}>
-                    {formatScore(k.score)}
-                  </div>
-                </div>
+                  <span className="admin-klanten__status" style={{background:`${statusColor(k.status)}22`,color:statusColor(k.status)}}>{k.status}</span>
+                </span>
+                <span className="admin-klanten__counts">
+                  <span className="admin-klanten__count"><i className="admin-klanten__count-mark" aria-hidden="true" />{k.trajecten.length} trajecten</span>
+                  <span className="admin-klanten__count"><i className="admin-klanten__count-mark" aria-hidden="true" />{k.metingen.length} metingen</span>
+                  <span className="admin-klanten__count"><i className="admin-klanten__count-mark" aria-hidden="true" />{k.team || 0} antwoorden</span>
+                </span>
+              </button>
+            ))}
+            {gefilterdeKlanten.length === 0 && (
+              <div className="admin-klanten__empty">
+                {klanten.length === 0 ? "Nog geen klanten beschikbaar." : "Geen klanten gevonden. Pas je zoekopdracht of filters aan."}
               </div>
-              <div style={{display:"flex",gap:12,marginTop:12,flexWrap:"wrap",fontSize:12,color:ADM.muted}}>
-                <span>📝 {k.trajecten.length} traject(en)</span>
-                <span>📋 {k.metingen.length} meting(en)</span>
-                <span>📈 {k.team || 0} antwoorden</span>
-              </div>
-            </div>
-          ))}
-          {klanten.length === 0 && (
-            <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:12,padding:"24px",textAlign:"center",color:ADM.muted}}>
-              Nog geen klanten beschikbaar.
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </aside>
 
-        <div style={{background:ADM.navy,border:`1px solid ${ADM.border}`,borderRadius:14,padding:"22px 20px"}}>
+        <section className="admin-klanten__detail" aria-label="Klantdetails">
           {!selectedKlant ? (
-            <div style={{color:ADM.muted}}>Selecteer een klant om details te bekijken.</div>
+            <div className="admin-klanten__empty">Selecteer een klant om details te bekijken.</div>
           ) : (
             <>
               {/* ── Klantinfo header ── */}
               {bewerkModus ? (
-                <div style={{marginBottom:18}}>
+                <div style={{padding:20,marginBottom:0}}>
                   <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:12}}>
                     Klant bewerken
                   </div>
@@ -3830,6 +3883,7 @@ function PageKlanten() {
                       <div key={k}>
                         <div style={{fontSize:11,color:ADM.muted,textTransform:"uppercase",letterSpacing:"1px",marginBottom:5}}>{l}</div>
                         <input
+                          aria-label={l}
                           value={bewerkData[k] || ""}
                           onChange={e => setBewerkData(d => ({...d, [k]: e.target.value}))}
                           style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.teal}55`,
@@ -3852,57 +3906,59 @@ function PageKlanten() {
                   </div>
                 </div>
               ) : (
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:18,flexWrap:"wrap"}}>
+                <header className="admin-klanten__header">
                   <div>
-                    <div style={{fontSize:26,fontWeight:700,color:ADM.white,marginBottom:6}}>{selectedKlant.naam}</div>
-                    <div style={{fontSize:13,color:ADM.muted,lineHeight:1.7}}>
-                      {selectedKlant.sector || "Sector onbekend"} · {selectedKlant.contact || "Geen contactpersoon"}{selectedKlant.email ? ` · ${selectedKlant.email}` : ""}
+                    <h3 className="admin-klanten__heading">{selectedKlant.naam}</h3>
+                    <div className="admin-klanten__meta">
+                      <span>{selectedKlant.sector || "Sector onbekend"}</span>
+                      <span>{selectedKlant.contact || "Geen contactpersoon"}</span>
+                      {selectedKlant.email && <span>{selectedKlant.email}</span>}
                     </div>
                   </div>
-                  <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",justifyContent:"flex-end"}}>
-                    <span style={{fontSize:11,fontWeight:700,padding:"5px 10px",borderRadius:20,background:`${statusColor(selectedKlant?.status || "")}22`,color:statusColor(selectedKlant?.status || "")}}>
+                  <div className="admin-klanten__actions">
+                    <span className="admin-klanten__status" style={{background:`${statusColor(selectedKlant?.status || "")}22`,color:statusColor(selectedKlant?.status || "")}}>
                       {selectedKlant.status}
                     </span>
+                    <button type="button" className="admin-klanten__button admin-klanten__button--primary" onClick={()=>{setActiveKlantTab("Trajecten");setShowTrajectForm(true);}}>
+                      <span aria-hidden="true">＋</span> Nieuw traject
+                    </button>
+                    <button type="button" className="admin-klanten__button" onClick={()=>{setActiveKlantTab("Metingen");setShowMetingForm(true);}}>
+                      <span aria-hidden="true">＋</span> Nieuwe meting
+                    </button>
                     {isEchteKlantRecord && (
-                      <button
+                      <button type="button" className="admin-klanten__button"
                         onClick={startBewerken}
-                        style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,
-                          borderRadius:8,padding:"8px 12px",fontSize:12,fontWeight:700,cursor:"pointer"}}
                       >
-                        ✏️ Bewerken
+                        Bewerken
                       </button>
                     )}
                     {isEchteKlantRecord && (
-                      <button
-                        onClick={verwijderKlantNaarPrullenbak}
-                        disabled={verwijderenKlant}
-                        style={{background:"rgba(231,76,60,0.10)",color:ADM.red,border:`1px solid rgba(231,76,60,0.24)`,
-                          borderRadius:8,padding:"8px 12px",fontSize:12,fontWeight:700,cursor:verwijderenKlant?"wait":"pointer"}}
-                      >
-                        {verwijderenKlant ? "Verplaatsen..." : "🗑️ Klant verwijderen"}
-                      </button>
+                      <div style={{position:"relative"}}>
+                        <button type="button" className="admin-klanten__button" aria-label="Meer klantacties" aria-haspopup="menu" aria-expanded={actieMenuOpen} onClick={()=>setActieMenuOpen(open=>!open)}>•••</button>
+                        {actieMenuOpen && (
+                          <div className="admin-klanten__menu" role="menu" onKeyDown={event=>{if(event.key==="Escape"){setActieMenuOpen(false);event.currentTarget.previousElementSibling?.focus();}}}>
+                            <button type="button" role="menuitem" className="admin-klanten__button admin-klanten__button--danger" onClick={()=>{setActieMenuOpen(false);verwijderKlantNaarPrullenbak();}} disabled={verwijderenKlant}>
+                              {verwijderenKlant ? "Verplaatsen..." : "Klant verwijderen"}
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
-                </div>
+                </header>
               )}
 
-              <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:18}}>
-                <button
-                  onClick={()=>setShowTrajectForm(v => !v)}
-                  style={{background:ADM.teal,color:ADM.navyDeep,border:"none",borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
-                >
-                  + Nieuw traject
-                </button>
-                <button
-                  onClick={()=>setShowMetingForm(v => !v)}
-                  style={{background:"rgba(255,255,255,0.06)",color:ADM.white,border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 14px",fontWeight:700,fontSize:13,cursor:"pointer"}}
-                >
-                  + Nieuwe meting
-                </button>
+              <div className="admin-klanten__tabs" role="tablist" aria-label="Klantdetails">
+                {klantTabs.map((tab, index) => (
+                  <button key={tab} id={`klant-tab-${index}`} type="button" role="tab" className="admin-klanten__tab" aria-selected={activeKlantTab === tab} aria-controls="klant-tabpaneel" tabIndex={activeKlantTab === tab ? 0 : -1} onClick={()=>setActiveKlantTab(tab)} onKeyDown={event=>activeerTabMetToets(event,index)}>
+                    {tab}
+                  </button>
+                ))}
               </div>
 
+              <div id="klant-tabpaneel" role="tabpanel" aria-labelledby={`klant-tab-${klantTabs.indexOf(activeKlantTab)}`} className="admin-klanten__panel">
 
-              {isEchteKlantRecord && (
+              {isEchteKlantRecord && activeKlantTab === "Klantportaal" && (
                 <div style={{background:"rgba(0,168,150,0.08)",border:`1px solid rgba(0,168,150,0.24)`,borderRadius:10,padding:"14px 14px",marginBottom:16}}>
                   <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:8}}>Klantportaal</div>
                   <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,marginBottom:10}}>
@@ -3917,25 +3973,29 @@ function PageKlanten() {
                   </div>
                   <div style={{display:"grid",gap:8,marginBottom:8}}>
                     <input
+                      aria-label="Titel of notitie voor klantportaal"
                       value={portalItem.titel}
                       onChange={e=>setPortalItem(p=>({...p, titel:e.target.value}))}
                       placeholder="Titel (bijv. Teamscan rapportage T1) of korte notitie"
                       style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
                     />
                     <input
+                      aria-label="Documentlink voor klantportaal"
                       value={portalItem.url}
                       onChange={e=>setPortalItem(p=>({...p, url:e.target.value}))}
                       placeholder="Link naar document (OneDrive/SharePoint) — leeg laten voor een notitie"
                       style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
                     />
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+                    <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr 1fr",gap:8}}>
                       <select
+                        aria-label="Categorie portaalitem"
                         value={portalItem.categorie}
                         onChange={e=>setPortalItem(p=>({...p, categorie:e.target.value}))}
                         style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}>
                         {["Rapport","Verslag","Presentatie","Overig"].map(c => <option key={c} value={c} style={{color:"#0D1B2A"}}>{c}</option>)}
                       </select>
                       <select
+                        aria-label="Doelgroep portaalitem"
                         value={portalItem.doelgroep}
                         onChange={e=>setPortalItem(p=>({...p, doelgroep:e.target.value}))}
                         style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}>
@@ -3943,6 +4003,7 @@ function PageKlanten() {
                         {["Hele team","Medewerkers","Leidinggevende"].map(dg => <option key={dg} value={dg} style={{color:"#0D1B2A"}}>{dg}</option>)}
                       </select>
                       <input
+                        aria-label="Datum portaalitem"
                         type="date"
                         value={portalItem.datum}
                         onChange={e=>setPortalItem(p=>({...p, datum:e.target.value}))}
@@ -3993,17 +4054,23 @@ function PageKlanten() {
                 </div>
               )}
 
-              {showTrajectForm && (
+              {!isEchteKlantRecord && activeKlantTab === "Klantportaal" && (
+                <div className="admin-klanten__empty">Maak eerst een volledig klantrecord aan om het klantportaal te beheren.</div>
+              )}
+
+              {activeKlantTab === "Trajecten" && showTrajectForm && (
                 <div style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"16px 16px",marginBottom:16}}>
                   <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>Nieuw traject</div>
                   <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1fr 160px",gap:10,marginBottom:10}}>
                     <input
+                      aria-label="Naam van het traject"
                       value={nieuwTraject.naam}
                       onChange={e=>setNieuwTraject(n=>({...n, naam:e.target.value}))}
                       placeholder="Naam van het traject"
                       style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
                     />
                     <input
+                      aria-label="Status van het traject"
                       value={nieuwTraject.status}
                       onChange={e=>setNieuwTraject(n=>({...n, status:e.target.value}))}
                       placeholder="Status"
@@ -4026,11 +4093,12 @@ function PageKlanten() {
                 </div>
               )}
 
-              {showMetingForm && (
+              {activeKlantTab === "Metingen" && showMetingForm && (
                 <div style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"16px 16px",marginBottom:16}}>
                   <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>Nieuwe meting</div>
                   <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1fr 1fr 1fr",gap:10,marginBottom:10}}>
                     <select
+                      aria-label="Traject voor de meting"
                       value={nieuweMeting.trajectId}
                       onChange={e=>kiesMetingTraject(e.target.value)}
                       style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
@@ -4041,12 +4109,14 @@ function PageKlanten() {
                       ))}
                     </select>
                     <input
+                      aria-label="Type meting"
                       value={nieuweMeting.type}
                       onChange={e=>setNieuweMeting(n=>({...n, type:e.target.value}))}
                       placeholder="Type meting"
                       style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${ADM.border}`,borderRadius:8,padding:"10px 12px",color:ADM.white,fontSize:13,outline:"none",boxSizing:"border-box"}}
                     />
                     <input
+                      aria-label="Datum van de meting"
                       value={nieuweMeting.datum}
                       onChange={e=>setNieuweMeting(n=>({...n, datum:e.target.value}))}
                       placeholder="Datum"
@@ -4058,6 +4128,7 @@ function PageKlanten() {
                       <div key={p} style={{display:"flex",alignItems:"center",gap:10}}>
                         <div style={{fontSize:12,color:ADM.text,flex:1}}>{p}</div>
                         <input
+                          aria-label={`Score voor ${p}`}
                           type="number" min="1" max="5" step="0.1"
                           value={nieuweMeting.scores[p] || ""}
                           onChange={e=>setNieuweMeting(n=>({...n,scores:{...n.scores,[p]:e.target.value}}))}
@@ -4079,7 +4150,7 @@ function PageKlanten() {
                 </div>
               )}
 
-              {!isEchteKlantRecord && (
+              {!isEchteKlantRecord && activeKlantTab === "Overzicht" && (
                 <div style={{marginBottom:14,background:"rgba(231,76,60,0.06)",border:`1px solid rgba(231,76,60,0.2)`,borderRadius:10,padding:"12px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
                   <div style={{fontSize:12,color:ADM.muted,lineHeight:1.6,flex:1}}>
                     Deze klant bestaat alleen in gekoppelde scans of metingen — er is geen los klantrecord.
@@ -4091,12 +4162,13 @@ function PageKlanten() {
                     style={{background:"rgba(231,76,60,0.12)",color:ADM.red,border:`1px solid rgba(231,76,60,0.3)`,
                       borderRadius:8,padding:"8px 14px",fontSize:12,fontWeight:700,
                       cursor:verwijderenSamengesteld?"wait":"pointer",whiteSpace:"nowrap",flexShrink:0}}>
-                    {verwijderenSamengesteld ? "Verwijderen..." : "🗑️ Alles verwijderen"}
+                    {verwijderenSamengesteld ? "Verwijderen..." : "Alles verwijderen"}
                   </button>
                 </div>
               )}
 
-              <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr 1fr" : "repeat(4,1fr)",gap:12,marginBottom:20}}>
+              {activeKlantTab === "Overzicht" && <>
+              <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr 1fr" : "repeat(4,1fr)",gap:12,marginBottom:14}}>
                 {[
                   ["Trajecten", geselecteerdeTrajecten.length, "#3A7DBF"],
                   ["Metingen", geselecteerdeMetingen.length, "#E8821A"],
@@ -4110,8 +4182,28 @@ function PageKlanten() {
                 ))}
               </div>
 
-              <div style={{display:"grid",gridTemplateColumns:isMobile ? "1fr" : "1fr 1fr",gap:16,marginBottom:16}}>
-                <div>
+              <div className="admin-klanten__overview-grid">
+                <div className="admin-klanten__overview-card">
+                  <div className="admin-klanten__overview-label">Contactpersoon</div>
+                  <div className="admin-klanten__overview-value">{selectedKlant.contact || "Niet ingevuld"}</div>
+                </div>
+                <div className="admin-klanten__overview-card">
+                  <div className="admin-klanten__overview-label">E-mailadres</div>
+                  <div className="admin-klanten__overview-value">{selectedKlant.email || "Niet ingevuld"}</div>
+                </div>
+                <div className="admin-klanten__overview-card">
+                  <div className="admin-klanten__overview-label">Startdatum</div>
+                  <div className="admin-klanten__overview-value">{fmtDate(selectedKlant.startdatum)}</div>
+                </div>
+                <div className="admin-klanten__overview-card">
+                  <div className="admin-klanten__overview-label">Laatste activiteit</div>
+                  <div className="admin-klanten__overview-value">{tijdlijnItems(selectedKlant)[0]?.subtitel || "Nog geen activiteit"}</div>
+                </div>
+              </div>
+              </>}
+
+              <div style={{display:"grid",gridTemplateColumns:"1fr",gap:16,marginBottom:16}}>
+                {activeKlantTab === "Trajecten" && <div>
                   <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>
                     Trajecten
                   </div>
@@ -4202,14 +4294,14 @@ function PageKlanten() {
                               <div style={{display:"flex",alignItems:"center",gap:6}}>
                                 <div style={{width:8,height:8,borderRadius:"50%",background:mwAntwoorden.length>=5?ADM.green:mwAntwoorden.length>0?ADM.orange:ADM.border,flexShrink:0}}/>
                                 <span style={{fontSize:12,color:ADM.muted}}>
-                                  👥 Medewerkers: <strong style={{color:ADM.white}}>{mwAntwoorden.length}</strong>
+                                  Medewerkers: <strong style={{color:ADM.white}}>{mwAntwoorden.length}</strong>
                                   {mwAntwoorden.length<5 && <span style={{color:ADM.orange}}> (min. 5)</span>}
                                 </span>
                               </div>
                               <div style={{display:"flex",alignItems:"center",gap:6}}>
                                 <div style={{width:8,height:8,borderRadius:"50%",background:mgAntwoorden.length>=1?ADM.green:ADM.border,flexShrink:0}}/>
                                 <span style={{fontSize:12,color:ADM.muted}}>
-                                  👔 Manager: <strong style={{color:ADM.white}}>{mgAntwoorden.length}</strong>
+                                  Manager: <strong style={{color:ADM.white}}>{mgAntwoorden.length}</strong>
                                   {mgAntwoorden.length===0 && <span style={{color:ADM.orange}}> (nog niet ingevuld)</span>}
                                 </span>
                               </div>
@@ -4316,7 +4408,7 @@ function PageKlanten() {
                                               onClick={async()=>{try{await navigator.clipboard.writeText(`${window.location.origin}/deelnemen/${bestaand.id}`);}catch{}}}
                                               style={{background:`${config.kleur}18`,color:config.kleur,border:`1px solid ${config.kleur}33`,borderRadius:6,padding:"4px 10px",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}
                                             >
-                                              🔗 Kopieer link
+                                              Kopieer link
                                             </button>
                                           ) : (
                                             <button
@@ -4338,9 +4430,9 @@ function PageKlanten() {
                       });
                     })()}
                   </div>
-                </div>
+                </div>}
 
-                <div>
+                {activeKlantTab === "Metingen" && <div>
                   <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>
                     Metingen
                   </div>
@@ -4388,10 +4480,10 @@ function PageKlanten() {
                         </div>
                       ))}
                   </div>
-                </div>
+                </div>}
               </div>
 
-              {(geselecteerdTraject || geselecteerdeMeting) && (
+              {((activeKlantTab === "Trajecten" && geselecteerdTraject) || (activeKlantTab === "Metingen" && geselecteerdeMeting)) && (
                 <div style={{background:"rgba(255,255,255,0.03)",border:`1px solid ${ADM.border}`,borderRadius:10,padding:"16px 16px",marginBottom:16}}>
                   {geselecteerdTraject && (
                     <>
@@ -4424,16 +4516,36 @@ function PageKlanten() {
                 </div>
               )}
 
-              <div>
-                <div style={{fontSize:11,color:ADM.teal,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:10}}>
-                  Tijdlijn
+              {activeKlantTab === "Rapportages" && (
+                <div>
+                  <h4 className="admin-klanten__section-title">Beschikbare rapportages</h4>
+                  <div className="admin-klanten__report-list">
+                    {beschikbareRapportages.length === 0 ? (
+                      <div style={{fontSize:13,color:ADM.muted}}>Er zijn nog geen rapportages met ingevulde scans beschikbaar.</div>
+                    ) : beschikbareRapportages.map(traject => {
+                      const aantalAntwoorden = antwoorden.filter(a => a.vragenlijstId === traject.id).length;
+                      return (
+                        <div key={traject.id} className="admin-klanten__report">
+                          <div>
+                            <div style={{fontSize:14,fontWeight:700,color:ADM.white}}>{traject.naam}</div>
+                            <div style={{fontSize:12,color:ADM.muted,marginTop:4}}>{aantalAntwoorden} {aantalAntwoorden === 1 ? "antwoord" : "antwoorden"} · {traject.type || "Basisscan"}</div>
+                          </div>
+                          <button type="button" className="admin-klanten__button" onClick={()=>openRapportageVoorTraject(traject)}>Open rapportage</button>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
+              )}
+
+              {activeKlantTab === "Tijdlijn" && <div>
+                <h4 className="admin-klanten__section-title">Alle activiteit</h4>
                 <div style={{display:"flex",flexDirection:"column",gap:10}}>
                   {tijdlijnItems(selectedKlant).length === 0 ? (
                     <div style={{fontSize:13,color:ADM.muted}}>Nog geen gebeurtenissen beschikbaar.</div>
                   ) : tijdlijnItems(selectedKlant).map((item, i) => (
                     <div key={item.id || i} style={{display:"flex",gap:12,alignItems:"flex-start",background:"rgba(255,255,255,0.03)",borderRadius:10,padding:"12px 14px"}}>
-                      <div style={{fontSize:18,lineHeight:1}}>{item.icon}</div>
+                      <div className="admin-klanten__timeline-mark" aria-hidden="true">{item.icon}</div>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap"}}>
                           <div style={{fontSize:14,fontWeight:700,color:ADM.white}}>{item.titel}</div>
@@ -4461,7 +4573,7 @@ function PageKlanten() {
                               if (t) openRapportageVoorTraject(t);
                             }}
                               style={{background:"rgba(15,118,110,0.12)",color:ADM.teal,border:`1px solid rgba(15,118,110,0.26)`,borderRadius:8,padding:"6px 10px",fontSize:12,fontWeight:700,cursor:"pointer"}}>
-                              📄 Open rapportage
+                              Open rapportage
                             </button>
                           )}
                         </div>
@@ -4469,10 +4581,11 @@ function PageKlanten() {
                     </div>
                   ))}
                 </div>
+              </div>}
               </div>
             </>
           )}
-        </div>
+        </section>
       </div>
     </div>
   );
