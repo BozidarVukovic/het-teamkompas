@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
 import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities } from "../../lib/app/teamomgevingOpslag";
-import { valideerOmgeving, deelTekst } from "../../lib/app/teamomgeving";
+import { valideerOmgeving, deelTekst, maakBronPakket } from "../../lib/app/teamomgeving";
 import "../../styles/teamomgeving.css";
 
 // Geen HTML, afbeeldingen of externe links uit geïmporteerde inhoud uitvoeren.
@@ -94,6 +94,19 @@ function Omgeving({ team, uid, leden, magInrichten }) {
     } catch (err) { setMelding(err.message || "Downloaden is niet gelukt. Probeer opnieuw."); }
     finally { setBezig(""); }
   }
+  // Alleen de twee begeleiders komen op dit tabblad, en het bestand wordt in de
+  // browser zelf gemaakt: er gaat niets naar een server.
+  function exporteerBron() {
+    setMelding("");
+    try {
+      const tekst = JSON.stringify(maakBronPakket(omgeving), null, 2);
+      const url = URL.createObjectURL(new Blob([tekst], { type: "application/json" }));
+      const a = document.createElement("a"); a.href = url; a.download = "teamomgeving-brontekst.json"; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      setMelding("De brontekst is gedownload.");
+    } catch (err) { setMelding(err.message || "De brontekst kon niet worden klaargezet."); }
+  }
+
   async function bewaar() {
     setBezig("notities"); setMelding("");
     try { await bewaarOmgevingNotities(team, notities); setMelding("Bespreeknotities opgeslagen. Alleen de twee aangewezen begeleiders kunnen ze lezen."); }
@@ -109,7 +122,7 @@ function Omgeving({ team, uid, leden, magInrichten }) {
     <nav className="to-tabs" aria-label="Teamomgeving"><div>{omgeving.inhoud.onderdelen.map((d) => <button key={d.id} aria-current={tab === d.id ? "page" : undefined} onClick={() => { setTab(d.id); setMelding(""); }}>{d.titel}</button>)}<button aria-current={tab === "documenten" ? "page" : undefined} onClick={() => setTab("documenten")}>Documenten</button>{omgeving.magBeheer && <button aria-current={tab === "beheer" ? "page" : undefined} onClick={() => setTab("beheer")}>Beheer</button>}</div></nav>
     {deel && <article className="tk-kaart to-tekst"><h2>{deel.titel}</h2><Tekst>{deel.tekst}</Tekst>{deel.id === "afspraken" && <Link className="tk-knop" to="/app/team">Gedeelde teamafspraken bekijken en bijwerken</Link>}{deel.id === "experimenten" && <Link className="tk-knop" to="/app/ik">Mijn experimenten in de app</Link>}</article>}
     {tab === "documenten" && <section className="to-sectie"><h2>Documenten &amp; terugblik</h2><div className="to-documenten">{omgeving.inhoud.documenten.map((d) => <article className="tk-kaart to-doc" key={d.id}><p className="to-eyebrow">Teamdocument · PDF</p><h3>{d.titel}</h3><p>{d.beschrijving}</p><button className="tk-knop tk-knop-rand" disabled={!!bezig} onClick={() => download(d)}>{bezig === d.id ? "Pdf controleren…" : "Pdf downloaden"}</button></article>)}</div><div className="tk-kaart to-tekst"><Tekst>{omgeving.inhoud.documentContext}</Tekst></div></section>}
-    {tab === "beheer" && omgeving.magBeheer && <section className="tk-kaart to-tekst"><h2>Beheer & bespreking</h2><p className="to-privacy">Alleen zichtbaar voor de twee aangewezen begeleiders. Andere teamleden kunnen deze inhoud ook niet rechtstreeks opvragen.</p><Tekst>{omgeving.beheer?.tekst}</Tekst><div className="to-beheer-invoer"><label className="tk-label" htmlFor="bespreeknotities">Bespreeknotities</label><textarea className="tk-tekstvak" id="bespreeknotities" maxLength={20000} rows={8} value={notities} onChange={(e) => setNotities(e.target.value)} /><button className="tk-knop" disabled={!!bezig} onClick={bewaar}>{bezig === "notities" ? "Opslaan…" : "Notities opslaan"}</button></div></section>}
+    {tab === "beheer" && omgeving.magBeheer && <section className="tk-kaart to-tekst"><h2>Beheer & bespreking</h2><p className="to-privacy">Alleen zichtbaar voor de twee aangewezen begeleiders. Andere teamleden kunnen deze inhoud ook niet rechtstreeks opvragen.</p><Tekst>{omgeving.beheer?.tekst}</Tekst><div className="to-bronexport"><button className="tk-knop tk-knop-rand" onClick={exporteerBron}>Brontekst downloaden</button><p>De teksten van alle onderdelen zoals ze in het pakket staan, om na te lezen of te verbeteren. Zonder de bespreeknotities en zonder de pdf&apos;s. Dit bestand bevat teaminhoud: bewaar het net zo zorgvuldig als de rest.</p></div><div className="to-beheer-invoer"><label className="tk-label" htmlFor="bespreeknotities">Bespreeknotities</label><textarea className="tk-tekstvak" id="bespreeknotities" maxLength={20000} rows={8} value={notities} onChange={(e) => setNotities(e.target.value)} /><button className="tk-knop" disabled={!!bezig} onClick={bewaar}>{bezig === "notities" ? "Opslaan…" : "Notities opslaan"}</button></div></section>}
     {melding && <p role="status">{melding}</p>}
   </>;
 }

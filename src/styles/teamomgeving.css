@@ -516,6 +516,20 @@
   line-height: 1.6;
 }
 
+.to-bronexport {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.to-bronexport p {
+  margin: 10px 0 0;
+  max-width: 62ch;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.6;
+}
+
 .to-beheer-invoer {
   margin-top: 22px;
   padding-top: 20px;

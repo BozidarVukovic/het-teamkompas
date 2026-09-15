@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst, deelTekst } from '../src/lib/app/teamomgeving.js';
+import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst, deelTekst, maakBronPakket } from '../src/lib/app/teamomgeving.js';
 import { createHash } from 'node:crypto';
 const geldig = () => ({ versie:1, inhoud:{titel:'Testteam',onderdelen:[{id:'overzicht',titel:'Overzicht',tekst:'Alleen teamleden'}]},beheer:{tekst:'Apart'},bestanden:[] });
 test('geldige teamomgeving wordt geaccepteerd', () => assert.equal(valideerOmgeving(geldig()).versie,1));
@@ -158,4 +158,38 @@ test('een tabel met pijpen mag twee kolommen hebben', () => {
 test('twee kolommen met een punt blijven gewone tekst', () => {
   const zinnen = 'Volgende teamdag \u00b7 8 oktober 2026\n\nVorige teamdag \u00b7 4 juni 2026';
   assert.deepEqual(deelTekst(zinnen).map((d) => d.soort), ['tekst']);
+});
+
+const geladen = () => ({
+  inhoud: {
+    titel: 'Testteam',
+    intro: 'Een zin.',
+    onderdelen: [{ id: 'overzicht', titel: 'Overzicht', tekst: 'Onze aandacht' }],
+    documentContext: 'Context.',
+    documenten: [{ id: 'handleiding', titel: 'Handleiding', naam: 'h.pdf', beschrijving: 'Kort', sha256: 'a'.repeat(64), delen: 2 }],
+    aangemaaktOp: { seconds: 1, nanoseconds: 0 },
+  },
+  magBeheer: true,
+  beheer: { tekst: 'Alleen voor begeleiders', notities: 'Wat ik in het gesprek zag' },
+});
+
+test('de brontekst komt eruit als een geldig pakket', () => {
+  const pakket = maakBronPakket(geladen());
+  assert.equal(valideerOmgeving(pakket).versie, 1);
+  assert.equal(pakket.inhoud.onderdelen[0].tekst, 'Onze aandacht');
+  assert.equal(pakket.beheer.tekst, 'Alleen voor begeleiders');
+  assert.equal(pakket.inhoud.documentContext, 'Context.');
+});
+
+test('bespreeknotities en pdfinhoud gaan niet mee in de export', () => {
+  const pakket = maakBronPakket(geladen());
+  assert.equal(pakket.beheer.notities, undefined);
+  assert.deepEqual(pakket.bestanden, []);
+  assert.equal(pakket.inhoud.documenten[0].sha256, undefined);
+  assert.ok(!JSON.stringify(pakket).includes('Wat ik in het gesprek zag'));
+});
+
+test('exporteren zonder omgeving geeft een nette fout', () => {
+  assert.throws(() => maakBronPakket(null));
+  assert.throws(() => maakBronPakket({ inhoud: {} }));
 });

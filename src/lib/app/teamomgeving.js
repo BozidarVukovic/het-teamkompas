@@ -158,6 +158,34 @@ export function deelTekst(tekst) {
   return delen;
 }
 
+// De brontekst terug uit de opslag.
+//
+// Na de import leeft de tekst van een teamomgeving alleen nog in Firestore.
+// Wie hem wil corrigeren -- een kop die als alinea is geschreven, een tabel die
+// als losse regels is getypt -- kan er niet meer bij. Deze functie zet wat het
+// scherm al heeft geladen terug in de vorm van een pakket, zodat de begeleider
+// het kan nalezen, verbeteren en als nieuw pakket aanleveren.
+//
+// Wat er bewust niet in gaat: de bespreeknotities (die zijn van de begeleiders
+// zelf en horen niet in een inhoudsbestand) en de pdf's (die staan al apart en
+// zijn met hun sha256 te herkennen). Het resultaat is verder een geldig pakket.
+export function maakBronPakket(omgeving) {
+  const inhoud = omgeving && omgeving.inhoud;
+  if (!inhoud || !Array.isArray(inhoud.onderdelen)) throw new Error("Er is geen teamomgeving om te exporteren.");
+  return {
+    versie: OMGEVING_VERSIE,
+    inhoud: {
+      titel: inhoud.titel || "",
+      intro: inhoud.intro || "",
+      onderdelen: inhoud.onderdelen.map((d) => ({ id: d.id, titel: d.titel, tekst: d.tekst })),
+      documentContext: inhoud.documentContext || "",
+      documenten: (inhoud.documenten || []).map((d) => ({ id: d.id, titel: d.titel, naam: d.naam, beschrijving: d.beschrijving || "" })),
+    },
+    beheer: { tekst: (omgeving.beheer && omgeving.beheer.tekst) || "" },
+    bestanden: [],
+  };
+}
+
 export function splitsBestand(base64) {
   return Array.from({ length: Math.ceil(base64.length / DEEL_GROOTTE) }, (_, i) => base64.slice(i * DEEL_GROOTTE, (i + 1) * DEEL_GROOTTE));
 }

@@ -20,6 +20,12 @@ Onder `organisaties/{orgId}/teams/{teamId}`:
   base64-tekens. Alleen teamleden lezen; geen publieke assets of downloadtokens.
   SHA-256 wordt vóór import én vóór downloaden gecontroleerd.
 
+Op het beheertabblad kunnen de twee begeleiders de brontekst downloaden: een
+pakketbestand met de teksten van alle onderdelen, zonder de bespreeknotities en
+zonder de pdf's. Het bestand wordt in de browser zelf gemaakt. Zo blijft een
+correctie op de brontekst mogelijk zonder dat iemand in de opslag hoeft te
+kijken. Het bevat echte teaminhoud en hoort dus niet in versiebeheer.
+
 De import is één batch met onveranderlijke toegang en inhoud: herhaalde import
 kan niets overschrijven. Alleen de bespreeknotities kunnen daarna in de app worden
 bijgewerkt. Een latere broninhoudwijziging of wisseling van begeleider vereist een
