@@ -1,21 +1,375 @@
-.to-omgeving { max-width: 1100px; }
-.to-intro { margin: 28px 0; padding: 32px; border-radius: 18px; background: #153f42; color: #fff; }
-.to-intro h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.15; margin: 12px 0; color: inherit; }
-.to-intro p { max-width: 65ch; color: #d4e6e2; }
-.to-label { text-transform: uppercase; letter-spacing: .1em; font-size: .72rem; font-weight: 700; }
-.to-tabs { margin: 0 0 24px; }
-.to-tabs>div { display: flex; flex-wrap: wrap; gap: 8px; }
-.to-tabs button { background: #f3f5f2; color: #153f42; border: 1px solid #d6dfd9; border-radius: 24px; padding: 10px 16px; font: inherit; cursor: pointer; }
-.to-tabs button[aria-current] { background: #153f42; color: white; }
-.to-tabs button:focus-visible, .to-omgeving input:focus-visible, .to-omgeving textarea:focus-visible, .to-omgeving select:focus-visible { outline: 3px solid #dcaa56; outline-offset: 3px; }
-.to-tekst { line-height: 1.7; }
-.to-tekst h3 { margin-top: 28px; }
-.to-tekst ul,.to-tekst ol { padding-left: 24px; }
-.to-tekst li { margin: 8px 0; }
-.to-tekst blockquote,.to-privacy { padding: 16px 20px; border-left: 4px solid #cfa35b; background: #faf6ed; margin: 20px 0; }
-.to-documenten { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 18px; }
-.to-omgeving textarea,.to-inrichten select { display: block; width: 100%; border: 1px solid #9baaa4; border-radius: 8px; padding: 12px; margin: 8px 0 16px; font: inherit; box-sizing: border-box; }
-.to-inrichten label { display: block; margin: 20px 0; }
-.to-inrichten input[type=file] { display: block; margin: 10px 0; max-width: 100%; }
-.to-inrichten .to-akkoord { display: flex; gap: 12px; align-items: flex-start; }
-@media(max-width:600px) { .to-intro { padding: 24px 20px; } .to-tabs button { padding: 9px 12px; font-size: .9rem; } }
+/* De besloten teamomgeving.
+ *
+ * Dit scherm kwam binnen met een eigen kleurenset: een donkergroenblauwe balk
+ * (#153f42), goudkleurige accenten (#dcaa56, #cfa35b) en groengrijze randen —
+ * kleuren die nergens anders in de app voorkomen. Daardoor oogde het als een
+ * pagina uit een ander product, ook al klopte er inhoudelijk niets aan mis.
+ *
+ * Hier staat nu geen enkele losse kleur meer. Alles komt uit de tokens van
+ * app.css, en waar de app al een onderdeel heeft (kaart, invoerveld, tekstvak,
+ * keuzevakje, knop) gebruikt dit scherm dat onderdeel in plaats van een eigen
+ * variant. Wat overblijft is opmaak die alleen hier voorkomt: de tabbladen, het
+ * documentenraster en de typografie van geïmporteerde markdown.
+ */
+
+/* De breedte was 1100 terwijl elk ander scherm op 880 staat. Dat is het soort
+   verschil dat je niet als breedte ziet maar als "het loopt niet lekker": de
+   kop begint op een andere plek dan op het scherm ervoor. */
+.to-omgeving {
+  padding-bottom: 8px;
+}
+
+/* ------------------------------------------------------------------- terug */
+
+.to-terug {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  margin-bottom: 18px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .to-terug:hover {
+    color: var(--tk-tekst);
+  }
+}
+
+/* -------------------------------------------------------------------- kop */
+
+/* Geen gekleurde balk. De titel van een pagina heeft geen vlak nodig om een
+   titel te zijn, en een donker blok bovenaan een licht scherm trekt de
+   aandacht naar de omlijsting in plaats van naar wat er staat. Dezelfde
+   opbouw als elk ander scherm: kopregel, titel, één zin eronder. */
+.to-kop {
+  margin-bottom: 26px;
+}
+
+.to-eyebrow {
+  margin: 0 0 8px;
+  color: var(--tk-teal);
+  font-size: var(--tk-t-fijn);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.to-kop .tk-onderkop {
+  max-width: 62ch;
+  margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------- tabbladen */
+
+/* Dezelfde vorm als het menu bovenin: pil, doorzichtig, actief met een tealtint
+   en een tealrand. Zo leest de app als één ding in plaats van als twee lagen
+   navigatie met elk hun eigen stijl.
+
+   Schuiven in plaats van afbreken: bij zeven tabbladen op een telefoon wordt
+   een wrappende rij een rommelig blok van twee of drie regels met gaten. */
+.to-tabs {
+  margin: 0 0 22px;
+}
+
+.to-tabs > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Onder de 640 past een rij van zes nooit, en dan is omlopen erger dan
+   schuiven: je krijgt drie regels met gaten erin. */
+@media (max-width: 640px) {
+  .to-tabs > div {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 2px 2px 8px;
+    margin: -2px -2px -8px;
+    scrollbar-width: none;
+  }
+
+  .to-tabs > div::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.to-tabs button {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 8px 15px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tk-zacht);
+  font: inherit;
+  font-size: var(--tk-t-basis);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--tk-vlot) var(--tk-soepel),
+    background var(--tk-vlot) var(--tk-soepel);
+}
+
+@media (hover: hover) {
+  .to-tabs button:hover {
+    color: var(--tk-tekst);
+  }
+}
+
+.to-tabs button[aria-current] {
+  color: var(--tk-tekst);
+  background: var(--tk-teal-dim);
+  border-color: rgba(0, 121, 107, 0.45);
+}
+
+/* --------------------------------------------------------------- inhoud */
+
+.to-sectie {
+  margin-bottom: 16px;
+}
+
+.to-sectie > h2 {
+  margin: 0 0 12px 4px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-fijn);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Geïmporteerde markdown. Eén ritme voor koppen, alinea's en lijsten, zodat
+   twee onderdelen van verschillende lengte er hetzelfde uitzien. */
+.to-tekst {
+  padding: 24px;
+}
+
+.to-tekst > h2 {
+  margin: 0 0 14px;
+  font-size: var(--tk-t-sectie);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.to-tekst h3 {
+  margin: 26px 0 8px;
+  font-size: var(--tk-t-kop);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.to-tekst h4 {
+  margin: 20px 0 6px;
+  font-size: var(--tk-t-lead);
+  font-weight: 700;
+}
+
+.to-tekst p {
+  margin: 0 0 14px;
+  max-width: 68ch;
+  line-height: 1.75;
+}
+
+.to-tekst > *:last-child {
+  margin-bottom: 0;
+}
+
+.to-tekst ul,
+.to-tekst ol {
+  margin: 0 0 14px;
+  padding-left: 22px;
+  max-width: 68ch;
+}
+
+.to-tekst li {
+  margin: 0 0 8px;
+  line-height: 1.7;
+}
+
+.to-tekst li:last-child {
+  margin-bottom: 0;
+}
+
+.to-tekst strong {
+  font-weight: 700;
+}
+
+/* Zelfde vorm als het citaat in een advies: een tealstreep links, verder niets.
+   Het gouden kader dat hier stond was het enige gouden element in de app. */
+.to-tekst blockquote {
+  margin: 18px 0;
+  padding: 6px 0 6px 16px;
+  border-left: 3px solid var(--tk-teal);
+  color: var(--tk-zacht);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+.to-tekst blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.to-tekst hr {
+  margin: 26px 0;
+  border: 0;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.to-tekst code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--tk-navy);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.92em;
+}
+
+/* Een knop na een stuk tekst hoort lucht te hebben en niet tegen de laatste
+   regel aan te plakken. */
+.to-tekst .tk-knop {
+  margin-top: 18px;
+}
+
+/* ------------------------------------------------------------- documenten */
+
+/* Gelijke hoogte, en de knop onderaan uitgelijnd. Zonder dat laatste eindigt
+   elke kaart op een andere hoogte — afhankelijk van hoe lang de beschrijving
+   is — en dat is precies wat een raster onrustig maakt. */
+.to-documenten {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.to-doc {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+  padding: 20px;
+}
+
+.to-doc .to-eyebrow {
+  color: var(--tk-zacht);
+}
+
+.to-doc h3 {
+  margin: 0 0 6px;
+  font-size: var(--tk-t-kop);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.to-doc p {
+  margin: 0 0 18px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.6;
+}
+
+.to-doc .tk-knop {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+/* ----------------------------------------------------------------- beheer */
+
+/* De regel die zegt wie dit kan lezen. Zelfde vorm als een melding in de app:
+   een zacht tealvlak, geen kader met een eigen kleur. */
+.to-privacy {
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--tk-teal-dim);
+  color: var(--tk-tekst);
+  font-size: var(--tk-t-klein);
+  line-height: 1.6;
+}
+
+.to-beheer-invoer {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.to-beheer-invoer .tk-tekstvak {
+  margin-bottom: 14px;
+}
+
+/* --------------------------------------------------------------- inrichten */
+
+.to-inrichten .tk-label {
+  margin-top: 20px;
+}
+
+.to-inrichten .tk-label:first-of-type {
+  margin-top: 16px;
+}
+
+.to-inrichten input[type="file"] {
+  display: block;
+  width: 100%;
+  margin: 0;
+  font-size: var(--tk-t-klein);
+  color: var(--tk-zacht);
+}
+
+.to-inrichten .tk-invoer {
+  margin-bottom: 4px;
+}
+
+.to-pakket {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--tk-navy);
+  border: 1px solid var(--tk-lijn);
+}
+
+.to-pakket strong {
+  display: block;
+  font-size: var(--tk-t-lead);
+  line-height: 1.35;
+}
+
+.to-pakket span {
+  display: block;
+  margin-top: 3px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+}
+
+.to-akkoord {
+  margin: 20px 0 18px;
+}
+
+/* --------------------------------------------------------------- meldingen */
+
+.to-omgeving [role="alert"] {
+  margin: 14px 0 0;
+  color: var(--tk-rood);
+  font-size: var(--tk-t-klein);
+  line-height: 1.6;
+}
+
+.to-omgeving > [role="status"],
+.to-omgeving p[role="status"] {
+  margin: 14px 0 0;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+}
+
+/* ------------------------------------------------------------ smal scherm */
+
+@media (max-width: 600px) {
+  .to-tekst,
+  .to-doc {
+    padding: 18px;
+  }
+
+  .to-documenten {
+    grid-template-columns: 1fr;
+  }
+}
