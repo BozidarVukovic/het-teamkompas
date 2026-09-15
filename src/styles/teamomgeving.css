@@ -173,24 +173,114 @@
   line-height: 1.75;
 }
 
+/* De eerste regel onder de titel is de inleiding van het onderdeel, geen gewone
+   alinea. Iets stiller gezet scheelt een leesmoment: je ziet in één oogopslag
+   waar de titel ophoudt en de inhoud begint. */
+.to-tekst > h2 + p {
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-lead);
+  line-height: 1.6;
+}
+
 .to-tekst > *:last-child {
   margin-bottom: 0;
 }
 
-.to-tekst ul,
-.to-tekst ol {
+.to-tekst ul {
   margin: 0 0 14px;
   padding-left: 22px;
   max-width: 68ch;
 }
 
-.to-tekst li {
+.to-tekst ul li {
   margin: 0 0 8px;
   line-height: 1.7;
 }
 
-.to-tekst li:last-child {
+.to-tekst ul li:last-child {
   margin-bottom: 0;
+}
+
+/* Een genummerde lijst is bijna nooit "tekst met cijfers ervoor": het zijn
+   afzonderlijke afspraken, acties of vragen, elk met een eigen stand van zaken.
+   Dus geen ingesprongen alinea's met een cijfer ervoor, maar echte regels: het
+   nummer in een eigen plaatje links, de kop op zijn eigen gewicht, en wat er
+   verder in het item staat eronder in de stillere tekstkleur.
+
+   De haarlijn ertussen doet het werk dat witruimte alleen niet kan doen — hij
+   laat zien waar het ene item ophoudt en het volgende begint, ook als de kop
+   over twee regels loopt. */
+.to-tekst ol {
+  counter-reset: to-stap;
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.to-tekst ol > li {
+  counter-increment: to-stap;
+  position: relative;
+  padding: 14px 0 14px 42px;
+  border-top: 1px solid var(--tk-lijn);
+  line-height: 1.6;
+}
+
+.to-tekst ol > li:first-child {
+  border-top: 0;
+  padding-top: 2px;
+}
+
+.to-tekst ol > li:last-child {
+  padding-bottom: 2px;
+}
+
+.to-tekst ol > li::before {
+  content: counter(to-stap);
+  position: absolute;
+  left: 0;
+  top: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--tk-teal-dim);
+  color: var(--tk-teal);
+  font-size: var(--tk-t-fijn);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.to-tekst ol > li:first-child::before {
+  top: 1px;
+}
+
+/* De eerste alinea van een item is de actie zelf; alles daarna is toelichting.
+   Zonder dat verschil lezen kop en stand van zaken als twee losse regels. */
+.to-tekst ol > li > p {
+  margin: 0;
+  max-width: 58ch;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.to-tekst ol > li > p ~ p,
+.to-tekst ol > li > ul {
+  margin: 5px 0 0;
+  max-width: 64ch;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.to-tekst ol > li > ul {
+  padding-left: 18px;
+}
+
+.to-tekst ol ol {
+  margin: 8px 0 0;
 }
 
 .to-tekst strong {

@@ -4,12 +4,12 @@ import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
 import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities } from "../../lib/app/teamomgevingOpslag";
-import { valideerOmgeving } from "../../lib/app/teamomgeving";
+import { valideerOmgeving, normaliseerTekst } from "../../lib/app/teamomgeving";
 import "../../styles/teamomgeving.css";
 
 // Geen HTML, afbeeldingen of externe links uit geïmporteerde inhoud uitvoeren.
 function Tekst({ children }) {
-  return <ReactMarkdown skipHtml disallowedElements={["img", "a"]} unwrapDisallowed>{children || ""}</ReactMarkdown>;
+  return <ReactMarkdown skipHtml disallowedElements={["img", "a"]} unwrapDisallowed>{normaliseerTekst(children)}</ReactMarkdown>;
 }
 
 function Inrichten({ team, uid, leden, herladen }) {
