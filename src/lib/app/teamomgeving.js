@@ -45,12 +45,24 @@ export function valideerOmgeving(pakket) {
 // Er verandert niets aan de woorden: alleen de blokindeling. Herkent de functie
 // het patroon niet, dan gaat de tekst ongewijzigd door -- een brontekst die al
 // een echte genummerde lijst gebruikt, raakt dit dus niet aan.
+const REGELEINDE = /<br\s*\/?>/gi;
+const HTML_LABEL = /<\/?(?:a|abbr|b|big|br|cite|code|dd|div|dl|dt|em|h[1-6]|hr|i|li|ol|p|pre|q|s|small|span|strong|sub|sup|table|tbody|td|tfoot|th|thead|tr|u|ul)\b[^>]*>/gi;
+const CODEHEK = /^\s{0,3}(```|~~~)/;
 const LOS_NUMMER = /^\s{0,3}(\d{1,2})[.)]?\s*$/;
 const BLOKGRENS = /^\s{0,3}(#{1,6}\s|[-*+]\s|\d{1,9}[.)]\s|>\s|---|___|\*\*\*|\|)/;
 
+function zonderHtml(regel) {
+  return regel.replace(REGELEINDE, "  \n").replace(HTML_LABEL, " ").replace(/[ \t]{2,}(?!\n)/g, " ");
+}
+
 export function normaliseerTekst(tekst) {
   if (typeof tekst !== "string" || !tekst.trim()) return "";
-  const blokken = tekst.replace(/\r\n?/g, "\n").split(/\n{2,}/);
+  let inCode = false;
+  const schoon = tekst.replace(/\r\n?/g, "\n").split("\n").map((regel) => {
+    if (CODEHEK.test(regel)) { inCode = !inCode; return regel; }
+    return inCode ? regel : zonderHtml(regel);
+  }).join("\n");
+  const blokken = schoon.split(/\n{2,}/);
   const uit = [];
   for (let i = 0; i < blokken.length; i += 1) {
     const nummer = LOS_NUMMER.exec(blokken[i]);
@@ -69,6 +81,57 @@ export function normaliseerTekst(tekst) {
     uit.push([nummer[1] + ". " + inhoud[0], ...vervolg].join("\n\n"));
   }
   return uit.join("\n\n");
+}
+
+// Tabellen die als gewone regels zijn opgeschreven.
+//
+// In de brontekst staat een programma of een tijdlijn soms als losse alinea's
+// met een punt ertussen, inclusief een punt aan het eind van de regel:
+//
+//     Tijd · Onderdeel · Inhoud ·
+//     08.45-09.15 · Opening en terugblik · Wat hebben we geleerd? ·
+//
+// Op het scherm is dat geen tabel maar een rij zinnen: de kopregel ziet er
+// precies zo uit als de gegevens eronder, en wie iets zoekt moet elke regel
+// helemaal lezen. De woorden kloppen; alleen de vorm ontbreekt.
+//
+// deelTekst() haalt die blokken eruit en geeft ze terug als kop en rijen, zodat
+// het scherm er een echte tabel van kan maken. De voorwaarden zijn streng: twee
+// of meer opeenvolgende alinea's, elk met minstens twee scheidingstekens en
+// allemaal met evenveel kolommen. Een gewone zin met één punt erin -- "Volgende
+// teamdag · 8 oktober 2026" -- blijft dus gewoon een zin.
+const SCHEIDING = /\s+[·|]\s+|\s+[·|]\s*$/;
+
+function alsRij(blok) {
+  if (blok.includes("\n") || /^\s{0,3}([#>*+-]|\d{1,9}[.)])\s/.test(blok)) return null;
+  const cellen = blok.trim().replace(/\s*[·|]\s*$/, "").split(SCHEIDING).map((c) => c.trim());
+  return cellen.length >= 3 && cellen.every(Boolean) ? cellen : null;
+}
+
+export function deelTekst(tekst) {
+  const blokken = normaliseerTekst(tekst).split(/\n{2,}/);
+  const delen = [];
+  const tekstBlok = (blok) => {
+    const vorige = delen[delen.length - 1];
+    if (vorige && vorige.soort === "tekst") vorige.tekst += "\n\n" + blok;
+    else delen.push({ soort: "tekst", tekst: blok });
+  };
+  for (let i = 0; i < blokken.length; i += 1) {
+    const eerste = alsRij(blokken[i]);
+    const rijen = eerste ? [eerste] : [];
+    let j = i + 1;
+    while (eerste && j < blokken.length) {
+      const volgende = alsRij(blokken[j]);
+      if (!volgende || volgende.length !== eerste.length) break;
+      rijen.push(volgende);
+      j += 1;
+    }
+    if (rijen.length >= 2) {
+      delen.push({ soort: "tabel", kop: rijen[0], rijen: rijen.slice(1) });
+      i = j - 1;
+    } else tekstBlok(blokken[i]);
+  }
+  return delen;
 }
 
 export function splitsBestand(base64) {

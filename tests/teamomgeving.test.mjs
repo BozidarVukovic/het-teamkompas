@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst } from '../src/lib/app/teamomgeving.js';
+import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst, deelTekst } from '../src/lib/app/teamomgeving.js';
 import { createHash } from 'node:crypto';
 const geldig = () => ({ versie:1, inhoud:{titel:'Testteam',onderdelen:[{id:'overzicht',titel:'Overzicht',tekst:'Alleen teamleden'}]},beheer:{tekst:'Apart'},bestanden:[] });
 test('geldige teamomgeving wordt geaccepteerd', () => assert.equal(valideerOmgeving(geldig()).versie,1));
@@ -80,4 +80,59 @@ test('lege of ontbrekende tekst geeft een lege string', () => {
   assert.equal(normaliseerTekst(''), '');
   assert.equal(normaliseerTekst(undefined), '');
   assert.equal(normaliseerTekst(null), '');
+});
+
+// Een programma dat als losse regels met een punt ertussen is opgeschreven.
+const PROGRAMMA = [
+  'Overgenomen uit het opdrachtgeversvoorstel.',
+  '',
+  'Tijd \u00b7 Onderdeel \u00b7 Inhoud \u00b7',
+  '',
+  '08.45\u201309.15 \u00b7 Opening en terugblik \u00b7 Waar staan de vier opdrachten? \u00b7',
+  '',
+  '12.00\u201312.30 \u00b7 Lunch \u00b7 Pauze \u00b7',
+  '',
+  'Drie routes voor knelpunten',
+].join('\n');
+
+test('een tabel die als tekst is getypt wordt weer een tabel', () => {
+  const delen = deelTekst(PROGRAMMA);
+  assert.deepEqual(delen.map((d) => d.soort), ['tekst', 'tabel', 'tekst']);
+  assert.deepEqual(delen[1].kop, ['Tijd', 'Onderdeel', 'Inhoud']);
+  assert.equal(delen[1].rijen.length, 2);
+  assert.deepEqual(delen[1].rijen[1], ['12.00\u201312.30', 'Lunch', 'Pauze']);
+});
+
+test('elke rij heeft evenveel cellen als de kop', () => {
+  const { kop, rijen } = deelTekst(PROGRAMMA)[1];
+  assert.ok(rijen.every((r) => r.length === kop.length));
+});
+
+test('een losse zin met een punt erin blijft gewone tekst', () => {
+  const delen = deelTekst('Volgende teamdag \u00b7 8 oktober 2026\n\nWat belemmert ons?');
+  assert.deepEqual(delen.map((d) => d.soort), ['tekst']);
+});
+
+test('een enkele regel is nog geen tabel', () => {
+  const los = 'A \u00b7 B \u00b7 C\n\nGewone alinea.';
+  assert.deepEqual(deelTekst(los).map((d) => d.soort), ['tekst']);
+});
+
+test('een opsomming met punten erin wordt niet als tabel gelezen', () => {
+  const lijst = '- A \u00b7 B \u00b7 C\n- D \u00b7 E \u00b7 F';
+  assert.deepEqual(deelTekst(lijst).map((d) => d.soort), ['tekst']);
+});
+
+test('een weggelaten regeleinde plakt geen woorden aan elkaar', () => {
+  assert.equal(normaliseerTekst('Eerste teamdag<br>Afgerond'), 'Eerste teamdag  \nAfgerond');
+  assert.equal(normaliseerTekst('Tweede teamdag<br />Voorstel'), 'Tweede teamdag  \nVoorstel');
+});
+
+test('een ander weggelaten label laat een spatie achter', () => {
+  assert.equal(normaliseerTekst('<td>Eerste teamdag</td><td>Afgerond</td>').trim(), 'Eerste teamdag Afgerond');
+});
+
+test('een codeblok blijft ongemoeid', () => {
+  const code = '```\n<br>\n```';
+  assert.equal(normaliseerTekst(code), code);
 });

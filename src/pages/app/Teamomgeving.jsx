@@ -4,12 +4,27 @@ import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
 import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities } from "../../lib/app/teamomgevingOpslag";
-import { valideerOmgeving, normaliseerTekst } from "../../lib/app/teamomgeving";
+import { valideerOmgeving, deelTekst } from "../../lib/app/teamomgeving";
 import "../../styles/teamomgeving.css";
 
 // Geen HTML, afbeeldingen of externe links uit geïmporteerde inhoud uitvoeren.
+// Ook binnen een tabelcel gaat de tekst door dezelfde poort; er wordt alleen
+// bepaald waar een cel begint en eindigt, nooit wat erin mag.
+function Markdown({ children }) {
+  return <ReactMarkdown skipHtml disallowedElements={["img", "a"]} unwrapDisallowed>{children || ""}</ReactMarkdown>;
+}
+
+function Tabel({ kop, rijen }) {
+  return <div className="to-tabelwikkel"><table className="to-tabel">
+    <thead><tr>{kop.map((cel, i) => <th key={i} scope="col"><Markdown>{cel}</Markdown></th>)}</tr></thead>
+    <tbody>{rijen.map((rij, r) => <tr key={r}>{rij.map((cel, i) => <td key={i} data-kop={kop[i]}><Markdown>{cel}</Markdown></td>)}</tr>)}</tbody>
+  </table></div>;
+}
+
 function Tekst({ children }) {
-  return <ReactMarkdown skipHtml disallowedElements={["img", "a"]} unwrapDisallowed>{normaliseerTekst(children)}</ReactMarkdown>;
+  return deelTekst(children).map((deel, i) => deel.soort === "tabel"
+    ? <Tabel key={i} kop={deel.kop} rijen={deel.rijen} />
+    : <Markdown key={i}>{deel.tekst}</Markdown>);
 }
 
 function Inrichten({ team, uid, leden, herladen }) {
