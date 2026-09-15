@@ -22,9 +22,11 @@ function Tabel({ kop, rijen }) {
 }
 
 function Tekst({ children }) {
-  return deelTekst(children).map((deel, i) => deel.soort === "tabel"
-    ? <Tabel key={i} kop={deel.kop} rijen={deel.rijen} />
-    : <Markdown key={i}>{deel.tekst}</Markdown>);
+  return deelTekst(children).map((deel, i) => {
+    if (deel.soort === "tabel") return <Tabel key={i} kop={deel.kop} rijen={deel.rijen} />;
+    if (deel.soort === "bovenkopje") return <p className="to-eyebrow to-bovenkopje" key={i}>{deel.tekst}</p>;
+    return <Markdown key={i}>{deel.tekst}</Markdown>;
+  });
 }
 
 function Inrichten({ team, uid, leden, herladen }) {

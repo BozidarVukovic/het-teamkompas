@@ -136,3 +136,26 @@ test('een codeblok blijft ongemoeid', () => {
   const code = '```\n<br>\n```';
   assert.equal(normaliseerTekst(code), code);
 });
+
+test('een korte regel boven een kop wordt een bovenkopje', () => {
+  const delen = deelTekst('Slot.\n\nOnze aandacht\n\n### Vier acties uit juni\n\nTekst.');
+  assert.deepEqual(delen.map((d) => d.soort), ['tekst', 'bovenkopje', 'tekst']);
+  assert.equal(delen[1].tekst, 'Onze aandacht');
+});
+
+test('een gewone zin boven een kop blijft een zin', () => {
+  assert.deepEqual(deelTekst('Dit is een gewone zin die eindigt op een punt.\n\n## Kop').map((d) => d.soort), ['tekst']);
+  assert.deepEqual(deelTekst('Onze aandacht\n\nGeen kop hierna.').map((d) => d.soort), ['tekst']);
+});
+
+test('een tabel met pijpen mag twee kolommen hebben', () => {
+  const delen = deelTekst('| Wat | Wanneer |\n\n| --- | --- |\n\n| Teamdag | 8 oktober |\n\n| Terugblik | november |');
+  assert.equal(delen.length, 1);
+  assert.deepEqual(delen[0].kop, ['Wat', 'Wanneer']);
+  assert.equal(delen[0].rijen.length, 2);
+});
+
+test('twee kolommen met een punt blijven gewone tekst', () => {
+  const zinnen = 'Volgende teamdag \u00b7 8 oktober 2026\n\nVorige teamdag \u00b7 4 juni 2026';
+  assert.deepEqual(deelTekst(zinnen).map((d) => d.soort), ['tekst']);
+});

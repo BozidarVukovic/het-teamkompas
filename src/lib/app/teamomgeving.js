@@ -100,12 +100,31 @@ export function normaliseerTekst(tekst) {
 // of meer opeenvolgende alinea's, elk met minstens twee scheidingstekens en
 // allemaal met evenveel kolommen. Een gewone zin met één punt erin -- "Volgende
 // teamdag · 8 oktober 2026" -- blijft dus gewoon een zin.
-const SCHEIDING = /\s+[·|]\s+|\s+[·|]\s*$/;
+const SCHEIDING = /\s*[·|]\s*/;
+const STREEPRIJ = /^[\s:|-]+$/;
 
+// Met een liggend streepje als scheiding is twee kolommen al duidelijk genoeg;
+// met een punt vraagt dat om verwarring met een gewone zin ("Volgende teamdag ·
+// 8 oktober 2026"), dus daar zijn er minstens drie nodig.
 function alsRij(blok) {
   if (blok.includes("\n") || /^\s{0,3}([#>*+-]|\d{1,9}[.)])\s/.test(blok)) return null;
-  const cellen = blok.trim().replace(/\s*[·|]\s*$/, "").split(SCHEIDING).map((c) => c.trim());
-  return cellen.length >= 3 && cellen.every(Boolean) ? cellen : null;
+  const pijp = blok.includes("|");
+  const kaal = blok.trim().replace(/^[·|]\s*/, "").replace(/\s*[·|]$/, "");
+  if (STREEPRIJ.test(kaal)) return "streep";
+  const cellen = kaal.split(SCHEIDING).map((c) => c.trim());
+  return cellen.length >= (pijp ? 2 : 3) && cellen.every(Boolean) ? cellen : null;
+}
+
+// Een korte regel zonder eindpunt, vlak boven een kop, is geen alinea maar het
+// bovenkopje van die kop -- "Onze aandacht" boven "Vier acties uit juni". Als
+// gewone alinea ziet dat eruit als een zin die halverwege is afgebroken.
+const KOPJE = /^[^\s#>*+|·-][^\n]{0,46}$/;
+const EINDPUNT = /[.!?:;,]$/;
+
+function alsBovenkopje(blok, volgende) {
+  if (!volgende || !/^\s{0,3}#{2,4}\s/.test(volgende)) return null;
+  const regel = blok.trim();
+  return KOPJE.test(regel) && !EINDPUNT.test(regel) && regel.split(/\s+/).length <= 6 ? regel : null;
 }
 
 export function deelTekst(tekst) {
@@ -118,18 +137,23 @@ export function deelTekst(tekst) {
   };
   for (let i = 0; i < blokken.length; i += 1) {
     const eerste = alsRij(blokken[i]);
-    const rijen = eerste ? [eerste] : [];
+    const rijen = Array.isArray(eerste) ? [eerste] : [];
     let j = i + 1;
-    while (eerste && j < blokken.length) {
+    while (rijen.length && j < blokken.length) {
       const volgende = alsRij(blokken[j]);
-      if (!volgende || volgende.length !== eerste.length) break;
+      if (volgende === "streep") { j += 1; continue; }
+      if (!volgende || volgende.length !== rijen[0].length) break;
       rijen.push(volgende);
       j += 1;
     }
     if (rijen.length >= 2) {
       delen.push({ soort: "tabel", kop: rijen[0], rijen: rijen.slice(1) });
       i = j - 1;
-    } else tekstBlok(blokken[i]);
+      continue;
+    }
+    const bovenkopje = alsBovenkopje(blokken[i], blokken[i + 1]);
+    if (bovenkopje) delen.push({ soort: "bovenkopje", tekst: bovenkopje });
+    else tekstBlok(blokken[i]);
   }
   return delen;
 }

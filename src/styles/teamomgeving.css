@@ -322,6 +322,23 @@
   margin-top: 18px;
 }
 
+/* Het bovenkopje hoort bij de kop eronder: het neemt de ruimte erboven over,
+   zodat de twee als één blok lezen en niet als een losse regel plus een kop. */
+.to-bovenkopje {
+  margin: 28px 0 3px;
+  color: var(--tk-zacht);
+}
+
+.to-tekst > .to-bovenkopje:first-child {
+  margin-top: 0;
+}
+
+.to-bovenkopje + h2,
+.to-bovenkopje + h3,
+.to-bovenkopje + h4 {
+  margin-top: 0;
+}
+
 /* ------------------------------------------------------------------ tabel */
 
 /* Een tabel hoort te lezen als een tabel: de kop apart, de kolommen onder
