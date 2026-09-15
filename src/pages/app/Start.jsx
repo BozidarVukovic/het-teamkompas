@@ -25,6 +25,7 @@ import { bepaalVoortgang } from "../../lib/app/voortgang";
 import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
 import { uitgelichteAfspraak } from "../../lib/app/afspraken";
 import { initialen, korteNamen, voornaam } from "../../lib/app/naam";
+import TeamomgevingLink from "../../components/app/TeamomgevingLink";
 
 /** Een collega als bol met een naam eronder. Eén tik en je bent bij het advies. */
 function Mens({ naar, ini, label, onder, gestippeld = false }) {
@@ -83,6 +84,8 @@ export default function Start() {
     <div className="tk-inhoud">
       <h1 className="tk-kop">Hallo {voornaam(naam, "daar")}</h1>
       <p className="tk-onderkop">Waarmee kunnen we je vandaag helpen?</p>
+
+      <TeamomgevingLink />
 
       {uitnodigingscode && (
         <div className="tk-kaart tk-kaart-klaar">

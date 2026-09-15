@@ -15,7 +15,7 @@
     "valideer:teamscan": "node scripts/valideer-teamscan.mjs",
     "valideer:teamdag": "node scripts/valideer-teamdag.mjs",
     "test:teamdag": "node --test tests/teamdagGenerator.test.mjs",
-    "test:regels": "npx -y firebase-tools@13 emulators:exec --only firestore --project teamkompas-regeltest \"node --test tests/securityRules.test.mjs\"",
+    "test:regels": "npx -y firebase-tools@13 emulators:exec --only firestore --project teamkompas-regeltest \"node --test tests/securityRules.test.mjs tests/teamomgevingRules.test.mjs\"",
     "test:app": "node --test tests/adviesApp.test.mjs",
     "valideer:regels": "node scripts/valideer-regels.mjs",
     "test:insights": "node --test tests/insightsPdf.test.mjs",

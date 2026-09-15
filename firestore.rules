@@ -176,6 +176,47 @@ service cloud.firestore {
         && resource.data.eigenaar == request.auth.uid;
 
       match /teams/{teamId} {
+        // Apart van het teamdocument: gewone teambeheerders krijgen niet
+        // automatisch toegang tot de bespreeknotities van de begeleiders.
+        function omgevingsbeheer() {
+          return isTeamlid(orgId, teamId)
+            && request.auth.uid in getAfter(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/teamomgeving/toegang).data.beheerders;
+        }
+
+        match /teamomgeving/{onderdeel} {
+          allow get: if isTeamlid(orgId, teamId)
+            && (onderdeel in ['toegang', 'inhoud'] || (onderdeel == 'beheer' && omgevingsbeheer()));
+          allow list: if false;
+          // Eénmalige inrichting. De lijst kan niet vanuit de client worden
+          // uitgebreid, overschreven of verwijderd, ook niet door een beheerder.
+          allow create: if onderdeel == 'toegang' && isTeambeheerder(orgId, teamId)
+            && request.resource.data.keys().hasOnly(['beheerders', 'aangemaaktDoor', 'versie'])
+            && request.resource.data.versie == 1
+            && request.resource.data.aangemaaktDoor == request.auth.uid
+            && request.resource.data.beheerders is list
+            && request.resource.data.beheerders.size() == 2
+            && request.resource.data.beheerders[0] == request.auth.uid
+            && request.resource.data.beheerders[1] is string
+            && request.resource.data.beheerders[1] != request.auth.uid
+            && exists(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/leden/$(request.resource.data.beheerders[1]));
+          allow create: if onderdeel in ['inhoud', 'beheer'] && omgevingsbeheer();
+          allow update: if onderdeel == 'beheer' && omgevingsbeheer()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['notities', 'bijgewerktOp'])
+            && request.resource.data.notities is string
+            && request.resource.data.notities.size() <= 20000
+            && request.resource.data.bijgewerktOp == request.time;
+        }
+
+        // Pdfs blijven in de bestaande beveiligde database, nooit als publieke
+        // sitebestanden of langlevende downloadlinks. Delen blijven onder 1 MiB.
+        match /teamomgevingBestanden/{bestandId}/delen/{deelId} {
+          allow read: if isTeamlid(orgId, teamId);
+          allow create: if omgevingsbeheer()
+            && request.resource.data.keys().hasOnly(['data'])
+            && request.resource.data.data is string
+            && request.resource.data.data.size() <= 600000;
+        }
+
         allow get: if isTeamlid(orgId, teamId);
         allow list: if false;
         allow create: if magTeamsMaken()

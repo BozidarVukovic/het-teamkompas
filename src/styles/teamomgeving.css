@@ -1,0 +1,21 @@
+.to-omgeving { max-width: 1100px; }
+.to-intro { margin: 28px 0; padding: 32px; border-radius: 18px; background: #153f42; color: #fff; }
+.to-intro h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.15; margin: 12px 0; color: inherit; }
+.to-intro p { max-width: 65ch; color: #d4e6e2; }
+.to-label { text-transform: uppercase; letter-spacing: .1em; font-size: .72rem; font-weight: 700; }
+.to-tabs { margin: 0 0 24px; }
+.to-tabs>div { display: flex; flex-wrap: wrap; gap: 8px; }
+.to-tabs button { background: #f3f5f2; color: #153f42; border: 1px solid #d6dfd9; border-radius: 24px; padding: 10px 16px; font: inherit; cursor: pointer; }
+.to-tabs button[aria-current] { background: #153f42; color: white; }
+.to-tabs button:focus-visible, .to-omgeving input:focus-visible, .to-omgeving textarea:focus-visible, .to-omgeving select:focus-visible { outline: 3px solid #dcaa56; outline-offset: 3px; }
+.to-tekst { line-height: 1.7; }
+.to-tekst h3 { margin-top: 28px; }
+.to-tekst ul,.to-tekst ol { padding-left: 24px; }
+.to-tekst li { margin: 8px 0; }
+.to-tekst blockquote,.to-privacy { padding: 16px 20px; border-left: 4px solid #cfa35b; background: #faf6ed; margin: 20px 0; }
+.to-documenten { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 18px; }
+.to-omgeving textarea,.to-inrichten select { display: block; width: 100%; border: 1px solid #9baaa4; border-radius: 8px; padding: 12px; margin: 8px 0 16px; font: inherit; box-sizing: border-box; }
+.to-inrichten label { display: block; margin: 20px 0; }
+.to-inrichten input[type=file] { display: block; margin: 10px 0; max-width: 100%; }
+.to-inrichten .to-akkoord { display: flex; gap: 12px; align-items: flex-start; }
+@media(max-width:600px) { .to-intro { padding: 24px 20px; } .to-tabs button { padding: 9px 12px; font-size: .9rem; } }

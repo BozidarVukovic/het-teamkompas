@@ -14,7 +14,7 @@
 import fs from "node:fs";
 
 const REGELS = "firestore.rules";
-const TESTS = "tests/securityRules.test.mjs";
+const TESTS = ["tests/securityRules.test.mjs", "tests/teamomgevingRules.test.mjs"];
 
 // Alleen het app-gedeelte. De backoffice-collecties erboven horen bij de
 // publieke site en hebben hun eigen geschiedenis; die er nu bij trekken zou de
@@ -28,7 +28,7 @@ const UITGEZONDERD = {
 };
 
 const heleBestand = fs.readFileSync(REGELS, "utf8");
-const tests = fs.readFileSync(TESTS, "utf8");
+const tests = TESTS.map((bestand) => fs.readFileSync(bestand, "utf8")).join("\n");
 
 const vanaf = heleBestand.indexOf(BEGIN);
 if (vanaf === -1) {
