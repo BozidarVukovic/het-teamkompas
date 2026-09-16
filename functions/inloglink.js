@@ -88,19 +88,46 @@ const ALTIJD_TOEGESTAAN = ["bozidar@mijnteamkompas.nl", "edmond@mijnteamkompas.n
  * Klopt geen van drieën, dan gaat er geen mail weg. De browser krijgt wel
  * hetzelfde antwoord als anders; zie de opmerking bij de functie hieronder.
  */
-async function magInloggen(db, email, code) {
+async function magInloggen(db, email, code, team) {
   if (ALTIJD_TOEGESTAAN.includes(email)) return true;
 
-  if (code) {
-    const codeDoc = await db.collection("teamcodes").doc(code).get().catch(() => null);
-    if (codeDoc && codeDoc.exists) return true;
-  }
+  // De code is al opgezocht; bestaat het team, dan is dit een uitnodiging.
+  if (code && team) return true;
 
   const bestaand = await admin.auth().getUserByEmail(email).catch(() => null);
   if (bestaand) return true;
 
   const begeleider = await db.collection("begeleiders").doc(email).get().catch(() => null);
   return Boolean(begeleider && begeleider.exists);
+}
+
+/**
+ * Het team dat bij een uitnodigingscode hoort.
+ *
+ * De teamnaam kwam tot nu toe uit het verzoek van de browser. Dat betekende
+ * twee dingen: hij werd nergens gecontroleerd, en de app stuurde hem helemaal
+ * niet mee. Iemand die werd uitgenodigd voor HR Business & Beleid kreeg dus een
+ * mail met "Je vroeg een inloglink aan voor Mijn Teamkompas" -- terwijl hij
+ * niets had gevraagd en er een team op hem wachtte.
+ *
+ * Hier wordt hij opgezocht bij de code zelf. Deze functie draait met
+ * beheerdersrechten, dus de leesregel die een teamnaam pas na toetreden vrijgeeft
+ * geldt hier niet; dat is de bedoeling, want zonder de naam is de uitnodiging
+ * niet te herkennen.
+ */
+async function teamViaCode(db, code) {
+  if (!code) return null;
+  const codeDoc = await db.collection("teamcodes").doc(code).get().catch(() => null);
+  if (!codeDoc || !codeDoc.exists) return null;
+  const { orgId, teamId } = codeDoc.data() || {};
+  if (!orgId || !teamId) return null;
+  const teamDoc = await db
+    .collection("organisaties").doc(orgId)
+    .collection("teams").doc(teamId)
+    .get()
+    .catch(() => null);
+  const naam = teamDoc && teamDoc.exists ? String(teamDoc.data().naam || "").trim().slice(0, 80) : "";
+  return { orgId, teamId, naam };
 }
 
 const sleutelVan = (email) => crypto.createHash("sha256").update(email).digest("hex");
@@ -207,118 +234,12 @@ async function geefTerug(tellers) {
   );
 }
 
-/**
- * Zet de link op ons eigen domein.
- *
- * Firebase maakt een link naar mijn-teamkompas-6de84.firebaseapp.com. Die mail
- * komt dan van auth.mijnteamkompas.nl maar wijst naar een heel ander domein —
- * en firebaseapp.com is een gedeeld domein waar veel phishing vandaan komt. Dat
- * is precies het patroon waar spamfilters op letten: afzender en bestemming die
- * niet bij elkaar horen. Voor de ontvanger ziet het er ook niet uit als iets van
- * ons.
- *
- * De ontvangende kant heeft dat domein niet nodig. signInWithEmailLink() in de
- * browser leest alleen `mode` en `oobCode` uit de adresbalk en wisselt die bij
- * Firebase in; welke host ervoor staat doet er niet toe. Dus houden we de hele
- * queryreeks en zetten er ons eigen adres voor.
- */
-function eigenLink(firebaseLink, terug) {
-  const bron = new URL(firebaseLink);
-  const doel = new URL(terug);
-  doel.search = bron.search;
-  return doel.toString();
-}
+// Het adres van de inloglink -- ons eigen domein, met de eenmalige code én de
+// teamcode erin. De uitleg staat bij de functie zelf.
+const { inlogAdres } = require("./inloglinkAdres");
 
-/** De mail zelf. Nederlands, "je", en één ding om te doen. */
-function mailtekst({ link, teamNaam }) {
-  const over = teamNaam
-    ? `Je bent uitgenodigd voor <strong>${teamNaam}</strong> in Mijn Teamkompas.`
-    : "Je vroeg een inloglink aan voor Mijn Teamkompas.";
-
-  const plat = [
-    teamNaam
-      ? `Je bent uitgenodigd voor ${teamNaam} in Mijn Teamkompas.`
-      : "Je vroeg een inloglink aan voor Mijn Teamkompas.",
-    "",
-    "Klik op deze link om in te loggen:",
-    link,
-    "",
-    "De link werkt één keer. Heb je hem niet aangevraagd, dan kun je deze mail negeren.",
-    "",
-    "Mijn Teamkompas",
-  ].join("\n");
-
-  // Over donkere modus.
-  //
-  // Mailprogramma's in donkere modus klappen achtergronden om als ze denken dat
-  // een mail daar geen rekening mee houdt. Een donkere kopbalk met witte letters
-  // werd zo een lichte kopbalk met witte letters — onleesbaar.
-  //
-  // Twee dingen houden dat tegen. De meta-regels color-scheme zeggen tegen het
-  // programma: deze mail regelt zijn eigen kleuren, klap niets om. En het
-  // style-blok geeft voor de donkere modus zelf de goede kleuren op, zodat het
-  // er ook dan uitziet zoals het hoort in plaats van omgekeerd.
-  //
-  // De inline kleuren blijven staan voor programma's die style-blokken negeren
-  // (Outlook op Windows); die krijgen gewoon de lichte versie.
-  const html = `<!doctype html>
-<html lang="nl">
-<head>
-<meta charset="utf-8">
-<meta name="color-scheme" content="light dark">
-<meta name="supported-color-schemes" content="light dark">
-<style>
-  :root { color-scheme: light dark; supported-color-schemes: light dark; }
-  @media (prefers-color-scheme: dark) {
-    .tk-buiten { background:#0a1420 !important; }
-    .tk-kaart  { background:#152437 !important; }
-    .tk-kop    { background:#0D1B2A !important; }
-    .tk-tekst  { color:#E8EEF4 !important; }
-    .tk-fijn   { color:#93a5b8 !important; }
-    .tk-link   { color:#4fd6c4 !important; }
-  }
-</style>
-</head>
-<body style="margin:0;padding:0;background:#f4f6f8;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="tk-buiten"
-         style="background:#f4f6f8;padding:32px 16px;">
-    <tr><td align="center">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="tk-kaart"
-             style="max-width:520px;background:#ffffff;border-radius:14px;overflow:hidden;
-                    font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-        <tr><td class="tk-kop" style="background:#0D1B2A;padding:22px 28px;">
-          <span style="color:#ffffff;font-size:19px;font-weight:600;">Mijn</span><span
-                style="color:#00A896;font-size:19px;font-weight:600;"> Teamkompas</span>
-        </td></tr>
-        <tr><td class="tk-tekst" style="padding:28px;color:#1c2b3a;font-size:16px;line-height:1.6;">
-          <p style="margin:0 0 18px;" class="tk-tekst">${over}</p>
-          <p style="margin:0 0 24px;" class="tk-tekst">Klik op de knop om in te loggen. Je hebt geen wachtwoord nodig.</p>
-          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
-            <tr><td style="background:#00A896;border-radius:99px;">
-              <a href="${link}" style="display:inline-block;padding:13px 30px;color:#062a26;
-                 font-size:16px;font-weight:600;text-decoration:none;">Inloggen</a>
-            </td></tr>
-          </table>
-          <p class="tk-fijn" style="margin:0 0 8px;color:#5b6b7c;font-size:13.5px;line-height:1.5;">
-            Werkt de knop niet? Plak deze link in je browser:
-          </p>
-          <p style="margin:0 0 24px;word-break:break-all;">
-            <a href="${link}" class="tk-link" style="color:#0a7d70;font-size:13px;">${link}</a>
-          </p>
-          <p class="tk-fijn" style="margin:0;color:#5b6b7c;font-size:13.5px;line-height:1.5;">
-            De link werkt één keer. Heb je hem niet aangevraagd, dan kun je deze mail negeren.
-          </p>
-        </td></tr>
-        <tr><td class="tk-fijn" style="padding:0 28px 26px;color:#8a97a5;font-size:12.5px;line-height:1.5;">
-          Je ontvangt deze mail omdat er met dit adres is ingelogd op mijnteamkompas.nl.
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body></html>`;
-
-  return { html, plat };
-}
+// De mail zelf staat apart, met de uitleg erbij.
+const { mailtekst } = require("./inloglinkMail");
 
 /**
  * Maakt een inloglink en stuurt hem op.
@@ -329,7 +250,6 @@ function mailtekst({ link, teamNaam }) {
  */
 exports.stuurInloglink = onCall({ secrets: [RESEND_API_KEY] }, async (request) => {
   const email = String((request.data && request.data.email) || "").trim().toLowerCase();
-  const teamNaam = String((request.data && request.data.teamNaam) || "").trim().slice(0, 80);
   const code = String((request.data && request.data.code) || "").trim().toUpperCase().slice(0, 20);
 
   if (!EMAIL.test(email) || email.length > 254) {
@@ -348,7 +268,10 @@ exports.stuurInloglink = onCall({ secrets: [RESEND_API_KEY] }, async (request) =
   // uit het verschil afleiden wie er een account heeft. Dat iemand Mijn
   // Teamkompas gebruikt, is niets om aan een vreemde prijs te geven. Het
   // inlogscherm vertelt daarom vooraf dat de app op uitnodiging werkt.
-  if (!(await magInloggen(db, email, code))) {
+  const team = await teamViaCode(db, code);
+  const teamNaam = (team && team.naam) || "";
+
+  if (!(await magInloggen(db, email, code, team))) {
     console.log("Inloglink geweigerd: geen uitnodiging, geen account, niet op de lijst.");
     // Een adres dat er toch niet in mag, hoort de rem voor de rest niet op te
     // eten. De poging telt dus niet mee.
@@ -371,9 +294,9 @@ exports.stuurInloglink = onCall({ secrets: [RESEND_API_KEY] }, async (request) =
     await geefTerug(tellers);
     throw new HttpsError("internal", "Het versturen van de inloglink is niet gelukt.");
   }
-  const link = eigenLink(vanFirebase, terug);
+  const link = inlogAdres(vanFirebase, terug, code);
 
-  const { html, plat } = mailtekst({ link, teamNaam });
+  const { html, plat } = mailtekst({ link, teamNaam, code });
 
   const antwoord = await fetch("https://api.resend.com/emails", {
     method: "POST",
