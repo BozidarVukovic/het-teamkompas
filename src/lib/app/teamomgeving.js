@@ -122,6 +122,10 @@ const KOPJE = /^[^\s#>*+|·-][^\n]{0,46}$/;
 const EINDPUNT = /[.!?:;,]$/;
 
 function alsBovenkopje(blok, volgende) {
+  // Een ingesprongen regel hoort bij het lijstitem erboven. Zonder deze
+  // controle werd de stand van zaken van de laatste actie het bovenkopje van
+  // de kop erna -- en verloor die actie zijn eigen regel.
+  if (/^\s/.test(blok)) return null;
   if (!volgende || !/^\s{0,3}#{2,4}\s/.test(volgende)) return null;
   const regel = blok.trim();
   return KOPJE.test(regel) && !EINDPUNT.test(regel) && regel.split(/\s+/).length <= 6 ? regel : null;

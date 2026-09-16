@@ -193,3 +193,11 @@ test('exporteren zonder omgeving geeft een nette fout', () => {
   assert.throws(() => maakBronPakket(null));
   assert.throws(() => maakBronPakket({ inhoud: {} }));
 });
+
+test('de stand van zaken van de laatste actie wordt geen bovenkopje', () => {
+  const tekst = ['### Vier acties uit juni', '', '4', '', 'Meer met elkaar delen', '', 'Stand van zaken nog te bespreken', '', '### Ons traject', '', 'Slot.'].join('\n');
+  const delen = deelTekst(tekst);
+  assert.deepEqual(delen.map((d) => d.soort), ['tekst']);
+  assert.match(delen[0].tekst, /^4\. Meer met elkaar delen$/m);
+  assert.match(delen[0].tekst, /^ {3}Stand van zaken nog te bespreken$/m);
+});
