@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn } from '../src/lib/app/teamomgeving.js';
+import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen } from '../src/lib/app/teamomgeving.js';
 import { createHash } from 'node:crypto';
 const geldig = () => ({ versie:1, inhoud:{titel:'Testteam',onderdelen:[{id:'overzicht',titel:'Overzicht',tekst:'Alleen teamleden'}]},beheer:{tekst:'Apart'},bestanden:[] });
 test('geldige teamomgeving wordt geaccepteerd', () => assert.equal(valideerOmgeving(geldig()).versie,1));
@@ -306,4 +306,67 @@ test('inspringing van een lijstitem blijft staan', () => {
 
 test('spaties die overblijven waar een label stond, worden er een', () => {
   assert.equal(normaliseerTekst('<b>Een</b>   <i>twee</i>').trim(), 'Een twee');
+});
+
+const WERKVORMEN = [
+  'Vier werkvormen bij het traject.',
+  '',
+  '15 minuten \u00b7 rollen en processen',
+  '',
+  '### Een knelpunt verder brengen',
+  '',
+  '1. Beschrijf een situatie.',
+  '',
+  '> Voorkom dat een systeemprobleem een gedragsopdracht wordt.',
+  '',
+  '20 minuten \u00b7 elkaar begrijpen',
+  '',
+  '### Hand-in-Hand in een duo',
+  '',
+  '1. Kies een situatie.',
+].join('\n');
+
+test('een onderdeel valt uiteen in inleiding en secties', () => {
+  const { inleiding, secties } = splitsInSecties(WERKVORMEN);
+  assert.equal(inleiding, 'Vier werkvormen bij het traject.');
+  assert.deepEqual(secties.map((s) => s.kop), ['Een knelpunt verder brengen', 'Hand-in-Hand in een duo']);
+});
+
+test('de korte regel boven een kop hoort bij die kop, niet bij de vorige', () => {
+  const { secties } = splitsInSecties(WERKVORMEN);
+  assert.equal(secties[0].bovenkopje, '15 minuten \u00b7 rollen en processen');
+  assert.equal(secties[1].bovenkopje, '20 minuten \u00b7 elkaar begrijpen');
+  assert.ok(!secties[0].tekst.includes('20 minuten'));
+});
+
+test('de inhoud van een sectie loopt tot de volgende kop', () => {
+  const { secties } = splitsInSecties(WERKVORMEN);
+  assert.match(secties[0].tekst, /Beschrijf een situatie/);
+  assert.match(secties[0].tekst, /systeemprobleem/);
+  assert.ok(!secties[0].tekst.includes('Hand-in-Hand'));
+});
+
+test('zonder koppen is alles inleiding', () => {
+  const { inleiding, secties } = splitsInSecties('Een zin.\n\nNog een zin.');
+  assert.equal(secties.length, 0);
+  assert.equal(inleiding, 'Een zin.\n\nNog een zin.');
+  assert.deepEqual(splitsInSecties(undefined), { inleiding: '', secties: [] });
+});
+
+test('een gewone zin boven een kop blijft in de vorige sectie staan', () => {
+  const { secties } = splitsInSecties('### Een\n\nDit is een gewone zin die eindigt op een punt.\n\n### Twee');
+  assert.equal(secties[1].bovenkopje, '');
+  assert.match(secties[0].tekst, /gewone zin/);
+});
+
+test('inklappen is een keuze van het pakket, geen gok van het scherm', () => {
+  assert.equal(magInklappen({ inklapbaar: true }), true);
+  assert.equal(magInklappen({ inklapbaar: 'ja' }), false);
+  assert.equal(magInklappen({}), false);
+  assert.equal(magInklappen(null), false);
+});
+
+test('inklapbaar blijft behouden in de geexporteerde brontekst', () => {
+  const omgeving = { inhoud: { titel: 'T', onderdelen: [{ id: 'leren', titel: 'Samen leren', tekst: 'x', inklapbaar: true }] } };
+  assert.equal(maakBronPakket(omgeving).inhoud.onderdelen[0].inklapbaar, true);
 });

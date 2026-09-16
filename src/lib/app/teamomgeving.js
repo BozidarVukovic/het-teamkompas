@@ -191,6 +191,7 @@ export function maakBronPakket(omgeving) {
       onderdelen: inhoud.onderdelen.map((d) => {
         const deel = { id: d.id, titel: d.titel, tekst: d.tekst };
         if (d.groep) deel.groep = d.groep;
+        if (d.inklapbaar === true) deel.inklapbaar = true;
         if (Array.isArray(d.tijdlijn) && d.tijdlijn.length) deel.tijdlijn = d.tijdlijn;
         return deel;
       }),
@@ -265,6 +266,51 @@ export function leesTijdlijn(deel) {
       stand: typeof h.stand === "string" ? h.stand.trim() : "",
       gedaan: typeof h.gedaan === "boolean" ? h.gedaan : GEDAAN.test(typeof h.stand === "string" ? h.stand : ""),
     }));
+}
+
+// Een onderdeel opdelen in secties.
+//
+// "Samen leren" is vier werkvormen achter elkaar, elk met vier stappen en een
+// kanttekening. Als losse pagina is dat een lap tekst waarin je moet zoeken
+// welke werkvorm je nodig hebt. Als vier regels die je één voor één openklapt,
+// zie je het aanbod in één blik.
+//
+// De kop van een sectie is een ###. De korte regel die daar in de brontekst
+// vlak bóven staat ("15 minuten · rollen en processen") is het bovenkopje van
+// die sectie en hoort er dus bij -- niet bij de sectie ervoor. In gesloten
+// toestand staat hij naast de titel, zodat je zonder openklappen ziet hoe lang
+// een werkvorm duurt en waar hij over gaat.
+//
+// Wat vóór de eerste kop staat blijft gewoon staan: dat is de inleiding van het
+// onderdeel en die hoort niet verstopt te worden.
+const SECTIEKOP = /^\s{0,3}###\s+(.+?)\s*$/;
+
+export function splitsInSecties(tekst) {
+  const blokken = (typeof tekst === "string" ? tekst : "").replace(/\r\n?/g, "\n").split(/\n{2,}/);
+  const inleiding = [];
+  const secties = [];
+  let huidig = null;
+  for (const blok of blokken) {
+    const kop = SECTIEKOP.exec(blok.trim());
+    if (!kop) { (huidig ? huidig.blokken : inleiding).push(blok); continue; }
+    const doel = huidig ? huidig.blokken : inleiding;
+    const vorige = doel[doel.length - 1];
+    const boven = vorige && alsBovenkopje(vorige, blok) ? doel.pop().trim() : "";
+    huidig = { kop: kop[1], bovenkopje: boven, blokken: [] };
+    secties.push(huidig);
+  }
+  return {
+    inleiding: inleiding.join("\n\n").trim(),
+    secties: secties.map((s) => ({ kop: s.kop, bovenkopje: s.bovenkopje, tekst: s.blokken.join("\n\n").trim() })),
+  };
+}
+
+// Inklappen is een keuze van wie het pakket schrijft, geen gok van het scherm.
+// Een overzicht met vier koppen moet juist openstaan; een naslagwerk met vier
+// werkvormen niet. Dat verschil kan de app niet zien, en verkeerd gokken kost
+// de lezer precies wat hij zocht.
+export function magInklappen(deel) {
+  return Boolean(deel && deel.inklapbaar === true);
 }
 
 export function splitsBestand(base64) {

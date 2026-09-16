@@ -20,11 +20,16 @@ Onder `organisaties/{orgId}/teams/{teamId}`:
   base64-tekens. Alleen teamleden lezen; geen publieke assets of downloadtokens.
   SHA-256 wordt vóór import én vóór downloaden gecontroleerd.
 
-Een onderdeel mag twee optionele velden hebben die alleen over de vorm gaan:
+Een onderdeel mag drie optionele velden hebben die alleen over de vorm gaan:
 `groep` zet het in een groep in de navigatie, en `tijdlijn` is een rij haltes
 (`wanneer`, `wat`, `stand`, optioneel `gedaan`) die als lijn wordt getoond. Een
 regel `[tijdlijn]` in de tekst bepaalt waar die lijn staat; zonder die regel komt
-hij bovenaan. Beide velden zijn leeg toegestaan en veranderen niets aan de tekst.
+hij bovenaan. En `inklapbaar: true` maakt van elke `###` een sectie die open- en
+dichtklapt, één tegelijk, met de korte regel erboven als ondertitel in gesloten
+toestand. Die keuze hoort bij het pakket: een overzicht met vier koppen moet
+juist openstaan, een naslagwerk met vier werkvormen niet, en dat verschil kan
+het scherm niet zien. Alle drie de velden zijn leeg toegestaan en veranderen
+niets aan de tekst.
 
 Een gedownloade brontekst en een nieuw pakket horen in `omgevingspakketten/`.
 Die map staat in .gitignore en `scripts/valideer-klantinhoud.mjs` laat de build
