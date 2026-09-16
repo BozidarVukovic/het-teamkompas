@@ -1,6 +1,6 @@
 import { doc, getDoc, getDocs, collection, writeBatch, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
-import { controleerPdf, splitsBestand, valideerOmgeving, pasWijzigingToe, OMGEVING_VERSIE } from "./teamomgeving";
+import { controleerPdf, splitsBestand, valideerOmgeving, pasWijzigingToe, maakDocumentregel, OMGEVING_VERSIE } from "./teamomgeving";
 
 const basis = ({ orgId, teamId }) => `organisaties/${orgId}/teams/${teamId}`;
 const ref = (team, id) => doc(db, `${basis(team)}/teamomgeving/${id}`);
@@ -95,6 +95,45 @@ export async function werkTekstenBij(team, uid, wijziging) {
     bijgewerktOp: serverTimestamp(),
     bijgewerktDoor: uid,
   });
+}
+
+// Eén document toevoegen aan een omgeving die al staat.
+//
+// De pdf gaat eerst, de lijst daarna. Andersom zou er even een regel in de
+// lijst staan die wijst naar een bestand dat er nog niet is -- en dan krijgt
+// een teamlid dat op dat moment klikt een foutmelding over iets wat hij niet
+// heeft gedaan. Blijft het bij de pdf steken, dan staan er losse delen in de
+// opslag die niemand ziet; dat is de goedkope kant van het misgaan.
+//
+// Verwijderen kan hiermee niet, en de regels laten het ook niet toe. Dat is een
+// aparte beslissing: de delen van een verwijderd document blijven anders als
+// wees achter, en een lijst die krimpt is een lijst die herschreven kan worden.
+export async function voegDocumentToe(team, uid, document) {
+  const huidig = await getDoc(ref(team, "inhoud"));
+  if (!huidig.exists()) throw new Error("Deze teamomgeving is nog niet ingericht.");
+  const documenten = huidig.data().documenten;
+  if (!Array.isArray(documenten)) throw new Error("Deze omgeving heeft nog geen documentenlijst. Lever hem opnieuw aan als pakket.");
+
+  const delen = splitsBestand(document.base64);
+  const regel = maakDocumentregel(documenten, { ...document, delen: delen.length });
+
+  // Dezelfde controle als bij het downloaden: klopt de vingerafdruk niet met de
+  // bytes, dan gaat er niets de opslag in.
+  await controleerPdf({ base64: document.base64, sha256: regel.sha256 });
+
+  const batch = writeBatch(db);
+  delen.forEach((data, i) => batch.set(
+    doc(db, `${basis(team)}/teamomgevingBestanden/${regel.id}/delen/${String(i).padStart(3, "0")}`),
+    { data }
+  ));
+  await batch.commit();
+
+  await updateDoc(ref(team, "inhoud"), {
+    documenten: [...documenten, regel],
+    bijgewerktOp: serverTimestamp(),
+    bijgewerktDoor: uid,
+  });
+  return regel;
 }
 
 export async function haalOmgevingPdf(team, bestand) {

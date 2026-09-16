@@ -69,6 +69,42 @@ test('teamomgeving: toegang en scheiding in Firestore', { skip: !draait }, async
       await assertFails(updateDoc(r(db('bo'),'inhoud'),{...basis,titel:''}));
       await assertFails(updateDoc(r(db('bo'),'inhoud'),{...basis,onderdelen:[]}));
     });
+    await t.test('een document mag erbij, maar alleen achteraan en zonder de rest aan te raken', async () => {
+      const oud={id:'voorbeeld',titel:'Terugkoppeling',naam:'a.pdf',sha256:'a'.repeat(64),delen:1};
+      const nieuw={id:'handleiding',titel:'Hand-in-Handleiding',naam:'hh.pdf',sha256:'b'.repeat(64),delen:2};
+      await env.withSecurityRulesDisabled((ctx)=>updateDoc(doc(ctx.firestore(),`${pad}/teamomgeving/inhoud`),{documenten:[oud]}));
+      const voegToe=(uid,lijst)=>updateDoc(r(db(uid),'inhoud'),{documenten:lijst,bijgewerktOp:serverTimestamp(),bijgewerktDoor:uid});
+      // Alleen de twee aangewezen begeleiders.
+      for (const uid of ['lid','andere-beheerder','buitenstaander']) await assertFails(voegToe(uid,[oud,nieuw]));
+      // Niet vooraan, niet in plaats van, niet twee tegelijk, en krimpen mag niet.
+      await assertFails(voegToe('bo',[nieuw,oud]));
+      await assertFails(voegToe('bo',[nieuw]));
+      await assertFails(voegToe('bo',[oud,nieuw,{...nieuw,id:'derde'}]));
+      await assertFails(voegToe('bo',[]));
+      // Een bestaand document mag niet meeveranderen -- daar hangt de controle
+      // bij het downloaden aan.
+      await assertFails(voegToe('bo',[{...oud,sha256:'c'.repeat(64)},nieuw]));
+      await assertFails(voegToe('bo',[{...oud,titel:'Anders'},nieuw]));
+      await assertFails(voegToe('bo',[{...oud,naam:'anders.pdf'},nieuw]));
+      // En de nieuwe regel moet zelf kloppen.
+      await assertFails(voegToe('bo',[oud,{...nieuw,sha256:'geen hash'}]));
+      await assertFails(voegToe('bo',[oud,{...nieuw,naam:'hh.exe'}]));
+      await assertFails(voegToe('bo',[oud,{...nieuw,naam:'../buiten.pdf'}]));
+      await assertFails(voegToe('bo',[oud,{...nieuw,id:'Met Hoofdletters'}]));
+      await assertFails(voegToe('bo',[oud,{...nieuw,delen:0}]));
+      await assertFails(voegToe('bo',[oud,{...nieuw,delen:11}]));
+      await assertFails(voegToe('bo',[oud,{...nieuw,titel:''}]));
+      await assertFails(voegToe('bo',[oud,{...nieuw,extra:'veld'}]));
+      await assertFails(voegToe('bo',[oud,{titel:'Zonder id',naam:'x.pdf',sha256:'b'.repeat(64),delen:1}]));
+      // Zo mag het wel.
+      await assertSucceeds(voegToe('ed',[oud,nieuw]));
+    });
+    await t.test('toevoegen kan de teksten of de sporen niet meenemen', async () => {
+      const lijst=[{id:'voorbeeld',titel:'Terugkoppeling',naam:'a.pdf',sha256:'a'.repeat(64),delen:1},{id:'handleiding',titel:'Hand-in-Handleiding',naam:'hh.pdf',sha256:'b'.repeat(64),delen:2},{id:'derde',titel:'Derde',naam:'c.pdf',sha256:'d'.repeat(64),delen:1}];
+      await assertFails(updateDoc(r(db('bo'),'inhoud'),{documenten:lijst,titel:'Gekaapt',bijgewerktOp:serverTimestamp(),bijgewerktDoor:'bo'}));
+      await assertFails(updateDoc(r(db('bo'),'inhoud'),{documenten:lijst,bijgewerktOp:new Date(0),bijgewerktDoor:'bo'}));
+      await assertFails(updateDoc(r(db('bo'),'inhoud'),{documenten:lijst,bijgewerktOp:serverTimestamp(),bijgewerktDoor:'ed'}));
+    });
     await t.test('te groot pdfdeel wordt geweigerd', async () => {
       await assertFails(setDoc(doc(db('bo'),`${pad}/teamomgevingBestanden/voorbeeld/delen/001`),{data:'x'.repeat(600001)}));
     });

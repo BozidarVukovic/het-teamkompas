@@ -183,6 +183,20 @@ service cloud.firestore {
             && request.auth.uid in getAfter(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/teamomgeving/toegang).data.beheerders;
         }
 
+        // De vorm van één documentregel. De sha256 is wat een download straks
+        // tegen wordt gehouden, dus die moet er staan en moet een hash zijn --
+        // een lege of verzonnen waarde zou betekenen dat de controle bij het
+        // downloaden niets meer controleert.
+        function nieuwDocument(d) {
+          return d.keys().hasAll(['id', 'titel', 'naam', 'sha256', 'delen'])
+            && d.keys().hasOnly(['id', 'titel', 'naam', 'sha256', 'delen', 'beschrijving'])
+            && d.id is string && d.id.size() > 0 && d.id.size() <= 80 && d.id.matches('^[a-z0-9][a-z0-9-]*$')
+            && d.titel is string && d.titel.size() > 0 && d.titel.size() <= 160
+            && d.naam is string && d.naam.size() > 4 && d.naam.size() <= 160 && d.naam.matches('^[^/\\\\]+[.]pdf$')
+            && d.sha256 is string && d.sha256.matches('^[a-f0-9]{64}$')
+            && d.delen is int && d.delen >= 1 && d.delen <= 10;
+        }
+
         match /teamomgeving/{onderdeel} {
           allow get: if isTeamlid(orgId, teamId)
             && (onderdeel in ['toegang', 'inhoud'] || (onderdeel == 'beheer' && omgevingsbeheer()));
@@ -222,6 +236,33 @@ service cloud.firestore {
             && request.resource.data.onderdelen is list
             && request.resource.data.onderdelen.size() >= 1
             && request.resource.data.onderdelen.size() <= 12
+            && request.resource.data.bijgewerktOp == request.time
+            && request.resource.data.bijgewerktDoor == request.auth.uid;
+          // Een document toevoegen aan een omgeving die al staat.
+          //
+          // De documentenlijst lag vast na het inrichten, met reden: wie hem mag
+          // herschrijven, kan een download naar andere inhoud laten wijzen dan
+          // er is gecontroleerd. Maar een team maakt na een teamdag nieuwe
+          // documenten, en die horen erbij.
+          //
+          // Dus mag er precies één bij, achteraan, en verandert er verder niets.
+          // De vergelijking hieronder is letterlijk: de oude lijst met het
+          // nieuwe element erachter moet gelijk zijn aan de nieuwe lijst. Een
+          // andere titel bij een bestaand document, een andere sha256, een
+          // andere volgorde -- het maakt die vergelijking allemaal onwaar, en
+          // dan gaat er niets door. Verwijderen kan hiermee ook niet; dat is een
+          // aparte beslissing, want de pdf-delen blijven anders als wees achter.
+          allow update: if onderdeel == 'inhoud' && omgevingsbeheer()
+            && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['documenten', 'bijgewerktOp', 'bijgewerktDoor'])
+            && resource.data.documenten is list
+            && request.resource.data.documenten is list
+            && request.resource.data.documenten.size() == resource.data.documenten.size() + 1
+            && request.resource.data.documenten.size() <= 10
+            && resource.data.documenten
+                 .concat([request.resource.data.documenten[resource.data.documenten.size()]])
+               == request.resource.data.documenten
+            && nieuwDocument(request.resource.data.documenten[resource.data.documenten.size()])
             && request.resource.data.bijgewerktOp == request.time
             && request.resource.data.bijgewerktDoor == request.auth.uid;
           allow update: if onderdeel == 'beheer' && omgevingsbeheer()

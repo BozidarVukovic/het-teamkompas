@@ -3,8 +3,8 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
-import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij, werkTekstenBij } from "../../lib/app/teamomgevingOpslag";
-import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek, leesBijgewerkt, schrijfDatum } from "../../lib/app/teamomgeving";
+import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij, werkTekstenBij, voegDocumentToe } from "../../lib/app/teamomgevingOpslag";
+import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek, leesBijgewerkt, schrijfDatum, leesPdf } from "../../lib/app/teamomgeving";
 import { maakSlak, sectieAdressen, leesHash, maakAdres } from "../../lib/app/teamomgevingAdres";
 import { maakZoekindex, zoek as zoekInOmgeving } from "../../lib/app/teamomgevingZoek";
 import { houdOpZijnPlek } from "../../lib/app/scrollbehoud";
@@ -543,6 +543,81 @@ function KopBewerker({ inhoud, opslaan, herladen }) {
   </div>;
 }
 
+// Een document toevoegen aan een omgeving die al staat.
+//
+// Toevoegen kan, vervangen en verwijderen niet -- dat laatste staat ook zo in
+// de regels. Daarom staat er bij de knop wat er gaat gebeuren en voor wie het
+// zichtbaar wordt: dit is het enige onderdeel van Beheer waarmee je in één klik
+// iets aan negen mensen laat zien.
+function DocumentToevoegen({ team, uid, documenten, herladen }) {
+  const [bestand, setBestand] = useState(null);
+  const [titel, setTitel] = useState("");
+  const [beschrijving, setBeschrijving] = useState("");
+  const [akkoord, setAkkoord] = useState(false);
+  const [bezig, setBezig] = useState(false);
+  const [fout, setFout] = useState("");
+  const [klaar, setKlaar] = useState("");
+
+  async function kies(e) {
+    setFout(""); setKlaar(""); setBestand(null); setAkkoord(false);
+    const gekozen = e.target.files?.[0];
+    if (!gekozen) return;
+    setBezig(true);
+    try {
+      const gelezen = await leesPdf(await gekozen.arrayBuffer(), gekozen.name);
+      setBestand(gelezen);
+      // De bestandsnaam is een bruikbaar voorstel, geen titel. "Hand-in-
+      // Handleiding team HR BB 07-juli-2026" is wat er staat; wat het team
+      // ervan maakt, bepaalt de begeleider.
+      if (!titel.trim()) setTitel(gelezen.naam.replace(/\.pdf$/i, "").replace(/[_-]+/g, " ").trim());
+    } catch (err) {
+      setFout(err.message || "Dit bestand kon niet worden gelezen.");
+    } finally {
+      setBezig(false);
+    }
+  }
+
+  async function voegToe() {
+    setBezig(true); setFout(""); setKlaar("");
+    try {
+      const regel = await voegDocumentToe(team, uid, { ...bestand, titel, beschrijving });
+      setBestand(null); setTitel(""); setBeschrijving(""); setAkkoord(false);
+      setKlaar(`"${regel.titel}" staat nu bij Documenten. Iedereen in het team kan hem downloaden.`);
+      herladen();
+    } catch (err) {
+      setFout(err.message || "Toevoegen is niet gelukt. Er is niets gepubliceerd.");
+    } finally {
+      setBezig(false);
+    }
+  }
+
+  const vol = (documenten || []).length >= 10;
+  return <div className="to-bijwerken">
+    <p className="tk-label">Document toevoegen</p>
+    <p>Een pdf die bij dit team hoort: een terugkoppeling, een handleiding, de uitkomst van een teamdag. Toevoegen kan; vervangen en verwijderen niet, ook niet door jou. {(documenten || []).length} van 10 gebruikt.</p>
+    {vol
+      ? <p role="alert">Er passen maximaal tien documenten in een teamomgeving.</p>
+      : <>
+        <label><span className="tk-label">Pdf</span><input type="file" accept=".pdf,application/pdf" onChange={kies} disabled={bezig} /></label>
+        {bestand && <div className="to-pakket">
+          <strong>{bestand.naam}</strong>
+          <span>{Math.round(bestand.base64.length * 0.75 / 1024).toLocaleString("nl-NL")} kB · vingerafdruk {bestand.sha256.slice(0, 12)}…</span>
+        </div>}
+        {bestand && <label><span className="tk-label">Titel in de lijst</span><input className="tk-invoer" maxLength={160} value={titel} onChange={(e) => setTitel(e.target.value)} disabled={bezig} /></label>}
+        {bestand && <label><span className="tk-label">Korte toelichting (mag leeg)</span><input className="tk-invoer" maxLength={300} value={beschrijving} onChange={(e) => setBeschrijving(e.target.value)} disabled={bezig} /></label>}
+        {bestand && <label className="tk-keuzevakje to-akkoord">
+          <input type="checkbox" checked={akkoord} onChange={(e) => setAkkoord(e.target.checked)} disabled={bezig} />
+          Ik voeg dit document toe aan de omgeving van {team.teamNaam || "dit team"}. Iedereen in het team kan het vanaf dat moment downloaden, en weghalen kan niet vanuit de app.
+        </label>}
+        {fout && <p role="alert">{fout}</p>}
+        {klaar && <p role="status">{klaar}</p>}
+        <button className="tk-knop" type="button" disabled={!bestand || !titel.trim() || !akkoord || bezig} onClick={voegToe}>
+          {bezig ? "Bezig…" : "Document toevoegen"}
+        </button>
+      </>}
+  </div>;
+}
+
 function Inrichten({ team, uid, leden, herladen }) {
   const [pakket, setPakket] = useState(null);
   const [tweede, setTweede] = useState("");
@@ -740,6 +815,12 @@ function Omgeving({ team, uid, leden, magInrichten }) {
             <button className="tk-knop tk-knop-rand" onClick={exporteerBron}>Brontekst downloaden</button>
             <p>De teksten van alle onderdelen zoals ze in het pakket staan, om na te lezen of te verbeteren. Zonder de bespreeknotities en zonder de pdf&apos;s. Dit bestand bevat teaminhoud: bewaar het net zo zorgvuldig als de rest.</p>
           </div>
+          <DocumentToevoegen
+            team={team}
+            uid={uid}
+            documenten={omgeving.inhoud.documenten}
+            herladen={() => setVersie((v) => v + 1)}
+          />
           <KopBewerker
             inhoud={omgeving.inhoud}
             opslaan={(wijziging) => werkTekstenBij(team, uid, wijziging)}

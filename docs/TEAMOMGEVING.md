@@ -41,6 +41,26 @@ op elke kop en op elke inklapbare sectie, en het zoeken geeft hem terug bij een
 treffer. Wie er een verzint moet dus dezelfde functie gebruiken, anders komt een
 link ergens anders uit dan de treffer beloofde.
 
+## Documenten toevoegen
+
+Na het inrichten lag de documentenlijst vast. Dat was met opzet -- wie hem mag
+herschrijven, kan een download naar andere inhoud laten wijzen dan er is
+gecontroleerd -- maar een team maakt na een teamdag nieuwe documenten.
+
+Er mag daarom precies één document bij, achteraan, via `voegDocumentToe`. De
+regel in `firestore.rules` vergelijkt letterlijk: de oude lijst met het nieuwe
+element erachter moet gelijk zijn aan de nieuwe lijst. Een andere titel bij een
+bestaand document, een andere sha256, een andere volgorde -- het maakt die
+vergelijking onwaar en er gaat niets door.
+
+Vervangen en verwijderen kan niet, ook niet door een begeleider. Dat is een
+aparte beslissing: de pdf-delen van een verwijderd document blijven als wees
+achter, en een lijst die kan krimpen is een lijst die herschreven kan worden.
+
+De sha256 komt hier uit de browser en niet uit een pakket. Dat is geen controle
+op een derde partij maar een vingerafdruk, en die belooft precies één ding: wat
+je downloadt is byte voor byte wat er is geüpload.
+
 ## Teksten bewerken
 
 Twee routes, met opzet allebei door dezelfde poort:

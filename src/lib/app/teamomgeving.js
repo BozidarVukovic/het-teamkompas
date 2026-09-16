@@ -1,3 +1,5 @@
+import { maakSlak } from "./teamomgevingAdres.js";
+
 // Alleen de generieke vorm staat in de app. Klantinhoud komt uit beveiligde opslag.
 export const OMGEVING_VERSIE = 1;
 export const DEEL_GROOTTE = 600000;
@@ -400,6 +402,81 @@ export function pasWijzigingToe(inhoud, wijziging) {
   }
 
   return uit;
+}
+
+// Een pdf klaarmaken om toe te voegen.
+//
+// Bij het inrichten komt de sha256 uit het pakket en controleert de app of het
+// bestand daarbij hoort. Hier is er geen pakket: de begeleider kiest een
+// bestand en de browser rekent de hash er zelf bij uit. Dat is geen controle op
+// een derde partij maar een vingerafdruk, en die belooft precies één ding --
+// wat je straks downloadt is byte voor byte wat er is geüpload.
+//
+// De omzetting naar base64 gaat in blokken. String.fromCharCode met een paar
+// miljoen bytes ineens loopt de aanroepstapel over, en dat gebeurt pas bij een
+// groot bestand: precies het geval dat je niet test.
+const PDF_KOP = [0x25, 0x50, 0x44, 0x46, 0x2d]; // %PDF-
+const MAX_BASE64 = 6000000;
+
+function naarBase64(bytes) {
+  let uit = "";
+  const blok = 0x8000;
+  for (let i = 0; i < bytes.length; i += blok) {
+    uit += String.fromCharCode.apply(null, bytes.subarray(i, i + blok));
+  }
+  return btoa(uit);
+}
+
+export function schoneBestandsnaam(naam) {
+  const kaal = String(naam || "").split(/[\\/]/).pop().trim().slice(0, 160);
+  if (!kaal) return "";
+  return /\.pdf$/i.test(kaal) ? kaal.replace(/\.pdf$/i, ".pdf") : kaal + ".pdf";
+}
+
+export async function leesPdf(bytes, naam) {
+  const inhoud = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+  if (inhoud.length < 5 || PDF_KOP.some((b, i) => inhoud[i] !== b)) {
+    throw new Error("Dit lijkt geen pdf-bestand. Kies een bestand dat met %PDF- begint.");
+  }
+  const base64 = naarBase64(inhoud);
+  if (base64.length > MAX_BASE64) throw new Error("Deze pdf is te groot. Maximaal ongeveer 4 MB.");
+  const hash = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", inhoud)), (b) => b.toString(16).padStart(2, "0")).join("");
+  return { naam: schoneBestandsnaam(naam), sha256: hash, base64 };
+}
+
+// De regel die in de documentenlijst komt te staan.
+//
+// Het id komt uit de titel en niet uit de bestandsnaam: dat laatste is
+// "Hand-in-Handleiding team HR BB 07-juli-2026.pdf" en dat wil je niet in een
+// adres. Botst het met een bestaand id, dan krijgt het een volgnummer -- twee
+// documenten met hetzelfde id zouden betekenen dat de een de delen van de ander
+// ophaalt.
+export function maakDocumentregel(documenten, wens) {
+  const lijst = Array.isArray(documenten) ? documenten : [];
+  if (lijst.length >= 10) throw new Error("Er passen maximaal tien documenten in een teamomgeving.");
+
+  const titel = String((wens && wens.titel) || "").trim();
+  if (!titel || titel.length > 160) throw new Error("Geef het document een titel van maximaal 160 tekens.");
+
+  const naam = schoneBestandsnaam(wens && wens.naam);
+  if (naam.length < 5 || naam.length > 160) throw new Error("De bestandsnaam is leeg of te lang.");
+
+  const sha256 = String((wens && wens.sha256) || "");
+  if (!/^[a-f0-9]{64}$/.test(sha256)) throw new Error("De vingerafdruk van het bestand ontbreekt.");
+
+  const delen = Number(wens && wens.delen);
+  if (!Number.isInteger(delen) || delen < 1 || delen > 10) throw new Error("Dit bestand is te groot of leeg.");
+
+  const gebruikt = new Set(lijst.map((d) => d && d.id));
+  const basis = maakSlak(titel) || "document";
+  let id = basis;
+  for (let n = 2; gebruikt.has(id); n += 1) id = `${basis}-${n}`;
+  if (id.length > 80) id = id.slice(0, 80).replace(/-+$/, "");
+
+  const regel = { id, titel, naam, sha256, delen };
+  const beschrijving = String((wens && wens.beschrijving) || "").trim();
+  if (beschrijving) regel.beschrijving = beschrijving.slice(0, 300);
+  return regel;
 }
 
 export function splitsBestand(base64) {
