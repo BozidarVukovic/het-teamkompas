@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
 import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij } from "../../lib/app/teamomgevingOpslag";
-import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen } from "../../lib/app/teamomgeving";
+import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek } from "../../lib/app/teamomgeving";
 import "../../styles/teamomgeving.css";
 
 // Geen HTML, afbeeldingen of externe links uit geïmporteerde inhoud uitvoeren.
@@ -35,12 +35,15 @@ function Tijdlijn({ haltes }) {
   </ol>;
 }
 
-function Tekst({ children, tijdlijn }) {
+// plaatsBoven is er voor het geval de brontekst geen [tijdlijn] bevat: dan zet
+// het scherm de lijn bovenaan. Binnen een inklapbaar onderdeel mag dat niet
+// zomaar, want dan zou hij in elke sectie opnieuw verschijnen.
+function Tekst({ children, tijdlijn, plaatsBoven }) {
   const delen = deelTekst(children);
   const haltes = tijdlijn || [];
   const heeftPlek = delen.some((deel) => deel.soort === "tijdlijn");
   return <>
-    {!heeftPlek && haltes.length > 0 && <Tijdlijn haltes={haltes} />}
+    {plaatsBoven && !heeftPlek && haltes.length > 0 && <Tijdlijn haltes={haltes} />}
     {delen.map((deel, i) => {
       if (deel.soort === "tijdlijn") return haltes.length ? <Tijdlijn haltes={haltes} key={i} /> : null;
       if (deel.soort === "tabel") return <Tabel key={i} kop={deel.kop} rijen={deel.rijen} />;
@@ -156,10 +159,13 @@ function Bijwerken({ team, uid, herladen }) {
 // wie met een schermlezer of met het toetsenbord werkt. Een dichte sectie staat
 // op visibility: hidden en valt daarmee ook uit de tabvolgorde.
 function Secties({ deel, tijdlijn }) {
-  const [open, setOpen] = useState("");
   const { inleiding, secties } = splitsInSecties(deel.tekst);
+  const [open, setOpen] = useState(() => (eersteSectieOpen(deel) && secties.length ? `${deel.id}-sectie-0` : ""));
+  // Zit de plek voor de tijdlijn in een van de secties, dan hoort hij daar en
+  // niet ook nog boven de inleiding.
+  const inSectie = secties.some((sectie) => heeftTijdlijnplek(sectie.tekst));
   return <>
-    {inleiding && <Tekst tijdlijn={tijdlijn}>{inleiding}</Tekst>}
+    {inleiding && <Tekst tijdlijn={tijdlijn} plaatsBoven={!inSectie}>{inleiding}</Tekst>}
     <div className="to-vouw">
       {secties.map((sectie, i) => {
         const id = `${deel.id}-sectie-${i}`;
@@ -181,7 +187,7 @@ function Secties({ deel, tijdlijn }) {
             </button>
           </h3>
           <div className="to-vouwvak" id={id} data-open={uit ? "ja" : undefined}>
-            <div><Tekst>{sectie.tekst}</Tekst></div>
+            <div><Tekst tijdlijn={tijdlijn}>{sectie.tekst}</Tekst></div>
           </div>
         </section>;
       })}
@@ -300,7 +306,7 @@ function Omgeving({ team, uid, leden, magInrichten }) {
             ? <Leeg titel="Hier staat nog niets" uitleg={`Dit onderdeel is ingericht maar heeft nog geen inhoud. ${aanvullen}`} />
             : magInklappen(deel)
               ? <Secties deel={deel} tijdlijn={leesTijdlijn(deel)} />
-              : <Tekst tijdlijn={leesTijdlijn(deel)}>{deel.tekst}</Tekst>}
+              : <Tekst tijdlijn={leesTijdlijn(deel)} plaatsBoven>{deel.tekst}</Tekst>}
           {deel.id === "afspraken" && <Link className="tk-knop" to="/app/team">Gedeelde teamafspraken bekijken en bijwerken</Link>}
           {deel.id === "experimenten" && <Link className="tk-knop" to="/app/ik">Mijn experimenten in de app</Link>}
         </article>}

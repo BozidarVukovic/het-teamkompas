@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen } from '../src/lib/app/teamomgeving.js';
+import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek } from '../src/lib/app/teamomgeving.js';
 import { createHash } from 'node:crypto';
 const geldig = () => ({ versie:1, inhoud:{titel:'Testteam',onderdelen:[{id:'overzicht',titel:'Overzicht',tekst:'Alleen teamleden'}]},beheer:{tekst:'Apart'},bestanden:[] });
 test('geldige teamomgeving wordt geaccepteerd', () => assert.equal(valideerOmgeving(geldig()).versie,1));
@@ -369,4 +369,33 @@ test('inklappen is een keuze van het pakket, geen gok van het scherm', () => {
 test('inklapbaar blijft behouden in de geexporteerde brontekst', () => {
   const omgeving = { inhoud: { titel: 'T', onderdelen: [{ id: 'leren', titel: 'Samen leren', tekst: 'x', inklapbaar: true }] } };
   assert.equal(maakBronPakket(omgeving).inhoud.onderdelen[0].inklapbaar, true);
+});
+
+test('het eerste blok staat open als het pakket dat zegt', () => {
+  assert.equal(eersteSectieOpen({ inklapbaar: true, eersteOpen: true }), true);
+  assert.equal(eersteSectieOpen({ inklapbaar: true }), false);
+  assert.equal(eersteSectieOpen({ eersteOpen: 'ja' }), false);
+  assert.equal(eersteSectieOpen(null), false);
+});
+
+test('de plek voor de tijdlijn wordt herkend', () => {
+  assert.equal(heeftTijdlijnplek('Een zin.\n\n[tijdlijn]\n\nNog een.'), true);
+  assert.equal(heeftTijdlijnplek('[tijdlijn]'), true);
+  assert.equal(heeftTijdlijnplek('We noemen dit de [tijdlijn] van het team.'), false);
+  assert.equal(heeftTijdlijnplek('Geen plek hier.'), false);
+  assert.equal(heeftTijdlijnplek(undefined), false);
+});
+
+test('de tijdlijnplek zit in de sectie, niet in de inleiding', () => {
+  const tekst = 'Inleiding zonder lijn.\n\n### Ons traject\n\n[tijdlijn]\n\nSlot.';
+  const { inleiding, secties } = splitsInSecties(tekst);
+  assert.equal(heeftTijdlijnplek(inleiding), false);
+  assert.equal(heeftTijdlijnplek(secties[0].tekst), true);
+});
+
+test('eersteOpen blijft behouden in de geexporteerde brontekst', () => {
+  const omgeving = { inhoud: { titel: 'T', onderdelen: [{ id: 'overzicht', titel: 'Overzicht', tekst: 'x', inklapbaar: true, eersteOpen: true }] } };
+  const uit = maakBronPakket(omgeving).inhoud.onderdelen[0];
+  assert.equal(uit.inklapbaar, true);
+  assert.equal(uit.eersteOpen, true);
 });

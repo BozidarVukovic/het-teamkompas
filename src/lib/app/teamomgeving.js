@@ -192,6 +192,7 @@ export function maakBronPakket(omgeving) {
         const deel = { id: d.id, titel: d.titel, tekst: d.tekst };
         if (d.groep) deel.groep = d.groep;
         if (d.inklapbaar === true) deel.inklapbaar = true;
+        if (d.eersteOpen === true) deel.eersteOpen = true;
         if (Array.isArray(d.tijdlijn) && d.tijdlijn.length) deel.tijdlijn = d.tijdlijn;
         return deel;
       }),
@@ -311,6 +312,20 @@ export function splitsInSecties(tekst) {
 // de lezer precies wat hij zocht.
 export function magInklappen(deel) {
   return Boolean(deel && deel.inklapbaar === true);
+}
+
+// Alles dicht of het eerste blok open -- dat hangt af van wat het onderdeel is.
+// Een naslagwerk met vier werkvormen laat je dicht: de lijst zelf is waar je op
+// kiest. Een overzicht dat je elke keer opent, hoort meteen iets te zeggen; vier
+// dichte kopjes zijn daar een klik tussen jou en waar het over gaat.
+export function eersteSectieOpen(deel) {
+  return Boolean(deel && deel.eersteOpen === true);
+}
+
+// Waar de tijdlijn hoort. Staat de plek in een van de secties, dan zet het
+// scherm hem daar en nergens anders -- ook niet bovenaan "voor de zekerheid".
+export function heeftTijdlijnplek(tekst) {
+  return typeof tekst === "string" && /^\s*\[tijdlijn\]\s*$/m.test(tekst);
 }
 
 export function splitsBestand(base64) {

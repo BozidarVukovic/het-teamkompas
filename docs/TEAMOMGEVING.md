@@ -26,10 +26,11 @@ Een onderdeel mag drie optionele velden hebben die alleen over de vorm gaan:
 regel `[tijdlijn]` in de tekst bepaalt waar die lijn staat; zonder die regel komt
 hij bovenaan. En `inklapbaar: true` maakt van elke `###` een sectie die open- en
 dichtklapt, één tegelijk, met de korte regel erboven als ondertitel in gesloten
-toestand. Die keuze hoort bij het pakket: een overzicht met vier koppen moet
-juist openstaan, een naslagwerk met vier werkvormen niet, en dat verschil kan
-het scherm niet zien. Alle drie de velden zijn leeg toegestaan en veranderen
-niets aan de tekst.
+toestand. `eersteOpen: true` laat daarbij het eerste blok openstaan -- passend
+voor een overzicht dat meteen iets moet zeggen, niet voor een naslagwerk waar de
+lijst zelf de keuze is. Die afweging hoort bij het pakket; het scherm kan niet
+zien wat voor soort onderdeel het is. Alle velden zijn leeg toegestaan en
+veranderen niets aan de tekst.
 
 Een gedownloade brontekst en een nieuw pakket horen in `omgevingspakketten/`.
 Die map staat in .gitignore en `scripts/valideer-klantinhoud.mjs` laat de build
