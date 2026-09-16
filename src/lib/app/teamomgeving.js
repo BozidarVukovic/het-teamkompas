@@ -328,6 +328,41 @@ export function heeftTijdlijnplek(tekst) {
   return typeof tekst === "string" && /^\s*\[tijdlijn\]\s*$/m.test(tekst);
 }
 
+// Wanneer deze teksten voor het laatst zijn bijgewerkt.
+//
+// Een omgeving die er alleen maar "staat", roept de vraag op of hij nog klopt.
+// Een datum is het goedkoopste antwoord daarop. Hij stond al in de opslag --
+// werkOmgevingBij zet hem bij elke wijziging -- hij werd alleen nergens
+// getoond.
+//
+// De waarde kan uit Firestore komen (een Timestamp met toDate), uit een pakket
+// (een getal of een tekst) of uit een test (een Date). Alle vier mogen, en wat
+// er niet uit te lezen valt levert niets op in plaats van "Invalid Date".
+function alsDatum(waarde) {
+  return waarde instanceof Date && !Number.isNaN(waarde.getTime()) ? waarde : null;
+}
+
+export function leesBijgewerkt(inhoud) {
+  const bron = inhoud && (inhoud.bijgewerktOp || inhoud.aangemaaktOp);
+  if (!bron) return null;
+  if (bron instanceof Date) return alsDatum(bron);
+  if (typeof bron === "number" || typeof bron === "string") return alsDatum(new Date(bron));
+  if (typeof bron.toDate === "function") {
+    try { return alsDatum(bron.toDate()); } catch { return null; }
+  }
+  if (typeof bron.seconds === "number") return alsDatum(new Date(bron.seconds * 1000));
+  return null;
+}
+
+export function schrijfDatum(datum, taal = "nl-NL") {
+  if (!alsDatum(datum)) return "";
+  try {
+    return new Intl.DateTimeFormat(taal, { day: "numeric", month: "long", year: "numeric" }).format(datum);
+  } catch {
+    return "";
+  }
+}
+
 export function splitsBestand(base64) {
   return Array.from({ length: Math.ceil(base64.length / DEEL_GROOTTE) }, (_, i) => base64.slice(i * DEEL_GROOTTE, (i + 1) * DEEL_GROOTTE));
 }

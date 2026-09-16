@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
 import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij } from "../../lib/app/teamomgevingOpslag";
-import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek } from "../../lib/app/teamomgeving";
+import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek, leesBijgewerkt, schrijfDatum } from "../../lib/app/teamomgeving";
 import { maakSlak, sectieAdressen, leesHash, maakAdres } from "../../lib/app/teamomgevingAdres";
 import { maakZoekindex, zoek as zoekInOmgeving } from "../../lib/app/teamomgevingZoek";
 import { houdOpZijnPlek } from "../../lib/app/scrollbehoud";
@@ -547,6 +547,7 @@ function Omgeving({ team, uid, leden, magInrichten }) {
   const deel = omgeving.inhoud.onderdelen.find((d) => d.id === tab);
   const documenten = omgeving.inhoud.documenten || [];
   const groepen = maakOnderdelenlijst(omgeving.inhoud, omgeving.magBeheer);
+  const bijgewerkt = leesBijgewerkt(omgeving.inhoud);
   const aanvullen = omgeving.magBeheer
     ? "Je kunt de brontekst bij Beheer downloaden, aanvullen en als nieuw pakket aanleveren."
     : "De twee begeleiders van dit team vullen dit aan.";
@@ -556,6 +557,7 @@ function Omgeving({ team, uid, leden, magInrichten }) {
       <div className="to-koptekst">
         <h1 className="to-titel">{omgeving.inhoud.titel}</h1>
         {omgeving.inhoud.intro && <p className="to-context">{omgeving.inhoud.intro}</p>}
+        {bijgewerkt && <p className="to-versheid">Bijgewerkt op {schrijfDatum(bijgewerkt)}</p>}
       </div>
       <Zoeken inhoud={omgeving.inhoud} ga={(id, slak) => { setMelding(""); navigeer(maakAdres(id, slak)); }} />
     </header>

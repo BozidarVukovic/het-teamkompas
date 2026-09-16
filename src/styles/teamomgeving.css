@@ -86,6 +86,12 @@
   line-height: 1.25;
 }
 
+.to-versheid {
+  margin: 8px 0 0;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-fijn);
+}
+
 .to-context {
   margin: 5px 0 0;
   max-width: 68ch;
@@ -131,6 +137,34 @@
     position: sticky;
     top: 84px;
     margin-bottom: 0;
+  }
+}
+
+/* Op een smal scherm is de keuzeknop de navigatie, en die hoort mee te lopen.
+   Stond hij alleen bovenaan, dan was hij na een half scherm scrollen weg en
+   moest je helemaal terug om naar het volgende onderdeel te gaan.
+   De hoogte waarop hij blijft hangen is die van de balk erboven: onder de 720
+   pixels is dat alleen de bovenbalk, daarboven komt het menu erbij. */
+@media (max-width: 899px) {
+  .to-nav {
+    position: sticky;
+    top: 84px;
+    z-index: 6;
+    margin: 0 -6px 16px;
+    padding: 6px 6px 0;
+    background: var(--tk-navy);
+  }
+
+  /* Een lijst die langer is dan het scherm zou de knop zelf uit beeld duwen. */
+  .to-navlijst[data-open="ja"] {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .to-nav {
+    top: 57px;
   }
 }
 
@@ -339,6 +373,23 @@
   margin: 0 0 14px;
   max-width: 68ch;
   line-height: 1.75;
+}
+
+/* Eén leesbreedte voor alles wat je leest.
+   Een alinea stond al op 68 tekens, maar een lijstregel, een kop en een
+   sectietitel liepen door tot de rand van de kaart. Op een breed scherm werd
+   dezelfde tekst daardoor anders om te lezen dan de alinea erboven: negentig
+   tekens per regel in plaats van zeventig, en dat is precies het punt waarop je
+   oog de volgende regel niet meer vanzelf terugvindt.
+   De tijdlijn en de documentenrijen doen niet mee: dat zijn geen leesregels
+   maar rijtjes met een eigen indeling. */
+.to-tekst h2,
+.to-tekst h3,
+.to-tekst h4,
+.to-tekst blockquote,
+.to-tekst li:not(.to-halte):not(.to-doc),
+.to-vouwtitel {
+  max-width: 68ch;
 }
 
 /* De eerste regel onder de titel is de inleiding van het onderdeel, geen gewone
@@ -1346,5 +1397,67 @@
 @media (max-width: 600px) {
   .to-tekst {
     padding: 18px;
+  }
+}
+
+/* ------------------------------------------------------------------ papier */
+
+/* Een teamdag wordt voorbereid op papier. Op papier bestaat inklappen niet, en
+   navigatie, zoeken en knoppen ook niet: wat overblijft is de tekst, in de
+   volgorde waarin hij staat. */
+@media print {
+  .to-kruimel,
+  .to-nav,
+  .to-zoekknop,
+  .to-zoek,
+  .to-vouwlink,
+  .to-pijl,
+  .to-tekst .tk-knop,
+  .to-bronexport,
+  .to-bijwerken,
+  .to-beheer-invoer {
+    display: none !important;
+  }
+
+  .to-omgeving {
+    max-width: none;
+  }
+
+  .to-werkblad {
+    display: block;
+  }
+
+  .to-tekst {
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  /* Alles open, ook wat de browser voor het scherm had verstopt. */
+  .to-vouwvak,
+  .to-vouwvak[hidden] {
+    display: block !important;
+    grid-template-rows: none !important;
+    content-visibility: visible !important;
+    visibility: visible !important;
+  }
+
+  .to-vouwvak > div {
+    overflow: visible;
+  }
+
+  .to-vouwdeel,
+  .to-halte,
+  .to-tabel tr {
+    break-inside: avoid;
+  }
+
+  .to-vouwkop {
+    padding: 14px 0 2px;
+  }
+
+  .tk-app {
+    background: #fff;
   }
 }
