@@ -3,6 +3,27 @@ import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { heeftOmgeving } from "../../lib/app/teamomgevingOpslag";
 
+// De ingang naar de teamomgeving.
+//
+// Dit was een onderstreepte tekstlink in een kaart. Daarmee zag de enige plek
+// waar het werk van een heel team samenkomt eruit als een voetnoot -- en op een
+// scherm waar verder alleen bollen met voornamen staan, is een blauwe streep
+// niet het ding waar je oog naartoe gaat.
+//
+// De hele kaart is nu de knop. De pil rechts is er om te laten zien dat er iets
+// gebeurt als je klikt; het is met opzet geen oranje knop, want oranje betekent
+// in deze app "hier verandert iets" en dit is navigeren.
+function Team({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M15.5 19.5v-1.6a3.6 3.6 0 0 0-3.6-3.6H6.1a3.6 3.6 0 0 0-3.6 3.6v1.6" />
+      <circle cx="9" cy="7.4" r="3.3" />
+      <path d="M21.5 19.5v-1.6a3.6 3.6 0 0 0-2.7-3.5" />
+      <path d="M15.2 4.3a3.3 3.3 0 0 1 0 6.2" />
+    </svg>
+  );
+}
+
 export default function TeamomgevingLink() {
   const { actiefTeam, gebruiker } = useApp();
   const [zichtbaarVoor, setZichtbaarVoor] = useState("");
@@ -18,5 +39,18 @@ export default function TeamomgevingLink() {
     return () => { geldig = false; };
   }, [sleutel]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!sleutel || zichtbaarVoor !== sleutel) return null;
-  return <Link className="tk-kaart" style={{ display: "block", marginBottom: 20 }} to="/app/teamomgeving"><strong>Onze teamomgeving →</strong><p>Teamdagen, documenten, werkvormen en de verbinding met onze afspraken.</p></Link>;
+  const team = actiefTeam.teamNaam ? ` van ${actiefTeam.teamNaam}` : "";
+  return (
+    <Link className="tk-kaart tk-toegang" to="/app/teamomgeving">
+      <span className="tk-toegang-icoon" aria-hidden="true"><Team /></span>
+      <span className="tk-toegang-tekst">
+        <strong className="tk-toegang-titel">Onze teamomgeving</strong>
+        <span className="tk-toegang-uitleg">Afspraken, teamdagen, werkvormen en documenten{team}.</span>
+      </span>
+      <span className="tk-toegang-actie" aria-hidden="true">
+        Openen
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 8h10M9 4.2 12.8 8 9 11.8" /></svg>
+      </span>
+    </Link>
+  );
 }

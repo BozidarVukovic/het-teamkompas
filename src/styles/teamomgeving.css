@@ -15,38 +15,73 @@
 /* De breedte was 1100 terwijl elk ander scherm op 880 staat. Dat is het soort
    verschil dat je niet als breedte ziet maar als "het loopt niet lekker": de
    kop begint op een andere plek dan op het scherm ervoor. */
+/* De teamomgeving is een werkomgeving, geen pagina om doorheen te scrollen.
+   Op een breed scherm staat de navigatie links en blijft hij staan; de inhoud
+   ernaast houdt zijn eigen leesbreedte. Op een smal scherm wordt diezelfde
+   navigatie één knop die openklapt. */
 .to-omgeving {
   padding-bottom: 8px;
 }
 
-/* ------------------------------------------------------------------- terug */
+@media (min-width: 900px) {
+  .to-omgeving {
+    max-width: 1080px;
+  }
+}
 
-.to-terug {
-  display: inline-flex;
+/* ---------------------------------------------------------------- kruimel */
+
+.to-kruimel {
+  display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   min-height: 32px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   color: var(--tk-zacht);
   font-size: var(--tk-t-klein);
   font-weight: 600;
+}
+
+.to-kruimel a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tk-zacht);
   text-decoration: none;
 }
 
+.to-kruimel [aria-current] {
+  color: var(--tk-tekst);
+}
+
 @media (hover: hover) {
-  .to-terug:hover {
+  .to-kruimel a:hover {
     color: var(--tk-tekst);
   }
 }
 
 /* -------------------------------------------------------------------- kop */
 
-/* Geen gekleurde balk. De titel van een pagina heeft geen vlak nodig om een
-   titel te zijn, en een donker blok bovenaan een licht scherm trekt de
-   aandacht naar de omlijsting in plaats van naar wat er staat. Dezelfde
-   opbouw als elk ander scherm: kopregel, titel, één zin eronder. */
+/* Compact. Een titel van 32 pixels met een alinea eronder leest als een
+   landingspagina en duwt het werk onder de vouw; dit is een plek waar mensen
+   iets komen doen. */
 .to-kop {
-  margin-bottom: 26px;
+  margin-bottom: 20px;
+}
+
+.to-titel {
+  margin: 0;
+  font-size: var(--tk-t-groot);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.to-context {
+  margin: 5px 0 0;
+  max-width: 68ch;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.6;
 }
 
 .to-eyebrow {
@@ -58,88 +93,202 @@
   text-transform: uppercase;
 }
 
-.to-kop .tk-onderkop {
-  max-width: 62ch;
-  margin-bottom: 0;
-}
+/* ------------------------------------------------------------- werkblad */
 
-/* --------------------------------------------------------------- tabbladen */
-
-/* Dezelfde vorm als het menu bovenin: pil, doorzichtig, actief met een tealtint
-   en een tealrand. Zo leest de app als één ding in plaats van als twee lagen
-   navigatie met elk hun eigen stijl.
-
-   Schuiven in plaats van afbreken: bij zeven tabbladen op een telefoon wordt
-   een wrappende rij een rommelig blok van twee of drie regels met gaten. */
-.to-tabs {
-  margin: 0 0 22px;
-}
-
-.to-tabs > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* Onder de 640 past een rij van zes nooit, en dan is omlopen erger dan
-   schuiven: je krijgt drie regels met gaten erin. */
-@media (max-width: 640px) {
-  .to-tabs > div {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding: 2px 2px 8px;
-    margin: -2px -2px -8px;
-    scrollbar-width: none;
-  }
-
-  .to-tabs > div::-webkit-scrollbar {
-    display: none;
+@media (min-width: 900px) {
+  .to-werkblad {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
   }
 }
 
-.to-tabs button {
-  flex: 0 0 auto;
-  min-height: 40px;
-  padding: 8px 15px;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--tk-zacht);
-  font: inherit;
-  font-size: var(--tk-t-basis);
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: color var(--tk-vlot) var(--tk-soepel),
-    background var(--tk-vlot) var(--tk-soepel);
+/* Zonder dit mag een grid-kolom niet smaller worden dan zijn breedste kind, en
+   een brede tabel duwt de hele pagina dan uit beeld. */
+.to-werk {
+  min-width: 0;
 }
 
-@media (hover: hover) {
-  .to-tabs button:hover {
-    color: var(--tk-tekst);
-  }
-}
+/* ------------------------------------------------------------- navigatie */
 
-.to-tabs button[aria-current] {
-  color: var(--tk-tekst);
-  background: var(--tk-teal-dim);
-  border-color: rgba(0, 121, 107, 0.45);
-}
-
-/* --------------------------------------------------------------- inhoud */
-
-.to-sectie {
+.to-nav {
   margin-bottom: 16px;
 }
 
-.to-sectie > h2 {
-  margin: 0 0 12px 4px;
+@media (min-width: 900px) {
+  .to-nav {
+    position: sticky;
+    top: 84px;
+    margin-bottom: 0;
+  }
+}
+
+/* De knop bestaat alleen op smalle schermen; daar is hij de navigatie. */
+.to-navknop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: var(--tk-raak);
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--tk-vlak);
+  box-shadow: 0 6px 20px rgba(16, 36, 58, 0.08);
+  color: var(--tk-tekst);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.to-navknop-label {
+  flex: 0 0 auto;
   color: var(--tk-zacht);
   font-size: var(--tk-t-fijn);
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+
+.to-navknop-titel {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--tk-t-basis);
+  font-weight: 700;
+}
+
+.to-navlijst[data-open="nee"] {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .to-navknop {
+    display: none;
+  }
+
+  .to-navlijst[data-open="nee"] {
+    display: block;
+  }
+}
+
+.to-navlijst {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 18px;
+  background: var(--tk-vlak);
+  box-shadow: 0 6px 20px rgba(16, 36, 58, 0.08);
+}
+
+@media (min-width: 900px) {
+  .to-navlijst {
+    margin-top: 0;
+  }
+}
+
+.to-navlijst ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.to-groep + .to-groep {
+  margin-top: 6px;
+}
+
+/* Beheer is niet het achtste onderdeel maar een ander soort plek. */
+.to-groep[data-apart="ja"] {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.to-groepkop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 34px;
+  padding: 4px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--tk-zacht);
+  font: inherit;
+  font-size: var(--tk-t-fijn);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.to-onderdeel {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 12px 9px 14px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tk-zacht);
+  font: inherit;
+  font-size: var(--tk-t-basis);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--tk-vlot) var(--tk-soepel),
+    background var(--tk-vlot) var(--tk-soepel);
+}
+
+@media (hover: hover) {
+  .to-onderdeel:hover {
+    color: var(--tk-tekst);
+    background: var(--tk-navy);
+  }
+}
+
+/* Waar je staat, zie je aan drie dingen tegelijk: kleur, vlak en het streepje.
+   Eén ervan alleen is te makkelijk te missen op een scherm vol tekst. */
+.to-onderdeel[aria-current] {
+  color: var(--tk-tekst);
+  background: var(--tk-teal-dim);
+}
+
+.to-onderdeel[aria-current]::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  width: 3px;
+  height: 17px;
+  margin-top: -8.5px;
+  border-radius: 2px;
+  background: var(--tk-teal);
+}
+
+.to-pijl {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--tk-vlot) var(--tk-soepel);
+}
+
+[aria-expanded="true"] > .to-pijl {
+  transform: translateY(2px) rotate(-135deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .to-onderdeel,
+  .to-pijl {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------- inhoud */
 
 /* Geïmporteerde markdown. Eén ritme voor koppen, alinea's en lijsten, zodat
    twee onderdelen van verschillende lengte er hetzelfde uitzien. */
@@ -462,44 +611,116 @@
 
 /* ------------------------------------------------------------- documenten */
 
-/* Gelijke hoogte, en de knop onderaan uitgelijnd. Zonder dat laatste eindigt
-   elke kaart op een andere hoogte — afhankelijk van hoe lang de beschrijving
-   is — en dat is precies wat een raster onrustig maakt. */
-.to-documenten {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px;
-  margin-bottom: 16px;
+/* Regels, geen kaarten. Een raster van kaarten geeft elk document evenveel
+   gewicht als een heel onderdeel, terwijl het om vijf pdf's gaat die je wilt
+   kunnen aflopen. */
+.to-docs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .to-doc {
   display: flex;
-  flex-direction: column;
-  margin-bottom: 0;
-  padding: 20px;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--tk-lijn);
 }
 
-.to-doc .to-eyebrow {
-  color: var(--tk-zacht);
+.to-doc:first-child {
+  border-top: 0;
+  padding-top: 2px;
 }
 
-.to-doc h3 {
-  margin: 0 0 6px;
-  font-size: var(--tk-t-kop);
+.to-doc:last-child {
+  padding-bottom: 2px;
+}
+
+.to-doc-soort {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--tk-teal-dim);
+  color: var(--tk-teal);
+  font-size: var(--tk-t-fijn);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.to-doc-tekst {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.to-doc-tekst strong {
+  display: block;
+  font-size: var(--tk-t-lead);
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
-.to-doc p {
-  margin: 0 0 18px;
+.to-doc-tekst span {
+  display: block;
+  margin-top: 3px;
+  max-width: 58ch;
   color: var(--tk-zacht);
   font-size: var(--tk-t-klein);
   line-height: 1.6;
 }
 
 .to-doc .tk-knop {
-  margin-top: auto;
-  align-self: flex-start;
+  flex: 0 0 auto;
+  align-self: center;
+}
+
+@media (max-width: 560px) {
+  .to-doc {
+    flex-wrap: wrap;
+  }
+
+  .to-doc .tk-knop {
+    margin-left: 52px;
+  }
+}
+
+.to-docuitleg {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.to-docuitleg > *:last-child {
+  margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------------- leeg */
+
+/* Een leeg onderdeel is geen leeg scherm. Wie hier komt heeft ergens op geklikt
+   en hoort te lezen waarom er niets staat en wie daar iets aan kan doen. */
+.to-leeg {
+  padding: 24px 20px;
+  border: 1px dashed var(--tk-lijn);
+  border-radius: 16px;
+}
+
+.to-leeg-titel {
+  margin: 0 0 6px !important;
+  color: var(--tk-tekst);
+  font-size: var(--tk-t-lead);
+  font-weight: 700;
+}
+
+.to-leeg p {
+  margin: 0;
+  max-width: 58ch;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.6;
 }
 
 /* ----------------------------------------------------------------- beheer */
@@ -606,12 +827,7 @@
 /* ------------------------------------------------------------ smal scherm */
 
 @media (max-width: 600px) {
-  .to-tekst,
-  .to-doc {
+  .to-tekst {
     padding: 18px;
-  }
-
-  .to-documenten {
-    grid-template-columns: 1fr;
   }
 }

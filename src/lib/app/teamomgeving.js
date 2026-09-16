@@ -181,13 +181,39 @@ export function maakBronPakket(omgeving) {
     inhoud: {
       titel: inhoud.titel || "",
       intro: inhoud.intro || "",
-      onderdelen: inhoud.onderdelen.map((d) => ({ id: d.id, titel: d.titel, tekst: d.tekst })),
+      onderdelen: inhoud.onderdelen.map((d) => (d.groep ? { id: d.id, titel: d.titel, groep: d.groep, tekst: d.tekst } : { id: d.id, titel: d.titel, tekst: d.tekst })),
       documentContext: inhoud.documentContext || "",
       documenten: (inhoud.documenten || []).map((d) => ({ id: d.id, titel: d.titel, naam: d.naam, beschrijving: d.beschrijving || "" })),
     },
     beheer: { tekst: (omgeving.beheer && omgeving.beheer.tekst) || "" },
     bestanden: [],
   };
+}
+
+// De onderdelen zoals ze in de navigatie staan.
+//
+// Acht onderdelen in twee rijen gelijkwaardige tabbladen laten zien dát er acht
+// dingen zijn, niet hoe ze zich tot elkaar verhouden. Groeperen helpt daarbij,
+// maar alleen als de groep uit het pakket komt: welke onderdelen er zijn
+// verschilt per team, en een indeling die hier op namen of volgorde gokt, klopt
+// bij de volgende klant niet meer.
+//
+// Een onderdeel mag daarom een veld `groep` hebben. Staat het er niet, dan komt
+// het onderdeel gewoon in de lopende lijst -- geen verzonnen kopjes. Documenten
+// sluit daarbij aan; Beheer staat apart, want dat is van de begeleiders.
+export function maakOnderdelenlijst(inhoud, magBeheer) {
+  const groepen = [];
+  const voegToe = (naam, item) => {
+    const laatste = groepen[groepen.length - 1];
+    if (laatste && !laatste.apart && laatste.naam === naam) laatste.items.push(item);
+    else groepen.push({ naam, items: [item] });
+  };
+  for (const deel of (inhoud && inhoud.onderdelen) || []) {
+    voegToe(typeof deel.groep === "string" ? deel.groep.trim() : "", { id: deel.id, titel: deel.titel });
+  }
+  voegToe("", { id: "documenten", titel: "Documenten" });
+  if (magBeheer) groepen.push({ naam: "", apart: true, items: [{ id: "beheer", titel: "Beheer" }] });
+  return groepen;
 }
 
 export function splitsBestand(base64) {

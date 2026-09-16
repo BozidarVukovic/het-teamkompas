@@ -321,6 +321,117 @@
   margin-bottom: 0;
 }
 
+/* De ingang naar de teamomgeving, op Start.
+   Dit was een onderstreepte tekstlink in een kaart: de enige plek waar het werk
+   van een heel team samenkomt zag eruit als een voetnoot. De hele kaart is nu
+   de knop. De pil rechts is met opzet niet oranje -- oranje betekent in deze app
+   "hier verandert iets", en dit is navigeren. */
+.tk-toegang {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow var(--tk-vlot) var(--tk-soepel),
+    transform var(--tk-vlot) var(--tk-soepel);
+}
+
+.tk-toegang-icoon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--tk-teal-dim);
+  color: var(--tk-teal);
+}
+
+.tk-toegang-icoon svg {
+  width: 23px;
+  height: 23px;
+}
+
+.tk-toegang-tekst {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tk-toegang-titel {
+  display: block;
+  font-size: var(--tk-t-kop);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.tk-toegang-uitleg {
+  display: block;
+  margin-top: 3px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.55;
+}
+
+.tk-toegang-actie {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--tk-teal-dim);
+  color: var(--tk-teal);
+  font-size: var(--tk-t-klein);
+  font-weight: 700;
+  transition: background var(--tk-vlot) var(--tk-soepel);
+}
+
+.tk-toegang-actie svg {
+  width: 15px;
+  height: 15px;
+}
+
+@media (hover: hover) {
+  .tk-toegang:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(16, 36, 58, 0.13);
+  }
+
+  .tk-toegang:hover .tk-toegang-actie {
+    background: rgba(0, 121, 107, 0.18);
+  }
+}
+
+.tk-toegang:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 14px rgba(16, 36, 58, 0.10);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tk-toegang,
+  .tk-toegang-actie {
+    transition: none;
+  }
+
+  .tk-toegang:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .tk-toegang {
+    flex-wrap: wrap;
+  }
+
+  .tk-toegang-actie {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .tk-label {
   display: block;
   font-size: var(--tk-t-klein);

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst, deelTekst, maakBronPakket } from '../src/lib/app/teamomgeving.js';
+import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst, deelTekst, maakBronPakket, maakOnderdelenlijst } from '../src/lib/app/teamomgeving.js';
 import { createHash } from 'node:crypto';
 const geldig = () => ({ versie:1, inhoud:{titel:'Testteam',onderdelen:[{id:'overzicht',titel:'Overzicht',tekst:'Alleen teamleden'}]},beheer:{tekst:'Apart'},bestanden:[] });
 test('geldige teamomgeving wordt geaccepteerd', () => assert.equal(valideerOmgeving(geldig()).versie,1));
@@ -200,4 +200,47 @@ test('de stand van zaken van de laatste actie wordt geen bovenkopje', () => {
   assert.deepEqual(delen.map((d) => d.soort), ['tekst']);
   assert.match(delen[0].tekst, /^4\. Meer met elkaar delen$/m);
   assert.match(delen[0].tekst, /^ {3}Stand van zaken nog te bespreken$/m);
+});
+
+const inhoudMet = (onderdelen) => ({ onderdelen, documenten: [] });
+
+test('zonder groepen is de navigatie een lopende lijst', () => {
+  const groepen = maakOnderdelenlijst(inhoudMet([
+    { id: 'overzicht', titel: 'Overzicht' },
+    { id: 'afspraken', titel: 'Onze afspraken' },
+  ]), false);
+  assert.equal(groepen.length, 1);
+  assert.deepEqual(groepen[0].items.map((i) => i.id), ['overzicht', 'afspraken', 'documenten']);
+  assert.equal(groepen[0].naam, '');
+});
+
+test('een groep uit het pakket wordt een groep in de navigatie', () => {
+  const groepen = maakOnderdelenlijst(inhoudMet([
+    { id: 'overzicht', titel: 'Overzicht' },
+    { id: 'afspraken', titel: 'Onze afspraken', groep: 'Samenwerken' },
+    { id: 'experimenten', titel: 'Experimenten', groep: 'Samenwerken' },
+    { id: 'teamdagen', titel: 'Onze teamdagen', groep: 'Traject' },
+  ]), false);
+  assert.deepEqual(groepen.map((g) => g.naam), ['', 'Samenwerken', 'Traject', '']);
+  assert.deepEqual(groepen[1].items.map((i) => i.id), ['afspraken', 'experimenten']);
+  assert.deepEqual(groepen[3].items.map((i) => i.id), ['documenten']);
+});
+
+test('beheer staat apart en alleen voor de begeleiders', () => {
+  const zonder = maakOnderdelenlijst(inhoudMet([{ id: 'overzicht', titel: 'Overzicht' }]), false);
+  assert.ok(!zonder.some((g) => g.items.some((i) => i.id === 'beheer')));
+  const met = maakOnderdelenlijst(inhoudMet([{ id: 'overzicht', titel: 'Overzicht' }]), true);
+  const laatste = met[met.length - 1];
+  assert.equal(laatste.apart, true);
+  assert.deepEqual(laatste.items.map((i) => i.id), ['beheer']);
+});
+
+test('een lege of ontbrekende inhoud geeft alleen de vaste onderdelen', () => {
+  assert.deepEqual(maakOnderdelenlijst(null, false)[0].items.map((i) => i.id), ['documenten']);
+  assert.deepEqual(maakOnderdelenlijst({}, false)[0].items.map((i) => i.id), ['documenten']);
+});
+
+test('een groep blijft behouden in de geexporteerde brontekst', () => {
+  const omgeving = { inhoud: { titel: 'T', onderdelen: [{ id: 'afspraken', titel: 'Onze afspraken', groep: 'Samenwerken', tekst: 'x' }] } };
+  assert.equal(maakBronPakket(omgeving).inhoud.onderdelen[0].groep, 'Samenwerken');
 });
