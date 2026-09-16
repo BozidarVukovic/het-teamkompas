@@ -51,8 +51,12 @@ const CODEHEK = /^\s{0,3}(```|~~~)/;
 const LOS_NUMMER = /^\s{0,3}(\d{1,2})[.)]?\s*$/;
 const BLOKGRENS = /^\s{0,3}(#{1,6}\s|[-*+]\s|\d{1,9}[.)]\s|>\s|---|___|\*\*\*|\|)/;
 
+// De spaties die overblijven waar een label stond, worden er weer één. Wat aan
+// het begin van een regel staat blijft staan: in markdown is inspringing geen
+// witruimte maar betekenis -- het zegt dat een regel bij het lijstitem erboven
+// hoort. Die weghalen brak elke actie los van zijn eigen stand van zaken.
 function zonderHtml(regel) {
-  return regel.replace(REGELEINDE, "  \n").replace(HTML_LABEL, " ").replace(/[ \t]{2,}(?!\n)/g, " ");
+  return regel.replace(REGELEINDE, "  \n").replace(HTML_LABEL, " ").replace(/(\S)[ \t]{2,}(?!\n)/g, "$1 ");
 }
 
 export function normaliseerTekst(tekst) {
@@ -211,10 +215,20 @@ export function maakBronPakket(omgeving) {
 // sluit daarbij aan; Beheer staat apart, want dat is van de begeleiders.
 export function maakOnderdelenlijst(inhoud, magBeheer) {
   const groepen = [];
+  const opNaam = new Map();
+  // Een groep staat op de plek van zijn eerste onderdeel en verzamelt de rest,
+  // ook als die er in het pakket niet direct achter staan. Wie het pakket
+  // schrijft hoeft dan niet ook nog op de volgorde te letten.
   const voegToe = (naam, item) => {
+    if (naam) {
+      let groep = opNaam.get(naam);
+      if (!groep) { groep = { naam, items: [] }; opNaam.set(naam, groep); groepen.push(groep); }
+      groep.items.push(item);
+      return;
+    }
     const laatste = groepen[groepen.length - 1];
-    if (laatste && !laatste.apart && laatste.naam === naam) laatste.items.push(item);
-    else groepen.push({ naam, items: [item] });
+    if (laatste && !laatste.apart && !laatste.naam) laatste.items.push(item);
+    else groepen.push({ naam: "", items: [item] });
   };
   for (const deel of (inhoud && inhoud.onderdelen) || []) {
     voegToe(typeof deel.groep === "string" ? deel.groep.trim() : "", { id: deel.id, titel: deel.titel });

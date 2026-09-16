@@ -285,3 +285,25 @@ test('een onderdeel zonder tijdlijn krijgt het veld niet cadeau', () => {
   const omgeving = { inhoud: { titel: 'T', onderdelen: [{ id: 'overzicht', titel: 'Overzicht', tekst: 'x' }] } };
   assert.equal('tijdlijn' in maakBronPakket(omgeving).inhoud.onderdelen[0], false);
 });
+
+test('een groep verzamelt zijn onderdelen ook als ze niet op elkaar volgen', () => {
+  const groepen = maakOnderdelenlijst(inhoudMet([
+    { id: 'overzicht', titel: 'Overzicht' },
+    { id: 'afspraken', titel: 'Onze afspraken', groep: 'Samenwerken' },
+    { id: 'teamdagen', titel: 'Onze teamdagen', groep: 'Traject' },
+    { id: 'experimenten', titel: 'Experimenten', groep: 'Samenwerken' },
+    { id: 'teamcheck', titel: 'Teamcheck', groep: 'Traject' },
+  ]), false);
+  assert.deepEqual(groepen.map((g) => g.naam), ['', 'Samenwerken', 'Traject', '']);
+  assert.deepEqual(groepen[1].items.map((i) => i.id), ['afspraken', 'experimenten']);
+  assert.deepEqual(groepen[2].items.map((i) => i.id), ['teamdagen', 'teamcheck']);
+});
+
+test('inspringing van een lijstitem blijft staan', () => {
+  const lijst = '1. Eerste actie\n\n   Stand van zaken nog te bespreken\n\n2. Tweede actie';
+  assert.equal(normaliseerTekst(lijst), lijst);
+});
+
+test('spaties die overblijven waar een label stond, worden er een', () => {
+  assert.equal(normaliseerTekst('<b>Een</b>   <i>twee</i>').trim(), 'Een twee');
+});
