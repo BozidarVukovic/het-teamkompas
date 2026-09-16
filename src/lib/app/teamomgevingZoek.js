@@ -16,18 +16,25 @@ import { maakSlak, sectieAdressen } from "./teamomgevingAdres.js";
 
 // Markdown terug naar lopende tekst, zodat een fragment niet halverwege een
 // sterretje begint.
+// Losse alinea's krijgen een liggend streepje tussen zich in. Zonder dat plakt
+// "Actieteam: Stephanie" aan "Stand van zaken: nog te bespreken" en leest een
+// treffer als een zin die halverwege ontspoort.
 export function vlak(tekst) {
   return normaliseerTekst(tekst)
-    .split("\n")
-    .map((regel) => regel
-      .replace(/^\s{0,3}#{1,6}\s+/, "")
-      .replace(/^\s{0,3}[-*+]\s+/, "")
-      .replace(/^\s{0,3}>\s?/, ""))
-    .join(" ")
-    .replace(/\[tijdlijn\]/gi, " ")
-    .replace(/[*_`|~]/g, " ")
-    .replace(/\s{2,}/g, " ")
-    .trim();
+    .split(/\n{2,}/)
+    .map((blok) => blok
+      .split("\n")
+      .map((regel) => regel
+        .replace(/^\s{0,3}#{1,6}\s+/, "")
+        .replace(/^\s{0,3}[-*+]\s+/, "")
+        .replace(/^\s{0,3}>\s?/, ""))
+      .join(" ")
+      .replace(/\[tijdlijn\]/gi, " ")
+      .replace(/[*_`|~]/g, " ")
+      .replace(/\s{2,}/g, " ")
+      .trim())
+    .filter(Boolean)
+    .join(" \u2014 ");
 }
 
 // Hoofdletters en accenten tellen niet mee bij het zoeken. "Stephanie" hoort

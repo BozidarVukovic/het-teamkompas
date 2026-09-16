@@ -19,7 +19,8 @@ const inhoud = {
 };
 
 test('markdown wordt lopende tekst in een fragment', () => {
-  assert.equal(vlak('### Kop\n\n- punt een\n- punt twee'), 'Kop punt een punt twee');
+  assert.equal(vlak('### Kop\n\n- punt een\n- punt twee'), 'Kop \u2014 punt een punt twee');
+  assert.equal(vlak('Actieteam: Anouk\n\nStand van zaken: nog te bespreken.'), 'Actieteam: Anouk \u2014 Stand van zaken: nog te bespreken.');
   assert.equal(vlak('Actieteam: **Stéphanie**'), 'Actieteam: Stéphanie');
   assert.equal(vlak('[tijdlijn]'), '');
 });
