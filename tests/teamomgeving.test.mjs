@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst, deelTekst, maakBronPakket, maakOnderdelenlijst } from '../src/lib/app/teamomgeving.js';
+import { valideerOmgeving, splitsBestand, controleerPdf, normaliseerTekst, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn } from '../src/lib/app/teamomgeving.js';
 import { createHash } from 'node:crypto';
 const geldig = () => ({ versie:1, inhoud:{titel:'Testteam',onderdelen:[{id:'overzicht',titel:'Overzicht',tekst:'Alleen teamleden'}]},beheer:{tekst:'Apart'},bestanden:[] });
 test('geldige teamomgeving wordt geaccepteerd', () => assert.equal(valideerOmgeving(geldig()).versie,1));
@@ -243,4 +243,45 @@ test('een lege of ontbrekende inhoud geeft alleen de vaste onderdelen', () => {
 test('een groep blijft behouden in de geexporteerde brontekst', () => {
   const omgeving = { inhoud: { titel: 'T', onderdelen: [{ id: 'afspraken', titel: 'Onze afspraken', groep: 'Samenwerken', tekst: 'x' }] } };
   assert.equal(maakBronPakket(omgeving).inhoud.onderdelen[0].groep, 'Samenwerken');
+});
+
+const TRAJECT = [
+  { wanneer: '4 juni', wat: 'Eerste teamdag', stand: 'Afgerond' },
+  { wanneer: '8 oktober', wat: 'Tweede teamdag', stand: 'Voorstel' },
+  { wanneer: '30 dagen', wat: 'Toepassing', stand: 'Voorgesteld' },
+];
+
+test('een halte die afgerond is, wordt als afgerond gelezen', () => {
+  const haltes = leesTijdlijn({ tijdlijn: TRAJECT });
+  assert.deepEqual(haltes.map((h) => h.gedaan), [true, false, false]);
+  assert.equal(haltes[0].wat, 'Eerste teamdag');
+});
+
+test('het pakket mag zelf zeggen of een halte achter de rug is', () => {
+  const haltes = leesTijdlijn({ tijdlijn: [{ wanneer: 'Q1', stand: 'Loopt', gedaan: true }] });
+  assert.equal(haltes[0].gedaan, true);
+  assert.equal(haltes[0].wat, '');
+});
+
+test('zonder tijdlijn of met onzin komt er een lege lijst uit', () => {
+  assert.deepEqual(leesTijdlijn(undefined), []);
+  assert.deepEqual(leesTijdlijn({}), []);
+  assert.deepEqual(leesTijdlijn({ tijdlijn: 'geen lijst' }), []);
+  assert.deepEqual(leesTijdlijn({ tijdlijn: [null, {}, { wanneer: '  ' }] }), []);
+});
+
+test('de regel [tijdlijn] is een plek, geen tekst', () => {
+  const delen = deelTekst('Een zin.\n\n[tijdlijn]\n\nNog een zin.');
+  assert.deepEqual(delen.map((d) => d.soort), ['tekst', 'tijdlijn', 'tekst']);
+  assert.ok(!JSON.stringify(delen).includes('[tijdlijn]'));
+});
+
+test('een tijdlijn blijft behouden in de geexporteerde brontekst', () => {
+  const omgeving = { inhoud: { titel: 'T', onderdelen: [{ id: 'overzicht', titel: 'Overzicht', tekst: 'x', tijdlijn: TRAJECT }] } };
+  assert.deepEqual(maakBronPakket(omgeving).inhoud.onderdelen[0].tijdlijn, TRAJECT);
+});
+
+test('een onderdeel zonder tijdlijn krijgt het veld niet cadeau', () => {
+  const omgeving = { inhoud: { titel: 'T', onderdelen: [{ id: 'overzicht', titel: 'Overzicht', tekst: 'x' }] } };
+  assert.equal('tijdlijn' in maakBronPakket(omgeving).inhoud.onderdelen[0], false);
 });

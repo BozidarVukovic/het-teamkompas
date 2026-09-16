@@ -20,6 +20,12 @@ Onder `organisaties/{orgId}/teams/{teamId}`:
   base64-tekens. Alleen teamleden lezen; geen publieke assets of downloadtokens.
   SHA-256 wordt vóór import én vóór downloaden gecontroleerd.
 
+Een onderdeel mag twee optionele velden hebben die alleen over de vorm gaan:
+`groep` zet het in een groep in de navigatie, en `tijdlijn` is een rij haltes
+(`wanneer`, `wat`, `stand`, optioneel `gedaan`) die als lijn wordt getoond. Een
+regel `[tijdlijn]` in de tekst bepaalt waar die lijn staat; zonder die regel komt
+hij bovenaan. Beide velden zijn leeg toegestaan en veranderen niets aan de tekst.
+
 Een gedownloade brontekst en een nieuw pakket horen in `omgevingspakketten/`.
 Die map staat in .gitignore en `scripts/valideer-klantinhoud.mjs` laat de build
 mislukken zodra zo'n bestand toch wordt bijgehouden of de negeerregel verdwijnt.

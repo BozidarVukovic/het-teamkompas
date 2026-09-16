@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
 import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities } from "../../lib/app/teamomgevingOpslag";
-import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst } from "../../lib/app/teamomgeving";
+import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn } from "../../lib/app/teamomgeving";
 import "../../styles/teamomgeving.css";
 
 // Geen HTML, afbeeldingen of externe links uit geïmporteerde inhoud uitvoeren.
@@ -21,12 +21,33 @@ function Tabel({ kop, rijen }) {
   </table></div>;
 }
 
-function Tekst({ children }) {
-  return deelTekst(children).map((deel, i) => {
-    if (deel.soort === "tabel") return <Tabel key={i} kop={deel.kop} rijen={deel.rijen} />;
-    if (deel.soort === "bovenkopje") return <p className="to-eyebrow to-bovenkopje" key={i}>{deel.tekst}</p>;
-    return <Markdown key={i}>{deel.tekst}</Markdown>;
-  });
+// De haltes staan op een lijn, niet in een lijst: zo zie je in één oogopslag
+// wat achter je ligt en wat er nog komt. Op een smal scherm kantelt dezelfde
+// lijn naar verticaal — vijf haltes naast elkaar past daar niet.
+function Tijdlijn({ haltes }) {
+  return <ol className="to-lijn">
+    {haltes.map((halte, i) => <li className="to-halte" key={i} data-gedaan={halte.gedaan ? "ja" : undefined}>
+      <span className="to-halte-punt" aria-hidden="true" />
+      <span className="to-halte-wanneer">{halte.wanneer}</span>
+      {halte.wat && <span className="to-halte-wat">{halte.wat}</span>}
+      {halte.stand && <span className="to-halte-stand">{halte.stand}</span>}
+    </li>)}
+  </ol>;
+}
+
+function Tekst({ children, tijdlijn }) {
+  const delen = deelTekst(children);
+  const haltes = tijdlijn || [];
+  const heeftPlek = delen.some((deel) => deel.soort === "tijdlijn");
+  return <>
+    {!heeftPlek && haltes.length > 0 && <Tijdlijn haltes={haltes} />}
+    {delen.map((deel, i) => {
+      if (deel.soort === "tijdlijn") return haltes.length ? <Tijdlijn haltes={haltes} key={i} /> : null;
+      if (deel.soort === "tabel") return <Tabel key={i} kop={deel.kop} rijen={deel.rijen} />;
+      if (deel.soort === "bovenkopje") return <p className="to-eyebrow to-bovenkopje" key={i}>{deel.tekst}</p>;
+      return <Markdown key={i}>{deel.tekst}</Markdown>;
+    })}
+  </>;
 }
 
 // Een leeg onderdeel is geen leeg scherm. Wie hier komt heeft ergens op geklikt
@@ -189,7 +210,7 @@ function Omgeving({ team, uid, leden, magInrichten }) {
         {deel && <article className="tk-kaart to-tekst">
           <h2>{deel.titel}</h2>
           {deel.tekst && deel.tekst.trim()
-            ? <Tekst>{deel.tekst}</Tekst>
+            ? <Tekst tijdlijn={leesTijdlijn(deel)}>{deel.tekst}</Tekst>
             : <Leeg titel="Hier staat nog niets" uitleg={`Dit onderdeel is ingericht maar heeft nog geen inhoud. ${aanvullen}`} />}
           {deel.id === "afspraken" && <Link className="tk-knop" to="/app/team">Gedeelde teamafspraken bekijken en bijwerken</Link>}
           {deel.id === "experimenten" && <Link className="tk-knop" to="/app/ik">Mijn experimenten in de app</Link>}

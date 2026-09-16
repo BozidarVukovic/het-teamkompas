@@ -118,6 +118,7 @@ function alsRij(blok) {
 // Een korte regel zonder eindpunt, vlak boven een kop, is geen alinea maar het
 // bovenkopje van die kop -- "Onze aandacht" boven "Vier acties uit juni". Als
 // gewone alinea ziet dat eruit als een zin die halverwege is afgebroken.
+const TIJDLIJNPLEK = /^\[tijdlijn\]$/i;
 const KOPJE = /^[^\s#>*+|·-][^\n]{0,46}$/;
 const EINDPUNT = /[.!?:;,]$/;
 
@@ -140,6 +141,8 @@ export function deelTekst(tekst) {
     else delen.push({ soort: "tekst", tekst: blok });
   };
   for (let i = 0; i < blokken.length; i += 1) {
+    // Een regel [tijdlijn] is geen tekst maar een plek: hier hoort de lijn.
+    if (TIJDLIJNPLEK.test(blokken[i].trim())) { delen.push({ soort: "tijdlijn" }); continue; }
     const eerste = alsRij(blokken[i]);
     const rijen = Array.isArray(eerste) ? [eerste] : [];
     let j = i + 1;
@@ -181,7 +184,12 @@ export function maakBronPakket(omgeving) {
     inhoud: {
       titel: inhoud.titel || "",
       intro: inhoud.intro || "",
-      onderdelen: inhoud.onderdelen.map((d) => (d.groep ? { id: d.id, titel: d.titel, groep: d.groep, tekst: d.tekst } : { id: d.id, titel: d.titel, tekst: d.tekst })),
+      onderdelen: inhoud.onderdelen.map((d) => {
+        const deel = { id: d.id, titel: d.titel, tekst: d.tekst };
+        if (d.groep) deel.groep = d.groep;
+        if (Array.isArray(d.tijdlijn) && d.tijdlijn.length) deel.tijdlijn = d.tijdlijn;
+        return deel;
+      }),
       documentContext: inhoud.documentContext || "",
       documenten: (inhoud.documenten || []).map((d) => ({ id: d.id, titel: d.titel, naam: d.naam, beschrijving: d.beschrijving || "" })),
     },
@@ -214,6 +222,35 @@ export function maakOnderdelenlijst(inhoud, magBeheer) {
   voegToe("", { id: "documenten", titel: "Documenten" });
   if (magBeheer) groepen.push({ naam: "", apart: true, items: [{ id: "beheer", titel: "Beheer" }] });
   return groepen;
+}
+
+// Het traject als tijdlijn.
+//
+// Een traject is geen alinea. "4 juni eerste teamdag afgerond, 8 oktober tweede
+// teamdag voorstel" is een rij zinnen waarin je moet tellen hoe ver het is; een
+// lijn met haltes laat dat in één oogopslag zien -- wat achter je ligt, waar je
+// staat, wat er nog komt.
+//
+// De haltes komen uit het pakket, niet uit de lopende tekst. Data en standen uit
+// een alinea vissen zou raden zijn, en bij de volgende klant anders raden.
+//
+// Of een halte achter je ligt mag het pakket zeggen met `gedaan`. Staat dat er
+// niet, dan wordt het uit de stand afgeleid -- "Afgerond" betekent afgerond.
+// Dat is een leeshulp voor de vorm van de lijn, geen oordeel over inhoud: wat
+// er staat blijft precies wat de begeleiders hebben opgeschreven.
+const GEDAAN = /\b(afgerond|afgesloten|gedaan|klaar|geweest)\b/i;
+
+export function leesTijdlijn(deel) {
+  const haltes = deel && Array.isArray(deel.tijdlijn) ? deel.tijdlijn : [];
+  return haltes
+    .filter((h) => h && typeof h.wanneer === "string" && h.wanneer.trim())
+    .slice(0, 12)
+    .map((h) => ({
+      wanneer: h.wanneer.trim(),
+      wat: typeof h.wat === "string" ? h.wat.trim() : "",
+      stand: typeof h.stand === "string" ? h.stand.trim() : "",
+      gedaan: typeof h.gedaan === "boolean" ? h.gedaan : GEDAAN.test(typeof h.stand === "string" ? h.stand : ""),
+    }));
 }
 
 export function splitsBestand(base64) {

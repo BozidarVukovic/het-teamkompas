@@ -350,7 +350,11 @@
   margin-bottom: 0;
 }
 
-/* Een genummerde lijst is bijna nooit "tekst met cijfers ervoor": het zijn
+/* Deze regels gaan over genummerde lijsten uit de brontekst. De tijdlijn is ook
+   een <ol> -- het is een volgorde -- maar geen opsomming, en kreeg zonder de
+   uitzondering hieronder het genummerde rondje van een actieregel over zich heen.
+
+   Een genummerde lijst is bijna nooit "tekst met cijfers ervoor": het zijn
    afzonderlijke afspraken, acties of vragen, elk met een eigen stand van zaken.
    Dus geen ingesprongen alinea's met een cijfer ervoor, maar echte regels: het
    nummer in een eigen plaatje links, de kop op zijn eigen gewicht, en wat er
@@ -359,14 +363,14 @@
    De haarlijn ertussen doet het werk dat witruimte alleen niet kan doen — hij
    laat zien waar het ene item ophoudt en het volgende begint, ook als de kop
    over twee regels loopt. */
-.to-tekst ol {
+.to-tekst ol:not(.to-lijn) {
   counter-reset: to-stap;
   list-style: none;
   margin: 0 0 16px;
   padding: 0;
 }
 
-.to-tekst ol > li {
+.to-tekst ol:not(.to-lijn) > li {
   counter-increment: to-stap;
   position: relative;
   padding: 14px 0 14px 42px;
@@ -374,16 +378,16 @@
   line-height: 1.6;
 }
 
-.to-tekst ol > li:first-child {
+.to-tekst ol:not(.to-lijn) > li:first-child {
   border-top: 0;
   padding-top: 2px;
 }
 
-.to-tekst ol > li:last-child {
+.to-tekst ol:not(.to-lijn) > li:last-child {
   padding-bottom: 2px;
 }
 
-.to-tekst ol > li::before {
+.to-tekst ol:not(.to-lijn) > li::before {
   content: counter(to-stap);
   position: absolute;
   left: 0;
@@ -401,21 +405,21 @@
   font-variant-numeric: tabular-nums;
 }
 
-.to-tekst ol > li:first-child::before {
+.to-tekst ol:not(.to-lijn) > li:first-child::before {
   top: 1px;
 }
 
 /* De eerste alinea van een item is de actie zelf; alles daarna is toelichting.
    Zonder dat verschil lezen kop en stand van zaken als twee losse regels. */
-.to-tekst ol > li > p {
+.to-tekst ol:not(.to-lijn) > li > p {
   margin: 0;
   max-width: 58ch;
   font-weight: 600;
   line-height: 1.5;
 }
 
-.to-tekst ol > li > p ~ p,
-.to-tekst ol > li > ul {
+.to-tekst ol:not(.to-lijn) > li > p ~ p,
+.to-tekst ol:not(.to-lijn) > li > ul {
   margin: 5px 0 0;
   max-width: 64ch;
   color: var(--tk-zacht);
@@ -424,11 +428,11 @@
   line-height: 1.6;
 }
 
-.to-tekst ol > li > ul {
+.to-tekst ol:not(.to-lijn) > li > ul {
   padding-left: 18px;
 }
 
-.to-tekst ol ol {
+.to-tekst ol:not(.to-lijn) ol {
   margin: 8px 0 0;
 }
 
@@ -606,6 +610,124 @@
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+  }
+}
+
+/* ---------------------------------------------------------------- tijdlijn */
+
+/* Een metrolijn: elke halte tekent het stuk lijn naar de volgende, dus de lijn
+   begint bij de eerste stip en houdt op bij de laatste -- geen streepje dat het
+   niets in loopt. Wat achter je ligt is teal en gevuld, wat nog komt is open.
+   Het verschil zit in kleur én in vulling, want kleur alleen is voor wie die
+   niet onderscheidt geen verschil. */
+.to-lijn {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  list-style: none;
+  margin: 4px 0 22px;
+  padding: 0;
+}
+
+.to-halte {
+  position: relative;
+  padding: 28px 16px 0 0;
+}
+
+.to-halte::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 7px;
+  width: 100%;
+  height: 2px;
+  background: var(--tk-lijn);
+}
+
+.to-halte:last-child::before {
+  display: none;
+}
+
+.to-halte[data-gedaan]::before {
+  background: var(--tk-teal);
+}
+
+.to-halte-punt {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--tk-lijn);
+  background: var(--tk-vlak);
+}
+
+.to-halte[data-gedaan] .to-halte-punt {
+  border-color: var(--tk-teal);
+  background: var(--tk-teal);
+}
+
+.to-halte-wanneer {
+  display: block;
+  color: var(--tk-tekst);
+  font-size: var(--tk-t-basis);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.to-halte-wat {
+  display: block;
+  margin-top: 2px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.45;
+}
+
+/* De stand is een woord uit het pakket, geen signaal. Daarom twee rustige
+   vlakken en geen stoplicht: dit gaat over een fase, niet over een persoon. */
+.to-halte-stand {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--tk-navy-2);
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-fijn);
+  font-weight: 700;
+}
+
+.to-halte[data-gedaan] .to-halte-stand {
+  background: var(--tk-teal-dim);
+  color: var(--tk-teal);
+}
+
+/* Vijf haltes naast elkaar passen niet op een telefoon. Dezelfde lijn kantelt
+   naar verticaal; de haltes blijven haltes. */
+@media (max-width: 720px) {
+  .to-lijn {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    margin-bottom: 18px;
+  }
+
+  .to-halte {
+    padding: 0 0 18px 28px;
+  }
+
+  .to-halte:last-child {
+    padding-bottom: 0;
+  }
+
+  .to-halte::before {
+    left: 7px;
+    top: 16px;
+    width: 2px;
+    height: 100%;
+  }
+
+  .to-halte-stand {
+    margin-top: 6px;
   }
 }
 
