@@ -32,6 +32,21 @@ lijst zelf de keuze is. Die afweging hoort bij het pakket; het scherm kan niet
 zien wat voor soort onderdeel het is. Alle velden zijn leeg toegestaan en
 veranderen niets aan de tekst.
 
+## Adressen
+
+Het onderdeel staat in het pad (`/app/teamomgeving/afspraken`) en de sectie in
+de hash (`#verwachtingen-van-de-leidinggevende`). De slak wordt gemaakt in
+`teamomgevingAdres.js` en op twee plekken gebruikt: het scherm zet hem als `id`
+op elke kop en op elke inklapbare sectie, en het zoeken geeft hem terug bij een
+treffer. Wie er een verzint moet dus dezelfde functie gebruiken, anders komt een
+link ergens anders uit dan de treffer beloofde.
+
+## Zoeken
+
+`teamomgevingZoek.js` bouwt de index uit dezelfde inhoud die het scherm toont --
+in de browser, zonder netwerk. De beheerinhoud en de bespreeknotities zitten er
+niet in en horen er niet in: die zijn van de twee begeleiders.
+
 Een gedownloade brontekst en een nieuw pakket horen in `omgevingspakketten/`.
 Die map staat in .gitignore en `scripts/valideer-klantinhoud.mjs` laat de build
 mislukken zodra zo'n bestand toch wordt bijgehouden of de negeerregel verdwijnt.

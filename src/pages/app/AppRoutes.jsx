@@ -134,6 +134,7 @@ function Poort() {
         <Route path="handleiding" element={<MijnHandleiding />} />
         <Route path="team" element={<MijnTeam />} />
         <Route path="teamomgeving" element={<Teamomgeving />} />
+        <Route path="teamomgeving/:onderdeelId" element={<Teamomgeving />} />
         <Route path="teambeeld" element={<Teambeeld />} />
         <Route path="gegevens" element={<MijnGegevens />} />
         <Route path="ik" element={<Ik />} />

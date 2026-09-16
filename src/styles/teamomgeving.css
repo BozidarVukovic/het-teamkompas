@@ -66,7 +66,17 @@
    landingspagina en duwt het werk onder de vouw; dit is een plek waar mensen
    iets komen doen. */
 .to-kop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 20px;
   margin-bottom: 20px;
+}
+
+.to-koptekst {
+  flex: 1 1 320px;
+  min-width: 0;
 }
 
 .to-titel {
@@ -301,6 +311,15 @@
   font-size: var(--tk-t-sectie);
   font-weight: 800;
   line-height: 1.25;
+}
+
+/* Elke kop is aan te wijzen met een link. Dan hoort hij ook niet onder de
+   bovenrand te landen als je zo'n link opent. */
+.to-tekst h2,
+.to-tekst h3,
+.to-tekst h4,
+.to-vouwdeel {
+  scroll-margin-top: 96px;
 }
 
 .to-tekst h3 {
@@ -621,8 +640,62 @@
   margin: 4px 0 0;
 }
 
+.to-vouwdeel {
+  position: relative;
+}
+
 .to-vouwdeel + .to-vouwdeel {
   border-top: 1px solid var(--tk-lijn);
+}
+
+/* De kop en de kopieerknop staan naast elkaar. Nesten kan niet -- een knop in
+   een knop bestaat niet -- dus het zijn er twee, met de kop die de ruimte
+   pakt. */
+.to-vouwrij {
+  display: flex;
+  align-items: stretch;
+}
+
+.to-vouwkop {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Alleen zichtbaar als je er met de muis of met het toetsenbord bent. Op een
+   aanraakscherm is er geen zweven, dus daar staat hij gewoon aan. */
+.to-vouwlink {
+  flex: none;
+  align-self: center;
+  min-width: var(--tk-raak);
+  min-height: var(--tk-raak);
+  margin-left: 4px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--tk-zacht);
+  font: inherit;
+  font-size: var(--tk-t-klein);
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--tk-vlot) var(--tk-soepel), color var(--tk-vlot) var(--tk-soepel);
+}
+
+.to-vouwdeel:hover .to-vouwlink,
+.to-vouwdeel:focus-within .to-vouwlink {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .to-vouwlink {
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) {
+  .to-vouwlink:hover {
+    color: var(--tk-teal);
+  }
 }
 
 .to-vouw h3 {
@@ -683,9 +756,16 @@
 .to-vouwvak {
   display: grid;
   grid-template-rows: 0fr;
-  visibility: hidden;
-  transition: grid-template-rows var(--tk-rustig) var(--tk-soepel),
-    visibility var(--tk-rustig) var(--tk-soepel);
+  transition: grid-template-rows var(--tk-rustig) var(--tk-soepel);
+}
+
+/* Het kenmerk hidden="until-found" doet het verbergen én laat de browser de
+   tekst vinden met Cmd-F. content-visibility staat er los bij, zodat een
+   browser die het kenmerk nog niet kent toch verbergt -- en zodat de inhoud
+   van een dichte sectie uit de tabvolgorde en uit de schermlezer blijft. */
+.to-vouwvak[hidden] {
+  display: grid;
+  content-visibility: hidden;
 }
 
 .to-vouwvak > div {
@@ -694,7 +774,6 @@
 
 .to-vouwvak[data-open="ja"] {
   grid-template-rows: 1fr;
-  visibility: visible;
 }
 
 .to-vouwvak[data-open="ja"] > div > *:first-child {
@@ -710,6 +789,184 @@
   .to-vouwtitel {
     transition: none;
   }
+}
+
+/* ------------------------------------------------------------------ zoeken */
+
+/* Alleen voor wie voorleest. */
+.to-verborgen {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.to-loep {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.to-zoekknop {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tk-raak);
+  padding: 0 14px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 999px;
+  background: var(--tk-vlak);
+  color: var(--tk-zacht);
+  font: inherit;
+  font-size: var(--tk-t-klein);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color var(--tk-vlot) var(--tk-soepel), color var(--tk-vlot) var(--tk-soepel);
+}
+
+@media (hover: hover) {
+  .to-zoekknop:hover {
+    border-color: var(--tk-teal);
+    color: var(--tk-teal);
+  }
+}
+
+.to-zoekknop kbd {
+  padding: 2px 6px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 6px;
+  background: var(--tk-navy);
+  font-family: inherit;
+  font-size: var(--tk-t-mini);
+}
+
+@media (max-width: 520px) {
+  .to-zoekknop kbd {
+    display: none;
+  }
+}
+
+/* Een echte dialog: focus, Escape en het buitensluiten van de rest van de
+   pagina komen dan van de browser en niet uit nagebouwde toetsafhandeling. */
+.to-zoek {
+  display: flex;
+  flex-direction: column;
+  width: min(680px, calc(100vw - 32px));
+  max-height: min(70vh, 640px);
+  margin: 9vh auto auto;
+  padding: 0;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 16px;
+  background: var(--tk-vlak);
+  color: var(--tk-tekst);
+  overflow: hidden;
+}
+
+.to-zoek:not([open]) {
+  display: none;
+}
+
+.to-zoek::backdrop {
+  background: rgba(16, 36, 58, 0.45);
+}
+
+.to-zoekbalk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--tk-lijn);
+  color: var(--tk-zacht);
+}
+
+.to-zoekveld {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tk-tekst);
+  font: inherit;
+  font-size: var(--tk-t-lead);
+}
+
+.to-zoekveld:focus {
+  outline: none;
+}
+
+.to-zoeksluit {
+  flex: none;
+  min-height: var(--tk-raak);
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--tk-zacht);
+  font: inherit;
+  font-size: var(--tk-t-klein);
+  cursor: pointer;
+}
+
+.to-zoekstand {
+  margin: 0;
+  padding: 10px 18px 0;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-fijn);
+}
+
+.to-zoeklijst {
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.to-zoekraak {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.to-zoekraak[data-wijzer="ja"] {
+  background: var(--tk-teal-dim);
+}
+
+.to-zoekplek {
+  display: block;
+  color: var(--tk-teal);
+  font-size: var(--tk-t-fijn);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.to-zoekkop {
+  color: var(--tk-tekst);
+}
+
+.to-zoekfragment {
+  display: block;
+  margin-top: 3px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.6;
+}
+
+.to-zoekfragment mark {
+  padding: 0 2px;
+  border-radius: 3px;
+  background: var(--tk-teal-dim);
+  color: var(--tk-tekst);
+  font-weight: 700;
 }
 
 /* ---------------------------------------------------------------- tijdlijn */
