@@ -7,6 +7,7 @@ import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Navigate, Routes, Route, useNavigate } from "react-router-dom";
 import { laadPagina } from "./lib/paginaLaden";
+import { isBeheerpad, scanUitAdres } from "./lib/opstart";
 const OnzeAanpak = lazy(() => laadPagina(() => import("./OnzeAanpak")));
 import heroContent from "./content/heroContent";
 import { trackEvent } from "./lib/analytics";
@@ -12685,12 +12686,29 @@ function TeamdagPage() {
 }
 
 export default function App() {
-  const [view, setView] = useState("public");
-  const [scanId, setScanId] = useState(null);
-  const [authReady, setAuthReady] = useState(false);
+  // Wat het adres al zegt, weten we voor de eerste weergave. Dat in een effect
+  // zetten betekent één weergave met het verkeerde scherm erin.
+  const startScan = scanUitAdres(window.location.pathname, window.location.search);
+  const [view, setView] = useState(startScan ? "scan" : "public");
+  const [scanId] = useState(startScan);
+
+  // Aanmeldstatus beslist hier maar één ding: of het beheerdashboard
+  // verschijnt. Een bezoeker op de homepage heeft er niets aan -- en toch stond
+  // die te wachten tot Firebase antwoordde. Kwam dat antwoord niet, dan bleef
+  // de drukst bezochte pagina van de site op "Laden..." staan, zonder fout in
+  // de console en zonder dat iemand het merkte behalve de bezoeker.
+  //
+  // Dat antwoord kan uitblijven: Firebase bewaart de aanmeldstatus in de opslag
+  // van de browser, en Safari kan die blokkeren. Een blokkeerder kan het
+  // verzoek tegenhouden. Offline komt er sowieso niets terug.
+  //
+  // Dus wacht alleen het beheer, en ook dat niet langer dan een paar tellen.
+  const [authReady, setAuthReady] = useState(() => !isBeheerpad(window.location.pathname));
 
   useEffect(() => {
+    const noodrem = setTimeout(() => setAuthReady(true), 4000);
     const unsub = onAuthStateChanged(auth, async (user) => {
+      clearTimeout(noodrem);
       if (user) {
         const pad = window.location.pathname;
         const isAdminPath = pad.startsWith("/beheer") || pad.startsWith("/admin");
@@ -12714,24 +12732,7 @@ export default function App() {
       setAuthReady(true);
     });
 
-    return () => unsub();
-  }, []);
-
-  useEffect(() => {
-    // Nieuw: /deelnemen/:scanId pad (firewall-vriendelijk)
-    const deelnemenMatch = window.location.pathname.match(/^\/deelnemen\/([^/]+)/);
-    if (deelnemenMatch) {
-      setScanId(deelnemenMatch[1]);
-      setView("scan");
-      return;
-    }
-    // Oud: ?scan=xxx (backward compatibility)
-    const params = new URLSearchParams(window.location.search);
-    const s = params.get("scan");
-    if (s) {
-      setScanId(s);
-      setView("scan");
-    }
+    return () => { clearTimeout(noodrem); unsub(); };
   }, []);
 
   useEffect(() => {
