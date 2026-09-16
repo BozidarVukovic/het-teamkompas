@@ -74,6 +74,14 @@ dist/
 # macOS metadata
 .DS_Store
 
+# Klantinhoud. Een omgevingspakket en een geexporteerde brontekst bevatten
+# echte teaminhoud van een klant. Ze mogen in de werkmap staan -- daar werk je
+# eraan -- maar nooit in versiebeheer. scripts/valideer-klantinhoud.mjs
+# controleert bij elke build dat deze regels er nog staan en dat er niets van
+# dit soort bestanden is bijgehouden.
+omgevingspakketten/
+*teamomgeving-brontekst*.json
+
 # Tijdelijke bestanden van vite en van de testscripts
 vite.config.js.timestamp-*
 scripts/.tmp-*

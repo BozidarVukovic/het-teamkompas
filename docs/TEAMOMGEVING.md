@@ -20,6 +20,12 @@ Onder `organisaties/{orgId}/teams/{teamId}`:
   base64-tekens. Alleen teamleden lezen; geen publieke assets of downloadtokens.
   SHA-256 wordt vóór import én vóór downloaden gecontroleerd.
 
+Een gedownloade brontekst en een nieuw pakket horen in `omgevingspakketten/`.
+Die map staat in .gitignore en `scripts/valideer-klantinhoud.mjs` laat de build
+mislukken zodra zo'n bestand toch wordt bijgehouden of de negeerregel verdwijnt.
+Zo kan er in de werkmap aan klantinhoud worden gewerkt zonder dat die ooit in
+versiebeheer belandt.
+
 Op het beheertabblad kunnen de twee begeleiders de brontekst downloaden: een
 pakketbestand met de teksten van alle onderdelen, zonder de bespreeknotities en
 zonder de pdf's. Het bestand wordt in de browser zelf gemaakt. Zo blijft een
