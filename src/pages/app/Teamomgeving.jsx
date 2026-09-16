@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
-import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities } from "../../lib/app/teamomgevingOpslag";
+import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij } from "../../lib/app/teamomgevingOpslag";
 import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn } from "../../lib/app/teamomgeving";
 import "../../styles/teamomgeving.css";
 
@@ -100,6 +100,49 @@ function Onderdelen({ groepen, actief, kies }) {
       })}
     </div>
   </nav>;
+}
+
+// De brontekst terugzetten nadat hij buiten de app is verbeterd.
+//
+// Twee dingen bewust anders dan bij het inrichten: er is geen keuze meer over
+// wie de begeleiders zijn -- dat ligt vast en blijft vastliggen -- en het
+// vinkje benoemt wat er níét verandert. Wie hier iets terugzet moet weten dat
+// de documenten en de toegang blijven zoals ze zijn.
+function Bijwerken({ team, uid, herladen }) {
+  const [pakket, setPakket] = useState(null);
+  const [akkoord, setAkkoord] = useState(false);
+  const [bezig, setBezig] = useState(false);
+  const [fout, setFout] = useState("");
+  const [klaar, setKlaar] = useState("");
+  async function lees(e) {
+    setFout(""); setPakket(null); setAkkoord(false); setKlaar("");
+    try {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      if (file.size > 8000000) throw new Error("Het pakket is te groot.");
+      setPakket(valideerOmgeving(JSON.parse(await file.text())));
+    } catch (err) { setFout(err.message || "Het pakket kon niet worden gelezen."); }
+  }
+  async function bijwerken() {
+    setBezig(true); setFout("");
+    try {
+      await werkOmgevingBij(team, uid, pakket);
+      setPakket(null); setAkkoord(false);
+      setKlaar("De teksten zijn bijgewerkt. De documenten en de toegang zijn niet veranderd.");
+      herladen();
+    } catch (err) { setFout(err.message || "Bijwerken is niet gelukt. Er is niets veranderd."); }
+    finally { setBezig(false); }
+  }
+  return <div className="to-bijwerken">
+    <p className="tk-label">Brontekst terugzetten</p>
+    <p>Heb je de gedownloade brontekst verbeterd? Kies hem hier om de teksten van alle onderdelen te vervangen. De documenten, de pdf&apos;s en de twee begeleiders blijven zoals ze zijn.</p>
+    <label><span className="tk-label">Verbeterd pakket</span><input type="file" accept=".json,application/json" onChange={lees} disabled={bezig} /></label>
+    {pakket && <div className="to-pakket"><strong>{pakket.inhoud.titel}</strong><span>{pakket.inhoud.onderdelen.length} onderdelen</span></div>}
+    {pakket && <label className="tk-keuzevakje to-akkoord"><input type="checkbox" checked={akkoord} onChange={(e) => setAkkoord(e.target.checked)} disabled={bezig} />Ik vervang de teksten van {team.teamNaam || "dit team"} door de teksten uit dit bestand.</label>}
+    {fout && <p role="alert">{fout}</p>}
+    {klaar && <p role="status">{klaar}</p>}
+    <button className="tk-knop tk-knop-rand" disabled={!pakket || !akkoord || bezig} onClick={bijwerken}>{bezig ? "Bijwerken…" : "Teksten bijwerken"}</button>
+  </div>;
 }
 
 function Inrichten({ team, uid, leden, herladen }) {
@@ -241,6 +284,7 @@ function Omgeving({ team, uid, leden, magInrichten }) {
             <button className="tk-knop tk-knop-rand" onClick={exporteerBron}>Brontekst downloaden</button>
             <p>De teksten van alle onderdelen zoals ze in het pakket staan, om na te lezen of te verbeteren. Zonder de bespreeknotities en zonder de pdf&apos;s. Dit bestand bevat teaminhoud: bewaar het net zo zorgvuldig als de rest.</p>
           </div>
+          <Bijwerken team={team} uid={uid} herladen={() => setVersie((v) => v + 1)} />
           <div className="to-beheer-invoer">
             <label className="tk-label" htmlFor="bespreeknotities">Bespreeknotities</label>
             <textarea className="tk-tekstvak" id="bespreeknotities" maxLength={20000} rows={8} value={notities} onChange={(e) => setNotities(e.target.value)} />

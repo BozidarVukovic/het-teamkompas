@@ -38,6 +38,14 @@ zonder de pdf's. Het bestand wordt in de browser zelf gemaakt. Zo blijft een
 correctie op de brontekst mogelijk zonder dat iemand in de opslag hoeft te
 kijken. Het bevat echte teaminhoud en hoort dus niet in versiebeheer.
 
+De twee begeleiders kunnen de teksten later bijwerken met een verbeterd pakket
+(`werkOmgevingBij`). Dat raakt alleen `titel`, `intro`, `onderdelen` en
+`documentContext`; `documenten` blijft ongemoeid, want die metadata hoort bij de
+pdf's in de aparte collectie en een losse titelwijziging zou een download iets
+anders kunnen laten heten dan wat is gecontroleerd. Komt de documentenlijst niet
+overeen, dan gaat er niets door. De toegang blijft onveranderlijk. Elke
+bijwerking laat `bijgewerktOp` en `bijgewerktDoor` achter.
+
 De import is één batch met onveranderlijke toegang en inhoud: herhaalde import
 kan niets overschrijven. Alleen de bespreeknotities kunnen daarna in de app worden
 bijgewerkt. Een latere broninhoudwijziging of wisseling van begeleider vereist een

@@ -200,6 +200,30 @@ service cloud.firestore {
             && request.resource.data.beheerders[1] != request.auth.uid
             && exists(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/leden/$(request.resource.data.beheerders[1]));
           allow create: if onderdeel in ['inhoud', 'beheer'] && omgevingsbeheer();
+          // De teksten mogen worden verbeterd, de rest van de omgeving niet.
+          //
+          // Wat hier niet in affectedKeys staat, kan dus niet mee veranderen:
+          // documenten blijft zoals het is -- die metadata hoort bij de pdf's in
+          // de aparte collectie, en wie hem mag herschrijven kan een download
+          // naar andere inhoud laten wijzen. Toegang staat helemaal buiten deze
+          // regel en blijft onveranderlijk.
+          //
+          // Wat er in een onderdeel staat wordt hier niet gecontroleerd: een
+          // lijst van objecten is in regels niet te doorlopen. Dat is het werk
+          // van valideerOmgeving in de client. Deze regel bewaakt wie er mag
+          // schrijven, welke velden, en de grove vorm -- de dingen die een
+          // client nooit over zichzelf mag beweren.
+          allow update: if onderdeel == 'inhoud' && omgevingsbeheer()
+            && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['titel', 'intro', 'onderdelen', 'documentContext', 'bijgewerktOp', 'bijgewerktDoor'])
+            && request.resource.data.titel is string
+            && request.resource.data.titel.size() > 0
+            && request.resource.data.titel.size() <= 160
+            && request.resource.data.onderdelen is list
+            && request.resource.data.onderdelen.size() >= 1
+            && request.resource.data.onderdelen.size() <= 12
+            && request.resource.data.bijgewerktOp == request.time
+            && request.resource.data.bijgewerktDoor == request.auth.uid;
           allow update: if onderdeel == 'beheer' && omgevingsbeheer()
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['notities', 'bijgewerktOp'])
             && request.resource.data.notities is string

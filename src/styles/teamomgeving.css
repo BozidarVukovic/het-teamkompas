@@ -873,6 +873,36 @@
   line-height: 1.6;
 }
 
+.to-bijwerken {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.to-bijwerken > p {
+  margin: 8px 0 14px;
+  max-width: 62ch;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.6;
+}
+
+.to-bijwerken .tk-label {
+  margin: 0;
+}
+
+.to-bijwerken input[type="file"] {
+  display: block;
+  width: 100%;
+  margin: 6px 0 0;
+  font-size: var(--tk-t-klein);
+  color: var(--tk-zacht);
+}
+
+.to-bijwerken .tk-knop {
+  margin-top: 16px;
+}
+
 .to-beheer-invoer {
   margin-top: 22px;
   padding-top: 20px;

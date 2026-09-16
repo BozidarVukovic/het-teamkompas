@@ -38,6 +38,36 @@ export async function richtOmgevingIn(team, uid, tweedeUid, pakket) {
   await batch.commit();
 }
 
+// De teksten bijwerken, en niets anders.
+//
+// Een teamomgeving werd één keer ingericht en was daarna niet meer te
+// corrigeren: een kop die als alinea was geschreven, twee cellen die aan elkaar
+// plakten. Dat kan nu, door de twee begeleiders, met hetzelfde pakketformaat
+// waarin de omgeving ook is aangeleverd.
+//
+// De documenten blijven buiten schot. Hun metadata hoort bij de pdf's in de
+// aparte collectie -- titel en sha256 horen bij elkaar, en losse titels
+// bijwerken zou betekenen dat een download iets anders kan gaan heten dan wat
+// er is gecontroleerd. Komt de lijst niet overeen, dan gaat er niets door: dan
+// hoort dit pakket bij een andere omgeving.
+export async function werkOmgevingBij(team, uid, pakket) {
+  valideerOmgeving(pakket);
+  const huidig = await getDoc(ref(team, "inhoud"));
+  if (!huidig.exists()) throw new Error("Deze teamomgeving is nog niet ingericht.");
+  const sleutels = (lijst) => (lijst || []).map((d) => d.id).join("|");
+  if (sleutels(pakket.inhoud.documenten) !== sleutels(huidig.data().documenten)) {
+    throw new Error("De documenten in dit pakket komen niet overeen met wat er is opgeslagen. Er is niets bijgewerkt.");
+  }
+  await updateDoc(ref(team, "inhoud"), {
+    titel: pakket.inhoud.titel,
+    intro: pakket.inhoud.intro || "",
+    documentContext: pakket.inhoud.documentContext || "",
+    onderdelen: pakket.inhoud.onderdelen,
+    bijgewerktOp: serverTimestamp(),
+    bijgewerktDoor: uid,
+  });
+}
+
 export async function haalOmgevingPdf(team, bestand) {
   const snapshot = await getDocs(collection(db, `${basis(team)}/teamomgevingBestanden/${bestand.id}/delen`));
   const delen = snapshot.docs.sort((a, b) => a.id.localeCompare(b.id));

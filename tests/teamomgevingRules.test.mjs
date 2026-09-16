@@ -53,6 +53,22 @@ test('teamomgeving: toegang en scheiding in Firestore', { skip: !draait }, async
       await assertFails(setDoc(r(db('bo'),'inhoud'),{titel:'Overschreven'}));
       await assertFails(updateDoc(r(db('ed'),'beheer'),{tekst:'Bron vervangen'}));
     });
+    await t.test('begeleiders mogen de teksten bijwerken', async () => {
+      await assertSucceeds(updateDoc(r(db('ed'),'inhoud'),{titel:'Teamversie',onderdelen:[{id:'overzicht',titel:'Overzicht',tekst:'Bijgewerkt'}],bijgewerktOp:serverTimestamp(),bijgewerktDoor:'ed'}));
+    });
+    await t.test('een ander teamlid of teambeheerder mag dat niet', async () => {
+      for (const uid of ['lid','andere-beheerder','buitenstaander']) {
+        await assertFails(updateDoc(r(db(uid),'inhoud'),{titel:'Gekaapt',onderdelen:[{id:'x',titel:'X',tekst:'y'}],bijgewerktOp:serverTimestamp(),bijgewerktDoor:uid}));
+      }
+    });
+    await t.test('bijwerken kan de documenten en de sporen niet meenemen', async () => {
+      const basis = {titel:'Teamversie',onderdelen:[{id:'overzicht',titel:'Overzicht',tekst:'x'}],bijgewerktOp:serverTimestamp(),bijgewerktDoor:'bo'};
+      await assertFails(updateDoc(r(db('bo'),'inhoud'),{...basis,documenten:[{id:'voorbeeld',sha256:'a'.repeat(64)}]}));
+      await assertFails(updateDoc(r(db('bo'),'inhoud'),{...basis,bijgewerktDoor:'ed'}));
+      await assertFails(updateDoc(r(db('bo'),'inhoud'),{...basis,bijgewerktOp:new Date(0)}));
+      await assertFails(updateDoc(r(db('bo'),'inhoud'),{...basis,titel:''}));
+      await assertFails(updateDoc(r(db('bo'),'inhoud'),{...basis,onderdelen:[]}));
+    });
     await t.test('te groot pdfdeel wordt geweigerd', async () => {
       await assertFails(setDoc(doc(db('bo'),`${pad}/teamomgevingBestanden/voorbeeld/delen/001`),{data:'x'.repeat(600001)}));
     });
