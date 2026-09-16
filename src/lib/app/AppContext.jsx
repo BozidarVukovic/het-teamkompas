@@ -13,6 +13,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { wachtOpAanmelding } from "./wachttijd";
 import { auth } from "../firebase";
 import { kenmerkenUitInsights } from "./insights";
 import {
@@ -141,7 +142,7 @@ export function AppProvider({ children }) {
   useEffect(() => {
     let vorigeUid = null;
 
-    const stop = onAuthStateChanged(auth, (u) => {
+    return wachtOpAanmelding((ontvang) => onAuthStateChanged(auth, ontvang), (u) => {
       const uid = u ? u.uid : null;
       const gewisseld = uid !== vorigeUid;
       vorigeUid = uid;
@@ -167,8 +168,6 @@ export function AppProvider({ children }) {
       // Mét gebruiker begint het ophalen juist, dus zijn we dat nog niet.
       setGegevensKlaar(!u);
     });
-
-    return () => stop();
   }, []);
 
 /**
