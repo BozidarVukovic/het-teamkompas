@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { leesPdf, schoneBestandsnaam, maakDocumentregel, splitsBestand, controleerPdf } from '../src/lib/app/teamomgeving.js';
+import { leesPdf, schoneBestandsnaam, maakDocumentregel, verwijderUitLijst, splitsBestand, controleerPdf } from '../src/lib/app/teamomgeving.js';
 
 const pdf = (extra = 0) => {
   const kop = new TextEncoder().encode('%PDF-1.7\n');
@@ -85,4 +85,38 @@ test('het aantal delen klopt met wat splitsBestand ervan maakt', async () => {
   assert.equal(delen.length, 1);
   assert.equal(delen.join(''), gelezen.base64);
   assert.equal(maakDocumentregel([], { ...goed, delen: delen.length }).delen, 1);
+});
+
+const drie = () => ([
+  { id: 'terugkoppeling', titel: 'Terugkoppeling', naam: 'a.pdf', sha256: 'a'.repeat(64), delen: 1 },
+  { id: 'handleiding', titel: 'Hand-in-Handleiding', naam: 'hh.pdf', sha256: 'b'.repeat(64), delen: 2 },
+  { id: 'programma', titel: 'Programma', naam: 'p.pdf', sha256: 'c'.repeat(64), delen: 1 },
+]);
+
+test('weghalen laat de rest ongemoeid en in dezelfde volgorde', () => {
+  const { over, weg } = verwijderUitLijst(drie(), 'handleiding');
+  assert.equal(weg.titel, 'Hand-in-Handleiding');
+  assert.equal(weg.delen, 2);
+  assert.deepEqual(over.map((d) => d.id), ['terugkoppeling', 'programma']);
+});
+
+test('het laatste document mag ook weg', () => {
+  const { over } = verwijderUitLijst([drie()[0]], 'terugkoppeling');
+  assert.deepEqual(over, []);
+});
+
+test('een document dat er niet is, levert een fout op in plaats van een stille lege lijst', () => {
+  assert.throws(() => verwijderUitLijst(drie(), 'bestaat-niet'), /niet meer in deze teamomgeving/);
+  assert.throws(() => verwijderUitLijst(undefined, 'terugkoppeling'), /niet meer in deze teamomgeving/);
+});
+
+test('het aantal delen komt mee, want dat is wat er opgeruimd moet worden', () => {
+  assert.equal(verwijderUitLijst(drie(), 'handleiding').weg.delen, 2);
+  assert.equal(verwijderUitLijst(drie(), 'programma').weg.delen, 1);
+});
+
+test('na weghalen is de plek weer vrij voor hetzelfde id', () => {
+  const { over } = verwijderUitLijst(drie(), 'handleiding');
+  const regel = maakDocumentregel(over, { titel: 'Hand-in-Handleiding', naam: 'hh2.pdf', sha256: 'd'.repeat(64), delen: 1 });
+  assert.equal(regel.id, 'hand-in-handleiding');
 });

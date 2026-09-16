@@ -105,6 +105,24 @@ test('teamomgeving: toegang en scheiding in Firestore', { skip: !draait }, async
       await assertFails(updateDoc(r(db('bo'),'inhoud'),{documenten:lijst,bijgewerktOp:new Date(0),bijgewerktDoor:'bo'}));
       await assertFails(updateDoc(r(db('bo'),'inhoud'),{documenten:lijst,bijgewerktOp:serverTimestamp(),bijgewerktDoor:'ed'}));
     });
+    await t.test('een document mag eruit, maar alleen een en zonder de rest aan te raken', async () => {
+      const oud={id:'voorbeeld',titel:'Terugkoppeling',naam:'a.pdf',sha256:'a'.repeat(64),delen:1};
+      const nieuw={id:'handleiding',titel:'Hand-in-Handleiding',naam:'hh.pdf',sha256:'b'.repeat(64),delen:2};
+      const haalWeg=(uid,lijst)=>updateDoc(r(db(uid),'inhoud'),{documenten:lijst,bijgewerktOp:serverTimestamp(),bijgewerktDoor:uid});
+      // Alleen de twee aangewezen begeleiders.
+      for (const uid of ['lid','andere-beheerder','buitenstaander']) await assertFails(haalWeg(uid,[oud]));
+      // Niet twee tegelijk, en niet weghalen terwijl je er een verandert.
+      await assertFails(haalWeg('bo',[]));
+      await assertFails(haalWeg('bo',[{...oud,titel:'Anders'}]));
+      await assertFails(haalWeg('bo',[{...nieuw,sha256:'e'.repeat(64)}]));
+      await assertFails(updateDoc(r(db('bo'),'inhoud'),{documenten:[oud],titel:'Gekaapt',bijgewerktOp:serverTimestamp(),bijgewerktDoor:'bo'}));
+      await assertFails(updateDoc(r(db('bo'),'inhoud'),{documenten:[oud],bijgewerktOp:serverTimestamp(),bijgewerktDoor:'ed'}));
+      // Zo mag het wel: er blijft er precies een over, ongewijzigd.
+      await assertSucceeds(haalWeg('bo',[oud]));
+      // En de delen opruimen mag daarna, maar niet door een gewoon teamlid.
+      await assertFails(deleteDoc(doc(db('lid'),`${pad}/teamomgevingBestanden/handleiding/delen/000`)));
+      await assertSucceeds(deleteDoc(doc(db('ed'),`${pad}/teamomgevingBestanden/handleiding/delen/000`)));
+    });
     await t.test('te groot pdfdeel wordt geweigerd', async () => {
       await assertFails(setDoc(doc(db('bo'),`${pad}/teamomgevingBestanden/voorbeeld/delen/001`),{data:'x'.repeat(600001)}));
     });

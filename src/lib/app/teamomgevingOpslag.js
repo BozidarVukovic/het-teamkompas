@@ -1,6 +1,6 @@
 import { doc, getDoc, getDocs, collection, writeBatch, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
-import { controleerPdf, splitsBestand, valideerOmgeving, pasWijzigingToe, maakDocumentregel, OMGEVING_VERSIE } from "./teamomgeving";
+import { controleerPdf, splitsBestand, valideerOmgeving, pasWijzigingToe, maakDocumentregel, verwijderUitLijst, OMGEVING_VERSIE } from "./teamomgeving";
 
 const basis = ({ orgId, teamId }) => `organisaties/${orgId}/teams/${teamId}`;
 const ref = (team, id) => doc(db, `${basis(team)}/teamomgeving/${id}`);
@@ -134,6 +134,39 @@ export async function voegDocumentToe(team, uid, document) {
     bijgewerktDoor: uid,
   });
   return regel;
+}
+
+// Eén document weghalen.
+//
+// Eerst uit de lijst, dan het bestand. In die volgorde, want zo kan niemand
+// meer op een download klikken die er niet meer is. Andersom zou een teamlid
+// die op dat moment klikt een foutmelding krijgen over iets wat hij niet heeft
+// gedaan.
+//
+// Blijft het opruimen steken, dan liggen er delen in de opslag waar geen enkele
+// lijst meer naar wijst. Dat wordt niet stilletjes weggeslikt: de aanroeper
+// hoort te weten dat het bestand er nog is, ook al is het uit de omgeving.
+export async function verwijderDocument(team, uid, id) {
+  const huidig = await getDoc(ref(team, "inhoud"));
+  if (!huidig.exists()) throw new Error("Deze teamomgeving is nog niet ingericht.");
+  const { over, weg } = verwijderUitLijst(huidig.data().documenten, id);
+
+  await updateDoc(ref(team, "inhoud"), {
+    documenten: over,
+    bijgewerktOp: serverTimestamp(),
+    bijgewerktDoor: uid,
+  });
+
+  try {
+    const batch = writeBatch(db);
+    for (let i = 0; i < (Number(weg.delen) || 0); i += 1) {
+      batch.delete(doc(db, `${basis(team)}/teamomgevingBestanden/${weg.id}/delen/${String(i).padStart(3, "0")}`));
+    }
+    await batch.commit();
+    return { weg, opgeruimd: true };
+  } catch {
+    return { weg, opgeruimd: false };
+  }
 }
 
 export async function haalOmgevingPdf(team, bestand) {

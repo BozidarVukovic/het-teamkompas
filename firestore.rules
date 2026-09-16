@@ -265,6 +265,28 @@ service cloud.firestore {
             && nieuwDocument(request.resource.data.documenten[resource.data.documenten.size()])
             && request.resource.data.bijgewerktOp == request.time
             && request.resource.data.bijgewerktDoor == request.auth.uid;
+          // Een document weghalen.
+          //
+          // Er mag er precies één weg en verder verandert er niets. De twee
+          // removeAll-regels bewijzen dat samen: wat eruit gaat is er precies
+          // één, en er komt niets bij en er verandert niets aan wat blijft
+          // staan -- want een gewijzigd document telt als "weg" én als "erbij"
+          // en sneuvelt dan op de tweede regel.
+          //
+          // Wat hier níét mee vaststaat is de volgorde van wat overblijft. Dat
+          // is bewust: die bepaalt alleen hoe de lijst op het scherm staat, niet
+          // naar welk bestand een download wijst -- dat hangt aan id en sha256,
+          // en die kunnen hiermee geen van beide veranderen.
+          allow update: if onderdeel == 'inhoud' && omgevingsbeheer()
+            && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['documenten', 'bijgewerktOp', 'bijgewerktDoor'])
+            && resource.data.documenten is list
+            && request.resource.data.documenten is list
+            && request.resource.data.documenten.size() == resource.data.documenten.size() - 1
+            && resource.data.documenten.removeAll(request.resource.data.documenten).size() == 1
+            && request.resource.data.documenten.removeAll(resource.data.documenten).size() == 0
+            && request.resource.data.bijgewerktOp == request.time
+            && request.resource.data.bijgewerktDoor == request.auth.uid;
           allow update: if onderdeel == 'beheer' && omgevingsbeheer()
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['notities', 'bijgewerktOp'])
             && request.resource.data.notities is string
@@ -280,6 +302,10 @@ service cloud.firestore {
             && request.resource.data.keys().hasOnly(['data'])
             && request.resource.data.data is string
             && request.resource.data.data.size() <= 600000;
+          // Opruimen na het weghalen uit de lijst. Zonder dit zouden de delen
+          // van een verwijderd document voorgoed in de opslag blijven staan --
+          // onbereikbaar, want er wijst geen lijst meer naar, maar er wel.
+          allow delete: if omgevingsbeheer();
         }
 
         allow get: if isTeamlid(orgId, teamId);

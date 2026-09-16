@@ -479,6 +479,18 @@ export function maakDocumentregel(documenten, wens) {
   return regel;
 }
 
+// Eén document uit de lijst halen.
+//
+// Geeft terug wat er overblijft én wat eruit gaat, want dat laatste heeft de
+// aanroeper nodig: in de regel staat hoeveel delen het bestand had, en zonder
+// dat getal is niet te weten wat er opgeruimd moet worden.
+export function verwijderUitLijst(documenten, id) {
+  const lijst = Array.isArray(documenten) ? documenten : [];
+  const weg = lijst.find((d) => d && d.id === id);
+  if (!weg) throw new Error("Dit document staat niet meer in deze teamomgeving. Ververs het scherm.");
+  return { over: lijst.filter((d) => d !== weg), weg };
+}
+
 export function splitsBestand(base64) {
   return Array.from({ length: Math.ceil(base64.length / DEEL_GROOTTE) }, (_, i) => base64.slice(i * DEEL_GROOTTE, (i + 1) * DEEL_GROOTTE));
 }

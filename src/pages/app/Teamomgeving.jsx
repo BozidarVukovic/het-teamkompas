@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
-import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij, werkTekstenBij, voegDocumentToe } from "../../lib/app/teamomgevingOpslag";
+import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij, werkTekstenBij, voegDocumentToe, verwijderDocument } from "../../lib/app/teamomgevingOpslag";
 import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek, leesBijgewerkt, schrijfDatum, leesPdf } from "../../lib/app/teamomgeving";
 import { maakSlak, sectieAdressen, leesHash, maakAdres } from "../../lib/app/teamomgevingAdres";
 import { maakZoekindex, zoek as zoekInOmgeving } from "../../lib/app/teamomgevingZoek";
@@ -543,6 +543,72 @@ function KopBewerker({ inhoud, opslaan, herladen }) {
   </div>;
 }
 
+// De documenten die er staan, met de mogelijkheid er een weg te halen.
+//
+// Weghalen is onomkeerbaar en het gaat om iets van het team, niet van de
+// begeleider. Daarom in twee stappen, met de titel van het document uitgeschreven
+// in de bevestiging: zo staat er tussen jou en de daad een zin die je moet lezen.
+//
+// En er staat bij wat verwijderen níét doet. Wie het al heeft gedownload houdt
+// zijn kopie; dat is geen terugtrekking maar het weghalen van een ingang.
+function DocumentenLijst({ team, uid, documenten, herladen }) {
+  const [vraag, setVraag] = useState("");
+  const [akkoord, setAkkoord] = useState(false);
+  const [bezig, setBezig] = useState("");
+  const [melding, setMelding] = useState("");
+  const lijst = documenten || [];
+
+  function begin(id) {
+    setVraag(id === vraag ? "" : id);
+    setAkkoord(false);
+    setMelding("");
+  }
+  async function haalWeg(document) {
+    setBezig(document.id);
+    setMelding("");
+    try {
+      const uitkomst = await verwijderDocument(team, uid, document.id);
+      setVraag(""); setAkkoord(false);
+      setMelding(uitkomst.opgeruimd
+        ? `"${uitkomst.weg.titel}" staat niet meer in de omgeving.`
+        : `"${uitkomst.weg.titel}" staat niet meer in de omgeving, maar het bestand zelf kon niet worden opgeruimd. Niemand kan er nog bij; laat het weten als het weg moet uit de opslag.`);
+      herladen();
+    } catch (err) {
+      setMelding(err.message || "Weghalen is niet gelukt. Er is niets veranderd.");
+    } finally {
+      setBezig("");
+    }
+  }
+
+  if (!lijst.length) return null;
+  return <div className="to-bijwerken">
+    <p className="tk-label">Documenten in deze omgeving</p>
+    <ul className="to-weglijst">
+      {lijst.map((document) => <li className="to-wegdeel" key={document.id}>
+        <div className="to-wegrij">
+          <span className="to-wegtekst">
+            <strong>{document.titel}</strong>
+            <span>{document.naam}</span>
+          </span>
+          <button className="to-wegknop" type="button" aria-expanded={vraag === document.id} disabled={!!bezig} onClick={() => begin(document.id)}>
+            {vraag === document.id ? "Toch niet" : "Weghalen"}
+          </button>
+        </div>
+        {vraag === document.id && <div className="to-wegvraag">
+          <label className="tk-keuzevakje">
+            <input type="checkbox" checked={akkoord} onChange={(e) => setAkkoord(e.target.checked)} disabled={!!bezig} />
+            Ik haal &ldquo;{document.titel}&rdquo; weg uit de omgeving van {team.teamNaam || "dit team"}. Dat kan niet ongedaan worden gemaakt, en wie hem al heeft gedownload houdt zijn kopie.
+          </label>
+          <button className="tk-knop to-knop-weg" type="button" disabled={!akkoord || !!bezig} onClick={() => haalWeg(document)}>
+            {bezig === document.id ? "Weghalen…" : "Definitief weghalen"}
+          </button>
+        </div>}
+      </li>)}
+    </ul>
+    {melding && <p role="status">{melding}</p>}
+  </div>;
+}
+
 // Een document toevoegen aan een omgeving die al staat.
 //
 // Toevoegen kan, vervangen en verwijderen niet -- dat laatste staat ook zo in
@@ -594,7 +660,7 @@ function DocumentToevoegen({ team, uid, documenten, herladen }) {
   const vol = (documenten || []).length >= 10;
   return <div className="to-bijwerken">
     <p className="tk-label">Document toevoegen</p>
-    <p>Een pdf die bij dit team hoort: een terugkoppeling, een handleiding, de uitkomst van een teamdag. Toevoegen kan; vervangen en verwijderen niet, ook niet door jou. {(documenten || []).length} van 10 gebruikt.</p>
+    <p>Een pdf die bij dit team hoort: een terugkoppeling, een handleiding, de uitkomst van een teamdag. Vervangen kan niet — haal de oude weg en voeg de nieuwe toe. {(documenten || []).length} van 10 gebruikt.</p>
     {vol
       ? <p role="alert">Er passen maximaal tien documenten in een teamomgeving.</p>
       : <>
@@ -607,7 +673,7 @@ function DocumentToevoegen({ team, uid, documenten, herladen }) {
         {bestand && <label><span className="tk-label">Korte toelichting (mag leeg)</span><input className="tk-invoer" maxLength={300} value={beschrijving} onChange={(e) => setBeschrijving(e.target.value)} disabled={bezig} /></label>}
         {bestand && <label className="tk-keuzevakje to-akkoord">
           <input type="checkbox" checked={akkoord} onChange={(e) => setAkkoord(e.target.checked)} disabled={bezig} />
-          Ik voeg dit document toe aan de omgeving van {team.teamNaam || "dit team"}. Iedereen in het team kan het vanaf dat moment downloaden, en weghalen kan niet vanuit de app.
+          Ik voeg dit document toe aan de omgeving van {team.teamNaam || "dit team"}. Iedereen in het team kan het vanaf dat moment downloaden.
         </label>}
         {fout && <p role="alert">{fout}</p>}
         {klaar && <p role="status">{klaar}</p>}
@@ -815,6 +881,12 @@ function Omgeving({ team, uid, leden, magInrichten }) {
             <button className="tk-knop tk-knop-rand" onClick={exporteerBron}>Brontekst downloaden</button>
             <p>De teksten van alle onderdelen zoals ze in het pakket staan, om na te lezen of te verbeteren. Zonder de bespreeknotities en zonder de pdf&apos;s. Dit bestand bevat teaminhoud: bewaar het net zo zorgvuldig als de rest.</p>
           </div>
+          <DocumentenLijst
+            team={team}
+            uid={uid}
+            documenten={omgeving.inhoud.documenten}
+            herladen={() => setVersie((v) => v + 1)}
+          />
           <DocumentToevoegen
             team={team}
             uid={uid}

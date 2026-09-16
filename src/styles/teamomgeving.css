@@ -377,6 +377,71 @@
   }
 }
 
+/* ------------------------------------------------------- documenten weg */
+
+.to-weglijst {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.to-wegdeel + .to-wegdeel {
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.to-wegrij {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 0;
+}
+
+.to-wegtekst {
+  display: block;
+  min-width: 0;
+}
+
+.to-wegtekst span {
+  display: block;
+  margin-top: 2px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-fijn);
+}
+
+/* Stil, want dit is niet de handeling die je hier komt doen. Rood wordt het pas
+   in de bevestiging, waar het wél om die handeling gaat. */
+.to-wegknop {
+  flex: none;
+  min-height: var(--tk-raak);
+  padding: 0 12px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tk-zacht);
+  font: inherit;
+  font-size: var(--tk-t-klein);
+  cursor: pointer;
+  transition: border-color var(--tk-vlot) var(--tk-soepel), color var(--tk-vlot) var(--tk-soepel);
+}
+
+@media (hover: hover) {
+  .to-wegknop:hover {
+    border-color: var(--tk-rood);
+    color: var(--tk-rood);
+  }
+}
+
+.to-wegvraag {
+  padding: 4px 0 16px;
+}
+
+.to-knop-weg {
+  margin-top: 12px;
+  background: var(--tk-rood);
+  color: #fff;
+}
+
 /* ---------------------------------------------------------------- bewerken */
 
 .to-bewerk {

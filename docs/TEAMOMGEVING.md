@@ -53,9 +53,20 @@ element erachter moet gelijk zijn aan de nieuwe lijst. Een andere titel bij een
 bestaand document, een andere sha256, een andere volgorde -- het maakt die
 vergelijking onwaar en er gaat niets door.
 
-Vervangen en verwijderen kan niet, ook niet door een begeleider. Dat is een
-aparte beslissing: de pdf-delen van een verwijderd document blijven als wees
-achter, en een lijst die kan krimpen is een lijst die herschreven kan worden.
+Weghalen kan ook, met een tweede regel die spiegelbeeldig werkt: er mag er
+precies één uit, en twee `removeAll`-controles bewijzen samen dat er niets
+bijkomt en niets verandert aan wat blijft staan. De volgorde van wat overblijft
+staat daarmee niet vast; dat is bewust, want die bepaalt alleen hoe de lijst op
+het scherm staat en niet naar welk bestand een download wijst.
+
+De client haalt het document eerst uit de lijst en ruimt daarna de pdf-delen op
+(`allow delete` op `teamomgevingBestanden`). In die volgorde, want zo kan niemand
+klikken op een download die er niet meer is. Lukt het opruimen niet, dan zegt het
+scherm dat: er liggen dan delen in de opslag waar geen lijst meer naar wijst.
+
+Vervangen kan nog steeds niet, en dat hoeft ook niet — weghalen en opnieuw
+toevoegen doet hetzelfde, en laat geen ruimte om een bestaande regel te
+herschrijven.
 
 De sha256 komt hier uit de browser en niet uit een pakket. Dat is geen controle
 op een derde partij maar een vingerafdruk, en die belooft precies één ding: wat
