@@ -6,15 +6,16 @@
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Navigate, Routes, Route, useNavigate } from "react-router-dom";
-const OnzeAanpak = lazy(() => import("./OnzeAanpak"));
+import { laadPagina } from "./lib/paginaLaden";
+const OnzeAanpak = lazy(() => laadPagina(() => import("./OnzeAanpak")));
 import heroContent from "./content/heroContent";
 import { trackEvent } from "./lib/analytics";
 import KlantreisKeuze from "./KlantreisKeuze";
-const Verkennen = lazy(() => import("./Verkennen"));
-const TeamscanDigitaal = lazy(() => import("./TeamscanDigitaal"));
+const Verkennen = lazy(() => laadPagina(() => import("./Verkennen")));
+const TeamscanDigitaal = lazy(() => laadPagina(() => import("./TeamscanDigitaal")));
 import ContactModal from "./ContactModal";
 import { auth, db, ADMIN_EMAILS } from "./firebase";
-const FunnelDashboard = lazy(() => import("./FunnelDashboard"));
+const FunnelDashboard = lazy(() => laadPagina(() => import("./FunnelDashboard")));
 import { PUB, ADM } from "./styles/tokens";
 import "./styles/admin-klanten.css";
 import { useInView, useIsMobile } from "./components/shared/hooks";
@@ -23,7 +24,7 @@ import LoginScreen from "./components/admin/LoginScreen";
 // De samenwerkomgeving onder /app is een eigen toepassing met een eigen
 // stijlblad en eigen schermen. Een bezoeker die een artikel komt lezen heeft er
 // geen letter van nodig, dus wordt hij pas opgehaald wanneer iemand /app opent.
-const AppRoutes = lazy(() => import("./pages/app/AppRoutes"));
+const AppRoutes = lazy(() => laadPagina(() => import("./pages/app/AppRoutes")));
 
 /** Wat er staat terwijl een apart geladen deel binnenkomt. */
 function Laadscherm() {
@@ -43,22 +44,22 @@ function Laadscherm() {
   );
 }
 import KompasDot from "./components/shared/KompasDot";
-const ScanInvullen = lazy(() => import("./pages/public/ScanInvullen"));
+const ScanInvullen = lazy(() => laadPagina(() => import("./pages/public/ScanInvullen")));
 import Blog from "./pages/public/Blog";
 import BlogPost from "./pages/public/BlogPost";
-const Klantenportaal = lazy(() => import("./pages/public/Klantenportaal"));
-const InsightsDiscoveryProfiel = lazy(() => import("./pages/public/InsightsDiscoveryProfiel"));
-const KenniskaartTeamontwikkeling = lazy(() => import("./pages/public/KenniskaartTeamontwikkeling"));
-const BevlogenheidInHetWerk = lazy(() => import("./pages/public/BevlogenheidInHetWerk"));
-const Teamenergie = lazy(() => import("./pages/public/Teamenergie"));
-const Teamcultuur = lazy(() => import("./pages/public/Teamcultuur"));
-const EigenaarschapInTeams = lazy(() => import("./pages/public/EigenaarschapInTeams"));
-const Verandermanagement = lazy(() => import("./pages/public/Verandermanagement"));
-const ImpactVanEenTeamdag = lazy(() => import("./pages/public/ImpactVanEenTeamdag"));
-const Kennisbank = lazy(() => import("./pages/public/Kennisbank"));
-const KennisbankItem = lazy(() => import("./pages/public/KennisbankItem"));
-const Gespreksvoorbereider = lazy(() => import("./pages/public/Gespreksvoorbereider"));
-const TeamdagGenerator = lazy(() => import("./pages/public/TeamdagGenerator"));
+const Klantenportaal = lazy(() => laadPagina(() => import("./pages/public/Klantenportaal")));
+const InsightsDiscoveryProfiel = lazy(() => laadPagina(() => import("./pages/public/InsightsDiscoveryProfiel")));
+const KenniskaartTeamontwikkeling = lazy(() => laadPagina(() => import("./pages/public/KenniskaartTeamontwikkeling")));
+const BevlogenheidInHetWerk = lazy(() => laadPagina(() => import("./pages/public/BevlogenheidInHetWerk")));
+const Teamenergie = lazy(() => laadPagina(() => import("./pages/public/Teamenergie")));
+const Teamcultuur = lazy(() => laadPagina(() => import("./pages/public/Teamcultuur")));
+const EigenaarschapInTeams = lazy(() => laadPagina(() => import("./pages/public/EigenaarschapInTeams")));
+const Verandermanagement = lazy(() => laadPagina(() => import("./pages/public/Verandermanagement")));
+const ImpactVanEenTeamdag = lazy(() => laadPagina(() => import("./pages/public/ImpactVanEenTeamdag")));
+const Kennisbank = lazy(() => laadPagina(() => import("./pages/public/Kennisbank")));
+const KennisbankItem = lazy(() => laadPagina(() => import("./pages/public/KennisbankItem")));
+const Gespreksvoorbereider = lazy(() => laadPagina(() => import("./pages/public/Gespreksvoorbereider")));
+const TeamdagGenerator = lazy(() => laadPagina(() => import("./pages/public/TeamdagGenerator")));
 import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import RelatedArticles from "./components/shared/RelatedArticles";
@@ -66,10 +67,10 @@ import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
 import CookieBanner from "./components/shared/CookieBanner";
 import ReflectiekaartFormulier from "./ReflectiekaartFormulier";
 import { Analytics } from "@vercel/analytics/react";
-const PageScans = lazy(() => import("./pages/admin/PageScans"));
-const PageGratisTeamscan = lazy(() => import("./pages/admin/PageGratisTeamscan"));
-const PageAppgebruik = lazy(() => import("./pages/admin/PageAppgebruik"));
-const GratisTeamscan = lazy(() => import("./pages/public/GratisTeamscan"));
+const PageScans = lazy(() => laadPagina(() => import("./pages/admin/PageScans")));
+const PageGratisTeamscan = lazy(() => laadPagina(() => import("./pages/admin/PageGratisTeamscan")));
+const PageAppgebruik = lazy(() => laadPagina(() => import("./pages/admin/PageAppgebruik")));
+const GratisTeamscan = lazy(() => laadPagina(() => import("./pages/public/GratisTeamscan")));
 const GratisTeamscanReport = lazy(() =>
   import("./pages/public/GratisTeamscan").then((m) => ({ default: m.GratisTeamscanReport }))
 );
