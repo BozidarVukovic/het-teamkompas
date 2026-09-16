@@ -1,6 +1,6 @@
 import { doc, getDoc, getDocs, collection, writeBatch, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
-import { controleerPdf, splitsBestand, valideerOmgeving } from "./teamomgeving";
+import { controleerPdf, splitsBestand, valideerOmgeving, pasWijzigingToe, OMGEVING_VERSIE } from "./teamomgeving";
 
 const basis = ({ orgId, teamId }) => `organisaties/${orgId}/teams/${teamId}`;
 const ref = (team, id) => doc(db, `${basis(team)}/teamomgeving/${id}`);
@@ -63,6 +63,35 @@ export async function werkOmgevingBij(team, uid, pakket) {
     intro: pakket.inhoud.intro || "",
     documentContext: pakket.inhoud.documentContext || "",
     onderdelen: pakket.inhoud.onderdelen,
+    bijgewerktOp: serverTimestamp(),
+    bijgewerktDoor: uid,
+  });
+}
+
+// Eén tekst bijwerken, vanuit het scherm.
+//
+// Twee dingen zitten hier met opzet in.
+//
+// De inhoud wordt eerst opnieuw gelezen en de wijziging gaat daar bovenop, niet
+// bovenop wat het scherm uren geleden laadde. Er zijn twee begeleiders per
+// omgeving; corrigeert de een een teamdag terwijl de ander aan de afspraken
+// werkt, dan hoort dat niet te betekenen dat er één van de twee verdwijnt.
+//
+// En de uitkomst gaat door dezelfde controle als een aangeleverd pakket. Eén
+// poort, geen tweede route met eigen regels -- want een tweede route is een
+// tweede plek waar iets doorheen kan glippen dat het scherm niet aankan.
+export async function werkTekstenBij(team, uid, wijziging) {
+  const huidig = await getDoc(ref(team, "inhoud"));
+  if (!huidig.exists()) throw new Error("Deze teamomgeving is nog niet ingericht.");
+
+  const nieuw = pasWijzigingToe(huidig.data(), wijziging);
+  valideerOmgeving({ versie: OMGEVING_VERSIE, inhoud: nieuw, beheer: { tekst: "" }, bestanden: [] });
+
+  await updateDoc(ref(team, "inhoud"), {
+    titel: nieuw.titel,
+    intro: nieuw.intro || "",
+    documentContext: nieuw.documentContext || "",
+    onderdelen: nieuw.onderdelen,
     bijgewerktOp: serverTimestamp(),
     bijgewerktDoor: uid,
   });

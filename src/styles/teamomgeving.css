@@ -340,6 +340,123 @@
   padding: 24px;
 }
 
+/* De kop van een onderdeel met de bewerkknop ernaast. De knop staat stil aan de
+   rechterkant: hij hoort er te zijn voor wie hem zoekt, niet om aandacht te
+   vragen van wie komt lezen. */
+.to-tekstkop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.to-tekstkop > h2 {
+  flex: 1;
+  min-width: 0;
+}
+
+.to-bewerkknop {
+  flex: none;
+  min-height: var(--tk-raak);
+  padding: 0 12px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tk-zacht);
+  font: inherit;
+  font-size: var(--tk-t-klein);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color var(--tk-vlot) var(--tk-soepel), color var(--tk-vlot) var(--tk-soepel);
+}
+
+@media (hover: hover) {
+  .to-bewerkknop:hover {
+    border-color: var(--tk-teal);
+    color: var(--tk-teal);
+  }
+}
+
+/* ---------------------------------------------------------------- bewerken */
+
+.to-bewerk {
+  margin-top: 4px;
+}
+
+.to-bewerk-uitleg {
+  margin: 0 0 12px;
+  max-width: 68ch;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.6;
+}
+
+.to-bewerk-blad {
+  display: grid;
+  gap: 16px;
+}
+
+/* Naast elkaar zodra er ruimte voor is. Onder elkaar zou betekenen dat je
+   scrolt tussen wat je typt en wat het wordt, en dan kijk je er niet meer naar. */
+@media (min-width: 1100px) {
+  .to-bewerk-blad {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.to-bewerk-veld {
+  min-height: 320px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: var(--tk-t-klein);
+  line-height: 1.7;
+  tab-size: 2;
+  resize: vertical;
+}
+
+.to-bewerk-voorbeeld {
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px dashed var(--tk-lijn);
+  border-radius: 12px;
+  background: var(--tk-navy);
+}
+
+.to-bewerk-kanttekening {
+  display: block;
+  margin-top: 4px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.to-bewerk-merk {
+  margin: 0 0 10px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-fijn);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Het voorbeeld is een stuk van hetzelfde scherm, dus het erft de typografie
+   van .to-tekst. Alleen de hoogte is begrensd: een lang onderdeel hoort het
+   invoerveld niet uit beeld te duwen. */
+.to-bewerk-blik {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.to-bewerk-knoppen {
+  align-items: center;
+  margin-top: 14px;
+}
+
+.to-bewerk-stand {
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-fijn);
+}
+
 .to-tekst > h2 {
   margin: 0 0 14px;
   font-size: var(--tk-t-sectie);

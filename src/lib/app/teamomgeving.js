@@ -363,6 +363,45 @@ export function schrijfDatum(datum, taal = "nl-NL") {
   }
 }
 
+// Eén wijziging op de inhoud, zonder de rest aan te raken.
+//
+// De teksten waren alleen te corrigeren door het hele pakket opnieuw aan te
+// leveren: downloaden, JSON aanpassen, terugzetten. Dat werkt bij één klant en
+// houdt op bij vijf -- je bent dan een bestandsformaat aan het bijwerken in
+// plaats van een tekst.
+//
+// Deze functie krijgt de inhoud zoals hij nu in de opslag staat en geeft een
+// nieuwe terug met precies één ding anders. Alles wat niet in de wijziging
+// staat blijft letterlijk staan, ook velden die deze versie van de app niet
+// kent. Dat is met opzet: wie hier een veld vergeet over te nemen, gooit het bij
+// de eerstvolgende correctie weg -- en dat merk je pas als een klant vraagt waar
+// zijn tijdlijn is gebleven.
+//
+// Het onderdeel wordt op id gezocht en niet op plek in de lijst. Een index uit
+// een scherm dat intussen opnieuw is geladen, wijst naar het verkeerde stuk
+// tekst.
+export function pasWijzigingToe(inhoud, wijziging) {
+  const bron = inhoud && typeof inhoud === "object" ? inhoud : {};
+  const wens = wijziging && typeof wijziging === "object" ? wijziging : {};
+  const uit = { ...bron };
+  const schoon = (waarde) => String(waarde).replace(/\r\n?/g, "\n");
+
+  if (typeof wens.titel === "string") uit.titel = schoon(wens.titel).trim();
+  if (typeof wens.intro === "string") uit.intro = schoon(wens.intro).trim();
+  if (typeof wens.documentContext === "string") uit.documentContext = schoon(wens.documentContext).trim();
+
+  if (wens.onderdeel && typeof wens.onderdeel.id === "string") {
+    const lijst = Array.isArray(bron.onderdelen) ? bron.onderdelen : [];
+    if (!lijst.some((deel) => deel && deel.id === wens.onderdeel.id)) {
+      throw new Error("Dit onderdeel staat niet meer in deze teamomgeving. Ververs het scherm en probeer het opnieuw.");
+    }
+    const tekst = schoon(wens.onderdeel.tekst === undefined ? "" : wens.onderdeel.tekst);
+    uit.onderdelen = lijst.map((deel) => (deel && deel.id === wens.onderdeel.id ? { ...deel, tekst } : deel));
+  }
+
+  return uit;
+}
+
 export function splitsBestand(base64) {
   return Array.from({ length: Math.ceil(base64.length / DEEL_GROOTTE) }, (_, i) => base64.slice(i * DEEL_GROOTTE, (i + 1) * DEEL_GROOTTE));
 }

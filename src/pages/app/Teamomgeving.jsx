@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
-import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij } from "../../lib/app/teamomgevingOpslag";
+import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij, werkTekstenBij } from "../../lib/app/teamomgevingOpslag";
 import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek, leesBijgewerkt, schrijfDatum } from "../../lib/app/teamomgeving";
 import { maakSlak, sectieAdressen, leesHash, maakAdres } from "../../lib/app/teamomgevingAdres";
 import { maakZoekindex, zoek as zoekInOmgeving } from "../../lib/app/teamomgevingZoek";
@@ -168,7 +168,7 @@ function Bijwerken({ team, uid, herladen }) {
   }
   return <div className="to-bijwerken">
     <p className="tk-label">Brontekst terugzetten</p>
-    <p>Heb je de gedownloade brontekst verbeterd? Kies hem hier om de teksten van alle onderdelen te vervangen. De documenten, de pdf&apos;s en de twee begeleiders blijven zoals ze zijn.</p>
+    <p>Voor een grote wijziging in één keer, of om een onderdeel toe te voegen. Losse teksten corrigeer je sneller met <strong>Tekst bewerken</strong> op het onderdeel zelf. De documenten, de pdf&apos;s en de twee begeleiders blijven zoals ze zijn.</p>
     <label><span className="tk-label">Verbeterd pakket</span><input type="file" accept=".json,application/json" onChange={lees} disabled={bezig} /></label>
     {pakket && <div className="to-pakket"><strong>{pakket.inhoud.titel}</strong><span>{pakket.inhoud.onderdelen.length} onderdelen</span></div>}
     {pakket && <label className="tk-keuzevakje to-akkoord"><input type="checkbox" checked={akkoord} onChange={(e) => setAkkoord(e.target.checked)} disabled={bezig} />Ik vervang de teksten van {team.teamNaam || "dit team"} door de teksten uit dit bestand.</label>}
@@ -423,6 +423,126 @@ function Zoeken({ inhoud, ga }) {
   </>;
 }
 
+// Tekst bewerken waar je hem leest.
+//
+// Naast het invoerveld staat het scherm zelf. Wat je typt gaat door precies
+// dezelfde molen als de gepubliceerde tekst -- dezelfde tabellen, dezelfde
+// tijdlijn, dezelfde koppen. Dat is het hele punt: de vorige route liep via een
+// JSON-bestand waarin je pas na het terugzetten zag of een kop een kop was
+// geworden.
+//
+// Eén ding staat er met opzet anders bij dan op het scherm: bij een inklapbaar
+// onderdeel staat in het voorbeeld alles open. Je bent hier aan het nalezen, en
+// een proefdruk waarin driekwart van de tekst achter een dichte kop zit, is
+// geen proefdruk. Dat staat erbij, zodat je het niet voor de echte weergave
+// aanziet.
+function Bewerker({ label, uitleg, waarde, tijdlijn, inklapbaar, opslaan, klaar }) {
+  const [tekst, setTekst] = useState(waarde);
+  const [bezig, setBezig] = useState(false);
+  const [fout, setFout] = useState("");
+  const gewijzigd = tekst !== waarde;
+
+  // Een halfafgemaakte correctie is zo weg met een tik op de terugknop of het
+  // kruisje. De browser vraagt het dan tenminste na.
+  useEffect(() => {
+    if (!gewijzigd) return undefined;
+    const vraag = (e) => { e.preventDefault(); e.returnValue = ""; };
+    window.addEventListener("beforeunload", vraag);
+    return () => window.removeEventListener("beforeunload", vraag);
+  }, [gewijzigd]);
+
+  async function bewaar() {
+    setBezig(true);
+    setFout("");
+    try {
+      await opslaan(tekst);
+      klaar(true);
+    } catch (err) {
+      // De tekst blijft staan. Een foutmelding die je werk meeneemt is geen
+      // foutmelding maar een tweede fout.
+      setFout(err.message || "Opslaan is niet gelukt. Je tekst staat nog in het veld.");
+    } finally {
+      setBezig(false);
+    }
+  }
+
+  function afbreken() {
+    if (gewijzigd && !window.confirm("Je wijzigingen zijn nog niet opgeslagen. Weggooien?")) return;
+    klaar(false);
+  }
+
+  return <div className="to-bewerk">
+    <p className="tk-label">{label}</p>
+    {uitleg && <p className="to-bewerk-uitleg">{uitleg}</p>}
+    <div className="to-bewerk-blad">
+      <textarea
+        className="tk-tekstvak to-bewerk-veld"
+        rows={20}
+        maxLength={60000}
+        spellCheck
+        value={tekst}
+        onChange={(e) => setTekst(e.target.value)}
+        aria-label={label}
+      />
+      <div className="to-bewerk-voorbeeld">
+        <p className="to-bewerk-merk">
+        Zo komt het op het scherm
+        {inklapbaar && <span className="to-bewerk-kanttekening">Hier staat alles open; op het scherm klappen de ### -koppen in.</span>}
+      </p>
+        <div className="to-bewerk-blik">
+          {tekst.trim()
+            ? <Tekst tijdlijn={tijdlijn} plaatsBoven>{tekst}</Tekst>
+            : <p className="to-bewerk-uitleg">Nog niets ingevuld.</p>}
+        </div>
+      </div>
+    </div>
+    {fout && <p role="alert">{fout}</p>}
+    <div className="tk-knoppen to-bewerk-knoppen">
+      <button className="tk-knop" type="button" disabled={!gewijzigd || bezig} onClick={bewaar}>
+        {bezig ? "Opslaan…" : "Opslaan"}
+      </button>
+      <button className="tk-knop tk-knop-rand tk-knop-klein" type="button" disabled={bezig} onClick={afbreken}>
+        Annuleren
+      </button>
+      <span className="to-bewerk-stand">{tekst.length.toLocaleString("nl-NL")} van 60.000 tekens</span>
+    </div>
+  </div>;
+}
+
+// De titel en de intro staan boven elk onderdeel en horen daarom niet bij één
+// onderdeel thuis. Ze zijn kort, dus hier hoeft geen voorbeeld naast: je ziet
+// het resultaat zodra je opslaat.
+function KopBewerker({ inhoud, opslaan, herladen }) {
+  const [titel, setTitel] = useState(inhoud.titel || "");
+  const [intro, setIntro] = useState(inhoud.intro || "");
+  const [bezig, setBezig] = useState(false);
+  const [melding, setMelding] = useState("");
+  const gewijzigd = titel !== (inhoud.titel || "") || intro !== (inhoud.intro || "");
+  async function bewaar() {
+    setBezig(true);
+    setMelding("");
+    try {
+      await opslaan({ titel, intro });
+      setMelding("De kop is bijgewerkt.");
+      herladen();
+    } catch (err) {
+      setMelding(err.message || "Opslaan is niet gelukt.");
+    } finally {
+      setBezig(false);
+    }
+  }
+  return <div className="to-beheer-invoer">
+    <label className="tk-label" htmlFor="to-titel">Titel van de omgeving</label>
+    <input className="tk-invoer" id="to-titel" maxLength={160} value={titel} onChange={(e) => setTitel(e.target.value)} />
+    <label className="tk-label" htmlFor="to-intro">Intro onder de titel</label>
+    <textarea className="tk-tekstvak" id="to-intro" rows={3} maxLength={600} value={intro} onChange={(e) => setIntro(e.target.value)} />
+    {melding && <p role="status">{melding}</p>}
+    <button className="tk-knop" type="button" disabled={!gewijzigd || bezig || !titel.trim()} onClick={bewaar}>
+      {bezig ? "Opslaan…" : "Kop bijwerken"}
+    </button>
+  </div>;
+}
+
 function Inrichten({ team, uid, leden, herladen }) {
   const [pakket, setPakket] = useState(null);
   const [tweede, setTweede] = useState("");
@@ -465,6 +585,7 @@ function Omgeving({ team, uid, leden, magInrichten }) {
   const [fout, setFout] = useState("");
   const [versie, setVersie] = useState(0);
   const [notities, setNotities] = useState("");
+  const [bewerkt, setBewerkt] = useState("");
   const [bezig, setBezig] = useState("");
   const [melding, setMelding] = useState("");
   useEffect(() => {
@@ -549,7 +670,7 @@ function Omgeving({ team, uid, leden, magInrichten }) {
   const groepen = maakOnderdelenlijst(omgeving.inhoud, omgeving.magBeheer);
   const bijgewerkt = leesBijgewerkt(omgeving.inhoud);
   const aanvullen = omgeving.magBeheer
-    ? "Je kunt de brontekst bij Beheer downloaden, aanvullen en als nieuw pakket aanleveren."
+    ? "Gebruik hierboven Tekst bewerken om hem te vullen."
     : "De twee begeleiders van dit team vullen dit aan.";
 
   return <>
@@ -567,14 +688,31 @@ function Omgeving({ team, uid, leden, magInrichten }) {
 
       <div className="to-werk">
         {deel && <article className="tk-kaart to-tekst">
-          <h2>{deel.titel}</h2>
-          {!deel.tekst || !deel.tekst.trim()
-            ? <Leeg titel="Hier staat nog niets" uitleg={`Dit onderdeel is ingericht maar heeft nog geen inhoud. ${aanvullen}`} />
-            : magInklappen(deel)
-              ? <Secties deel={deel} tijdlijn={leesTijdlijn(deel)} hash={hash} key={deel.id} />
-              : <Tekst tijdlijn={leesTijdlijn(deel)} plaatsBoven>{deel.tekst}</Tekst>}
-          {deel.id === "afspraken" && <Link className="tk-knop" to="/app/team">Gedeelde teamafspraken bekijken en bijwerken</Link>}
-          {deel.id === "experimenten" && <Link className="tk-knop" to="/app/ik">Mijn experimenten in de app</Link>}
+          <div className="to-tekstkop">
+            <h2>{deel.titel}</h2>
+            {omgeving.magBeheer && bewerkt !== deel.id && (
+              <button className="to-bewerkknop" type="button" onClick={() => setBewerkt(deel.id)}>
+                <span aria-hidden="true">✎</span> Tekst bewerken
+              </button>
+            )}
+          </div>
+          {bewerkt === deel.id
+            ? <Bewerker
+              label={`Tekst van ${deel.titel}`}
+              uitleg="Markdown. ## is een kop, ### maakt een inklapbare sectie, - een opsomming, ** ** vet. Een regel [tijdlijn] zet de lijn op die plek."
+              waarde={deel.tekst || ""}
+              tijdlijn={leesTijdlijn(deel)}
+              inklapbaar={magInklappen(deel)}
+              opslaan={(tekst) => werkTekstenBij(team, uid, { onderdeel: { id: deel.id, tekst } })}
+              klaar={(bewaard) => { setBewerkt(""); if (bewaard) setVersie((v) => v + 1); }}
+            />
+            : (!deel.tekst || !deel.tekst.trim()
+              ? <Leeg titel="Hier staat nog niets" uitleg={`Dit onderdeel is ingericht maar heeft nog geen inhoud. ${aanvullen}`} />
+              : magInklappen(deel)
+                ? <Secties deel={deel} tijdlijn={leesTijdlijn(deel)} hash={hash} key={deel.id} />
+                : <Tekst tijdlijn={leesTijdlijn(deel)} plaatsBoven>{deel.tekst}</Tekst>)}
+          {bewerkt !== deel.id && deel.id === "afspraken" && <Link className="tk-knop" to="/app/team">Gedeelde teamafspraken bekijken en bijwerken</Link>}
+          {bewerkt !== deel.id && deel.id === "experimenten" && <Link className="tk-knop" to="/app/ik">Mijn experimenten in de app</Link>}
         </article>}
 
         {tab === "documenten" && <section className="tk-kaart to-tekst">
@@ -602,6 +740,11 @@ function Omgeving({ team, uid, leden, magInrichten }) {
             <button className="tk-knop tk-knop-rand" onClick={exporteerBron}>Brontekst downloaden</button>
             <p>De teksten van alle onderdelen zoals ze in het pakket staan, om na te lezen of te verbeteren. Zonder de bespreeknotities en zonder de pdf&apos;s. Dit bestand bevat teaminhoud: bewaar het net zo zorgvuldig als de rest.</p>
           </div>
+          <KopBewerker
+            inhoud={omgeving.inhoud}
+            opslaan={(wijziging) => werkTekstenBij(team, uid, wijziging)}
+            herladen={() => setVersie((v) => v + 1)}
+          />
           <Bijwerken team={team} uid={uid} herladen={() => setVersie((v) => v + 1)} />
           <div className="to-beheer-invoer">
             <label className="tk-label" htmlFor="bespreeknotities">Bespreeknotities</label>

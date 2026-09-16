@@ -41,6 +41,23 @@ op elke kop en op elke inklapbare sectie, en het zoeken geeft hem terug bij een
 treffer. Wie er een verzint moet dus dezelfde functie gebruiken, anders komt een
 link ergens anders uit dan de treffer beloofde.
 
+## Teksten bewerken
+
+Twee routes, met opzet allebei door dezelfde poort:
+
+- **Tekst bewerken** op het onderdeel zelf (alleen voor de twee begeleiders).
+  Een invoerveld met het scherm ernaast, zodat je ziet wat de markdown wordt
+  voordat je opslaat. Slaat op via `werkTekstenBij`, dat de inhoud eerst opnieuw
+  leest en de wijziging daar bovenop zet -- zo overschrijft de ene begeleider
+  niet het werk van de andere.
+- **Brontekst terugzetten** in Beheer, voor een grote wijziging in één keer of
+  om een onderdeel toe te voegen. Dat kan het bewerkscherm niet: het wijzigt
+  alleen de tekst van een onderdeel dat er al is.
+
+Beide gaan door `valideerOmgeving` en door dezelfde regel in `firestore.rules`.
+Voeg geen derde schrijfroute toe; dat is een derde plek waar iets langs de
+controle kan glippen.
+
 ## Zoeken
 
 `teamomgevingZoek.js` bouwt de index uit dezelfde inhoud die het scherm toont --
