@@ -960,11 +960,16 @@
   }
 }
 
+/* Een stap kleiner dan de titel van het onderdeel, met opzet.
+   Op 18px tegen een titel van 20px stonden vijf sectiekoppen onder elkaar even
+   hard te roepen als de plek waar je was -- en dan lijkt het scherm vol terwijl
+   het grootste deel dichtstaat. Deze koppen zijn labels van dichte laden; dat
+   ze open kunnen zegt de pijl al, dat hoeft de puntgrootte niet te herhalen. */
 .to-vouwtitel {
   display: block;
-  font-size: var(--tk-t-kop);
+  font-size: var(--tk-t-lead);
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.35;
   transition: color var(--tk-vlot) var(--tk-soepel);
 }
 
