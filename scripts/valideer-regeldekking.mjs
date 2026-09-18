@@ -14,7 +14,11 @@
 import fs from "node:fs";
 
 const REGELS = "firestore.rules";
-const TESTS = ["tests/securityRules.test.mjs", "tests/teamomgevingRules.test.mjs"];
+const TESTS = [
+  "tests/securityRules.test.mjs",
+  "tests/teamomgevingRules.test.mjs",
+  "tests/teamcheckRules.test.mjs",
+];
 
 // Alleen het app-gedeelte. De backoffice-collecties erboven horen bij de
 // publieke site en hebben hun eigen geschiedenis; die er nu bij trekken zou de

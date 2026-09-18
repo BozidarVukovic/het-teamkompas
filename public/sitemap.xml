@@ -601,8 +601,20 @@
     <priority>0.75</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/blog/ai-verandert-ook-leiderschap</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.mijnteamkompas.nl/blog/hoe-ziet-de-zorg-er-over-tien-jaar-uit</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/kennisbank</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-09-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
