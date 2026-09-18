@@ -12,6 +12,8 @@
 import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
+import Vingerafdruk from "../../components/app/Vingerafdruk";
+import { kleurenOmTeDelen } from "../../lib/app/vingerafdruk";
 import { BEVESTIGING, BRONNEN, CATEGORIEEN, KENMERKEN } from "../../data/app/kenmerken";
 import { KLEUREN, insightsSamenvatting, kleur } from "../../lib/app/insights";
 import InsightsUpload from "../../components/app/InsightsUpload";
@@ -180,6 +182,48 @@ function KenmerkRij({
 }
 
 /* ------------------------------------------------------------------ pagina */
+
+/**
+ * Wat er bij je naam staat, en de knop om dat weg te halen.
+ *
+ * Dit blok staat er omdat de kleuren standaard aan staan in plaats van per stuk
+ * aangevinkt. Alles wat je verder deelt, vink je zelf aan; dit niet. Dan hoort
+ * op zijn minst zichtbaar te zijn wát er dan bij je naam komt, in plaats van
+ * dat je het toevallig ontdekt als je de ledenlijst opent.
+ */
+function Kleurenkeuze() {
+  const { gebruikerDoc, zetKleurenDelen } = useApp();
+  const [bezig, setBezig] = useState(false);
+  const insights = (gebruikerDoc && gebruikerDoc.insights) || null;
+  const aan = !(gebruikerDoc && gebruikerDoc.kleurenDelen === false);
+  const kleuren = kleurenOmTeDelen(insights);
+
+  // Geen profiel, niets te tonen en niets te kiezen.
+  if (!kleuren) return null;
+
+  return <section className="tk-kaart">
+    <h2>Je kleuren bij je naam</h2>
+    <div className="tk-kleurenrij">
+      <Vingerafdruk kleuren={aan ? kleuren : null} naam="" />
+      {!aan && <span className="tk-fijn">Staat uit — je teamgenoten zien geen kleuren bij je naam.</span>}
+    </div>
+    <p>
+      {aan
+        ? "Dit staat achter je naam in de ledenlijst van je team. Je teamgenoten zien de verhouding tussen de vier kleuren en de volgorde — niet je type, niet de tekst van je profiel, en niet wat eruit is afgeleid."
+        : "Je teamgenoten zien alleen je naam. De kleuren blijven op je eigen account staan en worden voor de vertaling naar samenwerkingspunten gewoon gebruikt."}
+    </p>
+    <div className="tk-knoppen">
+      <button
+        type="button"
+        className="tk-knop tk-knop-rand tk-knop-klein"
+        disabled={bezig}
+        onClick={async () => { setBezig(true); try { await zetKleurenDelen(!aan); } finally { setBezig(false); } }}
+      >
+        {bezig ? "Bezig…" : aan ? "Kleuren niet meer tonen" : "Kleuren weer tonen"}
+      </button>
+    </div>
+  </section>;
+}
 
 export default function MijnProfiel() {
   const {
@@ -408,8 +452,12 @@ export default function MijnProfiel() {
     <div className="tk-inhoud">
       <h1 className="tk-kop">Mijn profiel</h1>
       <p className="tk-onderkop">
-        Niets hiervan is zichtbaar voor anderen, behalve wat je zelf deelt.
+        Niets hiervan is zichtbaar voor anderen, behalve wat je zelf deelt — en de
+        kleuren van je profiel, die bij je naam in het team staan. Hieronder zie je
+        wat dat is en kun je het uitzetten.
       </p>
+
+      <Kleurenkeuze />
 
       <Melding melding={melding} onSluiten={wisMelding} />
 

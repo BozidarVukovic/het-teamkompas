@@ -453,6 +453,22 @@ export async function haalProfiel(uid) {
   return snap.exists() ? snap.data() : null;
 }
 
+/**
+ * Of je kleuren bij je naam mogen staan.
+ *
+ * Staat op je eigen gebruikersdocument en niet in de gedeelde kopie: het is een
+ * keuze over jou, niet iets dat je per team anders zet. Ontbreekt het veld, dan
+ * geldt "ja" -- dat is de stand waarmee dit is ingevoerd, en die staat zichtbaar
+ * op Mijn profiel met de schakelaar ernaast.
+ */
+export async function bewaarKleurenDelen(uid, aan) {
+  await setDoc(
+    gebruikerRef(uid),
+    { kleurenDelen: aan !== false, bijgewerktOp: serverTimestamp() },
+    { merge: true }
+  );
+}
+
 export async function bewaarInsights(uid, insights) {
   await setDoc(
     profielRef(uid),
@@ -568,7 +584,7 @@ export async function verwijderSectie(uid, sectieId) {
  * aangevinkt, dan wordt de kopie verwijderd. Zo bestaat er geen document met
  * restanten van eerder delen.
  */
-export async function werkGedeeldBij({ uid, naam, orgId, teamId, kenmerken, handleiding }) {
+export async function werkGedeeldBij({ uid, naam, orgId, teamId, kenmerken, handleiding, insights, kleurenDelen }) {
   // Wát er in de kopie komt, staat in gedeeldeKopie.js — een pure functie, met
   // tests. Hier wordt er alleen nog mee geschreven of verwijderd.
   const kopie = stelGedeeldeKopieSamen({
@@ -576,6 +592,8 @@ export async function werkGedeeldBij({ uid, naam, orgId, teamId, kenmerken, hand
     sleutel: teamsleutel(orgId, teamId),
     kenmerken,
     handleiding,
+    insights,
+    kleurenDelen,
   });
 
   if (!kopie) {
@@ -591,10 +609,10 @@ export async function werkGedeeldBij({ uid, naam, orgId, teamId, kenmerken, hand
 }
 
 /** Werkt de gedeelde kopie bij voor elk team waar de gebruiker lid van is. */
-export async function werkAlleGedeeldBij({ uid, naam, lidmaatschappen, kenmerken, handleiding }) {
+export async function werkAlleGedeeldBij({ uid, naam, lidmaatschappen, kenmerken, handleiding, insights, kleurenDelen }) {
   await Promise.all(
     (lidmaatschappen || []).map((l) =>
-      werkGedeeldBij({ uid, naam, orgId: l.orgId, teamId: l.teamId, kenmerken, handleiding })
+      werkGedeeldBij({ uid, naam, orgId: l.orgId, teamId: l.teamId, kenmerken, handleiding, insights, kleurenDelen })
     )
   );
 }

@@ -56,6 +56,7 @@ import {
   verwijderTeam as verwijderTeamInDb,
   verwijderEigenGegevens as verwijderEigenGegevensInDb,
   werkAlleGedeeldBij,
+  bewaarKleurenDelen as bewaarKleurenDelenInDb,
   werkGebruikerBij,
   zetTeamrol as zetTeamrolInDb,
   werkLidgegevensBij,
@@ -407,9 +408,36 @@ function terugkeeradres() {
         lidmaatschappen,
         kenmerken: nieuweKenmerken,
         handleiding: nieuweHandleiding,
+        insights: (gebruikerDoc && gebruikerDoc.insights) || null,
+        kleurenDelen: !(gebruikerDoc && gebruikerDoc.kleurenDelen === false),
       });
     },
-    [gebruiker, naam, lidmaatschappen]
+    [gebruiker, naam, lidmaatschappen, gebruikerDoc]
+  );
+
+  /**
+   * Of je kleuren bij je naam mogen staan, aan of uit.
+   *
+   * Twee schrijfacties: de keuze op je eigen document, en daarna elke gedeelde
+   * kopie opnieuw. Dat tweede is het echte werk -- zonder dat blijft er een
+   * kopie met kleuren staan bij een team waar je net nee zei.
+   */
+  const zetKleurenDelen = useCallback(
+    async (aan) => {
+      if (!gebruiker) return;
+      await bewaarKleurenDelenInDb(gebruiker.uid, aan);
+      await werkAlleGedeeldBij({
+        uid: gebruiker.uid,
+        naam,
+        lidmaatschappen,
+        kenmerken,
+        handleiding,
+        insights: (gebruikerDoc && gebruikerDoc.insights) || null,
+        kleurenDelen: aan !== false,
+      });
+      await laadGegevens(gebruiker.uid, gebruiker.email);
+    },
+    [gebruiker, naam, lidmaatschappen, kenmerken, handleiding, gebruikerDoc, laadGegevens]
   );
 
   /**
@@ -839,6 +867,7 @@ function terugkeeradres() {
       bewaarSectie,
       bewaarInsights,
       wisInsights,
+      zetKleurenDelen,
       maakTeam,
       doeMee,
       verlaatTeam,
@@ -853,7 +882,7 @@ function terugkeeradres() {
       kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, bewaarAfspraak, verwijderAfspraak, experimenten, startExperiment, blikTerug, sessies, reflecties, bewaarReflectie, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
-      wisInsights, maakTeam, doeMee, verlaatTeam, verwijderTeam, vernieuwCode, magTeams, verwijderAlles, laadGegevens,
+      wisInsights, zetKleurenDelen, maakTeam, doeMee, verlaatTeam, verwijderTeam, vernieuwCode, magTeams, verwijderAlles, laadGegevens,
     ]
   );
 

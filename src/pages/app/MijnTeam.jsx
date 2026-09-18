@@ -38,6 +38,8 @@ import { kenmerkenUitInsights } from "../../lib/app/insights";
 import { deelzin } from "../../data/app/kenmerken";
 import { MAX_NAAM, initialen, schoneNaam, voornaam } from "../../lib/app/naam";
 import { gedeeldSamengevat } from "../../lib/app/gedeeld";
+import Vingerafdruk from "../../components/app/Vingerafdruk";
+import { kleurenOmTeDelen } from "../../lib/app/vingerafdruk";
 import InsightsUpload from "../../components/app/InsightsUpload";
 import HandleidingKlaarzetten from "../../components/app/HandleidingKlaarzetten";
 import Teamafspraken from "../../components/app/Teamafspraken";
@@ -85,7 +87,7 @@ function Gedeeld({ gedeeld }) {
 }
 
 /** Eén regel in de ledenlijst, met wat eronder tevoorschijn komt. */
-function Persoon({ sleutel, naam: hunNaam, achter, onder, uitgeklapt, onKlik, children }) {
+function Persoon({ sleutel, naam: hunNaam, achter, onder, kleuren, uitgeklapt, onKlik, children }) {
   return (
     <div className="tk-persoonrij">
       <button
@@ -102,6 +104,7 @@ function Persoon({ sleutel, naam: hunNaam, achter, onder, uitgeklapt, onKlik, ch
           </strong>
           <small>{onder}</small>
         </span>
+        {kleuren && <Vingerafdruk kleuren={kleuren} naam={hunNaam} klein />}
         <span className="tk-optie-pijl" aria-hidden="true">›</span>
       </button>
       {uitgeklapt && <div className="tk-optie-uit" key={sleutel}>{children}</div>}
@@ -318,6 +321,7 @@ export default function MijnTeam() {
         sleutel={sleutel}
         naam={l.naam || "Teamgenoot"}
         achter={eigen ? "(jij)" : null}
+        kleuren={g && g.kleuren}
         onder={[
           l.functie || null,
           l.rol === BEGELEIDER
@@ -630,6 +634,7 @@ export default function MijnTeam() {
                 key={sleutel}
                 sleutel={sleutel}
                 naam={pl.naam}
+                kleuren={kleurenOmTeDelen(pl.insights)}
                 onder={[
                   `${(pl.kenmerken || []).length} punten`,
                   (pl.handleiding || []).length > 0

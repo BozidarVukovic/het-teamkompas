@@ -18,6 +18,7 @@
 //   - is er niets aangevinkt, dan is er geen kopie in plaats van een lege
 
 import { deelzin } from "../../data/app/kenmerken.js";
+import { kleurenOmTeDelen } from "./vingerafdruk.js";
 import { SECTIES, sectie } from "../../data/app/handleiding.js";
 
 /**
@@ -41,7 +42,14 @@ export function sectiesAlsLijst(secties = {}) {
   }).filter(Boolean);
 }
 
-export function stelGedeeldeKopieSamen({ naam = "", sleutel, kenmerken = [], handleiding = {} } = {}) {
+export function stelGedeeldeKopieSamen({
+  naam = "",
+  sleutel,
+  kenmerken = [],
+  handleiding = {},
+  insights = null,
+  kleurenDelen = true,
+} = {}) {
   if (!sleutel) return null;
 
   const gedeeldeKenmerken = (kenmerken || [])
@@ -65,11 +73,26 @@ export function stelGedeeldeKopieSamen({ naam = "", sleutel, kenmerken = [], han
       tekst: s.tekst,
     }));
 
-  if (gedeeldeKenmerken.length === 0 && gedeeldeSecties.length === 0) return null;
+  // De kleuren van je profiel, als je ze niet hebt uitgezet.
+  //
+  // Dit is het enige in deze kopie dat standaard aan staat in plaats van per
+  // stuk aangevinkt. Dat is een bewuste keuze en geen vergissing: zonder
+  // kleuren bij de namen valt het patroon weg waar de hele lijst op leunt, en
+  // een vinkje dat niemand aanzet is hetzelfde als geen functie. De prijs is
+  // dat iemand iets deelt zonder dat hij daar per keer ja tegen zei, en die
+  // prijs hoort zichtbaar te zijn: op Mijn profiel staat wat er bij je naam
+  // komt te staan, met de schakelaar ernaast.
+  //
+  // Wat meegaat is het minimum -- de vier getallen en de eerste twee kleuren.
+  // Niet het wiel, niet het type, niet de tekst van het profiel.
+  const kleuren = kleurenDelen === false ? null : kleurenOmTeDelen(insights);
+
+  if (gedeeldeKenmerken.length === 0 && gedeeldeSecties.length === 0 && !kleuren) return null;
 
   return {
     naam: naam || "",
     kenmerken: gedeeldeKenmerken,
     handleiding: gedeeldeSecties,
+    ...(kleuren ? { kleuren } : {}),
   };
 }

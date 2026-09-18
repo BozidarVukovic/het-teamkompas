@@ -1709,6 +1709,85 @@ a.tk-optie {
   letter-spacing: 0;
 }
 
+/* De kleurvingerafdruk achter een naam.
+   Een balk met de verhouding en bolletjes met de volgorde. Klein genoeg om in
+   een regel mee te lopen, groot genoeg om te herkennen zonder te lezen. */
+.tk-afdruk {
+  flex: 0 0 auto;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-left: auto;
+  padding-left: 12px;
+}
+
+.tk-afdruk-balk {
+  display: flex;
+  width: 96px;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tk-afdruk-balk > span {
+  display: block;
+  height: 100%;
+}
+
+.tk-afdruk-bollen {
+  display: flex;
+  gap: 3px;
+  justify-content: flex-start;
+}
+
+.tk-afdruk-bollen > span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+/* Wat niet gemeten is, staat er ook niet als gemeten bij: die bolletjes zijn
+   een ring in plaats van een vlakje. */
+.tk-afdruk-bollen > span[data-gemeten="nee"] {
+  background: transparent !important;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  opacity: 0.35;
+}
+
+.tk-afdruk[data-klein="ja"] .tk-afdruk-balk { width: 68px; height: 5px; }
+.tk-afdruk[data-klein="ja"] .tk-afdruk-bollen > span { width: 7px; height: 7px; }
+
+@media (max-width: 480px) {
+  .tk-afdruk-balk { width: 68px; }
+}
+
+/* Alleen voor schermlezers: het beeld hierboven staat op aria-hidden. */
+.tk-verborgen {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* De afdruk op Mijn profiel: daar staat hij op zichzelf en niet aan het eind
+   van een regel, dus zonder de duwende marge. */
+.tk-kleurenrij {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.tk-kleurenrij .tk-afdruk {
+  margin-left: 0;
+  padding-left: 0;
+}
+
 /* Het kleurstipje van een Insights-kleur. */
 .tk-kleurstip {
   width: 14px;
