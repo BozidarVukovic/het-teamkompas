@@ -129,7 +129,13 @@ function Onderdelen({ groepen, actief, kies }) {
       {groepen.map((groep, i) => {
         const bevatActief = groep.items.some((item) => item.id === actief);
         const ingeklapt = Boolean(groep.naam) && dicht.includes(groep.naam) && !bevatActief;
-        return <div className="to-groep" key={groep.naam || `groep-${i}`} data-apart={groep.apart ? "ja" : undefined}>
+        return <div
+          className="to-groep"
+          key={groep.naam || `groep-${i}`}
+          data-groep={groep.naam ? "ja" : undefined}
+          data-actief={groep.naam && bevatActief ? "ja" : undefined}
+          data-apart={groep.apart ? "ja" : undefined}
+        >
           {groep.naam && <button className="to-groepkop" type="button" aria-expanded={!ingeklapt} onClick={() => wisselGroep(groep.naam)}>
             <span>{groep.naam}</span>
             <span className="to-pijl" aria-hidden="true" />

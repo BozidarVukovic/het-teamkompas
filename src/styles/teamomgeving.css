@@ -265,7 +265,38 @@
 }
 
 .to-groep + .to-groep {
-  margin-top: 6px;
+  margin-top: 14px;
+}
+
+/* Een groep is een blok, geen kopje met daaronder toevallig wat regels.
+   "Samenwerken" stond in dezelfde kolom als de onderdelen eronder, in
+   hoofdletters en een tint zachter -- genoeg om te zien dat het iets anders
+   is, te weinig om te zien wat er bij hoort. Nu springen de onderdelen in,
+   met een lijn ernaast: aan de vorm alleen zie je al dat Experimenten en
+   Samen leren onder Samenwerken vallen. */
+.to-groep[data-groep="ja"] ul {
+  margin-left: 13px;
+  padding-left: 11px;
+  border-left: 2px solid var(--tk-lijn);
+}
+
+/* En de groep waar je in zit, licht als geheel op.
+   Dat is het antwoord op "ik klik Onze afspraken aan en zie niet dat de
+   andere twee erbij horen": niet het onderdeel kleurt, de hele groep doet
+   dat. Het actieve onderdeel blijft er binnen uitspringen doordat zijn vlak
+   verzadigder is dan dat van de groep. */
+.to-groep[data-actief="ja"] {
+  background: rgba(0, 121, 107, 0.045);
+  border-radius: 12px;
+  padding: 2px 0 6px;
+}
+
+.to-groep[data-actief="ja"] .to-groepkop {
+  color: var(--tk-teal);
+}
+
+.to-groep[data-actief="ja"] ul {
+  border-left-color: rgba(0, 121, 107, 0.3);
 }
 
 /* Beheer is niet het achtste onderdeel maar een ander soort plek. */
@@ -951,7 +982,7 @@
 /* Regels, geen kaarten in een kaart. Een haarlijn per sectie is genoeg om te
    zien waar de een ophoudt; een tweede laag vlakken maakt het alleen drukker. */
 .to-vouw {
-  margin: 10px 0 0;
+  margin: 4px 0 0;
 }
 
 /* Terug naar het overzicht zonder omhoog te scrollen naar de kop die je
@@ -982,12 +1013,22 @@
   }
 }
 
+/* Elke sectie is een rij met randen -- open en dicht.
+   Eerder waren dichte secties regels met een haarlijn ertussen. Dat leest als
+   tekst met strepen, niet als iets waar je op kunt drukken, en het gaf te
+   weinig verschil met de kop van het onderdeel erboven. Een eigen rand en
+   ronding zeggen "hier kun je aan zitten" zonder er knoppen van te maken.
+
+   Open en dicht hebben dezelfde marge en dezelfde binnenmarge, met opzet: de
+   kop die je aanraakt verschuift dan geen pixel bij het openklappen. Alleen
+   de vulling en de randkleur veranderen. */
 .to-vouwdeel {
   position: relative;
-}
-
-.to-vouwdeel + .to-vouwdeel {
-  border-top: 1px solid var(--tk-lijn);
+  margin: 8px 0;
+  padding: 0 16px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 12px;
+  background: var(--tk-vlak);
 }
 
 /* Een open sectie is een kader, geen tekst die toevallig zichtbaar is.
@@ -1001,24 +1042,14 @@
    kop geen pixel bij het openklappen -- het vlak groeit naar buiten, de tekst
    blijft staan waar hij stond. Zou het andersom zijn, dan sprong de kop die
    je net aanraakte opzij. */
+/* Open: dezelfde vorm, een andere vulling. */
 .to-vouwdeel[data-open="ja"] {
-  margin: 10px -18px;
-  padding: 0 18px;
   background: var(--tk-teal-waas);
-  border: 1px solid rgba(0, 121, 107, 0.16);
-  border-radius: 14px;
-}
-
-/* Het kader is zijn eigen begrenzing; de haarlijnen eromheen zouden er een
-   tweede grens naast leggen. */
-.to-vouwdeel[data-open="ja"],
-.to-vouwdeel[data-open="ja"] + .to-vouwdeel {
-  border-top: 0;
+  border-color: rgba(0, 121, 107, 0.28);
 }
 
 @media (max-width: 600px) {
-  .to-vouwdeel[data-open="ja"] {
-    margin: 10px -12px;
+  .to-vouwdeel {
     padding: 0 12px;
   }
 }
@@ -1147,8 +1178,13 @@
   line-height: 1.5;
 }
 
+/* De pijl is het teken dat er iets opengaat, en teal betekent in deze app
+   "hier kun je aan zitten". Op de zachte tekstkleur was hij een streepje dat
+   je moest zoeken; nu zegt hij zelf wat de rij is. Dan hoeft de kop dat niet
+   ook nog eens te doen met gewicht. */
 .to-vouwkop .to-pijl {
-  color: var(--tk-zacht);
+  color: var(--tk-teal);
+  opacity: 0.8;
 }
 
 /* Openvouwen zonder de hoogte te meten: de rij groeit van 0fr naar 1fr en het
