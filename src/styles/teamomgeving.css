@@ -278,7 +278,10 @@
   color: var(--tk-zacht);
   font: inherit;
   font-size: var(--tk-t-basis);
-  font-weight: 600;
+  /* Navigatie hoort terug te treden. Op 600 stond de zijbalk net zo hard te
+     roepen als de koppen ernaast, en dan leest de hele pagina als groot --
+     terwijl het de weging is die niet klopt, niet de puntgrootte. */
+  font-weight: 500;
   text-align: left;
   cursor: pointer;
   transition: color var(--tk-vlot) var(--tk-soepel),
@@ -723,6 +726,13 @@
 
 /* Een knop na een stuk tekst hoort lucht te hebben en niet tegen de laatste
    regel aan te plakken. */
+/* Een vervolgstap, geen hoofdzaak. Op volle maat was dit het luidste op het
+   scherm, terwijl de tekst erboven de reden is dat je hier bent. */
+.to-tekst .tk-knop {
+  font-size: var(--tk-t-klein);
+  padding: 11px 20px;
+}
+
 .to-tekst .tk-knop {
   margin-top: 18px;
 }
@@ -951,7 +961,7 @@
   gap: 16px;
   width: 100%;
   min-height: var(--tk-raak);
-  padding: 16px 2px;
+  padding: 12px 2px;
   border: 0;
   background: transparent;
   color: var(--tk-tekst);
@@ -979,9 +989,8 @@
 .to-vouwtitel {
   display: block;
   font-size: var(--tk-t-lead);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.35;
-  transition: color var(--tk-vlot) var(--tk-soepel);
 }
 
 /* De duur en het thema staan naast de titel, niet erin: zo zie je zonder
@@ -1034,8 +1043,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .to-vouwvak,
-  .to-vouwtitel {
+  .to-vouwvak {
     transition: none;
   }
 }

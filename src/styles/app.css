@@ -12,7 +12,17 @@
    geweest wat ze deden. */
 
 .tk-app {
-  --tk-navy: #eef2f7;      /* de pagina */
+  --tk-navy: #e9eef5;      /* de pagina -- een tint dieper, zodat wit erop ligt
+                              in plaats van ermee samenvalt */
+
+  /* Diepte.
+     Een enkele zachte waas laat een kaart vaag zweven: er is niets dat zegt
+     waar hij ophoudt. Een rand bepaalt de grens, een korte schaduw legt hem op
+     het vlak, en een brede zachte tilt hem op. Alle drie subtiel; het effect
+     zit in de stapeling, niet in de sterkte van een van de drie. */
+  --tk-rand: rgba(16, 36, 58, 0.07);
+  --tk-lift: 0 1px 2px rgba(16, 36, 58, 0.05), 0 4px 12px rgba(16, 36, 58, 0.05);
+  --tk-lift-hoog: 0 2px 4px rgba(16, 36, 58, 0.06), 0 14px 32px rgba(16, 36, 58, 0.10);
   --tk-navy-2: #e4eaf2;    /* een vlak dat een stap terugtreedt */
   --tk-navy-3: #dfe7f0;    /* invoervelden, bollen, uitgeschakelde knoppen */
 
@@ -297,11 +307,13 @@
    ruimere ronding en de schaduw die hij werpt. */
 .tk-kaart {
   background: var(--tk-vlak);
-  border: 0;
-  border-radius: 20px;
+  /* 20 was de maat van een consumenten-app. Op een groot vlak leest zo'n ronde
+     hoek als speels; op gereedschap hoort hij rustig te zijn. */
+  border: 1px solid var(--tk-rand);
+  border-radius: 14px;
   padding: 20px;
   margin-bottom: 16px;
-  box-shadow: 0 6px 20px rgba(16, 36, 58, 0.08);
+  box-shadow: var(--tk-lift);
 }
 
 .tk-kaart h2 {
