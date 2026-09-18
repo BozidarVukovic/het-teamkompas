@@ -7,6 +7,7 @@ import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities,
 import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek, leesBijgewerkt, schrijfDatum, leesPdf, isVerborgen, zichtbareOnderdelen } from "../../lib/app/teamomgeving";
 import { maakSlak, sectieAdressen, leesHash, maakAdres } from "../../lib/app/teamomgevingAdres";
 import { maakZoekindex, zoek as zoekInOmgeving } from "../../lib/app/teamomgevingZoek";
+import Teamcheck from "../../components/app/Teamcheck";
 import { houdOpZijnPlek } from "../../lib/app/scrollbehoud";
 import "../../styles/teamomgeving.css";
 
@@ -925,6 +926,17 @@ function Omgeving({ team, uid, leden, magInrichten }) {
                 : <Tekst tijdlijn={leesTijdlijn(deel)} plaatsBoven>{deel.tekst}</Tekst>)}
           {bewerkt !== deel.id && deel.id === "afspraken" && <Link className="tk-knop to-verder" to="/app/team">Gedeelde teamafspraken bekijken en bijwerken</Link>}
           {bewerkt !== deel.id && deel.id === "experimenten" && <Link className="tk-knop to-verder" to="/app/ik">Mijn experimenten in de app</Link>}
+          {/* De tekst van dit onderdeel is de inleiding; het invullen en het
+              teambeeld staan eronder. Zo blijft de uitleg bewerkbaar zonder
+              dat er een tweede plek ontstaat waar de vragenlijst zou kunnen
+              afwijken van wat erover verteld wordt. */}
+          {bewerkt !== deel.id && deel.id === "teamcheck" && <Teamcheck
+            team={team}
+            uid={uid}
+            naam={(leden.find((l) => l.uid === uid) || {}).naam || ""}
+            magBeheer={omgeving.magBeheer}
+            aantalLeden={leden.length}
+          />}
         </article>}
 
         {tab === "documenten" && <section className="tk-kaart to-tekst">

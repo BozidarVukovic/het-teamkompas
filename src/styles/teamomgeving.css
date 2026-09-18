@@ -1839,6 +1839,443 @@
   font-size: var(--tk-t-klein);
 }
 
+/* ------------------------------------------------------------- teamcheck */
+
+/* De teamcheck woont binnen de leeskaart van zijn onderdeel: de tekst erboven
+   is de inleiding, dit is wat je doet. Vandaar een streep en lucht in plaats
+   van een nieuwe kaart -- een kaart in een kaart zou suggereren dat het iets
+   anders is dan waar de tekst over ging. */
+.tc {
+  display: block;
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+/* De drie meetmomenten. Ze staan er alle drie, ook als er maar één open is:
+   je hoort te zien dat dit een reeks is en geen los formulier. */
+.tc-rondes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.tc-ronde {
+  flex: 1 1 180px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tk-tekst);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tc-ronde[data-actief="ja"] {
+  background: var(--tk-teal-waas);
+  border-color: rgba(0, 121, 107, 0.35);
+}
+
+.tc-ronde-bol {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--tk-lijn);
+  font-size: var(--tk-t-klein);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--tk-zacht);
+}
+
+.tc-ronde[data-actief="ja"] .tc-ronde-bol {
+  background: var(--tk-teal);
+  border-color: var(--tk-teal);
+  color: #fff;
+}
+
+.tc-ronde-tekst {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tc-ronde-tekst strong { font-size: var(--tk-t-basis); font-weight: 600; }
+.tc-ronde-tekst small { color: var(--tk-zacht); font-size: var(--tk-t-fijn); }
+
+/* De knop om een ronde te openen of te sluiten. Staat bij de begeleiders en
+   nergens anders; stil, want het is beheer en geen aansporing. */
+.tc-beheer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border: 1px dashed var(--tk-lijn);
+  border-radius: 12px;
+}
+
+/* Wat er met je antwoorden gebeurt, boven het formulier en niet eronder.
+   Dit is geen kleine lettertjes-tekst: wie hier iets invult over zijn team,
+   hoort vooraf te weten wie het leest. */
+.tc-uitleg {
+  margin: 0 0 20px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: var(--tk-navy-2);
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.7;
+  max-width: 68ch;
+}
+
+.tc-uitleg strong { color: var(--tk-tekst); }
+
+.tc-wacht {
+  margin: 0;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.7;
+}
+
+/* Eén vraag per scherm. */
+.tc-blad {
+  border: 1px solid var(--tk-lijn);
+  border-radius: 14px;
+  padding: 24px;
+  background: var(--tk-vlak);
+}
+
+.tc-vorderingkop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+}
+
+.tc-vordering {
+  margin: 10px 0 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--tk-navy-3);
+  overflow: hidden;
+}
+
+.tc-vordering > span {
+  display: block;
+  height: 100%;
+  background: var(--tk-teal);
+  transition: width var(--tk-rustig) var(--tk-soepel);
+}
+
+.tc-stelling {
+  margin: 0 0 20px;
+  font-size: var(--tk-t-sectie);
+  font-weight: 700;
+  line-height: 1.3;
+  max-width: 60ch;
+}
+
+/* De vijf kaarten. Op een smal scherm blijven het er vijf naast elkaar met
+   alleen het cijfer -- vijf rijen onder elkaar maakt van een schaal een lijst,
+   en dan verlies je dat 1 en 5 twee uitersten zijn. */
+.tc-schaal {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tc-kaart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-height: 84px;
+  padding: 14px 6px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 12px;
+  background: var(--tk-vlak);
+  color: var(--tk-tekst);
+  font: inherit;
+  cursor: pointer;
+}
+
+.tc-kaart[data-gekozen="ja"] {
+  background: var(--tk-teal-waas);
+  border-color: var(--tk-teal);
+  box-shadow: inset 0 0 0 1px var(--tk-teal);
+}
+
+@media (hover: hover) {
+  .tc-kaart:hover { border-color: rgba(0, 121, 107, 0.45); }
+  .tc-ronde:hover { border-color: rgba(0, 121, 107, 0.45); }
+}
+
+.tc-cijfer {
+  font-size: var(--tk-t-sectie);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.tc-label {
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-fijn);
+  line-height: 1.3;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .tc-label { display: none; }
+  .tc-kaart { min-height: 60px; }
+}
+
+/* "Kan ik nog niet beoordelen" staat los onder de schaal en niet ernaast:
+   het is geen zesde punt op een lijn van oneens naar eens, het valt erbuiten. */
+.tc-nietbeoordelen {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  min-height: var(--tk-raak);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--tk-zacht);
+  font: inherit;
+  font-size: var(--tk-t-klein);
+  cursor: pointer;
+}
+
+.tc-rondje {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 1.5px solid rgba(16, 36, 58, 0.35);
+}
+
+.tc-nietbeoordelen[data-gekozen="ja"] {
+  color: var(--tk-tekst);
+}
+
+.tc-nietbeoordelen[data-gekozen="ja"] .tc-rondje {
+  border-color: var(--tk-teal);
+  border-width: 5px;
+}
+
+.tc-naamkeuze {
+  margin-top: 18px;
+}
+
+.tc-naamkeuze small {
+  display: block;
+  margin-top: 4px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-fijn);
+  line-height: 1.55;
+}
+
+.tc-knoppen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.tc-terug {
+  color: var(--tk-zacht);
+  font-weight: 500;
+}
+
+/* Volgende brengt je naar de volgende vraag en verandert verder niets; oranje
+   betekent in deze app dat er wel iets verandert. Dat is de opslaanknop op de
+   laatste stap, en die blijft daarom als enige oranje. */
+.to-tekst .tc-volgende {
+  background: var(--tk-teal);
+  color: #fff;
+}
+
+@media (hover: hover) {
+  .to-tekst .tc-volgende:not(:disabled):hover { background: #00695f; }
+}
+
+.to-tekst .tc-volgende:disabled {
+  background: var(--tk-navy-3);
+  color: var(--tk-zacht);
+}
+
+.tc-terug:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.tc-hint {
+  margin: 12px 0 0;
+  max-width: 60ch;
+}
+
+.tc-klaar .tc-stelling { margin-bottom: 12px; }
+
+.tc-vink {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  background: var(--tk-teal-dim);
+  color: var(--tk-teal);
+  font-size: var(--tk-t-sectie);
+}
+
+.tc-intrekken { margin-left: auto; }
+
+/* ------------------------------------------------------ het begeleidersbeeld */
+
+.tc-overzicht {
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.tc-tegels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 20px 0 28px;
+}
+
+.tc-tegel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 12px;
+}
+
+.tc-tegel small { color: var(--tk-zacht); font-size: var(--tk-t-fijn); }
+.tc-tegel strong { font-size: var(--tk-t-kop); line-height: 1.25; }
+
+/* Het thema waar de ervaringen uiteenlopen krijgt een streepje, geen vlak:
+   het is iets om naar te kijken, geen waarschuwing. */
+.tc-tegel-let { border-left: 3px solid var(--tk-oranje); }
+
+.tc-kop {
+  margin: 28px 0 6px;
+  font-size: var(--tk-t-kop);
+  font-weight: 700;
+}
+
+.tc-balken,
+.tc-verdeling,
+.tc-stemmen {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+.tc-balkrij,
+.tc-verdeling li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+}
+
+.tc-balklabel {
+  flex: 0 0 150px;
+  font-size: var(--tk-t-klein);
+}
+
+.tc-balkspoor {
+  flex: 1 1 auto;
+  height: 10px;
+  border-radius: 6px;
+  background: var(--tk-navy-3);
+  overflow: hidden;
+}
+
+.tc-balkvulling {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--tk-teal);
+}
+
+.tc-zacht { background: rgba(0, 121, 107, 0.45); }
+
+.tc-balkcijfer {
+  flex: 0 0 58px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* n staat altijd naast een gemiddelde. Een 4,0 uit acht antwoorden en een 4,0
+   uit twee antwoorden zijn niet hetzelfde getal, en dat hoort te zien te zijn
+   zonder dat je ernaar hoeft te zoeken. */
+.tc-balkcijfer small {
+  display: block;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-mini);
+}
+
+.tc-verdeling-cijfer {
+  flex: 0 0 18px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  font-variant-numeric: tabular-nums;
+}
+
+.tc-verdeling-aantal {
+  flex: 0 0 42px;
+  text-align: right;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  font-variant-numeric: tabular-nums;
+}
+
+.tc-kiezer { max-width: 280px; }
+
+.tc-stemmen li { margin-bottom: 18px; }
+
+.tc-stemmen blockquote {
+  margin: 0;
+  padding: 12px 0 12px 16px;
+  border-left: 2px solid rgba(0, 121, 107, 0.45);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+.tc-stemmen cite {
+  display: block;
+  margin-top: 6px;
+  padding-left: 18px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-fijn);
+  font-style: normal;
+}
+
+.tc-naamloos { opacity: 0.8; }
+
+@media (max-width: 560px) {
+  .tc-blad { padding: 18px; }
+  .tc-balklabel { flex-basis: 96px; }
+}
+
 /* ------------------------------------------------------------ smal scherm */
 
 @media (max-width: 600px) {
