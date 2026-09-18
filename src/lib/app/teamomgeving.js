@@ -13,8 +13,13 @@ export function valideerOmgeving(pakket) {
   const ids = new Set();
   for (const deel of inhoud.onderdelen) {
     if (!sleutel.test(deel.id) || ["beheer", "documenten"].includes(deel.id) || ids.has(deel.id) || typeof deel.titel !== "string" || typeof deel.tekst !== "string" || deel.tekst.length > 60000) throw new Error("Een onderdeel is ongeldig of dubbel.");
+    if (deel.verborgen !== undefined && typeof deel.verborgen !== "boolean") throw new Error("Een onderdeel is ongeldig of dubbel.");
     ids.add(deel.id);
   }
+  // Alles verbergen kan niet. Dan opent een teamlid een omgeving die er is,
+  // en staat er niets -- geen foutmelding, geen uitleg, alleen een leeg
+  // scherm. Dat is erger dan de omgeving helemaal niet inrichten.
+  if (!inhoud.onderdelen.some((deel) => !isVerborgen(deel))) throw new Error("Er moet ten minste een onderdeel zichtbaar blijven voor het team.");
   if (!beheer || typeof beheer.tekst !== "string" || beheer.tekst.length > 60000) throw new Error("De afzonderlijke beheerinhoud ontbreekt.");
   if (!Array.isArray(bestanden) || bestanden.length > 10) throw new Error("Te veel documenten.");
   const files = new Set();
@@ -194,6 +199,9 @@ export function maakBronPakket(omgeving) {
         const deel = { id: d.id, titel: d.titel, tekst: d.tekst };
         if (d.groep) deel.groep = d.groep;
         if (d.inklapbaar === true) deel.inklapbaar = true;
+        // Mee in de brontekst, anders staat een verborgen onderdeel na het
+        // opnieuw inrichten ineens weer voor iedereen in beeld.
+        if (d.verborgen === true) deel.verborgen = true;
         if (d.eersteOpen === true) deel.eersteOpen = true;
         if (Array.isArray(d.tijdlijn) && d.tijdlijn.length) deel.tijdlijn = d.tijdlijn;
         return deel;
@@ -217,6 +225,28 @@ export function maakBronPakket(omgeving) {
 // Een onderdeel mag daarom een veld `groep` hebben. Staat het er niet, dan komt
 // het onderdeel gewoon in de lopende lijst -- geen verzonnen kopjes. Documenten
 // sluit daarbij aan; Beheer staat apart, want dat is van de begeleiders.
+/**
+ * Staat dit onderdeel wel in de omgeving maar niet in beeld?
+ *
+ * Een onderdeel dat nog niet af is, hoort niet halfbakken bij een team op het
+ * scherm te staan -- maar weggooien is ook geen antwoord, want de tekst die er
+ * al staat is werk. Verborgen is de tussenstand: hij blijft bewaard, hij is
+ * voor de begeleiders gewoon te lezen en te bewerken, en het team ziet hem
+ * niet. Niet in de zijbalk, niet in het zoeken, en ook niet als iemand het
+ * adres rechtstreeks intikt.
+ *
+ * Dat laatste is het punt waar dit soort dingen meestal stilletjes lekt.
+ */
+export function isVerborgen(deel) {
+  return Boolean(deel && deel.verborgen === true);
+}
+
+/** De onderdelen die deze lezer mag zien. */
+export function zichtbareOnderdelen(inhoud, magBeheer) {
+  const alle = (inhoud && inhoud.onderdelen) || [];
+  return magBeheer ? alle : alle.filter((deel) => !isVerborgen(deel));
+}
+
 export function maakOnderdelenlijst(inhoud, magBeheer) {
   const groepen = [];
   const opNaam = new Map();
@@ -234,8 +264,13 @@ export function maakOnderdelenlijst(inhoud, magBeheer) {
     if (laatste && !laatste.apart && !laatste.naam) laatste.items.push(item);
     else groepen.push({ naam: "", items: [item] });
   };
-  for (const deel of (inhoud && inhoud.onderdelen) || []) {
-    voegToe(typeof deel.groep === "string" ? deel.groep.trim() : "", { id: deel.id, titel: deel.titel });
+  for (const deel of zichtbareOnderdelen(inhoud, magBeheer)) {
+    voegToe(
+      typeof deel.groep === "string" ? deel.groep.trim() : "",
+      isVerborgen(deel)
+        ? { id: deel.id, titel: deel.titel, verborgen: true }
+        : { id: deel.id, titel: deel.titel },
+    );
   }
   voegToe("", { id: "documenten", titel: "Documenten" });
   if (magBeheer) groepen.push({ naam: "", apart: true, items: [{ id: "beheer", titel: "Beheer" }] });
@@ -392,6 +427,25 @@ export function pasWijzigingToe(inhoud, wijziging) {
   if (typeof wens.intro === "string") uit.intro = schoon(wens.intro).trim();
   if (typeof wens.documentContext === "string") uit.documentContext = schoon(wens.documentContext).trim();
 
+  // Zichtbaarheid is een aparte wijziging en geen veld in de tekst: wie een
+  // tekst bijwerkt, hoort daarmee niet per ongeluk een onderdeel voor het team
+  // te laten verdwijnen of verschijnen.
+  if (wens.zichtbaarheid && typeof wens.zichtbaarheid.id === "string") {
+    const lijst = Array.isArray(bron.onderdelen) ? bron.onderdelen : [];
+    if (!lijst.some((deel) => deel && deel.id === wens.zichtbaarheid.id)) {
+      throw new Error("Dit onderdeel staat niet meer in deze teamomgeving. Ververs het scherm en probeer het opnieuw.");
+    }
+    const verberg = wens.zichtbaarheid.verborgen === true;
+    uit.onderdelen = lijst.map((deel) => {
+      if (!deel || deel.id !== wens.zichtbaarheid.id) return deel;
+      if (verberg) return { ...deel, verborgen: true };
+      // De vlag helemaal weghalen in plaats van op false zetten: "niet
+      // verborgen" is de gewone stand, en die hoort niet als uitzondering in
+      // de gegevens te staan.
+      const { verborgen, ...rest } = deel;
+      return rest;
+    });
+  }
   if (wens.onderdeel && typeof wens.onderdeel.id === "string") {
     const lijst = Array.isArray(bron.onderdelen) ? bron.onderdelen : [];
     if (!lijst.some((deel) => deel && deel.id === wens.onderdeel.id)) {

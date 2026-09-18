@@ -421,16 +421,63 @@
   margin: 0 0 4px;
 }
 
+/* De kop links, de knoppen rechts -- en op een smal scherm onder elkaar.
+   Gemeten op 390 pixels: twee knoppen naast een kop passen daar niet, en
+   zonder wrap schoven ze het scherm uit in plaats van een regel te zakken.
+   De eerste kolom is de kop met zijn opschrift; die mag krimpen tot 220 en
+   daarna breekt de rij. */
 .to-tekstkop {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px 16px;
 }
 
-.to-tekstkop > h2 {
-  flex: 1;
+.to-tekstkop > :first-child {
+  flex: 1 1 220px;
   min-width: 0;
+}
+
+/* Twee knoppen naast de kop: verbergen en bewerken. Ze horen bij elkaar en
+   wijken samen naar de volgende regel als de kop lang is. */
+.to-kopknoppen {
+  flex: 0 1 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* "Niet zichtbaar voor het team" -- alleen een begeleider ziet deze regel, en
+   dan staat er inhoud op het scherm die een teamlid niet heeft. Dat hoort geen
+   voetnoot te zijn: oranje betekent in deze app dat er iets aan de hand is met
+   de stand van zaken, en dat is hier precies het geval. */
+.to-verborgenregel {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(232, 130, 26, 0.10);
+  border: 1px solid rgba(232, 130, 26, 0.3);
+  color: var(--tk-tekst);
+  font-size: var(--tk-t-klein);
+  line-height: 1.6;
+  max-width: 68ch;
+}
+
+/* Hetzelfde bericht in de zijbalk, in het klein: je ziet in de lijst welke
+   onderdelen het team niet heeft, zonder ze een voor een te openen. */
+.to-verborgenmerk {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(232, 130, 26, 0.14);
+  color: var(--tk-oranje-donker);
+  font-size: var(--tk-t-mini);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  vertical-align: 1px;
 }
 
 .to-bewerkknop {

@@ -80,6 +80,17 @@ export async function werkOmgevingBij(team, uid, pakket) {
 // En de uitkomst gaat door dezelfde controle als een aangeleverd pakket. Eén
 // poort, geen tweede route met eigen regels -- want een tweede route is een
 // tweede plek waar iets doorheen kan glippen dat het scherm niet aankan.
+/**
+ * Een onderdeel tonen of verbergen voor het team.
+ *
+ * Loopt langs dezelfde weg als het bewerken van een tekst -- dezelfde regel in
+ * Firestore, dezelfde controle in valideerOmgeving -- maar met een eigen naam,
+ * omdat het een ander besluit is dan een tekst verbeteren.
+ */
+export async function werkZichtbaarheidBij(team, uid, id, verborgen) {
+  await werkTekstenBij(team, uid, { zichtbaarheid: { id, verborgen: verborgen === true } });
+}
+
 export async function werkTekstenBij(team, uid, wijziging) {
   const huidig = await getDoc(ref(team, "inhoud"));
   if (!huidig.exists()) throw new Error("Deze teamomgeving is nog niet ingericht.");

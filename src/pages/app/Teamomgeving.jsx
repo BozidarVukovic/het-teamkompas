@@ -3,8 +3,8 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
-import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij, werkTekstenBij, voegDocumentToe, verwijderDocument } from "../../lib/app/teamomgevingOpslag";
-import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek, leesBijgewerkt, schrijfDatum, leesPdf } from "../../lib/app/teamomgeving";
+import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij, werkTekstenBij, werkZichtbaarheidBij, voegDocumentToe, verwijderDocument } from "../../lib/app/teamomgevingOpslag";
+import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek, leesBijgewerkt, schrijfDatum, leesPdf, isVerborgen, zichtbareOnderdelen } from "../../lib/app/teamomgeving";
 import { maakSlak, sectieAdressen, leesHash, maakAdres } from "../../lib/app/teamomgevingAdres";
 import { maakZoekindex, zoek as zoekInOmgeving } from "../../lib/app/teamomgevingZoek";
 import { houdOpZijnPlek } from "../../lib/app/scrollbehoud";
@@ -146,7 +146,10 @@ function Onderdelen({ groepen, actief, kies }) {
               type="button"
               aria-current={item.id === actief ? "page" : undefined}
               onClick={() => { kies(item.id); setOpen(false); }}
-            >{item.titel}</button>
+            >
+              {item.titel}
+              {item.verborgen && <span className="to-verborgenmerk">verborgen</span>}
+            </button>
           </li>)}</ul>}
         </div>;
       })}
@@ -346,13 +349,13 @@ function Secties({ deel, tijdlijn, hash }) {
 // de twee begeleiders en horen in geen enkele index.
 const MACTOETS = typeof navigator !== "undefined" && /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent || "");
 
-function Zoeken({ inhoud, ga }) {
+function Zoeken({ inhoud, magBeheer, ga }) {
   const [open, setOpen] = useState(false);
   const [vraag, setVraag] = useState("");
   const [wijzer, setWijzer] = useState(0);
   const venster = useRef(null);
   const veld = useRef(null);
-  const index = useMemo(() => maakZoekindex(inhoud), [inhoud]);
+  const index = useMemo(() => maakZoekindex(inhoud, magBeheer), [inhoud, magBeheer]);
   const raak = useMemo(() => zoekInOmgeving(index, vraag), [index, vraag]);
 
   useEffect(() => {
@@ -776,8 +779,11 @@ function Omgeving({ team, uid, leden, magInrichten }) {
   // Welk onderdeel je leest, staat in het adres en niet in de toestand van het
   // scherm. Daardoor werkt de terugknop, overleeft je plek een herlaadbeurt, en
   // kun je een collega wijzen op precies het onderdeel dat je bedoelt.
+  // Verborgen onderdelen staan hier niet in voor wie geen beheerder is. Dat is
+  // wat een rechtstreeks ingetikt adres tegenhoudt: het onderdeel bestaat voor
+  // deze lezer niet, dus komt hij op het eerste uit dat er wel is.
   const ids = omgeving
-    ? [...(omgeving.inhoud.onderdelen || []).map((d) => d.id), "documenten", ...(omgeving.magBeheer ? ["beheer"] : [])]
+    ? [...zichtbareOnderdelen(omgeving.inhoud, omgeving.magBeheer).map((d) => d.id), "documenten", ...(omgeving.magBeheer ? ["beheer"] : [])]
     : [];
   const tab = ids.includes(onderdeelId) ? onderdeelId : (ids[0] || "");
 
@@ -829,6 +835,19 @@ function Omgeving({ team, uid, leden, magInrichten }) {
     } catch (err) { setMelding(err.message || "De brontekst kon niet worden klaargezet."); }
   }
 
+  async function zetZichtbaarheid(deel) {
+    setBezig("zichtbaarheid"); setMelding("");
+    try {
+      await werkZichtbaarheidBij(team, uid, deel.id, !isVerborgen(deel));
+      setMelding(isVerborgen(deel)
+        ? `"${deel.titel}" staat weer in beeld voor het team.`
+        : `"${deel.titel}" is verborgen. De tekst blijft bewaard; alleen jullie zien hem nog.`);
+      setVersie((v) => v + 1);
+    } catch (err) {
+      setMelding(err.message || "Dat is niet gelukt. Ververs het scherm en probeer het opnieuw.");
+    } finally { setBezig(""); }
+  }
+
   async function bewaar() {
     setBezig("notities"); setMelding("");
     try { await bewaarOmgevingNotities(team, notities); setMelding("Bespreeknotities opgeslagen. Alleen de twee aangewezen begeleiders kunnen ze lezen."); }
@@ -854,7 +873,7 @@ function Omgeving({ team, uid, leden, magInrichten }) {
         {omgeving.inhoud.intro && <p className="to-context">{omgeving.inhoud.intro}</p>}
         {bijgewerkt && <p className="to-versheid">Bijgewerkt op {schrijfDatum(bijgewerkt)}</p>}
       </div>
-      <Zoeken inhoud={omgeving.inhoud} ga={(id, slak) => { setMelding(""); navigeer(maakAdres(id, slak)); }} />
+      <Zoeken inhoud={omgeving.inhoud} magBeheer={omgeving.magBeheer} ga={(id, slak) => { setMelding(""); navigeer(maakAdres(id, slak)); }} />
     </header>
 
     <div className="to-werkblad">
@@ -868,11 +887,27 @@ function Omgeving({ team, uid, leden, magInrichten }) {
               <h2>{deel.titel}</h2>
             </div>
             {omgeving.magBeheer && bewerkt !== deel.id && (
-              <button className="to-bewerkknop" type="button" onClick={() => setBewerkt(deel.id)}>
-                <span aria-hidden="true">✎</span> Tekst bewerken
-              </button>
+              <div className="to-kopknoppen">
+                <button
+                  className="to-bewerkknop"
+                  type="button"
+                  disabled={bezig === "zichtbaarheid"}
+                  onClick={() => zetZichtbaarheid(deel)}
+                >
+                  {bezig === "zichtbaarheid"
+                    ? "Bezig…"
+                    : isVerborgen(deel) ? "Tonen aan het team" : "Verbergen voor het team"}
+                </button>
+                <button className="to-bewerkknop" type="button" onClick={() => setBewerkt(deel.id)}>
+                  <span aria-hidden="true">✎</span> Tekst bewerken
+                </button>
+              </div>
             )}
           </div>
+          {isVerborgen(deel) && <p className="to-verborgenregel">
+            <strong>Niet zichtbaar voor het team.</strong> Dit onderdeel staat er wel, maar alleen jullie zien het —
+            ook niet via het zoeken of een rechtstreekse link.
+          </p>}
           {bewerkt === deel.id
             ? <Bewerker
               label={`Tekst van ${deel.titel}`}

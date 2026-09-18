@@ -11,7 +11,7 @@
 //
 // Wat er bewust niet in zit: de beheerinhoud en de bespreeknotities. Die zijn
 // van de twee begeleiders en horen in geen enkele index.
-import { normaliseerTekst, splitsInSecties, magInklappen } from "./teamomgeving.js";
+import { normaliseerTekst, splitsInSecties, magInklappen, zichtbareOnderdelen } from "./teamomgeving.js";
 import { maakSlak, sectieAdressen } from "./teamomgevingAdres.js";
 
 // Markdown terug naar lopende tekst, zodat een fragment niet halverwege een
@@ -50,9 +50,11 @@ export function sleutelbaar(tekst) {
 // krijgt het adres dat het scherm er ook aan geeft; bij een doorlopend
 // onderdeel is dat de slak van de kop zelf, want dat is het id dat daar in de
 // pagina staat.
-export function maakZoekindex(inhoud) {
+export function maakZoekindex(inhoud, magBeheer) {
   const uit = [];
-  for (const deel of (inhoud && inhoud.onderdelen) || []) {
+  // Verborgen onderdelen horen ook niet via het zoeken tevoorschijn te komen;
+  // een zoekresultaat is net zo goed een manier om iets te laten zien.
+  for (const deel of zichtbareOnderdelen(inhoud, magBeheer)) {
     if (!deel || typeof deel.id !== "string") continue;
     const { inleiding, secties } = splitsInSecties(deel.tekst || "");
     const adressen = magInklappen(deel) ? sectieAdressen(secties) : secties.map((s) => maakSlak(s.kop));
