@@ -105,12 +105,14 @@
   line-height: 1.6;
 }
 
+/* Hetzelfde opschrift als in de zijbalk, en dus dezelfde maat: links en
+   rechts noemen dezelfde groep, dat hoort er hetzelfde uit te zien. */
 .to-eyebrow {
   margin: 0 0 8px;
   color: var(--tk-teal);
-  font-size: var(--tk-t-fijn);
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-size: var(--tk-t-mini);
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -318,9 +320,14 @@
   background: transparent;
   color: var(--tk-zacht);
   font: inherit;
-  font-size: var(--tk-t-fijn);
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  /* Een groepskop is een opschrift, geen regel in de lijst.
+     Op 12,5 vet stond hij bijna even groot als de onderdelen eronder, en dan
+     leest hij als het eerste item in plaats van als de naam van het groepje.
+     Kleiner en wijder uit elkaar is wat een opschrift tot opschrift maakt --
+     de maat zegt "dit is een laag hoger", niet het gewicht. */
+  font-size: var(--tk-t-mini);
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
 }
