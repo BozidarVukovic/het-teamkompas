@@ -37,6 +37,19 @@ function Markdown({ children }) {
   return <ReactMarkdown skipHtml disallowedElements={["img", "a"]} unwrapDisallowed components={GEMERKT}>{children || ""}</ReactMarkdown>;
 }
 
+// Een schakel, want dat is wat de knop kopieert. Een hekje is het teken uit het
+// adres zelf en zegt op een scherm niets; wie het niet herkent, ziet een typefout.
+function Ketting({ gedaan }) {
+  return <svg className="to-kettingicoon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+    {gedaan
+      ? <path d="M4.5 10.5 8 14l7.5-8" />
+      : <>
+        <path d="M8.5 11.5a3.2 3.2 0 0 0 4.7.3l2.4-2.4a3.2 3.2 0 0 0-4.5-4.5l-1.3 1.3" />
+        <path d="M11.5 8.5a3.2 3.2 0 0 0-4.7-.3l-2.4 2.4a3.2 3.2 0 0 0 4.5 4.5l1.3-1.3" />
+      </>}
+  </svg>;
+}
+
 function Loep() {
   return <svg className="to-loep" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
     <circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" strokeWidth="2" />
@@ -296,8 +309,10 @@ function Secties({ deel, tijdlijn, hash }) {
               <span className="to-pijl" aria-hidden="true" />
             </button>
             <button className="to-vouwlink" type="button" onClick={() => kopieer(i)}>
-              <span className="to-verborgen">Link naar {sectie.kop} kopiëren</span>
-              <span aria-hidden="true">{gekopieerd === adressen[i] ? "✓" : "#"}</span>
+              <span className="to-verborgen">
+                {gekopieerd === adressen[i] ? `Link naar ${sectie.kop} gekopieerd` : `Link naar ${sectie.kop} kopiëren`}
+              </span>
+              <Ketting gedaan={gekopieerd === adressen[i]} />
             </button>
           </h3>
           <Vouwvak id={id} open={uit} onVinden={() => zet(i, false)}>

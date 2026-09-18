@@ -914,6 +914,11 @@
   transition: opacity var(--tk-vlot) var(--tk-soepel), color var(--tk-vlot) var(--tk-soepel);
 }
 
+.to-kettingicoon {
+  width: 17px;
+  height: 17px;
+}
+
 .to-vouwdeel:hover .to-vouwlink,
 .to-vouwdeel:focus-within .to-vouwlink {
   opacity: 1;
@@ -922,6 +927,7 @@
 @media (hover: none) {
   .to-vouwlink {
     opacity: 1;
+    border: 1px solid var(--tk-lijn);
   }
 }
 
@@ -954,8 +960,13 @@
   cursor: pointer;
 }
 
+/* De pijl kleurt mee, de kop niet.
+   Een sectietitel die teal wordt bij hover was luid op een muisscherm en bleef
+   op een aanraakscherm ook nog eens plakken na een tik -- dan staat er na het
+   openklappen een gekleurde kop die niets betekent. De pijl is waar het over
+   gaat: daar klap je mee open. */
 @media (hover: hover) {
-  .to-vouwkop:hover .to-vouwtitel {
+  .to-vouwkop:hover .to-pijl {
     color: var(--tk-teal);
   }
 }
