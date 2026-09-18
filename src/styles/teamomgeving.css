@@ -963,7 +963,11 @@
   margin: 14px 0 0;
 }
 
-.to-inklap {
+/* Twee klassen diep, met opzet: .tk-tekstknop in app.css zet teal, en die
+   regel wint van een losse .to-inklap omdat app.css later in de bundel staat.
+   Dan is dit knopje ineens het luidste op het scherm terwijl het een uitweg
+   is, geen aansporing. */
+.to-vouwbalk .to-inklap {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -973,7 +977,7 @@
 }
 
 @media (hover: hover) {
-  .to-inklap:hover {
+  .to-vouwbalk .to-inklap:hover {
     color: var(--tk-teal);
   }
 }
