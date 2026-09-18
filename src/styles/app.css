@@ -195,6 +195,57 @@
   }
 }
 
+/* De paginatitel die meelift zodra hij zelf uit beeld is.
+   Een streepje ervoor in plaats van een tweede blok: hij hoort bij het merk
+   ernaast, hij staat er niet los van. Halfvet en niet vet -- het is een
+   herinnering aan waar je bent, geen tweede kop. */
+.tk-balktitel {
+  /* Basis nul, en als enige groeiend: dan is dit altijd het onderdeel dat
+     ruimte afstaat als de balk krap wordt. Met een basis op de eigen breedte
+     duwde de titel de teamkiezer en de uitlogknop over elkaar heen -- gemeten
+     op 768 pixels. Een titel die inkort is een titel die inkort; twee knoppen
+     die overlappen is stuk. */
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-left: 14px;
+  border-left: 1px solid var(--tk-lijn);
+  font-size: var(--tk-t-basis);
+  font-weight: 600;
+  color: var(--tk-tekst);
+  animation: tk-balktitel-in var(--tk-vlot) var(--tk-soepel) both;
+}
+
+@keyframes tk-balktitel-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Onder 720 niet. Gemeten op 390 pixels met een teamkiezer erbij: de titel
+   neemt de ruimte die de kiezer en de uitlogknop nodig hebben, en dan schuiven
+   die over elkaar heen. Dat is dezelfde reden waarom de merknaam daar al
+   wegvalt -- op een telefoon is er geen ruimte voor drie dingen naast elkaar.
+   Het is ook de breedte waar het menu verdwijnt en de onderbalk het overneemt,
+   dus waar je bent staat daar toch al onderaan. */
+/* Onder 900 niet. Daar is de balk al vol met het merk, de teamkiezer en de
+   uitlogknop, en wat er van de titel overblijft is "Sam..." -- dat wijst
+   nergens meer naar. Negenhonderd is ook de breedte waar het werkblad twee
+   kolommen krijgt: vanaf daar is er ruimte, eronder niet. Op een telefoon
+   staat waar je bent trouwens toch al in de onderbalk. */
+@media (max-width: 900px) {
+  .tk-balktitel {
+    display: none;
+  }
+}
+
 .tk-balk-rechts {
   margin-left: auto;
   display: flex;

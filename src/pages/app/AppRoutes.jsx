@@ -19,6 +19,7 @@ import Teambeeld from "./Teambeeld";
 import MijnGegevens from "./MijnGegevens";
 import Ik from "./Ik";
 import Navigatie from "../../components/app/Navigatie";
+import Balktitel from "../../components/app/Balktitel";
 import KompasDot from "../../components/shared/KompasDot";
 import { welkombestemming } from "../../lib/app/welkom";
 import "../../styles/app.css";
@@ -45,6 +46,7 @@ function Schil({ children }) {
           <KompasDot size={22} />
           <span className="tk-merk-woorden" aria-hidden="true">Mijn Teamkompas</span>
         </a>
+        <Balktitel />
         <div className="tk-balk-rechts">
           {lidmaatschappen.length > 1 && (
             <label className="tk-teamwissel">
