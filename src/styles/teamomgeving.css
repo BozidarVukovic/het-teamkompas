@@ -1165,7 +1165,13 @@
    stap terug -- nog steeds goed te scannen, maar ze vragen niets. */
 .to-vouwtitel {
   display: block;
-  font-size: var(--tk-t-lead);
+  /* Een stap onder de kop van het onderdeel, en niet een half stapje.
+     Op 16,5 tegen een titel van 20 stonden vijf sectiekoppen bijna even hard
+     te roepen als de plek waar je bent; dan lijkt het scherm vol terwijl het
+     grootste deel dichtstaat. Op 15 is het verschil met "Onze afspraken" een
+     kwart, en dat lees je zonder erover na te denken. Dat het rijen zijn waar
+     je op kunt drukken, zegt de vorm al -- de rand, de ronding en de pijl. */
+  font-size: var(--tk-t-basis);
   font-weight: 500;
   line-height: 1.35;
 }
@@ -1180,7 +1186,9 @@
   display: block;
   margin-top: 3px;
   color: var(--tk-zacht);
-  font-size: var(--tk-t-klein);
+  /* Mee omlaag met de titel erboven: op 13,5 onder een titel van 15 stond het
+     bijschrift bijna even groot als waar het bij hoort. */
+  font-size: var(--tk-t-fijn);
   font-weight: 400;
   line-height: 1.5;
 }
