@@ -108,6 +108,10 @@ test('teamomgeving: toegang en scheiding in Firestore', { skip: !draait }, async
     await t.test('een document mag eruit, maar alleen een en zonder de rest aan te raken', async () => {
       const oud={id:'voorbeeld',titel:'Terugkoppeling',naam:'a.pdf',sha256:'a'.repeat(64),delen:1};
       const nieuw={id:'handleiding',titel:'Hand-in-Handleiding',naam:'hh.pdf',sha256:'b'.repeat(64),delen:2};
+      // Eigen begintoestand. Zonder dit bouwt deze test voort op wat de twee
+      // tests hierboven lieten staan, en dan zegt een uitkomst niets over de
+      // regel maar over de volgorde van het bestand.
+      await env.withSecurityRulesDisabled((ctx)=>updateDoc(doc(ctx.firestore(),`${pad}/teamomgeving/inhoud`),{documenten:[oud,nieuw]}));
       const haalWeg=(uid,lijst)=>updateDoc(r(db(uid),'inhoud'),{documenten:lijst,bijgewerktOp:serverTimestamp(),bijgewerktDoor:uid});
       // Alleen de twee aangewezen begeleiders.
       for (const uid of ['lid','andere-beheerder','buitenstaander']) await assertFails(haalWeg(uid,[oud]));
@@ -119,6 +123,9 @@ test('teamomgeving: toegang en scheiding in Firestore', { skip: !draait }, async
       await assertFails(updateDoc(r(db('bo'),'inhoud'),{documenten:[oud],bijgewerktOp:serverTimestamp(),bijgewerktDoor:'ed'}));
       // Zo mag het wel: er blijft er precies een over, ongewijzigd.
       await assertSucceeds(haalWeg('bo',[oud]));
+      // En de laatste mag ook weg. Dat is nog steeds precies een document, en
+      // een team dat zijn enige document wil weghalen hoort dat te kunnen.
+      await assertSucceeds(haalWeg('ed',[]));
       // En de delen opruimen mag daarna, maar niet door een gewoon teamlid.
       await assertFails(deleteDoc(doc(db('lid'),`${pad}/teamomgevingBestanden/handleiding/delen/000`)));
       await assertSucceeds(deleteDoc(doc(db('ed'),`${pad}/teamomgevingBestanden/handleiding/delen/000`)));
