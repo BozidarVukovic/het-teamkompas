@@ -111,12 +111,30 @@
 
 /* ------------------------------------------------------------- werkblad */
 
+/* Twee vlakken van gelijke hoogte.
+   Met align-items: start werd elke kolom precies zo hoog als zijn eigen inhoud.
+   Bij een kort onderdeel -- Experimenten, Samen leren -- eindigde het werkblad
+   dan ver boven de zijbalk, en dat leest als een pagina die halverwege ophoudt.
+   Nu vult de kortste de rij op.
+   De zijbalk blijft daarbij op zijn eigen hoogte staan (align-self: start),
+   anders zou hij de hele rij vullen en heeft plakken geen betekenis meer. */
 @media (min-width: 900px) {
   .to-werkblad {
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr);
     gap: 28px;
-    align-items: start;
+  }
+
+  .to-werk {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .to-werk > .tk-kaart {
+    flex: 1;
+    /* Anders eindigt hij 16 pixels boven de zijbalk, en dan is gelijk net niet
+       gelijk -- precies het verschil dat je ziet zonder te weten waarom. */
+    margin-bottom: 0;
   }
 }
 
@@ -136,6 +154,7 @@
   .to-nav {
     position: sticky;
     top: 84px;
+    align-self: start;
     margin-bottom: 0;
   }
 }
@@ -219,9 +238,13 @@
 .to-navlijst {
   margin-top: 8px;
   padding: 10px;
-  border-radius: 18px;
+  /* Dezelfde kaart als het werkblad ernaast. Deze had nog een eigen schaduw en
+     een eigen ronding, en dan zie je twee vlakken die net niet hetzelfde ding
+     zijn. */
+  border: 1px solid var(--tk-rand);
+  border-radius: 14px;
   background: var(--tk-vlak);
-  box-shadow: 0 6px 20px rgba(16, 36, 58, 0.08);
+  box-shadow: var(--tk-lift);
 }
 
 @media (min-width: 900px) {
