@@ -76,11 +76,17 @@ test('teamomgeving: toegang en scheiding in Firestore', { skip: !draait }, async
       const voegToe=(uid,lijst)=>updateDoc(r(db(uid),'inhoud'),{documenten:lijst,bijgewerktOp:serverTimestamp(),bijgewerktDoor:uid});
       // Alleen de twee aangewezen begeleiders.
       for (const uid of ['lid','andere-beheerder','buitenstaander']) await assertFails(voegToe(uid,[oud,nieuw]));
-      // Niet vooraan, niet in plaats van, niet twee tegelijk, en krimpen mag niet.
+      // Niet vooraan, niet in plaats van, en niet twee tegelijk.
+      //
+      // De lijst leegmaken staat hier met opzet niet bij. Deze test begint met
+      // een document, dus legen is precies een weghalen -- en dat mag, via de
+      // regel daarvoor. Dat stond hier wel toen de verwijderregel nog niet
+      // bestond, en die bewering was daarna stil achterhaald door ons eigen
+      // ontwerp. Wat er met een krimpende lijst wel en niet mag, wordt getoetst
+      // in de test hieronder.
       await assertFails(voegToe('bo',[nieuw,oud]));
       await assertFails(voegToe('bo',[nieuw]));
       await assertFails(voegToe('bo',[oud,nieuw,{...nieuw,id:'derde'}]));
-      await assertFails(voegToe('bo',[]));
       // Een bestaand document mag niet meeveranderen -- daar hangt de controle
       // bij het downloaden aan.
       await assertFails(voegToe('bo',[{...oud,sha256:'c'.repeat(64)},nieuw]));
