@@ -288,11 +288,16 @@ function Secties({ deel, tijdlijn, hash }) {
 
   return <>
     {inleiding && <Tekst tijdlijn={tijdlijn} plaatsBoven={!inSectie}>{inleiding}</Tekst>}
+    {keuze >= 0 && secties.length > 1 && <div className="to-vouwbalk">
+      <button className="tk-tekstknop to-inklap" type="button" onClick={() => zet(keuze, true)}>
+        Inklappen
+      </button>
+    </div>}
     <div className="to-vouw">
       {secties.map((sectie, i) => {
         const id = `${deel.id}-sectie-${i}`;
         const uit = keuze === i;
-        return <section className="to-vouwdeel" id={adressen[i]} key={id}>
+        return <section className="to-vouwdeel" data-open={uit ? "ja" : undefined} id={adressen[i]} key={id}>
           <h3 className="to-vouwrij">
             <button
               className="to-vouwkop"

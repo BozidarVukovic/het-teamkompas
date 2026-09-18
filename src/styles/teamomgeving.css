@@ -954,12 +954,69 @@
   margin: 10px 0 0;
 }
 
+/* Terug naar het overzicht zonder omhoog te scrollen naar de kop die je
+   opende. Staat er alleen als er iets openstaat, want anders doet hij niets.
+   Rechts uitgelijnd en stil: het is een uitweg, geen aansporing. */
+.to-vouwbalk {
+  display: flex;
+  justify-content: flex-end;
+  margin: 14px 0 0;
+}
+
+.to-inklap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--tk-t-klein);
+  font-weight: 500;
+  color: var(--tk-zacht);
+}
+
+@media (hover: hover) {
+  .to-inklap:hover {
+    color: var(--tk-teal);
+  }
+}
+
 .to-vouwdeel {
   position: relative;
 }
 
 .to-vouwdeel + .to-vouwdeel {
   border-top: 1px solid var(--tk-lijn);
+}
+
+/* Een open sectie is een kader, geen tekst die toevallig zichtbaar is.
+   Dichte secties zijn regels met een haarlijn ertussen -- dat is genoeg om te
+   zien waar de een ophoudt. Maar zodra er inhoud onder een regel verschijnt,
+   is die haarlijn niet meer het einde van wat je leest: het is het begin van
+   de volgende sectie. Je oog moet dan zelf uitzoeken waar het blok ophoudt,
+   en dat is precies het werk dat een kader je uit handen neemt.
+
+   De marge is negatief en de padding positief, met opzet. Zo verschuift de
+   kop geen pixel bij het openklappen -- het vlak groeit naar buiten, de tekst
+   blijft staan waar hij stond. Zou het andersom zijn, dan sprong de kop die
+   je net aanraakte opzij. */
+.to-vouwdeel[data-open="ja"] {
+  margin: 10px -18px;
+  padding: 0 18px;
+  background: var(--tk-teal-waas);
+  border: 1px solid rgba(0, 121, 107, 0.16);
+  border-radius: 14px;
+}
+
+/* Het kader is zijn eigen begrenzing; de haarlijnen eromheen zouden er een
+   tweede grens naast leggen. */
+.to-vouwdeel[data-open="ja"],
+.to-vouwdeel[data-open="ja"] + .to-vouwdeel {
+  border-top: 0;
+}
+
+@media (max-width: 600px) {
+  .to-vouwdeel[data-open="ja"] {
+    margin: 10px -12px;
+    padding: 0 12px;
+  }
 }
 
 /* De kop en de kopieerknop staan naast elkaar. Nesten kan niet -- een knop in
@@ -1060,11 +1117,19 @@
    hard te roepen als de plek waar je was -- en dan lijkt het scherm vol terwijl
    het grootste deel dichtstaat. Deze koppen zijn labels van dichte laden; dat
    ze open kunnen zegt de pijl al, dat hoeft de puntgrootte niet te herhalen. */
+/* Dicht is stiller dan open.
+   Vijf koppen die allemaal even hard roepen, laten niet zien welke je aan het
+   lezen bent. De open sectie krijgt het volle gewicht, de dichte staan een
+   stap terug -- nog steeds goed te scannen, maar ze vragen niets. */
 .to-vouwtitel {
   display: block;
   font-size: var(--tk-t-lead);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.35;
+}
+
+.to-vouwdeel[data-open="ja"] .to-vouwtitel {
+  font-weight: 700;
 }
 
 /* De duur en het thema staan naast de titel, niet erin: zo zie je zonder
