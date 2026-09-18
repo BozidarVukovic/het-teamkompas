@@ -877,8 +877,8 @@ function Omgeving({ team, uid, leden, magInrichten }) {
               : magInklappen(deel)
                 ? <Secties deel={deel} tijdlijn={leesTijdlijn(deel)} hash={hash} key={deel.id} />
                 : <Tekst tijdlijn={leesTijdlijn(deel)} plaatsBoven>{deel.tekst}</Tekst>)}
-          {bewerkt !== deel.id && deel.id === "afspraken" && <Link className="tk-knop" to="/app/team">Gedeelde teamafspraken bekijken en bijwerken</Link>}
-          {bewerkt !== deel.id && deel.id === "experimenten" && <Link className="tk-knop" to="/app/ik">Mijn experimenten in de app</Link>}
+          {bewerkt !== deel.id && deel.id === "afspraken" && <Link className="tk-knop to-verder" to="/app/team">Gedeelde teamafspraken bekijken en bijwerken</Link>}
+          {bewerkt !== deel.id && deel.id === "experimenten" && <Link className="tk-knop to-verder" to="/app/ik">Mijn experimenten in de app</Link>}
         </article>}
 
         {tab === "documenten" && <section className="tk-kaart to-tekst">
