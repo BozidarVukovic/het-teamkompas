@@ -78,24 +78,28 @@
      slordigheid. De namen gaan over de rol, niet over het getal: waar de tekst
      staat bepaalt welke je pakt. */
   --tk-t-mini: 11.5px;    /* het label onder een icoon in de balk */
-  --tk-t-fijn: 13px;      /* voetnoot, kopje boven een blok */
-  --tk-t-klein: 14px;     /* secundair, en de kleine knoppen */
-  --tk-t-basis: 16.5px;   /* lopende tekst */
-  --tk-t-lead: 17.5px;    /* de eerste regel van een rij, met nadruk */
-  --tk-t-kop: 19px;       /* de kop van een kaart */
-  --tk-t-sectie: 21px;    /* de kop van een blok */
+  --tk-t-fijn: 12.5px;    /* voetnoot, kopje boven een blok */
+  --tk-t-klein: 13.5px;   /* secundair, en de kleine knoppen */
+  --tk-t-basis: 15px;     /* lopende tekst */
+  --tk-t-lead: 16.5px;    /* de eerste regel van een rij, met nadruk */
+  --tk-t-kop: 18px;       /* de kop van een kaart */
+  --tk-t-sectie: 20px;    /* de kop van een blok */
   --tk-t-groot: 23px;     /* een getal dat het onderwerp is */
-  --tk-t-titel: 32px;     /* de titel van een pagina */
+  --tk-t-titel: 29px;     /* de titel van een pagina */
 
-  /* Ruimte.
-     Vijftien pixels lopende tekst is de maat van een beheerscherm: veel regels
-     op weinig hoogte. Maar wat hier staat wordt gelezen -- afspraken, een
-     terugkoppeling, de voorbereiding van een teamdag -- en dat is een document,
-     geen tabel. Op 16,5 met meer regelafstand leest het als iets dat voor
-     mensen is opgeschreven. De koppen gaan niet mee omhoog: de sprong tussen
-     kop en tekst wordt juist kleiner, en dat is precies waarom het rustiger
-     oogt. De balklabels blijven op 11,5 -- daar is de breedte de grens, niet
-     de leesbaarheid.
+  /* Ruimte, niet grootte.
+     De schaal is een keer omhoog gegaan om een scherm rustiger te maken dat in
+     werkelijkheid niet te klein was maar te dicht opeen. Dat werkte averechts:
+     grotere letters in dezelfde kaart maken het voller, niet rustiger, en er
+     past minder in beeld. Wat het wel doet is de witruimte hieronder -- daar
+     zit het verschil, en die blijft.
+
+     Vandaar ook de regelafstand die bij de ruimere marges hoort: lopende tekst
+     staat op 1,75 tot 1,8 in plaats van 1,65. Dezelfde puntgrootte, meer lucht
+     tussen de regels. Dat is wat een scherm tot een document maakt.
+
+     De titel staat op 29 en niet op 32: met een stillere tekst eronder hoeft
+     de kop niet zo hard te roepen om kop te zijn.
 
      De drie maten hieronder vervangen de losse getallen die op vijftig plekken
      los stonden. Een kaart die net om zijn inhoud past, leest als "het paste
@@ -504,7 +508,7 @@
   .tk-app input,
   .tk-app select,
   .tk-app textarea {
-    font-size: var(--tk-t-basis);
+    font-size: 16px;
   }
 }
 
