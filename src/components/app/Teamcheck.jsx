@@ -183,23 +183,39 @@ function Klaar({ antwoord, ronde, magWijzigen, opnieuw, intrekken, download, bez
   </div>;
 }
 
-/** Een staafje voor een gemiddelde op de schaal 1–5. */
-function Balk({ stelling, uit }) {
-  const breedte = uit.gemiddelde === null ? 0 : ((uit.gemiddelde - 1) / 4) * 100;
+/**
+ * Een staafje voor een gemiddelde op de schaal 1–5.
+ *
+ * Staat er een vorige ronde, dan komt die als streepje in het spoor te staan.
+ * Bewust een streepje en geen tweede balk: je wilt zien welke kant het op is
+ * gegaan, niet twee cijfers naast elkaar afwegen. Het verschil erbij, want
+ * "3,4" zegt weinig zonder "was 2,9".
+ */
+function Balk({ stelling, uit, eerder }) {
+  const plek = (waarde) => ((waarde - 1) / 4) * 100;
+  const breedte = uit.gemiddelde === null ? 0 : plek(uit.gemiddelde);
+  const toen = eerder && eerder.gemiddelde !== null ? eerder.gemiddelde : null;
+  const verschil = toen !== null && uit.gemiddelde !== null
+    ? Math.round((uit.gemiddelde - toen) * 10) / 10
+    : null;
   return <li className="tc-balkrij">
     <span className="tc-balklabel">{stelling.thema}</span>
     <span className="tc-balkspoor" aria-hidden="true">
       <span className="tc-balkvulling" style={{ width: `${breedte}%` }} />
+      {toen !== null && <span className="tc-toen" style={{ left: `${plek(toen)}%` }} />}
     </span>
     <span className="tc-balkcijfer">
       <strong>{uit.gemiddelde === null ? "—" : uit.gemiddelde.toFixed(1).replace(".", ",")}</strong>
       <small>n = {uit.n}</small>
+      {verschil !== null && <small className="tc-verschil" data-richting={verschil > 0 ? "op" : verschil < 0 ? "neer" : "gelijk"}>
+        {verschil > 0 ? "+" : verschil < 0 ? "−" : "="}{verschil === 0 ? "" : Math.abs(verschil).toFixed(1).replace(".", ",")}
+      </small>}
     </span>
   </li>;
 }
 
 /** Het teambeeld. Alleen voor de twee aangewezen begeleiders. */
-function Overzicht({ antwoorden, aantalLeden }) {
+function Overzicht({ antwoorden, aantalLeden, vorige, vorigeRonde }) {
   const [gekozen, setGekozen] = useState(STELLINGEN[0].id);
   const compleet = useMemo(() => antwoorden.filter(isCompleet), [antwoorden]);
   const telling = respons(antwoorden, aantalLeden);
@@ -248,8 +264,16 @@ function Overzicht({ antwoorden, aantalLeden }) {
     <h4 className="tc-kop">De ontwikkeling in beeld</h4>
     <p className="tk-fijn">Gemiddelde per stelling, op een schaal van 1 tot 5. Wie niet kon oordelen telt niet mee.</p>
     <ul className="tc-balken">
-      {STELLINGEN.map((stelling) => <Balk key={stelling.id} stelling={stelling} uit={gemiddelde(compleet, stelling.id)} />)}
+      {STELLINGEN.map((stelling) => <Balk
+        key={stelling.id}
+        stelling={stelling}
+        uit={gemiddelde(compleet, stelling.id)}
+        eerder={magTonen((vorige || []).length) ? gemiddelde(vorige, stelling.id) : null}
+      />)}
     </ul>
+    {vorigeRonde && magTonen((vorige || []).length) && <p className="tk-fijn">
+      Het streepje in de balk is waar dit thema stond na {vorigeRonde.dagen} dagen.
+    </p>}
 
     <h4 className="tc-kop">Ervaren we hetzelfde?</h4>
     <p className="tk-fijn">
@@ -290,6 +314,43 @@ function Overzicht({ antwoorden, aantalLeden }) {
       In een team van deze omvang is een open antwoord vaak herkenbaar aan de formulering, ook
       zonder naam. Ga er voorzichtig mee om in het gesprek.
     </p>
+
+    {/* De leesregels horen bij het overzicht en niet in een handleiding
+        elders: je hebt ze nodig op het moment dat je naar de cijfers kijkt.
+        Ingeklapt, want wie ze al kent hoeft er niet langs. */}
+    <details className="tc-lezen">
+      <summary>Hoe lezen we deze resultaten?</summary>
+      <ul>
+        <li>
+          <strong>Een gemiddelde is geen oordeel.</strong> Het zegt waar het team nu staat op
+          een stelling, niet of dat goed of slecht is. Wat een 3,0 betekent, hangt af van waar
+          jullie vandaan komen en wat jullie hadden afgesproken.
+        </li>
+        <li>
+          <strong>Kijk eerst naar de verdeling, dan naar het cijfer.</strong> Een gemiddelde van
+          3,0 kan betekenen dat iedereen neutraal is, of dat de helft oneens is en de helft eens.
+          Dat tweede is een gesprek, het eerste een constatering.
+        </li>
+        <li>
+          <strong>n staat er niet voor de sier.</strong> Een 4,0 uit acht antwoorden en een 4,0
+          uit twee antwoorden zijn niet hetzelfde getal.
+        </li>
+        <li>
+          <strong>"Kan ik nog niet beoordelen" telt niet mee in het gemiddelde.</strong> Veel van
+          die antwoorden op één stelling is zelf een signaal: blijkbaar heeft het team er nog
+          geen ervaring mee.
+        </li>
+        <li>
+          <strong>Wat uiteenloopt is interessanter dan wat laag is.</strong> Waar het team het
+          onderling oneens is, valt meer te bespreken dan waar iedereen hetzelfde matige cijfer
+          geeft.
+        </li>
+        <li>
+          <strong>De cijfers zijn het begin van het gesprek, niet de uitkomst.</strong> Leg ze
+          naast wat mensen erbij schreven en naast wat jullie zelf zien gebeuren.
+        </li>
+      </ul>
+    </details>
   </section>;
 }
 
@@ -298,6 +359,7 @@ export default function Teamcheck({ team, uid, naam, magBeheer, aantalLeden }) {
   const [ronde, setRonde] = useState(RONDE_IDS[0]);
   const [eigen, setEigen] = useState(null);
   const [alles, setAlles] = useState([]);
+  const [vorige, setVorige] = useState([]);
   const [laden, setLaden] = useState(true);
   const [bezig, setBezig] = useState(false);
   const [wijzigen, setWijzigen] = useState(false);
@@ -316,6 +378,11 @@ export default function Teamcheck({ team, uid, naam, magBeheer, aantalLeden }) {
       const bestaat = standen[ronde] && standen[ronde].status !== "nietgeopend";
       setEigen(bestaat ? await haalEigenAntwoord(team, ronde, uid) : null);
       setAlles(magBeheer && bestaat ? await haalAlleAntwoorden(team, ronde) : []);
+      // De vorige ronde erbij, zodat je de beweging ziet en niet alleen de
+      // stand. Alleen voor de begeleiders, en alleen als die ronde er is.
+      const eerder = RONDE_IDS[RONDE_IDS.indexOf(ronde) - 1];
+      const eerderBestaat = eerder && standen[eerder] && standen[eerder].status !== "nietgeopend";
+      setVorige(magBeheer && eerderBestaat ? await haalAlleAntwoorden(team, eerder) : []);
     } catch {
       setFout("De teamcheck kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.");
     } finally { setLaden(false); }
@@ -414,6 +481,11 @@ export default function Teamcheck({ team, uid, naam, magBeheer, aantalLeden }) {
         </>
         : <p className="tc-wacht">Deze ronde is gesloten en je hebt hem niet ingevuld.</p>)}
 
-    {magBeheer && stand !== "nietgeopend" && <Overzicht antwoorden={alles} aantalLeden={aantalLeden} />}
+    {magBeheer && stand !== "nietgeopend" && <Overzicht
+      antwoorden={alles}
+      aantalLeden={aantalLeden}
+      vorige={vorige}
+      vorigeRonde={leesRonde(RONDE_IDS[RONDE_IDS.indexOf(ronde) - 1])}
+    />}
   </section>;
 }

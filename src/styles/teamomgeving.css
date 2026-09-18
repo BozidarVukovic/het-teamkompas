@@ -2233,6 +2233,79 @@
   font-size: var(--tk-t-mini);
 }
 
+/* Waar dit thema de vorige keer stond. Een streepje en geen tweede balk: je
+   wilt zien welke kant het op ging, niet twee cijfers tegen elkaar afwegen. */
+.tc-toen {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--tk-oranje);
+}
+
+.tc-balkspoor {
+  position: relative;
+  overflow: visible;
+}
+
+/* Het spoor knipte de vulling af met overflow: hidden; nu het streepje erbuiten
+   mag steken, doet de vulling zelf zijn ronding. */
+.tc-balkvulling {
+  border-radius: 6px;
+}
+
+.tc-verschil {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.tc-verschil[data-richting="op"] { color: var(--tk-teal); }
+.tc-verschil[data-richting="neer"] { color: var(--tk-oranje-donker); }
+.tc-verschil[data-richting="gelijk"] { color: var(--tk-zacht); }
+
+/* De leesregels. Ingeklapt, want wie ze kent hoeft er niet langs -- maar ze
+   staan bij de cijfers en niet in een handleiding elders, omdat je ze nodig
+   hebt op het moment dat je kijkt. */
+.tc-lezen {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.tc-lezen > summary {
+  cursor: pointer;
+  font-size: var(--tk-t-klein);
+  font-weight: 600;
+  color: var(--tk-teal);
+  list-style: none;
+}
+
+.tc-lezen > summary::-webkit-details-marker { display: none; }
+
+.tc-lezen > summary::before {
+  content: "▸ ";
+  display: inline-block;
+  transition: transform var(--tk-vlot) var(--tk-soepel);
+}
+
+.tc-lezen[open] > summary::before { content: "▾ "; }
+
+.tc-lezen ul {
+  margin: 16px 0 0;
+  padding-left: 20px;
+  max-width: 68ch;
+}
+
+.tc-lezen li {
+  margin-bottom: 12px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-klein);
+  line-height: 1.7;
+}
+
+.tc-lezen li strong { color: var(--tk-tekst); }
+
 .tc-verdeling-cijfer {
   flex: 0 0 18px;
   color: var(--tk-zacht);
