@@ -81,9 +81,14 @@
 
 .to-titel {
   margin: 0;
-  font-size: var(--tk-t-groot);
-  font-weight: 800;
-  line-height: 1.25;
+  /* De grootste sprong op dit scherm was anderhalf keer de lopende tekst, en
+     dat is te weinig om als kop te overtuigen -- dan leest niet de kop als
+     groot maar de hele pagina als hard. Twee keer is waar het zelfverzekerd
+     wordt, en de rest mag daardoor juist stiller. */
+  font-size: var(--tk-t-titel);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
 }
 
 .to-versheid {
@@ -369,6 +374,15 @@
 /* De kop van een onderdeel met de bewerkknop ernaast. De knop staat stil aan de
    rechterkant: hij hoort er te zijn voor wie hem zoekt, niet om aandacht te
    vragen van wie komt lezen. */
+/* Waar je bent, boven de kop.
+   Een klein teal label dat de groep noemt waar dit onderdeel in zit. Het staat
+   er niet voor de sier: bij acht onderdelen in twee groepen is "Samenwerken"
+   of "Traject" precies het stukje orientatie dat de zijbalk wel geeft en de
+   inhoud niet. */
+.to-groeplabel {
+  margin: 0 0 4px;
+}
+
 .to-tekstkop {
   display: flex;
   align-items: flex-start;
@@ -551,7 +565,7 @@
 .to-tekst > h2 {
   margin: 0 0 14px;
   font-size: var(--tk-t-sectie);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.25;
 }
 
@@ -720,13 +734,29 @@
 
 /* Zelfde vorm als het citaat in een advies: een tealstreep links, verder niets.
    Het gouden kader dat hier stond was het enige gouden element in de app. */
+/* Een blok dat iets samenvat of apart zet.
+   Het scherm kende alleen wit en haarlijnen. Een getint vlak geeft een
+   samenvatting of een kanttekening een eigen plek zonder er een kop boven te
+   hoeven zetten -- en het is het enige ritme dat een lange tekst nog mist.
+   In de brontekst is dit gewoon een citaatregel: > zo. */
 .to-tekst blockquote {
-  margin: 18px 0;
-  padding: 6px 0 6px 16px;
-  border-left: 3px solid var(--tk-teal);
-  color: var(--tk-zacht);
-  font-style: italic;
+  margin: 20px 0;
+  max-width: 68ch;
+  padding: 16px 20px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--tk-teal-waas);
+  color: var(--tk-tekst);
+  font-style: normal;
   line-height: 1.7;
+}
+
+.to-tekst blockquote > *:first-child {
+  margin-top: 0;
+}
+
+.to-tekst blockquote strong {
+  color: var(--tk-tekst);
 }
 
 .to-tekst blockquote p:last-child {

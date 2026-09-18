@@ -38,6 +38,10 @@
      merkteal zelf leeft door in het logo. */
   --tk-teal: #00796b;
   --tk-teal-dim: rgba(0, 121, 107, 0.10);
+  /* Een vlak dat iets samenvat of apart zet. Zachter dan teal-dim, want dat is
+     gemaakt voor een accent van een paar tekens en wordt over een heel blok
+     een kleurvlak. */
+  --tk-teal-waas: rgba(0, 121, 107, 0.055);
 
   /* Oranje is de actiekleur: hij zit op de gevulde knop en op het actieve item
      in de onderbalk, en nergens anders. Als vlak blijft hij #e8821a met

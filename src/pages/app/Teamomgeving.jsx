@@ -699,6 +699,13 @@ function DocumentToevoegen({ team, uid, documenten, herladen }) {
   </div>;
 }
 
+// De groep waar een onderdeel in zit. Komt uit dezelfde lijst als de navigatie,
+// zodat er nooit een label boven de kop staat dat de zijbalk niet kent.
+function groepVan(groepen, id) {
+  const groep = (groepen || []).find((g) => g.items.some((item) => item.id === id));
+  return groep && !groep.apart ? groep.naam : "";
+}
+
 function Inrichten({ team, uid, leden, herladen }) {
   const [pakket, setPakket] = useState(null);
   const [tweede, setTweede] = useState("");
@@ -845,7 +852,10 @@ function Omgeving({ team, uid, leden, magInrichten }) {
       <div className="to-werk">
         {deel && <article className="tk-kaart to-tekst">
           <div className="to-tekstkop">
-            <h2>{deel.titel}</h2>
+            <div>
+              {groepVan(groepen, deel.id) && <p className="to-eyebrow to-groeplabel">{groepVan(groepen, deel.id)}</p>}
+              <h2>{deel.titel}</h2>
+            </div>
             {omgeving.magBeheer && bewerkt !== deel.id && (
               <button className="to-bewerkknop" type="button" onClick={() => setBewerkt(deel.id)}>
                 <span aria-hidden="true">✎</span> Tekst bewerken
