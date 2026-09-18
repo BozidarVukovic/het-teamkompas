@@ -640,6 +640,10 @@ export default function MijnTeam() {
                   (pl.handleiding || []).length > 0
                     ? `${(pl.handleiding || []).length} in eigen woorden`
                     : null,
+                  // Staat er geen kleurafdruk achter de naam, dan hoort dat
+                  // hier te staan in plaats van dat je je afvraagt waarom die
+                  // ene rij er anders uitziet. Een leeg vlak is geen antwoord.
+                  kleurenOmTeDelen(pl.insights) ? null : "geen profiel ingelezen",
                   `toegevoegd door ${pl.toegevoegdDoorNaam || "een beheerder"}`,
                 ]
                   .filter(Boolean)
@@ -1004,6 +1008,14 @@ export default function MijnTeam() {
                           insights: {
                             voorkeurskleur: gelezen.voorkeurskleur,
                             tweedeKleur: gelezen.tweedeKleur || null,
+                            // De vier gemeten waarden gingen hier verloren. De
+                            // parser leest ze uit het profiel, ze bepalen de
+                            // verhouding in de kleurafdruk, en zonder die
+                            // waarden is er alleen een volgorde -- dus stonden
+                            // er bij toegevoegde profielen nooit meer dan twee
+                            // bolletjes, ook al stond de verdeling gewoon in de
+                            // pdf die net was ingelezen.
+                            energieen: gelezen.energieen || null,
                           },
                           toegevoegdDoor: gebruiker.uid,
                           toegevoegdDoorNaam: naam,
