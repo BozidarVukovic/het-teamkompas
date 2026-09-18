@@ -294,6 +294,75 @@ service cloud.firestore {
             && request.resource.data.bijgewerktOp == request.time;
         }
 
+        // De teamcheck: wat negen mensen los van elkaar invullen.
+        //
+        // Dit is het eerste in deze omgeving waar iemand iets opschrijft dat
+        // niet voor zijn collega's bedoeld is. Tot nu toe stond er alleen
+        // materiaal dat het hele team mag zien; hier hangt de waarde van het
+        // instrument aan de belofte dat je buurman je antwoord niet leest.
+        // Die belofte staat of valt met deze regels, niet met het scherm: wie
+        // de app omzeilt en rechtstreeks de database bevraagt, hoort precies
+        // hetzelfde te krijgen.
+        //
+        // De ronde zelf (open of gesloten) mag iedereen in het team lezen --
+        // je moet kunnen zien of je nog kunt invullen -- maar alleen de twee
+        // aangewezen begeleiders mogen hem openen of sluiten.
+        match /teamcheck/{ronde} {
+          allow get: if isTeamlid(orgId, teamId);
+          allow list: if isTeamlid(orgId, teamId);
+          allow create, update: if omgevingsbeheer()
+            && ronde in ['d30', 'd60', 'd90']
+            && request.resource.data.keys().hasOnly(['status', 'versie', 'geopendOp', 'geopendDoor'])
+            && request.resource.data.status in ['open', 'gesloten']
+            && request.resource.data.versie == 1
+            && request.resource.data.geopendDoor == request.auth.uid;
+          // Een ronde weggooien zou de antwoorden eronder onbereikbaar maken
+          // zonder ze te verwijderen. Sluiten is wat je wilt.
+          allow delete: if false;
+
+          // Het antwoord van één persoon, op zijn eigen uid.
+          //
+          // Op zijn eigen uid en niet op een willekeurig id, om twee redenen:
+          // je kunt je eigen antwoord terugvinden en bijstellen, en niemand
+          // kan twee keer invullen. De prijs is dat de koppeling tussen
+          // persoon en antwoord bestaat. Dat is een bewuste afweging en hij
+          // hoort in de tekst boven het formulier te staan -- niet verstopt.
+          match /antwoorden/{uid} {
+            // Je leest je eigen antwoord. De twee begeleiders lezen alles,
+            // want zonder de antwoorden is er geen teambeeld. Een collega
+            // leest niets: niet in de app, en niet erbuiten.
+            allow get: if ikBen(uid) || omgevingsbeheer();
+            allow list: if omgevingsbeheer();
+
+            // Schrijven doe je alleen op jezelf, alleen als je in het team
+            // zit, en alleen zolang de ronde openstaat. Dat laatste is wat
+            // een teamcheck een moment maakt in plaats van een formulier dat
+            // altijd open staat.
+            allow create, update: if ikBen(uid)
+              && isTeamlid(orgId, teamId)
+              && get(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/teamcheck/$(ronde)).data.status == 'open'
+              && request.resource.data.keys().hasOnly(['scores', 'open', 'naamErbij', 'naam', 'ingevuldOp'])
+              && request.resource.data.scores is map
+              && request.resource.data.scores.keys().hasOnly(['duidelijkheid', 'toepassing', 'eigenaarschap', 'bespreekbaarheid', 'opbrengst'])
+              && request.resource.data.open is string
+              && request.resource.data.open.size() <= 2000
+              && request.resource.data.naamErbij is bool
+              // De belofte in één regel: een naam komt er alleen in als je er
+              // zelf voor koos. Zonder deze controle zou een client een naam
+              // kunnen meesturen bij een antwoord dat in het overzicht
+              // naamloos hoort te zijn, en dan klopt het scherm wel en de
+              // gegevens niet.
+              && (!('naam' in request.resource.data.keys()) || request.resource.data.naamErbij == true)
+              && request.resource.data.ingevuldOp == request.time;
+
+            // Je eigen inzending intrekken mag, zolang de ronde open is. Een
+            // begeleider kan dat niet voor je doen: dat zou het wegpoetsen van
+            // andermans stem zijn.
+            allow delete: if ikBen(uid)
+              && get(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/teamcheck/$(ronde)).data.status == 'open';
+          }
+        }
+
         // Pdfs blijven in de bestaande beveiligde database, nooit als publieke
         // sitebestanden of langlevende downloadlinks. Delen blijven onder 1 MiB.
         match /teamomgevingBestanden/{bestandId}/delen/{deelId} {
