@@ -32,6 +32,9 @@ export const heroContent = {
   // tweede route. Eventnamen beschrijven de actie, niet de plek op de pagina.
   scanCta: { label: "Doe de gratis teamscan", href: "/gratis-teamscan", event: "hero_teamscan_click" },
   contactCta: { label: "Plan een vrijblijvende kennismaking", event: "hero_primary_cta_click" },
+  // Staat niet meer in de hero: naast de knoppen trok deze link de aandacht
+  // weg van de scan. De route loopt via het menu en via de knop halverwege de
+  // pagina. Bewaard, zodat hij zo terug te zetten is.
   tertiaryCta: { label: "Bekijk onze aanpak", href: "/onze-aanpak", event: "hero_approach_click" },
 
   ctaNote: "Individueel, 8 tot 10 minuten, direct inzicht.",

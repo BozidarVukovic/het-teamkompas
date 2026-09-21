@@ -1411,20 +1411,22 @@ function PublicSite({ onLoginClick }) {
               <button
                 type="button"
                 onClick={() => { trackEvent(heroContent.contactCta.event); openModal(); }}
-                style={{ background: PUB.wit, color: PUB.donker, border: 0, font: "inherit", padding: "14px 22px", borderRadius: 8, fontWeight: 800, fontSize: 14, cursor: "pointer", textAlign: "center", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}
+                /* Omlijning in plaats van een wit vlak. Twee gevulde knoppen
+                   naast elkaar vragen allebei een beslissing; de scan is de
+                   stap met de laagste drempel en hoort als enige op te vallen.
+                   De rand is wat steviger dan de ghostStyle elders op de site,
+                   omdat hier een foto achter zit in plaats van egaal navy. */
+                style={{ background: "rgba(255,255,255,0.06)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.55)", font: "inherit", padding: "14px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: "pointer", textAlign: "center", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}
               >
                 {heroContent.contactCta.label}
               </button>
             </div>
-            <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 16px" }}>
-              <span style={{ color: "rgba(255,255,255,0.58)", fontSize: 13 }}>{heroContent.ctaNote}</span>
-              <a
-                href={heroContent.tertiaryCta.href}
-                onClick={(e) => { e.preventDefault(); trackEvent(heroContent.tertiaryCta.event); navigate(heroContent.tertiaryCta.href); }}
-                style={{ color: PUB.teal, fontWeight: 800, fontSize: 13.5, textDecoration: "underline", textUnderlineOffset: 3 }}
-              >
-                {heroContent.tertiaryCta.label} →
-              </a>
+            {/* Alleen nog wat de drempel voor de scan wegneemt. De link naar
+                de aanpak stond hiernaast en trok de aandacht juist weg van de
+                knop erboven; die route loopt via het menu en via de knop
+                halverwege de pagina. */}
+            <div style={{ marginTop: 14 }}>
+              <span style={{ color: "rgba(255,255,255,0.72)", fontSize: 13.5 }}>{heroContent.ctaNote}</span>
             </div>
             <LeadTrustBar isMobile={isMobile} tone="dark" />
             </div>
