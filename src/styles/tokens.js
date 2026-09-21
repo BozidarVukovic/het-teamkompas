@@ -3,6 +3,11 @@ export const PUB = {
   navy: "#1A2E4A",
   teal: "#0F766E",
   tealDark: "#0B5F5A",
+  // Dezelfde accentkleur, maar voor tekst op een donkere achtergrond. PUB.teal
+  // is gekozen voor witte vlakken; op #0D1B2A haalt die 3,2:1 en dat is onder
+  // de leesbaarheidsnorm van 4,5:1. Deze haalt 8:1. Gebruik hem overal waar
+  // teal-tekst op navy staat, niet alleen in de hero.
+  tealOpDonker: "#35C4B5",
   tealGlow: "rgba(0,168,150,0.15)",
   groen: "#5A8C3C",
   blauw: "#3A7DBF",

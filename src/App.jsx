@@ -1369,7 +1369,12 @@ function PublicSite({ onLoginClick }) {
           <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.035) 1px,transparent 1px)", backgroundSize: "30px 30px" }} />
           <Strepen />
           <div style={{ padding: isMobile ? "58px 24px 36px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 16 }}>{heroContent.eyebrow}</div>
+            {/* Geen kapitalen meer. Een regel van 46 tekens in hoofdletters met
+                0,16em spatiering leest woord voor woord in plaats van in een
+                oogopslag, en juist deze regel moet in een oogopslag duidelijk
+                maken voor wie de pagina is. Normale schrijfwijze, iets groter,
+                en de teal-variant die op navy wel contrast heeft. */}
+            <div style={{ fontSize: isMobile ? 14 : 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 16 }}>{heroContent.eyebrow}</div>
             {/* Regellengte begrensd via maxWidth, zodat losse woorden niet los op een regel vallen. */}
             <h1 style={{ fontSize: isMobile ? 32 : 52, fontWeight: 800, lineHeight: 1.08, color: PUB.wit, marginBottom: 20, letterSpacing: "-0.03em", maxWidth: isMobile ? "100%" : 620, textWrap: "balance" }}>
               {heroContent.title}
