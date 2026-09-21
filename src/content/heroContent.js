@@ -14,10 +14,18 @@ export const heroContent = {
 
   // Let op: deze kop staat ook in het statische SEO-blok in index.html.
   // Wijzig ze samen, anders leest Google iets anders dan de bezoeker ziet.
-  title: "Teams die goed samenwerken presteren merkbaar beter. Wij maken zichtbaar wat dat nu tegenhoudt.",
+  // Kort en op de uitkomst. De vorige kop (bewaard als variant1 onderaan) legde
+  // eerst uit waarom samenwerking ertoe doet en kwam pas in de tweede zin bij
+  // wat wij doen -- dat is te veel leeswerk voor een openingsscherm. Deze noemt
+  // meteen de uitkomst en hoe klein de eerste stap is, en sluit daarmee aan op
+  // de gratis scan eronder.
+  title: "Zie in tien minuten wat jullie samenwerking tegenhoudt.",
 
+  // Twee regels, geen drie. De kop zegt wat je krijgt; hier staat alleen nog
+  // waarmee en wat het oplevert. Een algemene opening ("iedereen doet zijn
+  // best") kost een halve alinea voordat er iets staat dat alleen van ons is.
   subtitle:
-    "Iedereen doet zijn best en toch loopt de samenwerking vast. Wij brengen in beeld wat verandering, eigenaarschap en onderling vertrouwen in de weg zit, en helpen teams met kleine concrete stappen naar ander gedrag in de praktijk.",
+    "Het Teamkompas meet jullie samenwerking op vijf domeinen en geeft één concrete stap voor volgende week.",
 
   // De gratis teamscan is de laagdrempeligste eerste stap en staat daarom
   // vooraan in het oranje. De kennismaking blijft duidelijk zichtbaar als
@@ -64,6 +72,13 @@ export const heroContent = {
  *              we stap voor stap aan betere samenwerking, eigenaarschap en teamenergie."
  */
 export const heroVariants = {
+  // De kop die tot september 2026 op de homepage stond.
+  variant1: {
+    title:
+      "Teams die goed samenwerken presteren merkbaar beter. Wij maken zichtbaar wat dat nu tegenhoudt.",
+    subtitle:
+      "Iedereen doet zijn best en toch loopt de samenwerking vast. Wij brengen in beeld wat verandering, eigenaarschap en onderling vertrouwen in de weg zit, en helpen teams met kleine concrete stappen naar ander gedrag in de praktijk.",
+  },
   variant2: {
     title: "Verandering lijkt afgesproken. Toch verandert er in de praktijk weinig.",
     subtitle:
