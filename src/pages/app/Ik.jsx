@@ -35,6 +35,54 @@ import {
   waaroverInEenZin,
 } from "../../lib/app/reflecties";
 import { situatie } from "../../data/app/situaties";
+import { STANDEN, bewaarStand, haalStand, pasToe } from "../../lib/app/thema";
+
+/**
+ * Licht of donker.
+ *
+ * Staat onderaan en niet bovenaan: het is een voorkeur voor het scherm, geen
+ * onderdeel van wie je bent. Drie knoppen naast elkaar in plaats van een
+ * schuifje met twee standen, want "volg mijn telefoon" is een echte derde
+ * keuze en geen tussenstand.
+ *
+ * De keuze geldt voor dit apparaat. Dat staat er ook bij -- anders verwacht je
+ * hem morgen op je laptop terug te zien.
+ */
+function Weergave() {
+  const [stand, setStand] = useState(haalStand);
+
+  const kies = (id) => {
+    setStand(id);
+    bewaarStand(id);
+    pasToe(id);
+  };
+
+  return (
+    <section className="tk-groep">
+      <h2 className="tk-groep-kop">Weergave</h2>
+      <div className="tk-kaart">
+        <div className="tk-standen" role="group" aria-label="Licht of donker">
+          {STANDEN.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              className="tk-stand"
+              data-gekozen={stand === s.id ? "ja" : undefined}
+              aria-pressed={stand === s.id}
+              onClick={() => kies(s.id)}
+            >
+              <strong>{s.label}</strong>
+              <small>{s.uitleg}</small>
+            </button>
+          ))}
+        </div>
+        <p className="tk-fijn" style={{ margin: "12px 0 0" }}>
+          Deze keuze geldt voor dit apparaat. Op je telefoon stel je hem apart in.
+        </p>
+      </div>
+    </section>
+  );
+}
 
 function Regel({ naar, titel, uitleg, stand = null, klaar = false }) {
   return (
@@ -357,6 +405,8 @@ export default function Ik() {
           ))}
         </section>
       )}
+
+      <Weergave />
     </div>
   );
 }

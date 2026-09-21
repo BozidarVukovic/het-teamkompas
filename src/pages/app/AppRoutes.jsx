@@ -4,6 +4,7 @@
 // komt op het inlogscherm; wie nog geen team heeft, komt eerst langs het
 // welkomscherm.
 
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Navigate, Route, Routes, useLocation, useSearchParams } from "react-router-dom";
 import { AppProvider, useApp } from "../../lib/app/AppContext";
@@ -22,6 +23,7 @@ import Navigatie from "../../components/app/Navigatie";
 import Balktitel from "../../components/app/Balktitel";
 import KompasDot from "../../components/shared/KompasDot";
 import { welkombestemming } from "../../lib/app/welkom";
+import { haalStand, pasToe, volgSysteem } from "../../lib/app/thema";
 import "../../styles/app.css";
 
 function Laden({ tekst = "Even laden..." }) {
@@ -148,7 +150,23 @@ function Poort() {
   );
 }
 
+/**
+ * Houdt het thema gelijk met het apparaat.
+ *
+ * Het script in index.html zet het thema al voordat de pagina tekent; dit
+ * houdt het bij als de telefoon onderweg naar donker gaat. Wie zelf licht of
+ * donker koos merkt er niets van -- bepaalThema negeert het apparaat dan.
+ */
+function useThema() {
+  useEffect(() => {
+    pasToe(haalStand());
+    return volgSysteem(() => pasToe(haalStand()));
+  }, []);
+}
+
 export default function AppRoutes() {
+  useThema();
+
   return (
     <AppProvider>
       {/* Een besloten omgeving hoort niet in zoekmachines. */}

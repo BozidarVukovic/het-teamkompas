@@ -13,6 +13,12 @@
 
 import { maakVingerafdruk, bolletjes, omschrijf } from "../../lib/app/vingerafdruk";
 
+// De kleur komt uit de stylesheet en niet uit de hex in insights.js: op een
+// donkere kaart zakken het groen en het rood van het lichte stel weg tot onder
+// de leesbaarheidsgrens. De betekenis blijft waar hij hoort -- welke kleur bij
+// welk id hoort staat nog steeds in insights.js, alleen de tint per thema niet.
+const vlak = (id) => `var(--tk-insights-${id})`;
+
 export default function Vingerafdruk({ kleuren, naam = "", klein = false }) {
   const afdruk = maakVingerafdruk(kleuren);
   if (!afdruk) return null;
@@ -23,7 +29,7 @@ export default function Vingerafdruk({ kleuren, naam = "", klein = false }) {
     <span aria-hidden="true">
       {afdruk.balk.length > 0 && <span className="tk-afdruk-balk">
         {afdruk.balk.map((deel) => (
-          <span key={deel.id} style={{ width: `${deel.deel * 100}%`, background: deel.kleur }} />
+          <span key={deel.id} style={{ width: `${deel.deel * 100}%`, background: vlak(deel.id) }} />
         ))}
       </span>}
       <span className="tk-afdruk-bollen">
@@ -33,7 +39,7 @@ export default function Vingerafdruk({ kleuren, naam = "", klein = false }) {
             // color erbij voor de niet-gemeten bolletjes: die zijn een ring in
             // currentColor. Zonder dit werd de ring de tekstkleur en zag je
             // niet meer welke kleur het was.
-            style={{ background: bol.kleur, color: bol.kleur }}
+            style={{ background: vlak(bol.id), color: vlak(bol.id) }}
             // Zonder gemeten verhouding is de volgorde na de eerste twee niet
             // gemeten maar de vaste kleurvolgorde. Die twee zien er anders uit
             // dan de rest, zodat het beeld niet meer belooft dan het weet.

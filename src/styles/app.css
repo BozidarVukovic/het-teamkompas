@@ -11,6 +11,87 @@
    maar "de pagina, en twee lagen die verder terugtreden" -- dat is altijd al
    geweest wat ze deden. */
 
+/* ---------------------------------------------------------- donker thema
+
+   Licht blijft de standaard, om de reden die hierboven staat. Dit is de
+   keuze ernaast, niet de nieuwe uitgangspositie.
+
+   Het attribuut staat op <html> en niet op .tk-app, zodat een klein script in
+   index.html het kan zetten voordat React draait. Zonder dat zie je bij elke
+   paginalading eerst het lichte thema en daarna pas het donkere.
+
+   De waarde is altijd "licht" of "donker", nooit "systeem": wat de bezoeker
+   koos wordt in JavaScript naar een van die twee vertaald. Daarom staat de
+   donkere set hier een keer in plaats van twee keer -- ook onder een
+   prefers-color-scheme-regel.
+
+   Elke kleur hieronder is nagerekend tegen de pagina (#0d1b2a) en tegen een
+   kaart (#16283c). De laagste van het stel is rood op een kaart met 5,89:1;
+   de grens voor tekst is 4,5:1. Rood en oranje staan op 11,8 verschil in
+   OKLab -- ruim boven de 8 waar twee kleuren nog uit elkaar te houden zijn. */
+[data-tk-thema="donker"] .tk-app {
+  --tk-navy: #0d1b2a;
+  --tk-navy-2: #1b2f45;
+  --tk-navy-3: #24384f;
+  --tk-vlak: #16283c;
+
+  /* Op wit tilt een schaduw een kaart op. Op donker kan dat niet: zwart op
+     donkerblauw is geen schaduw maar een vlek. Wat een kaart hier optilt is
+     dat hij lichter is dan de pagina (1,16) plus een dunne lichte bovenrand.
+     De schaduw blijft, maar alleen om de onderrand te verankeren. */
+  --tk-rand: rgba(255, 255, 255, 0.10);
+  --tk-lift: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 2px 8px rgba(0, 0, 0, 0.28);
+  --tk-lift-hoog: 0 1px 0 rgba(255, 255, 255, 0.07) inset, 0 12px 28px rgba(0, 0, 0, 0.40);
+
+  /* Het merkteal haalt op deze pagina 8,05:1 en mag hier dus zichzelf zijn --
+     op wit kon dat niet en stond er een donkere variant. */
+  --tk-teal: #35c4b5;
+  --tk-teal-dim: rgba(53, 196, 181, 0.16);
+  --tk-teal-waas: rgba(53, 196, 181, 0.07);
+
+  /* Het oranje vlak blijft precies zoals het is: dat is de actiekleur en die
+     hoort op beide thema's dezelfde knop te zijn. Alleen oranje als tekst
+     wordt lichter, want de donkere variant verdwijnt hier in de pagina. */
+  --tk-oranje: #e8821a;
+  --tk-oranje-tekst: #2a1603;
+  --tk-oranje-donker: #f0a13f;
+
+  --tk-tekst: #e7eef6;
+  --tk-zacht: #9db0c6;
+  --tk-lijn: rgba(255, 255, 255, 0.14);
+  --tk-rood: #ff7a70;
+
+  /* Dezelfde vier kleuren, een stap lichter. Op een donkere kaart zakken het
+     groen en het rood van het lichte stel weg tot onder de grens. Het kleinste
+     onderling verschil is hier 16,3 (groen tegen geel); in het lichte stel is
+     dat 18,1, dus dit blijft even goed te onderscheiden. */
+  --tk-insights-blauw: #64A9EC;
+  --tk-insights-groen: #86CC63;
+  --tk-insights-geel: #FFD166;
+  --tk-insights-rood: #FF7A6E;
+
+  --tk-fout-tekst: #ff9d94;     /* 7,49:1 op een kaart */
+  --tk-goed-tekst: #5ad6c6;     /* 8,46:1 */
+  --tk-advies-vlak: linear-gradient(180deg, #172b40, #17313c);
+  --tk-citaat-tekst: #9fd8cf;   /* 8,56:1 op dat vlak */
+
+  --tk-waas: rgba(16, 32, 50, 0.72);
+  --tk-waas-sterk: rgba(22, 40, 60, 0.88);
+
+  /* Het kleurveld van de pagina. Dit stond als vaste waarde in .tk-app en was
+     daarmee het enige dat in dark mode licht bleef: donkere kaarten op een
+     lichte plaat. Zelfde opbouw als het lichte veld -- een spoor licht aan de
+     bovenkant, iets dieper naar onderen -- alleen dan de andere kant op. */
+  background:
+    radial-gradient(120% 44% at 50% -8%, #1b3147 0%, rgba(27, 49, 71, 0) 60%),
+    linear-gradient(180deg, #14263a 0%, var(--tk-navy) 46%, #081420 100%);
+
+  /* Zegt de browser dat invoervelden, scrollbalken en het keuzemenu van een
+     select hun donkere uitvoering moeten pakken. Zonder dit staat er een wit
+     schuifbalkje langs een donkere pagina. */
+  color-scheme: dark;
+}
+
 .tk-app {
   --tk-navy: #e9eef5;      /* de pagina -- een tint dieper, zodat wit erop ligt
                               in plaats van ermee samenvalt */
@@ -112,6 +193,32 @@
      verschillende dingen; dit gaat over het tweede. */
   --tk-raak: 44px;
 
+  /* De vier Insights-kleuren. Ze stonden als hex in insights.js en gingen
+     daarmee als inline stijl het scherm op -- dat werkt zolang er precies een
+     achtergrond is. Hier staan ze zodat het donkere thema ze kan vervangen;
+     insights.js houdt zijn eigen waarden voor alles wat geen scherm is. */
+  --tk-insights-blauw: #3A7DBF;
+  --tk-insights-groen: #5A8C3C;
+  --tk-insights-geel: #E8821A;
+  --tk-insights-rood: #C0392B;
+
+  /* Vier kleuren die alleen op een van de twee thema's werkten en daarom als
+     vaste waarde in een regel stonden. Nu hier, zodat beide thema's ze kunnen
+     zetten in plaats van dat de donkere versie ze stilzwijgend erft. */
+  --tk-fout-tekst: #9b1c17;
+  --tk-goed-tekst: #00695f;
+  --tk-advies-vlak: linear-gradient(180deg, #ffffff, #f2faf8);
+  --tk-citaat-tekst: #2f5c55;
+
+  /* De twee wazige balken: boven, en op een telefoon ook onder. Dit is de
+     enige plek in de app waar iets doorzichtig is, en dat kan daar omdat er
+     niets doorheen gelezen hoeft te worden -- de inhoud schuift eronderdoor,
+     hij staat er niet op. */
+  --tk-waas: rgba(255, 255, 255, 0.7);
+  --tk-waas-sterk: rgba(255, 255, 255, 0.86);
+
+  color-scheme: light;
+
   min-height: 100vh;
 
   /* Een kleurveld in plaats van een vlakke plaat: het scherm heeft een
@@ -150,7 +257,7 @@
   padding: 14px 20px;
   /* Geen eigen balkkleur meer met een streep eronder, maar een waas waar de
      inhoud onderdoor schuift. */
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--tk-waas);
   backdrop-filter: blur(16px);
 }
 
@@ -796,16 +903,16 @@
 
 .tk-melding-fout {
   border-color: rgba(198, 40, 40, 0.4);
-  color: #9b1c17;
+  color: var(--tk-fout-tekst);
 }
 
 .tk-melding-goed {
   border-color: rgba(0, 121, 107, 0.45);
-  color: #00695f;
+  color: var(--tk-goed-tekst);
 }
 
 .tk-advies {
-  background: linear-gradient(180deg, #ffffff, #f2faf8);
+  background: var(--tk-advies-vlak);
   border: 1px solid rgba(0, 121, 107, 0.3);
   border-radius: 18px;
   padding: var(--tk-marge);
@@ -838,7 +945,7 @@
 .tk-citaat {
   border-left: 3px solid var(--tk-teal);
   padding: 8px 0 8px 14px;
-  color: #2f5c55;
+  color: var(--tk-citaat-tekst);
   font-style: italic;
   line-height: 1.65;
   margin: 0;
@@ -977,7 +1084,7 @@
   right: 10px;
   bottom: calc(10px + env(safe-area-inset-bottom));
   z-index: 30;
-  background: rgba(255, 255, 255, 0.86);
+  background: var(--tk-waas-sterk);
   backdrop-filter: blur(20px) saturate(1.3);
   border-radius: 24px;
   box-shadow: 0 10px 30px rgba(16, 36, 58, 0.16);
@@ -1707,6 +1814,51 @@ a.tk-optie {
   font-weight: 500;
   text-transform: none;
   letter-spacing: 0;
+}
+
+/* Drie standen naast elkaar: systeem, licht, donker.
+   Even breed, want geen van de drie is belangrijker dan de andere twee. Onder
+   420 pixels onder elkaar -- drie kolommen met een label eronder wordt daar
+   een woordenbrij. */
+.tk-standen {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tk-stand {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: var(--tk-raak);
+  padding: 12px 10px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tk-tekst);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--tk-vlot) var(--tk-soepel),
+    border-color var(--tk-vlot) var(--tk-soepel);
+}
+
+.tk-stand strong { font-size: var(--tk-t-basis); font-weight: 600; }
+.tk-stand small { color: var(--tk-zacht); font-size: var(--tk-t-fijn); line-height: 1.4; }
+
+.tk-stand[data-gekozen="ja"] {
+  background: var(--tk-teal-dim);
+  border-color: var(--tk-teal);
+  box-shadow: inset 0 0 0 1px var(--tk-teal);
+}
+
+@media (hover: hover) {
+  .tk-stand:hover { border-color: var(--tk-teal); }
+}
+
+@media (max-width: 420px) {
+  .tk-standen { grid-template-columns: 1fr; }
+  .tk-stand { flex-direction: row; align-items: baseline; gap: 10px; }
 }
 
 /* De kleurvingerafdruk achter een naam.

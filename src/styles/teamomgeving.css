@@ -2112,7 +2112,7 @@
 }
 
 @media (hover: hover) {
-  .to-tekst .tc-volgende:not(:disabled):hover { background: #00695f; }
+  .to-tekst .tc-volgende:not(:disabled):hover { background: var(--tk-teal); filter: brightness(0.92); }
 }
 
 .to-tekst .tc-volgende:disabled {

@@ -63,6 +63,26 @@
     }
     </script>
 
+    <!-- Licht of donker, gezet voordat de pagina tekent. Staat hier en niet in
+         React, omdat je anders bij elke lading eerst het lichte thema ziet en
+         daarna pas het donkere. Buiten de app doet het attribuut niets: de
+         donkere set is gescoped op .tk-app. -->
+    <script>
+      (function () {
+        try {
+          var stand = window.localStorage.getItem("tk-thema") || "systeem";
+          var donker =
+            stand === "donker" ||
+            (stand !== "licht" &&
+              window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.setAttribute("data-tk-thema", donker ? "donker" : "licht");
+        } catch (e) {
+          document.documentElement.setAttribute("data-tk-thema", "licht");
+        }
+      })();
+    </script>
+
     <!-- Print styling voor blog download -->
     <style>
       @media print {
