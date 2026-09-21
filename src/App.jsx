@@ -1365,10 +1365,28 @@ function PublicSite({ onLoginClick }) {
 
       <div style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, overflowX: "hidden", paddingTop: 64, background: PUB.wit }}>
 
-        <section id="home" style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "80vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", alignItems: "center", position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.035) 1px,transparent 1px)", backgroundSize: "30px 30px" }} />
+        {/* De foto vult de hele opening en de tekst ligt erop. Eerder stond er
+            links een donker vlak en rechts de foto; dat las als twee pagina's
+            naast elkaar. De leesbaarheid komt nu van de overlay en niet van een
+            eigen vlak, vandaar twee lagen: een horizontale die de tekstkant
+            donker houdt, en een naar boven aflopende die de onderrand draagt.
+            Het stippenpatroon is weg -- de foto geeft de textuur nu.
+
+            Op desktop precies het scherm hoog, min de vaste balk van 64, zodat
+            je eerst landt voordat het volgende blok in beeld schuift. */}
+        <section id="home" style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "calc(100svh - 64px)", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
+          <img
+            src="/teamkompas-workshop-hero.jpg"
+            alt="Teamworkshop van Mijn Teamkompas met kompaswerkvorm en gezamenlijke dialoog"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: isMobile ? "center" : "72% center" }}
+          />
+          <div style={{ position: "absolute", inset: 0, background: isMobile
+            ? "linear-gradient(to bottom, rgba(13,27,42,0.82), rgba(13,27,42,0.90))"
+            : "linear-gradient(to right, rgba(13,27,42,0.96) 0%, rgba(13,27,42,0.92) 34%, rgba(13,27,42,0.62) 66%, rgba(13,27,42,0.45) 100%)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(13,27,42,0.80), rgba(13,27,42,0) 34%)" }} />
           <Strepen />
-          <div style={{ padding: isMobile ? "58px 24px 36px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
+          <div style={{ flex: "1 1 auto", display: "flex", alignItems: "center", padding: isMobile ? "52px 24px 32px" : "48px 58px 40px 72px", position: "relative", zIndex: 2 }}>
+            <div style={{ maxWidth: 640 }}>
             {/* Geen kapitalen meer. Een regel van 46 tekens in hoofdletters met
                 0,16em spatiering leest woord voor woord in plaats van in een
                 oogopslag, en juist deze regel moet in een oogopslag duidelijk
@@ -1409,35 +1427,37 @@ function PublicSite({ onLoginClick }) {
               </a>
             </div>
             <LeadTrustBar isMobile={isMobile} tone="dark" />
-          </div>
-          <div style={{ position: "relative", zIndex: 1, alignSelf: "stretch" }}>
-            <div style={{ position: "relative", minHeight: isMobile ? 260 : "100%", height: isMobile ? 260 : "100%" }}>
-              <img src="/teamkompas-workshop-hero.jpg" alt="Teamworkshop van Mijn Teamkompas met kompaswerkvorm en gezamenlijke dialoog" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: .82 }} />
-              <div style={{ position: "absolute", inset: 0, background: isMobile ? "linear-gradient(to top, rgba(13,27,42,0.55), rgba(13,27,42,0.12))" : "linear-gradient(to right, rgba(13,27,42,0.92), rgba(13,27,42,0.10))" }} />
             </div>
-            {/* Op desktop zweeft het blok over de foto; op mobiel staat het eronder,
-                zodat er geen tekst over het beeld heen valt. */}
-            <div style={{ position: isMobile ? "static" : "absolute", left: isMobile ? undefined : 44, right: isMobile ? undefined : 44, bottom: isMobile ? undefined : 44, margin: isMobile ? "0 22px 30px" : undefined, background: isMobile ? "rgba(255,255,255,0.96)" : "rgba(255,255,255,0.92)", borderRadius: 18, padding: 22, boxShadow: "0 24px 70px rgba(0,0,0,0.28)" }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: PUB.teal, marginBottom: 8 }}>{heroContent.infoCard.label}</div>
-              <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 800, color: PUB.donker, lineHeight: 1.25, marginBottom: 8 }}>{heroContent.infoCard.title}</div>
-              <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.sub }}>{heroContent.infoCard.text}</div>
+          </div>
+
+          {/* Luisteren, meten, bewegen. Nu een strook binnen de hero in plaats
+              van een sectie eronder: de opening vult het scherm en je ziet toch
+              dat er meer is, zonder dat er een los blok in beeld schuift. */}
+          <div style={{ position: "relative", zIndex: 2, borderTop: "1px solid rgba(255,255,255,0.16)", background: "rgba(13,27,42,0.52)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", padding: isMobile ? "22px 24px 26px" : "22px 60px 24px" }}>
+            <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: isMobile ? 14 : 28 }}>
+              {heroContent.approach.map(([titel, tekst], i) => (
+                <div key={titel} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                  <span aria-hidden="true" style={{ flexShrink: 0, width: 26, height: 26, borderRadius: "50%", background: "rgba(53,196,181,0.18)", color: PUB.tealOpDonker, fontSize: 12, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center" }}>{i + 1}</span>
+                  <div>
+                    <div style={{ fontSize: 15, fontWeight: 850, color: PUB.wit, marginBottom: 3 }}>{titel}</div>
+                    <div style={{ fontSize: 13.5, lineHeight: 1.6, color: "rgba(255,255,255,0.72)" }}>{tekst}</div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Luisteren, meten, bewegen. Staat direct onder de hero en piept aan de
-            onderkant van het eerste scherm, als uitnodiging om verder te lezen. */}
-        <section aria-label="Onze werkwijze" style={{ background: PUB.donker, borderTop: "1px solid rgba(255,255,255,0.10)", padding: isMobile ? "26px 24px 30px" : "26px 60px 30px" }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: isMobile ? 14 : 28 }}>
-            {heroContent.approach.map(([titel, tekst], i) => (
-              <div key={titel} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <span aria-hidden="true" style={{ flexShrink: 0, width: 26, height: 26, borderRadius: "50%", background: "rgba(0,168,150,0.16)", color: PUB.teal, fontSize: 12, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center" }}>{i + 1}</span>
-                <div>
-                  <div style={{ fontSize: 15, fontWeight: 850, color: PUB.wit, marginBottom: 3 }}>{titel}</div>
-                  <div style={{ fontSize: 13.5, lineHeight: 1.6, color: "rgba(255,255,255,0.66)" }}>{tekst}</div>
-                </div>
-              </div>
-            ))}
+        {/* Het blok dat eerder over de foto zweefde. Als wit vlak in de hoek van
+            het openingsscherm brak het de rust; hier is het gewoon het eerste
+            wat je leest zodra je verder scrollt. */}
+        <section aria-label="Wanneer schakel je ons in" style={{ background: PUB.wit, padding: isMobile ? "44px 20px" : "64px 60px", borderBottom: `1px solid ${PUB.lijn}` }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 300px) minmax(0, 1fr)", gap: isMobile ? 10 : 48, alignItems: "start" }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: PUB.teal }}>{heroContent.infoCard.label}</div>
+            <div>
+              <h2 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 800, color: PUB.donker, lineHeight: 1.3, margin: "0 0 12px" }}>{heroContent.infoCard.title}</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.75, color: PUB.sub, margin: 0, maxWidth: "68ch" }}>{heroContent.infoCard.text}</p>
+            </div>
           </div>
         </section>
 
@@ -1509,7 +1529,10 @@ function PublicSite({ onLoginClick }) {
         <section id="voor-wie" style={{ padding: isMobile ? "54px 20px" : "82px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 42, alignItems: "center" }}>
             <Fade>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Wanneer schakel je ons in?</div>
+              {/* De opener "Wanneer schakel je ons in?" staat nu boven aan de
+                  pagina, bij het blok dat uit de hero kwam. Twee keer dezelfde
+                  vraag op een pagina leest als een herhaling; de kop hieronder
+                  draagt deze sectie prima alleen. */}
               <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Als gedrag, verandering of leiderschap vastloopt.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>Mijn Teamkompas helpt als de inhoud wel besproken wordt, maar het echte gesprek over samenwerking, spanning en verantwoordelijkheid nog onvoldoende op tafel komt.</p>
               <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Plan een vrijblijvende kennismaking</span>
