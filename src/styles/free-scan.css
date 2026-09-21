@@ -47,9 +47,64 @@
 .free-question > span { color: var(--tk-color-teal); font-weight: 850; }
 .free-question h1 { font-size: clamp(21px, 2.6vw, 30px); line-height: 1.25; letter-spacing: -.02em; max-width: 720px; margin: 10px 0 18px; }
 .free-question fieldset { border: 0; padding: 0; display: grid; gap: 8px; }
-.free-question label { display: flex; align-items: center; gap: 12px; background: #fff; border: 2px solid var(--tk-color-border); padding: 11px 16px; border-radius: 12px; cursor: pointer; }
-.free-question label.selected { border-color: var(--tk-color-teal); background: #effaf8; }
-.free-question label b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--tk-color-bg); flex-shrink: 0; }
+/* Er stond geen enkele overgang in dit bestand. Je klikte een antwoord aan en
+   de rand sprong van grijs naar teal -- geen bevestiging, alleen een andere
+   toestand. Bij vierentwintig vragen achter elkaar is dat het verschil tussen
+   een formulier en iets dat antwoord geeft.
+
+   Drie dingen tegelijk, en alle drie klein: de rand kleurt, het vlak wordt
+   lichter, en de regel schuift zes pixels naar rechts. Die verschuiving is wat
+   je het duidelijkst ziet zonder ernaar te kijken. */
+.free-question label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 2px solid var(--tk-color-border);
+  padding: 11px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 140ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    background-color 140ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    transform 160ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.free-question label.selected {
+  border-color: var(--tk-color-teal);
+  background: #effaf8;
+  transform: translateX(6px);
+}
+
+.free-question label b {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--tk-color-bg);
+  flex-shrink: 0;
+  transition: background-color 140ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    color 140ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* Het cijfer wordt het gekozen cijfer. Dat is de bevestiging die je in die
+   260 milliseconden ziet voordat het scherm doorschuift. */
+.free-question label.selected b {
+  background: var(--tk-color-teal);
+  color: #fff;
+}
+
+/* Een nieuwe vraag komt binnen in plaats van dat hij er ineens staat. Alleen
+   de vraag zelf beweegt, niet de voortgangsbalk erboven: die hoort juist stil
+   te staan zodat je ziet dat hij oploopt. */
+@keyframes free-vraag-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.free-question { animation: free-vraag-in 260ms cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+
+.free-progress progress { transition: none; }
 
 /* Zichtbare focus voor toetsenbordgebruikers: het antwoord waar je met Tab of
    de pijltjestoetsen op staat moet herkenbaar zijn, ook als het nog niet
@@ -224,8 +279,17 @@
   .free-theme__actions { grid-template-columns: 1fr; }
 }
 
+/* Wie beweging uit heeft staan, krijgt hetzelfde gedrag zonder de beweging:
+   het antwoord licht op en het scherm schuift door, alleen zonder overgang en
+   zonder wachttijd (die staat in beweging.js op nul). Niet minder feedback,
+   alleen geen animatie. */
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
+
+  .free-question { animation: none; }
+  .free-question label,
+  .free-question label b { transition: none; }
+  .free-question label.selected { transform: none; }
 }
 
 /* ---------------------------------------------------------------- print

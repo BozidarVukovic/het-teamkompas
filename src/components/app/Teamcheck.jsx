@@ -11,7 +11,8 @@
 // aanroep faalt gewoon voor een ander -- maar het scherm hoort niet te tonen
 // wat het niet mag hebben.
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { magBewegen, wachttijd } from "../../lib/beweging";
 import {
   STELLINGEN, OPEN_VRAAG, SCHAAL, RONDES, DREMPEL,
   gemiddelde, verdeling, magTonen, respons, sterkste, meestVerdeeld,
@@ -86,6 +87,11 @@ function Vraag({ stelling, waarde, kies }) {
 /** De wizard: vijf stellingen, dan de open vraag met de naamkeuze. */
 function Formulier({ afspraken, bestaand, naam, bezig, bewaren }) {
   const [stap, setStap] = useState(0);
+  // Zelfde afspraak als in de gratis teamscan: kiezen is doorgaan, behalve als
+  // je terugbladert naar iets dat je al beantwoord had. Dan ben je aan het
+  // nakijken en blijft het scherm staan.
+  const klok = useRef(null);
+  const [nakijken, setNakijken] = useState(false);
   const [scores, setScores] = useState(() => (bestaand && bestaand.scores) || {});
   const [open, setOpen] = useState(() => (bestaand && bestaand.open) || "");
   const [naamErbij, setNaamErbij] = useState(() => Boolean(bestaand && bestaand.naamErbij));
@@ -95,8 +101,22 @@ function Formulier({ afspraken, bestaand, naam, bezig, bewaren }) {
   const gekozen = stelling ? scores[stelling.id] : undefined;
   const heeftKeuze = stelling ? Object.prototype.hasOwnProperty.call(scores, stelling.id) : true;
 
+  useEffect(() => {
+    const nu = STELLINGEN[stap];
+    setNakijken(Boolean(nu) && Object.prototype.hasOwnProperty.call(scores, nu.id));
+    return () => { if (klok.current) clearTimeout(klok.current); };
+    // Alleen bij een stapwissel: het antwoord dat je nú geeft telt niet als
+    // "had je al".
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stap]);
+
   function kies(waarde) {
     setScores((oud) => ({ ...oud, [stelling.id]: waarde }));
+    if (nakijken) return;
+    if (klok.current) clearTimeout(klok.current);
+    // De open vraag aan het eind schuift niet vanzelf in beeld: daar moet je
+    // gaan typen, en dan wil je niet dat het scherm onder je handen wisselt.
+    klok.current = setTimeout(() => setStap((s) => Math.min(s + 1, laatste)), wachttijd(magBewegen()));
   }
 
   return <div className="tc-blad">
@@ -138,7 +158,7 @@ function Formulier({ afspraken, bestaand, naam, bezig, bewaren }) {
         ← Vorige
       </button>
       {stap < laatste
-        ? <button className="tk-knop tc-volgende" type="button" disabled={!heeftKeuze} onClick={() => setStap((s) => s + 1)}>
+        ? nakijken && <button className="tk-knop tc-volgende" type="button" disabled={!heeftKeuze} onClick={() => setStap((s) => s + 1)}>
           Volgende →
         </button>
         : <button className="tk-knop" type="button" disabled={bezig} onClick={() => bewaren({ scores, open, naamErbij, naam })}>

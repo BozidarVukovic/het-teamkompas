@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { magBewegen, wachttijd } from "../../lib/beweging";
 import { Helmet } from "react-helmet-async";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useParams } from "react-router-dom";
@@ -259,16 +260,47 @@ export function GratisTeamscanReport() {
 export default function GratisTeamscan() {
   const saved=useMemo(()=>{try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||{}}catch{return{}}},[]);
   const [phase,setPhase]=useState(saved.phase||"landing"), [index,setIndex]=useState(saved.index||0), [answers,setAnswers]=useState(saved.answers||{}), [sessionId,setSessionId]=useState(saved.sessionId||"");
+  // Nakijken: je kwam op een vraag die je al beantwoord had. Dan blijft het
+  // scherm staan tot je zelf doorklikt. klok houdt de lopende vertraging vast,
+  // zodat een tweede klik binnen die 260 ms de eerste vervangt in plaats van
+  // dat je twee vragen tegelijk doorschiet.
+  const klok=useRef(null); const [nakijken,setNakijken]=useState(false);
   const [person,setPerson]=useState({firstName:"",email:"",role:"",organisation:"",teamSize:"",consentProcessing:false,consentMarketing:false,hp:""}); const [busy,setBusy]=useState(false),[error,setError]=useState(""),[outcome,setOutcome]=useState(null);
   useEffect(()=>{if(phase==="scan") localStorage.setItem(STORAGE_KEY,JSON.stringify({phase,index,answers,sessionId}));},[phase,index,answers,sessionId]);
   useEffect(()=>{emit("free_scan_page_view")},[]);
+  useEffect(()=>{
+    setNakijken(Boolean(answers[FREE_SCAN_QUESTIONS[index].id]));
+    return ()=>{if(klok.current)clearTimeout(klok.current);};
+    // Alleen bij een vraagwissel kijken: het antwoord dat je nú geeft telt niet
+    // als "had je al".
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[index,phase]);
   async function start(){setError("");setBusy(true);try{const r=await httpsCallable(getFunctions(),"startFreeScan")({source:document.referrer||"direct",utm:Object.fromEntries(new URLSearchParams(location.search))});setSessionId(r.data.sessionId);setPhase("scan");emit("free_scan_started")}catch{setError("Starten lukt nu niet. Probeer het over een moment opnieuw.")}finally{setBusy(false)}}
-  function choose(value){setAnswers(a=>({...a,[FREE_SCAN_QUESTIONS[index].id]:value}));}
-  function next(){if(!answers[FREE_SCAN_QUESTIONS[index].id])return setError("Kies eerst het antwoord dat het beste past.");setError("");if(index===FREE_SCAN_QUESTIONS.length-1)setPhase("details");else{const ni=index+1;setIndex(ni);[6,12,18].includes(ni)&&emit("free_scan_progress",{percent:Math.round(ni/24*100)})}}
+  // Kiezen is doorgaan. Je klikt een antwoord aan, ziet het oplichten, en het
+  // scherm schuift door -- vierentwintig keer geen knop zoeken.
+  //
+  // Behalve als je terugbladert. Kom je op een vraag die je al beantwoord had,
+  // dan blijft het scherm staan en verschijnt de knop weer: dan ben je aan het
+  // nakijken, en is vanzelf doorschuiven precies het verkeerde.
+  function ga(naar){
+    if(klok.current){clearTimeout(klok.current);klok.current=null;}
+    if(naar>=FREE_SCAN_QUESTIONS.length){setPhase("details");return;}
+    setIndex(naar);
+    [6,12,18].includes(naar)&&emit("free_scan_progress",{percent:Math.round(naar/24*100)});
+  }
+
+  function choose(value){
+    setAnswers(a=>({...a,[FREE_SCAN_QUESTIONS[index].id]:value}));
+    setError("");
+    if(nakijken)return;
+    if(klok.current)clearTimeout(klok.current);
+    klok.current=setTimeout(()=>ga(index+1),wachttijd(magBewegen()));
+  }
+  function next(){if(!answers[FREE_SCAN_QUESTIONS[index].id])return setError("Kies eerst het antwoord dat het beste past.");setError("");ga(index+1);}
   async function finish(e){e.preventDefault();setError("");if(!person.consentProcessing)return setError("Toestemming voor het rapport is nodig om af te ronden.");setBusy(true);try{const lokaal=calculateFreeScanResults(answers);const r=await httpsCallable(getFunctions(),"completeFreeScan")({sessionId,answers,participant:person,questionnaireVersion:FREE_SCAN_VERSION});const serverScores=r.data.result&&r.data.result.themeScores;const rapport=serverScores&&serverScores.length?stelRapportSamen(serverScores):lokaal;setOutcome({...rapport,reportUrl:r.data.reportUrl,emailStatus:r.data.emailStatus});localStorage.removeItem(STORAGE_KEY);setPhase("result");emit("free_scan_completed")}catch(err){setError(err?.message||"Opslaan of verzenden is niet gelukt. Je antwoorden blijven op dit apparaat bewaard.")}finally{setBusy(false)}}
   const meta=<Helmet><title>Gratis teamscan | Mijn Teamkompas</title><meta name="description" content="Ontdek in 8 tot 10 minuten hoe jij de samenwerking in jouw team ervaart en ontvang direct jouw persoonlijke Teamkompas."/><link rel="canonical" href="https://www.mijnteamkompas.nl/gratis-teamscan"/><meta property="og:title" content="Gratis persoonlijke teamscan | Mijn Teamkompas"/></Helmet>;
   if(phase==="landing")return <main className="free-page">{meta}<section className="free-hero"><div><span className="free-eyebrow">Gratis individuele teamscan</span><h1>Ontdek hoe jij de samenwerking binnen jouw team ervaart</h1><p>Beantwoord 24 vragen over veiligheid, communicatie, eigenaarschap, verbinding, energie en leiderschap. Je krijgt direct inzicht en een persoonlijk rapport.</p><ul><li>Gratis deelname</li><li>8–10 minuten</li><li>Persoonlijk en vertrouwelijk</li><li>Direct inzicht</li></ul><button className="tk-button tk-button-primary" disabled={busy} onClick={start}>{busy?"Even geduld…":"Start de gratis teamscan"}</button>{error&&<p role="alert" className="free-error">{error}</p>}</div><aside><b>Jouw perspectief staat centraal</b><p>De uitkomst is geen oordeel over het hele team. Je herkent sterke punten, mogelijke patronen en een concrete eerste beweging.</p></aside></section><section className="free-content"><h2>Luisteren. Meten. Bewegen.</h2><div className="free-cards">{FREE_SCAN_THEMES.map(t=><article key={t.id}><i style={{background:t.color}}/><h3>{t.label}</h3><p>{t.description}</p></article>)}</div><div className="free-info"><article><h2>Wat ontvang je?</h2><p>Een directe samenvatting, een beveiligd persoonlijk webrapport, reflectievragen en kleine experimenten die je binnen één of twee weken kunt proberen.</p></article><article><h2>Hoe gaan we met gegevens om?</h2><p>We vragen pas na de vragen om je voornaam en e-mailadres. Verwerking voor het rapport en commerciële communicatie hebben aparte, niet vooraf aangevinkte toestemmingen. Lees onze <a href="/privacyverklaring_mijnteamkompas.pdf">privacyverklaring</a>.</p></article></div><details><summary>Wat is het verschil met de volledige Teamscan?</summary><p>Deze gratis scan toont één persoonlijke beleving. De volledige scan vergelijkt veilig de perspectieven van meerdere teamleden en vormt een basis voor het teamgesprek.</p></details><button className="tk-button tk-button-primary" onClick={start}>Start mijn scan</button></section></main>;
-  if(phase==="scan"){const question=FREE_SCAN_QUESTIONS[index];return <main className="free-shell">{meta}<Helmet><meta name="robots" content="noindex,nofollow"/></Helmet><div className="free-progress"><span>Vraag {index+1} van {FREE_SCAN_QUESTIONS.length}</span><progress max={FREE_SCAN_QUESTIONS.length} value={index+1}/></div><section className="free-question"><span>{FREE_SCAN_THEMES.find(t=>t.id===question.theme).label}</span><h1>{question.text}</h1><fieldset><legend className="sr-only">Kies één antwoord</legend>{FREE_SCAN_SCALE.map(o=><label key={o.value} className={answers[question.id]===o.value?"selected":""}><input type="radio" name={question.id} checked={answers[question.id]===o.value} onChange={()=>choose(o.value)}/><b>{o.value}</b>{o.label}</label>)}</fieldset>{error&&<p role="alert" className="free-error">{error}</p>}<div className="free-actions"><button disabled={index===0} onClick={()=>setIndex(i=>i-1)}>Terug</button><button className="tk-button tk-button-primary" onClick={next}>{index===23?"Naar jouw rapport":"Volgende"}</button></div></section></main>}
+  if(phase==="scan"){const question=FREE_SCAN_QUESTIONS[index];return <main className="free-shell">{meta}<Helmet><meta name="robots" content="noindex,nofollow"/></Helmet><div className="free-progress"><span>Vraag {index+1} van {FREE_SCAN_QUESTIONS.length}</span><progress max={FREE_SCAN_QUESTIONS.length} value={index+1}/></div><section className="free-question" key={index}><span>{FREE_SCAN_THEMES.find(t=>t.id===question.theme).label}</span><h1>{question.text}</h1><fieldset><legend className="sr-only">Kies één antwoord</legend>{FREE_SCAN_SCALE.map(o=><label key={o.value} className={answers[question.id]===o.value?"selected":""}><input type="radio" name={question.id} checked={answers[question.id]===o.value} onChange={()=>choose(o.value)}/><b>{o.value}</b>{o.label}</label>)}</fieldset>{error&&<p role="alert" className="free-error">{error}</p>}<div className="free-actions"><button disabled={index===0} onClick={()=>ga(index-1)}>Terug</button>{nakijken&&<button className="tk-button tk-button-primary" onClick={next}>{index===23?"Naar jouw rapport":"Volgende"}</button>}</div></section></main>}
   if(phase==="details")return <main className="free-shell"><Helmet><meta name="robots" content="noindex,nofollow"/></Helmet><form className="free-form" onSubmit={finish}><span className="free-eyebrow">Je bent er bijna</span><h1>Nog een paar gegevens en je uitslag staat klaar</h1><p>We vragen alleen wat nodig is. Organisatie, rol en teamgrootte zijn optioneel.</p><label>Voornaam *<input required value={person.firstName} onChange={e=>setPerson({...person,firstName:e.target.value})}/></label><label>E-mailadres *<input required type="email" value={person.email} onChange={e=>setPerson({...person,email:e.target.value})}/></label><div className="free-form-grid"><label>Organisatie<input value={person.organisation} onChange={e=>setPerson({...person,organisation:e.target.value})}/></label><label>Functierol<input value={person.role} onChange={e=>setPerson({...person,role:e.target.value})}/></label></div><input className="free-hp" tabIndex="-1" autoComplete="off" value={person.hp} onChange={e=>setPerson({...person,hp:e.target.value})}/><label className="free-check"><input type="checkbox" checked={person.consentProcessing} onChange={e=>setPerson({...person,consentProcessing:e.target.checked})}/> Ik geef toestemming om mijn antwoorden te verwerken, mijn rapport tijdelijk op te slaan zodat ik het kan bekijken. *</label><label className="free-check"><input type="checkbox" checked={person.consentMarketing} onChange={e=>setPerson({...person,consentMarketing:e.target.checked})}/> Ik ontvang graag af en toe inspiratie van Mijn Teamkompas (optioneel).</label>{error&&<p role="alert" className="free-error">{error}</p>}<div className="free-actions"><button type="button" onClick={()=>setPhase("scan")}>Terug</button><button className="tk-button tk-button-primary" disabled={busy}>{busy?"Rapport wordt gemaakt…":"Bekijk mijn uitslag"}</button></div></form></main>;
   // ───────────────────────────────────────────────────────── de uitslag
   //
