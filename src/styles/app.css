@@ -1716,16 +1716,16 @@ a.tk-optie {
   flex: 0 0 auto;
   display: inline-flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
   margin-left: auto;
-  padding-left: 12px;
+  padding-left: 16px;
 }
 
 .tk-afdruk-balk {
   display: flex;
-  width: 96px;
-  height: 6px;
-  border-radius: 3px;
+  width: 104px;
+  height: 8px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
@@ -1736,13 +1736,13 @@ a.tk-optie {
 
 .tk-afdruk-bollen {
   display: flex;
-  gap: 3px;
+  gap: 5px;
   justify-content: flex-start;
 }
 
 .tk-afdruk-bollen > span {
-  width: 9px;
-  height: 9px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
 }
 
@@ -1750,15 +1750,19 @@ a.tk-optie {
    een ring in plaats van een vlakje. */
 .tk-afdruk-bollen > span[data-gemeten="nee"] {
   background: transparent !important;
-  box-shadow: inset 0 0 0 1.5px currentColor;
-  opacity: 0.35;
+  box-shadow: inset 0 0 0 2px currentColor;
+  opacity: 0.45;
 }
 
-.tk-afdruk[data-klein="ja"] .tk-afdruk-balk { width: 68px; height: 5px; }
-.tk-afdruk[data-klein="ja"] .tk-afdruk-bollen > span { width: 7px; height: 7px; }
+/* "Klein" is de maat in een ledenrij. Dat was eerder zo klein dat je de
+   kleuren moest zoeken in plaats van zien -- en herkennen zonder lezen is nu
+   juist waar de afdruk voor is. Nu bijna de volle maat. */
+.tk-afdruk[data-klein="ja"] .tk-afdruk-balk { width: 88px; height: 7px; }
+.tk-afdruk[data-klein="ja"] .tk-afdruk-bollen > span { width: 11px; height: 11px; }
 
 @media (max-width: 480px) {
-  .tk-afdruk-balk { width: 68px; }
+  .tk-afdruk-balk { width: 72px; }
+  .tk-afdruk[data-klein="ja"] .tk-afdruk-balk { width: 72px; }
 }
 
 /* Alleen voor schermlezers: het beeld hierboven staat op aria-hidden. */

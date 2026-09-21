@@ -30,7 +30,10 @@ export default function Vingerafdruk({ kleuren, naam = "", klein = false }) {
         {bollen.map((bol, i) => (
           <span
             key={bol.id}
-            style={{ background: bol.kleur }}
+            // color erbij voor de niet-gemeten bolletjes: die zijn een ring in
+            // currentColor. Zonder dit werd de ring de tekstkleur en zag je
+            // niet meer welke kleur het was.
+            style={{ background: bol.kleur, color: bol.kleur }}
             // Zonder gemeten verhouding is de volgorde na de eerste twee niet
             // gemeten maar de vaste kleurvolgorde. Die twee zien er anders uit
             // dan de rest, zodat het beeld niet meer belooft dan het weet.
