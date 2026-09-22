@@ -3,7 +3,6 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { collection, addDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
-import KompasDot from "./components/shared/KompasDot";
 import { sendTeamscanConfirmationEmail } from "./email";
 import { getCurrentPageInfo } from "./contactMetadata";
 
@@ -491,19 +490,14 @@ export default function TeamscanDigitaal() {
       </Helmet>
 
       <div style={{ fontFamily: "Roboto, sans-serif", background: C.wit, color: C.donker, minHeight: "100vh" }}>
-        <header style={{ position: "sticky", top: 0, zIndex: 10, background: "rgba(255,255,255,0.94)", backdropFilter: "blur(10px)", borderBottom: `1px solid ${C.lijn}` }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", padding: "16px 22px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
-            <div onClick={() => navigate("/")} style={{ fontWeight: 900, fontSize: 20, cursor: "pointer", color: C.donker, display: "flex", alignItems: "center", gap: 9 }}><KompasDot size={22} />Mijn Teamkompas</div>
-            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-              <button onClick={() => navigate("/verkennen")} style={{ background: "transparent", border: `1px solid ${C.lijn}`, color: C.donker, borderRadius: 10, padding: "10px 14px", fontWeight: 800, cursor: "pointer" }}>Persoonlijk starten</button>
-              {/* "Terug naar home" stond in het oranje, dezelfde kleur als de
-                  knop die je wél wilt dat mensen indrukken. Teruggaan is geen
-                  actie die je moet aanmoedigen; oranje blijft nu voorbehouden
-                  aan de aanvraag. */}
-              <button onClick={() => navigate("/")} style={{ background: "transparent", border: `1px solid ${C.lijn}`, color: C.sub, borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>Terug naar home</button>
-            </div>
-          </div>
-        </header>
+        {/* Hier stond een tweede header: nog een keer het merk, met
+            "Persoonlijk starten" en "Terug naar home". Hij lag onzichtbaar
+            onder de vaste site-header, dus je zag hem niet -- maar een
+            schermlezer las twee banners en met Tab liep je er wel doorheen
+            voordat je bij de inhoud was. De twee routes die hij bood, staan
+            allebei nog op de pagina: naar huis via het logo in de balk
+            erboven, en naar /verkennen via "Liever eerst persoonlijk
+            overleggen?" in de hero. */}
 
         <section style={{ background: "linear-gradient(135deg,#0D1B2A 0%, #143B68 100%)", color: C.wit, padding: isMobile ? "54px 22px" : "80px 60px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr 0.95fr", gap: 42, alignItems: "center" }}>
