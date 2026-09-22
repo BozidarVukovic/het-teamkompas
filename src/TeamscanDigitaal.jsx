@@ -65,6 +65,19 @@ const buttonBase = {
   minHeight: 52,
 };
 
+/* De twee stille links onder de knoppen. Ze stonden op 13,5 pixels in een
+   blauw dat op het diepste deel van het verloop 5,4:1 haalt -- dat is boven de
+   norm, dus het probleem was niet het contrast maar de maat: ze gingen op in
+   een hero waar drie knoppen boven stonden te roepen. Nu 15 pixels, een
+   lichtere tint (6,6:1) en meer ruimte onder de streep. */
+const linkStijl = {
+  color: "#9CC9FF",
+  fontSize: 15,
+  fontWeight: 700,
+  textDecoration: "underline",
+  textUnderlineOffset: 4,
+};
+
 const primaryCtaStyle = {
   ...buttonBase,
   background: C.oranje,
@@ -483,7 +496,11 @@ export default function TeamscanDigitaal() {
             <div onClick={() => navigate("/")} style={{ fontWeight: 900, fontSize: 20, cursor: "pointer", color: C.donker, display: "flex", alignItems: "center", gap: 9 }}><KompasDot size={22} />Mijn Teamkompas</div>
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
               <button onClick={() => navigate("/verkennen")} style={{ background: "transparent", border: `1px solid ${C.lijn}`, color: C.donker, borderRadius: 10, padding: "10px 14px", fontWeight: 800, cursor: "pointer" }}>Persoonlijk starten</button>
-              <button onClick={() => navigate("/")} style={{ background: C.oranje, border: "none", color: C.donker, borderRadius: 8, padding: "10px 16px", fontWeight: 700, cursor: "pointer", boxShadow: "0 12px 28px rgba(232,130,26,0.22)" }}>Terug naar home</button>
+              {/* "Terug naar home" stond in het oranje, dezelfde kleur als de
+                  knop die je wél wilt dat mensen indrukken. Teruggaan is geen
+                  actie die je moet aanmoedigen; oranje blijft nu voorbehouden
+                  aan de aanvraag. */}
+              <button onClick={() => navigate("/")} style={{ background: "transparent", border: `1px solid ${C.lijn}`, color: C.sub, borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>Terug naar home</button>
             </div>
           </div>
         </header>
@@ -496,31 +513,47 @@ export default function TeamscanDigitaal() {
               <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 680 }}>
                 De online teamscan maakt zichtbaar hoe teamleden de samenwerking ervaren. Geen cijfer voor het team, maar een gezamenlijke spiegel: wat gaat goed, waar ontstaan patronen en welke volgende stap maakt het meeste verschil?
               </p>
+              {/* Er stonden hier drie knoppen naast elkaar: een witte, een oranje en
+                  een omlijnde. Drie dingen die alle drie om een beslissing vragen,
+                  terwijl twee ervan bijna hetzelfde heetten -- "Doe de gratis
+                  teamscan" en "Vraag de teamscan aan". Wie hier voor het eerst
+                  komt, kan daar niet uit opmaken wat het verschil is.
+
+                  Nu één gevulde knop, één omlijnde, en het voorbeeldrapport als
+                  link. Het verschil staat in de knoptekst zelf, niet in de kleur:
+                  voor je team tegenover voor jezelf. */}
               <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", flexWrap: "wrap", gap: 12, marginTop: 26 }}>
-                <a
-                  href="/gratis-teamscan"
-                  onClick={(e) => { e.preventDefault(); navigate("/gratis-teamscan"); }}
-                  style={{ ...buttonBase, background: C.wit, color: C.donker, fontWeight: 800, display: "inline-flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
-                >
-                  Doe de gratis teamscan
-                </a>
                 <a
                   href="#aanvraag"
                   onClick={() => trackFormStartOnce({ trigger: "hero_button" })}
                   style={{ ...primaryCtaStyle, display: "inline-flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
                 >
-                  Vraag de teamscan aan
+                  Vraag de teamscan aan voor je team
                 </a>
                 <a
-                  href="#voorbeeldrapport"
-                  style={{ ...buttonBase, background: "rgba(255,255,255,0.06)", color: C.wit, border: "1px solid rgba(255,255,255,0.22)", display: "inline-flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
+                  href="/gratis-teamscan"
+                  onClick={(e) => { e.preventDefault(); navigate("/gratis-teamscan"); }}
+                  style={{ ...buttonBase, background: "rgba(255,255,255,0.06)", color: C.wit, border: "1px solid rgba(255,255,255,0.55)", display: "inline-flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
                 >
-                  Bekijk het voorbeeldrapport
+                  Eerst zelf proberen — gratis
                 </a>
               </div>
-              <p style={{ fontSize: 13.5, color: "rgba(255,255,255,0.62)", margin: "14px 0 0" }}>
-                De gratis teamscan is individueel en duurt 8 tot 10 minuten. <button onClick={() => navigate("/verkennen")} style={{ background: "transparent", border: "none", color: "#7DB7FF", fontWeight: 700, cursor: "pointer", padding: 0, font: "inherit", textDecoration: "underline" }}>Liever eerst persoonlijk overleggen?</button>
+
+              {/* De regel die het verschil uitlegt. Hij stond er al, maar noemde
+                  alleen de gratis scan en niet waarin de andere verschilt -- en
+                  dat "aanvragen niets kost" stond pas dertig schermen lager bij
+                  de veelgestelde vragen, terwijl de aarzeling hier ontstaat. */}
+              <p style={{ fontSize: 15, lineHeight: 1.7, color: "rgba(255,255,255,0.78)", margin: "16px 0 0", maxWidth: 620 }}>
+                <strong style={{ color: C.wit, fontWeight: 700 }}>Voor je team:</strong> iedereen vult de scan in en samen ontstaat één teambeeld. Aanvragen kost niets.<br />
+                <strong style={{ color: C.wit, fontWeight: 700 }}>Zelf proberen:</strong> individueel, 8 tot 10 minuten, direct een persoonlijk rapport.
               </p>
+
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 20px", marginTop: 14 }}>
+                <a href="#voorbeeldrapport" style={linkStijl}>Bekijk het voorbeeldrapport</a>
+                <button onClick={() => navigate("/verkennen")} style={{ ...linkStijl, background: "transparent", border: "none", cursor: "pointer", padding: 0, font: "inherit", fontSize: 15, fontWeight: 700 }}>
+                  Liever eerst persoonlijk overleggen?
+                </button>
+              </div>
             </div>
 
             <div style={{ display: "grid", gap: 12 }}>
