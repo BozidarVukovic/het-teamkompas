@@ -1408,27 +1408,23 @@ function PublicSite({ onLoginClick }) {
               >
                 {heroContent.scanCta.label}
               </a>
-              <button
-                type="button"
-                onClick={() => { trackEvent(heroContent.contactCta.event); openModal(); }}
-                /* Omlijning in plaats van een wit vlak. Twee gevulde knoppen
-                   naast elkaar vragen allebei een beslissing; de scan is de
-                   stap met de laagste drempel en hoort als enige op te vallen.
-                   De rand is wat steviger dan de ghostStyle elders op de site,
-                   omdat hier een foto achter zit in plaats van egaal navy. */
-                style={{ background: "rgba(255,255,255,0.06)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.55)", font: "inherit", padding: "14px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: "pointer", textAlign: "center", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}
-              >
-                {heroContent.contactCta.label}
-              </button>
             </div>
-            {/* Alleen nog wat de drempel voor de scan wegneemt. De link naar
-                de aanpak stond hiernaast en trok de aandacht juist weg van de
-                knop erboven; die route loopt via het menu en via de knop
-                halverwege de pagina. */}
-            <div style={{ marginTop: 14 }}>
-              <span style={{ color: "rgba(255,255,255,0.72)", fontSize: 13.5 }}>{heroContent.ctaNote}</span>
-            </div>
-            <LeadTrustBar isMobile={isMobile} tone="dark" />
+            {/* Hier stonden een regel tekst en daaronder drie kaarten met een
+                kop en een zin elk. Samen namen ze meer ruimte dan de kop en
+                zeiden ze drie keer hetzelfde soort ding: het kost weinig tijd,
+                het levert meteen iets op, je zit nergens aan vast. Nu drie
+                vinkjes op één regel. Ze zijn er nog, ze roepen alleen niet meer.
+
+                De kennismaking is uit de hero verdwenen als tweede knop; die
+                staat rechtsboven in de balk op elke pagina. */}
+            <ul style={{ listStyle: "none", display: "flex", flexWrap: "wrap", gap: isMobile ? "8px 18px" : "10px 26px", margin: "18px 0 0", padding: 0 }}>
+              {heroContent.bewijs.map((punt) => (
+                <li key={punt} style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.82)", fontSize: 15 }}>
+                  <span aria-hidden="true" style={{ color: PUB.tealOpDonker, fontWeight: 800 }}>✓</span>
+                  {punt}
+                </li>
+              ))}
+            </ul>
             </div>
           </div>
 

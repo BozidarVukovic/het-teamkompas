@@ -37,6 +37,13 @@ export const heroContent = {
   // pagina. Bewaard, zodat hij zo terug te zetten is.
   tertiaryCta: { label: "Bekijk onze aanpak", href: "/onze-aanpak", event: "hero_approach_click" },
 
+  // Drie vinkjes in plaats van drie kaarten. Ze zeggen hetzelfde als de
+  // vorige regel en het blok eronder samen -- hoe lang het duurt, wat je
+  // krijgt, en dat je nergens aan vastzit -- maar in één regel.
+  bewijs: ["8 tot 10 minuten", "Direct inzicht", "Volledig vrijblijvend"],
+
+  // De oude regel. Stond onder de knoppen naast een blok met drie kaarten;
+  // samen was dat te veel voor een openingsscherm. Bewaard om terug te zetten.
   ctaNote: "Individueel, 8 tot 10 minuten, direct inzicht.",
 
   // Plek voor toekomstige, aantoonbare bewijskracht: klantlogo's, aantallen
