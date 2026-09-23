@@ -238,7 +238,7 @@ UTM campaign: ${utm.utm_campaign || "-"}`,
         {/* Titel + intro */}
         {!isCompact && (
           <div style={{ marginBottom: 28 }}>
-            <div style={{ fontSize: 11, fontWeight: 800, color: C.teal, textTransform: "uppercase", letterSpacing: "0.14em", marginBottom: 8 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: C.teal, letterSpacing: "0.02em", marginBottom: 8 }}>
               Gratis download
             </div>
             <h3 style={{ fontSize: 22, fontWeight: 800, color: C.donker, margin: "0 0 10px", lineHeight: 1.2 }}>

@@ -567,7 +567,7 @@ export default function TeamscanDigitaal() {
         <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.95fr 1.05fr", gap: 34, alignItems: "center" }}>
             <div>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Wat is een teamscan?</div>
+              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: C.teal, marginBottom: 10 }}>Wat is een teamscan?</div>
               <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, margin: "0 0 16px" }}>Een teamscan maakt zichtbaar wat in de samenwerking vaak onbesproken blijft</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub, margin: "0 0 14px" }}>
                 Een teamscan is een korte vragenlijst waarmee teamleden en leidinggevenden hun beeld geven van samenwerking, veiligheid, verandering, energie en leren. De uitkomsten laten zien waar het team sterk staat, waar frictie ontstaat en waar het verschil in beleving aandacht vraagt.
@@ -599,7 +599,7 @@ export default function TeamscanDigitaal() {
         <section style={{ padding: isMobile ? "48px 22px" : "70px 60px", background: C.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ textAlign: "center", maxWidth: 780, margin: "0 auto 30px" }}>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Wat meten we?</div>
+              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: C.blauw, marginBottom: 10 }}>Wat meten we?</div>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 12px" }}>Vier domeinen die bepalen of samenwerking werkt</h2>
               <p style={{ fontSize: 16, lineHeight: 1.75, color: C.sub, margin: 0 }}>
                 De teamscan ordent signalen rond vier herkenbare domeinen. Zo wordt snel duidelijk waar de meeste ontwikkeling mogelijk is en waar team en leidinggevende een ander beeld hebben.
@@ -627,7 +627,7 @@ export default function TeamscanDigitaal() {
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.82fr 1.18fr", gap: 34, alignItems: "start", marginBottom: 28 }}>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Voorbeeldrapport</div>
+                <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: C.teal, marginBottom: 10 }}>Voorbeeldrapport</div>
                 <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>Bekijk enkele voorbeeldpagina’s en krijg een indruk van hoe de teamscan wordt vertaald naar inzicht, duiding en praktisch advies.</h2>
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub, margin: "0 0 18px" }}>
                   Na de teamscan ontvang je geen losse cijfers, maar een praktisch rapport met duiding en vervolgstappen. De voorbeelden hieronder gebruiken fictieve data en laten alleen een beperkte preview zien. De vragenlijst, scoringslogica en volledige methodiek blijven onderdeel van het traject.
@@ -684,7 +684,7 @@ export default function TeamscanDigitaal() {
         <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ maxWidth: 820, marginBottom: 36 }}>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Wanneer zetten we de teamscan in?</div>
+              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: C.teal, marginBottom: 10 }}>Wanneer zetten we de teamscan in?</div>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>De teamscan werkt het best als startpunt, niet als sluitstuk</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub }}>
                 De teamscan is geen eindproduct, maar een spiegel die ruimte maakt voor het echte gesprek. Hij werkt het best als er iets speelt dat nog niet goed benoemd is, en als team en leidinggevende bereid zijn om dat samen te onderzoeken.
@@ -712,7 +712,7 @@ export default function TeamscanDigitaal() {
         <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ maxWidth: 820, marginBottom: 36 }}>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Teamscan vs. medewerkerstevredenheidsonderzoek</div>
+              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: C.blauw, marginBottom: 10 }}>Teamscan vs. medewerkerstevredenheidsonderzoek</div>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>Wat is het verschil met een MTO?</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub }}>
                 Een MTO geeft een beeld van tevredenheid op organisatieniveau. Een teamscan gaat dieper in op de samenwerking binnen één specifiek team en maakt het verschil zichtbaar tussen hoe team en leidinggevende de situatie ervaren.
@@ -756,7 +756,7 @@ export default function TeamscanDigitaal() {
         <section style={{ padding: isMobile ? "44px 22px" : "66px 60px", background: C.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 28px" }}>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.blauw, textTransform: "uppercase", marginBottom: 10 }}>Hoe het werkt</div>
+              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: C.blauw, marginBottom: 10 }}>Hoe het werkt</div>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 12px" }}>Een eenvoudige route naar teaminzicht</h2>
               <p style={{ fontSize: 16, lineHeight: 1.75, color: C.sub }}>Geen ingewikkeld traject vooraf. Je start met een compacte aanvraag, daarna zorgen wij dat het proces zorgvuldig wordt ingericht.</p>
             </div>
@@ -776,7 +776,7 @@ export default function TeamscanDigitaal() {
         <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit }}>
           <div style={{ maxWidth: 1040, margin: "0 auto" }}>
             <div style={{ maxWidth: 780, marginBottom: 26 }}>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Vertrouwelijkheid</div>
+              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: C.teal, marginBottom: 10 }}>Vertrouwelijkheid</div>
               <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, margin: "0 0 14px" }}>Wat er met de antwoorden gebeurt</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub }}>
                 Deelnemers moeten weten waar ze aan toe zijn. Daarom precies wat er wel en niet wordt vastgelegd.
@@ -805,7 +805,7 @@ export default function TeamscanDigitaal() {
         <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.licht }}>
           <div style={{ maxWidth: 1040, margin: "0 auto" }}>
             <div style={{ maxWidth: 820 }}>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Onderbouwing</div>
+              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: C.teal, marginBottom: 10 }}>Onderbouwing</div>
               <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, margin: "0 0 14px" }}>Waarop de scan is gebaseerd</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: C.sub, marginBottom: 14 }}>
                 De vier domeinen sluiten aan op inzichten uit onderzoek naar teamfunctioneren. Veiligheid en leiderschap bouwt voort op het werk rond{" "}
@@ -824,7 +824,7 @@ export default function TeamscanDigitaal() {
         {/* FAQ */}
         <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit }}>
           <div style={{ maxWidth: 860, margin: "0 auto" }}>
-            <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Veelgestelde vragen</div>
+            <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: C.teal, marginBottom: 10 }}>Veelgestelde vragen</div>
             <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, margin: "0 0 26px" }}>Vragen over de online Teamscan</h2>
             <div style={{ display: "grid", gap: 10 }}>
               {TEAMSCAN_FAQ.map(([vraag, antwoord], i) => (
@@ -857,7 +857,7 @@ export default function TeamscanDigitaal() {
         <section id="aanvraag" ref={aanvraagRef} style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.licht, scrollMarginTop: 86 }}>
           <div style={{ maxWidth: 1040, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "0.8fr 1.2fr", gap: 34, alignItems: "start" }}>
             <aside style={{ background: C.wit, border: `1px solid ${C.lijn}`, borderRadius: 24, padding: 24 }}>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: C.teal, textTransform: "uppercase", marginBottom: 10 }}>Teamscan aanvragen</div>
+              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: C.teal, marginBottom: 10 }}>Teamscan aanvragen</div>
               <h2 style={{ fontSize: isMobile ? 28 : 36, lineHeight: 1.12, margin: "0 0 12px" }}>Start zonder verplichting</h2>
               <p style={{ color: C.sub, lineHeight: 1.75, margin: "0 0 20px" }}>
                 In deze fase gebruiken we de digitale teamscan om teams laagdrempelig te helpen en te leren waar de meeste behoefte zit. Er zijn nu geen kosten verbonden aan deze aanvraag.

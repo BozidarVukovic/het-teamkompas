@@ -45,7 +45,9 @@ a { color: inherit; }
 .tk-page { min-height: 100vh; background: var(--tk-color-bg); color: var(--tk-color-ink); }
 .tk-section { padding: clamp(56px, 8vw, 96px) 24px; }
 .tk-container { width: min(1120px, 100%); margin: 0 auto; }
-.tk-eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 18px; color: var(--tk-color-teal); font-size: 13px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+/* Zelfde vorm als de bovenregels in App.jsx: vijftien pixels, gewone
+   schrijfwijze. Op donker verandert alleen de kleur, zie hieronder. */
+.tk-eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 18px; color: var(--tk-color-teal); font-size: 15px; font-weight: 700; letter-spacing: .02em; }
 
 /* Een sectie met een donkere achtergrond. De bovenregel wordt hier niet alleen
    lichter maar ook groter en rustiger gespatieerd: dertien pixels hoofdletters

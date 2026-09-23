@@ -16,6 +16,7 @@
       --navy: #0d1b2a;
       --navy-light: #14293d;
       --teal: #00A896;
+      --teal-op-donker: #35C4B5;
       --orange: #e8821a;
       --white: #ffffff;
       --muted: rgba(255,255,255,.68);
@@ -64,7 +65,7 @@
     .hero {
       position: relative;
       overflow: hidden;
-      padding: 110px 24px 90px;
+      padding: 174px 24px 90px;
       border-bottom: 1px solid var(--line);
     }
     .hero::before {
@@ -92,12 +93,13 @@
       max-width: 1120px;
       margin: 0 auto;
     }
+    /* Zelfde bovenregel als de rest van de site: vijftien pixels, gewone
+       schrijfwijze, en de teal die op donker leesbaar is. */
     .eyebrow {
-      color: var(--teal);
-      text-transform: uppercase;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .18em;
+      color: var(--teal-op-donker);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .02em;
       margin-bottom: 18px;
     }
     h1 {
@@ -219,20 +221,86 @@
     footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
     @media (max-width: 800px) {
       .intro-grid, .cards, .formats { grid-template-columns: 1fr; }
-      .hero { padding-top: 78px; }
+      .hero { padding-top: 142px; }
       section { padding: 66px 22px; }
       .quote-card { padding: 28px; }
       .back { display: none; }
     }
+
+    /* ---- Dezelfde kop als de rest van de site --------------------------
+       Deze pagina staat als losse HTML in public/ en kan de React-navigatie
+       dus niet gebruiken. De waarden hieronder zijn overgenomen uit
+       src/styles/global.css; verandert die, dan moet deze mee. */
+    .site-header{position:fixed;inset:0 0 auto;height:64px;z-index:1000;background:rgba(13,27,42,.985);border-bottom:1px solid rgba(0,168,150,.2);backdrop-filter:blur(12px)}
+    .site-nav{height:100%;padding:0 40px;display:flex;align-items:center;justify-content:space-between;gap:22px}
+    .site-nav a{text-decoration:none}
+    .site-nav__brand{display:flex;align-items:center;gap:9px;color:#fff;font-size:18px;font-weight:650;white-space:nowrap}
+    .kompasdot{width:22px;height:22px;border-radius:50%;flex-shrink:0;background:conic-gradient(#5A8C3C 0 25%,#3A7DBF 25% 50%,#E8821A 50% 75%,#6B4E9E 75% 100%);box-shadow:0 10px 30px rgba(0,0,0,.18)}
+    .site-nav__links{display:flex;align-items:center;gap:24px}
+    .site-nav__links>a,.site-nav__trigger{color:rgba(255,255,255,.76);font-size:14px;font-weight:600;font-family:inherit}
+    .site-nav__dropdown{position:relative}
+    .site-nav__trigger{min-height:44px;padding:10px 4px;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;gap:7px}
+    .site-nav__trigger[aria-expanded="true"],.site-nav__links a[aria-current="page"]{color:#45d5c5}
+    .site-nav__trigger>span{font-size:12px;transition:transform .18s ease}
+    .site-nav__trigger[aria-expanded="true"]>span{transform:rotate(180deg)}
+    .site-nav__small-menu{position:absolute;top:calc(100% + 4px);left:50%;transform:translateX(-50%);min-width:235px;padding:8px;background:#0d1b2a;border:1px solid rgba(0,168,150,.3);border-radius:12px;box-shadow:0 18px 45px rgba(0,0,0,.34)}
+    .site-nav__small-menu a{display:block;padding:11px 13px;color:rgba(255,255,255,.78);font-size:14px;border-radius:8px}
+    .site-nav__small-menu a:hover,.site-nav__small-menu a:focus-visible{color:#fff;background:rgba(0,168,150,.14)}
+    .site-nav__small-menu hr{margin:6px 9px;border:0;border-top:1px solid rgba(255,255,255,.1)}
+    .site-nav__cta{background:#f4f7f9;color:#0d1b2a !important;font-weight:800 !important;padding:10px 17px;border-radius:999px;font-size:12px !important;white-space:nowrap}
+    .site-nav__login{color:rgba(255,255,255,.48) !important;font-size:12px !important}
+    .site-nav :focus-visible,.mobile-nav :focus-visible{outline:3px solid #4fc3f7;outline-offset:3px}
+    .site-nav__mobile-actions{display:none;align-items:center;gap:10px}
+    .site-nav__cta--small{padding:8px 12px}
+    .site-nav__hamburger{min-width:44px;min-height:44px;border:0;background:transparent;color:rgba(255,255,255,.9);font-size:23px;cursor:pointer}
+    .mobile-nav{position:fixed;inset:64px 0 0;z-index:999;overflow-y:auto;overscroll-behavior:contain;background:#0d1b2a;border-bottom:1px solid rgba(0,168,150,.2);box-shadow:0 18px 35px rgba(0,0,0,.3)}
+    .mobile-nav>a,.mobile-nav__section>.site-nav__dropdown>button{width:100%;min-height:50px;padding:14px 22px;display:flex;justify-content:space-between;align-items:center;border:0;border-bottom:1px solid rgba(255,255,255,.08);background:transparent;color:rgba(255,255,255,.88);font-size:15px;font-weight:700;text-decoration:none}
+    .mobile-nav .site-nav__small-menu{position:static;transform:none;min-width:0;padding:4px 12px 10px;border:0;border-radius:0;box-shadow:none}
+    .mobile-nav__cta{width:auto !important;margin:16px 20px 8px;justify-content:center !important;border:0 !important;border-radius:999px;background:#f4f7f9 !important;color:#0d1b2a !important}
+    .mobile-nav__login{justify-content:center !important;color:#45d5c5 !important}
+    @media(max-width:959px){.site-nav{padding:0 20px}.site-nav__links{display:none}.site-nav__mobile-actions{display:flex}}
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <nav class="nav" aria-label="Hoofdnavigatie">
-      <a class="brand" href="/">Mijn <span>Teamkompas</span></a>
-      <a class="back" href="/">← terug naar de website</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Hoofdnavigatie">
+      <a class="site-nav__brand" href="/"><span class="kompasdot" aria-hidden="true"></span>Mijn Teamkompas</a>
+      <div class="site-nav__links">
+        <div class="site-nav__dropdown">
+          <button class="site-nav__trigger" type="button" aria-expanded="false" aria-controls="menu-diensten">Diensten<span aria-hidden="true">⌄</span></button>
+          <div class="site-nav__small-menu" id="menu-diensten" hidden><a href="/teamscan">Teamscan</a><a href="/teamontwikkeling">Teamontwikkeling</a><a href="/insights-discovery-profiel">Insights Discovery</a><a href="/teamcoaching">Teamcoaching</a><a href="/teamdag">Teamdag</a><a href="/sprekers">Sprekers</a></div>
+        </div>
+        <a href="/onze-aanpak">Onze aanpak</a>
+        <div class="site-nav__dropdown">
+          <button class="site-nav__trigger" type="button" aria-expanded="false" aria-controls="menu-kennis">Kennis<span aria-hidden="true">⌄</span></button>
+          <div class="site-nav__small-menu" id="menu-kennis" hidden><a href="/kennis/kenniskaart-teamontwikkeling">Bekijk alle kennis</a><a href="/kennisbank">Kenniswijzer: vind wat past</a><a href="/gespreksvoorbereider">Gespreksvoorbereider</a><a href="/teamdag-generator">Teamdag-generator</a><hr /><a href="/kennis/teamcultuur">Teamcultuur</a><a href="/psychologische-veiligheid">Psychologische veiligheid</a><a href="/kennis/eigenaarschap-in-teams">Eigenaarschap</a><a href="/kennis/verandermanagement">Verandermanagement</a><hr /><a href="/inspiratie">Naar alle artikelen en blogs →</a></div>
+        </div>
+        <a href="/inspiratie">Inspiratie</a>
+        <a href="/#over-ons">Over ons</a>
+        <a class="site-nav__cta" href="/verkennen">Plan een vrijblijvende kennismaking</a>
+        <a class="site-nav__login" href="/app">Inloggen</a>
+      </div>
+      <div class="site-nav__mobile-actions">
+        <a class="site-nav__cta site-nav__cta--small" href="/verkennen">Kennismaken</a>
+        <button class="site-nav__hamburger" type="button" aria-expanded="false" aria-controls="mobiel-menu" aria-label="Menu openen">☰</button>
+      </div>
     </nav>
   </header>
+  <div class="mobile-nav" id="mobiel-menu" hidden>
+    <div class="mobile-nav__section"><div class="site-nav__dropdown">
+      <button class="site-nav__trigger" type="button" aria-expanded="false" aria-controls="mobiel-diensten">Diensten<span aria-hidden="true">⌄</span></button>
+      <div class="site-nav__small-menu" id="mobiel-diensten" hidden><a href="/teamscan">Teamscan</a><a href="/teamontwikkeling">Teamontwikkeling</a><a href="/insights-discovery-profiel">Insights Discovery</a><a href="/teamcoaching">Teamcoaching</a><a href="/teamdag">Teamdag</a><a href="/sprekers">Sprekers</a></div>
+    </div></div>
+    <a href="/onze-aanpak">Onze aanpak</a>
+    <div class="mobile-nav__section"><div class="site-nav__dropdown">
+      <button class="site-nav__trigger" type="button" aria-expanded="false" aria-controls="mobiel-kennis">Kennis<span aria-hidden="true">⌄</span></button>
+      <div class="site-nav__small-menu" id="mobiel-kennis" hidden><a href="/kennis/kenniskaart-teamontwikkeling">Bekijk alle kennis</a><a href="/kennisbank">Kenniswijzer: vind wat past</a><a href="/gespreksvoorbereider">Gespreksvoorbereider</a><a href="/teamdag-generator">Teamdag-generator</a><hr /><a href="/kennis/teamcultuur">Teamcultuur</a><a href="/psychologische-veiligheid">Psychologische veiligheid</a><a href="/kennis/eigenaarschap-in-teams">Eigenaarschap</a><a href="/kennis/verandermanagement">Verandermanagement</a><hr /><a href="/inspiratie">Naar alle artikelen en blogs →</a></div>
+    </div></div>
+    <a href="/inspiratie">Inspiratie</a>
+    <a href="/#over-ons">Over ons</a>
+    <a class="mobile-nav__cta" href="/verkennen">Plan een vrijblijvende kennismaking</a>
+    <a class="mobile-nav__login" href="/app">Inloggen →</a>
+  </div>
 
   <main>
     <section class="hero">
@@ -309,6 +377,44 @@
     "description": "Edmond Lam helpt leiders, teams en professionals om complexe ideeën te vertalen naar verhalen die raken, richting geven en mensen in beweging brengen.",
     "isPartOf": { "@type": "WebSite", "name": "Mijn Teamkompas", "url": "https://www.mijnteamkompas.nl" }
   }
+  </script>
+  <script>
+    // Zelfde gedrag als de navigatie in React: klik opent, Escape sluit en
+    // teruggeeft aan de knop, en een klik buiten het menu sluit het ook.
+    (function () {
+      var knoppen = [].slice.call(document.querySelectorAll("[aria-controls]"));
+      function zet(knop, open) {
+        var doel = document.getElementById(knop.getAttribute("aria-controls"));
+        if (!doel) return;
+        knop.setAttribute("aria-expanded", String(open));
+        doel.hidden = !open;
+        if (knop.classList.contains("site-nav__hamburger")) {
+          knop.textContent = open ? "\u2715" : "\u2630";
+          knop.setAttribute("aria-label", open ? "Menu sluiten" : "Menu openen");
+          document.body.style.overflow = open ? "hidden" : "";
+        }
+      }
+      knoppen.forEach(function (knop) {
+        knop.addEventListener("click", function () {
+          zet(knop, knop.getAttribute("aria-expanded") !== "true");
+        });
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape") return;
+        knoppen.forEach(function (knop) {
+          if (knop.getAttribute("aria-expanded") === "true") { zet(knop, false); knop.focus(); }
+        });
+      });
+      document.addEventListener("pointerdown", function (e) {
+        knoppen.forEach(function (knop) {
+          if (knop.getAttribute("aria-expanded") !== "true") return;
+          var doel = document.getElementById(knop.getAttribute("aria-controls"));
+          if (knop.contains(e.target) || (doel && doel.contains(e.target))) return;
+          if (knop.classList.contains("site-nav__hamburger")) return;
+          zet(knop, false);
+        });
+      });
+    })();
   </script>
 </body>
 </html>

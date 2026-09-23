@@ -56,7 +56,7 @@ const images = {
 function SectionLabel({ children, opDonker = false }) {
   return opDonker
     ? <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>{children}</div>
-    : <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>{children}</div>;
+    : <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>{children}</div>;
 }
 
 function Card({ children, topColor }) {
@@ -210,7 +210,7 @@ export default function OnzeAanpakPage() {
               </div>
 
               <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 22, padding: 28, boxShadow: "0 18px 46px rgba(13,27,42,0.08)" }}>
-                <div style={{ fontSize: 13, fontWeight: 900, color: PUB.teal, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 18 }}>Wanneer zetten we het in?</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: PUB.teal, letterSpacing: "0.02em", marginBottom: 18 }}>Wanneer zetten we het in?</div>
                 <div style={{ display: "grid", gap: 12 }}>
                   {insightsToepassingen.map((item) => (
                     <div key={item} style={{ display: "grid", gridTemplateColumns: "22px 1fr", gap: 10, alignItems: "start" }}>
