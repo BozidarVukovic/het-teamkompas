@@ -9684,8 +9684,8 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             </button>
           </div>
           <div style={{ minHeight: isMobile ? 310 : "78vh", position: "relative", zIndex: 1 }}>
-            <img src="/teamkompas-samen-richting.jpg" alt="Teamontwikkeling met Mijn Teamkompas tijdens een begeleide teamsessie" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: .88 }} />
-            <div style={{ position: "absolute", inset: 0, background: isMobile ? "linear-gradient(to top, rgba(13,27,42,0.88), rgba(13,27,42,0.12))" : "linear-gradient(to right, rgba(13,27,42,0.92), rgba(13,27,42,0.08))" }} />
+            <img src="/teamkompas-samen-richting.jpg" alt="Teamontwikkeling met Mijn Teamkompas tijdens een begeleide teamsessie" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", objectPosition: "68% 40%", filter: "brightness(1.10) contrast(0.95) saturate(1.05)" }} />
+            <div style={{ position: "absolute", inset: 0, background: isMobile ? "linear-gradient(to top, rgba(13,27,42,0.88), rgba(13,27,42,0.12))" : "linear-gradient(to right, rgba(13,27,42,0.92) 0%, rgba(13,27,42,0.46) 9%, rgba(13,27,42,0.14) 26%, rgba(13,27,42,0.04) 60%, rgba(13,27,42,0) 100%)" }} />
           </div>
         </section>
 
@@ -10909,8 +10909,8 @@ function SocialeVeiligheidPage() {
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
-            <img src="/teamkompas-samen-richting.jpg" alt="Team in gesprek over sociale veiligheid en omgangsvormen" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.85 }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94), rgba(13,27,42,0.08))" }} />
+            <img src="/teamkompas-samen-richting.jpg" alt="Team in gesprek over sociale veiligheid en omgangsvormen" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", objectPosition: "22% 55%", filter: "brightness(1.10) contrast(0.95) saturate(1.05)" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.92) 0%, rgba(13,27,42,0.46) 9%, rgba(13,27,42,0.14) 26%, rgba(13,27,42,0.04) 60%, rgba(13,27,42,0) 100%)" }} />
           </div>
         </section>
 
@@ -12695,8 +12695,8 @@ function TeamdagPage() {
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 320 : "76vh", position: "relative" }}>
-            <img src="/teamkompas-samen-richting.jpg" alt="Team dat tijdens een begeleide teamdag samen richting geeft aan betere samenwerking" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.9 }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.96), rgba(13,27,42,0.12))" }} />
+            <img src="/teamkompas-samen-richting.jpg" alt="Team dat tijdens een begeleide teamdag samen richting geeft aan betere samenwerking" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", objectPosition: "45% 72%", filter: "brightness(1.10) contrast(0.95) saturate(1.05)" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.92) 0%, rgba(13,27,42,0.46) 9%, rgba(13,27,42,0.14) 26%, rgba(13,27,42,0.04) 60%, rgba(13,27,42,0) 100%)" }} />
           </div>
         </section>
 
