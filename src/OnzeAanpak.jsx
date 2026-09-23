@@ -29,6 +29,8 @@ const PUB = {
   licht: "#F4F7F9",
   wit: "#FFFFFF",
   sub: "#607083",
+  // Teal voor tekst op donker. De gewone teal haalt daar 3,18:1, deze 6,9:1.
+  tealOpDonker: "#35C4B5",
   lijn: "#dde4ed",
 };
 
@@ -128,12 +130,12 @@ export default function OnzeAanpakPage() {
 
         <section style={{ background: `linear-gradient(135deg, ${PUB.donker} 0%, ${PUB.navy} 62%, #10253A 100%)`, minHeight: isMobile ? "auto" : "72vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", alignItems: "center", overflow: "hidden" }}>
           <div style={{ padding: isMobile ? "54px 22px 34px" : "78px 58px 78px 72px", position: "relative", zIndex: 2 }}>
-            <SectionLabel>Onze aanpak</SectionLabel>
+            <SectionLabel opDonker>Onze aanpak</SectionLabel>
             <h1 style={{ fontSize: isMobile ? 36 : 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>We maken zichtbaar wat samenwerking helpt of belemmert.</h1>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. De teamscan brengt vier domeinen in beeld. Insights Discovery gebruiken we als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en samenwerkt.</p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 14, alignItems: isMobile ? "stretch" : "center", flexWrap: "wrap" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
-              <a href="/teamscan" style={{ ...ctaStyle, background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.22)", boxShadow: "none" }}>Start teamscan</a>
+              <a href="/teamscan" style={{ ...ctaStyle, background: "rgba(255,255,255,0.06)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.55)", boxShadow: "none" }}>Start teamscan</a>
               <span style={{ color: "rgba(255,255,255,0.58)", fontSize: 14 }}>Van teamscan naar gesprek, duiding en concrete beweging.</span>
             </div>
           </div>
@@ -164,7 +166,7 @@ export default function OnzeAanpakPage() {
             <div style={{ textAlign: "center", maxWidth: 800, margin: "0 auto 38px" }}>
               <SectionLabel>Vier domeinen en één gedragslens</SectionLabel>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 14px" }}>De teamscan laat zien wat er speelt. Insights Discovery helpt begrijpen hoe het team daarmee omgaat.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De teamscan brengt vier domeinen in beeld: veiligheid en leiderschap, energie en motivatie, verandering en betekenis, en verbeteren en leren. De gedragsvoorkeuren uit Insights Discovery gebruiken we als verdiepende lens om te begrijpen hoe mensen binnen deze domeinen communiceren, reageren en samenwerken.</p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De teamscan brengt vier domeinen in beeld: veiligheid en leiderschap, beleving van verandering, energie en motivatie, en verbeteren en leren. De gedragsvoorkeuren uit Insights Discovery gebruiken we als verdiepende lens om te begrijpen hoe mensen binnen deze domeinen communiceren, reageren en samenwerken.</p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 18 }}>
               {domeinen.map(([titel, kleur, tekst]) => (

@@ -25,7 +25,7 @@ export const heroContent = {
   // waarmee en wat het oplevert. Een algemene opening ("iedereen doet zijn
   // best") kost een halve alinea voordat er iets staat dat alleen van ons is.
   subtitle:
-    "Het Teamkompas meet jullie samenwerking op vijf domeinen en geeft één concrete stap voor volgende week.",
+    "Het Teamkompas meet jullie samenwerking op vier domeinen en geeft één concrete stap voor volgende week.",
 
   // De gratis teamscan is de laagdrempeligste eerste stap en staat daarom
   // vooraan in het oranje. De kennismaking blijft duidelijk zichtbaar als
