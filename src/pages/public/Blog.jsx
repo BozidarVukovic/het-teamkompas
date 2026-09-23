@@ -3,6 +3,9 @@ import { Helmet } from "react-helmet-async";
 import { Link, useSearchParams } from "react-router-dom";
 import ArticleCard from "../../components/shared/ArticleCard";
 import { blogCategories, blogPosts } from "../../content/blogData";
+// Dezelfde lijst waar de kenniswijzer zelf uit leest, zodat de vier domeinen
+// in de kaart nooit uit de pas gaan lopen met de kenniswijzer.
+import { DOMEINEN } from "../../data/kennisbank/taxonomie";
 
 const CANONICAL = "https://www.mijnteamkompas.nl/inspiratie";
 
@@ -24,11 +27,23 @@ export default function Blog() {
     </Helmet>
     <header className="inspiration-hero">
       <div className="inspiration-container">
-        <p className="inspiration-eyebrow">Artikelen en inzichten</p>
-        <h1>Inspiratie voor teams die willen blijven groeien</h1>
-        <p>Samenwerken lijkt vanzelfsprekend, maar in de dagelijkse praktijk lopen teams regelmatig vast in oude patronen, onuitgesproken verwachtingen en goede voornemens die weer verdwijnen.</p>
-        <p>In onze artikelen onderzoeken we herkenbare situaties uit teams en organisaties. We verbinden alledaagse observaties aan gedragswetenschap, teamdynamiek en praktische manieren om beweging te creëren.</p>
-      <p><Link className="inspiration-all-button" to="/kennisbank">Weet je niet waar te beginnen? Start de kenniswijzer →</Link></p>
+        <div>
+          <p className="inspiration-eyebrow">Artikelen en inzichten</p>
+          <h1>Inspiratie voor teams die willen blijven groeien</h1>
+          <p>Samenwerken lijkt vanzelfsprekend, maar in de dagelijkse praktijk lopen teams regelmatig vast in oude patronen, onuitgesproken verwachtingen en goede voornemens die weer verdwijnen.</p>
+          <p>In onze artikelen onderzoeken we herkenbare situaties uit teams en organisaties. We verbinden alledaagse observaties aan gedragswetenschap, teamdynamiek en praktische manieren om beweging te creëren.</p>
+        </div>
+        <Link className="inspiration-wijzer" to="/kennisbank">
+          <p className="inspiration-eyebrow">Kenniswijzer</p>
+          <h2>Weet je niet waar te beginnen?</h2>
+          <p>Beantwoord een paar vragen over je rol, wat er speelt en wat je wilt bereiken. De kenniswijzer zoekt daar artikelen, werkvormen en experimenten bij die passen.</p>
+          <ul>
+            {DOMEINEN.map((domein) => (
+              <li key={domein.id}><span aria-hidden="true" style={{ background: domein.kleur }} />{domein.kort}</li>
+            ))}
+          </ul>
+          <span className="inspiration-wijzer__meer">Start de kenniswijzer →</span>
+        </Link>
       </div>
     </header>
     <main className="inspiration-container inspiration-main">
