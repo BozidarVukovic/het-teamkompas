@@ -9980,7 +9980,11 @@ function TeamcoachingPage() {
           }}
         >
           <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+            {/* PUB.teal is gekozen voor tekst op wit en haalt op deze navy
+                3,2:1, onder de norm van 4,5. Dezelfde ingreep als op de
+                homepage en de Insights-pagina: de teal voor donkere vlakken
+                (8:1), normale schrijfwijze, en een maat waarop je hem leest. */}
+            <div style={{ fontSize: isMobile ? 14 : 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 14 }}>
               Teamcoaching
             </div>
             <h1 style={{ fontSize: isMobile ? 36 : 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
@@ -10000,12 +10004,24 @@ function TeamcoachingPage() {
           </div>
 
           <div style={{ minHeight: isMobile ? 320 : "74vh", position: "relative" }}>
+            {/* De man links zat in het donker, en dat lag niet aan de foto.
+                Er gebeurden twee dingen tegelijk: het beeld stond op 90 procent
+                dekking, en daar lag een waas overheen die aan de linkerkant op
+                96 procent navy begon. Precies waar hij zit werd dus bijna alles
+                weggepoetst.
+
+                De waas is er nog, maar alleen om de naad met de tekstkolom te
+                dempen: sterk aan de rand en binnen een zesde van de breedte
+                grotendeels weg. Daarbij een lichte correctie op het beeld zelf.
+                Meer helderheid met iets minder contrast tilt de schaduwen op
+                zonder de lichte plekken uit te blazen -- dat is wat "egaler en
+                warmer belicht" in de praktijk betekent zonder nieuwe foto. */}
             <img
               src="/teamkompas-intakegesprek.jpg"
               alt="Teamcoaching gesprek over samenwerking, communicatie en leiderschap"
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.9 }}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "brightness(1.12) contrast(0.94) saturate(1.06)" }}
             />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.96), rgba(13,27,42,0.12))" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.92) 0%, rgba(13,27,42,0.46) 9%, rgba(13,27,42,0.14) 26%, rgba(13,27,42,0.04) 60%, rgba(13,27,42,0) 100%)" }} />
           </div>
         </section>
 
