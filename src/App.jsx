@@ -9582,20 +9582,6 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
     boxShadow: "0 14px 32px rgba(232,130,26,0.28)",
   };
 
-  const ghostStyle = {
-    border: "1px solid rgba(255,255,255,0.30)",
-    color: PUB.wit,
-    padding: "14px 22px",
-    borderRadius: 8,
-    fontWeight: 700,
-    fontSize: 14,
-    cursor: "pointer",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "rgba(255,255,255,0.05)",
-  };
-
   const signalen = [
     "Overleggen blijven netjes, maar echte zorgen worden niet uitgesproken.",
     "Teamleden werken hard, maar samenwerking kost meer energie dan nodig is.",
@@ -9656,20 +9642,44 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.035) 1px,transparent 1px)", backgroundSize: "30px 30px" }} />
           <Strepen />
           <div style={{ padding: isMobile ? "54px 24px 34px" : "74px 58px 74px 72px", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 16 }}>Teamontwikkeling, teamcoaching en samenwerking</div>
+            {/* Zelfde geval als op de homepage: PUB.teal is gekozen voor tekst
+                op wit en haalt op navy 3,2:1, onder de norm van 4,5 -- en in
+                hoofdletters met ruime spatiering lees je zo'n regel woord voor
+                woord. Normale schrijfwijze, 15 pixels, en de teal-variant die
+                op donker wel contrast heeft (8:1). */}
+            <div style={{ fontSize: isMobile ? 14 : 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 16 }}>Teamontwikkeling, teamcoaching en samenwerking</div>
             <h1 style={{ fontSize: isMobile ? 34 : 56, fontWeight: 850, lineHeight: 1.05, color: PUB.wit, marginBottom: 20, letterSpacing: "-0.035em" }}>
               Teamontwikkeling die begint bij wat er echt speelt.
             </h1>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.74)", maxWidth: 660, marginBottom: 16 }}>
               Samenwerking verbeteren vraagt meer dan een losse teamdag. Mijn Teamkompas helpt teams zichtbaar maken waar veiligheid, energie, verandering en leren elkaar versterken of juist blokkeren.
             </p>
+            {/* Eén knop in plaats van twee. "Plan een kennismaking" stond hier
+                als tweede knop, terwijl diezelfde afspraak rechtsboven in de
+                balk al op elke pagina staat -- twee ingangen naar hetzelfde
+                gesprek, waarvan er een je afleidt van de stap die deze pagina
+                voorstelt. De kennismaking blijft bereikbaar, maar als regel
+                eronder in plaats van als tweede beslissing. */}
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
               <span style={ctaStyle} onClick={() => navigate("/teamscan")}>Start met de teamscan</span>
-              <span style={ghostStyle} onClick={openModal}>Plan een kennismaking</span>
             </div>
-            <div style={{ marginTop: 22, color: "rgba(255,255,255,0.50)", fontSize: 13 }}>
+
+            {/* Deze regel stond op 13 pixels in wit van 50 procent. Dat haalt
+                5,2:1 en is daarmee niet te donker volgens de norm, maar op die
+                maat lees je hem niet -- hij zegt voor wie deze pagina bedoeld
+                is en dat hoort geen kleine lettertjes te zijn. Nu 15 pixels en
+                78 procent (10,9:1). */}
+            <p style={{ marginTop: 20, marginBottom: 0, color: "rgba(255,255,255,0.78)", fontSize: 15, lineHeight: 1.7, maxWidth: 600 }}>
               Voor teams die willen werken aan vertrouwen, eigenaarschap, communicatie en duurzame verandering.
-            </div>
+            </p>
+
+            <button
+              type="button"
+              onClick={openModal}
+              style={{ marginTop: 12, background: "transparent", border: "none", padding: 0, font: "inherit", fontSize: 15, fontWeight: 700, color: "#9CC9FF", textDecoration: "underline", textUnderlineOffset: 4, cursor: "pointer" }}
+            >
+              Liever eerst kennismaken?
+            </button>
           </div>
           <div style={{ minHeight: isMobile ? 310 : "78vh", position: "relative", zIndex: 1 }}>
             <img src="/teamkompas-samen-richting.jpg" alt="Teamontwikkeling met Mijn Teamkompas tijdens een begeleide teamsessie" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: .88 }} />
