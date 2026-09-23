@@ -34,11 +34,15 @@ const PUB = {
   lijn: "#dde4ed",
 };
 
+/* Stonden alle vier op Unsplash: de laatste stockbeelden van de site, en de
+   enige beelden die van een server kwamen die wij niet beheren. Nu eigen
+   beeld, per plek gekozen bij wat de sectie zegt. Geen van de vier staat
+   ergens anders op de site. */
 const images = {
-  hero: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1600&q=90&fit=crop&crop=faces",
-  team: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=80&fit=crop&crop=center",
-  workshop: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80&fit=crop&crop=center",
-  zorg: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80&fit=crop&crop=center",
+  hero: "/blog/images/innovatie-gedrag-team.jpg",
+  team: "/blog/images/oorzaak-en-gevolg.jpg",
+  workshop: "/blog/images/complexe-situatie.jpg",
+  zorg: "/blog/images/medemenselijkheid.jpg",
 };
 
 
@@ -140,8 +144,8 @@ export default function OnzeAanpakPage() {
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 320 : "72vh", position: "relative" }}>
-            <img src={images.hero} alt="Teamcoaching sessie waarin teamleden in gesprek zijn over samenwerking en leiderschap" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block", opacity: 0.92, filter: "saturate(0.94) contrast(1.04)" }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94) 0%, rgba(13,27,42,0.54) 38%, rgba(13,27,42,0.06) 100%)" }} />
+            <img src={images.hero} alt="Team in gesprek rond een tafel met aantekeningen en schetsen" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block", filter: "brightness(1.10) contrast(0.95) saturate(1.05)" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.92) 0%, rgba(13,27,42,0.46) 9%, rgba(13,27,42,0.14) 26%, rgba(13,27,42,0.04) 60%, rgba(13,27,42,0) 100%)" }} />
             <div style={{ position: "absolute", left: 34, bottom: 34, maxWidth: 340, background: "rgba(13,27,42,0.72)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 18, padding: "18px 20px", backdropFilter: "blur(8px)", boxShadow: "0 22px 50px rgba(0,0,0,0.26)" }}>
               <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 8 }}>Reflectie en begeleiding</div>
               <div style={{ fontSize: 18, lineHeight: 1.45, fontWeight: 800, color: PUB.wit }}>Niet harder werken, maar anders kijken naar wat samenwerking helpt of belemmert.</div>
@@ -157,7 +161,7 @@ export default function OnzeAanpakPage() {
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>In teams spelen meerdere lagen tegelijk. Veiligheid, motivatie, veranderbeleving en dagelijkse verbeterkracht beïnvloeden elkaar. Daarom kijken we niet naar één losse score, maar naar de samenhang tussen wat mensen ervaren, nodig hebben en bespreekbaar durven maken.</p>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De kracht zit in het combineren van data met menselijk gesprek. De teamscan geeft richting, de begeleiding zorgt dat inzichten worden vertaald naar concreet gedrag.</p>
             </div>
-            <img src={images.team} alt="Professioneel team dat samenwerkt aan een vraagstuk" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
+            <img src={images.team} alt="Iemand die met een vergrootglas en een rij dominostenen zoekt naar oorzaak en gevolg" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
           </div>
         </section>
 
@@ -231,7 +235,7 @@ export default function OnzeAanpakPage() {
 
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 42, alignItems: "center" }}>
-            <img src={images.workshop} alt="Workshop waarin mensen samen inzichten vertalen naar actie" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 440, boxShadow: "0 24px 70px rgba(0,0,0,0.34)" }} />
+            <img src={images.workshop} alt="Begeleider bij een wand vol aantekeningen, met het team dat meekijkt" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 440, boxShadow: "0 24px 70px rgba(0,0,0,0.34)" }} />
             <div>
               <SectionLabel opDonker>Van inzicht naar gedrag</SectionLabel>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>De aanpak blijft pas waardevol als het team er iets mee gaat doen.</h2>
@@ -295,7 +299,7 @@ export default function OnzeAanpakPage() {
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>We geven voldoende uitleg om vertrouwen te bouwen, maar houden de echte waarde in de begeleiding: het scherp duiden van jullie specifieke context, de teamscanuitkomsten en de gedragsvoorkeuren van het team.</p>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
             </div>
-            <img src={images.zorg} alt="Samenwerking in een professionele zorgcontext" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
+            <img src={images.zorg} alt="Twee collega's aan tafel, waarvan de een de ander aandacht geeft" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 420, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }} />
           </div>
         </section>
       </div>

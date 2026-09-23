@@ -1159,8 +1159,8 @@ function ThemeDeepDiveSection({ isMobile, openModal }) {
         'Teams begrijpen de verandering rationeel, maar voelen nog geen houvast.'
       ],
       opbrengst: 'Meer draagvlak, kleinere haalbare stappen en verandering die beter landt in de dagelijkse praktijk.',
-      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80&fit=crop&crop=center',
-      alt: 'Groep mensen bespreekt verandering op een whiteboard.'
+      image: '/blog/images/hedenentoekomst.jpg',
+      alt: 'Team dat samen kijkt naar wat er verandert en wat blijft.'
     },
     {
       id: 'verbeteren-leren',
