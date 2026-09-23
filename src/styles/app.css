@@ -83,9 +83,14 @@
      daarmee het enige dat in dark mode licht bleef: donkere kaarten op een
      lichte plaat. Zelfde opbouw als het lichte veld -- een spoor licht aan de
      bovenkant, iets dieper naar onderen -- alleen dan de andere kant op. */
+  /* Het veld gaat als geheel onder de kaartkleur (#16283c) liggen, ook aan de
+     bovenkant. De lichtplek blijft -- zonder hem is het veld dood -- maar hij
+     is nu donkerder dan een kaart in plaats van lichter. Gemeten verschil
+     kaart tegen achtergrond: 37 bovenaan, 57 halverwege, 67 onderaan; de
+     lichte stand doet 32, 50, 59. */
   background:
-    radial-gradient(120% 44% at 50% -8%, #1b3147 0%, rgba(27, 49, 71, 0) 60%),
-    linear-gradient(180deg, #14263a 0%, var(--tk-navy) 46%, #081420 100%);
+    radial-gradient(120% 44% at 50% -8%, #0d1c2c 0%, rgba(13, 28, 44, 0) 60%),
+    linear-gradient(180deg, #0b1826 0%, #081524 46%, #061120 100%);
 
   /* Zegt de browser dat invoervelden, scrollbalken en het keuzemenu van een
      select hun donkere uitvoering moeten pakken. Zonder dit staat er een wit
@@ -731,6 +736,46 @@
   background: transparent;
   color: var(--tk-tekst);
   border: 1px solid var(--tk-lijn);
+}
+
+/* Muisgedrag. Alleen waar er een muis is: op een telefoon blijft een
+   hover-stand na een tik hangen en lijkt de knop ingedrukt.
+
+   Optillen en oplichten, geen kleurwissel. Een knop die van kleur verspringt
+   voelt als een andere knop; een knop die een pixel omhoogkomt voelt als
+   dezelfde knop die je aanraakt. Een uitgeschakelde knop doet niet mee -- daar
+   valt niets te raken. */
+@media (hover: hover) {
+  .tk-knop:hover:not(:disabled) {
+    filter: brightness(1.07);
+    transform: translateY(-1px);
+  }
+
+  .tk-knop-rand:hover:not(:disabled) {
+    filter: none;
+    border-color: var(--tk-teal);
+    background: var(--tk-teal-waas);
+  }
+
+  .tk-knop-gevaar:hover:not(:disabled) {
+    filter: none;
+    border-color: var(--tk-rood);
+    background: rgba(198, 40, 40, 0.10);
+  }
+
+  .tk-bolknop:hover:not(:disabled) .tk-bol {
+    border-color: var(--tk-teal);
+  }
+
+  .tk-kaart-klikbaar:hover {
+    border-color: var(--tk-teal-rand);
+  }
+}
+
+/* Indrukken zet de knop terug op zijn plaats. Zonder dit blijft hij bij een
+   klik een pixel zweven en voelt het alsof je hem mist. */
+.tk-knop:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 /* Klein gaat over hoe hij eruitziet, niet over hoe groot hij is om te raken:
@@ -1796,6 +1841,7 @@ a.tk-optie {
     background-color var(--tk-vlot) var(--tk-soepel),
     border-color var(--tk-vlot) var(--tk-soepel),
     color var(--tk-vlot) var(--tk-soepel),
+    filter var(--tk-vlot) var(--tk-soepel),
     opacity var(--tk-vlot) var(--tk-soepel),
     transform var(--tk-vlot) var(--tk-soepel);
 }
