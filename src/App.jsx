@@ -9646,7 +9646,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
                 woord. Normale schrijfwijze, 15 pixels, en de teal-variant die
                 op donker wel contrast heeft (8:1). */}
             <div style={{ fontSize: isMobile ? 14 : 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 16 }}>Teamontwikkeling, teamcoaching en samenwerking</div>
-            <h1 style={{ fontSize: isMobile ? 34 : 56, fontWeight: 850, lineHeight: 1.05, color: PUB.wit, marginBottom: 20, letterSpacing: "-0.035em" }}>
+            <h1 style={{ fontSize: isMobile ? 34 : 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, marginBottom: 20, letterSpacing: "-0.03em" }}>
               Teamontwikkeling die begint bij wat er echt speelt.
             </h1>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.74)", maxWidth: 660, marginBottom: 16 }}>
@@ -12533,7 +12533,7 @@ function TeamdagPage() {
     background: PUB.oranje,
     color: PUB.donker,
     padding: "14px 22px",
-    borderRadius: 10,
+    borderRadius: 8,
     fontWeight: 800,
     fontSize: 15,
     cursor: "pointer",
@@ -12683,7 +12683,7 @@ function TeamdagPage() {
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "76vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
           <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
             <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 14 }}>Teamdag organiseren</div>
-            <h1 style={{ fontSize: isMobile ? 36 : 56, fontWeight: 900, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>Teamdag organiseren die echt iets in beweging brengt</h1>
+            <h1 style={{ fontSize: isMobile ? 36 : 56, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>Teamdag organiseren die echt iets in beweging brengt</h1>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.74)", maxWidth: 700, marginBottom: 26 }}>Veel teamdagen zijn prettig en geven tijdelijk energie. Toch verandert er weinig als de bedoeling niet scherp is, het echte gesprek uitblijft en opvolging ontbreekt. Mijn Teamkompas helpt teams een teamdag organiseren die patronen zichtbaar maakt en beweging creëert in het dagelijks werk.</p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
               <button type="button" onClick={openModal} style={primaryCta}>Plan een vrijblijvende kennismaking</button>

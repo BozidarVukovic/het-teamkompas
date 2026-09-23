@@ -9,6 +9,9 @@ import { getCurrentPageInfo } from "./contactMetadata";
 const C = {
   donker: "#0D1B2A",
   navy: "#1A2E4A",
+  // Dezelfde teal-voor-donker als op de andere dienstenpagina's. Hier stond een
+  // lichtblauw dat nergens anders voorkomt.
+  tealOpDonker: "#35C4B5",
   teal: "#0F766E",
   groen: "#2F8F3A",
   blauw: "#0F66D0",
@@ -499,11 +502,11 @@ export default function TeamscanDigitaal() {
             erboven, en naar /verkennen via "Liever eerst persoonlijk
             overleggen?" in de hero. */}
 
-        <section style={{ background: "linear-gradient(135deg,#0D1B2A 0%, #143B68 100%)", color: C.wit, padding: isMobile ? "54px 22px" : "80px 60px" }}>
+        <section style={{ background: `linear-gradient(135deg, ${C.donker}, ${C.navy})`, color: C.wit, padding: isMobile ? "54px 22px" : "80px 60px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr 0.95fr", gap: 42, alignItems: "center" }}>
             <div>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", textTransform: "uppercase", color: "#7DB7FF", marginBottom: 14 }}>Digitale teamscan</div>
-              <h1 style={{ fontSize: isMobile ? 36 : 58, lineHeight: 1.04, margin: "0 0 18px", letterSpacing: "-0.03em" }}>Online Teamscan voor meer inzicht in jullie samenwerking</h1>
+              <div style={{ fontSize: isMobile ? 14 : 15, fontWeight: 600, letterSpacing: "0.005em", color: C.tealOpDonker, marginBottom: 14 }}>Digitale teamscan</div>
+              <h1 style={{ fontSize: isMobile ? 36 : 56, fontWeight: 800, lineHeight: 1.05, margin: "0 0 18px", letterSpacing: "-0.03em" }}>Online Teamscan voor meer inzicht in jullie samenwerking</h1>
               <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 680 }}>
                 De online teamscan maakt zichtbaar hoe teamleden de samenwerking ervaren. Geen cijfer voor het team, maar een gezamenlijke spiegel: wat gaat goed, waar ontstaan patronen en welke volgende stap maakt het meeste verschil?
               </p>
@@ -656,10 +659,10 @@ export default function TeamscanDigitaal() {
         </section>
 
         {/* Gratis individuele scan als laagdrempelige instap */}
-        <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: "linear-gradient(135deg,#0D1B2A 0%, #143B68 100%)", color: C.wit }}>
+        <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: `linear-gradient(135deg, ${C.donker}, ${C.navy})`, color: C.wit }}>
           <div style={{ maxWidth: 1040, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.15fr 0.85fr", gap: 34, alignItems: "center" }}>
             <div>
-              <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", textTransform: "uppercase", color: "#7DB7FF", marginBottom: 12 }}>Gratis · individueel · 8 tot 10 minuten</div>
+              <div style={{ fontSize: isMobile ? 14 : 15, fontWeight: 600, letterSpacing: "0.005em", color: C.tealOpDonker, marginBottom: 12 }}>Gratis · individueel · 8 tot 10 minuten</div>
               <h2 style={{ fontSize: isMobile ? 28 : 38, lineHeight: 1.12, margin: "0 0 14px" }}>Liever eerst zelf ervaren hoe zo’n scan werkt?</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.78)", margin: "0 0 22px", maxWidth: 620 }}>
                 Doe de gratis individuele teamscan. Je beantwoordt een korte vragenlijst over hoe jij de samenwerking ervaart en krijgt direct een persoonlijk rapport met reflectievragen en een eerste kleine stap. Het is een persoonlijke indruk, geen oordeel over het hele team. De volledige teamscan hierboven brengt juist de beleving van álle teamleden samen.
@@ -671,7 +674,7 @@ export default function TeamscanDigitaal() {
             <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 10 }}>
               {["Gratis en vrijblijvend", "Direct een persoonlijk rapport", "Persoonlijk en vertrouwelijk", "Een concrete eerste stap"].map((item) => (
                 <li key={item} style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 12, padding: "12px 14px", fontSize: 15, fontWeight: 700 }}>
-                  <span aria-hidden="true" style={{ color: "#7DB7FF", fontWeight: 900 }}>✓</span>{item}
+                  <span aria-hidden="true" style={{ color: C.tealOpDonker, fontWeight: 800 }}>✓</span>{item}
                 </li>
               ))}
             </ul>
