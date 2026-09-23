@@ -326,9 +326,18 @@ export async function verwijderTeam({ uid, orgId, teamId, code }) {
  *
  * Je functie is optioneel en gaat mee naar je teams, want daar is hij voor.
  * Leeg laten betekent leeg wegschrijven, zodat weghalen ook echt weghalen is.
+ *
+ * Voor je foto geldt hetzelfde. Die staat als klein vierkantje in het
+ * ledendocument zelf -- zie src/lib/app/foto.js voor waarom daar en niet in
+ * Firebase Storage. Leeg wegschrijven is hier het hele verwijdermechanisme:
+ * er is geen tweede plek waar nog een kopie kan achterblijven.
+ *
+ * De gedeelde kopie krijgt alleen je naam. Daar staan de punten in die je
+ * bewust deelt; het ledendocument is waar de app de ledenlijst uit tekent, en
+ * dat is de enige plek waar een foto gelezen wordt.
  */
-export async function werkLidgegevensBij({ uid, lidmaatschappen = [], naam = "", functie = "" }) {
-  const velden = { naam, functie };
+export async function werkLidgegevensBij({ uid, lidmaatschappen = [], naam = "", functie = "", foto = "" }) {
+  const velden = { naam, functie, foto };
 
   await Promise.all(
     (lidmaatschappen || []).map((l) =>

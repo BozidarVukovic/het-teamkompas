@@ -24,14 +24,21 @@ import { bepaalVolgendeStap } from "../../lib/app/volgendeStap";
 import { bepaalVoortgang } from "../../lib/app/voortgang";
 import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
 import { uitgelichteAfspraak } from "../../lib/app/afspraken";
-import { initialen, korteNamen, voornaam } from "../../lib/app/naam";
+import { korteNamen, voornaam } from "../../lib/app/naam";
+import Bol from "../../components/app/Bol";
 import TeamomgevingLink from "../../components/app/TeamomgevingLink";
 
 /** Een collega als bol met een naam eronder. Eén tik en je bent bij het advies. */
-function Mens({ naar, ini, label, onder, gestippeld = false }) {
+function Mens({ naar, naam, foto, teken, label, onder, gestippeld = false }) {
+  const klasse = `tk-bol-mens${gestippeld ? " tk-bol-leeg" : ""}`;
+
   return (
     <Link to={naar} className="tk-mens" title={onder || undefined}>
-      <span className={`tk-bol tk-bol-mens${gestippeld ? " tk-bol-leeg" : ""}`}>{ini}</span>
+      {/* De uitnodigen-bol draagt een plusteken en geen naam; die gaat niet
+          langs Bol, want daar zou "+" een initiaal worden. */}
+      {teken
+        ? <span className={`tk-bol ${klasse}`}>{teken}</span>
+        : <Bol naam={naam} foto={foto} klasse={klasse} />}
       <span className="tk-mens-naam">{label}</span>
     </Link>
   );
@@ -127,12 +134,13 @@ export default function Start() {
             <Mens
               key={c.sleutel}
               naar={`/app/samenwerken?met=${encodeURIComponent(c.sleutel)}`}
-              ini={initialen(c.naam)}
+              naam={c.naam}
+              foto={c.foto}
               label={collegalabels[i]}
               onder={collegaInEenZin(c)}
             />
           ))}
-          <Mens naar="/app/team" ini="+" label="Uitnodigen" gestippeld />
+          <Mens naar="/app/team" teken="+" label="Uitnodigen" gestippeld />
         </div>
         <p className="tk-fijn" style={{ margin: "12px 0 0" }}>
           {collegas.length === 0

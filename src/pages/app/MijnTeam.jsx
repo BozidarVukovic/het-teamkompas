@@ -36,7 +36,8 @@ import {
 } from "../../lib/app/teamrollen";
 import { kenmerkenUitInsights } from "../../lib/app/insights";
 import { deelzin } from "../../data/app/kenmerken";
-import { MAX_NAAM, initialen, schoneNaam, voornaam } from "../../lib/app/naam";
+import { MAX_NAAM, schoneNaam, voornaam } from "../../lib/app/naam";
+import Bol from "../../components/app/Bol";
 import { gedeeldSamengevat } from "../../lib/app/gedeeld";
 import Vingerafdruk from "../../components/app/Vingerafdruk";
 import { kleurenOmTeDelen } from "../../lib/app/vingerafdruk";
@@ -87,7 +88,7 @@ function Gedeeld({ gedeeld }) {
 }
 
 /** Eén regel in de ledenlijst, met wat eronder tevoorschijn komt. */
-function Persoon({ sleutel, naam: hunNaam, achter, onder, kleuren, uitgeklapt, onKlik, children }) {
+function Persoon({ sleutel, naam: hunNaam, foto, achter, onder, kleuren, uitgeklapt, onKlik, children }) {
   return (
     <div className="tk-persoonrij">
       <button
@@ -96,7 +97,7 @@ function Persoon({ sleutel, naam: hunNaam, achter, onder, kleuren, uitgeklapt, o
         onClick={onKlik}
         aria-expanded={uitgeklapt}
       >
-        <span className="tk-bol">{initialen(hunNaam)}</span>
+        <Bol naam={hunNaam} foto={foto} />
         <span className="tk-optie-tekst">
           <strong>
             {hunNaam}
@@ -320,6 +321,7 @@ export default function MijnTeam() {
         key={sleutel}
         sleutel={sleutel}
         naam={l.naam || "Teamgenoot"}
+        foto={l.foto}
         achter={eigen ? "(jij)" : null}
         kleuren={g && g.kleuren}
         onder={[

@@ -387,8 +387,21 @@ service cloud.firestore {
         // Wie lid is van het team. Bevat naam en rol, geen profielinhoud.
         // Je voegt uitsluitend jezelf toe, en alleen met een kloppende teamcode.
         match /leden/{uid} {
+          // Een foto bij je naam staat als klein vierkantje in dit document
+          // zelf: geen tweede opslag, geen tweede set regels, en weghalen is
+          // één handeling. Maar de ledenlijst wordt bij elk bezoek in zijn
+          // geheel opgehaald, dus hoort er een bovengrens te staan die niet
+          // van de browser afhangt. 60 kB is ruim vier keer wat een vierkant
+          // van 160 bij 160 kost; zie MAX_OPSLAG in src/lib/app/foto.js.
+          function fotoPast() {
+            return !("foto" in request.resource.data)
+              || (request.resource.data.foto is string
+                  && request.resource.data.foto.size() <= 61440);
+          }
+
           allow read: if isTeamlid(orgId, teamId);
           allow create: if ikBen(uid)
+            && fotoPast()
             && request.resource.data.rol in ["lid", "beheerder", "begeleider"]
             && (
               // De maker van het team beheert het ook — als beheerder die
@@ -413,12 +426,15 @@ service cloud.firestore {
                 && get(/databases/$(database)/documents/teamcodes/$(request.resource.data.code)).data.orgId == orgId
               )
             );
-          // Je eigen regel bijwerken mag — naam en functie — maar je rol niet.
+          // Je eigen regel bijwerken mag — naam, functie en foto — maar je rol niet.
           // Zonder die voorwaarde kon elk teamlid zichzelf beheerder maken door
           // rol: "beheerder" naar zijn eigen document te schrijven. Alleen een
           // beheerder kan een rol veranderen.
-          allow update: if isTeambeheerder(orgId, teamId)
-            || (ikBen(uid) && request.resource.data.rol == resource.data.rol);
+          allow update: if fotoPast()
+            && (
+              isTeambeheerder(orgId, teamId)
+              || (ikBen(uid) && request.resource.data.rol == resource.data.rol)
+            );
           allow delete: if ikBen(uid) || isTeambeheerder(orgId, teamId);
         }
 

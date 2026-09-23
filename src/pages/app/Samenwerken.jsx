@@ -15,7 +15,7 @@ import { collegasVan, onderscheidendeZinnen } from "../../lib/app/collegas";
 import { MINIMUM_GROEP } from "../../lib/app/advies/groepsregels";
 import { MEERDERE_COLLEGAS } from "../../lib/app/functies";
 import { voornaam } from "../../lib/app/naam";
-import { initialen } from "../../lib/app/naam";
+import Bol from "../../components/app/Bol";
 import VolgendeStap from "../../components/app/VolgendeStap";
 
 /** "Nikki, Eva en Aad" — leesbaar, ook bij één of bij zeven. */
@@ -378,7 +378,7 @@ export default function Samenwerken() {
           die vraag is al beantwoord. */}
       {directNaarVraag && (
         <div className="tk-gekozen">
-          <span className="tk-bol">{initialen(gekozen.naam)}</span>
+          <Bol naam={gekozen.naam} foto={gekozen.foto} />
           <span className="tk-gekozen-tekst">
             <strong>{gekozen.naam}</strong>
             <small>{regels[anderen.indexOf(gekozen)] || "Je teamgenoot"}</small>
@@ -407,7 +407,7 @@ export default function Samenwerken() {
                   aria-pressed={aan}
                   onClick={() => wisselPersoon(l.sleutel)}
                 >
-                  <span className="tk-bol">{initialen(l.naam)}</span>
+                  <Bol naam={l.naam} foto={l.foto} />
                   <span>
                     {l.naam || "Teamgenoot"}
                     {regels[i] && (
@@ -446,7 +446,7 @@ export default function Samenwerken() {
         <div className="tk-gekozen" ref={adviesTop}>
           <span className="tk-bollen">
             {geselecteerd.slice(0, 3).map((c) => (
-              <span className="tk-bol" key={c.sleutel}>{initialen(c.naam)}</span>
+              <Bol key={c.sleutel} naam={c.naam} foto={c.foto} />
             ))}
             {geselecteerd.length > 3 && <span className="tk-bol">+{geselecteerd.length - 3}</span>}
           </span>

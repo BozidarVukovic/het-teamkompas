@@ -15,7 +15,7 @@ import useActie from "../../components/app/useActie";
 import Melding from "../../components/app/Melding";
 import Voortgang from "../../components/app/Voortgang";
 import { bepaalVoortgang } from "../../lib/app/voortgang";
-import { initialen } from "../../lib/app/naam";
+import Fotokiezer from "../../components/app/Fotokiezer";
 import {
   KAN_VASTHOUDEN,
   LOOPTIJD_DAGEN,
@@ -306,16 +306,7 @@ export default function Ik() {
 
   return (
     <div className="tk-inhoud">
-      <header className="tk-ikkop">
-        <span className="tk-bol tk-bol-groot">{initialen(naam)}</span>
-        <div style={{ minWidth: 0 }}>
-          <h1 className="tk-kop" style={{ marginBottom: 2 }}>{naam || "Ik"}</h1>
-          <p className="tk-onderkop" style={{ margin: 0 }}>
-            {functie ? `${functie} · ` : ""}
-            {gebruiker && gebruiker.email}
-          </p>
-        </div>
-      </header>
+      <Fotokiezer naam={naam} functie={functie} email={gebruiker && gebruiker.email} />
 
       {/* De uitsplitsing in ingevuld, nagelopen en gedeeld helpt zolang er iets
           te doen is. Staat alles op honderd procent, dan is het een uitleg van

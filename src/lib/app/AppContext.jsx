@@ -398,6 +398,7 @@ function terugkeeradres() {
 
   const naam = (gebruikerDoc && gebruikerDoc.naam) || "";
   const functie = (gebruikerDoc && gebruikerDoc.functie) || "";
+  const foto = (gebruikerDoc && gebruikerDoc.foto) || "";
 
   const synchroniseerGedeeld = useCallback(
     async (nieuweKenmerken, nieuweHandleiding) => {
@@ -448,12 +449,13 @@ function terugkeeradres() {
    * hier los van; dat blijft jouw keuze per punt.
    */
   const zetProfielgegevens = useCallback(
-    async ({ naam: nieuweNaam, functie: nieuweFunctie } = {}) => {
+    async ({ naam: nieuweNaam, functie: nieuweFunctie, foto: nieuweFoto } = {}) => {
       if (!gebruiker) return;
 
       const velden = {};
       if (nieuweNaam !== undefined) velden.naam = nieuweNaam;
       if (nieuweFunctie !== undefined) velden.functie = nieuweFunctie;
+      if (nieuweFoto !== undefined) velden.foto = nieuweFoto;
       if (Object.keys(velden).length === 0) return;
 
       await werkGebruikerBij(gebruiker.uid, velden);
@@ -464,9 +466,10 @@ function terugkeeradres() {
         lidmaatschappen,
         naam: velden.naam !== undefined ? velden.naam : naam,
         functie: velden.functie !== undefined ? velden.functie : functie,
+        foto: velden.foto !== undefined ? velden.foto : foto,
       });
     },
-    [gebruiker, lidmaatschappen, naam, functie]
+    [gebruiker, lidmaatschappen, naam, functie, foto]
   );
 
   const zetNaam = useCallback(
@@ -829,6 +832,7 @@ function terugkeeradres() {
       gebruikerDoc,
       naam,
       functie,
+      foto,
       lidmaatschappen,
       actiefTeam,
       kenmerken,
@@ -878,7 +882,7 @@ function terugkeeradres() {
       herlaad: () => (gebruiker ? laadGegevens(gebruiker.uid, gebruiker.email) : null),
     }),
     [
-      gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, functie, lidmaatschappen, actiefTeam,
+      gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, functie, foto, lidmaatschappen, actiefTeam,
       kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, bewaarAfspraak, verwijderAfspraak, experimenten, startExperiment, blikTerug, sessies, reflecties, bewaarReflectie, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,

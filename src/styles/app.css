@@ -1003,6 +1003,53 @@
   font-weight: 800;
   color: var(--tk-tekst);
   flex: 0 0 auto;
+  /* De foto is vierkant en de bol is rond. */
+  overflow: hidden;
+}
+
+/* Een foto vult de bol helemaal, uitsnede uit het midden. De verkleining naar
+   160 pixels is al in de browser gebeurd; hier wordt alleen nog geschaald. */
+.tk-bolfoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* De grote bol op het ik-scherm is een knop: erop klikken opent de
+   bestandskiezer. Een bestandskiezer laat zich niet opmaken, en je eigen
+   gezicht met een plusje erbij zegt meer dan een grijze knop met "Bladeren". */
+.tk-bolknop {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  line-height: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.tk-bolknop[disabled] {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.tk-bolknop-teken {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--tk-teal);
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  color: var(--tk-navy);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .tk-code {

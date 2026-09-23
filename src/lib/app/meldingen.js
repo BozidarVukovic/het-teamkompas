@@ -29,8 +29,26 @@ const PER_CODE = {
   "auth/too-many-requests": "Er zijn te veel pogingen geweest. Wacht even en probeer het opnieuw.",
 };
 
+/**
+ * Een fout waarvan de tekst zelf al de zin is die op het scherm hoort.
+ *
+ * Voor gevallen waarin de aanroeper meer weet dan hier af te leiden is: dat
+ * een bestand HEIC is en hoe je dat oplost, bijvoorbeeld. Gebruik hem alleen
+ * voor tekst die je aan een gebruiker durft te laten zien -- geen foutcodes,
+ * geen namen van velden, niets uit een server.
+ */
+export class Uitlegfout extends Error {
+  constructor(tekst) {
+    super(tekst);
+    this.name = "Uitlegfout";
+    this.uitleg = true;
+  }
+}
+
 /** Een fout in één leesbare zin, met wat de gebruiker probeerde te doen erbij. */
 export function omschrijfFout(fout, actie) {
+  if (fout && fout.uitleg && fout.message) return fout.message;
+
   const code = (fout && fout.code) || "";
   const bekend = PER_CODE[code];
   if (bekend) return bekend;
