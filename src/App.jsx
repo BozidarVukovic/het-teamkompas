@@ -932,40 +932,6 @@ function StickyLeadCta({ onClick, isMobile = false }) {
   );
 }
 
-function ConversionImpactReport({ isMobile = false, onCta }) {
-  const verbeteringen = [
-    ["Hoog", "Eén dominante CTA naar kennismaking", "Minder keuze-stress: elke pagina stuurt naar een veilig eerste gesprek."],
-    ["Hoog", "Trustproof direct bij hero en formulier", "Reactietijd, vrijblijvendheid en anonimiteit verlagen drempels."],
-    ["Middel", "SEO-intent gekoppeld aan aanbod", "Bezoekers vanuit thema-pagina’s zien sneller welke dienst logisch is."],
-    ["Middel", "Korter formulier met betere microcopy", "Minder frictie, duidelijk wat er na verzenden gebeurt."],
-  ];
-
-  return (
-    <section style={{ background: PUB.licht, padding: isMobile ? "52px 20px" : "76px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 24, alignItems: "start" }}>
-        <div>
-          <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Conversie-analyse</div>
-          <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, margin: "0 0 14px" }}>Grootste impact richting 10 adviesgesprekken per maand.</h2>
-          <p style={{ fontSize: 16, lineHeight: 1.78, color: PUB.sub, margin: "0 0 22px" }}>
-            De website is ingericht als leadfunnel: herkennen van het probleem, vertrouwen opbouwen, bewijs tonen, risico verlagen en consequent uitnodigen voor een vrijblijvende kennismaking.
-          </p>
-          <button type="button" onClick={onCta} style={{ background: PUB.donker, color: PUB.wit, border: 0, borderRadius: 8, padding: "14px 20px", fontWeight: 850, cursor: "pointer" }}>Bespreek jullie teamvraag</button>
-        </div>
-        <div style={{ display: "grid", gap: 12 }}>
-          {verbeteringen.map(([impact, titel, tekst]) => (
-            <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 18, boxShadow: "0 12px 32px rgba(13,27,42,0.05)" }}>
-              <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 6 }}>
-                <span style={{ background: impact === "Hoog" ? PUB.oranje : PUB.teal, color: impact === "Hoog" ? PUB.donker : PUB.wit, borderRadius: 999, padding: "4px 9px", fontSize: 11, fontWeight: 900 }}>{impact} impact</span>
-                <strong style={{ color: PUB.donker }}>{titel}</strong>
-              </div>
-              <div style={{ color: PUB.sub, fontSize: 14, lineHeight: 1.65 }}>{tekst}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function SeoHead({ page = "home" }) {
   const pages = {
@@ -9865,7 +9831,6 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           </div>
         </section>
 
-        <ConversionImpactReport isMobile={isMobile} onCta={openModal} />
 
         <section style={{ background: PUB.wit, padding: isMobile ? "50px 20px" : "72px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
           <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
