@@ -146,13 +146,41 @@ export default function InsightsDiscoveryProfiel() {
       <script type="application/ld+json">{JSON.stringify({"@context":"https://schema.org","@type":"FAQPage",mainEntity:faqItems.map(([q,a])=>({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}}))})}</script>
     </Helmet>
 
-    <Section style={{ paddingTop: 96, paddingBottom: 72, background: `linear-gradient(135deg, ${PUB.donker}, ${PUB.navy})`, color: "white" }}>
-      <Eyebrow withDot>Insights Discovery-profiel voor betere samenwerking</Eyebrow>
-      <h1 className="tk-heading-xl">Begrijp jezelf. Begrijp elkaar. Werk beter samen.</h1>
-      <p className="tk-lead" style={{ color: "rgba(255,255,255,.76)" }}>Goede samenwerking begint met inzicht in jezelf en nieuwsgierigheid naar de ander. Een Insights Discovery-profiel geeft taal aan voorkeuren, kwaliteiten, communicatie en gedrag onder druk.</p>
-      <div className="tk-actions">
-        <button type="button" className="tk-button tk-button-primary" onClick={scrollToForm}>Vraag een Insights Discovery-profiel aan</button>
-        <ButtonLink href="/verkennen" variant="secondary" onClick={() => trackEvent("insights_hero_contact_click")}>Plan een vrijblijvende kennismaking</ButtonLink>
+    <Section className="tk-op-donker" style={{ paddingTop: 96, paddingBottom: 72, background: `linear-gradient(135deg, ${PUB.donker}, ${PUB.navy})`, color: "white" }}>
+      <div className="tk-hero-split">
+        <div>
+          <Eyebrow withDot>Insights Discovery-profiel voor betere samenwerking</Eyebrow>
+          <h1 className="tk-heading-xl">Begrijp jezelf. Begrijp elkaar. Werk beter samen.</h1>
+          <p className="tk-lead" style={{ color: "rgba(255,255,255,.80)" }}>Goede samenwerking begint met inzicht in jezelf en nieuwsgierigheid naar de ander. Een Insights Discovery-profiel geeft taal aan voorkeuren, kwaliteiten, communicatie en gedrag onder druk.</p>
+          <div className="tk-actions">
+            <button type="button" className="tk-button tk-button-primary" onClick={scrollToForm}>Vraag een profiel aan</button>
+            <ButtonLink href="/verkennen" variant="secondary" onClick={() => trackEvent("insights_hero_contact_click")}>Plan een vrijblijvende kennismaking</ButtonLink>
+          </div>
+
+          {/* Wat er gebeurt als je op de knop drukt. Er stond alleen "Vraag een
+              Insights Discovery-profiel aan", en daar kun je net zo goed een
+              bestelling als een offerte in lezen. Het is geen van beide: je
+              komt bij een kort formulier en wij bellen. Dat hoort naast de
+              knop te staan en niet pas bij het formulier. */}
+          <p style={{ margin: "16px 0 0", maxWidth: 560, fontSize: 15, lineHeight: 1.7, color: "rgba(255,255,255,.80)" }}>
+            De knop brengt je naar een kort formulier op deze pagina: naam, organisatie en je vraag.
+            Daarna nemen we contact op om de vorm en de kosten te bespreken. Een profiel kan voor één
+            persoon of voor een heel team; je zit nergens aan vast.
+          </p>
+        </div>
+
+        {/* De vier kleurenergieën, het element waaraan mensen Insights
+            herkennen. Bewust geen nabouw van het Insights-wiel zelf: dat is
+            hun eigen beeldmerk. Dit zijn de vier kleuren met de woorden die
+            verderop op deze pagina ook staan. */}
+        <div className="tk-kleurenvlak" aria-hidden="true">
+          {energy.map(([naam, essentie, , , kleur]) => (
+            <div key={naam} className="tk-kleurveld" style={{ "--veldkleur": kleur }}>
+              <span className="tk-kleurnaam">{naam}</span>
+              <span className="tk-kleuressentie">{essentie}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </Section>
 
