@@ -10,9 +10,13 @@ import { heeftOmgeving } from "../../lib/app/teamomgevingOpslag";
 // scherm waar verder alleen bollen met voornamen staan, is een blauwe streep
 // niet het ding waar je oog naartoe gaat.
 //
-// De hele kaart is nu de knop. De pil rechts is er om te laten zien dat er iets
-// gebeurt als je klikt; het is met opzet geen oranje knop, want oranje betekent
-// in deze app "hier verandert iets" en dit is navigeren.
+// De hele kaart is nu de knop. De pil rechts was teal-op-teal-waas, met de
+// redenering dat oranje in deze app "hier verandert iets" betekent en dit
+// navigeren is. Die regel hield de app zelf niet: .tk-knop is oranje en staat
+// tien keer op een <Link> die alleen maar naar een andere pagina gaat. Een
+// regel die nergens wordt gevolgd is geen regel, en deze pil las als een
+// labeltje in plaats van als de belangrijkste knop op het scherm. Nu dezelfde
+// oranje als elke andere hoofdknop, met dezelfde donkere tekst erop (6,3:1).
 function Team({ className }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
