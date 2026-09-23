@@ -10,6 +10,10 @@ export const PUB = {
   tealOpDonker: "#35C4B5",
   tealGlow: "rgba(0,168,150,0.15)",
   groen: "#5A8C3C",
+  /* Hetzelfde groen, maar donker genoeg om als tekst te dienen: het gewone
+     pijlergroen haalt op de lichte sectiekleur 3,72:1. Als vlak blijft
+     PUB.groen wat het is. */
+  groenTekst: "#4A7530",
   blauw: "#3A7DBF",
   paars: "#6B4E9E",
   oranje: "#E8821A",
@@ -17,7 +21,11 @@ export const PUB = {
   bg: "#F4F7F9",
   sand: "#F7F3EA",
   wit: "#FFFFFF",
-  sub: "#6B7A8D",
+  /* De zachte tekstkleur van de hele site. Stond op #6B7A8D en haalde
+     daarmee 4,38:1 op wit en 4,07:1 op de lichte sectiekleur -- net onder de
+     norm van 4,5, op 333 plekken tegelijk. Deze haalt 5,07 en 4,71 en scheelt
+     maar 3,5 in OKLab: je ziet het verschil niet, de norm wel. */
+  sub: "#607083",
   muted: "#637083",
   lijn: "#dde4ed",
   border: "#dde4ed",

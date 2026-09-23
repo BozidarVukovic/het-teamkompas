@@ -95,9 +95,10 @@
   transition: background 0.15s ease;
 }
 
+/* Wit op het merkteal haalt 2,98:1; navy erop haalt 5,83. */
 .td-knop--primair {
   background: var(--td-teal);
-  color: #fff;
+  color: var(--td-navy);
 }
 
 .td-knop--primair:hover { background: var(--td-teal-donker); }

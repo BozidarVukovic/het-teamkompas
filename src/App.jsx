@@ -1588,7 +1588,7 @@ function PublicSite({ onLoginClick }) {
                   <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 10 }}>{titel}</div>
                   <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, flex: 1 }}>{tekst}</div>
                   {titel === "Veiligheid & leiderschap" && (
-                    <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: kleur, textDecoration: "none" }}>
+                    <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: PUB.teal, textDecoration: "none" }}>
                       Meer over psychologische veiligheid →
                     </a>
                   )}
@@ -1650,7 +1650,9 @@ function PublicSite({ onLoginClick }) {
                   <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)" }}>Start laagdrempelig met de digitale teamscan of plan eerst een verdiepend gesprek.</div>
                 </div>
                 <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 10, flexShrink: 0 }}>
-                  <span style={{ ...ctaStyle, display: "inline-block", background: PUB.teal }} onClick={() => navigate("/teamscan")}>Start de digitale teamscan</span>
+                  {/* Teal als vulling is te donker voor de donkere tekst van
+                      ctaStyle (3,18:1). Met witte tekst erop is het 5,47. */}
+                  <span style={{ ...ctaStyle, display: "inline-block", background: PUB.teal, color: PUB.wit }} onClick={() => navigate("/teamscan")}>Start de digitale teamscan</span>
                   <span style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center" }} onClick={openModal}>Plan een verdiepend gesprek</span>
                 </div>
               </div>
@@ -9695,7 +9697,10 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 22 }}>
                 Teams lopen zelden vast op één incident. Vaak ontstaat er langzaam een patroon: gesprekken blijven aan de oppervlakte, initiatief neemt af of verandering voelt onduidelijk. Dan helpt het om eerst samen scherp te krijgen wat er onder de oppervlakte speelt.
               </p>
-              <span style={{ ...ctaStyle, color: PUB.wit }} onClick={() => navigate("/teamscan")}>Onderzoek jullie teambeeld</span>
+              {/* De witte tekst overschreef de donkere tekst van ctaStyle en kwam
+                  daarmee op 2,75:1 op oranje uit. Zonder die overschrijving is
+                  het 6,33. */}
+              <span style={ctaStyle} onClick={() => navigate("/teamscan")}>Onderzoek jullie teambeeld</span>
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
               {signalen.map((tekst, i) => (
@@ -9740,7 +9745,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           <Strepen />
           <div style={{ maxWidth: 1180, margin: "0 auto", position: "relative", zIndex: 1 }}>
             <Fade>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Vier ontwikkeldomeinen</div>
+              <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>Vier ontwikkeldomeinen</div>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.wit, marginBottom: 14, maxWidth: 820 }}>Teamontwikkeling wordt concreet als je weet waar je naar kijkt.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", maxWidth: 820, marginBottom: 32 }}>
                 Mijn Teamkompas kijkt naar vier domeinen die samen bepalen hoe een team functioneert, leert en verandert. Gedrag en communicatie vormen daarbij de verbindende laag.
@@ -9750,11 +9755,11 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
               {domeinen.map(([titel, tekst], i) => (
                 <Fade key={titel} delay={i * 0.05}>
                   <div style={{ height: "100%", background: "rgba(255,255,255,0.055)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 18, padding: 22, display: "flex", flexDirection: "column" }}>
-                    <div style={{ fontSize: 13, fontWeight: 850, color: PUB.teal, marginBottom: 10 }}>0{i + 1}</div>
+                    <div style={{ fontSize: 13, fontWeight: 850, color: PUB.tealOpDonker, marginBottom: 10 }}>0{i + 1}</div>
                     <div style={{ fontSize: 18, fontWeight: 850, color: PUB.wit, marginBottom: 10 }}>{titel}</div>
                     <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)", flex: 1 }}>{tekst}</div>
                     {titel === "Veiligheid en leiderschap" && (
-                      <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: PUB.teal, textDecoration: "none" }}>
+                      <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: PUB.tealOpDonker, textDecoration: "none" }}>
                         Meer over psychologische veiligheid →
                       </a>
                     )}
@@ -9790,7 +9795,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
                   De teamscan helpt om de juiste teamvraag scherp te maken. Daarna kan een teamdag, coachingsgesprek of begeleid traject veel gerichter worden ingericht.
                 </p>
                 <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12 }}>
-                  <span style={{ ...ctaStyle, color: PUB.wit, flex: 1 }} onClick={() => navigate("/teamscan")}>Start de digitale teamscan</span>
+                  <span style={{ ...ctaStyle, flex: 1 }} onClick={() => navigate("/teamscan")}>Start de digitale teamscan</span>
                   <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none", flex: 1 }} onClick={openModal}>Plan een verdiepend gesprek</span>
                 </div>
               </div>
@@ -9874,7 +9879,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
               Start laagdrempelig met de teamscan of plan een verkennend gesprek. Dan bepalen we samen welke stap past bij jullie teamvraag.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center" }}>
-              <span style={{ ...ctaStyle, color: PUB.wit }} onClick={() => navigate("/teamscan")}>Start met de teamscan</span>
+              <span style={ctaStyle} onClick={() => navigate("/teamscan")}>Start met de teamscan</span>
               <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none" }} onClick={openModal}>Plan een kennismaking</span>
             </div>
           </div>
@@ -10136,7 +10141,7 @@ function TeamcoachingPage() {
 
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
           <div style={{ maxWidth: 820, margin: "0 auto" }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>
               Klaar om samenwerking concreet te verbeteren?
             </div>
             <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
@@ -10376,7 +10381,7 @@ function PsychologischeVeiligheidPage() {
         {/* 1. Hero */}
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
           <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 14 }}>
               Psychologische veiligheid in teams
             </div>
             <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
@@ -10680,7 +10685,7 @@ function PsychologischeVeiligheidPage() {
         {/* 11. CTA */}
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
           <div style={{ maxWidth: 780, margin: "0 auto" }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>
               Psychologische veiligheid verbeteren
             </div>
             <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
@@ -10886,7 +10891,7 @@ function SocialeVeiligheidPage() {
         {/* 1. Hero */}
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
           <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 14 }}>
               Sociale veiligheid in teams
             </div>
             <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
@@ -11084,7 +11089,7 @@ function SocialeVeiligheidPage() {
         {/* CTA */}
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
           <div style={{ maxWidth: 780, margin: "0 auto" }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>
               Sociale veiligheid versterken
             </div>
             <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
@@ -11319,7 +11324,7 @@ function BovenOnderstroomPage() {
         {/* 1. Hero */}
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
           <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 14 }}>
               Boven- en onderstroom in teams
             </div>
             <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
@@ -11548,7 +11553,7 @@ function BovenOnderstroomPage() {
         {/* CTA */}
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
           <div style={{ maxWidth: 780, margin: "0 auto" }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>
               De onderstroom bespreekbaar maken
             </div>
             <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
@@ -11799,7 +11804,7 @@ function BreinEnSamenwerkingPage() {
         {/* 1. Hero */}
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
           <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 14 }}>
               Brein en samenwerking
             </div>
             <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
@@ -11925,7 +11930,7 @@ function BreinEnSamenwerkingPage() {
               </p>
             </div>
             <div style={{ background: PUB.donker, borderRadius: 22, padding: isMobile ? 24 : 36 }}>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 16 }}>Herkenbaar in de praktijk</div>
+              <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 16 }}>Herkenbaar in de praktijk</div>
               {[
                 ["Het blijft stil na een open vraag", "Het snelle brein weegt af: is antwoorden hier riskant? Stilte is vaak bescherming, geen desinteresse."],
                 ["Een felle reactie op een neutrale opmerking", "Een bedreigde sociale behoefte (status, zekerheid, rechtvaardigheid) kan een reactie triggeren die groter is dan de aanleiding."],
@@ -12011,7 +12016,7 @@ function BreinEnSamenwerkingPage() {
         {/* CTA */}
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
           <div style={{ maxWidth: 780, margin: "0 auto" }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>
               Gedrag begrijpen in jouw team
             </div>
             <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
@@ -12237,7 +12242,7 @@ function KleineExperimentenPage() {
         {/* 1. Hero */}
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
           <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 14 }}>
               Kleine experimenten
             </div>
             <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
@@ -12499,7 +12504,7 @@ function KleineExperimentenPage() {
         {/* CTA */}
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
           <div style={{ maxWidth: 780, margin: "0 auto" }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>
               Stap voor stap groeien
             </div>
             <h2 style={{ fontSize: isMobile ? 28 : 40, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
@@ -12681,7 +12686,7 @@ function TeamdagPage() {
       <main style={{ fontFamily: "'Roboto', sans-serif", color: PUB.donker, background: PUB.wit }}>
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "76vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
           <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 14 }}>Teamdag organiseren</div>
+            <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 14 }}>Teamdag organiseren</div>
             <h1 style={{ fontSize: isMobile ? 36 : 56, fontWeight: 900, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>Teamdag organiseren die echt iets in beweging brengt</h1>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.74)", maxWidth: 700, marginBottom: 26 }}>Veel teamdagen zijn prettig en geven tijdelijk energie. Toch verandert er weinig als de bedoeling niet scherp is, het echte gesprek uitblijft en opvolging ontbreekt. Mijn Teamkompas helpt teams een teamdag organiseren die patronen zichtbaar maakt en beweging creëert in het dagelijks werk.</p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
@@ -12731,7 +12736,7 @@ function TeamdagPage() {
         </section>
 
         <section style={{ padding: isMobile ? "58px 22px" : "88px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
-          <div style={{ maxWidth: 820, margin: "0 auto" }}><div style={{ fontSize: 12, fontWeight: 900, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>Kennismaken</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>Welke beweging heeft jullie team nodig?</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.72)", marginBottom: 30 }}>Bespreek jullie situatie vrijblijvend. Je hoeft nog geen vast programma te kiezen; we kijken eerst wat er speelt en welke vorm logisch is.</p><button type="button" onClick={openModal} style={primaryCta}>Plan een vrijblijvende kennismaking</button></div>
+          <div style={{ maxWidth: 820, margin: "0 auto" }}><div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>Kennismaken</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>Welke beweging heeft jullie team nodig?</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.72)", marginBottom: 30 }}>Bespreek jullie situatie vrijblijvend. Je hoeft nog geen vast programma te kiezen; we kijken eerst wat er speelt en welke vorm logisch is.</p><button type="button" onClick={openModal} style={primaryCta}>Plan een vrijblijvende kennismaking</button></div>
         </section>
       </main>
 

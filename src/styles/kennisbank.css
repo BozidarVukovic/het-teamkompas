@@ -15,7 +15,9 @@
 
 .kb-knop { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 13px 22px; border: 1px solid transparent; border-radius: 999px; font-weight: 800; font-size: 15px; text-decoration: none; cursor: pointer; transition: transform .16s ease, background .16s ease, border-color .16s ease; }
 .kb-knop:hover { transform: translateY(-1px); }
-.kb-knop--primair { background: var(--tk-color-orange); color: #fff; box-shadow: 0 12px 30px rgba(232,130,26,.28); }
+/* Wit op oranje haalt 2,75:1. Oranje is licht genoeg om donkere tekst te
+   dragen: navy erop haalt 6,33. Dat is ook wat de knoppen elders doen. */
+.kb-knop--primair { background: var(--tk-color-orange); color: var(--tk-color-ink); box-shadow: 0 12px 30px rgba(232,130,26,.28); }
 .kb-knop--primair:hover { background: #cf7015; }
 .kb-knop--secundair { background: #fff; color: var(--tk-color-ink); border-color: var(--tk-color-border); }
 .kb-knop--stil { background: transparent; color: inherit; border-color: currentColor; opacity: .85; }

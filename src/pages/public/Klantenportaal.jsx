@@ -98,7 +98,7 @@ export default function Klantenportaal() {
       <section style={{ padding: "128px 24px 72px", background: PUB.donker, color: PUB.wit }}>
         <div style={{ maxWidth: 1120, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 36, alignItems: "center" }}>
           <div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "8px 12px", border: "1px solid rgba(255,255,255,0.16)", borderRadius: 999, color: PUB.teal, fontWeight: 800, fontSize: 13, marginBottom: 22 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "8px 12px", border: "1px solid rgba(255,255,255,0.16)", borderRadius: 999, color: PUB.tealOpDonker, fontWeight: 800, fontSize: 13, marginBottom: 22 }}>
               <KompasDot size={18} /> Klantportaal
             </div>
             <h1 style={{ fontSize: "clamp(38px, 6vw, 68px)", lineHeight: 1.02, margin: "0 0 22px", letterSpacing: "-0.04em" }}>

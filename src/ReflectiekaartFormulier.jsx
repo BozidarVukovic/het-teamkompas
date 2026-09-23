@@ -31,7 +31,7 @@ const C = {
   groen:   "#5A8C3C",
   licht:   "#F4F7F9",
   wit:     "#FFFFFF",
-  sub:     "#6B7A8D",
+  sub:     "#607083",
   lijn:    "#dde4ed",
   fout:    "#DC2626",
 };

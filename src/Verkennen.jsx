@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ContactModal from "./ContactModal";
 import KompasDot from "./components/shared/KompasDot";
 
-const C = { donker: "#0D1B2A", navy: "#1A2E4A", teal: "#0F766E", groen: "#2F8F3A", blauw: "#3A7DBF", oranje: "#E8821A", paars: "#6B4E9E", wit: "#FFFFFF", licht: "#F4F7F9", lijn: "#DDE4ED", sub: "#5F6B7A" };
+const C = { donker: "#0D1B2A", navy: "#1A2E4A", teal: "#0F766E", groen: "#2F8F3A", groenTekst: "#26762F", groenOpDonker: "#86CC63", blauw: "#3A7DBF", oranje: "#E8821A", paars: "#6B4E9E", wit: "#FFFFFF", licht: "#F4F7F9", lijn: "#DDE4ED", sub: "#5F6B7A" };
 function useIsMobile(){ const [m,setM]=React.useState(false); React.useEffect(()=>{const f=()=>setM(window.innerWidth<820); f(); window.addEventListener("resize",f); return()=>window.removeEventListener("resize",f);},[]); return m; }
 
 export default function Verkennen(){
@@ -40,11 +40,11 @@ export default function Verkennen(){
           <div style={{position:"absolute", inset:0, backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.04) 1px,transparent 1px)", backgroundSize:"30px 30px"}} />
           <div style={{maxWidth:1180, margin:"0 auto", display:"grid", gridTemplateColumns:isMobile?"1fr":"1.02fr .98fr", gap:40, alignItems:"center", position:"relative"}}>
             <div>
-              <div style={{fontSize:12, fontWeight:900, letterSpacing:"0.16em", textTransform:"uppercase", color:"#5A8C3C", marginBottom:14}}>Klantreis 1: persoonlijk traject</div>
+              <div style={{fontSize:12, fontWeight:900, letterSpacing:"0.16em", textTransform:"uppercase", color:C.groenOpDonker, marginBottom:14}}>Klantreis 1: persoonlijk traject</div>
               <h1 style={{fontSize:isMobile?36:58, lineHeight:1.04, margin:"0 0 18px", letterSpacing:"-0.03em"}}>Bouw eerst vertrouwen op voordat je een team in beweging brengt.</h1>
               <p style={{fontSize:isMobile?16:18, lineHeight:1.75, color:"rgba(255,255,255,0.72)", maxWidth:680}}>Voor teams waar samenwerking schuurt, gesprekken blijven liggen of verandering niet goed landt. We starten niet met een standaardoplossing, maar met een zorgvuldige verkenning van wat er echt speelt.</p>
               <div style={{display:"flex", flexDirection:isMobile?"column":"row", gap:12, marginTop:28}}>
-                <button onClick={()=>setOpen(true)} style={{background:C.groen, color:C.wit, border:"none", borderRadius:12, padding:"15px 20px", fontWeight:900, cursor:"pointer"}}>Plan een vrijblijvende kennismaking</button>
+                <button onClick={()=>setOpen(true)} style={{background:C.groenTekst, color:C.wit, border:"none", borderRadius:12, padding:"15px 20px", fontWeight:900, cursor:"pointer"}}>Plan een vrijblijvende kennismaking</button>
                 <button onClick={()=>navigate("/")} style={{background:"rgba(255,255,255,0.06)", color:C.wit, border:"1px solid rgba(255,255,255,0.22)", borderRadius:12, padding:"15px 20px", fontWeight:800, cursor:"pointer"}}>Terug naar overzicht</button>
               </div>
             </div>
@@ -58,7 +58,7 @@ export default function Verkennen(){
         <section style={{padding:isMobile?"54px 22px":"82px 60px", background:C.licht}}>
           <div style={{maxWidth:1180, margin:"0 auto"}}>
             <div style={{maxWidth:760, marginBottom:28}}>
-              <div style={{fontSize:12, fontWeight:900, letterSpacing:"0.16em", color:C.groen, textTransform:"uppercase", marginBottom:10}}>Werkwijze</div>
+              <div style={{fontSize:12, fontWeight:900, letterSpacing:"0.16em", color:C.groenTekst, textTransform:"uppercase", marginBottom:10}}>Werkwijze</div>
               <h2 style={{fontSize:isMobile?30:44, lineHeight:1.12, margin:"0 0 12px"}}>Van eerste contact naar verdiepend teamtraject.</h2>
               <p style={{fontSize:16, lineHeight:1.75, color:C.sub}}>De route is bewust eenvoudig gehouden. De diepgang ontstaat in de analyse en begeleiding, niet in een ingewikkeld proces.</p>
             </div>

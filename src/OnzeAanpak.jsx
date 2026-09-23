@@ -28,7 +28,7 @@ const PUB = {
   oranje: "#E8821A",
   licht: "#F4F7F9",
   wit: "#FFFFFF",
-  sub: "#6B7A8D",
+  sub: "#607083",
   lijn: "#dde4ed",
 };
 
@@ -40,8 +40,17 @@ const images = {
 };
 
 
-function SectionLabel({ children }) {
-  return <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>{children}</div>;
+/**
+ * De regel boven een kop.
+ *
+ * Op een lichte sectie haalt de gewone teal 5,09:1 en is hij goed. Op een
+ * donkere sectie haalt diezelfde teal 3,18 en valt hij weg -- daar staat een
+ * lichtere tint, iets groter, en zonder hoofdletters.
+ */
+function SectionLabel({ children, opDonker = false }) {
+  return opDonker
+    ? <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>{children}</div>
+    : <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>{children}</div>;
 }
 
 function Card({ children, topColor }) {
@@ -132,7 +141,7 @@ export default function OnzeAanpakPage() {
             <img src={images.hero} alt="Teamcoaching sessie waarin teamleden in gesprek zijn over samenwerking en leiderschap" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block", opacity: 0.92, filter: "saturate(0.94) contrast(1.04)" }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94) 0%, rgba(13,27,42,0.54) 38%, rgba(13,27,42,0.06) 100%)" }} />
             <div style={{ position: "absolute", left: 34, bottom: 34, maxWidth: 340, background: "rgba(13,27,42,0.72)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 18, padding: "18px 20px", backdropFilter: "blur(8px)", boxShadow: "0 22px 50px rgba(0,0,0,0.26)" }}>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: PUB.teal, marginBottom: 8 }}>Reflectie en begeleiding</div>
+              <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 8 }}>Reflectie en begeleiding</div>
               <div style={{ fontSize: 18, lineHeight: 1.45, fontWeight: 800, color: PUB.wit }}>Niet harder werken, maar anders kijken naar wat samenwerking helpt of belemmert.</div>
             </div>
           </div>
@@ -163,7 +172,7 @@ export default function OnzeAanpakPage() {
                   <h3 style={{ fontSize: 20, margin: "0 0 10px", color: PUB.donker }}>{titel}</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>
                   {(titel === "Veiligheid & leiderschap") && (
-                    <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: kleur, textDecoration: "none" }}>
+                    <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: PUB.teal, textDecoration: "none" }}>
                       Meer over psychologische veiligheid →
                     </a>
                   )}
@@ -222,7 +231,7 @@ export default function OnzeAanpakPage() {
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 42, alignItems: "center" }}>
             <img src={images.workshop} alt="Workshop waarin mensen samen inzichten vertalen naar actie" style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 440, boxShadow: "0 24px 70px rgba(0,0,0,0.34)" }} />
             <div>
-              <SectionLabel>Van inzicht naar gedrag</SectionLabel>
+              <SectionLabel opDonker>Van inzicht naar gedrag</SectionLabel>
               <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>De aanpak blijft pas waardevol als het team er iets mee gaat doen.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)" }}>Daarom eindigt de teamscan niet bij een score. We gebruiken de uitkomsten om het juiste gesprek te voeren, patronen te herkennen en kleine stappen te kiezen die passen bij het team.</p>
               <div style={{ display: "grid", gap: 12, marginTop: 24 }}>
