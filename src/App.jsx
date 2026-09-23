@@ -1499,9 +1499,9 @@ function PublicSite({ onLoginClick }) {
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 18 }}>
               {[
-                ["Meten", "Met de teamscan, intake of voorbereidende gesprekken maken we zichtbaar wat het team ervaart en waar samenwerking schuurt.", "/teamkompas-intakegesprek.jpg", "Verkennend gesprek over leiderschap, samenwerking en teamontwikkeling"],
+                ["Meten", "Met de teamscan, intake of voorbereidende gesprekken maken we zichtbaar wat het team ervaart en waar samenwerking schuurt.", "/blog/images/afstemmen.jpg", "Team kijkt samen naar uitkomsten op een scherm"],
                 ["Begrijpen", "We geven samen betekenis aan patronen, verschillen en onderstroom, zodat het gesprek concreet en veilig wordt.", "/blog/images/goedevragen.jpg", "Twee collega's in gesprek, waarbij de een aandachtig luistert naar de ander"],
-                ["Bewegen", "In workshops, teamdagen en coaching vertalen we inzicht naar ander gedrag, duidelijke afspraken en eigenaarschap.", "/teamkompas-samen-richting.jpg", "Teamsessie waarin deelnemers samen richting geven aan verbetering"]
+                ["Bewegen", "In workshops, teamdagen en coaching vertalen we inzicht naar ander gedrag, duidelijke afspraken en eigenaarschap.", "/blog/images/experimenteren.jpg", "Begeleider bij een flip-over met de cyclus van proberen, kijken en leren"]
               ].map(([titel, tekst, image, alt], i) => (
                 <Fade key={titel} delay={i * 0.06} style={{ height: "100%" }}>
                   <div style={{ height: "100%", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, overflow: "hidden", boxShadow: "0 18px 44px rgba(13,27,42,0.08)" }}>
@@ -9680,7 +9680,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             </button>
           </div>
           <div style={{ minHeight: isMobile ? 310 : "78vh", position: "relative", zIndex: 1 }}>
-            <img src="/teamkompas-samen-richting.jpg" alt="Teamontwikkeling met Mijn Teamkompas tijdens een begeleide teamsessie" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", objectPosition: "68% 40%", filter: "brightness(1.10) contrast(0.95) saturate(1.05)" }} />
+            <img src="/blog/images/verandering-omarmen.jpg" alt="Team in gesprek tijdens een begeleide sessie over samenwerking" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "brightness(1.10) contrast(0.95) saturate(1.05)" }} />
             <div style={{ position: "absolute", inset: 0, background: isMobile ? "linear-gradient(to top, rgba(13,27,42,0.88), rgba(13,27,42,0.12))" : "linear-gradient(to right, rgba(13,27,42,0.92) 0%, rgba(13,27,42,0.46) 9%, rgba(13,27,42,0.14) 26%, rgba(13,27,42,0.04) 60%, rgba(13,27,42,0) 100%)" }} />
           </div>
         </section>
@@ -9714,7 +9714,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
         <section style={{ background: PUB.wit, padding: isMobile ? "54px 20px" : "82px 60px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 40, alignItems: "center" }}>
             <Fade>
-              <img src="/teamkompas-intakegesprek.jpg" alt="Verkennend gesprek over teamontwikkeling en samenwerking verbeteren" style={{ width: "100%", height: isMobile ? 280 : 440, objectFit: "cover", borderRadius: 20, boxShadow: "0 24px 60px rgba(13,27,42,0.14)" }} />
+              <img src="/blog/images/dagstart.jpg" alt="Team dat staand bij post-its de vraag achter de vraag onderzoekt" style={{ width: "100%", height: isMobile ? 280 : 440, objectFit: "cover", borderRadius: 20, boxShadow: "0 24px 60px rgba(13,27,42,0.14)" }} />
             </Fade>
             <Fade delay={0.08}>
               <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.16em", color: PUB.teal, textTransform: "uppercase", marginBottom: 12 }}>De aanpak van Mijn Teamkompas</div>
@@ -10395,8 +10395,8 @@ function PsychologischeVeiligheidPage() {
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
-            <img src="/teamkompas-intakegesprek.jpg" alt="Gesprek over psychologische veiligheid in teams" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.85 }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.94), rgba(13,27,42,0.08))" }} />
+            <img src="/blog/images/psychologische-veiligheid.jpg" alt="Team dat bij een flip-over bespreekt wat hen drijft" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "brightness(1.10) contrast(0.95) saturate(1.05)" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.92) 0%, rgba(13,27,42,0.46) 9%, rgba(13,27,42,0.14) 26%, rgba(13,27,42,0.04) 60%, rgba(13,27,42,0) 100%)" }} />
           </div>
         </section>
 
@@ -10905,7 +10905,7 @@ function SocialeVeiligheidPage() {
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
-            <img src="/teamkompas-samen-richting.jpg" alt="Team in gesprek over sociale veiligheid en omgangsvormen" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", objectPosition: "22% 55%", filter: "brightness(1.10) contrast(0.95) saturate(1.05)" }} />
+            <img src="/blog/images/sociale-veiligheid-afdeling.jpg" alt="Team in gesprek over sociale veiligheid en omgangsvormen op de afdeling" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "brightness(1.10) contrast(0.95) saturate(1.05)" }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.92) 0%, rgba(13,27,42,0.46) 9%, rgba(13,27,42,0.14) 26%, rgba(13,27,42,0.04) 60%, rgba(13,27,42,0) 100%)" }} />
           </div>
         </section>
