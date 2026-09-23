@@ -991,7 +991,7 @@ function SeoHead({ page = "home" }) {
       title: "Teamontwikkeling Nederland | samenwerking verbeteren",
       description: "Teamontwikkeling voor organisaties in Nederland. Verbeter samenwerking, psychologische veiligheid en eigenaarschap met teamscan, teamcoaching en praktische borging.",
       url: "https://www.mijnteamkompas.nl/teamontwikkeling",
-      image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
+      image: "https://www.mijnteamkompas.nl/blog/images/ogsm.jpg",
     },
     verkennen: {
       title: "Verkennend gesprek | bespreek je teamvraag met Mijn Teamkompas",
@@ -1009,13 +1009,13 @@ function SeoHead({ page = "home" }) {
       title: "Teamdag organiseren | dialoog en concrete afspraken",
       description: "Een teamdag van Mijn Teamkompas: gestructureerde dialoog op basis van de teamscan, met heldere uitkomsten, gedeelde afspraken en concrete vervolgstappen.",
       url: "https://www.mijnteamkompas.nl/teamdag",
-      image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
+      image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
     },
     klantenportaal: {
       title: "Klantenportaal | Mijn Teamkompas",
       description: "Toegang tot scanlinks, voorbereiding, documenten en contactinformatie voor klanten en deelnemers van Mijn Teamkompas.",
       url: "https://www.mijnteamkompas.nl/klantenportaal",
-      image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
+      image: "https://www.mijnteamkompas.nl/teamkompas-intakegesprek.jpg",
     },
     beheer: {
       title: "Beheeromgeving | Mijn Teamkompas",
@@ -1504,7 +1504,7 @@ function PublicSite({ onLoginClick }) {
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 18 }}>
               {[
                 ["Meten", "Met de teamscan, intake of voorbereidende gesprekken maken we zichtbaar wat het team ervaart en waar samenwerking schuurt.", "/teamkompas-intakegesprek.jpg", "Verkennend gesprek over leiderschap, samenwerking en teamontwikkeling"],
-                ["Begrijpen", "We geven samen betekenis aan patronen, verschillen en onderstroom, zodat het gesprek concreet en veilig wordt.", "/teamkompas-workshop-hero.jpg", "Teamworkshop met kompaswerkvorm en dialoog over samenwerking"],
+                ["Begrijpen", "We geven samen betekenis aan patronen, verschillen en onderstroom, zodat het gesprek concreet en veilig wordt.", "/blog/images/goedevragen.jpg", "Twee collega's in gesprek, waarbij de een aandachtig luistert naar de ander"],
                 ["Bewegen", "In workshops, teamdagen en coaching vertalen we inzicht naar ander gedrag, duidelijke afspraken en eigenaarschap.", "/teamkompas-samen-richting.jpg", "Teamsessie waarin deelnemers samen richting geven aan verbetering"]
               ].map(([titel, tekst, image, alt], i) => (
                 <Fade key={titel} delay={i * 0.06} style={{ height: "100%" }}>
@@ -9789,7 +9789,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             </Fade>
             <Fade delay={0.08}>
               <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 22, padding: isMobile ? 22 : 30, boxShadow: "0 24px 60px rgba(13,27,42,0.10)" }}>
-                <img src="/teamkompas-workshop-hero.jpg" alt="Teamscan en teamcoaching als basis voor teamontwikkeling" style={{ width: "100%", height: isMobile ? 220 : 300, objectFit: "cover", borderRadius: 16, marginBottom: 22 }} />
+                <img src="/blog/images/ogsm.jpg" alt="Kompas met doel, strategie, actie en meting, met een team eromheen" style={{ width: "100%", height: isMobile ? 220 : 300, objectFit: "cover", borderRadius: 16, marginBottom: 22 }} />
                 <h3 style={{ fontSize: isMobile ? 24 : 30, lineHeight: 1.18, color: PUB.donker, marginBottom: 12 }}>Van losse signalen naar een gedeelde ontwikkelagenda.</h3>
                 <p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, marginBottom: 22 }}>
                   De teamscan helpt om de juiste teamvraag scherp te maken. Daarna kan een teamdag, coachingsgesprek of begeleid traject veel gerichter worden ingericht.
@@ -10086,8 +10086,8 @@ function TeamcoachingPage() {
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 42, alignItems: "center" }}>
             <img
-              src="/teamkompas-workshop-hero.jpg"
-              alt="Teamcoaching met Insights Discovery en teamscan voor betere samenwerking"
+              src="/blog/images/relationele-intelligentie.jpg"
+              alt="Twee collega's in gesprek over hoe ze op elkaar reageren"
               style={{ width: "100%", borderRadius: 22, objectFit: "cover", minHeight: isMobile ? 280 : 460, boxShadow: "0 24px 70px rgba(13,27,42,0.16)" }}
             />
             <div>
