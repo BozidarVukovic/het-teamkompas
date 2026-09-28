@@ -42,7 +42,7 @@ export default function Teamontwikkeling() {
             inzicht in gedrag, veiligheid, motivatie en de dagelijkse praktijk.
           </p>
           <div className="tk-actions">
-            <ButtonLink href="/teamscan" onClick={() => registreerEvent("teamontwikkeling_teamscan_click")}>Start met de teamscan</ButtonLink>
+            <ButtonLink href="/teamscan" onClick={() => registreerEvent("teamontwikkeling_teamscan_click")}>Bekijk de teamscan voor teams</ButtonLink>
             <ButtonLink href="/" variant="secondary" onClick={() => registreerEvent("teamontwikkeling_home_click")}>Terug naar home</ButtonLink>
           </div>
         </Section>
@@ -241,7 +241,7 @@ export default function Teamontwikkeling() {
           boxShadow: "0 14px 35px rgba(15,118,110,.20)",
         }}
       >
-        Start met de teamscan
+        Bekijk de teamscan voor teams
       </a>
     </div>
 
@@ -565,7 +565,7 @@ export default function Teamontwikkeling() {
           lineHeight: 1.55,
         }}
       >
-        Start met de teamscan of plan eerst een verkennend gesprek.
+        Bekijk de teamscan voor teams, of plan eerst een verkennend gesprek.
       </p>
     </div>
 
@@ -582,7 +582,7 @@ export default function Teamontwikkeling() {
           fontWeight: 900,
         }}
       >
-        Start met de teamscan
+        Bekijk de teamscan voor teams
       </a>
 
       <a

@@ -262,7 +262,7 @@ export default function Kennisbank() {
                     </ul>
                     <div className="kb-filter-acties">
                       <button type="button" className="kb-knop kb-knop--primair" onClick={() => startWijzer(1)}>Keuzes aanpassen</button>
-                      <Link className="kb-knop kb-knop--secundair" to="/gratis-teamscan">Start de gratis teamscan</Link>
+                      <Link className="kb-knop kb-knop--secundair" to="/gratis-teamscan">Doe de gratis teamscan</Link>
                       <Link className="kb-knop kb-knop--secundair" to="/verkennen">Bespreek het vrijblijvend</Link>
                     </div>
                   </div>

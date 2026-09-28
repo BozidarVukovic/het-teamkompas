@@ -252,7 +252,7 @@ export function artikelNaarItem(post) {
     categorie: post.category,
     uitgelicht: false,
     datum: post.publishDate,
-    vervolgstap: { label: "Start de gratis persoonlijke teamscan", href: "/gratis-teamscan" },
+    vervolgstap: { label: "Doe de gratis teamscan", href: "/gratis-teamscan" },
     gerelateerd: [],
   };
 }

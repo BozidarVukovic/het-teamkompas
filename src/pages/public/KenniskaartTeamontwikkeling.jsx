@@ -138,7 +138,7 @@ export default function KenniskaartTeamontwikkeling() {
             <Eyebrow>Van kennis naar beweging</Eyebrow>
             <h2 className="tk-heading-lg">Kennis krijgt waarde wanneer teams ermee gaan werken.</h2>
             <p>Kennis over teamontwikkeling, neuromanagement, veiligheid en eigenaarschap wordt pas merkbaar wanneer teams deze vertalen naar gesprekken, afspraken en kleine experimenten in het dagelijks werk.</p>
-            <div className="tk-actions"><ButtonLink href="/teamscan">Start met de teamscan</ButtonLink><ButtonLink href="/verkennen" variant="secondary">Plan een kennismakingsgesprek</ButtonLink><ButtonLink href="/teamontwikkeling" variant="secondary">Bekijk teamontwikkeling</ButtonLink><ButtonLink href="/teamdag" variant="secondary">Ontdek teamdagen</ButtonLink></div>
+            <div className="tk-actions"><ButtonLink href="/teamscan">Bekijk de teamscan voor teams</ButtonLink><ButtonLink href="/verkennen" variant="secondary">Plan een kennismakingsgesprek</ButtonLink><ButtonLink href="/teamontwikkeling" variant="secondary">Bekijk teamontwikkeling</ButtonLink><ButtonLink href="/teamdag" variant="secondary">Ontdek teamdagen</ButtonLink></div>
           </div>
         </div>
       </Section>

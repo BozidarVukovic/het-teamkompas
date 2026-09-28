@@ -116,6 +116,14 @@ function MobileKnowledge({ onNavigate }) {
   </div>;
 }
 
+/* Hier stond "Over ons", met een link naar /#over-ons. Dat anker bestaat niet,
+   er is geen route /over-ons, en op de hele publieke site staat niets over
+   Bozidar en Edmond -- behalve Edmonds sprekersprofiel. De link deed dus op
+   elke pagina niets: je bleef staan, of je kwam boven aan de homepage uit.
+
+   Weggehaald in plaats van naar iets anders gewezen: een menu-item dat naar de
+   verkeerde pagina gaat is erger dan een menu-item dat er niet is. Hij hoort
+   terug zodra er een pagina is over de twee mensen achter dit bedrijf. */
 export default function OrganizedNavigation() {
   const [mobile, setMobile] = useState(() => window.innerWidth < 960);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -146,7 +154,6 @@ export default function OrganizedNavigation() {
     setMenuOpen(false);
     if (isStaticPage(path)) window.location.assign(path); else navigate(path);
   };
-  const goAnker = (event, path) => { event.preventDefault(); setMenuOpen(false); navigate(path); };
 
   return <>
     <header className="site-header">
@@ -160,7 +167,6 @@ export default function OrganizedNavigation() {
           <a href="/onze-aanpak" onClick={(e) => { e.preventDefault(); go("/onze-aanpak"); }}>Onze aanpak</a>
           <KnowledgeMenu onNavigate={go} />
           <NavLink item={{ label: "Inspiratie", href: "/inspiratie" }} onNavigate={go} />
-          <a href="/#over-ons" onClick={(e) => goAnker(e, "/#over-ons")}>Over ons</a>
           <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="site-nav__cta">Plan een vrijblijvende kennismaking</a>
           {/* Wijst naar de samenwerkomgeving en niet naar /beheer: teamleden
               zijn met velen en beheerders met een paar. Op het inlogscherm van
@@ -174,7 +180,6 @@ export default function OrganizedNavigation() {
       <a href="/onze-aanpak" onClick={(e) => { e.preventDefault(); go("/onze-aanpak"); }}>Onze aanpak</a>
       <MobileKnowledge onNavigate={go} />
       <NavLink item={{ label: "Inspiratie", href: "/inspiratie" }} onNavigate={go} />
-      <a href="/#over-ons" onClick={(e) => goAnker(e, "/#over-ons")}>Over ons</a>
       <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="mobile-nav__cta">Plan een vrijblijvende kennismaking</a>
       <a href="/app" onClick={(e) => { e.preventDefault(); go("/app"); }} className="mobile-nav__login">Inloggen →</a>
     </div>}

@@ -51,7 +51,7 @@ export const REFLECTIEVRAGEN = [
     tags: ["psychologische-veiligheid", "vertrouwen", "reflectie", "aanspreekbaarheid"],
     uitgelicht: true,
     datum: "2026-08-25",
-    vervolgstap: { label: "Start de gratis persoonlijke teamscan", href: "/gratis-teamscan" },
+    vervolgstap: { label: "Doe de gratis teamscan", href: "/gratis-teamscan" },
     gerelateerd: ["scan-gratis-teamscan", "wv-laatste-ronde", "art:/psychologische-veiligheid"],
     inhoud: {
       waarvoor: "Veiligheid meet je zelden door ernaar te vragen. Je merkt het aan wat mensen inslikken. Deze vragen maken dat concreet.",

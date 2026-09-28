@@ -1609,12 +1609,12 @@ function PublicSite({ onLoginClick }) {
               <div style={{ marginTop: 28, display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", gap: 16, alignItems: isMobile ? "stretch" : "center", background: PUB.donker, color: PUB.wit, borderRadius: 18, padding: isMobile ? 22 : 26 }}>
                 <div>
                   <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 6 }}>Wil je dit voor je eigen team zichtbaar maken?</div>
-                  <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)" }}>Start laagdrempelig met de digitale teamscan of plan eerst een verdiepend gesprek.</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)" }}>Bekijk wat de teamscan voor teams meet, of plan eerst een verdiepend gesprek.</div>
                 </div>
                 <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 10, flexShrink: 0 }}>
                   {/* Teal als vulling is te donker voor de donkere tekst van
                       ctaStyle (3,18:1). Met witte tekst erop is het 5,47. */}
-                  <span style={{ ...ctaStyle, display: "inline-block", background: PUB.teal, color: PUB.wit }} onClick={() => navigate("/teamscan")}>Start de digitale teamscan</span>
+                  <span style={{ ...ctaStyle, display: "inline-block", background: PUB.teal, color: PUB.wit }} onClick={() => navigate("/teamscan")}>Bekijk de teamscan voor teams</span>
                   <span style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center" }} onClick={openModal}>Plan een verdiepend gesprek</span>
                 </div>
               </div>
@@ -9625,7 +9625,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
                 voorstelt. De kennismaking blijft bereikbaar, maar als regel
                 eronder in plaats van als tweede beslissing. */}
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
-              <span style={ctaStyle} onClick={() => navigate("/teamscan")}>Start met de teamscan</span>
+              <span style={ctaStyle} onClick={() => navigate("/teamscan")}>Bekijk de teamscan voor teams</span>
             </div>
 
             {/* Deze regel stond op 13 pixels in wit van 50 procent. Dat haalt
@@ -9757,7 +9757,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
                   De teamscan helpt om de juiste teamvraag scherp te maken. Daarna kan een teamdag, coachingsgesprek of begeleid traject veel gerichter worden ingericht.
                 </p>
                 <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12 }}>
-                  <span style={{ ...ctaStyle, flex: 1 }} onClick={() => navigate("/teamscan")}>Start de digitale teamscan</span>
+                  <span style={{ ...ctaStyle, flex: 1 }} onClick={() => navigate("/teamscan")}>Bekijk de teamscan voor teams</span>
                   <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none", flex: 1 }} onClick={openModal}>Plan een verdiepend gesprek</span>
                 </div>
               </div>
@@ -9770,7 +9770,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Ondersteunende instrumenten</div>
             <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 24 }}>Teamontwikkeling krijgt meer diepte met passende hulpmiddelen.</h2>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
-              {[["Teamscan", "Maakt zichtbaar waar samenwerking, veiligheid, energie en leren aandacht vragen.", "/teamscan", "Start met de teamscan"], ["Teamdag", "Zet inzicht om in een begeleid gesprek, oefeningen en concrete teamafspraken.", "/teamdag", "Bekijk teamdagen"], ["Insights Discovery-profielen", "Voor professionals en teams die meer inzicht willen in communicatie, samenwerking, voorkeuren en gedrag onder druk.", "/insights-discovery-profiel", "Lees meer over Insights Discovery"]].map(([titel, tekst, href, label]) => (
+              {[["Teamscan", "Maakt zichtbaar waar samenwerking, veiligheid, energie en leren aandacht vragen.", "/teamscan", "Bekijk de teamscan voor teams"], ["Teamdag", "Zet inzicht om in een begeleid gesprek, oefeningen en concrete teamafspraken.", "/teamdag", "Bekijk teamdagen"], ["Insights Discovery-profielen", "Voor professionals en teams die meer inzicht willen in communicatie, samenwerking, voorkeuren en gedrag onder druk.", "/insights-discovery-profiel", "Lees meer over Insights Discovery"]].map(([titel, tekst, href, label]) => (
                 <a key={titel} href={href} onClick={() => titel === "Insights Discovery-profielen" && registreerTeamontwikkelingEvent("teamontwikkeling_insights_click")} style={{ display: "block", height: "100%", background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, textDecoration: "none", boxShadow: "0 16px 38px rgba(13,27,42,0.06)" }}>
                   <h3 style={{ fontSize: 22, lineHeight: 1.2, color: PUB.donker, margin: "0 0 10px" }}>{titel}</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
@@ -9837,10 +9837,10 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Volgende stap</div>
             <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Wil je weten wat jouw team nodig heeft?</h2>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, maxWidth: 720, margin: "0 auto 28px" }}>
-              Start laagdrempelig met de teamscan of plan een verkennend gesprek. Dan bepalen we samen welke stap past bij jullie teamvraag.
+              Bekijk wat de teamscan voor teams meet, of plan een verkennend gesprek. Dan bepalen we samen welke stap past bij jullie teamvraag.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center" }}>
-              <span style={ctaStyle} onClick={() => navigate("/teamscan")}>Start met de teamscan</span>
+              <span style={ctaStyle} onClick={() => navigate("/teamscan")}>Bekijk de teamscan voor teams</span>
               <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none" }} onClick={openModal}>Plan een kennismaking</span>
             </div>
           </div>
@@ -9964,7 +9964,7 @@ function TeamcoachingPage() {
                 Plan een kennismaking
               </button>
               <a href="/teamscan" style={{ ...ghostStyle, background: "rgba(255,255,255,0.08)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.22)" }}>
-                Start met de teamscan
+                Bekijk de teamscan voor teams
               </a>
             </div>
           </div>
@@ -10116,7 +10116,7 @@ function TeamcoachingPage() {
                 Plan een kennismaking
               </button>
               <a href="/teamscan" style={{ ...ghostStyle, background: "rgba(255,255,255,0.08)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.22)" }}>
-                Start met de teamscan
+                Bekijk de teamscan voor teams
               </a>
             </div>
           </div>
@@ -10356,7 +10356,7 @@ function PsychologischeVeiligheidPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
@@ -10657,7 +10657,7 @@ function PsychologischeVeiligheidPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
               <a href="/onze-aanpak" style={{ color: "rgba(255,255,255,0.72)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over onze aanpak →</a>
             </div>
           </div>
@@ -10866,7 +10866,7 @@ function SocialeVeiligheidPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
@@ -11061,7 +11061,7 @@ function SocialeVeiligheidPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
               <a href="/psychologische-veiligheid" style={{ color: "rgba(255,255,255,0.72)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over psychologische veiligheid →</a>
             </div>
           </div>
@@ -11299,7 +11299,7 @@ function BovenOnderstroomPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
@@ -11525,7 +11525,7 @@ function BovenOnderstroomPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
               <a href="/onze-aanpak" style={{ color: "rgba(255,255,255,0.72)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over onze aanpak →</a>
             </div>
           </div>
@@ -11779,7 +11779,7 @@ function BreinEnSamenwerkingPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
@@ -11988,7 +11988,7 @@ function BreinEnSamenwerkingPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
               <a href="/psychologische-veiligheid" style={{ color: "rgba(255,255,255,0.72)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over psychologische veiligheid →</a>
             </div>
           </div>
@@ -12217,7 +12217,7 @@ function KleineExperimentenPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
             </div>
           </div>
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
@@ -12476,7 +12476,7 @@ function KleineExperimentenPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan</a>
+              <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
               <a href="/onze-aanpak" style={{ color: "rgba(255,255,255,0.72)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over onze aanpak →</a>
             </div>
           </div>

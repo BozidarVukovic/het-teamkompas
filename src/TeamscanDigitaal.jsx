@@ -652,7 +652,7 @@ export default function TeamscanDigitaal() {
               </div>
             </div>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", marginTop: 22 }}>
-              <a href="#aanvraag" onClick={() => trackFormStartOnce({ trigger: "rapport_preview_cta" })} style={{ ...primaryCtaStyle, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Start de teamscan</a>
+              <a href="#aanvraag" onClick={() => trackFormStartOnce({ trigger: "rapport_preview_cta" })} style={{ ...primaryCtaStyle, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Vraag de teamscan aan</a>
               <button onClick={() => navigate("/verkennen")} style={{ ...buttonBase, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Plan een kennismaking</button>
             </div>
           </div>
@@ -668,7 +668,7 @@ export default function TeamscanDigitaal() {
                 Doe de gratis individuele teamscan. Je beantwoordt een korte vragenlijst over hoe jij de samenwerking ervaart en krijgt direct een persoonlijk rapport met reflectievragen en een eerste kleine stap. Het is een persoonlijke indruk, geen oordeel over het hele team. De volledige teamscan hierboven brengt juist de beleving van álle teamleden samen.
               </p>
               <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12 }}>
-                <a href="/gratis-teamscan" onClick={(e) => { e.preventDefault(); navigate("/gratis-teamscan"); }} style={{ ...primaryCtaStyle, background: C.teal, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Start de gratis teamscan</a>
+                <a href="/gratis-teamscan" onClick={(e) => { e.preventDefault(); navigate("/gratis-teamscan"); }} style={{ ...primaryCtaStyle, background: C.teal, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Doe de gratis teamscan</a>
               </div>
             </div>
             <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 10 }}>
@@ -947,7 +947,7 @@ export default function TeamscanDigitaal() {
                   <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 24 }}>
                     <button type="button" onClick={() => { setError(""); setStep(1); scrollToAanvraag(); }} style={{ ...buttonBase, flex: 1, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Terug</button>
                     <button type="submit" disabled={submitting} style={{ ...primaryCtaStyle, flex: 2, background: submitting ? C.sub : C.oranje, opacity: submitting ? 0.75 : 1 }}>
-                      {submitting ? "Aanvraag versturen..." : "Start aanvraag teamscan"}
+                      {submitting ? "Aanvraag versturen..." : "Vraag de teamscan aan"}
                     </button>
                   </div>
                 </div>

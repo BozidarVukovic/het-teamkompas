@@ -23,7 +23,7 @@ export const DOWNLOADS = [
     uitgelicht: true,
     datum: "2026-08-25",
     bestand: "/reflectiekaart-mijn-teamkompas.pdf",
-    vervolgstap: { label: "Start de gratis persoonlijke teamscan", href: "/gratis-teamscan" },
+    vervolgstap: { label: "Doe de gratis teamscan", href: "/gratis-teamscan" },
     gerelateerd: ["scan-gratis-teamscan", "rv-veiligheid-team", "rv-team-leren"],
     inhoud: {
       waarvoor: "Een kaart die je meeneemt naar een overleg of teamdag, met per domein een paar vragen die het gesprek op gang brengen.",

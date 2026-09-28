@@ -263,7 +263,7 @@ export const KENNISPAGINAS = [
     niveau: "laag",
     tags: ["teamontwikkeling", "reflectie", "leren"],
     datum: "2026-06-10",
-    vervolgstap: { label: "Start de gratis persoonlijke teamscan", href: "/gratis-teamscan" },
+    vervolgstap: { label: "Doe de gratis teamscan", href: "/gratis-teamscan" },
     gerelateerd: ["scan-gratis-teamscan", "kp-kleine-experimenten", "dl-reflectiekaart"],
   },
   {

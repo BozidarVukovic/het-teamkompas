@@ -110,7 +110,7 @@ export const VOORMETING = {
   aanraden:
     "Een korte voormeting helpt: laat het team vooraf de gratis teamscan invullen. Je begint de dag dan met een gedeeld beeld in plaats van met een inventarisatie.",
   href: "/gratis-teamscan",
-  label: "Bekijk de gratis teamscan",
+  label: "Doe de gratis teamscan",
 };
 
 export const BORGING_VOORSTELLEN = {
@@ -152,7 +152,7 @@ export const CONVERSIE = {
   knoppen: [
     { label: "Plan een vrijblijvend gesprek", href: "/contact", primair: true },
     { label: "Ontdek begeleiding voor jullie teamdag", href: "/teamdag" },
-    { label: "Start de Teamscan", href: "/gratis-teamscan" },
+    { label: "Doe de gratis teamscan", href: "/gratis-teamscan" },
   ],
   intake: {
     tekst:

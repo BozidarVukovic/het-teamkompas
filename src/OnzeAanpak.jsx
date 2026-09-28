@@ -128,7 +128,7 @@ export default function OnzeAanpakPage() {
             <a href="/teamscan" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Teamscan</a>
             <a href="/teamontwikkeling" style={{ color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13 }}>Teamontwikkeling</a>
             <button type="button" onClick={openModal} style={{ background: "transparent", border: "none", padding: 0, color: "rgba(255,255,255,0.68)", textDecoration: "none", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>Contact</button>
-            <a href="/teamscan" style={{ background: PUB.licht, color: PUB.donker, padding: "10px 18px", borderRadius: 999, fontSize: 12, fontWeight: 800, textDecoration: "none" }}>Start teamscan</a>
+            <a href="/teamscan" style={{ background: PUB.licht, color: PUB.donker, padding: "10px 18px", borderRadius: 999, fontSize: 12, fontWeight: 800, textDecoration: "none" }}>Teamscan voor teams</a>
           </nav>
         </header>
 
@@ -139,7 +139,7 @@ export default function OnzeAanpakPage() {
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 680, marginBottom: 26 }}>Mijn Teamkompas combineert een praktische teamscan met veranderkundige duiding. De teamscan brengt vier domeinen in beeld. Insights Discovery gebruiken we als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en samenwerkt.</p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 14, alignItems: isMobile ? "stretch" : "center", flexWrap: "wrap" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
-              <a href="/teamscan" style={{ ...ctaStyle, background: "rgba(255,255,255,0.06)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.55)", boxShadow: "none" }}>Start teamscan</a>
+              <a href="/teamscan" style={{ ...ctaStyle, background: "rgba(255,255,255,0.06)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.55)", boxShadow: "none" }}>Bekijk de teamscan voor teams</a>
               <span style={{ color: "rgba(255,255,255,0.58)", fontSize: 14 }}>Van teamscan naar gesprek, duiding en concrete beweging.</span>
             </div>
           </div>
@@ -205,7 +205,7 @@ export default function OnzeAanpakPage() {
                 </p>
                 <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", marginTop: 24 }}>
                   <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
-                  <a href="/teamscan" style={secondaryCtaStyle}>Start met de teamscan</a>
+                  <a href="/teamscan" style={secondaryCtaStyle}>Bekijk de teamscan voor teams</a>
                 </div>
               </div>
 

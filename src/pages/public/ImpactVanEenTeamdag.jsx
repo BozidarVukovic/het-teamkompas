@@ -161,7 +161,7 @@ export default function ImpactVanEenTeamdag() {
             <Eyebrow withDot>Kennis · impact en borging</Eyebrow>
             <h1 className="tk-heading-xl">Waarom een teamdag vaak weinig verandert</h1>
             <p className="tk-lead">Een geslaagde dag. Er wordt open gesproken, er ontstaan goede ideeën, en aan het einde spreekt iedereen af om het anders te gaan doen. De energie is voelbaar. Enkele weken later is de agenda weer vol, worden dezelfde gesprekken vermeden en zijn de oude irritaties terug.</p>
-            <div className="tk-actions"><ButtonLink href="/teamscan">Bekijk de teamscan</ButtonLink><ButtonLink href="/teamdag" variant="secondary">Een teamdag organiseren</ButtonLink></div>
+            <div className="tk-actions"><ButtonLink href="/teamscan">Bekijk de teamscan voor teams</ButtonLink><ButtonLink href="/teamdag" variant="secondary">Een teamdag organiseren</ButtonLink></div>
           </div>
           <img className="tk-jdr-hero-media" src="/teamkompas-samen-richting.jpg" alt="Een team dat samen terugkijkt op gemaakte afspraken en bepaalt wat er in het dagelijkse werk verandert." />
         </div>
