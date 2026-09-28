@@ -55,9 +55,10 @@ export default function KlantreisKeuze() {
             id="klantreis-keuze-title"
             style={{
               color: "#0D1B2A",
-              fontSize: "clamp(32px, 4vw, 48px)",
-              lineHeight: 1.08,
-              letterSpacing: "-0.04em",
+              fontSize: "clamp(30px, 4vw, 42px)",
+              fontWeight: 800,
+              lineHeight: 1.12,
+              letterSpacing: "-0.03em",
               margin: "0 0 14px",
             }}
           >

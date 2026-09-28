@@ -118,7 +118,6 @@ export default function KansenCarrousel({ isMobile = false }) {
     >
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         <div style={{ maxWidth: "62ch", marginBottom: isMobile ? 28 : 44 }}>
-          <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Kansen</div>
           <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, margin: "0 0 14px" }}>
             Kansen die wij voor teams zien
           </h2>
