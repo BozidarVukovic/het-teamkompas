@@ -63,6 +63,7 @@ const Gespreksvoorbereider = lazy(() => laadPagina(() => import("./pages/public/
 const TeamdagGenerator = lazy(() => laadPagina(() => import("./pages/public/TeamdagGenerator")));
 import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
+import KansenCarrousel from "./components/shared/KansenCarrousel";
 import RelatedArticles from "./components/shared/RelatedArticles";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
 import CookieBanner from "./components/shared/CookieBanner";
@@ -1556,6 +1557,12 @@ function PublicSite({ onLoginClick }) {
             </Fade>
           </div>
         </section>
+
+        {/* Vier kansen, één tegelijk. Staat na "Wie wij zijn": daar vertellen
+            we waar we in geloven, hier maken we het concreet aan vier dingen
+            die we in teams tegenkomen -- en elke kans wijst door naar de
+            pagina die er het diepst op ingaat. */}
+        <KansenCarrousel isMobile={isMobile} />
 
         <section id="teamscan" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.licht }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".95fr 1.05fr", gap: 44, alignItems: "center" }}>
