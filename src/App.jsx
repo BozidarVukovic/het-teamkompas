@@ -1495,7 +1495,7 @@ function PublicSite({ onLoginClick }) {
                 <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Wat we bieden</div>
                 <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>In één oogopslag: teamscan, workshops en coaching.</h2>
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>
-                  Je schakelt Mijn Teamkompas in als samenwerking stroef loopt, verandering onvoldoende landt of leiders en teams beter willen leren omgaan met gedrag, spanning en verantwoordelijkheid.
+                  Vier manieren om met een team aan de slag te gaan. Wat past, hangt af van wat er speelt.
                 </p>
               </div>
             </Fade>
@@ -1511,6 +1511,49 @@ function PublicSite({ onLoginClick }) {
                 </Fade>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ── Wie wij zijn ──────────────────────────────────────────────
+            Na het aanbod en vóór de teamscan: eerst zien wat we doen, dan
+            waarom we het zo doen, dan pas het instrument.
+
+            Een donker vlak tussen twee lichte secties. Geen kaarten, geen
+            opsomming, een regelbreedte van 62 tekens en ruime regelafstand --
+            dit is de pauze in de pagina, en het enige blok dat niets vraagt
+            behalve doorlezen. De knop is daarom een omlijning en geen oranje
+            vlak: oranje is in deze site de ene actie op het scherm. */}
+        <section id="wie-wij-zijn" style={{ background: PUB.donker, padding: isMobile ? "64px 20px" : "112px 60px" }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 0.78fr) minmax(0, 1.22fr)", gap: isMobile ? 24 : 72, alignItems: "start" }}>
+            <Fade>
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 14 }}>Wie wij zijn</div>
+                <h2 style={{ fontSize: isMobile ? 30 : 44, fontWeight: 800, lineHeight: 1.12, letterSpacing: "-0.02em", color: PUB.wit, margin: 0 }}>
+                  Fijn om kennis te maken
+                </h2>
+              </div>
+            </Fade>
+
+            <Fade delay={0.08}>
+              <div style={{ maxWidth: "62ch" }}>
+                <p style={{ fontSize: isMobile ? 16 : 17.5, lineHeight: 1.85, color: "rgba(255,255,255,0.78)", margin: "0 0 22px" }}>
+                  Mijn Teamkompas helpt organisaties om samenwerking te verbeteren door zichtbaar te maken wat in teams vaak onbesproken blijft. We luisteren naar wat professionals ervaren, brengen patronen in kaart en vertalen inzichten naar stappen die passen bij hun dagelijkse werk.
+                </p>
+                <p style={{ fontSize: isMobile ? 16 : 17.5, lineHeight: 1.85, color: "rgba(255,255,255,0.78)", margin: "0 0 22px" }}>
+                  Wij geloven dat mensen beter samenwerken wanneer zij zich gehoord voelen, hun kwaliteiten kunnen inzetten en samen verantwoordelijkheid nemen. Dat geeft professionals meer ruimte om met plezier en vertrouwen te werken. En juist wanneer mensen elkaar versterken, kan een team uitstekende resultaten bereiken.
+                </p>
+                <p style={{ fontSize: isMobile ? 16 : 17.5, lineHeight: 1.85, color: "rgba(255,255,255,0.78)", margin: "0 0 34px" }}>
+                  Daarom verbinden we aandacht voor de mens met een praktische aanpak: luisteren, meten en bewegen. We helpen teams om het gesprek te voeren dat nodig is en nieuwe afspraken om te zetten in gedrag dat blijft.
+                </p>
+                <a
+                  href="/onze-aanpak"
+                  onClick={(e) => { e.preventDefault(); navigate("/onze-aanpak"); }}
+                  style={{ display: "inline-block", background: "rgba(255,255,255,0.06)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.55)", padding: "14px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, textDecoration: "none" }}
+                >
+                  Ontdek onze aanpak
+                </a>
+              </div>
+            </Fade>
           </div>
         </section>
 
