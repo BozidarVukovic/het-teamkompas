@@ -1412,6 +1412,30 @@ function PublicSite({ onLoginClick }) {
           </div>
         </section>
 
+        <section id="voor-wie" style={{ padding: isMobile ? "54px 20px" : "82px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 42, alignItems: "center" }}>
+            <Fade>
+              {/* De opener "Wanneer schakel je ons in?" staat nu boven aan de
+                  pagina, bij het blok dat uit de hero kwam. Twee keer dezelfde
+                  vraag op een pagina leest als een herhaling; de kop hieronder
+                  draagt deze sectie prima alleen. */}
+              <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Als gedrag, verandering of leiderschap vastloopt.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>Mijn Teamkompas helpt als de inhoud wel besproken wordt, maar het echte gesprek over samenwerking, spanning en verantwoordelijkheid nog onvoldoende op tafel komt.</p>
+              <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Plan een vrijblijvende kennismaking</span>
+            </Fade>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14, alignItems: "stretch" }}>
+              {vragen.map((v, i) => (
+                <Fade key={v} delay={i * .05} style={{ height: "100%" }}>
+                  <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 22, minHeight: 150, height: "100%", boxSizing: "border-box", boxShadow: "0 14px 34px rgba(13,27,42,0.06)" }}>
+                    <div style={{ width: 30, height: 30, borderRadius: "50%", background: PUB.tealGlow, color: PUB.teal, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, marginBottom: 14 }}>{i + 1}</div>
+                    <div style={{ fontSize: 16, lineHeight: 1.55, color: PUB.donker, fontWeight: 700 }}>{v}</div>
+                  </div>
+                </Fade>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Het blok dat eerder over de foto zweefde. Als wit vlak in de hoek van
             het openingsscherm brak het de rust; hier is het gewoon het eerste
             wat je leest zodra je verder scrollt. */}
@@ -1424,33 +1448,6 @@ function PublicSite({ onLoginClick }) {
             </div>
           </div>
         </section>
-
-        <section id="wat-we-bieden" style={{ background: PUB.wit, padding: isMobile ? "44px 20px" : "58px 60px", borderBottom: `1px solid ${PUB.lijn}` }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            <Fade>
-              <div style={{ maxWidth: 820, marginBottom: 28 }}>
-                <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Wat we bieden</div>
-                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>In één oogopslag: teamscan, workshops en coaching.</h2>
-                <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>
-                  Je schakelt Mijn Teamkompas in als samenwerking stroef loopt, verandering onvoldoende landt of leiders en teams beter willen leren omgaan met gedrag, spanning en verantwoordelijkheid.
-                </p>
-              </div>
-            </Fade>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 18 }}>
-              {aanbodItems.map(([titel, kernzin, tekst, kleur, href, cta], i) => (
-                <Fade key={titel} delay={i * 0.06} style={{ height: "100%" }}>
-                  <div style={{ height: "100%", border: `1px solid ${PUB.lijn}`, borderTop: `5px solid ${kleur}`, borderRadius: 18, padding: 24, background: PUB.wit, boxShadow: "0 18px 44px rgba(13,27,42,0.08)", boxSizing: "border-box" }}>
-                    <div style={{ fontSize: 20, fontWeight: 900, color: PUB.donker, marginBottom: 10 }}>{titel}</div>
-                    <div style={{ fontSize: 15, fontWeight: 800, color: PUB.tealDark, lineHeight: 1.55, marginBottom: 10 }}>{kernzin}</div>
-                    <div style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub }}>{tekst}</div>
-                    {href && <button type="button" onClick={() => navigate(href)} style={{ marginTop: 16, border: 0, background: "transparent", padding: 0, color: PUB.teal, fontSize: 13, fontWeight: 900, cursor: "pointer" }}>{cta} →</button>}
-                  </div>
-                </Fade>
-              ))}
-            </div>
-          </div>
-        </section>
-
 
         <section id="beelden-aanpak" style={{ background: PUB.wit, padding: isMobile ? "52px 20px" : "74px 60px", borderBottom: `1px solid ${PUB.lijn}` }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
@@ -1490,29 +1487,82 @@ function PublicSite({ onLoginClick }) {
         </section>
         <KlantreisKeuze />
 
-        <section id="voor-wie" style={{ padding: isMobile ? "54px 20px" : "82px 60px", background: PUB.licht }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 42, alignItems: "center" }}>
+
+        <section id="wat-we-bieden" style={{ background: PUB.wit, padding: isMobile ? "44px 20px" : "58px 60px", borderBottom: `1px solid ${PUB.lijn}` }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <Fade>
-              {/* De opener "Wanneer schakel je ons in?" staat nu boven aan de
-                  pagina, bij het blok dat uit de hero kwam. Twee keer dezelfde
-                  vraag op een pagina leest als een herhaling; de kop hieronder
-                  draagt deze sectie prima alleen. */}
-              <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Als gedrag, verandering of leiderschap vastloopt.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>Mijn Teamkompas helpt als de inhoud wel besproken wordt, maar het echte gesprek over samenwerking, spanning en verantwoordelijkheid nog onvoldoende op tafel komt.</p>
-              <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Plan een vrijblijvende kennismaking</span>
+              <div style={{ maxWidth: 820, marginBottom: 28 }}>
+                <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Wat we bieden</div>
+                <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>In één oogopslag: teamscan, workshops en coaching.</h2>
+                <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>
+                  Je schakelt Mijn Teamkompas in als samenwerking stroef loopt, verandering onvoldoende landt of leiders en teams beter willen leren omgaan met gedrag, spanning en verantwoordelijkheid.
+                </p>
+              </div>
             </Fade>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14, alignItems: "stretch" }}>
-              {vragen.map((v, i) => (
-                <Fade key={v} delay={i * .05} style={{ height: "100%" }}>
-                  <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 22, minHeight: 150, height: "100%", boxSizing: "border-box", boxShadow: "0 14px 34px rgba(13,27,42,0.06)" }}>
-                    <div style={{ width: 30, height: 30, borderRadius: "50%", background: PUB.tealGlow, color: PUB.teal, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, marginBottom: 14 }}>{i + 1}</div>
-                    <div style={{ fontSize: 16, lineHeight: 1.55, color: PUB.donker, fontWeight: 700 }}>{v}</div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 18 }}>
+              {aanbodItems.map(([titel, kernzin, tekst, kleur, href, cta], i) => (
+                <Fade key={titel} delay={i * 0.06} style={{ height: "100%" }}>
+                  <div style={{ height: "100%", border: `1px solid ${PUB.lijn}`, borderTop: `5px solid ${kleur}`, borderRadius: 18, padding: 24, background: PUB.wit, boxShadow: "0 18px 44px rgba(13,27,42,0.08)", boxSizing: "border-box" }}>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: PUB.donker, marginBottom: 10 }}>{titel}</div>
+                    <div style={{ fontSize: 15, fontWeight: 800, color: PUB.tealDark, lineHeight: 1.55, marginBottom: 10 }}>{kernzin}</div>
+                    <div style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub }}>{tekst}</div>
+                    {href && <button type="button" onClick={() => navigate(href)} style={{ marginTop: 16, border: 0, background: "transparent", padding: 0, color: PUB.teal, fontSize: 13, fontWeight: 900, cursor: "pointer" }}>{cta} →</button>}
                   </div>
                 </Fade>
               ))}
             </div>
           </div>
         </section>
+
+        <section id="teamscan" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.licht }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".95fr 1.05fr", gap: 44, alignItems: "center" }}>
+            <Fade>
+              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>De teamscan</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, marginBottom: 16 }}>Geen vragenlijstje, maar een startpunt voor betekenisvol gesprek.</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 22 }}>De teamscan helpt patronen zichtbaar maken in samenwerking, veiligheid, energie en verbeteren. Insights Discovery gebruiken we aanvullend als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en verandert.</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
+                <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Plan een vrijblijvende kennismaking</span>
+                {/* Stond onder het voorbeeldrapport, dat hier niet meer staat.
+                    Zonder deze regel loopt er vanaf de homepage geen weg meer
+                    naar de teamscanpagina zelf. */}
+                <a href="/teamscan" onClick={(e) => { e.preventDefault(); navigate("/teamscan"); }} style={{ fontSize: 15, fontWeight: 700, color: PUB.teal, textDecoration: "none" }}>
+                  Bekijk de teamscan voor teams →
+                </a>
+              </div>
+            </Fade>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
+              {pijlerCards.map(([titel, kleur, tekst]) => (
+                <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderTop: `5px solid ${kleur}`, borderRadius: 18, padding: 22, boxShadow: "0 14px 34px rgba(13,27,42,0.06)", display: "flex", flexDirection: "column" }}>
+                  <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 10 }}>{titel}</div>
+                  <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, flex: 1 }}>{tekst}</div>
+                  {titel === "Veiligheid & leiderschap" && (
+                    <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: PUB.teal, textDecoration: "none" }}>
+                      Meer over psychologische veiligheid →
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+
+        {/* ─────────────────────────────────────────────────────────────
+            Hier komt het blok over Bozidar en Edmond.
+
+            Het staat er nog niet, en met opzet niet met een voorlopige
+            tekst erin. Op de hele publieke site staat op dit moment niets
+            over de twee mensen achter dit bedrijf -- behalve Edmonds
+            sprekersprofiel. Voor een consultancy waar de oprichters het
+            product zijn is dat geen ontbrekend stukje content maar een gat
+            in de propositie, en een verzonnen biografie maakt dat erger in
+            plaats van beter.
+
+            Nodig: een foto van allebei, per persoon drie tot vijf regels
+            achtergrond, en één zin over wat ieder inbrengt. Daarna hoort
+            hier een kort blok met een link naar /over-ons, en gaat het
+            menu-item Over ons terug in OrganizedNavigation.jsx.
+        ───────────────────────────────────────────────────────────────── */}
 
         <section id="eerste-stap" style={{ padding: isMobile ? "54px 20px" : "82px 60px", background: PUB.wit }}>
           <div style={{ maxWidth: 1120, margin: "0 auto" }}>
@@ -1532,93 +1582,6 @@ function PublicSite({ onLoginClick }) {
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-
-
-        <section id="teamscan" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.licht }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".95fr 1.05fr", gap: 44, alignItems: "center" }}>
-            <Fade>
-              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>De teamscan</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, marginBottom: 16 }}>Geen vragenlijstje, maar een startpunt voor betekenisvol gesprek.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 22 }}>De teamscan helpt patronen zichtbaar maken in samenwerking, veiligheid, energie en verbeteren. Insights Discovery gebruiken we aanvullend als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en verandert.</p>
-              <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Plan een vrijblijvende kennismaking</span>
-            </Fade>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
-              {pijlerCards.map(([titel, kleur, tekst]) => (
-                <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderTop: `5px solid ${kleur}`, borderRadius: 18, padding: 22, boxShadow: "0 14px 34px rgba(13,27,42,0.06)", display: "flex", flexDirection: "column" }}>
-                  <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 10 }}>{titel}</div>
-                  <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, flex: 1 }}>{tekst}</div>
-                  {titel === "Veiligheid & leiderschap" && (
-                    <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: PUB.teal, textDecoration: "none" }}>
-                      Meer over psychologische veiligheid →
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="voorbeeldrapport" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.wit, borderTop: `1px solid ${PUB.lijn}`, borderBottom: `1px solid ${PUB.lijn}` }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            <Fade>
-              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".88fr 1.12fr", gap: 34, alignItems: "end", marginBottom: 30 }}>
-                <div>
-                  <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Voorbeeld van de opbrengst</div>
-                  <h2 style={{ fontSize: isMobile ? 30 : 44, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>Wat zie je terug na een teamscan?</h2>
-                  <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>
-                    Een teamscan levert geen losse cijfers op, maar een helder beeld van wat het team ervaart, waar perceptieverschillen zitten en welke vervolgstappen logisch zijn. Hieronder zie je enkele fictieve voorbeeldpagina’s uit een rapport van Mijn Teamkompas.
-                  </p>
-                </div>
-                <div style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: isMobile ? 20 : 24 }}>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: PUB.donker, marginBottom: 8 }}>Een eerste indruk van het adviesrapport</div>
-                  <div style={{ fontSize: 14, lineHeight: 1.75, color: PUB.sub }}>
-                    De voorbeeldpagina’s werken met fictieve data. Ze laten zien hoe de teamscan wordt vertaald naar inzicht, duiding en praktisch advies, zonder persoonsgegevens of klantspecifieke informatie te tonen.
-                  </div>
-                </div>
-              </div>
-            </Fade>
-
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 16, alignItems: "stretch" }}>
-              {[
-                ["1", "Overzicht", "Een compact totaalbeeld van het team, inclusief kernscores en eerste duiding.", "/teamkompas-voorbeeldrapport-overzicht.jpg", "Fictieve voorbeeldpagina van een Mijn Teamkompas adviesrapport met overzicht en inleiding"],
-                ["2", "Leidende inzichten", "De belangrijkste patronen, sterke punten en perceptiegaps in één oogopslag.", "/teamkompas-voorbeeldrapport-inzichten.jpg", "Fictieve voorbeeldpagina met leidende inzichten en domeinoverzicht uit een teamscan"],
-                ["3", "Domeinanalyse", "Per domein wordt zichtbaar wat de data zegt en wat dit betekent voor team en leidinggevende.", "/teamkompas-voorbeeldrapport-domeinanalyse.jpg", "Fictieve voorbeeldpagina met domeinanalyse veiligheid en leiderschap uit een teamscanrapport"],
-                ["4", "Vervolgstappen", "De uitkomsten worden vertaald naar prioriteiten, eerste acties en een 90-dagen richting.", "/teamkompas-voorbeeldrapport-conclusie.jpg", "Fictieve voorbeeldpagina met conclusie prioriteiten en vervolgstappen na een teamscan"]
-              ].map(([nr, titel, tekst, image, alt], i) => (
-                <Fade key={titel} delay={i * 0.05} style={{ height: "100%" }}>
-                  <div style={{ height: "100%", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, overflow: "hidden", boxShadow: "0 18px 44px rgba(13,27,42,0.08)", display: "flex", flexDirection: "column" }}>
-                    <div style={{ position: "relative", background: PUB.licht }}>
-                      <img src={image} alt={alt} loading="lazy" style={{ width: "100%", height: isMobile ? 340 : 300, objectFit: "cover", objectPosition: "top center", display: "block", filter: "saturate(0.96)" }} />
-                      <div style={{ position: "absolute", left: 12, top: 12, background: "rgba(255,255,255,0.92)", color: PUB.tealDark, border: `1px solid ${PUB.lijn}`, borderRadius: 999, padding: "7px 10px", fontSize: 11, fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                        Fictief voorbeeld
-                      </div>
-                    </div>
-                    <div style={{ padding: 20, flex: 1 }}>
-                      <div style={{ color: PUB.teal, fontWeight: 900, fontSize: 14, marginBottom: 8 }}>0{nr}</div>
-                      <div style={{ fontSize: 18, fontWeight: 800, color: PUB.donker, marginBottom: 8 }}>{titel}</div>
-                      <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub }}>{tekst}</div>
-                    </div>
-                  </div>
-                </Fade>
-              ))}
-            </div>
-
-            <Fade delay={0.12}>
-              <div style={{ marginTop: 28, display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", gap: 16, alignItems: isMobile ? "stretch" : "center", background: PUB.donker, color: PUB.wit, borderRadius: 18, padding: isMobile ? 22 : 26 }}>
-                <div>
-                  <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 6 }}>Wil je dit voor je eigen team zichtbaar maken?</div>
-                  <div style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,0.66)" }}>Bekijk wat de teamscan voor teams meet, of plan eerst een verdiepend gesprek.</div>
-                </div>
-                <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 10, flexShrink: 0 }}>
-                  {/* Teal als vulling is te donker voor de donkere tekst van
-                      ctaStyle (3,18:1). Met witte tekst erop is het 5,47. */}
-                  <span style={{ ...ctaStyle, display: "inline-block", background: PUB.teal, color: PUB.wit }} onClick={() => navigate("/teamscan")}>Bekijk de teamscan voor teams</span>
-                  <span style={{ border: "1px solid rgba(255,255,255,0.28)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center" }} onClick={openModal}>Plan een verdiepend gesprek</span>
-                </div>
-              </div>
-            </Fade>
           </div>
         </section>
 

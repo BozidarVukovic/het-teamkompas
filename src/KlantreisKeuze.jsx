@@ -1,8 +1,8 @@
 export default function KlantreisKeuze() {
   const routes = [
     {
-      title: "samen scherp krijgen wat er speelt",
-      description: "voor teams die willen starten met inzicht en een goed gesprek",
+      title: "Samen scherp krijgen wat er speelt",
+      description: "Voor teams die willen starten met inzicht en een goed gesprek",
       items: [
         "teamscan + analyse",
         "inzichten in gedrag en samenwerking",
@@ -10,12 +10,12 @@ export default function KlantreisKeuze() {
         "persoonlijke begeleiding",
       ],
       href: "/verkennen",
-      button: "plan een verdiepend gesprek",
+      button: "Plan een verdiepend gesprek",
       variant: "primary",
     },
     {
-      title: "direct inzicht met de teamscan",
-      description: "voor teams die zelfstandig willen starten en snel overzicht willen krijgen",
+      title: "Direct inzicht met de teamscan",
+      description: "Voor teams die zelfstandig willen starten en snel overzicht willen krijgen",
       items: [
         "direct starten",
         "helder inzicht in wat er speelt",
@@ -23,7 +23,7 @@ export default function KlantreisKeuze() {
         "praktische vervolgstappen",
       ],
       href: "/teamscan",
-      button: "start de digitale teamscan",
+      button: "Bekijk de teamscan voor teams",
       variant: "secondary",
     },
   ];
@@ -61,10 +61,10 @@ export default function KlantreisKeuze() {
               margin: "0 0 14px",
             }}
           >
-            kies de route die past bij jouw team
+            Kies de route die past bij jouw team
           </h2>
           <p style={{ color: "#5A6B7A", fontSize: "18px", lineHeight: 1.7, margin: 0 }}>
-            sommige teams starten met een gesprek, andere willen direct inzicht.
+            Sommige teams starten met een gesprek, andere willen direct inzicht.
           </p>
         </div>
 
