@@ -42,7 +42,12 @@ function Kompas({ index, aantal, beweegt }) {
       ))}
       <g
         style={{
-          transformOrigin: "60px 60px",
+          // Niet "60px 60px": waar die nul ligt hangt af van transform-box,
+          // en Safari telt dan vanaf het kader van de naald zelf in plaats van
+          // vanaf de viewBox. De naald is symmetrisch om (60, 60), dus
+          // "center" wijst in beide rekenwijzen hetzelfde punt aan.
+          transformBox: "view-box",
+          transformOrigin: "center",
           transform: `rotate(${hoek}deg)`,
           transition: beweegt ? "transform .9s cubic-bezier(.22,.61,.36,1)" : "none",
         }}
