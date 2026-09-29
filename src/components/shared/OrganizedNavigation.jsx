@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { vraagKennismaking } from "../../lib/kennismaking";
 import KompasDot from "./KompasDot";
 import { knowledgeNavigation, serviceLinks } from "./navigationData";
 
@@ -155,19 +156,29 @@ export default function OrganizedNavigation() {
     if (isStaticPage(path)) window.location.assign(path); else navigate(path);
   };
 
+  // De knop blijft een echte link naar /verkennen -- rechtermuisknop, openen in
+  // een nieuw tabblad en een schermlezer werken daardoor gewoon. Alleen de
+  // gewone klik wordt onderschept: die opent het venster als de pagina er een
+  // heeft, en volgt anders alsnog de link.
+  const kennismaken = (e) => {
+    e.preventDefault();
+    setMenuOpen(false);
+    vraagKennismaking(navigate);
+  };
+
   return <>
     <header className="site-header">
       <nav className="site-nav" aria-label="Hoofdnavigatie">
         <a href="/" onClick={(event) => { event.preventDefault(); go("/"); }} className="site-nav__brand"><KompasDot size={22} />Mijn Teamkompas</a>
         {mobile ? <div className="site-nav__mobile-actions">
-          <a href="/verkennen" onClick={(event) => { event.preventDefault(); go("/verkennen"); }} className="site-nav__cta site-nav__cta--small">Kennismaken</a>
+          <a href="/verkennen" onClick={kennismaken} className="site-nav__cta site-nav__cta--small">Kennismaken</a>
           <button ref={menuButtonRef} type="button" className="site-nav__hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-main-menu" aria-label={menuOpen ? "Menu sluiten" : "Menu openen"}>{menuOpen ? "✕" : "☰"}</button>
         </div> : <div className="site-nav__links">
           <SimpleDropdown label="Diensten" items={serviceLinks} onNavigate={go} />
           <a href="/onze-aanpak" onClick={(e) => { e.preventDefault(); go("/onze-aanpak"); }}>Onze aanpak</a>
           <KnowledgeMenu onNavigate={go} />
           <NavLink item={{ label: "Inspiratie", href: "/inspiratie" }} onNavigate={go} />
-          <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="site-nav__cta">Plan een vrijblijvende kennismaking</a>
+          <a href="/verkennen" onClick={kennismaken} className="site-nav__cta">Plan een vrijblijvende kennismaking</a>
           {/* Wijst naar de samenwerkomgeving en niet naar /beheer: teamleden
               zijn met velen en beheerders met een paar. Op het inlogscherm van
               de app staat een regel die beheerders doorstuurt. */}
@@ -180,7 +191,7 @@ export default function OrganizedNavigation() {
       <a href="/onze-aanpak" onClick={(e) => { e.preventDefault(); go("/onze-aanpak"); }}>Onze aanpak</a>
       <MobileKnowledge onNavigate={go} />
       <NavLink item={{ label: "Inspiratie", href: "/inspiratie" }} onNavigate={go} />
-      <a href="/verkennen" onClick={(e) => { e.preventDefault(); go("/verkennen"); }} className="mobile-nav__cta">Plan een vrijblijvende kennismaking</a>
+      <a href="/verkennen" onClick={kennismaken} className="mobile-nav__cta">Plan een vrijblijvende kennismaking</a>
       <a href="/app" onClick={(e) => { e.preventDefault(); go("/app"); }} className="mobile-nav__login">Inloggen →</a>
     </div>}
   </>;

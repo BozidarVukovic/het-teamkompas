@@ -68,6 +68,7 @@ import RelatedArticles from "./components/shared/RelatedArticles";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
 import CookieBanner from "./components/shared/CookieBanner";
 import ReflectiekaartFormulier from "./ReflectiekaartFormulier";
+import { useKennismaking } from "./lib/kennismaking";
 import { Analytics } from "@vercel/analytics/react";
 const PageScans = lazy(() => laadPagina(() => import("./pages/admin/PageScans")));
 const PageGratisTeamscan = lazy(() => laadPagina(() => import("./pages/admin/PageGratisTeamscan")));
@@ -734,7 +735,7 @@ function InsightDiscoveryLandingSection({ isMobile, openModal }) {
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
                 <span onClick={openModal} style={{ background: PUB.oranje, color: PUB.donker, padding: "13px 22px", borderRadius: 4, fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
-                  Plan een kennismaking
+                  Plan een vrijblijvende kennismaking
                 </span>
                 <span onClick={() => document.getElementById("insights-faq")?.scrollIntoView({ behavior: "smooth", block: "start" })} style={{ border: `1px solid ${PUB.lijn}`, color: PUB.donker, padding: "13px 22px", borderRadius: 4, fontSize: 14, cursor: "pointer", background: PUB.wit }}>
                   Bekijk veelgestelde vragen
@@ -1278,6 +1279,9 @@ function PublicSite({ onLoginClick }) {
   const isMobile = useIsMobile();
 
   const openModal = () => setModalOpen(true);
+  // De knop in de menubalk opent dit venster in plaats van weg te navigeren
+  // naar /verkennen. Zie src/lib/kennismaking.js.
+  useKennismaking(openModal);
 
   const closeModal = () => setModalOpen(false);
 
@@ -1496,7 +1500,7 @@ function PublicSite({ onLoginClick }) {
             </div>
             <Fade delay={0.12}>
               <div style={{ marginTop: 26, display: "flex", flexWrap: "wrap", gap: 12 }}>
-                <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Plan een kennismaking</span>
+                <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Plan een vrijblijvende kennismaking</span>
                 <span style={{ border: `1px solid ${PUB.lijn}`, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", background: PUB.wit }} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
               </div>
             </Fade>
@@ -1621,7 +1625,7 @@ function PublicSite({ onLoginClick }) {
           <div style={{ maxWidth: 1040, margin: "0 auto", textAlign: "center", color: PUB.wit }}>
             <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, marginBottom: 14 }}>Wil je samenwerking, leiderschap of verandering concreet verbeteren?</h2>
             <p style={{ fontSize: 16, lineHeight: 1.75, opacity: .9, maxWidth: 720, margin: "0 auto 26px" }}>Begin met een korte kennismaking. Daarna bepalen we samen of een teamscan, workshop, teamdag of coachingtraject logisch is.</p>
-            <span onClick={openModal} style={{ display: "inline-block", background: PUB.wit, color: PUB.tealDark, padding: "14px 24px", borderRadius: 8, fontWeight: 800, cursor: "pointer" }}>Plan een kennismaking</span>
+            <span onClick={openModal} style={{ display: "inline-block", background: PUB.wit, color: PUB.tealDark, padding: "14px 24px", borderRadius: 8, fontWeight: 800, cursor: "pointer" }}>Plan een vrijblijvende kennismaking</span>
           </div>
         </section>
 
@@ -9509,6 +9513,9 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
   const [modalOpen, setModalOpen] = useState(false);
 
   const openModal = () => setModalOpen(true);
+  // De knop in de menubalk opent dit venster in plaats van weg te navigeren
+  // naar /verkennen. Zie src/lib/kennismaking.js.
+  useKennismaking(openModal);
   const closeModal = () => setModalOpen(false);
   const registreerTeamontwikkelingEvent = async (event) => {
     try {
@@ -9827,7 +9834,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center" }}>
               <span style={ctaStyle} onClick={() => navigate("/teamscan")}>Bekijk de teamscan voor teams</span>
-              <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none" }} onClick={openModal}>Plan een kennismaking</span>
+              <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none" }} onClick={openModal}>Plan een vrijblijvende kennismaking</span>
             </div>
           </div>
         </section>
@@ -9842,6 +9849,9 @@ function TeamcoachingPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const isMobile = useIsMobile();
   const openModal = () => setModalOpen(true);
+  // De knop in de menubalk opent dit venster in plaats van weg te navigeren
+  // naar /verkennen. Zie src/lib/kennismaking.js.
+  useKennismaking(openModal);
   const closeModal = () => setModalOpen(false);
 
   const ctaStyle = {
@@ -9947,7 +9957,7 @@ function TeamcoachingPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>
-                Plan een kennismaking
+                Plan een vrijblijvende kennismaking
               </button>
               <a href="/teamscan" style={{ ...ghostStyle, background: "rgba(255,255,255,0.08)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.22)" }}>
                 Bekijk de teamscan voor teams
@@ -10099,7 +10109,7 @@ function TeamcoachingPage() {
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
               <button type="button" onClick={openModal} style={ctaStyle}>
-                Plan een kennismaking
+                Plan een vrijblijvende kennismaking
               </button>
               <a href="/teamscan" style={{ ...ghostStyle, background: "rgba(255,255,255,0.08)", color: PUB.wit, border: "1px solid rgba(255,255,255,0.22)" }}>
                 Bekijk de teamscan voor teams
@@ -10120,6 +10130,9 @@ function PsychologischeVeiligheidPage() {
   const [openFaq, setOpenFaq] = useState(null);
   const isMobile = useIsMobile();
   const openModal = () => setModalOpen(true);
+  // De knop in de menubalk opent dit venster in plaats van weg te navigeren
+  // naar /verkennen. Zie src/lib/kennismaking.js.
+  useKennismaking(openModal);
   const closeModal = () => setModalOpen(false);
 
   const ctaStyle = {
@@ -10341,7 +10354,7 @@ function PsychologischeVeiligheidPage() {
               Mijn Teamkompas helpt teams psychologische veiligheid concreet te verbeteren. Met een teamscan die meet wat er speelt, begeleide gesprekken die open communicatie op gang brengen en gedragsafspraken die blijven hangen.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
-              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
               <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
             </div>
           </div>
@@ -10642,7 +10655,7 @@ function PsychologischeVeiligheidPage() {
               Begin met een teamscan of plan een verkennend gesprek. Dan kijken we samen welke aanpak past bij wat er in jouw team speelt.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
-              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
               <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
               <a href="/onze-aanpak" style={{ color: "rgba(255,255,255,0.76)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over onze aanpak →</a>
             </div>
@@ -10661,6 +10674,9 @@ function SocialeVeiligheidPage() {
   const [openFaq, setOpenFaq] = useState(null);
   const isMobile = useIsMobile();
   const openModal = () => setModalOpen(true);
+  // De knop in de menubalk opent dit venster in plaats van weg te navigeren
+  // naar /verkennen. Zie src/lib/kennismaking.js.
+  useKennismaking(openModal);
   const closeModal = () => setModalOpen(false);
 
   const ctaStyle = {
@@ -10851,7 +10867,7 @@ function SocialeVeiligheidPage() {
               Mijn Teamkompas helpt teams sociale veiligheid te versterken. Met een online teamscan die zichtbaar maakt wat er speelt, een begeleid gesprek dat zelf veilig verloopt en concrete afspraken over hoe het team met elkaar omgaat.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
-              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
               <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
             </div>
           </div>
@@ -11046,7 +11062,7 @@ function SocialeVeiligheidPage() {
               Begin met de online teamscan of plan een verkennend gesprek. Dan kijken we samen wat er speelt en welke aanpak daarbij past.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
-              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
               <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
               <a href="/psychologische-veiligheid" style={{ color: "rgba(255,255,255,0.76)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over psychologische veiligheid →</a>
             </div>
@@ -11066,6 +11082,9 @@ function BovenOnderstroomPage() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const isMobile = useIsMobile();
   const openModal = () => setModalOpen(true);
+  // De knop in de menubalk opent dit venster in plaats van weg te navigeren
+  // naar /verkennen. Zie src/lib/kennismaking.js.
+  useKennismaking(openModal);
   const closeModal = () => setModalOpen(false);
 
   const ctaStyle = {
@@ -11284,7 +11303,7 @@ function BovenOnderstroomPage() {
               Dan ligt de oorzaak zelden in de bovenstroom van plannen, processen en afspraken. Dan speelt er iets in de onderstroom. Mijn Teamkompas maakt beide lagen zichtbaar en bespreekbaar.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
-              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
               <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
             </div>
           </div>
@@ -11510,7 +11529,7 @@ function BovenOnderstroomPage() {
               Begin met een teamscan of plan een verkennend gesprek. Dan kijken we samen naar beide lagen: wat er gebeurt, en waarom het gebeurt.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
-              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
               <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
               <a href="/onze-aanpak" style={{ color: "rgba(255,255,255,0.76)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over onze aanpak →</a>
             </div>
@@ -11557,6 +11576,9 @@ function BreinEnSamenwerkingPage() {
   const [openFaq, setOpenFaq] = useState(null);
   const isMobile = useIsMobile();
   const openModal = () => setModalOpen(true);
+  // De knop in de menubalk opent dit venster in plaats van weg te navigeren
+  // naar /verkennen. Zie src/lib/kennismaking.js.
+  useKennismaking(openModal);
   const closeModal = () => setModalOpen(false);
 
   const ctaStyle = {
@@ -11764,7 +11786,7 @@ function BreinEnSamenwerkingPage() {
               Maar communicatie begint niet bij woorden. Ons brein bepaalt binnen een fractie van een seconde of een situatie veilig voelt. Pas daarna luisteren we, denken we na en reageren we. Dat verklaart waarom samenwerken soms ingewikkelder is dan het lijkt.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
-              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
               <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
             </div>
           </div>
@@ -11973,7 +11995,7 @@ function BreinEnSamenwerkingPage() {
               Begin met een teamscan of plan een verkennend gesprek. Dan kijken we samen wat het gedrag in jouw team vertelt, en wat het nodig heeft.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
-              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
               <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
               <a href="/psychologische-veiligheid" style={{ color: "rgba(255,255,255,0.76)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over psychologische veiligheid →</a>
             </div>
@@ -11992,6 +12014,9 @@ function KleineExperimentenPage() {
   const [openFaq, setOpenFaq] = useState(null);
   const isMobile = useIsMobile();
   const openModal = () => setModalOpen(true);
+  // De knop in de menubalk opent dit venster in plaats van weg te navigeren
+  // naar /verkennen. Zie src/lib/kennismaking.js.
+  useKennismaking(openModal);
   const closeModal = () => setModalOpen(false);
 
   const ctaStyle = {
@@ -12202,7 +12227,7 @@ function KleineExperimentenPage() {
               Mijn Teamkompas helpt teams veranderen via kleine, veilige experimenten: uitproberen, terugkijken, leren en bijstellen. Zo ontstaat een lerend team. Geen team dat alles perfect doet, maar een team dat steeds beter wordt.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
-              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
               <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
             </div>
           </div>
@@ -12461,7 +12486,7 @@ function KleineExperimentenPage() {
               Begin met een teamscan of plan een verkennend gesprek. Dan kijken we samen waar jouw team staat en welk eerste experiment het meeste verschil maakt.
             </p>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
-              <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+              <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
               <a href="/teamscan" style={ghostStyle}>Bekijk de teamscan voor teams</a>
               <a href="/onze-aanpak" style={{ color: "rgba(255,255,255,0.76)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Meer over onze aanpak →</a>
             </div>
@@ -12478,6 +12503,9 @@ function TeamdagPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const isMobile = useIsMobile();
   const openModal = () => setModalOpen(true);
+  // De knop in de menubalk opent dit venster in plaats van weg te navigeren
+  // naar /verkennen. Zie src/lib/kennismaking.js.
+  useKennismaking(openModal);
   const closeModal = () => setModalOpen(false);
 
   const primaryCta = {

@@ -653,7 +653,7 @@ export default function TeamscanDigitaal() {
             </div>
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, justifyContent: "center", marginTop: 22 }}>
               <a href="#aanvraag" onClick={() => trackFormStartOnce({ trigger: "rapport_preview_cta" })} style={{ ...primaryCtaStyle, textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Vraag de teamscan aan</a>
-              <button onClick={() => navigate("/verkennen")} style={{ ...buttonBase, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Plan een kennismaking</button>
+              <button onClick={() => navigate("/verkennen")} style={{ ...buttonBase, background: C.wit, color: C.donker, border: `1px solid ${C.lijn}` }}>Plan een vrijblijvende kennismaking</button>
             </div>
           </div>
         </section>

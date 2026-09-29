@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import ContactModal from "./ContactModal";
+import { useKennismaking } from "./lib/kennismaking";
 import KompasDot from "./components/shared/KompasDot";
 
 function useIsMobile() {
@@ -74,6 +75,7 @@ export default function OnzeAanpakPage() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
+  useKennismaking(openModal);
   const closeModal = () => setModalOpen(false);
 
   const domeinen = [
@@ -204,7 +206,7 @@ export default function OnzeAanpakPage() {
                   Zo helpt Mijn Teamkompas teams die zoeken naar een <strong style={{ color: PUB.donker }}>teamdag met Insights Discovery</strong>, <strong style={{ color: PUB.donker }}>teamcoaching met gedragsprofielen</strong> of een praktische <strong style={{ color: PUB.donker }}>teamsessie over communicatie en samenwerking</strong>.
                 </p>
                 <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, flexWrap: "wrap", marginTop: 24 }}>
-                  <button type="button" onClick={openModal} style={ctaStyle}>Plan een kennismaking</button>
+                  <button type="button" onClick={openModal} style={ctaStyle}>Plan een vrijblijvende kennismaking</button>
                   <a href="/teamscan" style={secondaryCtaStyle}>Bekijk de teamscan voor teams</a>
                 </div>
               </div>

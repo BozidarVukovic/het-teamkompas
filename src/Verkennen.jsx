@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import ContactModal from "./ContactModal";
+import { useKennismaking } from "./lib/kennismaking";
 import KompasDot from "./components/shared/KompasDot";
 
 const C = { donker: "#0D1B2A", navy: "#1A2E4A", teal: "#0F766E", groen: "#2F8F3A", groenTekst: "#26762F", groenOpDonker: "#86CC63", blauw: "#3A7DBF", oranje: "#E8821A", paars: "#6B4E9E", wit: "#FFFFFF", licht: "#F4F7F9", lijn: "#DDE4ED", sub: "#5F6B7A" };
@@ -11,6 +12,9 @@ export default function Verkennen(){
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
+  // Hier wees de knop in de menubalk naar deze pagina zelf. Nu opent hij het
+  // formulier dat op deze pagina al klaarstaat.
+  useKennismaking(() => setOpen(true));
   const steps = [
     ["1", "Kennismaking", "We verkennen de situatie, de context en wat het team nodig heeft."],
     ["2", "Teamscan", "We halen veilig op wat teamleden ervaren in samenwerking, leiderschap, energie en leren."],
