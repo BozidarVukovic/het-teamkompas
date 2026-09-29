@@ -1301,18 +1301,24 @@ function PublicSite({ onLoginClick }) {
       "We maken zichtbaar wat er speelt in het team.",
       "Met de teamscan brengen we gedrag, samenwerking, veiligheid, energie en veranderkracht in kaart. Zo ontstaat een scherp beeld van wat helpt, wat belemmert en waar het gesprek over moet gaan.",
       PUB.blauw,
+      "/teamscan",
+      "Bekijk de teamscan",
     ],
     [
       "Workshops en teamdagen",
       "We begeleiden het echte gesprek in het team.",
       "In workshops en teamdagen helpen we teams om patronen te herkennen, verschillen bespreekbaar te maken en concrete afspraken te maken over samenwerking en gedrag.",
       PUB.groen,
+      "/teamdag",
+      "Bekijk de teamdag",
     ],
     [
       "Coaching van leiders en teams",
       "We helpen leiders en teams ander gedrag vol te houden.",
       "Met coaching vertalen we inzichten naar dagelijks leiderschap, eigenaarschap en betere gesprekken in de praktijk.",
       PUB.oranje,
+      "/teamcoaching",
+      "Bekijk teamcoaching",
     ],
     [
       "Insights Discovery-profielen",
@@ -1333,12 +1339,6 @@ function PublicSite({ onLoginClick }) {
     "Als teams beter willen leren omgaan met gedrag, verschil en verantwoordelijkheid.",
   ];
 
-  const pijlerCards = [
-    ["Samenwerking & communicatie", PUB.blauw, "hoe mensen elkaar begrijpen, aanvullen of juist mislopen."],
-    ["Veiligheid & leiderschap", PUB.groen, "of mensen zich vrij voelen om eerlijk te zijn en initiatief te nemen."],
-    ["Energie & motivatie", PUB.oranje, "waar werk energie geeft en waar het team structureel leegloopt."],
-    ["Verbeteren & leren", PUB.paars, "of verbeterideeën zichtbaar worden, besproken worden en landen in gedrag."],
-  ];
 
   const ctaStyle = { background: PUB.oranje, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", textAlign: "center", boxShadow: "0 12px 28px rgba(232,130,26,0.28)" };
   const ghostStyle = { border: "1px solid rgba(255,255,255,0.30)", color: PUB.wit, padding: "14px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: "pointer", textAlign: "center", background: "rgba(255,255,255,0.04)" };
@@ -1578,38 +1578,6 @@ function PublicSite({ onLoginClick }) {
             die we in teams tegenkomen -- en elke kans wijst door naar de
             pagina die er het diepst op ingaat. */}
         <KansenCarrousel isMobile={isMobile} />
-
-        <section id="teamscan" style={{ padding: isMobile ? "54px 20px" : "86px 60px", background: PUB.licht }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".95fr 1.05fr", gap: 44, alignItems: "center" }}>
-            <Fade>
-              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>De teamscan</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, marginBottom: 16 }}>Geen vragenlijstje, maar een startpunt voor betekenisvol gesprek.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 22 }}>De teamscan helpt patronen zichtbaar maken in samenwerking, veiligheid, energie en verbeteren. Insights Discovery gebruiken we aanvullend als gedragslens om te begrijpen hoe dit specifieke team communiceert, reageert en verandert.</p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
-                <span style={{ ...ctaStyle, display: "inline-block" }} onClick={openModal}>Plan een vrijblijvende kennismaking</span>
-                {/* Stond onder het voorbeeldrapport, dat hier niet meer staat.
-                    Zonder deze regel loopt er vanaf de homepage geen weg meer
-                    naar de teamscanpagina zelf. */}
-                <a href="/teamscan" onClick={(e) => { e.preventDefault(); navigate("/teamscan"); }} style={{ fontSize: 15, fontWeight: 700, color: PUB.teal, textDecoration: "none" }}>
-                  Bekijk de teamscan voor teams →
-                </a>
-              </div>
-            </Fade>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
-              {pijlerCards.map(([titel, kleur, tekst]) => (
-                <div key={titel} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderTop: `5px solid ${kleur}`, borderRadius: 18, padding: 22, boxShadow: "none", display: "flex", flexDirection: "column" }}>
-                  <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 10 }}>{titel}</div>
-                  <div style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, flex: 1 }}>{tekst}</div>
-                  {titel === "Veiligheid & leiderschap" && (
-                    <a href="/psychologische-veiligheid" style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 700, color: PUB.teal, textDecoration: "none" }}>
-                      Meer over psychologische veiligheid →
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
 
         {/* ─────────────────────────────────────────────────────────────
