@@ -11,7 +11,6 @@ import { isBeheerpad, scanUitAdres } from "./lib/opstart";
 const OnzeAanpak = lazy(() => laadPagina(() => import("./OnzeAanpak")));
 import heroContent from "./content/heroContent";
 import { trackEvent } from "./lib/analytics";
-import KlantreisKeuze from "./KlantreisKeuze";
 const Verkennen = lazy(() => laadPagina(() => import("./Verkennen")));
 const TeamscanDigitaal = lazy(() => laadPagina(() => import("./TeamscanDigitaal")));
 import ContactModal from "./ContactModal";
@@ -1506,8 +1505,6 @@ function PublicSite({ onLoginClick }) {
             </Fade>
           </div>
         </section>
-        <KlantreisKeuze />
-
 
         <section id="wat-we-bieden" style={{ background: PUB.wit, padding: isMobile ? "44px 20px" : "58px 60px", borderBottom: `1px solid ${PUB.lijn}` }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
