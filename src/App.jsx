@@ -1618,14 +1618,20 @@ function PublicSite({ onLoginClick }) {
                 </div>
               ))}
             </div>
-          </div>
-        </section>
 
-        <section style={{ padding: isMobile ? "46px 20px" : "70px 60px", background: PUB.teal }}>
-          <div style={{ maxWidth: 1040, margin: "0 auto", textAlign: "center", color: PUB.wit }}>
-            <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, marginBottom: 14 }}>Wil je samenwerking, leiderschap of verandering concreet verbeteren?</h2>
-            <p style={{ fontSize: 16, lineHeight: 1.75, opacity: .9, maxWidth: 720, margin: "0 auto 26px" }}>Begin met een korte kennismaking. Daarna bepalen we samen of een teamscan, workshop, teamdag of coachingtraject logisch is.</p>
-            <span onClick={openModal} style={{ display: "inline-block", background: PUB.wit, color: PUB.tealDark, padding: "14px 24px", borderRadius: 8, fontWeight: 800, cursor: "pointer" }}>Plan een vrijblijvende kennismaking</span>
+            {/* De knop stond hier een sectie verderop, in een tealbalk met een
+                eigen kop. Die kop stelde de vraag die de opening van de pagina
+                al stelt, en de tekst eronder zei hetzelfde als stap 3. Nu staat
+                de knop waar het antwoord staat. De regel eronder komt uit het
+                venster zelf: dat hoort bij de knop en niet pas erachter. */}
+            <Fade delay={0.12}>
+              <div style={{ textAlign: "center", marginTop: isMobile ? 32 : 44 }}>
+                <span onClick={openModal} style={{ ...ctaStyle, display: "inline-block" }}>Plan een vrijblijvende kennismaking</span>
+                <p style={{ fontSize: 13, lineHeight: 1.6, color: PUB.sub, margin: "14px auto 0", maxWidth: 480 }}>
+                  Binnen 1 werkdag reactie. Vrijblijvend, concreet en zonder verkoopdruk.
+                </p>
+              </div>
+            </Fade>
           </div>
         </section>
 
