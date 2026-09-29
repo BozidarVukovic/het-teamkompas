@@ -7,6 +7,7 @@ import { gerelateerdeItems } from "../../lib/kennisbank/gerelateerd";
 import { leesFavorieten, wisselFavoriet } from "../../lib/kennisbank/favorieten";
 import { trackEvent } from "../../lib/analytics";
 import ResultaatKaart from "../../components/kennisbank/ResultaatKaart";
+import ReflectiekaartFormulier from "../../ReflectiekaartFormulier";
 import "../../styles/kennisbank.css";
 
 const SITE = "https://www.mijnteamkompas.nl";
@@ -245,6 +246,14 @@ export default function KennisbankItem() {
               <a className="kb-knop kb-knop--primair" href={item.vervolgstap.href}>{item.vervolgstap.label}</a>
             </div>
           )}
+
+          {/* Wie hier is aangekomen heeft net over dit onderwerp gelezen. Dat is
+              het moment waarop de reflectiekaart iets toevoegt: hij helpt om er
+              met het team een gesprek van te maken. Compact, want de pagina
+              eindigt hierna al met gerelateerde items. */}
+          <div className="kb-geenprint" style={{ marginTop: 34, maxWidth: 560 }}>
+            <ReflectiekaartFormulier bronPagina={`Kennisbank: ${item.titel}`} variant="compact" />
+          </div>
         </div>
       </main>
 

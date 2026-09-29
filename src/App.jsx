@@ -1649,15 +1649,6 @@ function PublicSite({ onLoginClick }) {
           </div>
         </section>
 
-        {/* ── Reflectiekaart leadblok ──────────────────────────────────── */}
-        <section style={{ padding: isMobile ? "52px 20px" : "80px 60px", background: PUB.licht }}>
-          <div style={{ maxWidth: 1040, margin: "0 auto" }}>
-            <Fade>
-              <ReflectiekaartFormulier bronPagina="Homepage" variant="block" />
-            </Fade>
-          </div>
-        </section>
-
         <section style={{ padding: isMobile ? "46px 20px" : "70px 60px", background: PUB.teal }}>
           <div style={{ maxWidth: 1040, margin: "0 auto", textAlign: "center", color: PUB.wit }}>
             <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, marginBottom: 14 }}>Wil je samenwerking, leiderschap of verandering concreet verbeteren?</h2>

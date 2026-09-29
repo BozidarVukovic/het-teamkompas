@@ -126,14 +126,12 @@ export default function ReflectiekaartFormulier({ bronPagina = "Website", varian
     setFouten(f => ({ ...f, [key]: false }));
   };
 
+  // Alleen het e-mailadres, want dat is het enige dat nodig is om de kaart te
+  // versturen. De rest mag leeg blijven; wie het invult helpt ons, maar wie
+  // het niet invult krijgt de kaart net zo goed.
   const valideer = () => {
     const f = {};
-    if (!form.voornaam.trim())   f.voornaam   = true;
-    if (!form.achternaam.trim()) f.achternaam = true;
     if (!form.email.trim() || !form.email.includes("@")) f.email = true;
-    if (!form.organisatie.trim()) f.organisatie = true;
-    if (!form.functie.trim())     f.functie     = true;
-    if (!form.toestemming)        f.toestemming = true;
     setFouten(f);
     return Object.keys(f).length === 0;
   };
@@ -145,6 +143,11 @@ export default function ReflectiekaartFormulier({ bronPagina = "Website", varian
     setStatus("sending");
     const utm = getUtmParams();
     const themaLabel = form.thema === "anders" ? (form.themaAnders || "Anders") : (form.thema || "Niet opgegeven");
+
+    // Naam is optioneel, dus alles wat een naam gebruikt heeft een terugval.
+    const naam = form.voornaam.trim();
+    const aanhef = naam ? `Beste ${naam}` : "Hallo";
+    const wie = [naam, form.achternaam.trim()].filter(Boolean).join(" ") || form.email.trim();
 
     try {
       /* 1. Sla lead op in Firestore */
@@ -167,26 +170,26 @@ export default function ReflectiekaartFormulier({ bronPagina = "Website", varian
       /* 2. Bevestigingsmail naar aanvrager */
       await stuurEmail(EMAILJS_REFLECTIE_TEMPLATE_ID, {
         to_email:    form.email.trim(),
-        to_name:     form.voornaam.trim(),
-        voornaam:    form.voornaam.trim(),
+        to_name:     naam,
+        voornaam:    naam,
         subject:     "Je reflectiekaart van Mijn Teamkompas",
         from_name:   "Mijn Teamkompas",
         reply_to:    CONTACT_TO_EMAIL,
         pdf_url:     "https://www.mijnteamkompas.nl/reflectiekaart-mijn-teamkompas.pdf",
-        message: `Beste ${form.voornaam.trim()},\nDankjewel voor je aanvraag.\nVia onderstaande link vind je de reflectiekaart "Maak samenwerking bespreekbaar in je team":\nhttps://www.mijnteamkompas.nl/reflectiekaart-mijn-teamkompas.pdf\nDe kaart helpt je om op een laagdrempelige manier het gesprek te voeren over vertrouwen, eigenaarschap, energie en psychologische veiligheid. Gebruik de kaart bijvoorbeeld in een teamoverleg, bila, heidag of reflectiemoment.\nWil je naar aanleiding hiervan eens sparren over je team? Neem dan contact op via www.mijnteamkompas.nl.\nHartelijke groet,\nMijn Teamkompas\ninfo@mijnteamkompas.nl`,
+        message: `${aanhef},\nDankjewel voor je aanvraag.\nVia onderstaande link vind je de reflectiekaart "Maak samenwerking bespreekbaar in je team":\nhttps://www.mijnteamkompas.nl/reflectiekaart-mijn-teamkompas.pdf\nDe kaart helpt je om op een laagdrempelige manier het gesprek te voeren over vertrouwen, eigenaarschap, energie en psychologische veiligheid. Gebruik de kaart bijvoorbeeld in een teamoverleg, bila, heidag of reflectiemoment.\nWil je naar aanleiding hiervan eens sparren over je team? Neem dan contact op via www.mijnteamkompas.nl.\nHartelijke groet,\nMijn Teamkompas\ninfo@mijnteamkompas.nl`,
       });
 
       /* 3. Melding naar beheerder */
       await stuurEmail(EMAILJS_ADMIN_TEMPLATE_ID, {
         to_email:   CONTACT_TO_EMAIL,
         from_name:  "Mijn Teamkompas website",
-        subject:    `Nieuwe aanvraag reflectiekaart: ${form.voornaam.trim()} ${form.achternaam.trim()}`,
+        subject:    `Nieuwe aanvraag reflectiekaart: ${wie}`,
         message: `Nieuwe aanvraag reflectiekaart
 
-Naam: ${form.voornaam.trim()} ${form.achternaam.trim()}
+Naam: ${wie}
 E-mail: ${form.email.trim()}
-Organisatie: ${form.organisatie.trim()}
-Functie: ${form.functie.trim()}
+Organisatie: ${form.organisatie.trim() || "-"}
+Functie: ${form.functie.trim() || "-"}
 Thema: ${themaLabel}
 Bronpagina: ${bronPagina}
 UTM source: ${utm.utm_source || "-"}
@@ -261,36 +264,8 @@ UTM campaign: ${utm.utm_campaign || "-"}`,
           </p>
         )}
 
-        {/* Naam */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
-          <div>
-            <label style={labelStyle}>Voornaam *</label>
-            <input
-              type="text"
-              placeholder="Je voornaam"
-              value={form.voornaam}
-              onChange={e => set("voornaam", e.target.value)}
-              style={inputStyle(fouten.voornaam)}
-              autoComplete="given-name"
-            />
-            {fouten.voornaam && <span style={{ fontSize: 11, color: C.fout }}>Vul je voornaam in</span>}
-          </div>
-          <div>
-            <label style={labelStyle}>Achternaam *</label>
-            <input
-              type="text"
-              placeholder="Je achternaam"
-              value={form.achternaam}
-              onChange={e => set("achternaam", e.target.value)}
-              style={inputStyle(fouten.achternaam)}
-              autoComplete="family-name"
-            />
-            {fouten.achternaam && <span style={{ fontSize: 11, color: C.fout }}>Vul je achternaam in</span>}
-          </div>
-        </div>
-
-        {/* E-mail */}
-        <div style={{ marginBottom: 14 }}>
+        {/* E-mail -- het enige verplichte veld, en daarom bovenaan. */}
+        <div style={{ marginBottom: 18 }}>
           <label style={labelStyle}>E-mailadres *</label>
           <input
             type="email"
@@ -303,37 +278,66 @@ UTM campaign: ${utm.utm_campaign || "-"}`,
           {fouten.email && <span style={{ fontSize: 11, color: C.fout }}>Vul een geldig e-mailadres in</span>}
         </div>
 
-        {/* Organisatie + functie */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
+        <div style={{ fontSize: 12, color: C.sub, marginBottom: 12, lineHeight: 1.6 }}>
+          Meer hoeft niet. Onderstaande velden helpen ons de kaart persoonlijker
+          te maken, maar je kunt ze leeg laten.
+        </div>
+
+        {/* Naam */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, marginBottom: 14 }}>
           <div>
-            <label style={labelStyle}>Organisatie *</label>
+            <label style={labelStyle}>Voornaam</label>
+            <input
+              type="text"
+              placeholder="Je voornaam"
+              value={form.voornaam}
+              onChange={e => set("voornaam", e.target.value)}
+              style={inputStyle()}
+              autoComplete="given-name"
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>Achternaam</label>
+            <input
+              type="text"
+              placeholder="Je achternaam"
+              value={form.achternaam}
+              onChange={e => set("achternaam", e.target.value)}
+              style={inputStyle()}
+              autoComplete="family-name"
+            />
+          </div>
+        </div>
+
+        {/* Organisatie + functie */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, marginBottom: 14 }}>
+          <div>
+            <label style={labelStyle}>Organisatie</label>
             <input
               type="text"
               placeholder="Naam van je organisatie"
               value={form.organisatie}
               onChange={e => set("organisatie", e.target.value)}
-              style={inputStyle(fouten.organisatie)}
+              style={inputStyle()}
               autoComplete="organization"
             />
-            {fouten.organisatie && <span style={{ fontSize: 11, color: C.fout }}>Vul je organisatie in</span>}
           </div>
           <div>
-            <label style={labelStyle}>Functie of rol *</label>
+            <label style={labelStyle}>Functie of rol</label>
             <input
               type="text"
               placeholder="Bijv. teamleider, HR-manager"
               value={form.functie}
               onChange={e => set("functie", e.target.value)}
-              style={inputStyle(fouten.functie)}
+              style={inputStyle()}
               autoComplete="organization-title"
             />
-            {fouten.functie && <span style={{ fontSize: 11, color: C.fout }}>Vul je functie in</span>}
           </div>
         </div>
 
         {/* Thema */}
         <div style={{ marginBottom: 18 }}>
-          <label style={labelStyle}>Waar wil je vooral mee aan de slag? (optioneel)</label>
+          <label style={labelStyle}>Waar wil je vooral mee aan de slag?</label>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
             {THEMA_OPTIES.map(opt => (
               <label key={opt} style={{
@@ -396,17 +400,12 @@ UTM campaign: ${utm.utm_campaign || "-"}`,
               style={{ marginTop: 2, accentColor: C.teal, flexShrink: 0 }}
             />
             <span>
-              Ik ontvang graag de reflectiekaart en af en toe praktische inzichten van Mijn Teamkompas over teamontwikkeling, samenwerking en leiderschap. Ik kan mij op elk moment uitschrijven.{" "}
+              Stuur mij daarnaast af en toe praktische inzichten over teamontwikkeling, samenwerking en leiderschap. Uitschrijven kan op elk moment.{" "}
               <a href="/privacyverklaring_mijnteamkompas.pdf" style={{ color: C.teal }} target="_blank" rel="noopener noreferrer">
                 Privacyverklaring
               </a>
             </span>
           </label>
-          {fouten.toestemming && (
-            <div style={{ fontSize: 11, color: C.fout, marginTop: 4 }}>
-              Geef toestemming om door te gaan
-            </div>
-          )}
         </div>
 
         {/* Submit */}
@@ -437,7 +436,7 @@ UTM campaign: ${utm.utm_campaign || "-"}`,
         </button>
 
         <p style={{ fontSize: 11, color: C.sub, marginTop: 10, textAlign: "center", lineHeight: 1.5 }}>
-          Je gegevens worden veilig opgeslagen en alleen gebruikt voor de reflectiekaart en af en toe inhoudelijke inzichten van Mijn Teamkompas. Uitschrijven kan altijd.
+          Je e-mailadres wordt veilig opgeslagen en gebruikt om je de reflectiekaart te sturen. Verdere berichten alleen als je daar hierboven om vraagt.
         </p>
       </div>
     </form>
