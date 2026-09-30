@@ -24,7 +24,7 @@
 import { kenmerk, optieVan } from "../../../data/app/kenmerken.js";
 import { situatie, openingVan } from "../../../data/app/situaties.js";
 import { ADVIESKADER } from "../../../data/app/adviesblokken.js";
-import { spreidingVoor, vraagtVan } from "../../../data/app/groepsblokken.js";
+import { afspraakVoor, samenVoor, spreidingVoor, vraagtVan } from "../../../data/app/groepsblokken.js";
 import { bepaalWaarden, MAX_BLOKKEN } from "./regels.js";
 
 /** Vanaf hoeveel mensen is dit een groep? Bij twee blijft het één-op-één. */
@@ -193,7 +193,24 @@ export function steltGroepsadviesSamen({
     onderwerp: b.label,
     duiding: b.duiding,
     voorkeuren: (b.voorkeuren || []).filter((v) => v.vraagt),
+    // Een voorstel in de wij-vorm, klaar om bij de teamafspraken te zetten.
+    // Het advies eindigde tot nu toe op het scherm; dit is het enige stuk dat
+    // eraf komt en blijft staan.
+    afspraak: afspraakVoor(b.kenmerkId),
   }));
+
+  // Waar de voorkeuren wél samenvallen. Dit stond al in bepaalSpreiding en
+  // werd weggegooid. Een groep die alleen over zijn verschillen leest, mist
+  // waar hij op kan bouwen -- en dat is meestal meer dan de verschillen.
+  const overeenkomstig = gedeeld
+    .filter((r) => r.voorkeuren.length === 1 && samenVoor(r.kenmerkId))
+    .slice(0, MAX_BLOKKEN)
+    .map((r) => ({
+      kenmerkId: r.kenmerkId,
+      onderwerp: r.label,
+      voorkeur: r.voorkeuren[0].label,
+      betekenis: samenVoor(r.kenmerkId),
+    }));
 
   return {
     soort: "groep",
@@ -203,6 +220,7 @@ export function steltGroepsadviesSamen({
     samenvatting,
     helpt,
     uiteen: uiteenlopend,
+    samen: overeenkomstig,
     vraag: s ? s.vraag : null,
     // Een actie die op één collega is afgestemd slaat hier nergens op; die van
     // de situatie is voor een groep even bruikbaar.
@@ -211,6 +229,7 @@ export function steltGroepsadviesSamen({
     transparantie:
       "Dit advies is gebaseerd op wat de mensen in deze groep zelf met dit team hebben gedeeld. Er staat nergens wie wat koos, en het is geen beoordeling van iemand.",
     aantalBeschikbaar: uiteen.length,
+    aantalGedeeld: gedeeld.length,
     gebruikteKenmerken: blokken.map((b) => b.kenmerkId),
   };
 }

@@ -148,8 +148,8 @@ test("de uitkomst bevat geen lijst van wie welke voorkeur koos", () => {
   // Alleen deze velden mogen naar buiten. Komt er ooit iets bij, dan is dit de
   // plek om te bedenken of het iets over een persoon zegt.
   assert.deepEqual(Object.keys(a).sort(), [
-    "aantal", "aantalBeschikbaar", "actie", "gebruikteKenmerken", "helpt",
-    "namen", "opmerkingen", "samenvatting", "situatie", "soort",
+    "aantal", "aantalBeschikbaar", "aantalGedeeld", "actie", "gebruikteKenmerken",
+    "helpt", "namen", "opmerkingen", "samen", "samenvatting", "situatie", "soort",
     "transparantie", "uiteen", "vraag",
   ]);
 
@@ -181,7 +181,81 @@ test("de teksten oordelen niet over mensen", () => {
   Object.entries(SPREIDING).forEach(([id, blok]) => {
     assert.doesNotMatch(blok.duiding, verdacht, `${id}: duiding oordeelt`);
     assert.doesNotMatch(blok.suggestie, verdacht, `${id}: suggestie oordeelt`);
+    assert.doesNotMatch(blok.afspraak, verdacht, `${id}: afspraak oordeelt`);
+    assert.doesNotMatch(blok.samen, verdacht, `${id}: samen oordeelt`);
   });
+});
+
+/* ------------------------------------------------ de voorgestelde afspraak */
+
+test("bij elk kenmerk staat een afspraak in de wij-vorm", () => {
+  Object.entries(SPREIDING).forEach(([id, blok]) => {
+    assert.ok(blok.afspraak, `${id}: er hoort een afspraak bij te staan`);
+    assert.match(blok.afspraak, /^Wij /, `${id}: een afspraak staat in de wij-vorm`);
+    // Even lang als wat het invoerveld bij de teamafspraken toestaat.
+    assert.ok(blok.afspraak.length <= 200, `${id}: de afspraak is te lang voor het veld`);
+    // Gedrag, geen houding: geen "voelen", "vinden", "proberen te zijn".
+    assert.doesNotMatch(blok.afspraak, /\b(vinden wij|voelen wij|zijn wij)\b/i, `${id}: dit beschrijft een houding`);
+  });
+});
+
+test("elk punt waarop de groep uiteenloopt draagt zijn eigen afspraak", () => {
+  const a = groep();
+  assert.ok(a.uiteen.length > 0);
+  a.uiteen.forEach((punt) => {
+    assert.ok(punt.afspraak, `${punt.onderwerp}: er hoort een afspraak bij`);
+    assert.match(punt.afspraak, /^Wij /);
+  });
+});
+
+/* -------------------------------------------- waar de groep wél samenvalt */
+
+test("waar iedereen hetzelfde kiest, komt dat als overeenkomst naar buiten", () => {
+  // Allemaal dezelfde voorkeur op tempo: dat is geen verschil, maar wel iets
+  // om te weten.
+  const gelijk = [{ kenmerkId: "tempo", waarde: "snel", bron: "user_confirmation" }];
+  const a = steltGroepsadviesSamen({
+    mijnKenmerken: gelijk,
+    deelnemers: [
+      { naam: "Nikki", kenmerken: gelijk },
+      { naam: "Eva", kenmerken: gelijk },
+    ],
+    situatieId: "bespreekbaar-maken",
+  });
+
+  const tempo = a.samen.find((p) => p.kenmerkId === "tempo");
+  assert.ok(tempo, "tempo hoort bij de overeenkomsten te staan");
+  assert.ok(tempo.onderwerp, "een overeenkomst heeft een onderwerp");
+  assert.ok(tempo.betekenis && tempo.betekenis.length > 20, "er hoort bij te staan wat het betekent");
+  assert.equal(a.uiteen.find((p) => p.kenmerkId === "tempo"), undefined, "en dan niet óók als verschil");
+});
+
+test("een overeenkomst noemt geen naam en geen aantal", () => {
+  const gelijk = [{ kenmerkId: "contact", waarde: "relatie", bron: "user_confirmation" }];
+  const a = steltGroepsadviesSamen({
+    mijnKenmerken: gelijk,
+    deelnemers: [
+      { naam: "Nikki", kenmerken: gelijk },
+      { naam: "Eva", kenmerken: gelijk },
+      { naam: "Aad", kenmerken: gelijk },
+    ],
+    situatieId: "bespreekbaar-maken",
+  });
+
+  const tekst = JSON.stringify(a.samen);
+  ["Nikki", "Eva", "Aad", "jij"].forEach((naam) => {
+    assert.ok(!tekst.includes(naam), `${naam} hoort niet bij een overeenkomst te staan`);
+  });
+  assert.doesNotMatch(tekst, /\b(alle vier|drie van|vier van|iedereen behalve)\b/i);
+});
+
+test("weet je het van maar één persoon, dan is het ook geen overeenkomst", () => {
+  const a = steltGroepsadviesSamen({
+    mijnKenmerken: [{ kenmerkId: "tempo", waarde: "snel", bron: "user_confirmation" }],
+    deelnemers: [{ naam: "Nikki", kenmerken: [] }],
+    situatieId: "bespreekbaar-maken",
+  });
+  assert.equal(a.samen.find((p) => p.kenmerkId === "tempo"), undefined);
 });
 
 test("bij elk verschil staat welke voorkeuren er in déze groep zitten", () => {

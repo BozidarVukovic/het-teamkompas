@@ -98,7 +98,7 @@ function DuoInhoud({ advies }) {
 }
 
 export default function Samenwerken() {
-  const { gebruiker, actiefTeam, kenmerken, teamOverzicht, ikBegeleid, startExperiment } = useApp();
+  const { gebruiker, actiefTeam, kenmerken, teamOverzicht, ikBegeleid, startExperiment, bewaarAfspraak } = useApp();
   const [zoek] = useSearchParams();
 
   // De teamgegevens staan al in de context; die nog een keer ophalen leverde
@@ -120,6 +120,12 @@ export default function Samenwerken() {
   // dagen één keer een vraag over terug.
   const [experimentGestart, setExperimentGestart] = useState(false);
   const [bezigMetExperiment, setBezigMetExperiment] = useState(false);
+
+  // Welke voorgestelde afspraken al bij de teamafspraken staan. Per kenmerk,
+  // want per punt staat er één voorstel.
+  const [aangenomen, setAangenomen] = useState([]);
+  const [bezigMetAfspraak, setBezigMetAfspraak] = useState(null);
+  const [afspraakFout, setAfspraakFout] = useState("");
 
 
   // Echte teamgenoten en de profielen die een beheerder heeft toegevoegd staan
@@ -289,6 +295,26 @@ export default function Samenwerken() {
     setBezigMetExperiment(false);
   };
 
+  /**
+   * Een voorgestelde afspraak bij de teamafspraken zetten.
+   *
+   * De duiding gaat mee als toelichting: over een maand is de zin zelf nog wel
+   * te lezen, maar niet meer waaróm hij er staat. Er gaat niets mee over wie
+   * wat koos -- dat staat niet in het advies en hoort ook niet in een afspraak.
+   */
+  const neemAfspraakAan = async (punt) => {
+    if (!punt || !punt.afspraak || bezigMetAfspraak) return;
+    setBezigMetAfspraak(punt.kenmerkId);
+    setAfspraakFout("");
+    try {
+      await bewaarAfspraak({ tekst: punt.afspraak, toelichting: punt.duiding });
+      setAangenomen((lijst) => (lijst.includes(punt.kenmerkId) ? lijst : [...lijst, punt.kenmerkId]));
+    } catch {
+      setAfspraakFout("De afspraak kon niet worden opgeslagen. Probeer het zo nog eens.");
+    }
+    setBezigMetAfspraak(null);
+  };
+
   // Je kiest een situatie onderaan een lange lijst. Het advies komt daarna in
   // de plaats van die lijst, terwijl de pagina blijft staan waar hij stond, en
   // dan begin je halverwege de tekst te lezen. Daarom springen we naar de kop
@@ -296,6 +322,13 @@ export default function Samenwerken() {
   // die hoogte trekken we eraf.
   const adviesTop = useRef(null);
   const BALKHOOGTE = 110;
+
+  // Een nieuw advies begint met een schone lei. Zonder dit blijft er een vinkje
+  // staan bij een punt dat over een heel andere situatie ging.
+  useEffect(() => {
+    setAangenomen([]);
+    setAfspraakFout("");
+  }, [advies]);
   useEffect(() => {
     if (!advies || !adviesTop.current) return;
     const y = adviesTop.current.getBoundingClientRect().top + window.scrollY - BALKHOOGTE;
@@ -586,8 +619,61 @@ export default function Samenwerken() {
                         </ul>
                       </>
                     )}
+
+                    {/* Het enige stuk van het advies dat van het scherm af
+                        komt. Een voorstel, geen conclusie: iedereen in het
+                        team kan hem daarna bijstellen, zoals elke afspraak. */}
+                    {punt.afspraak && (
+                      <div className="tk-punt-afspraak">
+                        <div className="tk-punt-label">Een afspraak die hierbij past</div>
+                        <p className="tk-citaat" style={{ margin: "0 0 10px" }}>{punt.afspraak}</p>
+                        {ikBegeleid ? (
+                          <p className="tk-fijn" style={{ margin: 0 }}>
+                            Je begeleidt dit team. Een afspraak hoort van het team zelf te komen,
+                            dus die zet jij hier niet neer.
+                          </p>
+                        ) : aangenomen.includes(punt.kenmerkId) ? (
+                          <p className="tk-fijn" style={{ margin: 0 }}>
+                            <span aria-hidden="true">✓</span> Staat bij jullie afspraken. Iedereen in
+                            het team ziet hem en kan hem bijstellen.
+                          </p>
+                        ) : (
+                          <button
+                            type="button"
+                            className="tk-knop tk-knop-rand tk-knop-klein"
+                            disabled={Boolean(bezigMetAfspraak)}
+                            onClick={() => neemAfspraakAan(punt)}
+                          >
+                            {bezigMetAfspraak === punt.kenmerkId ? "Bezig..." : "Zet dit bij onze afspraken"}
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
+                {afspraakFout && <div className="tk-melding" style={{ marginTop: 12 }}>{afspraakFout}</div>}
+              </div>
+            )}
+
+            {/* Waar de voorkeuren samenvallen. Stond er tot nu toe niet: het
+                scherm liet alleen verschillen zien, en dan lees je over je
+                eigen team alleen wat er schuurt. De kanttekening staat er één
+                keer bij en niet bij elk punt -- het is een observatie, geen
+                waarschuwing. */}
+            {advies.soort === "groep" && (advies.samen || []).length > 0 && (
+              <div className="tk-advies-blok">
+                <h3>Hier zit iedereen op één lijn</h3>
+                <p className="tk-fijn" style={{ margin: "0 0 12px" }}>
+                  Dat scheelt afstemmen. Het is ook waar jullie elkaar het minst zullen corrigeren,
+                  omdat niemand hier vanzelf om iets anders vraagt.
+                </p>
+                <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
+                  {advies.samen.map((punt) => (
+                    <li key={punt.kenmerkId} style={{ marginBottom: 6 }}>
+                      <strong>{punt.onderwerp}.</strong> {punt.betekenis}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 

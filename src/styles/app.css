@@ -1764,6 +1764,19 @@ a.tk-optie {
   margin: 14px 0 8px;
 }
 
+/* Het voorstel voor een afspraak, onderaan een punt. Iets ingesprongen en met
+   een lijntje ervoor, zodat te zien is dat het bij dít punt hoort en niet het
+   volgende opent. */
+.tk-punt-afspraak {
+  margin-top: 16px;
+  padding-left: 14px;
+  border-left: 3px solid var(--tk-teal);
+}
+
+.tk-punt-afspraak .tk-punt-label {
+  margin-top: 0;
+}
+
 /* De voorkeuren staan in de volgorde van het profiel, niet op aantal. Er staat
    nergens hoeveel mensen wat kozen; dat zou een meerderheid maken. */
 .tk-voorkeuren {

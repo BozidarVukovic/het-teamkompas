@@ -29,6 +29,10 @@ export const SPREIDING = {
       "Jullie werken niet allemaal in hetzelfde tempo naar een besluit toe. Zonder afspraak wordt het tempo van de snelste vanzelf het tempo van de groep, en haakt de rest stil af.",
     suggestie:
       "Zeg aan het begin wanneer het besluit valt. Dan weet wie tijd nodig heeft hoeveel er is, en hoeft wie snel wil niet te duwen.",
+    afspraak:
+      "Wij zeggen aan het begin van een overleg wanneer het besluit valt.",
+    samen:
+      "Jullie werken in hetzelfde tempo naar een besluit toe.",
   },
   context: {
     vraagt: {
@@ -40,6 +44,10 @@ export const SPREIDING = {
       "De een wil eerst het hele plaatje, de ander heeft aan een paar zinnen genoeg. Wat voor de een een noodzakelijke inleiding is, is voor de ander uitstel.",
     suggestie:
       "Stuur de achtergrond vooraf en begin het gesprek bij de vraag. Dan kan wie context wil die lezen, zonder dat de rest erop zit te wachten.",
+    afspraak:
+      "Wij sturen de achtergrond vooraf en beginnen het gesprek bij de vraag.",
+    samen:
+      "Jullie hebben ongeveer evenveel achtergrond nodig voordat een vraag te beantwoorden is.",
   },
   structuur: {
     vraagt: {
@@ -51,6 +59,10 @@ export const SPREIDING = {
       "Over hoeveel er vastgelegd moet worden verschillen jullie. Wordt dat niet besproken, dan voelt het voor de een rommelig en voor de ander benauwd.",
     suggestie:
       "Spreek af wat vast ligt en waar de ruimte zit. Eén zin over allebei voorkomt het meeste gedoe achteraf.",
+    afspraak:
+      "Wij spreken bij elke opdracht af wat vastligt en waar de ruimte zit.",
+    samen:
+      "Jullie willen evenveel vastleggen voordat je begint.",
   },
   denken: {
     vraagt: {
@@ -62,6 +74,10 @@ export const SPREIDING = {
       "Een deel van jullie denkt hardop en komt al pratend tot iets; een ander deel wil er eerst alleen over nadenken. In hetzelfde gesprek hoor je van de eersten het meest.",
     suggestie:
       "Leg de vraag neer voordat je hem bespreekt, en laat een stilte vallen voordat je hem invult. Wie eerst wil nadenken, heeft dan ook iets gezegd.",
+    afspraak:
+      "Wij leggen een vraag eerst neer en laten een stilte vallen voordat we hem invullen.",
+    samen:
+      "Jullie denken op dezelfde manier: een stilte betekent hier voor iedereen hetzelfde.",
   },
   contact: {
     vraagt: {
@@ -73,6 +89,10 @@ export const SPREIDING = {
       "Niet iedereen begint even makkelijk bij de inhoud. Voor de een is bijpraten opwarmen, voor de ander is het tijd die van het onderwerp afgaat.",
     suggestie:
       "Houd het persoonlijke deel kort en expliciet, aan het begin. Dan weet iedereen dat het erbij hoort en wanneer het klaar is.",
+    afspraak:
+      "Wij beginnen een overleg met een kort persoonlijk rondje en gaan daarna naar de inhoud.",
+    samen:
+      "Jullie beginnen een overleg op dezelfde manier.",
   },
   feedback: {
     vraagt: {
@@ -84,6 +104,10 @@ export const SPREIDING = {
       "Wat jullie prettig vinden bij het ontvangen van feedback loopt uiteen. Dezelfde opmerking komt bij de een aan als duidelijkheid en bij de ander als een aanval.",
     suggestie:
       "Geef feedback één op één in plaats van in de groep, tenzij het over de groep zelf gaat. Vraag vooraf hoe iemand het het liefst hoort.",
+    afspraak:
+      "Wij geven feedback onder vier ogen, tenzij het over de groep zelf gaat.",
+    samen:
+      "Jullie horen feedback het liefst op dezelfde manier.",
   },
   spanning: {
     vraagt: {
@@ -96,6 +120,10 @@ export const SPREIDING = {
       "Als het spannend wordt, reageren jullie verschillend: de een gaat sneller praten, de ander valt stil of trekt zich even terug. Dat wordt makkelijk gelezen als onwil of als drammen, terwijl het geen van beide is.",
     suggestie:
       "Benoem het als je merkt dat het spanning wordt, en bied een pauze aan met een moment erbij om verder te gaan. Stilte is dan geen instemming en tempo geen druk.",
+    afspraak:
+      "Wij benoemen het wanneer we merken dat het spanning wordt, en bieden een pauze aan met een moment erbij om verder te gaan.",
+    samen:
+      "Jullie reageren op dezelfde manier als de spanning oploopt.",
   },
   besluitvorming: {
     vraagt: {
@@ -107,6 +135,10 @@ export const SPREIDING = {
       "Jullie hebben niet allemaal hetzelfde nodig om achter een besluit te staan: meegepraat hebben, de afweging begrijpen, of gewoon een knoop.",
     suggestie:
       "Maak vooraf duidelijk of dit een gesprek is of een mededeling, en wie beslist. Het meeste ongenoegen ontstaat doordat dat achteraf pas blijkt.",
+    afspraak:
+      "Wij zeggen vooraf of iets een gesprek is of een mededeling, en wie beslist.",
+    samen:
+      "Jullie hebben hetzelfde nodig om achter een besluit te staan.",
   },
   energie: {
     vraagt: {
@@ -119,6 +151,10 @@ export const SPREIDING = {
       "Jullie krijgen energie van verschillende dingen — afmaken, samen oppakken, iets nieuws bedenken, ergens in duiken. Dat is bruikbaar, zolang het werk niet vanzelf bij dezelfde persoon terechtkomt.",
     suggestie:
       "Verdeel het werk op basis van waar iemand energie van krijgt in plaats van op beschikbaarheid. Vraag het één keer expliciet.",
+    afspraak:
+      "Wij verdelen werk op basis van waar iemand energie van krijgt, niet op wie tijd heeft.",
+    samen:
+      "Jullie krijgen energie van hetzelfde soort werk.",
   },
   energieverlies: {
     vraagt: {
@@ -131,6 +167,10 @@ export const SPREIDING = {
       "Wat jullie energie kost verschilt. Een lang overleg dat voor de een grondig voelt, is voor de ander de reden dat er niets meer uit komt.",
     suggestie:
       "Zet een eindtijd op het overleg en sluit af met wie wat doet en wanneer. Dat helpt bij alle vier de vormen tegelijk.",
+    afspraak:
+      "Wij zetten een eindtijd op elk overleg en sluiten af met wie wat doet en wanneer.",
+    samen:
+      "Jullie lopen leeg op hetzelfde.",
   },
   aanspreken: {
     vraagt: {
@@ -143,6 +183,10 @@ export const SPREIDING = {
       "Jullie hebben ieder aangegeven waarop je aangesproken wilt worden, en dat is niet hetzelfde. Zonder dat te weten spreekt iedereen elkaar aan op wat hemzelf zou storen.",
     suggestie:
       "Zeg het op het moment zelf en gebruik waar diegene zelf om vroeg. Dat staat in ieders profiel; het is geen gok.",
+    afspraak:
+      "Wij spreken elkaar aan op het moment zelf, en gebruiken daarbij waar iemand zelf om vroeg.",
+    samen:
+      "Jullie willen op hetzelfde aangesproken worden.",
   },
   misverstand: {
     vraagt: {
@@ -155,12 +199,31 @@ export const SPREIDING = {
       "Jullie worden op verschillende manieren verkeerd begrepen — kortaf, twijfelend, ongeïnteresseerd, of te snel toezeggend. In een groep stapelt dat: de een leest stilte als afwijzing terwijl de ander nog nadenkt.",
     suggestie:
       "Vraag na wat iemand bedoelde voordat je er iets van vindt. Eén verduidelijkende vraag scheelt vaak een heel gesprek.",
+    afspraak:
+      "Wij vragen eerst na wat iemand bedoelde, voordat we er iets van vinden.",
+    samen:
+      "Jullie worden op dezelfde manier verkeerd begrepen.",
   },
 };
 
 /** De duiding en suggestie bij een kenmerk waarop de groep uiteenloopt. */
 export function spreidingVoor(kenmerkId) {
   return SPREIDING[kenmerkId] || null;
+}
+
+/**
+ * De afspraak in de wij-vorm die bij dit kenmerk past, of niets.
+ *
+ * Een voorstel, geen conclusie: het team neemt hem aan of niet, en kan hem
+ * daarna bijstellen zoals elke andere afspraak.
+ */
+export function afspraakVoor(kenmerkId) {
+  return (SPREIDING[kenmerkId] || {}).afspraak || null;
+}
+
+/** Wat het betekent als iedereen in de groep hierin hetzelfde wil. */
+export function samenVoor(kenmerkId) {
+  return (SPREIDING[kenmerkId] || {}).samen || null;
 }
 
 /** Wat één voorkeur van de groep vraagt, of niets. */
