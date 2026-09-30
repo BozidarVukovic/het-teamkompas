@@ -12725,6 +12725,10 @@ function TeamdagPage() {
 }
 
 export default function App() {
+  // Nodig voor de terugknop op /beheer: daar is het inlogscherm een eigen
+  // adres, en dan is een toestandswissel niet genoeg om de site te zien.
+  const naar = useNavigate();
+
   // Wat het adres al zegt, weten we voor de eerste weergave. Dat in een effect
   // zetten betekent één weergave met het verkeerde scherm erin.
   const startScan = scanUitAdres(window.location.pathname, window.location.search);
@@ -12860,7 +12864,15 @@ export default function App() {
           return <AdminDashboard onLogout={() => setView("public")} />;
         }
 
-        return <LoginScreen onLogin={() => setView("admin")} onBack={() => setView("public")} />;
+        // Hier is het inlogscherm een eigen adres in plaats van een toestand
+        // van de homepage. setView alleen laat de bezoeker op /beheer staan,
+        // en dan gebeurt er zichtbaar niets.
+        return (
+          <LoginScreen
+            onLogin={() => setView("admin")}
+            onBack={() => { setView("public"); naar("/"); }}
+          />
+        );
       })()}
     </HelmetProvider>
   );
