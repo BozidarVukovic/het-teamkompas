@@ -22,18 +22,18 @@
 
 .gv-sectie { padding-block: clamp(40px, 6vw, 68px); }
 .gv-sectie--wit { background: #fff; }
-.gv-sectie h2 { margin: 0 0 12px; font-size: clamp(23px, 3.2vw, 32px); line-height: 1.2; }
+.gv-sectie h2 { margin: 0 0 12px; font-size: clamp(30px, 4vw, 42px); font-weight: 800; line-height: 1.12; }
 
 /* Situatiekeuze ---------------------------------------------------------- */
 .gv-situaties { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 26px; padding: 0; list-style: none; }
-.gv-situatie { width: 100%; height: 100%; display: flex; gap: 14px; align-items: flex-start; padding: 20px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; text-align: left; cursor: pointer; box-shadow: var(--tk-shadow-sm); transition: border-color .16s ease, transform .16s ease; }
+.gv-situatie { width: 100%; height: 100%; display: flex; gap: 14px; align-items: flex-start; padding: 20px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; text-align: left; cursor: pointer; box-shadow: none; transition: border-color .16s ease, transform .16s ease; }
 .gv-situatie:hover { border-color: var(--gv-accent, var(--tk-color-teal)); transform: translateY(-2px); }
 .gv-situatie-icoon { flex: 0 0 auto; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: color-mix(in srgb, var(--gv-accent, var(--tk-color-teal)), white 86%); font-size: 22px; }
 .gv-situatie strong { display: block; margin-bottom: 6px; font-size: 17px; line-height: 1.3; }
 .gv-situatie span { color: var(--tk-color-muted); font-size: 14.5px; line-height: 1.6; }
 
 /* Stappen ---------------------------------------------------------------- */
-.gv-kaart { padding: clamp(22px, 4vw, 36px); border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; box-shadow: var(--tk-shadow-md); scroll-margin-top: 96px; }
+.gv-kaart { padding: clamp(22px, 4vw, 36px); border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; box-shadow: none; scroll-margin-top: 96px; }
 .gv-voortgang { margin-bottom: 22px; }
 .gv-voortgang p { margin: 0 0 8px; display: flex; flex-wrap: wrap; gap: 4px 12px; color: var(--tk-color-muted); font-size: 14px; font-weight: 700; }
 .gv-voortgang p b { color: var(--gv-accent, var(--tk-color-teal)); font-weight: 800; }
@@ -102,7 +102,7 @@
 .gv-disclaimer { margin: 18px 0 0; color: var(--tk-color-muted); font-size: 13.5px; line-height: 1.6; }
 
 /* Resultaat -------------------------------------------------------------- */
-.gv-resultaat { padding: clamp(22px, 4vw, 36px); border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; box-shadow: var(--tk-shadow-md); }
+.gv-resultaat { padding: clamp(22px, 4vw, 36px); border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; box-shadow: none; }
 .gv-resultaat-kop { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 6px; }
 .gv-label { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border-radius: 999px; background: color-mix(in srgb, var(--gv-accent, var(--tk-color-teal)), white 86%); color: #123; font-size: 13px; font-weight: 800; }
 .gv-sectie-blok { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--tk-color-border); }

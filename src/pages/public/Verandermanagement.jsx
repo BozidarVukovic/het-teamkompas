@@ -116,7 +116,7 @@ function Flow({ steps, tone = "teal" }) {
     <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 10, maxWidth: 560 }}>
       {steps.map((s, i) => (
         <li key={s} style={{ position: "relative" }}>
-          <div style={{ background: "white", border: `1px solid var(--tk-color-border)`, borderLeft: `4px solid ${kleur}`, borderRadius: 14, padding: "13px 18px", fontWeight: 700, color: "var(--tk-color-ink)", boxShadow: "var(--tk-shadow-sm)" }}>{s}</div>
+          <div style={{ background: "white", border: `1px solid var(--tk-color-border)`, borderLeft: `4px solid ${kleur}`, borderRadius: 14, padding: "13px 18px", fontWeight: 700, color: "var(--tk-color-ink)" }}>{s}</div>
           {i < steps.length - 1 && <div aria-hidden="true" style={{ textAlign: "center", color: kleur, fontSize: 18, lineHeight: 1, margin: "4px 0" }}>↓</div>}
         </li>
       ))}

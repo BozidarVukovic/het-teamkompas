@@ -26,12 +26,12 @@
 
 .kb-sectie { padding-block: clamp(44px, 6vw, 72px); }
 .kb-sectie--wit { background: #fff; }
-.kb-sectie h2 { margin: 0 0 10px; font-size: clamp(24px, 3.4vw, 34px); line-height: 1.2; }
+.kb-sectie h2 { margin: 0 0 10px; font-size: clamp(30px, 4vw, 42px); font-weight: 800; line-height: 1.12; }
 .kb-sectie > .kb-container > p { max-width: 720px; color: var(--tk-color-muted); line-height: 1.7; }
 
 /* Snelle ingangen ------------------------------------------------------- */
 .kb-snel { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 26px; padding: 0; list-style: none; }
-.kb-snel button { width: 100%; height: 100%; display: flex; align-items: center; gap: 12px; min-height: 62px; padding: 14px 18px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-md); background: #fff; color: var(--tk-color-ink); font-size: 15px; font-weight: 700; text-align: left; line-height: 1.35; cursor: pointer; box-shadow: var(--tk-shadow-sm); transition: border-color .16s ease, transform .16s ease; }
+.kb-snel button { width: 100%; height: 100%; display: flex; align-items: center; gap: 12px; min-height: 62px; padding: 14px 18px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-md); background: #fff; color: var(--tk-color-ink); font-size: 15px; font-weight: 700; text-align: left; line-height: 1.35; cursor: pointer; box-shadow: none; transition: border-color .16s ease, transform .16s ease; }
 .kb-snel button:hover { border-color: var(--tk-color-teal); transform: translateY(-2px); }
 .kb-snel span[aria-hidden] { font-size: 22px; }
 
@@ -43,7 +43,7 @@
 .kb-zoek .kb-knop { align-self: end; }
 
 /* Kenniswijzer ---------------------------------------------------------- */
-.kb-wijzer { scroll-margin-top: 96px; padding: clamp(24px, 4vw, 38px); border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; box-shadow: var(--tk-shadow-md); }
+.kb-wijzer { scroll-margin-top: 96px; padding: clamp(24px, 4vw, 38px); border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; box-shadow: none; }
 .kb-voortgang { margin-bottom: 22px; }
 .kb-voortgang p { margin: 0 0 8px; color: var(--tk-color-muted); font-size: 14px; font-weight: 700; }
 .kb-voortgang-balk { height: 6px; border-radius: 999px; background: #e6ecf2; overflow: hidden; }
@@ -71,12 +71,12 @@
 .kb-wijzer-acties .kb-spacer { flex: 1 1 auto; }
 
 /* Resultaten ------------------------------------------------------------ */
-.kb-samenvatting { padding: 18px 22px; border-left: 4px solid var(--tk-color-teal); border-radius: 0 var(--tk-radius-md) var(--tk-radius-md) 0; background: #fff; box-shadow: var(--tk-shadow-sm); }
+.kb-samenvatting { padding: 18px 22px; border-left: 4px solid var(--tk-color-teal); border-radius: 0 var(--tk-radius-md) var(--tk-radius-md) 0; background: #fff; box-shadow: none; }
 .kb-samenvatting p { margin: 0; font-size: 16px; line-height: 1.6; }
 .kb-melding { margin-top: 16px; padding: 14px 18px; border: 1px solid #f0d3ac; border-radius: var(--tk-radius-md); background: #fdf6ec; color: #6b4a12; font-size: 15px; line-height: 1.6; }
 
 .kb-resultaten { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; margin-top: 24px; }
-.kb-kaart { position: relative; display: flex; flex-direction: column; height: 100%; padding: 22px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; box-shadow: var(--tk-shadow-sm); }
+.kb-kaart { position: relative; display: flex; flex-direction: column; height: 100%; padding: 22px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: #fff; box-shadow: none; }
 .kb-kaart::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; border-radius: var(--tk-radius-lg) var(--tk-radius-lg) 0 0; background: var(--kb-accent, var(--tk-color-teal)); }
 .kb-kaart-kop { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
 .kb-type { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; background: rgba(15,118,110,.1); color: #0b5f5a; font-size: 12.5px; font-weight: 850; letter-spacing: .01em; }
