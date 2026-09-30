@@ -9636,7 +9636,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             <button
               type="button"
               onClick={openModal}
-              style={{ marginTop: 12, background: "transparent", border: "none", padding: 0, font: "inherit", fontSize: 15, fontWeight: 700, color: "#9CC9FF", textDecoration: "underline", textUnderlineOffset: 4, cursor: "pointer" }}
+              style={{ marginTop: 12, background: "transparent", border: "none", padding: 0, font: "inherit", fontSize: 15, fontWeight: 700, color: "#35C4B5", textDecoration: "underline", textUnderlineOffset: 4, cursor: "pointer" }}
             >
               Liever eerst kennismaken?
             </button>
@@ -9651,7 +9651,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 38, alignItems: "start" }}>
             <Fade>
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Herkenbare signalen</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Wanneer teamontwikkeling nodig is.</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Wanneer teamontwikkeling nodig is.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 22 }}>
                 Teams lopen zelden vast op één incident. Vaak ontstaat er langzaam een patroon: gesprekken blijven aan de oppervlakte, initiatief neemt af of verandering voelt onduidelijk. Dan helpt het om eerst samen scherp te krijgen wat er onder de oppervlakte speelt.
               </p>
@@ -9680,7 +9680,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             </Fade>
             <Fade delay={0.08}>
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>De aanpak van Mijn Teamkompas</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Eerst begrijpen, dan begeleiden.</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Eerst begrijpen, dan begeleiden.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 26 }}>
                 Effectieve teamontwikkeling begint niet bij een standaardprogramma, maar bij een gedeeld beeld van de werkelijkheid. Daarom combineert Mijn Teamkompas teamscan, analyse, gedragsinzichten en begeleiding tot een aanpak die past bij het team.
               </p>
@@ -9704,7 +9704,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           <div style={{ maxWidth: 1180, margin: "0 auto", position: "relative", zIndex: 1 }}>
             <Fade>
               <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>Vier ontwikkeldomeinen</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.wit, marginBottom: 14, maxWidth: 820 }}>Teamontwikkeling wordt concreet als je weet waar je naar kijkt.</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.wit, marginBottom: 14, maxWidth: 820 }}>Teamontwikkeling wordt concreet als je weet waar je naar kijkt.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", maxWidth: 820, marginBottom: 32 }}>
                 Mijn Teamkompas kijkt naar vier domeinen die samen bepalen hoe een team functioneert, leert en verandert. Gedrag en communicatie vormen daarbij de verbindende laag.
               </p>
@@ -9732,7 +9732,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 42, alignItems: "center" }}>
             <Fade>
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Wanneer past dit?</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Voor teams die niet harder, maar gerichter willen samenwerken.</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Voor teams die niet harder, maar gerichter willen samenwerken.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>
                 Deze aanpak past bij teams die willen groeien, maar ook bij teams waar samenwerking schuurt. Het doel is niet om een team te beoordelen, maar om taal, richting en beweging te creëren.
               </p>
@@ -9764,7 +9764,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
         <section style={{ background: PUB.wit, padding: isMobile ? "54px 20px" : "78px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Ondersteunende instrumenten</div>
-            <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 24 }}>Teamontwikkeling krijgt meer diepte met passende hulpmiddelen.</h2>
+            <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 24 }}>Teamontwikkeling krijgt meer diepte met passende hulpmiddelen.</h2>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
               {[["Teamscan", "Maakt zichtbaar waar samenwerking, veiligheid, energie en leren aandacht vragen.", "/teamscan", "Bekijk de teamscan voor teams"], ["Teamdag", "Zet inzicht om in een begeleid gesprek, oefeningen en concrete teamafspraken.", "/teamdag", "Bekijk teamdagen"], ["Insights Discovery-profielen", "Voor professionals en teams die meer inzicht willen in communicatie, samenwerking, voorkeuren en gedrag onder druk.", "/insights-discovery-profiel", "Lees meer over Insights Discovery"]].map(([titel, tekst, href, label]) => (
                 <a key={titel} href={href} onClick={() => titel === "Insights Discovery-profielen" && registreerTeamontwikkelingEvent("teamontwikkeling_insights_click")} style={{ display: "block", height: "100%", background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, textDecoration: "none", boxShadow: "none" }}>
@@ -9781,7 +9781,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <Fade>
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Verdieping</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14, maxWidth: 820 }}>Teamontwikkeling raakt aan coaching, teamdagen en de onderstroom.</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 14, maxWidth: 820 }}>Teamontwikkeling raakt aan coaching, teamdagen en de onderstroom.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, maxWidth: 820, marginBottom: 30 }}>
                 Soms begint de vraag bij een teamdag, soms bij coaching en soms bij de spanning tussen wat gezegd wordt en wat mensen ervaren. Deze verdiepingen helpen om de juiste vervolgstap te kiezen.
               </p>
@@ -9804,7 +9804,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           <div style={{ maxWidth: 980, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".8fr 1.2fr", gap: 34, alignItems: "start" }}>
             <Fade>
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Veelgestelde vragen</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>Praktische vragen over teamontwikkeling.</h2>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>Praktische vragen over teamontwikkeling.</h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Kort antwoord op vragen die vaak leven bij leidinggevenden, HR en teams die een eerste stap willen zetten.</p>
             </Fade>
             <div style={{ display: "grid", gap: 12 }}>
@@ -9831,7 +9831,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
         <section style={{ background: PUB.wit, padding: isMobile ? "50px 20px" : "72px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
           <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
             <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Volgende stap</div>
-            <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Wil je weten wat jouw team nodig heeft?</h2>
+            <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Wil je weten wat jouw team nodig heeft?</h2>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, maxWidth: 720, margin: "0 auto 28px" }}>
               Bekijk wat de teamscan voor teams meet, of plan een verkennend gesprek. Dan bepalen we samen welke stap past bij jullie teamvraag.
             </p>
@@ -9996,7 +9996,7 @@ function TeamcoachingPage() {
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>
                 Wanneer teamcoaching helpt
               </div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>
                 Teamcoaching helpt wanneer het team niet harder, maar anders moet leren samenwerken.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
@@ -10021,7 +10021,7 @@ function TeamcoachingPage() {
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>
                 Onze aanpak voor teamcoaching
               </div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>
                 Van inzicht naar gedrag in het dagelijks werk.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
@@ -10054,7 +10054,7 @@ function TeamcoachingPage() {
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>
                 Teamcoaching met Insights Discovery
               </div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>
                 Gedragsprofielen helpen om communicatie concreet te maken.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
@@ -10078,7 +10078,7 @@ function TeamcoachingPage() {
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>
                 Thema’s in teamcoaching
               </div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>
                 De inhoud volgt de ontwikkelvraag van het team.
               </h2>
             </div>
@@ -10104,7 +10104,7 @@ function TeamcoachingPage() {
             <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>
               Klaar om samenwerking concreet te verbeteren?
             </div>
-            <h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
+            <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>
               Begin met een scherp beeld van wat er in het team speelt.
             </h2>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.68)", marginBottom: 26 }}>
@@ -12680,41 +12680,41 @@ function TeamdagPage() {
 
         <section style={sectionStyle(PUB.licht)}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".85fr 1.15fr", gap: 42 }}>
-            <div><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Herkenbare aanleiding</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Wanneer is het tijd voor een teamdag?</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Een inhoudelijke teamdag is zinvol wanneer je merkt dat dezelfde gesprekken terugkomen, samenwerking stroef loopt of een team een nieuwe fase ingaat. De dag helpt dan om te vertragen, scherper te kijken en samen keuzes te maken.</p></div>
+            <div><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Herkenbare aanleiding</div><h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>Wanneer is het tijd voor een teamdag?</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Een inhoudelijke teamdag is zinvol wanneer je merkt dat dezelfde gesprekken terugkomen, samenwerking stroef loopt of een team een nieuwe fase ingaat. De dag helpt dan om te vertragen, scherper te kijken en samen keuzes te maken.</p></div>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>{aanleiding.map((item) => <div key={item} style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 20, boxShadow: "none", lineHeight: 1.65 }}>{item}</div>)}</div>
           </div>
         </section>
 
         <section style={sectionStyle()}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 820, marginBottom: 30 }}><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Opbrengst</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Wat levert een goede teamdag op?</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Een goede teamdag belooft geen wonderen. Wel kan de dag een helder kantelpunt zijn: het team ziet beter wat er speelt, spreekt verwachtingen uit en kiest gedrag dat in de praktijk te volgen is.</p></div><div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 14 }}>{opbrengsten.map((item) => <article key={item} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}><h3 style={{ fontSize: 17, margin: 0, lineHeight: 1.45 }}>{item}</h3></article>)}</div></div>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 820, marginBottom: 30 }}><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Opbrengst</div><h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>Wat levert een goede teamdag op?</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Een goede teamdag belooft geen wonderen. Wel kan de dag een helder kantelpunt zijn: het team ziet beter wat er speelt, spreekt verwachtingen uit en kiest gedrag dat in de praktijk te volgen is.</p></div><div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 14 }}>{opbrengsten.map((item) => <article key={item} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}><h3 style={{ fontSize: 17, margin: 0, lineHeight: 1.45 }}>{item}</h3></article>)}</div></div>
         </section>
 
         <section style={sectionStyle(PUB.licht)}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 850, marginBottom: 34 }}><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Praktische stappen</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Zo kun je een goede teamdag organiseren</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Ook als je de dag zelf voorbereidt, helpt deze volgorde om van inspiratie naar resultaat te komen.</p><div style={{ marginTop: 18, padding: "18px 22px", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16 }}><strong style={{ display: "block", fontSize: 17, marginBottom: 6 }}>Liever meteen een concrete opzet?</strong><p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: "0 0 12px" }}>Beantwoord acht korte vragen over jouw team, de aanleiding en de beschikbare tijd. Je krijgt een programma met tijden, werkvormen, voorbereiding en borging. Zonder AI, op basis van vaste beslisregels.</p><a href="/teamdag-generator" style={{ display: "inline-block", background: PUB.teal, color: PUB.wit, padding: "12px 20px", borderRadius: 10, fontWeight: 800, fontSize: 15, textDecoration: "none" }}>Stel je teamdag samen →</a></div></div><div style={{ display: "grid", gap: 14 }}>{organiseerStappen.map(([nr, titel, tekst, href, linkLabel]) => <article key={nr} style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "64px 1fr", gap: 18, background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}><div style={{ width: 44, height: 44, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>{nr}</div><div><h3 style={{ fontSize: 20, margin: "0 0 8px" }}>{titel}</h3><p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>{href && <a href={href} style={{ display: "inline-block", marginTop: 10, color: PUB.teal, fontWeight: 800, fontSize: 14, textDecoration: "none" }}>{linkLabel} →</a>}</div></article>)}</div></div>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 850, marginBottom: 34 }}><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Praktische stappen</div><h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>Zo kun je een goede teamdag organiseren</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Ook als je de dag zelf voorbereidt, helpt deze volgorde om van inspiratie naar resultaat te komen.</p><div style={{ marginTop: 18, padding: "18px 22px", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16 }}><strong style={{ display: "block", fontSize: 17, marginBottom: 6 }}>Liever meteen een concrete opzet?</strong><p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: "0 0 12px" }}>Beantwoord acht korte vragen over jouw team, de aanleiding en de beschikbare tijd. Je krijgt een programma met tijden, werkvormen, voorbereiding en borging. Zonder AI, op basis van vaste beslisregels.</p><a href="/teamdag-generator" style={{ display: "inline-block", background: PUB.teal, color: PUB.wit, padding: "12px 20px", borderRadius: 10, fontWeight: 800, fontSize: 15, textDecoration: "none" }}>Stel je teamdag samen →</a></div></div><div style={{ display: "grid", gap: 14 }}>{organiseerStappen.map(([nr, titel, tekst, href, linkLabel]) => <article key={nr} style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "64px 1fr", gap: 18, background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}><div style={{ width: 44, height: 44, borderRadius: "50%", background: PUB.teal, color: PUB.wit, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>{nr}</div><div><h3 style={{ fontSize: 20, margin: "0 0 8px" }}>{titel}</h3><p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p>{href && <a href={href} style={{ display: "inline-block", marginTop: 10, color: PUB.teal, fontWeight: 800, fontSize: 14, textDecoration: "none" }}>{linkLabel} →</a>}</div></article>)}</div></div>
         </section>
 
         <section style={sectionStyle()}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 850, marginBottom: 34 }}><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Voorbeeldprogramma</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Voorbeeld van een inhoudelijke teamdag</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Het definitieve programma wordt altijd afgestemd op het team, de vraag en de context. Deze opbouw laat zien hoe inhoud, ontmoeting en borging elkaar kunnen versterken.</p></div><div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 14 }}>{programma.map(([titel, tekst], index) => <article key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}><div style={{ fontSize: 13, color: PUB.teal, fontWeight: 900, marginBottom: 8 }}>Stap {index + 1}</div><h3 style={{ fontSize: 18, margin: "0 0 8px" }}>{titel}</h3><p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p></article>)}</div></div>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 850, marginBottom: 34 }}><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Voorbeeldprogramma</div><h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>Voorbeeld van een inhoudelijke teamdag</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Het definitieve programma wordt altijd afgestemd op het team, de vraag en de context. Deze opbouw laat zien hoe inhoud, ontmoeting en borging elkaar kunnen versterken.</p></div><div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: 14 }}>{programma.map(([titel, tekst], index) => <article key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 22 }}><div style={{ fontSize: 13, color: PUB.teal, fontWeight: 900, marginBottom: 8 }}>Stap {index + 1}</div><h3 style={{ fontSize: 18, margin: "0 0 8px" }}>{titel}</h3><p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p></article>)}</div></div>
         </section>
 
         <section style={sectionStyle(PUB.licht)}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 38 }}><div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Mogelijke thema's voor jullie teamdag</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De thema's hangen af van wat er speelt. Waar relevant verbinden we de teamdag met bestaande kennis, de teamscan of Insights Discovery.</p></div><div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>{themas.map(([label, href]) => <a key={label} href={href} style={{ color: PUB.donker, background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 999, padding: "10px 14px", textDecoration: "none", fontWeight: 800, fontSize: 14 }}>{label}</a>)}</div></div>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".9fr 1.1fr", gap: 38 }}><div><h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>Mogelijke thema's voor jullie teamdag</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De thema's hangen af van wat er speelt. Waar relevant verbinden we de teamdag met bestaande kennis, de teamscan of Insights Discovery.</p></div><div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>{themas.map(([label, href]) => <a key={label} href={href} style={{ color: PUB.donker, background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 999, padding: "10px 14px", textDecoration: "none", fontWeight: 800, fontSize: 14 }}>{label}</a>)}</div></div>
         </section>
 
         <section id="aanpak" style={sectionStyle()}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 850, marginBottom: 34 }}><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Onze aanpak</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Luisteren – Meten – Bewegen</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Een teamdag die meer oplevert dan een leuke dag begint bij begrijpen wat er speelt en eindigt met gedrag dat het team kan oefenen.</p></div><div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>{aanpak.map(([titel, tekst]) => <article key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 20, padding: 24 }}><h3 style={{ fontSize: 22, margin: "0 0 10px" }}>{titel}</h3><p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p></article>)}</div><div style={{ marginTop: 28 }}><button type="button" onClick={openModal} style={primaryCta}>Plan een vrijblijvende kennismaking</button></div></div>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}><div style={{ maxWidth: 850, marginBottom: 34 }}><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Onze aanpak</div><h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>Luisteren – Meten – Bewegen</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>Een teamdag die meer oplevert dan een leuke dag begint bij begrijpen wat er speelt en eindigt met gedrag dat het team kan oefenen.</p></div><div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>{aanpak.map(([titel, tekst]) => <article key={titel} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 20, padding: 24 }}><h3 style={{ fontSize: 22, margin: "0 0 10px" }}>{titel}</h3><p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: 0 }}>{tekst}</p></article>)}</div><div style={{ marginTop: 28 }}><button type="button" onClick={openModal} style={primaryCta}>Plan een vrijblijvende kennismaking</button></div></div>
         </section>
 
         <section style={sectionStyle(PUB.licht)}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 38 }}><div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px" }}>Waarom begeleiding door Mijn Teamkompas?</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>We werken niet met een standaardprogramma. De begeleiding combineert analyse, gesprek en toepasbare werkvormen, met aandacht voor de inhoud én de onderlinge dynamiek. Er is ruimte voor wat zichtbaar speelt en voor wat mensen minder makkelijk uitspreken.</p><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De nadruk ligt op beweging na de teamdag: kleine experimenten, duidelijke afspraken en een vervolg dat past bij jullie ritme.</p></div><div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 22, padding: 28, boxShadow: "0 18px 46px rgba(13,27,42,.08)" }}><h3 style={{ marginTop: 0 }}>Praktische informatie</h3><p style={{ lineHeight: 1.75, color: PUB.sub }}>Geschikt voor teams die samenwerking, veiligheid, eigenaarschap of communicatie willen versterken. Een teamdag kan meestal op jullie eigen locatie of op een externe locatie plaatsvinden, als halve of hele dag. De voorbereiding bestaat uit een intake en waar passend aanvullende gesprekken of een teamscan. Het programma is maatwerk; prijs is op aanvraag.</p><p style={{ lineHeight: 1.75, color: PUB.sub, marginBottom: 0 }}>Twijfel je of een teamdag, teamscan of teamcoaching past? In een vrijblijvende kennismaking verkennen we dat samen.</p></div></div>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 38 }}><div><h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>Waarom begeleiding door Mijn Teamkompas?</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>We werken niet met een standaardprogramma. De begeleiding combineert analyse, gesprek en toepasbare werkvormen, met aandacht voor de inhoud én de onderlinge dynamiek. Er is ruimte voor wat zichtbaar speelt en voor wat mensen minder makkelijk uitspreken.</p><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De nadruk ligt op beweging na de teamdag: kleine experimenten, duidelijke afspraken en een vervolg dat past bij jullie ritme.</p></div><div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 22, padding: 28, boxShadow: "0 18px 46px rgba(13,27,42,.08)" }}><h3 style={{ marginTop: 0 }}>Praktische informatie</h3><p style={{ lineHeight: 1.75, color: PUB.sub }}>Geschikt voor teams die samenwerking, veiligheid, eigenaarschap of communicatie willen versterken. Een teamdag kan meestal op jullie eigen locatie of op een externe locatie plaatsvinden, als halve of hele dag. De voorbereiding bestaat uit een intake en waar passend aanvullende gesprekken of een teamscan. Het programma is maatwerk; prijs is op aanvraag.</p><p style={{ lineHeight: 1.75, color: PUB.sub, marginBottom: 0 }}>Twijfel je of een teamdag, teamscan of teamcoaching past? In een vrijblijvende kennismaking verkennen we dat samen.</p></div></div>
         </section>
 
         <section style={sectionStyle()}>
-          <div style={{ maxWidth: 980, margin: "0 auto" }}><div style={{ marginBottom: 28 }}><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Veelgestelde vragen</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: 0 }}>FAQ over een teamdag organiseren</h2></div><div style={{ display: "grid", gap: 14 }}>{faqs.map(([vraag, antwoord]) => <details key={vraag} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: "18px 20px" }}><summary style={{ cursor: "pointer", fontWeight: 900, fontSize: 17 }}>{vraag}</summary><p style={{ color: PUB.sub, lineHeight: 1.75, marginBottom: 0 }}>{antwoord}</p></details>)}</div></div>
+          <div style={{ maxWidth: 980, margin: "0 auto" }}><div style={{ marginBottom: 28 }}><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Veelgestelde vragen</div><h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: 0 }}>FAQ over een teamdag organiseren</h2></div><div style={{ display: "grid", gap: 14 }}>{faqs.map(([vraag, antwoord]) => <details key={vraag} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: "18px 20px" }}><summary style={{ cursor: "pointer", fontWeight: 900, fontSize: 17 }}>{vraag}</summary><p style={{ color: PUB.sub, lineHeight: 1.75, marginBottom: 0 }}>{antwoord}</p></details>)}</div></div>
         </section>
 
         <section style={{ padding: isMobile ? "58px 22px" : "88px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
-          <div style={{ maxWidth: 820, margin: "0 auto" }}><div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>Kennismaken</div><h2 style={{ fontSize: isMobile ? 30 : 42, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>Welke beweging heeft jullie team nodig?</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.76)", marginBottom: 30 }}>Bespreek jullie situatie vrijblijvend. Je hoeft nog geen vast programma te kiezen; we kijken eerst wat er speelt en welke vorm logisch is.</p><button type="button" onClick={openModal} style={primaryCta}>Plan een vrijblijvende kennismaking</button></div>
+          <div style={{ maxWidth: 820, margin: "0 auto" }}><div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 12 }}>Kennismaken</div><h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px", color: PUB.wit }}>Welke beweging heeft jullie team nodig?</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.76)", marginBottom: 30 }}>Bespreek jullie situatie vrijblijvend. Je hoeft nog geen vast programma te kiezen; we kijken eerst wat er speelt en welke vorm logisch is.</p><button type="button" onClick={openModal} style={primaryCta}>Plan een vrijblijvende kennismaking</button></div>
         </section>
       </main>
 
