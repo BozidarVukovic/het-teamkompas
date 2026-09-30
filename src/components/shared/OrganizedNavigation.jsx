@@ -6,10 +6,6 @@ import { knowledgeNavigation, serviceLinks } from "./navigationData";
 
 const NAVY = "#0D1B2A";
 
-function isStaticPage(path) {
-  return path === "/sprekers" || path.startsWith("/sprekers/");
-}
-
 function NavLink({ item, onNavigate, className = "" }) {
   const { pathname } = useLocation();
   const active = pathname === item.href || (item.href === "/inspiratie" && pathname.startsWith("/blog/"));
@@ -151,9 +147,12 @@ export default function OrganizedNavigation() {
     return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", onKeyDown); };
   }, [menuOpen]);
 
+  // /sprekers was hier de uitzondering: die pagina was losse HTML, dus moest
+  // de browser hem helemaal opnieuw laden. Sinds hij een gewone route is
+  // gelden voor elke pagina dezelfde regels.
   const go = (path) => {
     setMenuOpen(false);
-    if (isStaticPage(path)) window.location.assign(path); else navigate(path);
+    navigate(path);
   };
 
   // De knop blijft een echte link naar /verkennen -- rechtermuisknop, openen in

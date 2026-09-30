@@ -679,8 +679,14 @@
     <priority>0.75</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/blog/hoe-hoger-de-werkdruk-hoe-groter-de-verleiding-om-te-controleren</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/kennisbank</loc>
-    <lastmod>2026-09-29</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>

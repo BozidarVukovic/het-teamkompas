@@ -53,6 +53,8 @@ const KenniskaartTeamontwikkeling = lazy(() => laadPagina(() => import("./pages/
 const BevlogenheidInHetWerk = lazy(() => laadPagina(() => import("./pages/public/BevlogenheidInHetWerk")));
 const Teamenergie = lazy(() => laadPagina(() => import("./pages/public/Teamenergie")));
 const Teamcultuur = lazy(() => laadPagina(() => import("./pages/public/Teamcultuur")));
+const Sprekers = lazy(() => laadPagina(() => import("./pages/public/Sprekers")));
+const SprekerEdmondLam = lazy(() => laadPagina(() => import("./pages/public/SprekerEdmondLam")));
 const EigenaarschapInTeams = lazy(() => laadPagina(() => import("./pages/public/EigenaarschapInTeams")));
 const Verandermanagement = lazy(() => laadPagina(() => import("./pages/public/Verandermanagement")));
 const ImpactVanEenTeamdag = lazy(() => laadPagina(() => import("./pages/public/ImpactVanEenTeamdag")));
@@ -9614,14 +9616,19 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.74)", maxWidth: 660, marginBottom: 16 }}>
               Samenwerking verbeteren vraagt meer dan een losse teamdag. Mijn Teamkompas helpt teams zichtbaar maken waar veiligheid, energie, verandering en leren elkaar versterken of juist blokkeren.
             </p>
-            {/* Eén knop in plaats van twee. "Plan een kennismaking" stond hier
-                als tweede knop, terwijl diezelfde afspraak rechtsboven in de
-                balk al op elke pagina staat -- twee ingangen naar hetzelfde
-                gesprek, waarvan er een je afleidt van de stap die deze pagina
-                voorstelt. De kennismaking blijft bereikbaar, maar als regel
-                eronder in plaats van als tweede beslissing. */}
+            {/* Oranje staat in deze site voor de ene handeling op het scherm.
+                Hier stond die kleur op "Bekijk de teamscan voor teams" -- dat
+                is navigatie -- terwijl de kennismaking eronder een tekstlink
+                was. Omgedraaid, zodat deze pagina hetzelfde doet als
+                /teamcoaching en /teamdag. */}
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12, marginTop: 30 }}>
-              <span style={ctaStyle} onClick={() => navigate("/teamscan")}>Bekijk de teamscan voor teams</span>
+              <span style={ctaStyle} onClick={openModal}>Plan een vrijblijvende kennismaking</span>
+              <span
+                onClick={() => navigate("/teamscan")}
+                style={{ display: "inline-block", background: "rgba(255,255,255,0.06)", color: "#fff", border: "1px solid rgba(255,255,255,0.55)", padding: "14px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: "pointer", textAlign: "center" }}
+              >
+                Bekijk de teamscan voor teams
+              </span>
             </div>
 
             {/* Deze regel stond op 13 pixels in wit van 50 procent. Dat haalt
@@ -9633,13 +9640,6 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
               Voor teams die willen werken aan vertrouwen, eigenaarschap, communicatie en duurzame verandering.
             </p>
 
-            <button
-              type="button"
-              onClick={openModal}
-              style={{ marginTop: 12, background: "transparent", border: "none", padding: 0, font: "inherit", fontSize: 15, fontWeight: 700, color: "#35C4B5", textDecoration: "underline", textUnderlineOffset: 4, cursor: "pointer" }}
-            >
-              Liever eerst kennismaken?
-            </button>
           </div>
           <div style={{ minHeight: isMobile ? 310 : "78vh", position: "relative", zIndex: 1 }}>
             <img src="/blog/images/verandering-omarmen.jpg" alt="Team in gesprek tijdens een begeleide sessie over samenwerking" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "brightness(1.10) contrast(0.95) saturate(1.05)" }} />
@@ -12892,6 +12892,8 @@ export default function App() {
         <Route path="/kennis/kenniskaart-teamontwikkeling" element={<KenniskaartTeamontwikkeling />} />
         <Route path="/kennis/teamenergie" element={<><Teamenergie /><RelatedArticles paths={["/kennis/teamenergie"]} /></>} />
         <Route path="/kennis/bevlogenheid-in-het-werk" element={<><BevlogenheidInHetWerk /><RelatedArticles paths={["/kennis/bevlogenheid-in-het-werk"]} /></>} />
+        <Route path="/sprekers" element={<Sprekers />} />
+        <Route path="/sprekers/edmond-lam" element={<SprekerEdmondLam />} />
         <Route path="/kennis/teamcultuur" element={<><Teamcultuur /><RelatedArticles paths={["/kennis/teamcultuur"]} /></>} />
         <Route path="/kennis/eigenaarschap-in-teams" element={<><EigenaarschapInTeams /><RelatedArticles paths={["/kennis/eigenaarschap-in-teams"]} /></>} />
         <Route path="/kennis/verandermanagement" element={<><Verandermanagement /><RelatedArticles paths={["/kennis/verandermanagement"]} /></>} />

@@ -118,7 +118,12 @@ a { color: inherit; }
 /* Oranje is de actiekleur van het merk en draagt donkere tekst (6,33:1).
    Witte tekst op oranje haalt 2,75 en stond er daarom nergens anders. */
 .tk-button-primary { color: var(--tk-color-ink); background: var(--tk-color-orange); box-shadow: 0 14px 35px rgba(232,130,26,.26); }
-.tk-button-secondary { color: var(--tk-color-ink); background: white; border-color: var(--tk-color-border); box-shadow: var(--tk-shadow-sm); }
+.tk-button-secondary { color: var(--tk-color-ink); background: white; border-color: var(--tk-color-border); box-shadow: none; }
+/* Een wit vlak is op een lichte pagina een nette tweede knop, maar op een
+   donkere hero roept hij net zo hard als de oranje knop ernaast -- en oranje is
+   in deze site de ene handeling op het scherm. Op donker dus dezelfde omlijnde
+   knop als overal elders. */
+.tk-op-donker .tk-button-secondary { color: #fff; background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.55); box-shadow: none; }
 .tk-card { position: relative; overflow: hidden; height: 100%; padding: 26px; border: 1px solid var(--tk-color-border); border-radius: var(--tk-radius-lg); background: var(--tk-color-surface); box-shadow: none; }
 .tk-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: var(--tk-accent, var(--tk-color-teal)); }
 .tk-card h3 { margin: 0 0 10px; font-size: 20px; line-height: 1.25; }

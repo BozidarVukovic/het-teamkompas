@@ -22,6 +22,24 @@ const DEFAULT_IMAGE = `${SITE}/teamkompas-workshop-hero.jpg`;
 
 const pages = [
   {
+    route: "sprekers",
+    title: "Sprekers over storytelling en teamontwikkeling | Mijn Teamkompas",
+    description:
+      "Ontdek de sprekers van Mijn Teamkompas over storytelling, samenwerking, leiderschap en organisatieontwikkeling.",
+    url: "https://www.mijnteamkompas.nl/sprekers",
+    image: DEFAULT_IMAGE,
+    content: `<main><h1>Sprekers die teams in beweging brengen</h1><p>Onze sprekers combineren praktijkervaring, psychologische inzichten en inspirerende verhalen. Niet om mensen alleen te motiveren, maar om een gesprek en beweging op gang te brengen die langer meegaan dan de bijeenkomst zelf.</p><h2>Een verhaal dat past bij jullie vraagstuk</h2><p>Een lezing, workshop of bijdrage aan een teamdag wordt afgestemd op de context, de doelgroep en de beweging die jullie willen realiseren.</p><h2>Edmond Lam</h2><p>Storytelling, communicatie en verbinding. Edmond helpt leiders, teams en professionals om complexe idee&euml;n te vertalen naar verhalen die raken, richting geven en mensen in beweging brengen. <a href="/sprekers/edmond-lam">Bekijk het profiel</a>.</p><p>Lees ook over <a href="/teamdag">een teamdag organiseren</a> of <a href="/verkennen">plan een vrijblijvende kennismaking</a>.</p></main>`,
+  },
+  {
+    route: "sprekers/edmond-lam",
+    title: "Edmond Lam als spreker over storytelling | Mijn Teamkompas",
+    description:
+      "Edmond Lam helpt leiders, teams en professionals om complexe ideeën te vertalen naar verhalen die raken, richting geven en mensen in beweging brengen.",
+    url: "https://www.mijnteamkompas.nl/sprekers/edmond-lam",
+    image: DEFAULT_IMAGE,
+    content: `<main><h1>Edmond Lam brengt verhalen tot leven</h1><p>Een goed verhaal maakt ingewikkelde idee&euml;n begrijpelijk, geeft betekenis aan verandering en helpt mensen om te onthouden wat er werkelijk toe doet.</p><h2>Waarom storytelling werkt</h2><p>In organisaties is veel informatie correct, maar nog niet betekenisvol. Strategie&euml;n, plannen en veranderingen blijven abstract zolang mensen niet voelen waar het werkelijk over gaat. Edmond helpt leiders en professionals om de kern te vinden en die te vertalen naar een verhaal dat helder, geloofwaardig en menselijk is.</p><h2>Wat deelnemers meenemen</h2><ul><li>De kern vinden: wat wil je dat mensen begrijpen, voelen en anders gaan doen?</li><li>Spanning opbouwen zonder de boodschap groter te maken dan zij is</li><li>Menselijk vertellen, met ruimte voor voorbeelden en ervaringen</li></ul><h2>Mogelijke vormen</h2><ul><li>Inspirerende lezing</li><li>Interactieve workshop</li><li>Onderdeel van een teamdag</li><li>Bijdrage aan een training</li></ul><p><a href="/sprekers">Bekijk alle sprekers</a> of <a href="/verkennen">plan een vrijblijvende kennismaking</a>.</p></main>`,
+  },
+  {
     route: "teamdag-generator",
     title: "Teamdag-generator: stel een programma samen | Mijn Teamkompas",
     description:
