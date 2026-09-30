@@ -18,6 +18,31 @@ import { voornaam } from "../../lib/app/naam";
 import Bol from "../../components/app/Bol";
 import VolgendeStap from "../../components/app/VolgendeStap";
 
+/**
+ * Bij welk domein van het kompas dit punt hoort.
+ *
+ * Een etiket met een link naar de kenniswijzer, die erop filtert. Nieuw
+ * tabblad: wie hier klikt is midden in een advies en hoort dat niet kwijt te
+ * raken. Er staat geen score bij en geen oordeel -- alleen waar dit thuishoort
+ * en waar je erover verder kunt lezen.
+ */
+function Domein({ domein }) {
+  if (!domein) return null;
+  return (
+    <a
+      className="tk-domein"
+      href={domein.kennisbank}
+      target="_blank"
+      rel="noreferrer"
+      style={{ "--tk-domeinkleur": domein.kleur }}
+    >
+      <span aria-hidden="true" className="tk-domein-stip" />
+      {domein.label}
+      <span className="tk-visueel-verborgen"> — lees meer in de kenniswijzer, opent in een nieuw tabblad</span>
+    </a>
+  );
+}
+
 /** "Nikki, Eva en Aad" — leesbaar, ook bij één of bij zeven. */
 function namenLijst(collegas) {
   const namen = collegas.map((c) => voornaam(c.naam, "een collega"));
@@ -605,6 +630,7 @@ export default function Samenwerken() {
                 {advies.uiteen.map((punt) => (
                   <div key={punt.kenmerkId} className="tk-punt">
                     <strong className="tk-punt-kop">{punt.onderwerp}</strong>
+                    <Domein domein={punt.domein} />
                     <p className="tk-punt-duiding">{punt.duiding}</p>
                     {punt.voorkeuren.length > 0 && (
                       <>
@@ -652,6 +678,57 @@ export default function Samenwerken() {
                   </div>
                 ))}
                 {afspraakFout && <div className="tk-melding" style={{ marginTop: 12 }}>{afspraakFout}</div>}
+
+                {/* De punten die niet in de samenvatting staan. Ingeklapt, want
+                    het eerste scherm hoort rustig te zijn -- maar wel bereikbaar,
+                    want er staat hierboven hoeveel er zijn. */}
+                {(advies.verder || []).length > 0 && (
+                  <details className="tk-meerpunten">
+                    <summary>
+                      Er {advies.verder.length === 1 ? "is nog één punt" : `zijn nog ${advies.verder.length} punten`} waarop jullie uiteenlopen
+                    </summary>
+                    {advies.verder.map((punt) => (
+                      <div key={punt.kenmerkId} className="tk-punt">
+                        <strong className="tk-punt-kop">{punt.onderwerp}</strong>
+                        <Domein domein={punt.domein} />
+                        <p className="tk-punt-duiding">{punt.duiding}</p>
+                        {punt.voorkeuren.length > 0 && (
+                          <>
+                            <div className="tk-punt-label">In deze groep zit</div>
+                            <ul className="tk-voorkeuren">
+                              {punt.voorkeuren.map((v) => (
+                                <li key={v.label}>
+                                  <span className="tk-voorkeur">{v.label}</span>
+                                  <span className="tk-voorkeur-vraagt">{v.vraagt}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </>
+                        )}
+                        {punt.afspraak && (
+                          <div className="tk-punt-afspraak">
+                            <div className="tk-punt-label">Een afspraak die hierbij past</div>
+                            <p className="tk-citaat" style={{ margin: "0 0 10px" }}>{punt.afspraak}</p>
+                            {ikBegeleid ? null : aangenomen.includes(punt.kenmerkId) ? (
+                              <p className="tk-fijn" style={{ margin: 0 }}>
+                                <span aria-hidden="true">✓</span> Staat bij jullie afspraken.
+                              </p>
+                            ) : (
+                              <button
+                                type="button"
+                                className="tk-knop tk-knop-rand tk-knop-klein"
+                                disabled={Boolean(bezigMetAfspraak)}
+                                onClick={() => neemAfspraakAan(punt)}
+                              >
+                                {bezigMetAfspraak === punt.kenmerkId ? "Bezig..." : "Zet dit bij onze afspraken"}
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </details>
+                )}
               </div>
             )}
 
@@ -688,6 +765,26 @@ export default function Samenwerken() {
                     <p>{w.tekst}</p>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* Het advies staat op het scherm van één persoon; een overleg
+                heeft het op tafel nodig. De printregels laten de balk, het
+                menu en de knoppen weg en houden het advies over. */}
+            {advies.soort === "groep" && (
+              <div className="tk-advies-blok tk-geenprint">
+                <h3>Meenemen naar het overleg</h3>
+                <p style={{ margin: "0 0 10px", lineHeight: 1.7 }}>
+                  Print dit advies of bewaar het als pdf, zodat jullie er samen naar kunnen kijken.
+                  Er staat geen naam in en geen aantal; het gaat over de groep.
+                </p>
+                <button
+                  type="button"
+                  className="tk-knop tk-knop-rand tk-knop-klein"
+                  onClick={() => window.print()}
+                >
+                  Afdrukken of opslaan als pdf
+                </button>
               </div>
             )}
 

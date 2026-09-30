@@ -2121,3 +2121,125 @@ a.tk-optie {
 .tk-uitleg-lijst strong {
   color: var(--tk-tekst);
 }
+
+/* ══════════════════════════════════ domein, meer punten, en meenemen
+   Bij elk punt in een groepsadvies staat bij welk domein van het kompas het
+   hoort. Een etiket met een link naar de kenniswijzer -- geen score en geen
+   oordeel; zie data/app/domeinen.js. */
+.tk-domein {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 2px 0 8px;
+  font-size: var(--tk-t-mini);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tk-zacht);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.tk-domein:hover,
+.tk-domein:focus-visible {
+  color: var(--tk-tekst);
+  border-bottom-color: currentColor;
+}
+
+.tk-domein-stip {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--tk-domeinkleur, var(--tk-teal));
+  flex-shrink: 0;
+}
+
+/* De punten die niet in de samenvatting staan. Ingeklapt, want het eerste
+   scherm hoort rustig te blijven -- maar er staat hoeveel het er zijn. */
+.tk-meerpunten {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.tk-meerpunten > summary {
+  cursor: pointer;
+  font-weight: 800;
+  color: var(--tk-tekst);
+}
+
+.tk-meerpunten > summary:focus-visible {
+  outline: 2px solid var(--tk-teal);
+  outline-offset: 3px;
+}
+
+.tk-meerpunten[open] > summary {
+  margin-bottom: 10px;
+}
+
+/* Voor een schermlezer wél, op het scherm niet. */
+.tk-visueel-verborgen {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Meenemen naar het overleg. Wat op papier niets doet, gaat eraf: de balk,
+   het menu, de knoppen en de uitklapper blijft open. Wat overblijft is het
+   advies, in zwart op wit. */
+@media print {
+  .tk-balk,
+  .tk-menu,
+  .tk-onderbalk,
+  .tk-geenprint,
+  .tk-knop {
+    display: none !important;
+  }
+
+  body,
+  .tk-advies {
+    background: #fff !important;
+    color: #111 !important;
+    box-shadow: none !important;
+  }
+
+  .tk-advies h2,
+  .tk-advies h3,
+  .tk-punt-kop,
+  .tk-citaat,
+  .tk-voorkeur {
+    color: #111 !important;
+  }
+
+  .tk-punt-duiding,
+  .tk-voorkeur-vraagt,
+  .tk-fijn,
+  .tk-advies p,
+  .tk-advies li {
+    color: #333 !important;
+  }
+
+  /* Ingeklapt op papier is informatie die je kwijt bent. */
+  .tk-meerpunten > summary {
+    font-weight: 800;
+  }
+
+  details {
+    display: block;
+  }
+
+  details > *:not(summary) {
+    display: revert !important;
+  }
+
+  .tk-punt,
+  .tk-advies-blok {
+    break-inside: avoid;
+  }
+}

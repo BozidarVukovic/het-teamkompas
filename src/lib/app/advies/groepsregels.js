@@ -25,6 +25,7 @@ import { kenmerk, optieVan } from "../../../data/app/kenmerken.js";
 import { situatie, openingVan } from "../../../data/app/situaties.js";
 import { ADVIESKADER } from "../../../data/app/adviesblokken.js";
 import { afspraakVoor, samenVoor, spreidingVoor, vraagtVan } from "../../../data/app/groepsblokken.js";
+import { domeinVan } from "../../../data/app/domeinen.js";
 import { bepaalWaarden, MAX_BLOKKEN } from "./regels.js";
 
 /** Vanaf hoeveel mensen is dit een groep? Bij twee blijft het één-op-één. */
@@ -188,7 +189,7 @@ export function steltGroepsadviesSamen({
   // Evenveel punten als de samenvatting er noemt. Stonden er drie onderwerpen
   // in de zin en werden er twee uitgewerkt, dan mis je er één zonder te weten
   // welke.
-  const uiteenlopend = blokken.map((b) => ({
+  const maakPunt = (b) => ({
     kenmerkId: b.kenmerkId,
     onderwerp: b.label,
     duiding: b.duiding,
@@ -197,7 +198,22 @@ export function steltGroepsadviesSamen({
     // Het advies eindigde tot nu toe op het scherm; dit is het enige stuk dat
     // eraf komt en blijft staan.
     afspraak: afspraakVoor(b.kenmerkId),
-  }));
+    // Bij welk domein van het kompas dit hoort. Een etiket en een plek om
+    // verder te lezen -- geen score en geen oordeel over het team.
+    domein: domeinVan(b.kenmerkId),
+  });
+
+  const uiteenlopend = blokken.map(maakPunt);
+
+  // De punten die niet in de samenvatting staan. Ze zijn er wel, ze zijn even
+  // volledig uitgewerkt, en ze staan achter een uitklapper. De samenvatting
+  // blijft gaan over de eerste drie; alles wat daaronder staat is
+  // uitdrukkelijk "meer" en niet iets wat je zou missen.
+  const rest = uiteen
+    .slice(MAX_BLOKKEN)
+    .map((r) => ({ ...r, ...(spreidingVoor(r.kenmerkId) || {}) }))
+    .filter((r) => r.duiding && r.suggestie)
+    .map(maakPunt);
 
   // Waar de voorkeuren wél samenvallen. Dit stond al in bepaalSpreiding en
   // werd weggegooid. Een groep die alleen over zijn verschillen leest, mist
@@ -220,6 +236,7 @@ export function steltGroepsadviesSamen({
     samenvatting,
     helpt,
     uiteen: uiteenlopend,
+    verder: rest,
     samen: overeenkomstig,
     vraag: s ? s.vraag : null,
     // Een actie die op één collega is afgestemd slaat hier nergens op; die van

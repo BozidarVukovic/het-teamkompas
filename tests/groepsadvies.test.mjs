@@ -11,6 +11,7 @@ import assert from "node:assert/strict";
 
 import { steltGroepsadviesSamen, bepaalSpreiding, MINIMUM_GROEP } from "../src/lib/app/advies/groepsregels.js";
 import { SPREIDING, vraagtVan } from "../src/data/app/groepsblokken.js";
+import { DOMEINEN, KENMERK_DOMEIN, domeinVan } from "../src/data/app/domeinen.js";
 import { KENMERK_IDS, KENMERKEN } from "../src/data/app/kenmerken.js";
 import { SITUATIES, situatiesPerGroep } from "../src/data/app/situaties.js";
 
@@ -150,7 +151,7 @@ test("de uitkomst bevat geen lijst van wie welke voorkeur koos", () => {
   assert.deepEqual(Object.keys(a).sort(), [
     "aantal", "aantalBeschikbaar", "aantalGedeeld", "actie", "gebruikteKenmerken",
     "helpt", "namen", "opmerkingen", "samen", "samenvatting", "situatie", "soort",
-    "transparantie", "uiteen", "vraag",
+    "transparantie", "uiteen", "verder", "vraag",
   ]);
 
   // De namen zijn een platte lijst zonder iets eraan vast.
@@ -256,6 +257,62 @@ test("weet je het van maar één persoon, dan is het ook geen overeenkomst", () 
     situatieId: "bespreekbaar-maken",
   });
   assert.equal(a.samen.find((p) => p.kenmerkId === "tempo"), undefined);
+});
+
+/* ------------------------------------------------------ het domein erbij */
+
+test("elk kenmerk hoort bij precies één bestaand domein", () => {
+  const ids = DOMEINEN.map((d) => d.id);
+  Object.entries(KENMERK_DOMEIN).forEach(([kenmerkId, domeinId]) => {
+    assert.ok(ids.includes(domeinId), `${kenmerkId}: ${domeinId} is geen bestaand domein`);
+  });
+});
+
+test("elk kenmerk waarover advies komt, heeft een domein", () => {
+  Object.keys(SPREIDING).forEach((kenmerkId) => {
+    assert.ok(domeinVan(kenmerkId), `${kenmerkId}: zonder domein valt er niets bij te zetten`);
+  });
+});
+
+test("een domein is een etiket met een leeslink, geen score", () => {
+  const d = domeinVan("feedback");
+  assert.deepEqual(Object.keys(d).sort(), ["id", "kennisbank", "kleur", "label"]);
+  assert.match(d.kennisbank, /^\/kennisbank\?domein=/);
+  // Geen woord dat een oordeel of een stand suggereert.
+  assert.doesNotMatch(JSON.stringify(d), /\b(score|niveau|zwak|sterk|onvoldoende|risico)\b/i);
+});
+
+test("bij elk punt in het advies staat het domein", () => {
+  const a = groep();
+  [...a.uiteen, ...a.verder].forEach((punt) => {
+    assert.ok(punt.domein, `${punt.onderwerp}: het domein hoort erbij te staan`);
+    assert.ok(punt.domein.label && punt.domein.kennisbank);
+  });
+});
+
+/* ------------------------------------------- de punten onder de streep */
+
+test("wat niet in de samenvatting staat, staat wel onder verder", () => {
+  const a = groep();
+  assert.ok(a.uiteen.length <= 3, "de samenvatting gaat over hoogstens drie punten");
+  assert.equal(a.uiteen.length + a.verder.length, a.aantalBeschikbaar,
+    "samen horen uiteen en verder alle gevonden punten te bevatten");
+});
+
+test("een punt onder verder is even volledig als een punt erboven", () => {
+  const a = groep();
+  if (a.verder.length === 0) return;
+  const punt = a.verder[0];
+  assert.deepEqual(Object.keys(punt).sort(), Object.keys(a.uiteen[0]).sort());
+  assert.ok(punt.duiding && punt.afspraak && punt.voorkeuren.length >= 2);
+});
+
+test("onder verder staat geen naam en geen aantal", () => {
+  const a = groep();
+  const tekst = JSON.stringify(a.verder);
+  ["Nikki", "Eva", "Aad", "jij"].forEach((naam) => {
+    assert.ok(!tekst.includes(naam), `${naam} hoort hier niet te staan`);
+  });
 });
 
 test("bij elk verschil staat welke voorkeuren er in déze groep zitten", () => {
