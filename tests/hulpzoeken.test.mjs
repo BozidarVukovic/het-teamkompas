@@ -94,6 +94,29 @@ test("een aanwijzing is voorzichtig geformuleerd en nooit stellig", () => {
   });
 });
 
+test("een bijdrage leest goed na \"om\", want zo komt hij op het scherm", () => {
+  HULPSOORTEN.forEach((h) => {
+    // De kaart zet "Om " ervoor en de hulpvraag "helpen om", dus hoort de
+    // bijdrage in de te-vorm te staan.
+    assert.match(h.bijdrage, /(^|\s)te\s/, `${h.id}: "Om ${h.bijdrage}." mist een "te"`);
+    assert.doesNotMatch(h.bijdrage, /^helpen\b/, `${h.id}: "Om helpen om ..." botst met het voorvoegsel`);
+    assert.doesNotMatch(h.bijdrage, /^om\b/i, `${h.id}: begint met "om" terwijl de kaart dat al zet`);
+  });
+});
+
+test("de kaart geeft per collega één regel met de reden, zonder getal", () => {
+  const a = vraagOm(
+    "Ik heb veel ideeën voor een nieuw onboardingprogramma, maar krijg het plan niet afgerond.",
+    ["structuur", "afronden"]
+  );
+  a.suggesties.forEach((s) => {
+    assert.ok(s.kortom && s.kortom.length > 5, `${s.sleutel}: er hoort een reden in één regel te staan`);
+    assert.doesNotMatch(s.kortom, /\d/, `${s.sleutel}: geen aantal en geen score in de regel`);
+  });
+  const nikki = a.suggesties.find((s) => s.sleutel === "nikki");
+  assert.match(nikki.kortom, /^Schreef zelf/, "eigen woorden hoort als reden bovenaan de regel");
+});
+
 /* ----------------------------------------------- 1. inhoudelijke expertise */
 
 test("iemand zoekt inhoudelijke expertise: de rol telt mee als de vraag erop aansluit", () => {
@@ -138,7 +161,13 @@ test("iemand zoekt een aanvullende werkvoorkeur: ideeën ontwikkelen", () => {
   const eva = a.suggesties.find((s) => s.sleutel === "eva");
   assert.ok(eva, "Eva's profiel bevat de aanwijzingen die hierbij horen");
   assert.ok(eva.waarom.every((b) => b.bron === "profiel"), "bij haar is alles afgeleid uit het profiel");
-  eva.waarom.forEach((b) => assert.match(b.zin, /aanwijzing/, "en dat hoort er met zoveel woorden bij te staan"));
+  // Het voorbehoud staat één keer bij het blok en niet meer vóór elke regel:
+  // drie keer dezelfde zin op één kaart was geen zorgvuldigheid maar ruis.
+  assert.ok(eva.voorbehoud, "bij een afgeleide aanwijzing hoort een voorbehoud op de kaart");
+  assert.match(eva.voorbehoud, /aanwijzing/, "en dat hoort er met zoveel woorden bij te staan");
+  eva.waarom.forEach((b) =>
+    assert.doesNotMatch(b.zin, /aanwijzing/, "maar niet herhaald in elke regel")
+  );
 });
 
 /* ------------------------ 4. alleen een profiel, of alleen een handleiding */

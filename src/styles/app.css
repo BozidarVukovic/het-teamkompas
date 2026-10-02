@@ -975,7 +975,10 @@
   border-bottom: 0;
 }
 
-.tk-advies-blok h3 {
+/* h4 erbij: in een uitklappaneel is de naam van de collega de h3, dus
+   schuiven de kopjes in het paneel een niveau op. */
+.tk-advies-blok h3,
+.tk-advies-blok h4 {
   font-size: var(--tk-t-klein);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -2316,4 +2319,138 @@ a.tk-optie {
   background: var(--tk-teal-dim);
   border-color: var(--tk-teal);
   font-weight: 700;
+}
+
+/* ═════════════════════════════ de collega's als uitklaplijst
+   Het resultatenscherm van "Wie helpt mij verder?" begint bij de namen. Drie
+   volledig uitgeschreven kaarten onder elkaar betekende vier schermen scrollen
+   voordat je wist wíe de app voorstelt, en dat is nu juist de eerste vraag. Nu
+   staan de namen op een rij met per regel één reden; tik je op een regel, dan
+   komt de onderbouwing eronder tevoorschijn en klapt de vorige dicht.
+
+   Niet "tk-uitklap": die naam is al in gebruik voor het kleine tekstknopje dat
+   een stukje tekst openvouwt, en die regels lekten hierheen -- vandaar dat elke
+   naam hier bij de collega hoort en niet bij de beweging. */
+.tk-collega-titel {
+  font-size: var(--tk-t-kop);
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.tk-collegalijst {
+  background: var(--tk-vlak);
+  border: 1px solid var(--tk-rand);
+  border-radius: 14px;
+  box-shadow: var(--tk-lift);
+  margin-bottom: var(--tk-tussen);
+  overflow: hidden;
+}
+
+.tk-collega + .tk-collega {
+  border-top: 1px solid var(--tk-lijn);
+}
+
+/* Een h3, maar geen kopje: het is de regel zelf. Daarom staat de opmaak hier
+   voluit in plaats van dat we hem ergens vandaan laten komen. */
+.tk-collega-kop {
+  margin: 0;
+  font-size: var(--tk-t-basis);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--tk-tekst);
+}
+
+.tk-collega-knop {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  /* Royaal, want dit is op een telefoon het raakvlak: ruim boven de 44 pixels
+     die een vinger nodig heeft. */
+  padding: 16px 18px;
+  border: 0;
+  background: none;
+  color: var(--tk-tekst);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tk-collega-tekst {
+  display: block;
+  min-width: 0;
+}
+
+.tk-collega-naam {
+  display: block;
+  font-size: var(--tk-t-kop);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--tk-tekst);
+}
+
+.tk-collega-functie {
+  display: block;
+  font-size: var(--tk-t-fijn);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--tk-zacht);
+}
+
+/* De reden in de dichtgeklapte regel. Teal, want dit is het antwoord op
+   "waarom deze collega?" en niet een ondertitel bij de naam. */
+.tk-collega-reden {
+  display: block;
+  margin-top: 3px;
+  font-size: var(--tk-t-fijn);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--tk-teal);
+}
+
+.tk-collega-pijl {
+  color: var(--tk-zacht);
+  transition: transform 0.18s ease;
+}
+
+.tk-collega.open .tk-collega-pijl {
+  transform: rotate(180deg);
+  color: var(--tk-teal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tk-collega-pijl {
+    transition: none;
+  }
+}
+
+.tk-collega.open .tk-collega-knop {
+  background: var(--tk-teal-dim);
+}
+
+@media (hover: hover) {
+  .tk-collega-knop:hover .tk-collega-naam {
+    color: var(--tk-teal);
+  }
+}
+
+.tk-collega-paneel {
+  padding: 2px 18px 20px;
+}
+
+/* Het paneel zit al in een omlijnde lijst, dus hoeft het laatste blok geen
+   ruimte eronder meer. */
+.tk-collega-paneel .tk-advies-blok:last-of-type {
+  padding-bottom: 0;
+}
+
+/* Een melding heeft dezelfde vlakkleur als de lijst eromheen en zou daarin
+   verdwijnen; in het paneel krijgt hij daarom de paginakleur. */
+.tk-collega-paneel .tk-melding {
+  background: var(--tk-navy);
+  box-shadow: none;
+  border: 1px solid var(--tk-lijn);
 }

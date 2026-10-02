@@ -7,6 +7,11 @@
 //
 // Per hulpsoort staan drie dingen:
 //
+// De bijdrage komt op het scherm altijd na "om" ("Om samen opties te
+// verkennen.") en in de hulpvraag na "helpen om". Daarom staat hij in de
+// te-vorm. Dat "te" in code ertussen schuiven gaat bij een scheidbaar werkwoord
+// mis -- "mee te nemen", niet "te meenemen" -- dus staat het hier.
+//
 //   aanwijzingen   Kenmerkwaarden die een mogelijke bijdrage suggereren, met de
 //                  zin die daarbij op het scherm komt. Een aanwijzing, geen
 //                  bewijs: "deze collega gaf aan energie te krijgen van iets
@@ -38,7 +43,7 @@ export const HULPSOORTEN = [
   {
     id: "ideeen",
     label: "Ideeën ontwikkelen",
-    bijdrage: "samen opties verkennen voordat je kiest",
+    bijdrage: "samen opties te verkennen voordat je kiest",
     aanwijzingen: [
       { kenmerkId: "energie", waarde: "nieuw", zin: "gaf aan energie te krijgen van nieuwe ideeën en mogelijkheden" },
       { kenmerkId: "denken", waarde: "hardop", zin: "denkt naar eigen zeggen het beste hardop, in gesprek" },
@@ -50,7 +55,7 @@ export const HULPSOORTEN = [
   {
     id: "meedenken",
     label: "Inhoudelijk meedenken",
-    bijdrage: "met je meedenken over de inhoud",
+    bijdrage: "met je mee te denken over de inhoud",
     aanwijzingen: [
       { kenmerkId: "denken", waarde: "hardop", zin: "denkt naar eigen zeggen het beste hardop, in gesprek" },
       { kenmerkId: "context", waarde: "veel", zin: "wil eerst het grotere geheel kennen voordat de details komen" },
@@ -62,7 +67,7 @@ export const HULPSOORTEN = [
   {
     id: "toetsen",
     label: "Kritisch toetsen",
-    bijdrage: "je voorstel tegen het licht houden voordat het de deur uit gaat",
+    bijdrage: "je voorstel tegen het licht te houden voordat het de deur uit gaat",
     aanwijzingen: [
       { kenmerkId: "context", waarde: "detail", zin: "begint naar eigen zeggen liever bij de concrete details" },
       { kenmerkId: "feedback", waarde: "direct", zin: "zegt het liever direct, zonder omtrekkende bewegingen" },
@@ -75,7 +80,7 @@ export const HULPSOORTEN = [
   {
     id: "structuur",
     label: "Structuur en overzicht",
-    bijdrage: "je ideeën ordenen en er een plan van maken",
+    bijdrage: "je ideeën te ordenen en er een plan van te maken",
     aanwijzingen: [
       { kenmerkId: "structuur", waarde: "structuur", zin: "werkt naar eigen zeggen het prettigst met duidelijke afspraken en een heldere structuur" },
       { kenmerkId: "energieverlies", waarde: "onduidelijk", zin: "gaf aan dat onduidelijkheid veel energie kost" },
@@ -87,7 +92,7 @@ export const HULPSOORTEN = [
   {
     id: "besluiten",
     label: "Kiezen en besluiten",
-    bijdrage: "met jou de knoop doorhakken",
+    bijdrage: "met jou de knoop door te hakken",
     aanwijzingen: [
       { kenmerkId: "besluitvorming", waarde: "knoop", zin: "heeft naar eigen zeggen liever een besluit dan een lang gesprek over alle opties" },
       { kenmerkId: "tempo", waarde: "snel", zin: "werkt graag vlot naar een besluit toe" },
@@ -99,7 +104,7 @@ export const HULPSOORTEN = [
   {
     id: "afronden",
     label: "Uitvoeren en afronden",
-    bijdrage: "de laatste stappen met je bepalen en vasthouden",
+    bijdrage: "de laatste stappen met je te bepalen en vast te houden",
     aanwijzingen: [
       { kenmerkId: "energie", waarde: "afronden", zin: "gaf aan energie te krijgen van iets echt afronden" },
       { kenmerkId: "aanspreken", waarde: "toezegging", zin: "vroeg zelf om aangesproken te worden op toezeggingen" },
@@ -111,7 +116,7 @@ export const HULPSOORTEN = [
   {
     id: "draagvlak",
     label: "Afstemmen en draagvlak",
-    bijdrage: "helpen om anderen mee te nemen in je voorstel",
+    bijdrage: "anderen mee te nemen in je voorstel",
     aanwijzingen: [
       { kenmerkId: "contact", waarde: "relatie", zin: "gaf aan dat even bijpraten bij goed samenwerken hoort" },
       { kenmerkId: "besluitvorming", waarde: "meepraten", zin: "staat achter een besluit als erover is meegepraat" },

@@ -152,7 +152,9 @@ export function bewijsVoor({ collega, hulpsoortIds = [], vraagwoorden = [] } = {
         bron: "profiel",
         hulpsoortId: id,
         titel: (kenmerk(a.kenmerkId) || {}).label || a.kenmerkId,
-        zin: `Het gedeelde profiel bevat een aanwijzing voor deze werkvoorkeur: ${collega.voornaam} ${a.zin}.`,
+        // Zonder het voorbehoud erin: dat staat één keer onder het blok,
+        // en het bronlabel bij deze regel zegt al waar hij vandaan komt.
+        zin: `${collega.voornaam} ${a.zin}.`,
       });
     });
   });
@@ -172,6 +174,39 @@ export function bewijsVoor({ collega, hulpsoortIds = [], vraagwoorden = [] } = {
   }
 
   return bewijs;
+}
+
+/**
+ * Het voorbehoud bij wat uit een profiel is afgeleid.
+ *
+ * Stond eerst vóór elke regel die uit een profiel kwam, waardoor dezelfde zin
+ * drie keer op één kaart terugkwam. Het bronlabel bij de regel zegt al waar
+ * die vandaan komt; het voorbehoud hoort bij het blok, niet bij elke regel.
+ */
+export const VOORBEHOUD_PROFIEL =
+  "Wat uit een profiel komt is een aanwijzing voor een werkvoorkeur, geen uitspraak van deze collega zelf. Vraag het na.";
+
+/**
+ * De reden in één regel, voor de dichtgeklapte regel in de lijst.
+ *
+ * Zegt wát voor onderbouwing er is -- eigen woorden, een rol die aansluit, of
+ * een aanwijzing uit een profiel -- en niet hoe goed iemand past. Geen aantal
+ * en geen score: de volgorde van de regels volgt al uit het soort onderbouwing
+ * en dat staat onderaan het scherm uitgelegd.
+ */
+export function kortomVoor(bewijs = []) {
+  const label = (b) => String((hulpsoort(b.hulpsoortId) || {}).label || "").toLowerCase();
+
+  const eigen = bewijs.find((b) => b.bron === "handleiding");
+  if (eigen) return label(eigen) ? `Schreef zelf over ${label(eigen)}` : "Schreef hier zelf over";
+
+  const rol = bewijs.find((b) => b.bron === "rol");
+  if (rol) return "De rol sluit aan op wat je beschrijft";
+
+  const profiel = bewijs.find((b) => b.bron === "profiel");
+  if (profiel) return label(profiel) ? `Profiel wijst op ${label(profiel)}` : "Aanwijzing uit het profiel";
+
+  return "";
 }
 
 /** Spreekt de informatie over deze collega zichzelf tegen? */
@@ -297,6 +332,10 @@ export function zoekHulp({ vraag = "", gekozenHulpsoorten = [], mijnKenmerken = 
 
   const suggesties = beoordeeld.slice(0, MAX_SUGGESTIES).map(({ collega, bewijs }) => {
     const soorten = [...new Set(bewijs.map((b) => b.hulpsoortId).filter(Boolean))];
+    // Wat er op de kaart komt te staan. Het voorbehoud hangt daaraan en niet
+    // aan al het bewijs: staat er geen afgeleide regel op de kaart, dan hoort
+    // het voorbehoud erover er ook niet te staan.
+    const zichtbaar = bewijs.slice(0, 3);
     return {
       sleutel: collega.sleutel || collega.uid || collega.naam,
       naam: collega.naam,
@@ -304,7 +343,10 @@ export function zoekHulp({ vraag = "", gekozenHulpsoorten = [], mijnKenmerken = 
       // Alleen tonen wat er is; een lege functie is geen reden voor een streepje.
       functie: String(collega.functie || "").trim() || null,
       doorBeheerder: Boolean(collega.doorBeheerder),
-      waarom: bewijs.slice(0, 3),
+      waarom: zichtbaar,
+      // De regel die in de dichtgeklapte lijst te zien is.
+      kortom: kortomVoor(bewijs),
+      voorbehoud: zichtbaar.some((b) => b.bron === "profiel") ? VOORBEHOUD_PROFIEL : null,
       bijdrage: soorten.map((id) => (hulpsoort(id) || {}).bijdrage).filter(Boolean).slice(0, 2),
       startTips: startTips({ collega, mijnKenmerken }),
       tegenspraak: tegenspraakBij({ collega, hulpsoortIds, bewijs }),

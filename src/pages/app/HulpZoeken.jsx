@@ -4,6 +4,16 @@
 // eventueel aan waar je hulp bij kunt gebruiken, en krijgt hoogstens drie
 // collega's uit je eigen team met een onderbouwing die je kunt nalezen.
 //
+// Het resultatenscherm begint bij de namen, niet bij de uitleg. Eerst de
+// collega's op een rij, met per regel één reden; tik je op een regel, dan komt
+// de volledige onderbouwing eronder tevoorschijn en klapt de vorige dicht. De
+// eerste vraag van een deelnemer is "wie?", en pas daarna "waarom?" -- met drie
+// volledig uitgeschreven kaarten onder elkaar moest je vier schermen scrollen
+// voordat je het antwoord op de eerste vraag had.
+//
+// Is er maar één collega, dan staat die meteen open: er valt dan niets te
+// kiezen, en een dichtgeklapte regel zou alleen een extra tik kosten.
+//
 // Wat er uit welke bron komt staat erbij: eigen woorden uit een
 // hand-in-handleiding, een aanwijzing uit een Insights Discovery-profiel, of
 // de functie die iemand zelf invulde. Geen score, geen percentage, geen
@@ -14,7 +24,7 @@
 // uitsluitend de mensen uit het actieve team, met uitsluitend wat zij met dít
 // team hebben gedeeld. Er wordt hier niets extra's opgehaald.
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { collegasVan } from "../../lib/app/collegas";
@@ -33,11 +43,16 @@ const BRONLABEL = {
 export default function HulpZoeken() {
   const { gebruiker, actiefTeam, kenmerken, teamOverzicht, ikBegeleid } = useApp();
   const { leden, gedeeld, profielleden, laden } = teamOverzicht;
+  const basis = useId();
 
   const [vraag, setVraag] = useState("");
   const [gekozenSoorten, setGekozenSoorten] = useState([]);
   const [uitkomst, setUitkomst] = useState(null);
   const [bezig, setBezig] = useState(false);
+  // Eén sleutel, geen lijst: daardoor klapt de vorige automatisch dicht zodra
+  // je een andere opent. Met <details> kan dat niet -- die weten niets van
+  // elkaar en zouden allemaal open kunnen staan.
+  const [open, setOpen] = useState(null);
   const [uitnodigingVoor, setUitnodigingVoor] = useState(null);
   const [uitnodiging, setUitnodiging] = useState("");
   const [gekopieerd, setGekopieerd] = useState(false);
@@ -69,14 +84,18 @@ export default function HulpZoeken() {
       collegas,
     });
     setUitkomst(antwoord);
+    setOpen(antwoord.suggesties.length === 1 ? antwoord.suggesties[0].sleutel : null);
     setBezig(false);
   };
 
   const opnieuw = () => {
     setUitkomst(null);
+    setOpen(null);
     setUitnodigingVoor(null);
     setGekopieerd(false);
   };
+
+  const klapUit = (sleutel) => setOpen((huidig) => (huidig === sleutel ? null : sleutel));
 
   const maakUitnodiging = (suggestie) => {
     setUitnodigingVoor(suggestie.sleutel);
@@ -213,94 +232,161 @@ export default function HulpZoeken() {
             </div>
           )}
 
-          {uitkomst.suggesties.map((s) => (
-            <article className="tk-kaart" key={s.sleutel}>
-              <div className="tk-persoonrij">
-                <Bol naam={s.naam} />
-                <div>
-                  <h2 style={{ margin: 0 }}>{s.naam}</h2>
-                  {s.functie && <div className="tk-fijn">{s.functie}</div>}
-                  {s.doorBeheerder && (
-                    <div className="tk-fijn">Profiel toegevoegd door een beheerder, niet door deze persoon zelf.</div>
-                  )}
-                </div>
+          {uitkomst.suggesties.length > 0 && (
+            <>
+              <h2 className="tk-collega-titel">
+                {uitkomst.suggesties.length === 1
+                  ? "Deze collega zou je hierbij kunnen helpen"
+                  : "Deze collega's zouden je hierbij kunnen helpen"}
+              </h2>
+              <p className="tk-fijn" style={{ margin: "0 0 14px" }}>
+                Tik op een naam om te zien waarop dat is gebaseerd.
+              </p>
+
+              <div className="tk-collegalijst">
+                {uitkomst.suggesties.map((s) => {
+                  const staatOpen = open === s.sleutel;
+                  const kopId = `${basis}-kop-${s.sleutel}`;
+                  const paneelId = `${basis}-paneel-${s.sleutel}`;
+
+                  return (
+                    <article className={staatOpen ? "tk-collega open" : "tk-collega"} key={s.sleutel}>
+                      {/* Een echte knop: daarmee werken Enter, spatie en focus
+                          zonder dat we toetsen zelf hoeven af te handelen. */}
+                      <h3 className="tk-collega-kop">
+                        <button
+                          type="button"
+                          className="tk-collega-knop"
+                          id={kopId}
+                          aria-expanded={staatOpen}
+                          aria-controls={paneelId}
+                          onClick={() => klapUit(s.sleutel)}
+                        >
+                          <Bol naam={s.naam} />
+                          <span className="tk-collega-tekst">
+                            <span className="tk-collega-naam">{s.naam}</span>
+                            {s.functie && <span className="tk-collega-functie">{s.functie}</span>}
+                            {s.kortom && <span className="tk-collega-reden">{s.kortom}</span>}
+                          </span>
+                          <svg
+                            className="tk-collega-pijl"
+                            width="15"
+                            height="15"
+                            viewBox="0 0 15 15"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path
+                              d="M4 6l3.5 3.5L11 6"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.8"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
+                      </h3>
+
+                      <div
+                        className="tk-collega-paneel"
+                        id={paneelId}
+                        role="region"
+                        aria-labelledby={kopId}
+                        hidden={!staatOpen}
+                      >
+                        {s.doorBeheerder && (
+                          <p className="tk-fijn" style={{ margin: "0 0 4px" }}>
+                            Profiel toegevoegd door een beheerder, niet door deze persoon zelf.
+                          </p>
+                        )}
+
+                        <div className="tk-advies-blok">
+                          <h4>Waarom deze collega?</h4>
+                          <ul className="tk-zinnen">
+                            {s.waarom.map((b) => (
+                              <li key={b.zin}>
+                                <span className="tk-bron">{BRONLABEL[b.bron] || b.bron}</span>
+                                {b.zin}
+                              </li>
+                            ))}
+                          </ul>
+                          {/* Het voorbehoud bij een profiel staat één keer onder
+                              het blok. Het stond eerst vóór elke regel, waardoor
+                              dezelfde zin drie keer op één kaart terugkwam -- en
+                              het label bij de regel zegt al dat het uit een
+                              profiel komt. */}
+                          {s.voorbehoud && <p className="tk-fijn" style={{ margin: "10px 0 0" }}>{s.voorbehoud}</p>}
+                        </div>
+
+                        {s.bijdrage.length > 0 && (
+                          <div className="tk-advies-blok">
+                            <h4>Waarbij kan {s.voornaam} mogelijk helpen?</h4>
+                            <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
+                              {s.bijdrage.map((b) => (
+                                <li key={b}>Om {b}.</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {s.tegenspraak && (
+                          <div className="tk-melding" style={{ marginTop: 18 }}>
+                            {s.tegenspraak.zinnen.map((z) => <div key={z}>{z}</div>)}
+                            <div style={{ marginTop: 6 }}>{s.tegenspraak.uitleg}</div>
+                          </div>
+                        )}
+
+                        {s.startTips.length > 0 && (
+                          <div className="tk-advies-blok">
+                            <h4>Zo start je prettig samen</h4>
+                            <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
+                              {s.startTips.map((t) => (
+                                <li key={t.kenmerkId} style={{ marginBottom: 6 }}>
+                                  {t.zin}
+                                  {t.verschil && <div className="tk-fijn">{t.verschil}</div>}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {uitnodigingVoor === s.sleutel ? (
+                          <div className="tk-advies-blok">
+                            <h4>Je hulpvraag</h4>
+                            <p className="tk-fijn" style={{ margin: "0 0 8px" }}>
+                              Pas hem aan zoals je wilt. Er wordt niets verstuurd; je kopieert hem zelf.
+                            </p>
+                            <textarea
+                              className="tk-tekstvak"
+                              rows={9}
+                              value={uitnodiging}
+                              onChange={(e) => { setUitnodiging(e.target.value); setGekopieerd(false); }}
+                              aria-label={`Hulpvraag aan ${s.voornaam}`}
+                            />
+                            <div className="tk-knoppen" style={{ marginTop: 10 }}>
+                              <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={kopieer}>
+                                {gekopieerd ? "Gekopieerd" : "Kopieer de tekst"}
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className="tk-knop tk-knop-rand tk-knop-klein"
+                            style={{ marginTop: 16 }}
+                            onClick={() => maakUitnodiging(s)}
+                          >
+                            Maak een hulpvraag
+                          </button>
+                        )}
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
-
-              <div className="tk-advies-blok">
-                <h3>Waarom deze collega?</h3>
-                <ul className="tk-zinnen">
-                  {s.waarom.map((b) => (
-                    <li key={b.zin}>
-                      <span className="tk-bron">{BRONLABEL[b.bron] || b.bron}</span>
-                      {b.zin}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {s.bijdrage.length > 0 && (
-                <div className="tk-advies-blok">
-                  <h3>Waarbij kan {s.voornaam} mogelijk helpen?</h3>
-                  <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
-                    {s.bijdrage.map((b) => (
-                      <li key={b}>Om {b}.</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {s.tegenspraak && (
-                <div className="tk-melding">
-                  {s.tegenspraak.zinnen.map((z) => <div key={z}>{z}</div>)}
-                  <div style={{ marginTop: 6 }}>{s.tegenspraak.uitleg}</div>
-                </div>
-              )}
-
-              {s.startTips.length > 0 && (
-                <div className="tk-advies-blok">
-                  <h3>Zo start je prettig samen</h3>
-                  <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
-                    {s.startTips.map((t) => (
-                      <li key={t.kenmerkId} style={{ marginBottom: 6 }}>
-                        {t.zin}
-                        {t.verschil && <div className="tk-fijn">{t.verschil}</div>}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {uitnodigingVoor === s.sleutel ? (
-                <div className="tk-advies-blok">
-                  <h3>Je hulpvraag</h3>
-                  <p className="tk-fijn" style={{ margin: "0 0 8px" }}>
-                    Pas hem aan zoals je wilt. Er wordt niets verstuurd; je kopieert hem zelf.
-                  </p>
-                  <textarea
-                    className="tk-tekstvak"
-                    rows={9}
-                    value={uitnodiging}
-                    onChange={(e) => { setUitnodiging(e.target.value); setGekopieerd(false); }}
-                    aria-label={`Hulpvraag aan ${s.voornaam}`}
-                  />
-                  <div className="tk-knoppen" style={{ marginTop: 10 }}>
-                    <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={kopieer}>
-                      {gekopieerd ? "Gekopieerd" : "Kopieer de tekst"}
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  className="tk-knop tk-knop-rand tk-knop-klein"
-                  style={{ marginTop: 14 }}
-                  onClick={() => maakUitnodiging(s)}
-                >
-                  Maak een hulpvraag
-                </button>
-              )}
-            </article>
-          ))}
+            </>
+          )}
 
           <p className="tk-voetnoot">{uitkomst.transparantie}</p>
         </>
