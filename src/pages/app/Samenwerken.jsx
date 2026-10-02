@@ -16,6 +16,7 @@ import { MINIMUM_GROEP } from "../../lib/app/advies/groepsregels";
 import { MEERDERE_COLLEGAS } from "../../lib/app/functies";
 import { voornaam } from "../../lib/app/naam";
 import Bol from "../../components/app/Bol";
+import IngangKeuze from "../../components/app/IngangKeuze";
 import VolgendeStap from "../../components/app/VolgendeStap";
 
 /**
@@ -418,6 +419,10 @@ export default function Samenwerken() {
           jullie allebei hebben gedeeld.
         </p>
       ) : null}
+
+      {/* De twee ingangen van deze tool. Staan ook op het hulpscherm, zodat
+          je altijd ziet welke je gebruikt en met één tik kunt wisselen. */}
+      <IngangKeuze />
 
       {anderen.length === 0 && (
         <div className="tk-kaart">

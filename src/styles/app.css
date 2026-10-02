@@ -2243,3 +2243,77 @@ a.tk-optie {
     break-inside: avoid;
   }
 }
+
+/* ═════════════════════════════ de twee ingangen en de hulpsoorten
+   De samenwerkingstool heeft twee ingangen: beginnen bij een collega, of
+   beginnen bij een taak. Ze staan op allebei de schermen, zodat je ziet welke
+   je gebruikt en met één tik naar de andere kunt. */
+.tk-ingangen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+  margin: 0 0 22px;
+}
+
+.tk-ingang {
+  display: block;
+  padding: 14px 16px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 13px;
+  background: var(--tk-navy);
+  color: var(--tk-tekst);
+  text-decoration: none;
+}
+
+.tk-ingang:hover,
+.tk-ingang:focus-visible {
+  border-color: var(--tk-teal);
+}
+
+.tk-ingang.actief {
+  background: var(--tk-teal-dim);
+  border-color: var(--tk-teal);
+}
+
+.tk-ingang-kop {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 3px;
+}
+
+.tk-ingang-uitleg {
+  display: block;
+  font-size: var(--tk-t-fijn);
+  color: var(--tk-zacht);
+  line-height: 1.5;
+}
+
+/* Waar je hulp bij kunt gebruiken. Meerdere tegelijk mag, en overslaan ook --
+   vandaar knoppen die aan en uit gaan in plaats van een verplichte keuze. */
+.tk-hulpsoorten {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tk-hulpsoort {
+  border: 1px solid var(--tk-lijn);
+  border-radius: 999px;
+  background: var(--tk-navy);
+  color: var(--tk-tekst);
+  padding: 9px 15px;
+  font: inherit;
+  font-size: var(--tk-t-fijn);
+  cursor: pointer;
+}
+
+.tk-hulpsoort:hover,
+.tk-hulpsoort:focus-visible {
+  border-color: var(--tk-teal);
+}
+
+.tk-hulpsoort.gekozen {
+  background: var(--tk-teal-dim);
+  border-color: var(--tk-teal);
+  font-weight: 700;
+}

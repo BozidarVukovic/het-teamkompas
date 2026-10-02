@@ -12,6 +12,7 @@ import Inloggen from "./Inloggen";
 import Welkom from "./Welkom";
 import Start from "./Start";
 import Samenwerken from "./Samenwerken";
+import HulpZoeken from "./HulpZoeken";
 import MijnProfiel from "./MijnProfiel";
 import MijnHandleiding from "./MijnHandleiding";
 import MijnTeam from "./MijnTeam";
@@ -134,6 +135,11 @@ function Poort() {
       <Routes>
         <Route index element={<Start />} />
         <Route path="samenwerken" element={<Samenwerken />} />
+        {/* De tweede ingang van dezelfde tool: beginnen bij een taak in
+            plaats van bij een collega. Geen eigen menu-item -- in de balk
+            staat "Samenwerken", en dit zijn twee manieren om daaraan te
+            beginnen. Zie IngangKeuze.jsx. */}
+        <Route path="hulp" element={<HulpZoeken />} />
         <Route path="profiel" element={<MijnProfiel />} />
         <Route path="handleiding" element={<MijnHandleiding />} />
         <Route path="team" element={<MijnTeam />} />
