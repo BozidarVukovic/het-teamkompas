@@ -1,5 +1,34 @@
 [
   {
+    "slug": "escaleren-is-hulp-organiseren",
+    "title": "Escaleren is hulp organiseren, geen oordeel over je collega",
+    "excerpt": "Medewerkers lossen zelf op wat in de samenwerking vastloopt, om de relatie te beschermen. Waardoor knelpunten onzichtbaar blijven en de werkdruk oploopt.",
+    "publishDate": "2026-10-08",
+    "modifiedDate": "2026-10-08",
+    "image": "/blog/images/steun-onder-de-last.jpg",
+    "imageAlt": "Illustratie bij het artikel over escaleren en hulp vragen in de samenwerking",
+    "category": "Samenwerking",
+    "tags": [
+      "samenwerking",
+      "leiderschap",
+      "eigenaarschap"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/rollen-en-verantwoordelijkheden",
+      "/psychologische-veiligheid",
+      "/kennis/teamcultuur"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamdag"
+    ],
+    "lead": "Een medewerker wacht op de bijdrage van een collega van een andere afdeling. Die komt niet. In plaats van het te melden, zoekt hij een omweg. Hij belt nog een keer, zoekt de informatie zelf op, of doet het werk er gewoon bij.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 645
+  },
+  {
     "slug": "elk-nieuw-initiatief-is-ook-een-besluit-over-capaciteit",
     "title": "Elk nieuw initiatief is ook een besluit over capaciteit",
     "excerpt": "Afzonderlijk is elk plan logisch, bij elkaar past het niet meer. Waarom prioriteren pas betekenis krijgt zodra duidelijk is wat er stopt of later komt.",
