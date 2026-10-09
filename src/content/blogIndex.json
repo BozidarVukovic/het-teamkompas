@@ -1,5 +1,34 @@
 [
   {
+    "slug": "een-goede-strategie-heeft-geen-vaste-vorm",
+    "title": "Sun Tzu, een goede strategie heeft geen vaste vorm",
+    "excerpt": "Water vormt zijn loop naar het terrein. Waarom een aanpak die eerder werkte zich niet zonder meer laat herhalen, en hoe je houvast geeft terwijl de route verandert.",
+    "publishDate": "2026-10-09",
+    "modifiedDate": "2026-10-09",
+    "image": "/blog/images/de-stroom-vindt-zijn-weg.jpg",
+    "imageAlt": "Illustratie bij het artikel over strategie die zich voegt naar de omstandigheden",
+    "category": "Verandering",
+    "tags": [
+      "verandering",
+      "leiderschap",
+      "samenwerking"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/verandermanagement",
+      "/kennis/teamcultuur",
+      "/kennis/teamenergie"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamscan"
+    ],
+    "lead": "Er ligt een plan. De doelen staan vast, de stappen zijn uitgewerkt en de verantwoordelijkheden verdeeld. Iedereen weet wat er moet gebeuren. Onderweg verandert de werkelijkheid.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 735
+  },
+  {
     "slug": "escaleren-is-hulp-organiseren",
     "title": "Escaleren is hulp organiseren, geen oordeel over je collega",
     "excerpt": "Medewerkers lossen zelf op wat in de samenwerking vastloopt, om de relatie te beschermen. Waardoor knelpunten onzichtbaar blijven en de werkdruk oploopt.",
