@@ -13,6 +13,18 @@ import {
   leestijdVan,
 } from "../../content/blogData";
 
+// Linktekst per dienstpagina. Wordt gebruikt voor de knop onderaan een artikel
+// en voor dezelfde knop in de statische versie (scripts/generate-seo-pages.js).
+// Houd beide gelijk wanneer hier een route bij komt.
+export const DIENST_ANKERS = {
+  "/teamcoaching": "Zo werkt onze teamcoaching",
+  "/teamdag": "Zo begeleiden wij een teamdag",
+  "/teamscan": "Bekijk de online teamscan",
+  "/teamontwikkeling": "Meer over teamontwikkeling",
+  "/insights-discovery-profiel": "Meer over het Insights Discovery-profiel",
+  "/verkennen": "Plan een verkennend gesprek",
+};
+
 function ShareButtons({ title }) {
   const [copied, setCopied] = useState(false);
   const url = typeof window !== "undefined" ? window.location.href : "";
@@ -105,6 +117,15 @@ export default function BlogPost() {
 
   const readTime = post.readtime || leestijdVan(post.woorden);
   const author = post.author || "Mijn Teamkompas";
+
+  // De knop onderaan elk artikel wees altijd naar de eerste dienst uit de
+  // frontmatter, maar met voor alle artikelen dezelfde tekst ("Bekijk passende
+  // begeleiding"). Linktekst telt mee als signaal voor waar een pagina over
+  // gaat, dus die ene zin droeg honderd keer niets bij. Nu benoemt de knop de
+  // bestemming. Staat er een route in de frontmatter die we hier niet kennen,
+  // dan valt hij terug op de oude, neutrale tekst.
+  const dienstRoute = post.relatedServices?.[0] || "/verkennen";
+  const dienstAnker = DIENST_ANKERS[dienstRoute] || "Bekijk passende begeleiding";
 
   return (
     <div style={{ minHeight: "100vh", background: "#f9f7f4" }}>
@@ -313,7 +334,7 @@ export default function BlogPost() {
           <p style={{ color: "#8fa3bb", marginBottom: 24, fontSize: 15, lineHeight: 1.6 }}>
             Ontdek hoe onze begeleiding aansluit bij wat jouw team nodig heeft.
           </p>
-          <Link to={post.relatedServices[0] || "/verkennen"} style={{
+          <Link to={dienstRoute} style={{
             background: "#4FC3F7",
             color: "#0D1B2A",
             padding: "12px 28px",
@@ -323,7 +344,7 @@ export default function BlogPost() {
             fontSize: 15,
             display: "inline-block",
           }}>
-            Bekijk passende begeleiding
+            {dienstAnker}
           </Link>
         </div>
       </article>

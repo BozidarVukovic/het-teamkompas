@@ -306,6 +306,26 @@ const pages = [
 const escapeHtml = (waarde = "") =>
   String(waarde).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
+// Linktekst per dienstpagina, gelijk aan DIENST_ANKERS in
+// src/pages/public/BlogPost.jsx. Komt daar een route bij, vul hem hier ook aan.
+const DIENST_ANKERS = {
+  "/teamcoaching": "Zo werkt onze teamcoaching",
+  "/teamdag": "Zo begeleiden wij een teamdag",
+  "/teamscan": "Bekijk de online teamscan",
+  "/teamontwikkeling": "Meer over teamontwikkeling",
+  "/insights-discovery-profiel": "Meer over het Insights Discovery-profiel",
+  "/verkennen": "Plan een verkennend gesprek",
+};
+
+// Dezelfde knop als onderaan het React-artikel, zodat een crawler die geen
+// JavaScript uitvoert dezelfde beschrijvende linktekst ziet.
+function dienstLink(relatedServices = "") {
+  const route = String(relatedServices).split(",")[0].trim() || "/verkennen";
+  const anker = DIENST_ANKERS[route];
+  if (!anker) return "";
+  return `<p><a href="${route}">${escapeHtml(anker)}</a></p>`;
+}
+
 function leesFrontmatter(raw) {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return { data: {}, body: raw };
@@ -392,6 +412,7 @@ const blogPaginas = fs
         `<h1>${escapeHtml(titel)}</h1>` +
         (data.lead ? `<p>${escapeHtml(data.lead)}</p>` : "") +
         markdownNaarHtml(body) +
+        dienstLink(data.relatedServices) +
         `<nav><a href="/inspiratie">Alle artikelen</a> <a href="/teamscan">Teamscan</a> ` +
         `<a href="/gratis-teamscan">Gratis teamscan</a></nav>` +
         `</article></main>`,
