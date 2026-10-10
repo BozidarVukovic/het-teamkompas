@@ -128,6 +128,57 @@ const pages = [
       </main>`,
   },
   {
+    route: "individuele-coaching",
+    title: "Individuele coaching voor leidinggevenden | Mijn Teamkompas",
+    description:
+      "Individuele management- en leiderschapscoaching voor leidinggevenden die zelf willen groeien, zonder meteen het hele team in een traject te trekken.",
+    url: "https://www.mijnteamkompas.nl/individuele-coaching",
+    image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
+    content: `
+      <main>
+        <h1>Individuele coaching voor leidinggevenden</h1>
+        <p>Je team draait op zich goed. Wat je zoekt is iets anders: grip op je eigen manier van leidinggeven. Hoe je stuurt zonder over te nemen, hoe je delegeert zonder erover te blijven hangen, hoe je een gesprek voert dat je liever uitstelt. Daarvoor hoeft je hele team niet mee.</p>
+
+        <h2>Wanneer individuele coaching past</h2>
+        <ul>
+          <li>Je team functioneert op zich goed, en jij loopt tegen je eigen manier van sturen aan.</li>
+          <li>Je weet wat je zou moeten doen en in het moment doe je toch iets anders.</li>
+          <li>Delegeren lukt, en daarna kijk je er alsnog overheen.</li>
+          <li>Je bent doorgegroeid vanuit het team en zoekt een nieuwe verhouding tot oud-collega's.</li>
+          <li>Je voert hetzelfde gesprek met iemand al maanden in je hoofd en nog niet in het echt.</li>
+          <li>Je geeft leiding aan een grote groep en merkt dat wat vroeger werkte nu te weinig is.</li>
+        </ul>
+
+        <h2>Waar we meestal aan werken</h2>
+        <ul>
+          <li><strong>Situationeel leidinggeven.</strong> Je stijl laten meebewegen met wat iemand op dit moment nodig heeft.</li>
+          <li><strong>Delegeren en loslaten.</strong> Werk overdragen inclusief het oordeel dat erbij hoort.</li>
+          <li><strong>Coachend leidinggeven.</strong> Vragen stellen waar je gewend bent antwoorden te geven.</li>
+          <li><strong>Het gesprek dat je uitstelt.</strong> Voorbereiden, voeren en achteraf onderzoeken wat er gebeurde.</li>
+          <li><strong>Je gedrag onder druk.</strong> Wat er met je leiderschap gebeurt zodra de werkdruk oploopt.</li>
+          <li><strong>Je positie in de organisatie.</strong> De ruimte die je hebt, de ruimte die je denkt te hebben en het verschil daartussen.</li>
+        </ul>
+
+        <h2>Hoe het werkt</h2>
+        <p>Na een vrijblijvende kennismaking werken we aan concrete situaties uit je eigen praktijk: wat gebeurde er, wat deed jij, wat gebeurde er daarna. Tussen de gesprekken kies je iets kleins om anders te doen. Daar komt het leren vandaan.</p>
+        <p>Meestal vijf tot acht gesprekken van ongeveer anderhalf uur, verspreid over een aantal maanden. Op jullie locatie, bij ons, wandelend of online. Je werkt met Bozidar Vukovic of Edmond Lam, of met een coach uit onze samenwerkingspool wanneer die beter bij je vraag past. De prijs is op aanvraag, omdat vorm en aantal per persoon verschillen.</p>
+
+        <h2>Wanneer iets anders beter past</h2>
+        <p>Zit het vraagstuk eerder tussen mensen dan bij jou, dan is een traject met het team logischer. De <a href="/teamscan">online teamscan</a> laat zien hoe je team de samenwerking ervaart, een <a href="/teamdag">teamdag</a> of <a href="/teamcoaching">teamcoaching</a> brengt het gesprek met de hele groep op gang.</p>
+
+        <h2>Veelgestelde vragen over individuele coaching</h2>
+        <p><strong>Wat is het verschil met teamcoaching?</strong><br />Bij teamcoaching werken we met de groep en gaat het over wat er tussen mensen gebeurt. Bij individuele coaching werken we alleen met jou en gaat het over jouw eigen handelen.</p>
+        <p><strong>Hoeveel gesprekken zijn er nodig?</strong><br />Meestal vijf tot acht gesprekken van ongeveer anderhalf uur, verspreid over een aantal maanden.</p>
+        <p><strong>Wat kost het?</strong><br />De prijs is op aanvraag, omdat het aantal gesprekken en de vorm per persoon verschillen.</p>
+        <p><strong>Met wie heb ik de gesprekken?</strong><br />Met Bozidar Vukovic of Edmond Lam, of met een coach uit onze samenwerkingspool wanneer die beter bij je vraag past.</p>
+        <p><strong>Hoort mijn leidinggevende erbij betrokken te zijn?</strong><br />Dat hoeft niet. Betaalt je werkgever mee, dan is een kort driegesprek over de richting gebruikelijk. Wat er in de gesprekken zelf wordt besproken, blijft tussen ons.</p>
+        <p><strong>Blijft het vertrouwelijk?</strong><br />Ja. We koppelen niets inhoudelijks terug zonder dat jij weet wat er wordt gedeeld en ermee instemt.</p>
+
+        <p>Plan een vrijblijvend kennismakingsgesprek via <a href="mailto:info@mijnteamkompas.nl">info@mijnteamkompas.nl</a> of start met een <a href="/verkennen">verkennend gesprek</a>.</p>
+        <nav><a href="/">Home</a> <a href="/teamcoaching">Teamcoaching</a> <a href="/teamscan">Teamscan</a> <a href="/teamdag">Teamdag</a> <a href="/sprekers">Sprekers</a></nav>
+      </main>`,
+  },
+  {
     route: "teamdag",
     title: "Teamdag organiseren die echt iets verandert | Mijn Teamkompas",
     description:

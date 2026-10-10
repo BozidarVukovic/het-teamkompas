@@ -127,8 +127,18 @@ export default function Sprekers() {
           <div style={{ ...binnen, maxWidth: 820 }}>
             <div style={bovenregel}>Samen verkennen</div>
             <h2 style={kop}>Welke spreker past bij jullie moment?</h2>
-            <p style={{ fontSize: 17, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", margin: "0 0 26px" }}>
+            <p style={{ fontSize: 17, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", margin: "0 0 18px" }}>
               Vertel ons wat er speelt en wat de bijeenkomst moet opleveren. Dan denken we mee over de vorm en inhoud die het beste aansluiten.
+            </p>
+            <p style={{ fontSize: 17, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", margin: "0 0 26px" }}>
+              Zoek je begeleiding voor jezelf in plaats van een bijeenkomst voor een groep, kijk dan bij{" "}
+              <a
+                href="/individuele-coaching"
+                onClick={(e) => { e.preventDefault(); navigate("/individuele-coaching"); }}
+                style={{ color: PUB.tealOpDonker, fontWeight: 700 }}
+              >
+                individuele coaching voor leidinggevenden
+              </a>.
             </p>
             <button type="button" onClick={openModal} style={oranjeKnop}>Plan een vrijblijvende kennismaking</button>
           </div>

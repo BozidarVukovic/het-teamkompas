@@ -3,6 +3,7 @@ export const serviceLinks = [
   { label: "Teamontwikkeling", href: "/teamontwikkeling" },
   { label: "Insights Discovery", href: "/insights-discovery-profiel" },
   { label: "Teamcoaching", href: "/teamcoaching" },
+  { label: "Individuele coaching", href: "/individuele-coaching" },
   { label: "Teamdag", href: "/teamdag" },
   { label: "Sprekers", href: "/sprekers" },
 ];

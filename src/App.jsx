@@ -55,6 +55,7 @@ const Teamenergie = lazy(() => laadPagina(() => import("./pages/public/Teamenerg
 const Teamcultuur = lazy(() => laadPagina(() => import("./pages/public/Teamcultuur")));
 const Sprekers = lazy(() => laadPagina(() => import("./pages/public/Sprekers")));
 const SprekerEdmondLam = lazy(() => laadPagina(() => import("./pages/public/SprekerEdmondLam")));
+const IndividueleCoaching = lazy(() => laadPagina(() => import("./pages/public/IndividueleCoaching")));
 const EigenaarschapInTeams = lazy(() => laadPagina(() => import("./pages/public/EigenaarschapInTeams")));
 const Verandermanagement = lazy(() => laadPagina(() => import("./pages/public/Verandermanagement")));
 const ImpactVanEenTeamdag = lazy(() => laadPagina(() => import("./pages/public/ImpactVanEenTeamdag")));
@@ -12904,6 +12905,7 @@ export default function App() {
         <Route path="/kennis/kenniskaart-teamontwikkeling" element={<KenniskaartTeamontwikkeling />} />
         <Route path="/kennis/teamenergie" element={<><Teamenergie /><RelatedArticles paths={["/kennis/teamenergie"]} /></>} />
         <Route path="/kennis/bevlogenheid-in-het-werk" element={<><BevlogenheidInHetWerk /><RelatedArticles paths={["/kennis/bevlogenheid-in-het-werk"]} /></>} />
+        <Route path="/individuele-coaching" element={<><IndividueleCoaching /><RelatedArticles title="Verdiep je in dit onderwerp" paths={["/teamcoaching"]} /></>} />
         <Route path="/sprekers" element={<Sprekers />} />
         <Route path="/sprekers/edmond-lam" element={<SprekerEdmondLam />} />
         <Route path="/kennis/teamcultuur" element={<><Teamcultuur /><RelatedArticles paths={["/kennis/teamcultuur"]} /></>} />
