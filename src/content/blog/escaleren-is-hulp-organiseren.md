@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, leiderschap, eigenaarschap
 imageAlt: Illustratie bij het artikel over escaleren en hulp vragen in de samenwerking
 relatedKnowledgePages: /kennis/rollen-en-verantwoordelijkheden,/psychologische-veiligheid,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Hij doet dat met de beste bedoeling. Hij wil de verhouding met die collega goed houden en niemand in een lastig licht zetten.

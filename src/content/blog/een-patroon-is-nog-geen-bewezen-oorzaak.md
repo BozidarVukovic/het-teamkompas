@@ -9,7 +9,7 @@ category: Leiderschap
 tags: leiderschap, teamcultuur, verandermanagement
 imageAlt: Illustratie bij het artikel over oorzaak, gevolg en samenhang
 relatedKnowledgePages: /kennis/teamcultuur,/kennis/verandermanagement,/kennis/teamenergie
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 Weten we dat eigenlijk wel?

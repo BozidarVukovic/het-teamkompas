@@ -9,7 +9,7 @@ category: Verandering
 tags: verandering, leiderschap, eigenaarschap
 imageAlt: Illustratie bij het artikel over collega's meekrijgen bij verandering
 relatedKnowledgePages: /kennis/verandermanagement,/psychologische-veiligheid,/kennis/eigenaarschap-in-teams
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Voor een manager kan dat frustrerend zijn. De verandering is vaak goed doordacht, er is tijd in gestoken, er ligt een duidelijke aanleiding en de voordelen zijn misschien al uitgelegd. Toch beweegt niet iedereen mee. De verleiding is dan groot om nog meer uitleg te geven, harder te overtuigen of te zeggen dat het nu eenmaal moet.

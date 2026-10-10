@@ -9,7 +9,7 @@ category: Leiderschap
 tags: leiderschap, teamenergie, eigenaarschap
 imageAlt: Illustratie bij het artikel over stapelende initiatieven en beschikbare capaciteit
 relatedKnowledgePages: /kennis/teamenergie,/kennis/eigenaarschap-in-teams,/kennis/rollen-en-verantwoordelijkheden
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 Zo ontstaat een stapeling van verwachtingen. Elk initiatief is afzonderlijk logisch en waardevol, terwijl het geheel niet meer uitvoerbaar is.

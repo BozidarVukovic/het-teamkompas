@@ -9,7 +9,7 @@ category: Verandering
 tags: verandering, gedrag, leren
 imageAlt: Illustratie bij het artikel waarom experimenteren essentieel is voor betere samenwerking
 relatedKnowledgePages: /kennis/verandermanagement
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Er viel een korte stilte. De manager keek de tafel rond en stelde voor om het onderwerp mee te nemen naar de heidag in september. Iedereen knikte. Volgende punt.

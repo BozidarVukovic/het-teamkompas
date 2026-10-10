@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, leiderschap, teamenergie
 imageAlt: Illustratie bij het artikel over voetbalteams die in de slotfase instorten
 relatedKnowledgePages: /kennis/teamenergie,/psychologische-veiligheid,/kennis/eigenaarschap-in-teams
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Tijdens de wedstrijd viel me iets op wat je vaker ziet. Een ploeg kan zestig of zeventig minuten uitstekend spelen. De organisatie staat, spelers vinden elkaar makkelijk, er wordt op de goede momenten druk gezet.

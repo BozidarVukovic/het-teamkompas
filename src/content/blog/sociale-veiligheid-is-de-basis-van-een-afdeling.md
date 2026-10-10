@@ -9,7 +9,7 @@ category: Teamcultuur
 tags: psychologische veiligheid, teamcultuur, leiderschap
 imageAlt: Illustratie bij het artikel over sociale veiligheid op een afdeling
 relatedKnowledgePages: /sociale-veiligheid,/psychologische-veiligheid,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Een medewerker die een fout ziet en niets zegt omdat er een ervaren collega bij betrokken is. Een collega die tijdens het overleg steeds wordt onderbroken en op een gegeven moment haar mening voor zich houdt. Een grap die voor de een onschuldig is en voor een ander elke keer opnieuw ongemakkelijk. Iemand die het gedrag van zijn leidinggevende niet aankaart, omdat diezelfde leidinggevende ook gaat over zijn beoordeling, zijn rooster en zijn loopbaan.

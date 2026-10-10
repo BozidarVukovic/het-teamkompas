@@ -9,7 +9,7 @@ category: Verandering
 tags: verandering, gedrag, leren
 imageAlt: Illustratie bij het artikel waarom generaties anders met verandering omgaan
 relatedKnowledgePages: /kennis/verandermanagement
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Vrijwel ieder team herkent dit soort gesprekken. Al snel worden er etiketten geplakt.

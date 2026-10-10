@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, teamcultuur, leiderschap
 imageAlt: Illustratie bij het artikel over status en samenwerking tussen beroepsgroepen
 relatedKnowledgePages: /kennis/teamcultuur,/psychologische-veiligheid,/boven-en-onderstroom
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Een afspraak die goed staat gepland. Een arts die over de juiste informatie beschikt. Een onderzoek dat op tijd gebeurt. Een verpleegkundige die weet wat er is afgesproken. Een schone ruimte. Iemand bij de balie die weet waar je moet zijn.

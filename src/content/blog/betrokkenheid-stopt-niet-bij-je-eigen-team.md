@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, eigenaarschap, leiderschap
 imageAlt: Illustratie bij het artikel over verantwoordelijkheid buiten de eigen groep
 relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/teamcultuur,/kennis/rollen-en-verantwoordelijkheden
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 De Chinese filosoof Mozi verdedigde het idee van onpartijdige zorg. Daarmee bedoelde hij niet dat we voor iedereen hetzelfde moeten voelen of doen. Zijn punt gaat dieper: ook mensen buiten onze eigen familie, groep of kring horen een plaats te krijgen in onze morele afweging.

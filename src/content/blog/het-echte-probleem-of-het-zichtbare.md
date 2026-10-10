@@ -9,7 +9,7 @@ category: Leiderschap
 tags: leiderschap, samenwerking, psychologische veiligheid
 imageAlt: Illustratie bij het artikel over het verschil tussen symptoom en werkelijk probleem
 relatedKnowledgePages: /boven-en-onderstroom,/brein-en-samenwerking,/psychologische-veiligheid
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 De neiging om meteen iets op te lossen is groot. We maken nieuwe afspraken, verduidelijken de taakverdeling, plannen een gesprek, spreken iemand aan of passen het proces nog een keer aan.

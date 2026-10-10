@@ -9,7 +9,7 @@ category: Verandering
 tags: verandering, leiderschap, teamcultuur
 imageAlt: Illustratie bij het artikel over visie en richting in teams
 relatedKnowledgePages: /kennis/verandermanagement,/kennis/eigenaarschap-in-teams,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Iedereen werkt hard. Ze doen het alleen niet allemaal dezelfde kant op.

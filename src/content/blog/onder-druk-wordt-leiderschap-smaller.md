@@ -9,7 +9,7 @@ category: Leiderschap
 tags: leiderschap, eigenaarschap, teamenergie
 imageAlt: Illustratie bij het artikel over leiderschap onder langdurige druk
 relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/teamenergie,/psychologische-veiligheid
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 Onder druk worden leidinggevenden vooral meer van wat ze al waren.

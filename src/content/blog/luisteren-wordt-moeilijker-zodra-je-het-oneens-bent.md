@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, psychologische veiligheid, leiderschap
 imageAlt: Illustratie bij het artikel over luisteren bij een meningsverschil
 relatedKnowledgePages: /psychologische-veiligheid,/kennis/teamcultuur,/boven-en-onderstroom
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Terwijl hij verder praat, bereid jij in gedachten je reactie voor.

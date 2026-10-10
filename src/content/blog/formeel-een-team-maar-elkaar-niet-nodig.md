@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, teamcultuur, leiderschap
 imageAlt: Illustratie bij het artikel over teams die op papier bestaan maar in het werk niet
 relatedKnowledgePages: /kennis/teamcultuur,/kennis/eigenaarschap-in-teams,/kennis/verandermanagement
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 De medewerkers kunnen hun werk namelijk prima doen zonder elkaar. Ze hebben verschillende vakgebieden, eigen verantwoordelijkheden en vaak hun eigen interne klanten. Voor hun resultaten zijn ze nauwelijks van elkaar afhankelijk.

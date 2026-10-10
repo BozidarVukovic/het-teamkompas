@@ -9,7 +9,7 @@ category: Leiderschap
 tags: leiderschap, samenwerking, teamcultuur
 imageAlt: Illustratie bij het artikel over generatiemanagement
 relatedKnowledgePages: /kennis/teamcultuur,/kennis/rollen-en-verantwoordelijkheden,/kennis/verandermanagement
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Dat klinkt als rijkdom. Veel leidinggevenden merken vooral de wrijving.

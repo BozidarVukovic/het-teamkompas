@@ -9,7 +9,7 @@ category: Leiderschap
 tags: leiderschap, psychologische veiligheid, teamcultuur
 imageAlt: Illustratie bij het artikel over gedrag dat verandert als de leidinggevende aanwezig is
 relatedKnowledgePages: /psychologische-veiligheid,/boven-en-onderstroom,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 De sfeer verandert bijna ongemerkt. Mensen gaan rechter zitten. Zinnen worden voorzichtiger. Kritiek heet nu een aandachtspunt en een probleem heet een uitdaging.

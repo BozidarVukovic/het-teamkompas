@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, teamcultuur, psychologische veiligheid
 imageAlt: Illustratie bij het artikel over hoe een meningsverschil uitgroeit tot een teamconflict
 relatedKnowledgePages: /psychologische-veiligheid,/boven-en-onderstroom,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Op zichzelf hoeft dat geen probleem te zijn. Meningsverschillen horen bij samenwerken; mensen hebben andere ervaringen, belangen en ideeën. Een team waarin iedereen het altijd eens is, bestaat waarschijnlijk vooral uit mensen die niet alles zeggen wat ze denken.

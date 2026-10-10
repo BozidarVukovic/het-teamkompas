@@ -9,7 +9,7 @@ category: Teamcultuur
 tags: teamenergie, teamcultuur, samenwerking
 imageAlt: Illustratie bij het artikel over leren en verbeteren onder werkdruk
 relatedKnowledgePages: /kennis/teamenergie,/kennis/teamcultuur,/kennis/eigenaarschap-in-teams
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Eerst het werk af. Daarna kijken we wel hoe het beter kan.

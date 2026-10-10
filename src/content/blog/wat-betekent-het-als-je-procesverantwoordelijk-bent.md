@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, eigenaarschap, teamcultuur
 imageAlt: Illustratie bij het artikel over procesverantwoordelijkheid
 relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/teamcultuur,/kennis/rollen-en-verantwoordelijkheden
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Daar komt een vraag bij die vaak pas later opduikt. Wat doe je wanneer een andere afdeling onderdeel is van het proces en andere prioriteiten heeft?

@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, psychologische veiligheid, teamenergie
 imageAlt: Illustratie bij het artikel over samenwerking die onder druk verslechtert
 relatedKnowledgePages: /psychologische-veiligheid,/brein-en-samenwerking,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 Mensen worden korter in wat ze zeggen. Besluiten vallen sneller. Managers gaan meer controleren. Informatie blijft langer bij één persoon liggen. En teams vallen terug op vaste routines, ook wanneer die routines niet meer bij de situatie passen.

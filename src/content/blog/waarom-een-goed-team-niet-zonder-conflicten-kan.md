@@ -9,7 +9,7 @@ category: Teamcultuur
 tags: psychologische veiligheid, teamcultuur, samenwerking
 imageAlt: Illustratie bij het artikel over conflicten en goede samenwerking
 relatedKnowledgePages: /psychologische-veiligheid,/boven-en-onderstroom,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Het verschil van mening is daarmee niet weg. Het wordt alleen niet meer uitgesproken. En dat verzwakt de samenwerking langzaam.

@@ -9,7 +9,7 @@ category: Teamcultuur
 tags: psychologische veiligheid, teamcultuur, leiderschap
 imageAlt: Illustratie bij het artikel over stilte in teams
 relatedKnowledgePages: /psychologische-veiligheid,/boven-en-onderstroom,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Op papier is er niets aan de hand. Geen conflict, geen protest, besluiten zonder veel discussie.

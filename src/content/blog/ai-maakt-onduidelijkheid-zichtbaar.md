@@ -9,7 +9,7 @@ category: Verandering
 tags: verandering, eigenaarschap, samenwerking
 imageAlt: Illustratie bij het artikel over AI die organisatorische onduidelijkheid blootlegt
 relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/psychologische-veiligheid,/kennis/verandermanagement
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 Wie is verantwoordelijk? Waar staat de juiste informatie? Welke versie van dat document geldt nog? Wie neemt uiteindelijk het besluit? Waarom doet de ene afdeling het anders dan de andere? En wat gebeurt er wanneer twee richtlijnen elkaar tegenspreken?

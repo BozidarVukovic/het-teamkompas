@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, eigenaarschap, leiderschap
 imageAlt: Illustratie bij het artikel over afhankelijkheid van de sterkste medewerker
 relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/psychologische-veiligheid,/kennis/teamenergie
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 Voor een manager voelt zo iemand als een enorme kracht, en dat is diegene meestal ook. Rond die sterke medewerker kan alleen ongemerkt een kwetsbaarheid ontstaan, en dat komt zelden door diens functioneren. Het komt doordat het team steeds afhankelijker wordt van één persoon.

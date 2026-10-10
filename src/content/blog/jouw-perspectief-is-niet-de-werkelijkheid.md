@@ -9,7 +9,7 @@ category: Leiderschap
 tags: leiderschap, teamcultuur, samenwerking
 imageAlt: Illustratie bij het artikel over perspectief en interpretatie
 relatedKnowledgePages: /boven-en-onderstroom,/psychologische-veiligheid,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 De Chinese filosoof Zhuangzi vertelt dat hij op een nacht droomde dat hij een vlinder was. Als vlinder vloog hij zorgeloos rond, zonder enig besef van Zhuangzi, en hij twijfelde er geen moment aan dat hij een vlinder was.

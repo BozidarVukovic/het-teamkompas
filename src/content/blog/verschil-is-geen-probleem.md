@@ -9,7 +9,7 @@ category: Teamcultuur
 tags: teamcultuur, samenwerking, leiderschap
 imageAlt: Illustratie bij het artikel over verschil binnen een gezamenlijke richting
 relatedKnowledgePages: /kennis/teamcultuur,/psychologische-veiligheid,/insights-discovery-profiel
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Zo verandert overeenstemming ongemerkt in gelijkvormigheid. Het gezamenlijke doel moet duidelijk zijn, en gaandeweg lijkt ook de manier waarop mensen denken, werken en reageren op elkaar te moeten lijken. Wie afwijkt heet dan lastig, star of onvoldoende gericht op het team.

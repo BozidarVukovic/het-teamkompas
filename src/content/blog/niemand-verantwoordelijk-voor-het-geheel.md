@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, eigenaarschap, leiderschap
 imageAlt: Illustratie bij het artikel over eilandvorming tussen afdelingen
 relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/teamcultuur,/kennis/verandermanagement
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 Een klant vertelt zijn verhaal voor de derde keer. Een probleem schuift van de ene afdeling naar de andere. Een besluit dat lokaal verstandig was, veroorzaakt verderop een nieuw knelpunt. Iedereen kan uitleggen waarom hij correct heeft gehandeld, en niemand voelt zich eigenaar van de uitkomst.

@@ -9,7 +9,7 @@ category: Verandering
 tags: verandering, eigenaarschap, samenwerking
 imageAlt: Illustratie bij het artikel over het samen ontwerpen van toekomstig werk
 relatedKnowledgePages: /kennis/verandermanagement,/kennis/eigenaarschap-in-teams,/kennis/rollen-en-verantwoordelijkheden
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Die vraag levert bruikbare aanpassingen op. Een registratie wordt geautomatiseerd, een document sneller opgesteld, een overdracht vereenvoudigd. Het bestaande proces blijft overeind. Dezelfde stappen, in dezelfde volgorde, met dezelfde verdeling van verantwoordelijkheden.

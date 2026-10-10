@@ -9,7 +9,7 @@ category: Bevlogenheid en werkplezier
 tags: teamenergie, bevlogenheid, leiderschap
 imageAlt: Illustratie bij het artikel over de balans tussen werk en privé
 relatedKnowledgePages: /kennis/bevlogenheid-in-het-werk,/kennis/teamenergie,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 Werk reist via je telefoon mee naar huis. Privézaken verdwijnen tijdens werktijd niet uit je hoofd. Een bericht van een collega komt binnen tijdens het avondeten, en zorgen thuis zitten net zo goed bij je in een vergadering.

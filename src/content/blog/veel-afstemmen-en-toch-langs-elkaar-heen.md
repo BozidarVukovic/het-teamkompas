@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, teamcultuur, eigenaarschap
 imageAlt: Illustratie bij het artikel over afstemmen en elkaar toch niet begrijpen
 relatedKnowledgePages: /kennis/teamcultuur,/kennis/eigenaarschap-in-teams,/boven-en-onderstroom
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 Twee collega's blijken iets anders te hebben verwacht. Een actie blijft liggen omdat niemand zich er echt eigenaar van voelde. Iemand zit te wachten op informatie die volgens een ander allang was gedeeld. Een overleg later ligt hetzelfde onderwerp opnieuw op tafel.

@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, leiderschap, teamcultuur
 imageAlt: Illustratie bij het artikel over voorzitten en gedeeld eigenaarschap
 relatedKnowledgePages: /kennis/teamcultuur,/psychologische-veiligheid,/kennis/eigenaarschap-in-teams
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /teamdag,/teamcoaching
 ---
 
 Op de klok een efficiënte vergadering. In de praktijk een overleg waar één iemand denkt en de rest aanwezig is.

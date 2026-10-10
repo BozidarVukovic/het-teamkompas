@@ -9,7 +9,7 @@ category: Leiderschap
 tags: leiderschap, eigenaarschap, teamenergie
 imageAlt: Illustratie bij het artikel over werkdruk, controle en vertrouwen
 relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/teamenergie,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /teamscan,/teamcoaching
 ---
 
 In diezelfde beweging zit een risico.
