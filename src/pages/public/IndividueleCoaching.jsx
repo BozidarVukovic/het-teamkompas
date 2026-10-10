@@ -13,6 +13,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import ContactModal from "../../ContactModal";
+import { useIsMobile } from "../../components/shared/hooks";
 import { useKennismaking } from "../../lib/kennismaking";
 import { PUB } from "../../styles/tokens";
 import { donkerVlak, binnen, kop, bovenregel, oranjeKnop, omlijndeKnop } from "./Sprekers";
@@ -48,6 +49,7 @@ const FAQ = [
 
 export default function IndividueleCoaching() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   useKennismaking(openModal);
@@ -68,7 +70,7 @@ export default function IndividueleCoaching() {
         <meta property="og:description" content="Werken aan situationeel leidinggeven, delegeren en coachend leiderschap. Eén op één, met ruimte om het in de praktijk uit te proberen." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/individuele-coaching" />
-        <meta property="og:image" content="https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg" />
+        <meta property="og:image" content="https://www.mijnteamkompas.nl/teamkompas-intakegesprek.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Individuele coaching voor leidinggevenden | Mijn Teamkompas" />
         <meta name="twitter:description" content="Eén op één werken aan je eigen manier van leidinggeven, met ruimte om het tussen de gesprekken door uit te proberen." />
@@ -110,22 +112,41 @@ export default function IndividueleCoaching() {
       </Helmet>
 
       <div style={{ ...donkerVlak, paddingTop: 64 }}>
-        <section style={{ padding: "clamp(56px, 8vw, 96px) 0" }}>
-          <div style={{ ...binnen, maxWidth: 860 }}>
+        {/* Zelfde opbouw als de hero van /teamdag: tekst links, beeld rechts dat
+            via een verloop in het donkere vlak overgaat. Op mobiel onder elkaar. */}
+        <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.05fr .95fr", alignItems: "center", overflow: "hidden" }}>
+          <div style={{ padding: isMobile ? "54px 22px 34px" : "clamp(64px, 7vw, 96px) 58px clamp(64px, 7vw, 96px) max(20px, calc((100vw - 1180px) / 2))", position: "relative", zIndex: 2 }}>
             <div style={bovenregel}>Individuele coaching</div>
-            <h1 style={{ fontSize: "clamp(34px, 5vw, 54px)", fontWeight: 800, lineHeight: 1.07, letterSpacing: "-0.03em", margin: "0 0 20px" }}>
+            <h1 style={{ fontSize: isMobile ? 34 : "clamp(36px, 4vw, 52px)", fontWeight: 800, lineHeight: 1.07, letterSpacing: "-0.03em", margin: "0 0 20px" }}>
               Soms zit de vraag niet bij het team, maar bij jou.
             </h1>
-            <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.78)", margin: "0 0 18px" }}>
+            <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.78)", maxWidth: 620, margin: "0 0 18px" }}>
               Je team draait op zich goed. Wat je zoekt is iets anders: grip op je eigen manier van leidinggeven. Hoe je stuurt zonder over te nemen, hoe je delegeert zonder erover te blijven hangen, hoe je een gesprek voert dat je liever uitstelt.
             </p>
-            <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.78)", margin: "0 0 30px" }}>
+            <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.78)", maxWidth: 620, margin: "0 0 30px" }}>
               Daarvoor hoeft je hele team niet mee. Individuele coaching is de kleinere stap: alleen jij, jouw situaties en jouw gedrag. Je werkt met een van onze coaches, gekozen op wat jouw vraag nodig heeft.
             </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", flexWrap: "wrap", gap: 12, alignItems: isMobile ? "stretch" : "center" }}>
               <button type="button" onClick={openModal} style={oranjeKnop}>Plan een vrijblijvende kennismaking</button>
               <a href="#onderwerpen" style={omlijndeKnop}>Waar werken we aan?</a>
             </div>
+          </div>
+          <div style={{ minHeight: isMobile ? 280 : "clamp(420px, 56vh, 620px)", position: "relative" }}>
+            <img
+              src="/teamkompas-intakegesprek.jpg"
+              alt="Leidinggevende in een coachgesprek met een coach van Mijn Teamkompas"
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", objectPosition: "60% 40%" }}
+            />
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: isMobile
+                  ? "linear-gradient(to bottom, rgba(13,27,42,0.55) 0%, rgba(13,27,42,0.10) 45%, rgba(13,27,42,0) 100%)"
+                  : "linear-gradient(to right, rgba(13,27,42,0.94) 0%, rgba(13,27,42,0.48) 10%, rgba(13,27,42,0.14) 28%, rgba(13,27,42,0.03) 62%, rgba(13,27,42,0) 100%)",
+              }}
+            />
           </div>
         </section>
 

@@ -133,7 +133,7 @@ const pages = [
     description:
       "Individuele management- en leiderschapscoaching voor leidinggevenden die zelf willen groeien, zonder meteen het hele team in een traject te trekken.",
     url: "https://www.mijnteamkompas.nl/individuele-coaching",
-    image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
+    image: "https://www.mijnteamkompas.nl/teamkompas-intakegesprek.jpg",
     content: `
       <main>
         <h1>Individuele coaching voor leidinggevenden</h1>
