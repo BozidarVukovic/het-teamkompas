@@ -39,7 +39,7 @@ const FAQ = [
   ["Wat is het verschil met teamcoaching?", "Bij teamcoaching werken we met de groep en gaat het over wat er tussen mensen gebeurt. Bij individuele coaching werken we alleen met jou en gaat het over jouw eigen handelen. Functioneert je team op zich goed en loop je vooral tegen jezelf aan, dan is individuele coaching de kleinere en gerichtere stap."],
   ["Hoeveel gesprekken zijn er nodig?", "Meestal vijf tot acht gesprekken van ongeveer anderhalf uur, verspreid over een aantal maanden. Tussen de gesprekken zit tijd om in de praktijk iets uit te proberen; daar komt het werk vandaan."],
   ["Wat kost het?", "De prijs is op aanvraag, omdat het aantal gesprekken en de vorm per persoon verschillen. In de kennismaking hoor je waar je aan toe bent voordat je iets vastlegt."],
-  ["Met wie heb ik de gesprekken?", "Met Bozidar Vukovic of Edmond Lam. Past jouw vraag beter bij iemand anders, dan kijken we in onze samenwerkingspool naar een coach die er wel bij past. Die keuze maken we samen in de kennismaking."],
+  ["Met wie heb ik de gesprekken?", "Met een van onze coaches. In de kennismaking bespreken we je vraag en koppelen we je aan de coach die daar het beste bij past. Klikt het onverhoopt niet, dan kijken we opnieuw."],
   ["Waar vinden de gesprekken plaats?", "Op jullie locatie, bij ons, wandelend of online. Wat helpt verschilt per persoon en per gespreksonderwerp."],
   ["Hoort mijn leidinggevende erbij betrokken te zijn?", "Dat hoeft niet en het helpt vaak wel. Betaalt je werkgever mee, dan is een kort driegesprek over de richting gebruikelijk. Wat er in de gesprekken zelf wordt besproken, blijft tussen ons."],
   ["Blijft het vertrouwelijk?", "Ja. We koppelen niets inhoudelijks terug zonder dat jij weet wat er wordt gedeeld en ermee instemt."],
@@ -120,7 +120,7 @@ export default function IndividueleCoaching() {
               Je team draait op zich goed. Wat je zoekt is iets anders: grip op je eigen manier van leidinggeven. Hoe je stuurt zonder over te nemen, hoe je delegeert zonder erover te blijven hangen, hoe je een gesprek voert dat je liever uitstelt.
             </p>
             <p style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.78)", margin: "0 0 30px" }}>
-              Daarvoor hoeft je hele team niet mee. Individuele coaching is de kleinere stap: alleen jij, jouw situaties en jouw gedrag. Je werkt met Bozidar of Edmond, of met een coach uit onze samenwerkingspool wanneer die beter bij je vraag past.
+              Daarvoor hoeft je hele team niet mee. Individuele coaching is de kleinere stap: alleen jij, jouw situaties en jouw gedrag. Je werkt met een van onze coaches, gekozen op wat jouw vraag nodig heeft.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
               <button type="button" onClick={openModal} style={oranjeKnop}>Plan een vrijblijvende kennismaking</button>
@@ -170,7 +170,7 @@ export default function IndividueleCoaching() {
             <h2 style={kop}>Luisteren, meten, bewegen — nu voor één persoon</h2>
             <ol style={{ margin: "22px 0 0", padding: 0, listStyle: "none", display: "grid", gap: 22, counterReset: "stap" }}>
               {[
-                ["Kennismaking", "Een vrijblijvend gesprek over wat er speelt en wat je wilt veranderen. Daarna weet je of dit past en wie de logische gesprekspartner is: Bozidar, Edmond, of een coach uit onze samenwerkingspool."],
+                ["Kennismaking", "Een vrijblijvend gesprek over wat er speelt en wat je wilt veranderen. Daarna weet je of dit past, en koppelen we je aan de coach die het beste aansluit bij jouw vraag."],
                 ["Scherp krijgen waar het om gaat", "Wat je wilt veranderen is zelden hetzelfde als waar je mee binnenkomt. De eerste gesprekken gaan daarom over situaties: wat gebeurde er precies, wat deed jij, wat gebeurde er daarna."],
                 ["Uitproberen in je eigen werk", "Tussen de gesprekken kies je iets kleins om anders te doen. Eén gesprek, één overleg, één besluit. Daar komt het leren vandaan, niet uit de theorie."],
                 ["Terugkijken en bijstellen", "Wat werkte, wat niet, en wat zegt dat? Soms blijkt onderweg dat de vraag breder ligt dan bij jou alleen. Dan benoemen we dat."],

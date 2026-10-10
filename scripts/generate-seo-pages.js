@@ -161,7 +161,7 @@ const pages = [
 
         <h2>Hoe het werkt</h2>
         <p>Na een vrijblijvende kennismaking werken we aan concrete situaties uit je eigen praktijk: wat gebeurde er, wat deed jij, wat gebeurde er daarna. Tussen de gesprekken kies je iets kleins om anders te doen. Daar komt het leren vandaan.</p>
-        <p>Meestal vijf tot acht gesprekken van ongeveer anderhalf uur, verspreid over een aantal maanden. Op jullie locatie, bij ons, wandelend of online. Je werkt met Bozidar Vukovic of Edmond Lam, of met een coach uit onze samenwerkingspool wanneer die beter bij je vraag past. De prijs is op aanvraag, omdat vorm en aantal per persoon verschillen.</p>
+        <p>Meestal vijf tot acht gesprekken van ongeveer anderhalf uur, verspreid over een aantal maanden. Op jullie locatie, bij ons, wandelend of online. Je werkt met een van onze coaches, gekozen op wat jouw vraag nodig heeft. De prijs is op aanvraag, omdat vorm en aantal per persoon verschillen.</p>
 
         <h2>Wanneer iets anders beter past</h2>
         <p>Zit het vraagstuk eerder tussen mensen dan bij jou, dan is een traject met het team logischer. De <a href="/teamscan">online teamscan</a> laat zien hoe je team de samenwerking ervaart, een <a href="/teamdag">teamdag</a> of <a href="/teamcoaching">teamcoaching</a> brengt het gesprek met de hele groep op gang.</p>
@@ -170,7 +170,7 @@ const pages = [
         <p><strong>Wat is het verschil met teamcoaching?</strong><br />Bij teamcoaching werken we met de groep en gaat het over wat er tussen mensen gebeurt. Bij individuele coaching werken we alleen met jou en gaat het over jouw eigen handelen.</p>
         <p><strong>Hoeveel gesprekken zijn er nodig?</strong><br />Meestal vijf tot acht gesprekken van ongeveer anderhalf uur, verspreid over een aantal maanden.</p>
         <p><strong>Wat kost het?</strong><br />De prijs is op aanvraag, omdat het aantal gesprekken en de vorm per persoon verschillen.</p>
-        <p><strong>Met wie heb ik de gesprekken?</strong><br />Met Bozidar Vukovic of Edmond Lam, of met een coach uit onze samenwerkingspool wanneer die beter bij je vraag past.</p>
+        <p><strong>Met wie heb ik de gesprekken?</strong><br />Met een van onze coaches. In de kennismaking bespreken we je vraag en koppelen we je aan de coach die daar het beste bij past.</p>
         <p><strong>Hoort mijn leidinggevende erbij betrokken te zijn?</strong><br />Dat hoeft niet. Betaalt je werkgever mee, dan is een kort driegesprek over de richting gebruikelijk. Wat er in de gesprekken zelf wordt besproken, blijft tussen ons.</p>
         <p><strong>Blijft het vertrouwelijk?</strong><br />Ja. We koppelen niets inhoudelijks terug zonder dat jij weet wat er wordt gedeeld en ermee instemt.</p>
 
