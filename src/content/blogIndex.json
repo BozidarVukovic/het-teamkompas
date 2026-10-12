@@ -1,5 +1,34 @@
 [
   {
+    "slug": "bouw-de-dijken-voor-de-storm",
+    "title": "Machiavelli, bouw de dijken vóór de storm",
+    "excerpt": "Een drukke periode laat zien wat rust verborgen hield. Waar een team kwetsbaar is zodra de druk oploopt, en wat je kunt bouwen zolang het meevalt.",
+    "publishDate": "2026-10-16",
+    "modifiedDate": "2026-10-16",
+    "image": "/blog/images/dijken-voor-de-storm.jpg",
+    "imageAlt": "Illustratie bij het artikel over voorbereiding en veerkracht in teams",
+    "category": "Samenwerking",
+    "tags": [
+      "samenwerking",
+      "leiderschap",
+      "teamenergie"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/rollen-en-verantwoordelijkheden",
+      "/kennis/teamenergie",
+      "/kennis/teamcultuur"
+    ],
+    "relatedServices": [
+      "/teamdag",
+      "/teamscan"
+    ],
+    "lead": "De agenda zit vol. Een collega valt uit. Een termijn schuift naar voren. Opeens blijkt hoeveel werk van één persoon afhangt, hoeveel afspraken alleen in hoofden bestaan en hoeveel besluiten op dezelfde leidinggevende wachten.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 623
+  },
+  {
     "slug": "toets-je-keuze-alsof-iedereen-haar-zou-volgen",
     "title": "Immanuel Kant, toets je keuze alsof iedereen haar zou volgen",
     "excerpt": "Een toezegging doen om een lastig gesprek af te ronden. Een toets die zichtbaar maakt waar je een uitzondering voor jezelf maakt.",
