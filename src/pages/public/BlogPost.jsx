@@ -18,6 +18,7 @@ import {
 // Houd beide gelijk wanneer hier een route bij komt.
 export const DIENST_ANKERS = {
   "/teamcoaching": "Zo werkt onze teamcoaching",
+  "/individuele-coaching": "Zo werkt individuele coaching",
   "/teamdag": "Zo begeleiden wij een teamdag",
   "/teamscan": "Bekijk de online teamscan",
   "/teamontwikkeling": "Meer over teamontwikkeling",

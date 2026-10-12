@@ -361,6 +361,7 @@ const escapeHtml = (waarde = "") =>
 // src/pages/public/BlogPost.jsx. Komt daar een route bij, vul hem hier ook aan.
 const DIENST_ANKERS = {
   "/teamcoaching": "Zo werkt onze teamcoaching",
+  "/individuele-coaching": "Zo werkt individuele coaching",
   "/teamdag": "Zo begeleiden wij een teamdag",
   "/teamscan": "Bekijk de online teamscan",
   "/teamontwikkeling": "Meer over teamontwikkeling",
