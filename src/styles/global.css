@@ -280,7 +280,11 @@ a { color: inherit; }
 .inspiration-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; }
 .inspiration-card { min-width: 0; overflow: hidden; display: flex; flex-direction: column; border: 1px solid #dfe7e9; border-radius: 16px; background: #fff; box-shadow: none; }
 .inspiration-card__image { aspect-ratio: 3 / 2; display: grid; place-items: center; overflow: hidden; background: #14283c; text-decoration: none; font-size: 40px; }
-.inspiration-card__image img { width: 100%; height: 100%; object-fit: cover; transition: transform .25s ease; }
+/* De kaart is 3:2. Met alleen place-items:center bleef height:100% bij een
+   vierkante foto onbepaald: de afbeelding hield haar eigen verhouding, werd te
+   hoog en liet een donkere rand van het vlak zien. Door de afbeelding expliciet
+   over het hele vak te laten uitrekken wordt elke verhouding netjes bijgesneden. */
+.inspiration-card__image img { grid-area: 1 / 1; align-self: stretch; justify-self: stretch; width: 100%; height: 100%; object-fit: cover; transition: transform .25s ease; }
 .inspiration-card:focus-within .inspiration-card__image img, .inspiration-card:hover .inspiration-card__image img { transform: scale(1.025); }
 .inspiration-card__body { padding: 22px; display: flex; flex: 1; flex-direction: column; }
 .inspiration-card__meta { display: flex; flex-wrap: wrap; gap: 6px 12px; margin: 0 0 12px; color: var(--tk-color-muted); font-size: 12px; }
