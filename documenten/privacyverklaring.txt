@@ -1,0 +1,123 @@
+MIJN TEAMKOMPAS
+Privacyverklaring
+Versie: 16 oktober 2026
+Mijn Teamkompas respecteert de privacy van bezoekers, opdrachtgevers, deelnemers en andere
+betrokkenen. In deze privacyverklaring leggen wij uit welke persoonsgegevens wij verwerken, waarom
+wij dat doen, hoe wij daarmee omgaan en welke rechten betrokkenen hebben.
+Deze privacyverklaring is van toepassing op het gebruik van de website mijnteamkompas.nl, het
+contactformulier, het digitale teamscanplatform en onze dienstverlening op het gebied van teamscans,
+adviestrajecten, teamcoaching, leiderschapsbegeleiding en workshops.
+1. Wie verantwoordelijk is voor de verwerking
+Mijn Teamkompas is verantwoordelijk voor de verwerking van persoonsgegevens zoals beschreven in deze
+privacyverklaring.
+Handelsnaam Mijn Teamkompas
+Statutaire naam V.O.F. Mijn Teamkompas
+Rechtsvorm Vennootschap onder firma (V.O.F.)
+Gevestigd in Nederland
+KVK-nummer 42181487
+BTW-identificatienummer NL870072833B01
+Website mijnteamkompas.nl
+E-mail info@mijnteamkompas.nl
+2. Welke persoonsgegevens wij verwerken
+Wij verwerken alleen persoonsgegevens die nodig zijn voor contact, uitvoering van onze dienstverlening en
+het functioneren van het teamscanplatform.
+## Via het contactformulier
+Wij kunnen de volgende gegevens verwerken: naam, organisatie, e-mailadres, telefoonnummer en de inhoud
+van het bericht.
+## In het kader van offertes, opdrachten en facturatie
+Wij kunnen onder meer verwerken: naam van de organisatie, naam van contactpersonen, functie of rol,
+e-mailadres, telefoonnummer, factuur- en betaalgegevens en andere gegevens die nodig zijn voor de
+uitvoering van de opdracht.
+## In het kader van teamscans
+Wij verwerken gegevens die nodig zijn om een scan uit te voeren en resultaten terug te koppelen, zoals de
+naam van de opdrachtgever, de naam van het team of de vragenlijst, de rol van de deelnemer en antwoorden
+op gesloten en open vragen binnen de teamscan.
+## Technische en websitegegevens
+Bij gebruik van de website kunnen ook technische gegevens worden verwerkt, zoals IP-adres, browser- en
+apparaatgegevens, datum en tijd van gebruik en gegevens die nodig zijn voor beveiliging en correcte werking
+van de website.
+3. Waarom wij persoonsgegevens verwerken
+Wij verwerken persoonsgegevens alleen als daar een duidelijke reden voor is.
+## Verwerkingsdoelen
+- Contact en communicatie: om contactaanvragen te beantwoorden, kennismakingsgesprekken in te
+plannen en verzoeken of vragen af te handelen.
+- Offertes, overeenkomsten en facturatie: om offertes op te stellen, opdrachten uit te voeren, facturen te
+verzenden en administratieve verplichtingen na te komen.
+- Uitvoering van teamscans en begeleiding: om teamscans beschikbaar te stellen, resultaten te verwerken,
+analyses op te stellen en begeleiding, coaching, workshops en adviestrajecten uit te voeren.
+- Beveiliging en beheer: om de website, het contactformulier en het platform goed te laten functioneren, te
+beveiligen en te verbeteren.
+- Wettelijke verplichtingen: om te voldoen aan wettelijke verplichtingen, bijvoorbeeld op het gebied van
+administratie en belastingen.
+4. Op basis van welke grondslagen wij verwerken
+Wij verwerken persoonsgegevens op basis van één of meer van de volgende AVG-grondslagen: uitvoering
+van een overeenkomst, toestemming, wettelijke verplichting en gerechtvaardigd belang.
+Uitvoering van een overeenkomst: wanneer persoonsgegevens nodig zijn om een opdracht, teamscan,
+offerte of andere dienst uit te voeren.
+Toestemming: wanneer iemand zelf een contactformulier invult of vrijwillig informatie aan ons verstrekt.
+Wettelijke verplichting: wanneer wij gegevens moeten bewaren voor onze administratie of
+belastingverplichtingen.
+Gerechtvaardigd belang: voor het beveiligen, beheren en verbeteren van onze website, systemen en
+dienstverlening, mits dit niet zwaarder weegt dan de privacybelangen van betrokkenen.
+5. Hoe lang wij persoonsgegevens bewaren
+Wij bewaren persoonsgegevens niet langer dan nodig is voor het doel waarvoor ze zijn verzameld, tenzij een
+wettelijke bewaartermijn geldt.
+Contactaanvragen bewaren wij in beginsel maximaal 12 maanden na het laatste contact, tenzij daaruit een
+opdracht voortvloeit.
+Offerte- en opdrachtdossiers bewaren wij zolang nodig voor de uitvoering van de opdracht en daarna zolang
+nodig voor administratie, bewijs en relatiebeheer.
+Factuur- en administratiegegevens bewaren wij conform de wettelijke fiscale bewaartermijn van 7 jaar.
+Teamscanresultaten en rapportages bewaren wij zolang nodig voor de uitvoering, terugkoppeling en
+evaluatie van de opdracht, tenzij anders afgesproken.
+Technische log- en beveiligingsgegevens bewaren wij zolang nodig voor beveiliging en beheer.
+6. Hoe wij omgaan met teamscangegevens en anonimiteit
+- Mijn Teamkompas verwerkt persoonsgegevens en scaninformatie uitsluitend voor de uitvoering van de
+teamscan en de bijbehorende dienstverlening.
+- Individuele antwoorden worden niet op naam teruggekoppeld.
+- Resultaten worden uitsluitend op groepsniveau teruggekoppeld.
+- Opdrachtgevers zijn verantwoordelijk voor het juist informeren van deelnemers over doel, anonimiteit en
+gebruik van de uitkomsten.
+- De unieke scanlink is bedoeld voor het betreffende team en mag niet buiten die context worden gedeeld.
+7. Met wie wij persoonsgegevens delen
+Wij verkopen persoonsgegevens niet aan derden. Wij delen persoonsgegevens alleen als dat nodig is voor
+onze dienstverlening, voor de technische werking van de website of als wij daartoe wettelijk verplicht zijn.
+Op basis van de huidige inrichting van onze website en dienstverlening kunnen persoonsgegevens worden
+verwerkt via onder meer Google Firebase / Firestore voor opslag en beheer van contactaanvragen en
+scaninformatie, EmailJS voor het verzenden van berichten vanuit het contactformulier, hosting- en
+infrastructuurdiensten die nodig zijn voor de website en e-maildiensten die wij gebruiken voor zakelijke
+correspondentie.
+Wanneer een partij namens ons persoonsgegevens verwerkt, sluiten wij waar nodig een
+verwerkersovereenkomst of maken wij passende afspraken.
+8. Doorgifte buiten de Europese Economische Ruimte
+Het is mogelijk dat persoonsgegevens door onze technische dienstverleners buiten de Europese
+Economische Ruimte worden verwerkt of toegankelijk zijn. In dat geval zorgen wij ervoor dat hiervoor
+passende waarborgen worden toegepast, voor zover dit op grond van de AVG vereist is.
+9. Cookies en vergelijkbare technieken
+Onze website kan functionele cookies of vergelijkbare technieken gebruiken die nodig zijn voor de werking
+van de website en het platform.
+Voor functionele cookies is in beginsel geen toestemming nodig, maar bezoekers moeten daar wel over
+worden geïnformeerd. Voor trackingcookies of andere privacygevoelige cookies is toestemming nodig.
+Op dit moment is onze website primair ingericht voor functioneel gebruik. Als wij later analytische of
+marketingcookies gaan gebruiken die toestemming vereisen, zullen wij daarvoor een cookiemelding en, waar
+nodig, cookievoorkeuren toevoegen.
+10. Beveiliging van persoonsgegevens
+Wij nemen passende technische en organisatorische maatregelen om persoonsgegevens te beveiligen tegen
+verlies, misbruik, onbevoegde toegang of onrechtmatige verwerking.
+Daarbij kijken wij onder meer naar toegang tot systemen, beveiliging van accounts en wachtwoorden,
+beperking van toegang tot gegevens en beveiliging van het platform en de gebruikte software.
+11. Rechten van betrokkenen
+Iedere betrokkene heeft onder de AVG privacyrechten. Je kunt ons vragen om inzage in jouw
+persoonsgegevens, correctie van onjuiste gegevens, verwijdering van gegevens voor zover dat wettelijk
+mogelijk is, beperking van verwerking, overdracht van gegevens voor zover van toepassing, bezwaar tegen
+verwerking en intrekking van toestemming als verwerking op toestemming is gebaseerd.
+Verzoeken kunnen worden gestuurd naar: info@mijnteamkompas.nl
+Wij reageren in beginsel binnen de wettelijke termijn.
+12. Klachten
+Als je vragen of klachten hebt over hoe wij omgaan met persoonsgegevens, kun je contact met ons opnemen
+via info@mijnteamkompas.nl.
+Daarnaast heb je het recht om een klacht in te dienen bij de Autoriteit Persoonsgegevens.
+13. Wijzigingen in deze privacyverklaring
+Mijn Teamkompas kan deze privacyverklaring wijzigen, bijvoorbeeld als de website, dienstverlening of
+wetgeving verandert. De meest actuele versie wordt gepubliceerd op mijnteamkompas.nl.
+Deze privacyverklaring is opgesteld in aansluiting op de website van Mijn Teamkompas en de algemene voorwaarden, versie 16 oktober 2026. Mijn Teamkompas is een vennootschap onder firma, ingeschreven bij de Kamer van Koophandel onder
+nummer 42181487, btw-identificatienummer NL870072833B01.
