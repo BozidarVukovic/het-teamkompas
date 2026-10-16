@@ -8,7 +8,7 @@ author: Mijn Teamkompas
 category: Samenwerking
 tags: samenwerking, leiderschap, eigenaarschap
 imageAlt: Illustratie bij het artikel over escaleren en hulp vragen in de samenwerking
-relatedKnowledgePages: /kennis/rollen-en-verantwoordelijkheden,/psychologische-veiligheid,/kennis/teamcultuur
+relatedKnowledgePages: /psychologische-veiligheid,/kennis/teamcultuur
 relatedServices: /teamdag,/teamcoaching
 ---
 
@@ -48,7 +48,7 @@ Zo weet de ander wat er gebeurt en kan hij zijn eigen beeld inbrengen. Samen mel
 
 Een keer bijspringen is behulpzaam. Structureel werk overnemen zonder het knelpunt zichtbaar te maken, houdt een onwerkbare situatie in stand.
 
-Spreek daarom af wanneer iemand hulp inschakelt. Bijvoorbeeld zodra een termijn in gevaar komt, of zodra hij zijn eigen afgesproken werk moet laten liggen. Meer over waar zulke grenzen horen te liggen staat op de pagina over [rollen en verantwoordelijkheden](/kennis/rollen-en-verantwoordelijkheden).
+Spreek daarom af wanneer iemand hulp inschakelt. Bijvoorbeeld zodra een termijn in gevaar komt, of zodra hij zijn eigen afgesproken werk moet laten liggen. Meer over waar zulke grenzen horen te liggen staat op de pagina over [teamontwikkeling](/teamontwikkeling).
 
 Als leidinggevende kun je daar toestemming én richting voor geven. Ik verwacht dat jullie eerst met elkaar bespreken wat er nodig is. Komen jullie er samen niet uit, dan wil ik dat weten. Het tekort hoef je niet zelf te blijven opvangen, want het is mijn verantwoordelijkheid om te helpen bij keuzes die jullie niet kunnen maken.
 

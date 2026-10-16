@@ -8,7 +8,7 @@ author: Mijn Teamkompas
 category: Leiderschap
 tags: leiderschap, samenwerking, teamcultuur
 imageAlt: Illustratie bij het artikel over generatiemanagement
-relatedKnowledgePages: /kennis/teamcultuur,/kennis/rollen-en-verantwoordelijkheden,/kennis/verandermanagement
+relatedKnowledgePages: /kennis/teamcultuur,/kennis/verandermanagement
 relatedServices: /teamdag,/teamcoaching
 ---
 
@@ -54,7 +54,7 @@ De vraag wat deze generatie wil, levert daarom weinig op. Deze levert meer op: w
 
 ## Vier dingen die wel werken
 
-**Maak verwachtingen expliciet.** Veel irritatie tussen generaties gaat over onuitgesproken afspraken. Wat verstaan wij onder betrokkenheid? Hoe snel verwachten we een reactie? Wanneer werken we thuis en wanneer op locatie? Hoe geven we elkaar feedback? Hoe nemen we besluiten? Blijft dat impliciet, dan vult iedereen het zelf in. Meer daarover staat op de pagina over [rollen en verantwoordelijkheden](/kennis/rollen-en-verantwoordelijkheden).
+**Maak verwachtingen expliciet.** Veel irritatie tussen generaties gaat over onuitgesproken afspraken. Wat verstaan wij onder betrokkenheid? Hoe snel verwachten we een reactie? Wanneer werken we thuis en wanneer op locatie? Hoe geven we elkaar feedback? Hoe nemen we besluiten? Blijft dat impliciet, dan vult iedereen het zelf in. Meer daarover staat op de pagina over [teamontwikkeling](/teamontwikkeling).
 
 **Laat kennis twee kanten op stromen.** Kennisdeling wordt vaak gezien als iets wat ervaren mensen doen voor jongere collega's. De ervaren professional kent de geschiedenis, de uitzonderingen en de informele verhoudingen. De jongere collega brengt actuele kennis, digitale vaardigheid en nieuwe vragen mee. Laat ze samen onderzoeken wat ze van elkaar kunnen leren.
 

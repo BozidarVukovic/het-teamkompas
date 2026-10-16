@@ -9,7 +9,7 @@ category: Bevlogenheid en werkplezier
 tags: teamenergie, leiderschap, samenwerking
 imageAlt: Illustratie bij het artikel over wat langdurig verzuim doet met het achterblijvende team
 relatedServices: /teamscan,/teamcoaching
-relatedKnowledgePages: /kennis/teamenergie,/kennis/bevlogenheid-in-het-werk,/kennis/rollen-en-verantwoordelijkheden
+relatedKnowledgePages: /kennis/teamenergie,/kennis/bevlogenheid-in-het-werk
 ---
 
 Het werk verdwijnt namelijk niet.

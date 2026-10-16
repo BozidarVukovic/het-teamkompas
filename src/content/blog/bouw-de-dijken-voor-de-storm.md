@@ -9,7 +9,7 @@ category: Samenwerking
 tags: samenwerking, leiderschap, teamenergie
 imageAlt: Illustratie bij het artikel over voorbereiding en veerkracht in teams
 relatedServices: /teamdag,/teamscan
-relatedKnowledgePages: /kennis/rollen-en-verantwoordelijkheden,/kennis/teamenergie,/kennis/teamcultuur
+relatedKnowledgePages: /kennis/teamenergie,/kennis/teamcultuur
 ---
 
 Iedereen zet een stap extra. Het lukt, en het kost energie. Achteraf heet het een uitzonderlijke periode. Tot de volgende uitzonderlijke periode zich aandient.
@@ -36,7 +36,7 @@ Een rustige periode is daarom een goed moment voor één vraag. Welke extra insp
 
 ## De dijken van een team
 
-**Heldere verantwoordelijkheden** laten mensen zelfstandig handelen. Wie neemt welk besluit? Wie neemt over bij afwezigheid? Wanneer schakel je hulp in? Meer daarover staat op de pagina over [rollen en verantwoordelijkheden](/kennis/rollen-en-verantwoordelijkheden).
+**Heldere verantwoordelijkheden** laten mensen zelfstandig handelen. Wie neemt welk besluit? Wie neemt over bij afwezigheid? Wanneer schakel je hulp in? Meer daarover staat op de pagina over [teamontwikkeling](/teamontwikkeling).
 
 **Gedeelde kennis** maakt het werk minder afhankelijk van één collega. Dat vraagt tijd om samen te werken, iets uit te leggen en een ander het werkelijk te laten doen.
 

@@ -8,7 +8,7 @@ author: Mijn Teamkompas
 category: Verandering
 tags: verandering, eigenaarschap, samenwerking
 imageAlt: Illustratie bij het artikel over het samen ontwerpen van toekomstig werk
-relatedKnowledgePages: /kennis/verandermanagement,/kennis/eigenaarschap-in-teams,/kennis/rollen-en-verantwoordelijkheden
+relatedKnowledgePages: /kennis/verandermanagement,/kennis/eigenaarschap-in-teams
 relatedServices: /teamdag,/teamcoaching
 ---
 
@@ -56,7 +56,7 @@ Onderzoek daarom eerst welke activiteiten nodig zijn. Welke kunnen vervallen? We
 
 De meeste beroepen bevatten allebei: taken waarbij techniek kan helpen en taken die menselijke inbreng blijven vragen. Daarom verandert eerder de inhoud van een functie dan dat die functie verdwijnt. Dat talent zich slecht laat vangen in een functiebeschrijving, staat in het artikel over [sturen op talenten in plaats van functieomschrijvingen](/blog/van-functieomschrijving-naar-talent).
 
-Functiebeschrijvingen kunnen dus later volgen. De kwaliteit van het werk hoort vanaf het begin mee te doen. Een proces kan technisch efficiënt zijn en medewerkers tegelijk weinig overzicht, autonomie of ontwikkelruimte laten. Meer daarover staat op de pagina over [rollen en verantwoordelijkheden](/kennis/rollen-en-verantwoordelijkheden).
+Functiebeschrijvingen kunnen dus later volgen. De kwaliteit van het werk hoort vanaf het begin mee te doen. Een proces kan technisch efficiënt zijn en medewerkers tegelijk weinig overzicht, autonomie of ontwikkelruimte laten. Meer daarover staat op de pagina over [teamontwikkeling](/teamontwikkeling).
 
 ## Draagvlak ontstaat tijdens het ontwerpen
 

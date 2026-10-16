@@ -9,7 +9,7 @@ category: Leiderschap
 tags: leiderschap, teamcultuur, eigenaarschap
 imageAlt: Illustratie bij het artikel over keuzes die voor iedereen zouden moeten gelden
 relatedServices: /teamcoaching,/individuele-coaching
-relatedKnowledgePages: /kennis/teamcultuur,/psychologische-veiligheid,/kennis/rollen-en-verantwoordelijkheden
+relatedKnowledgePages: /kennis/teamcultuur,/psychologische-veiligheid
 ---
 
 Meestal begint het met een begrijpelijke gedachte. Deze keer moet het even zo. De omstandigheden zijn bijzonder. Later herstellen we het wel.

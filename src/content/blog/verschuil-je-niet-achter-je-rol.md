@@ -9,7 +9,7 @@ category: Leiderschap
 tags: leiderschap, eigenaarschap, teamcultuur
 imageAlt: Illustratie bij het artikel over rollen, keuzes en eigenaarschap
 relatedServices: /individuele-coaching,/teamcoaching
-relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/rollen-en-verantwoordelijkheden,/kennis/teamcultuur
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/teamcultuur
 ---
 
 Zodra we doen alsof ons karakter, onze functie of de omstandigheden ons handelen volledig bepalen, verdwijnt onze eigen keuze uit beeld.
@@ -34,7 +34,7 @@ Dat vraagt moed. Zodra je jouw keuze zichtbaar maakt, kunnen anderen er vragen o
 
 Sartres gedachte vraagt ook om nuance. Mensen handelen binnen werkelijke beperkingen. Doen alsof die er niet zijn, is eveneens een manier om jezelf iets wijs te maken.
 
-Voor een leidinggevende betekent dat een zorgvuldig onderscheid tussen wat vaststaat, wat beïnvloedbaar is en wat jij zelf kiest. Een besluit kun je soms niet veranderen, en je kunt wel je zorgen uitspreken, de gevolgen zichtbaar maken of een alternatief voorleggen. Meer over waar die ruimte precies ligt staat op de pagina over [rollen en verantwoordelijkheden](/kennis/rollen-en-verantwoordelijkheden).
+Voor een leidinggevende betekent dat een zorgvuldig onderscheid tussen wat vaststaat, wat beïnvloedbaar is en wat jij zelf kiest. Een besluit kun je soms niet veranderen, en je kunt wel je zorgen uitspreken, de gevolgen zichtbaar maken of een alternatief voorleggen. Meer over waar die ruimte precies ligt staat op de pagina over [teamontwikkeling](/teamontwikkeling).
 
 Ook wachten verdient een eerlijke afweging. Wat hoop je ermee te bereiken? Wie draagt ondertussen de gevolgen? En wanneer kom je erop terug?
 

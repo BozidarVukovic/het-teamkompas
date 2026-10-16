@@ -8,7 +8,7 @@ author: Mijn Teamkompas
 category: Samenwerking
 tags: samenwerking, eigenaarschap, teamcultuur
 imageAlt: Illustratie bij het artikel over procesverantwoordelijkheid
-relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/teamcultuur,/kennis/rollen-en-verantwoordelijkheden
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/teamcultuur
 relatedServices: /teamdag,/teamcoaching
 ---
 
@@ -38,7 +38,7 @@ De vraag verschuift daarmee. Van heeft iedereen zijn taak uitgevoerd, naar werkt
 
 **Is duidelijk wat het proces moet opleveren?** Zonder helder eindresultaat ontstaat discussie over wat goed genoeg is.
 
-**Zijn rollen en overdrachtsmomenten duidelijk?** Vertraging, dubbel werk en misverstanden ontstaan zelden middenin een afdeling. Ze ontstaan op de grens ertussen. Meer daarover staat op de pagina over [rollen en verantwoordelijkheden](/kennis/rollen-en-verantwoordelijkheden).
+**Zijn rollen en overdrachtsmomenten duidelijk?** Vertraging, dubbel werk en misverstanden ontstaan zelden middenin een afdeling. Ze ontstaan op de grens ertussen. Meer daarover staat op de pagina over [teamontwikkeling](/teamontwikkeling).
 
 **Werkt het proces in de praktijk?** Een procesbeschrijving kan op papier uitstekend zijn terwijl medewerkers dagelijks noodgrepen nodig hebben om het werk af te krijgen.
 

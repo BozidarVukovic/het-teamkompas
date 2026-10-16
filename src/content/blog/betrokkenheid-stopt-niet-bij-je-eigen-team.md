@@ -8,7 +8,7 @@ author: Mijn Teamkompas
 category: Samenwerking
 tags: samenwerking, eigenaarschap, leiderschap
 imageAlt: Illustratie bij het artikel over verantwoordelijkheid buiten de eigen groep
-relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/teamcultuur,/kennis/rollen-en-verantwoordelijkheden
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/teamcultuur
 relatedServices: /teamdag,/teamcoaching
 ---
 
@@ -28,7 +28,7 @@ Hoe dat structureel misgaat, staat in het artikel over [wat er gebeurt als niema
 
 Leiderschap vraagt daarom om meer dan de vraag wat goed is voor mijn team. Daarnaast staat deze: wie merkt de gevolgen van deze keuze nog meer?
 
-In organisaties waarin teams, disciplines en afdelingen van elkaar afhankelijk zijn, ontstaat kwaliteit zelden doordat elk onderdeel afzonderlijk optimaal draait. Ze ontstaat wanneer besluiten ook rekening houden met wat ze elders veroorzaken. Meer daarover staat op de pagina over [rollen en verantwoordelijkheden](/kennis/rollen-en-verantwoordelijkheden).
+In organisaties waarin teams, disciplines en afdelingen van elkaar afhankelijk zijn, ontstaat kwaliteit zelden doordat elk onderdeel afzonderlijk optimaal draait. Ze ontstaat wanneer besluiten ook rekening houden met wat ze elders veroorzaken. Meer daarover staat op de pagina over [teamontwikkeling](/teamontwikkeling).
 
 Dat belangen altijd gelijk zijn, volgt daar niet uit. Soms wint het ene belang en verliest het andere. Het verschil zit hem erin of het andere belang op tafel lag toen de keuze werd gemaakt, of dat het nooit ter sprake kwam.
 

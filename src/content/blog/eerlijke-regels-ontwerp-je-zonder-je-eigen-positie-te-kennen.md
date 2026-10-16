@@ -8,7 +8,7 @@ author: Mijn Teamkompas
 category: Leiderschap
 tags: leiderschap, teamcultuur, samenwerking
 imageAlt: Illustratie bij het artikel over rechtvaardige regels in organisaties
-relatedKnowledgePages: /kennis/teamcultuur,/kennis/rollen-en-verantwoordelijkheden,/psychologische-veiligheid
+relatedKnowledgePages: /kennis/teamcultuur,/psychologische-veiligheid
 relatedServices: /teamcoaching,/teamdag
 ---
 

@@ -8,7 +8,7 @@ author: Mijn Teamkompas
 category: Leiderschap
 tags: leiderschap, teamenergie, eigenaarschap
 imageAlt: Illustratie bij het artikel over stapelende initiatieven en beschikbare capaciteit
-relatedKnowledgePages: /kennis/teamenergie,/kennis/eigenaarschap-in-teams,/kennis/rollen-en-verantwoordelijkheden
+relatedKnowledgePages: /kennis/teamenergie,/kennis/eigenaarschap-in-teams
 relatedServices: /teamscan,/teamcoaching
 ---
 
@@ -20,7 +20,7 @@ Bij een nieuw idee bespreken we wat het moet opleveren, wie het oppakt en wannee
 
 Zonder die afweging komt de keuze bij de medewerker te liggen. Die bepaalt dagelijks wat voorgaat, welke afspraak wordt uitgesteld en wie teleurgesteld wordt. Ondertussen blijven alle oorspronkelijke verwachtingen staan.
 
-Zo belooft een organisatie ongemerkt meer dan haar mensen kunnen waarmaken. Meer over waar die verantwoordelijkheid hoort te liggen staat op de pagina over [rollen en verantwoordelijkheden](/kennis/rollen-en-verantwoordelijkheden).
+Zo belooft een organisatie ongemerkt meer dan haar mensen kunnen waarmaken. Meer over waar die verantwoordelijkheid hoort te liggen staat op de pagina over [teamontwikkeling](/teamontwikkeling).
 
 ## Uitstel wordt een persoonlijke last
 

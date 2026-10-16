@@ -9,7 +9,7 @@ category: Verandering
 tags: verandering, eigenaarschap, samenwerking
 imageAlt: Illustratie bij het artikel over borging na de oplevering van een project
 relatedServices: /teamdag,/teamcoaching
-relatedKnowledgePages: /kennis/impact-van-een-teamdag,/kennis/verandermanagement,/kennis/rollen-en-verantwoordelijkheden
+relatedKnowledgePages: /kennis/impact-van-een-teamdag,/kennis/verandermanagement
 ---
 
 Een paar maanden later blijken sommige afspraken anders te worden uitgelegd. Nieuwe collega's kennen de achterliggende keuzes niet. Een praktische aanpassing heeft onbedoeld gevolgen voor een ander team. En onder tijdsdruk keren mensen terug naar hun vertrouwde manier van werken.
@@ -48,7 +48,7 @@ Wie wil dat een resultaat blijft werken, bespreekt daarom welke aandacht ná de 
 
 Wie merkt het op als afspraken verwateren? Waar bespreken mensen een onverwacht probleem? En wie mag een werkwijze aanpassen wanneer die onvoldoende aansluit op de praktijk?
 
-Blijven die vragen onbeantwoord, dan hangt het behoud van het resultaat af van wie zich er toevallig verantwoordelijk voor voelt. Meer daarover staat op de pagina over [rollen en verantwoordelijkheden](/kennis/rollen-en-verantwoordelijkheden).
+Blijven die vragen onbeantwoord, dan hangt het behoud van het resultaat af van wie zich er toevallig verantwoordelijk voor voelt. Meer daarover staat op de pagina over [teamontwikkeling](/teamontwikkeling).
 
 ## Maak het onderhoud concreet
 

@@ -9,7 +9,7 @@ category: Leiderschap
 tags: leiderschap, eigenaarschap, teamcultuur
 imageAlt: Illustratie bij het artikel over eigenaarschap en invloed op het werk
 relatedServices: /teamdag,/teamcoaching
-relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/rollen-en-verantwoordelijkheden,/kennis/teamcultuur
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/kennis/teamcultuur
 ---
 
 Wat betekent eigenaarschap dan nog?
@@ -30,7 +30,7 @@ Wie verantwoordelijkheid vraagt, kijkt dus ook naar de invloed die daarbij hoort
 
 ## Meer dan een taak verdelen
 
-Eigenaarschap krijgt betekenis zodra mensen kunnen bijdragen aan de manier waarop het werk wordt uitgevoerd. Dat vraagt om heldere afspraken over wat vaststaat en waar professionele afweging mogelijk is. Meer daarover staat op de pagina over [rollen en verantwoordelijkheden](/kennis/rollen-en-verantwoordelijkheden).
+Eigenaarschap krijgt betekenis zodra mensen kunnen bijdragen aan de manier waarop het werk wordt uitgevoerd. Dat vraagt om heldere afspraken over wat vaststaat en waar professionele afweging mogelijk is. Meer daarover staat op de pagina over [teamontwikkeling](/teamontwikkeling).
 
 Ook de verbinding met het resultaat verdient aandacht. Wie dagelijks één onderdeel van een proces uitvoert, ziet niet vanzelf wat dat voor een patiënt, een klant of een collega betekent. Bespreek daarom wat het werk oplevert en welke bijdrage het team daaraan leverde.
 

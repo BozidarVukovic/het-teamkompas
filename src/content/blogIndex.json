@@ -16,8 +16,7 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/teamenergie",
-      "/kennis/bevlogenheid-in-het-werk",
-      "/kennis/rollen-en-verantwoordelijkheden"
+      "/kennis/bevlogenheid-in-het-werk"
     ],
     "relatedServices": [
       "/teamscan",
@@ -45,8 +44,7 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/impact-van-een-teamdag",
-      "/kennis/verandermanagement",
-      "/kennis/rollen-en-verantwoordelijkheden"
+      "/kennis/verandermanagement"
     ],
     "relatedServices": [
       "/teamdag",
@@ -55,7 +53,7 @@
     "lead": "De laatste bijeenkomst zit erop. De nieuwe werkwijze is ingevoerd, de afspraken staan op papier en de projectgroep krijgt een bedankje. Er is hard gewerkt en het resultaat mag er zijn. Tijdens het overleg zegt iemand tevreden dat het project kan worden afgesloten.",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 820
+    "woorden": 818
   },
   {
     "slug": "bouw-de-dijken-voor-de-storm",
@@ -73,7 +71,6 @@
     ],
     "featured": false,
     "relatedKnowledgePages": [
-      "/kennis/rollen-en-verantwoordelijkheden",
       "/kennis/teamenergie",
       "/kennis/teamcultuur"
     ],
@@ -84,7 +81,7 @@
     "lead": "De agenda zit vol. Een collega valt uit. Een termijn schuift naar voren. Opeens blijkt hoeveel werk van één persoon afhangt, hoeveel afspraken alleen in hoofden bestaan en hoeveel besluiten op dezelfde leidinggevende wachten.",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 623
+    "woorden": 621
   },
   {
     "slug": "toets-je-keuze-alsof-iedereen-haar-zou-volgen",
@@ -103,8 +100,7 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/teamcultuur",
-      "/psychologische-veiligheid",
-      "/kennis/rollen-en-verantwoordelijkheden"
+      "/psychologische-veiligheid"
     ],
     "relatedServices": [
       "/teamcoaching",
@@ -161,7 +157,6 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/eigenaarschap-in-teams",
-      "/kennis/rollen-en-verantwoordelijkheden",
       "/kennis/teamcultuur"
     ],
     "relatedServices": [
@@ -171,7 +166,7 @@
     "lead": "Een leidinggevende vraagt het team om meer eigenaarschap. Mensen moeten initiatief nemen, problemen oplossen en verantwoordelijkheid dragen voor het resultaat. Tegelijk liggen de werkwijze, de planning en de prioriteiten grotendeels vast, en is voor een aanpassing toestemming nodig.",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 582
+    "woorden": 580
   },
   {
     "slug": "verschuil-je-niet-achter-je-rol",
@@ -190,7 +185,6 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/eigenaarschap-in-teams",
-      "/kennis/rollen-en-verantwoordelijkheden",
       "/kennis/teamcultuur"
     ],
     "relatedServices": [
@@ -200,7 +194,7 @@
     "lead": "\"Zo ben ik nu eenmaal.\" \"Het beleid laat geen ruimte.\" \"Dat hoort bij mijn functie.\" Herkenbare uitspraken. Ze kunnen iets verklaren en ze kunnen een gesprek afsluiten.",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 642
+    "woorden": 640
   },
   {
     "slug": "ontwerp-het-werk-van-morgen-met-de-mensen-van-vandaag",
@@ -219,8 +213,7 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/verandermanagement",
-      "/kennis/eigenaarschap-in-teams",
-      "/kennis/rollen-en-verantwoordelijkheden"
+      "/kennis/eigenaarschap-in-teams"
     ],
     "relatedServices": [
       "/teamdag",
@@ -229,7 +222,7 @@
     "lead": "Nieuwe technologie, automatisering en AI bieden kansen om het werk anders in te richten. De vernieuwing begint alleen meestal met een vertrouwde vraag. Hoe kunnen we ons huidige proces verbeteren?",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 885
+    "woorden": 883
   },
   {
     "slug": "een-goede-strategie-heeft-geen-vaste-vorm",
@@ -276,7 +269,6 @@
     ],
     "featured": false,
     "relatedKnowledgePages": [
-      "/kennis/rollen-en-verantwoordelijkheden",
       "/psychologische-veiligheid",
       "/kennis/teamcultuur"
     ],
@@ -287,7 +279,7 @@
     "lead": "Een medewerker wacht op de bijdrage van een collega van een andere afdeling. Die komt niet. In plaats van het te melden, zoekt hij een omweg. Hij belt nog een keer, zoekt de informatie zelf op, of doet het werk er gewoon bij.",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 645
+    "woorden": 643
   },
   {
     "slug": "elk-nieuw-initiatief-is-ook-een-besluit-over-capaciteit",
@@ -306,8 +298,7 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/teamenergie",
-      "/kennis/eigenaarschap-in-teams",
-      "/kennis/rollen-en-verantwoordelijkheden"
+      "/kennis/eigenaarschap-in-teams"
     ],
     "relatedServices": [
       "/teamscan",
@@ -316,7 +307,7 @@
     "lead": "Het werk groeit en de tijd blijft gelijk. De dagelijkse taken vragen het grootste deel van de aandacht. Verbeterinitiatieven moeten in de resterende ruimte gebeuren, en die ruimte wordt steeds opnieuw gevuld met nieuwe opdrachten.",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 506
+    "woorden": 504
   },
   {
     "slug": "een-team-groeit-niet-nadat-de-druk-voorbij-is",
@@ -364,7 +355,6 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/teamcultuur",
-      "/kennis/rollen-en-verantwoordelijkheden",
       "/kennis/verandermanagement"
     ],
     "relatedServices": [
@@ -374,7 +364,7 @@
     "lead": "De ervaren collega die al dertig jaar in het vak zit. De professional die werk en thuis bewust probeert te combineren. De jonge medewerker die snel wil leren en kritische vragen stelt. Op één afdeling werken vaak vier generaties naast elkaar, en soms vijf.",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 844
+    "woorden": 842
   },
   {
     "slug": "sociale-veiligheid-is-de-basis-van-een-afdeling",
@@ -451,8 +441,7 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/eigenaarschap-in-teams",
-      "/psychologische-veiligheid",
-      "/kennis/rollen-en-verantwoordelijkheden"
+      "/psychologische-veiligheid"
     ],
     "relatedServices": [
       "/teamcoaching",
@@ -461,7 +450,7 @@
     "lead": "\"Jullie hebben de ruimte om dit zelf op te lossen.\" De leidinggevende meent het. Het team kent het werk, de mensen zijn deskundig, en niet elke beslissing hoeft langs hem. Er gebeurt vervolgens weinig.",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 687
+    "woorden": 685
   },
   {
     "slug": "expertise-kan-mogelijkheden-onzichtbaar-maken",
@@ -538,8 +527,7 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/eigenaarschap-in-teams",
-      "/kennis/teamcultuur",
-      "/kennis/rollen-en-verantwoordelijkheden"
+      "/kennis/teamcultuur"
     ],
     "relatedServices": [
       "/teamdag",
@@ -548,7 +536,7 @@
     "lead": "Je voelt je verantwoordelijk voor je eigen team. Dat is logisch. Je kent de mensen, je ziet de werkdruk en je merkt meteen wat een besluit voor hen betekent. In diezelfde nabijheid zit ook een blinde vlek.",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 478
+    "woorden": 476
   },
   {
     "slug": "eerlijke-regels-ontwerp-je-zonder-je-eigen-positie-te-kennen",
@@ -567,7 +555,6 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/teamcultuur",
-      "/kennis/rollen-en-verantwoordelijkheden",
       "/psychologische-veiligheid"
     ],
     "relatedServices": [
@@ -654,8 +641,7 @@
     "featured": false,
     "relatedKnowledgePages": [
       "/kennis/eigenaarschap-in-teams",
-      "/kennis/teamcultuur",
-      "/kennis/rollen-en-verantwoordelijkheden"
+      "/kennis/teamcultuur"
     ],
     "relatedServices": [
       "/teamdag",
@@ -664,7 +650,7 @@
     "lead": "\"Jij bent vanaf nu procesverantwoordelijk.\" Het klinkt belangrijk en het klinkt duidelijk. Meestal begint daarna de onduidelijkheid. Mag je het proces veranderen? Moet je collega's aanspreken wanneer afspraken niet worden nagekomen? Ben je verantwoordelijk voor het resultaat?",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 878
+    "woorden": 876
   },
   {
     "slug": "een-goede-voorzitter-zorgt-niet-voor-alle-antwoorden",

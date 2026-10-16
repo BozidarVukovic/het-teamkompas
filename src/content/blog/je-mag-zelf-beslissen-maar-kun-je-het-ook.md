@@ -8,7 +8,7 @@ author: Mijn Teamkompas
 category: Leiderschap
 tags: leiderschap, eigenaarschap, psychologische veiligheid
 imageAlt: Illustratie bij het artikel over vrijheid, ruimte en initiatief
-relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/psychologische-veiligheid,/kennis/rollen-en-verantwoordelijkheden
+relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/psychologische-veiligheid
 relatedServices: /teamcoaching,/teamscan
 ---
 
@@ -42,7 +42,7 @@ Wachten medewerkers af, dan ligt het oordeel snel klaar. Ze tonen weinig eigenaa
 
 Soms is een zetje inderdaad nodig. Onderzoek daarnaast wat initiatief nemen in deze omgeving van iemand vraagt.
 
-Moet hij eerst drie collega's overtuigen? Is onduidelijk wie het besluit mag nemen? Komt elke verbetering boven op het gewone werk? Wordt een afwijkende keuze achteraf beoordeeld op afspraken die vooraf niet helder waren? Meer over dat laatste staat op de pagina over [rollen en verantwoordelijkheden](/kennis/rollen-en-verantwoordelijkheden).
+Moet hij eerst drie collega's overtuigen? Is onduidelijk wie het besluit mag nemen? Komt elke verbetering boven op het gewone werk? Wordt een afwijkende keuze achteraf beoordeeld op afspraken die vooraf niet helder waren? Meer over dat laatste staat op de pagina over [teamontwikkeling](/teamontwikkeling).
 
 Afwachten is dan een begrijpelijke reactie.
 
