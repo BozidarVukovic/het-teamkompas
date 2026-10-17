@@ -288,15 +288,32 @@
   white-space: nowrap;
 }
 
-/* Op een telefoon is er geen ruimte voor drie dingen naast elkaar. Gemeten op
-   375 en 360 pixels -- de twee breedtes waar de meeste mensen op zitten -- liep
-   de teamkiezer over de uitlogknop heen. "Mijn" weglaten scheelde niet genoeg;
-   de naam moet eraf.
+/* De merknaam viel weg onder 640 pixels omdat de balk daar drie dingen naast
+   elkaar had: het kompas, de teamkiezer en een uitlogknop. Gemeten op 375 en
+   360 liep de kiezer toen over de knop heen.
 
-   Wat overblijft is het kompas als weg naar huis, de teamkiezer (het enige wat
-   je hier vaak gebruikt) en Uitloggen. Waar je bent staat een regel lager toch
-   als paginatitel. De link houdt zijn naam voor schermlezers via aria-label. */
-@media (max-width: 640px) {
+   Die twee zijn sinds het accountmenu één bol geworden, en daarmee is de ruimte
+   terug. Op 360 en 390 past de naam er weer naast; op 320 -- de smalste telefoon
+   die nog meetelt -- niet, dus daar blijft het bij het kompas alleen. De link
+   houdt zijn naam voor schermlezers via aria-label.
+
+   Iets kleiner dan op een breed scherm: dat scheelt genoeg om op 360 niet tegen
+   de bol aan te lopen, en de naam is daar toch niet het onderwerp. */
+@media (max-width: 720px) {
+  .tk-merk {
+    /* Gemeten op 360 pixels: met de naam erbij was deze link 22 hoog. Hij is
+       de weg terug naar Start, dus hij hoort raakbaar te zijn. De balk wordt
+       er niet hoger van -- het accountmenu ernaast is al 44. */
+    min-height: var(--tk-raak, 44px);
+    font-size: var(--tk-t-kop);
+  }
+
+  .tk-merk-woorden {
+    letter-spacing: 0;
+  }
+}
+
+@media (max-width: 359px) {
   .tk-merk-woorden {
     display: none;
   }
