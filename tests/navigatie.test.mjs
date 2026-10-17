@@ -16,6 +16,8 @@ const SCHERMEN = [
   "/app",
   "/app/samenwerken",
   "/app/team",
+  "/app/teamomgeving",
+  "/app/teambeeld",
   "/app/ik",
   "/app/profiel",
   "/app/handleiding",
@@ -67,4 +69,28 @@ test("een onderliggend scherm laat het onderdeel oplichten", () => {
 test("een adres buiten de app licht nergens op", () => {
   assert.equal(actiefOnderdeel("/teamscan"), null);
   assert.equal(actiefOnderdeel("/app/onbekend"), null);
+});
+
+/* ------------------------------------------- de teamomgeving in de balk */
+
+test("het vierde tabblad gaat naar de teamomgeving, niet naar de ledenlijst", () => {
+  const vier = ONDERDELEN.find((o) => o.id === "team");
+  assert.ok(vier, "het vierde onderdeel hoort te bestaan");
+  assert.equal(vier.pad, "/app/teamomgeving");
+});
+
+test("de collega's horen bij hetzelfde tabblad als de teamomgeving", () => {
+  // Een tabblad dat uitgaat terwijl je er nog in zit, leest als weggeklikt.
+  assert.equal(actiefOnderdeel("/app/teamomgeving").id, "team");
+  assert.equal(actiefOnderdeel("/app/teamomgeving/overzicht").id, "team");
+  assert.equal(actiefOnderdeel("/app/team").id, "team");
+  assert.equal(actiefOnderdeel("/app/teambeeld").id, "team");
+});
+
+test("geen label is langer dan wat er op een telefoon past", () => {
+  // "Teamomgeving" past niet in een vierdelige balk op 360 pixels; daarom
+  // heet het tabblad "Omgeving" en de pagina "Onze teamomgeving".
+  ONDERDELEN.forEach((o) => {
+    assert.ok(o.label.length <= 9, `"${o.label}" is te lang voor de onderbalk`);
+  });
 });

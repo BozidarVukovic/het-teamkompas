@@ -46,8 +46,20 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  /* Gemeten op 320 en 390 pixels: deze link was 16 hoog. Hij is nu de enige
+     weg terug boven aan de pagina, dus hij hoort raakbaar te zijn. De marge
+     links haalt de extra ruimte weer weg uit de uitlijning. */
+  min-height: var(--tk-raak, 44px);
+  padding: 0 8px;
+  margin-left: -8px;
   color: var(--tk-zacht);
   text-decoration: none;
+}
+
+.to-kruimel a:focus-visible {
+  outline: 2px solid var(--tk-teal);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
 .to-kruimel [aria-current] {
@@ -2449,4 +2461,389 @@
   .tk-app {
     background: #fff;
   }
+}
+
+/* ══════════════════════════════════════════ de pagina in vier blokken
+
+   Afspraken, volgende stap, terugblik, ingangen. Elk blok is een band over de
+   volle breedte in plaats van een kaart in een werkblad: op een telefoon is de
+   kolom toch al de breedte van het scherm, en een kaart om een kaart om een
+   kaart maakt er alleen een smallere kolom van. */
+
+.to-kopacties {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.to-beheerknoppen {
+  display: flex;
+  gap: 8px;
+}
+
+.to-bewerkmelding {
+  margin: 0 0 20px;
+  padding: 10px 14px;
+  border: 1px solid var(--tk-teal-rand);
+  border-radius: 10px;
+  background: var(--tk-teal-waas);
+  color: var(--tk-tekst);
+  font-size: var(--tk-t-klein);
+}
+
+.to-blok {
+  margin: 0 0 32px;
+}
+
+.to-blok > h2,
+.to-blokkop > h2 {
+  margin: 0 0 14px;
+  font-size: var(--tk-t-sectie);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.to-blokkop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.to-blokkop > h2 {
+  margin-bottom: 14px;
+}
+
+.to-blokverder {
+  margin-top: 14px;
+}
+
+/* ── één afspraak ─────────────────────────────────────────────────────────
+   Wat je nodig hebt om te weten of deze afspraak jou nu raakt: het nummer, de
+   titel, één zin, en wie hem trekt. Staat er geen trekker in de brontekst, dan
+   staat daar "niet vastgelegd" -- een leeg veld zou als een fout lezen, en een
+   verzonnen naam is erger. */
+
+.to-afspraak {
+  display: block;
+  margin: 0 0 12px;
+  background: var(--tk-vlak);
+  border: 1px solid var(--tk-rand);
+  border-radius: 14px;
+  box-shadow: var(--tk-lift);
+}
+
+.to-afspraak-rij {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  list-style: none;
+}
+
+.to-afspraak-rij::-webkit-details-marker {
+  display: none;
+}
+
+details.to-afspraak > summary.to-afspraak-rij {
+  cursor: pointer;
+  min-height: var(--tk-raak, 44px);
+}
+
+details.to-afspraak > summary:focus-visible {
+  outline: 2px solid var(--tk-teal);
+  outline-offset: -3px;
+  border-radius: 14px;
+}
+
+.to-afspraak-nr {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--tk-teal-dim);
+  color: var(--tk-teal);
+  font-size: var(--tk-t-klein);
+  font-weight: 700;
+}
+
+.to-afspraak-tekst {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.to-afspraak-titel {
+  font-size: var(--tk-t-lead);
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--tk-tekst);
+}
+
+.to-afspraak-zin {
+  font-size: var(--tk-t-basis);
+  line-height: 1.6;
+  color: var(--tk-tekst);
+}
+
+.to-afspraak-trekker {
+  font-size: var(--tk-t-fijn);
+  color: var(--tk-zacht);
+}
+
+.to-afspraak-rij > .to-pijl {
+  margin-top: 12px;
+  color: var(--tk-zacht);
+}
+
+details.to-afspraak[open] > summary > .to-pijl {
+  transform: translateY(2px) rotate(-135deg);
+}
+
+.to-afspraak-meer {
+  padding: 0 18px 18px 62px;
+}
+
+@media (max-width: 420px) {
+  .to-afspraak-meer {
+    padding-left: 18px;
+  }
+}
+
+/* ── de volgende stap ─────────────────────────────────────────────────────
+   Het enige op deze pagina met een datum. Een eigen vlak, want het is geen
+   afspraak en geen geschiedenis: het is wat er hierna gebeurt. */
+
+.to-stap {
+  margin: 0 0 32px;
+  padding: 20px;
+  background: var(--tk-advies-vlak);
+  border: 1px solid var(--tk-teal-rand);
+  border-radius: 16px;
+}
+
+.to-stap > .to-eyebrow {
+  margin: 0;
+  color: var(--tk-teal);
+}
+
+.to-stap-titel {
+  margin: 8px 0 4px;
+  font-size: var(--tk-t-sectie);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.to-stap-wanneer {
+  margin: 0 0 18px;
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-basis);
+}
+
+.to-terugblik {
+  margin-top: 4px;
+}
+
+/* ── terugblik en achtergrond ─────────────────────────────────────────────
+   Eén niveau uitklappen, en niet meer. Elk onderdeel laat zijn eerste regel
+   zien, zodat je zonder openklappen weet waar het over gaat. */
+
+.to-achtergronden {
+  border-top: 1px solid var(--tk-lijn);
+}
+
+.to-achtergrond {
+  border-bottom: 1px solid var(--tk-lijn);
+}
+
+.to-achtergrond-kop {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.to-achtergrond-knop {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: var(--tk-raak, 44px);
+  padding: 14px 2px;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.to-achtergrond-knop:focus-visible {
+  outline: 2px solid var(--tk-teal);
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+
+.to-achtergrond-tekst {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.to-achtergrond-titel {
+  font-size: var(--tk-t-lead);
+  font-weight: 650;
+  line-height: 1.35;
+  color: var(--tk-tekst);
+}
+
+.to-achtergrond-zin {
+  font-size: var(--tk-t-klein);
+  line-height: 1.5;
+  color: var(--tk-zacht);
+}
+
+.to-achtergrond-meer {
+  padding: 0 0 22px;
+}
+
+.to-kruis {
+  position: relative;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  color: var(--tk-teal);
+}
+
+.to-kruis::before,
+.to-kruis::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform var(--tk-vlot) var(--tk-soepel);
+}
+
+.to-kruis::before {
+  width: 15px;
+  height: 2px;
+  transform: translate(-50%, -50%);
+}
+
+.to-kruis::after {
+  width: 2px;
+  height: 15px;
+  transform: translate(-50%, -50%);
+}
+
+[aria-expanded="true"] .to-kruis::after {
+  transform: translate(-50%, -50%) scaleY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .to-kruis::before,
+  .to-kruis::after {
+    transition: none;
+  }
+}
+
+/* ── documenten, werkvormen en de collega's ───────────────────────────────── */
+
+.to-ingangen {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.to-ingang {
+  display: block;
+  background: var(--tk-vlak);
+  border: 1px solid var(--tk-rand);
+  border-radius: 12px;
+  color: var(--tk-tekst);
+  text-decoration: none;
+}
+
+.to-ingang-rij {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 58px;
+  padding: 10px 16px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.to-ingang-rij::-webkit-details-marker {
+  display: none;
+}
+
+details.to-ingang > summary:focus-visible,
+a.to-ingang:focus-visible {
+  outline: 2px solid var(--tk-teal);
+  outline-offset: -3px;
+  border-radius: 12px;
+}
+
+.to-ingang-soort {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 34px;
+  height: 26px;
+  padding: 0 7px;
+  border-radius: 7px;
+  background: var(--tk-navy-3);
+  color: var(--tk-zacht);
+  font-size: var(--tk-t-mini);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.to-ingang-titel {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--tk-t-basis);
+  font-weight: 600;
+}
+
+.to-ingang-rij > .to-pijl {
+  color: var(--tk-zacht);
+}
+
+details.to-ingang[open] > summary > .to-pijl {
+  transform: translateY(2px) rotate(-135deg);
+}
+
+/* Een link gaat ergens heen en klapt niets open: dan hoort de punt opzij te
+   wijzen en niet omlaag. */
+.to-pijl-recht {
+  transform: translateX(-2px) rotate(-45deg);
+}
+
+.to-ingang-meer {
+  padding: 0 16px 16px;
+}
+
+/* Een anker mag niet onder de vaste balken landen.
+   Gemeten: wie /app/teamomgeving/overzicht opent of op een zoektreffer klikt,
+   kreeg de kop van het blok precies achter de bovenbalk. De balk is 57 hoog,
+   het menu daaronder nog eens 50; 112 houdt de kop vrij met iets lucht. */
+.to-blok,
+.to-stap,
+.to-achtergrond,
+.to-ingang,
+.to-afspraak {
+  scroll-margin-top: 112px;
 }

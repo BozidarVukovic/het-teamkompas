@@ -21,7 +21,15 @@ export const ONDERDELEN = [
   // elke telefoon op; een kleinere marge nergens. "Advies" is bovendien wat je
   // daar haalt.
   { id: "samenwerken", pad: "/app/samenwerken", label: "Advies", paden: ["/app/samenwerken"] },
-  { id: "team", pad: "/app/team", label: "Team", paden: ["/app/team", "/app/teambeeld"] },
+  {
+    id: "team",
+    pad: "/app/teamomgeving",
+    label: "Omgeving",
+    // De collega's horen bij hetzelfde tabblad: je komt er vanuit de
+    // teamomgeving, en een tabblad dat uitgaat terwijl je er nog in zit, leest
+    // als weggeklikt.
+    paden: ["/app/teamomgeving", "/app/team", "/app/teambeeld"],
+  },
   {
     id: "ik",
     pad: "/app/ik",

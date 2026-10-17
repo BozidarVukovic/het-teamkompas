@@ -48,10 +48,13 @@ export default function TeamomgevingLink() {
       <span className="tk-toegang-icoon" aria-hidden="true"><Team /></span>
       <span className="tk-toegang-tekst">
         <strong className="tk-toegang-titel">Onze teamomgeving</strong>
-        <span className="tk-toegang-uitleg">Afspraken, teamdagen, werkvormen en documenten{team}.</span>
+        <span className="tk-toegang-uitleg">Onze afspraken, de volgende stap en de stukken{team}.</span>
       </span>
-      <span className="tk-toegang-pijl" aria-hidden="true">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 8h10M9 4.2 12.8 8 9 11.8" /></svg>
+      {/* Een pijl zegt "er is meer", niet wát er meer is. Met een naam erbij
+          weet je voor je tikt waar je uitkomt. */}
+      <span className="tk-toegang-actie">
+        Bekijk onze afspraken
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2.5 8h10M9 4.2 12.8 8 9 11.8" /></svg>
       </span>
     </Link>
   );

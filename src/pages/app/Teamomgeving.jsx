@@ -4,11 +4,10 @@ import ReactMarkdown from "react-markdown";
 import { useApp } from "../../lib/app/AppContext";
 import { magBeheren } from "../../lib/app/teamrollen";
 import { haalOmgeving, haalOmgevingPdf, richtOmgevingIn, bewaarOmgevingNotities, werkOmgevingBij, werkTekstenBij, werkZichtbaarheidBij, voegDocumentToe, verwijderDocument } from "../../lib/app/teamomgevingOpslag";
-import { valideerOmgeving, deelTekst, maakBronPakket, maakOnderdelenlijst, leesTijdlijn, splitsInSecties, magInklappen, eersteSectieOpen, heeftTijdlijnplek, leesBijgewerkt, schrijfDatum, leesPdf, isVerborgen, zichtbareOnderdelen } from "../../lib/app/teamomgeving";
-import { maakSlak, sectieAdressen, leesHash, maakAdres } from "../../lib/app/teamomgevingAdres";
+import { valideerOmgeving, deelTekst, maakBronPakket, leesTijdlijn, magInklappen, heeftTijdlijnplek, leesBijgewerkt, schrijfDatum, leesPdf, isVerborgen, zichtbareOnderdelen, leesAfspraken, leesVolgendeStap, heeftAfsprakenplek } from "../../lib/app/teamomgeving";
+import { maakSlak, leesHash, maakAdres } from "../../lib/app/teamomgevingAdres";
 import { maakZoekindex, zoek as zoekInOmgeving } from "../../lib/app/teamomgevingZoek";
 import Teamcheck from "../../components/app/Teamcheck";
-import { houdOpZijnPlek } from "../../lib/app/scrollbehoud";
 import "../../styles/teamomgeving.css";
 
 // Geen HTML, afbeeldingen of externe links uit geïmporteerde inhoud uitvoeren.
@@ -40,17 +39,6 @@ function Markdown({ children }) {
 
 // Een schakel, want dat is wat de knop kopieert. Een hekje is het teken uit het
 // adres zelf en zegt op een scherm niets; wie het niet herkent, ziet een typefout.
-function Ketting({ gedaan }) {
-  return <svg className="to-kettingicoon" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
-    {gedaan
-      ? <path d="M4.5 10.5 8 14l7.5-8" />
-      : <>
-        <path d="M8.5 11.5a3.2 3.2 0 0 0 4.7.3l2.4-2.4a3.2 3.2 0 0 0-4.5-4.5l-1.3 1.3" />
-        <path d="M11.5 8.5a3.2 3.2 0 0 0-4.7-.3l-2.4 2.4a3.2 3.2 0 0 0 4.5 4.5l1.3-1.3" />
-      </>}
-  </svg>;
-}
-
 function Loep() {
   return <svg className="to-loep" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
     <circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" strokeWidth="2" />
@@ -101,61 +89,6 @@ function Tekst({ children, tijdlijn, plaatsBoven }) {
 // en verdient te horen waarom er niets staat en wat er dan wél kan.
 function Leeg({ titel, uitleg }) {
   return <div className="to-leeg"><p className="to-leeg-titel">{titel}</p><p>{uitleg}</p></div>;
-}
-
-// De navigatie binnen de teamomgeving.
-//
-// Acht onderdelen in twee rijen gelijkwaardige tabbladen laat zien dát er acht
-// dingen zijn, niet hoe ze zich tot elkaar verhouden. Op een breed scherm staat
-// de lijst daarom links en blijft hij staan; op een telefoon is het één knop
-// die openklapt, want een rij van acht is daar geen keuze maar een zoekplaatje.
-//
-// Een groep waarin het geopende onderdeel zit, kan niet worden dichtgeklapt:
-// de plek waar je staat hoort niet te kunnen verdwijnen.
-function Onderdelen({ groepen, actief, kies }) {
-  const [open, setOpen] = useState(false);
-  const [dicht, setDicht] = useState(() => []);
-  const alles = groepen.flatMap((groep) => groep.items);
-  const huidig = alles.find((item) => item.id === actief);
-  function wisselGroep(naam) {
-    setDicht((oud) => (oud.includes(naam) ? oud.filter((n) => n !== naam) : [...oud, naam]));
-  }
-  return <nav className="to-nav" aria-label="Onderdelen" onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}>
-    <button className="to-navknop" type="button" aria-expanded={open} aria-controls="to-onderdelen" onClick={() => setOpen((v) => !v)}>
-      <span className="to-navknop-label">Onderdeel</span>
-      <span className="to-navknop-titel">{huidig ? huidig.titel : "Kies een onderdeel"}</span>
-      <span className="to-pijl" aria-hidden="true" />
-    </button>
-    <div className="to-navlijst" id="to-onderdelen" data-open={open ? "ja" : "nee"}>
-      {groepen.map((groep, i) => {
-        const bevatActief = groep.items.some((item) => item.id === actief);
-        const ingeklapt = Boolean(groep.naam) && dicht.includes(groep.naam) && !bevatActief;
-        return <div
-          className="to-groep"
-          key={groep.naam || `groep-${i}`}
-          data-groep={groep.naam ? "ja" : undefined}
-          data-actief={groep.naam && bevatActief ? "ja" : undefined}
-          data-apart={groep.apart ? "ja" : undefined}
-        >
-          {groep.naam && <button className="to-groepkop" type="button" aria-expanded={!ingeklapt} onClick={() => wisselGroep(groep.naam)}>
-            <span>{groep.naam}</span>
-            <span className="to-pijl" aria-hidden="true" />
-          </button>}
-          {!ingeklapt && <ul>{groep.items.map((item) => <li key={item.id}>
-            <button
-              className="to-onderdeel"
-              type="button"
-              aria-current={item.id === actief ? "page" : undefined}
-              onClick={() => { kies(item.id); setOpen(false); }}
-            >
-              {item.titel}
-              {item.verborgen && <span className="to-verborgenmerk">verborgen</span>}
-            </button>
-          </li>)}</ul>}
-        </div>;
-      })}
-    </div>
-  </nav>;
 }
 
 // De brontekst terugzetten nadat hij buiten de app is verbeterd.
@@ -215,139 +148,6 @@ function Bijwerken({ team, uid, herladen }) {
 // Het kenmerk gaat er pas op als de overgang klaar is, anders klapt de sectie
 // dicht zonder animatie. Bij de eerste weergave mag dat wel meteen: daar is
 // nog geen overgang om te bewaren.
-function Vouwvak({ id, open, onVinden, children }) {
-  const vak = useRef(null);
-  const eerder = useRef(false);
-  const melden = useRef(onVinden);
-  melden.current = onVinden;
-  useEffect(() => {
-    const el = vak.current;
-    if (!el) return undefined;
-    if (open) { eerder.current = true; el.removeAttribute("hidden"); return undefined; }
-    const verberg = () => el.setAttribute("hidden", "until-found");
-    if (!eerder.current) { verberg(); return undefined; }
-    const wacht = setTimeout(verberg, 320);
-    return () => clearTimeout(wacht);
-  }, [open]);
-  useEffect(() => {
-    const el = vak.current;
-    if (!el) return undefined;
-    const gevonden = () => { if (melden.current) melden.current(); };
-    el.addEventListener("beforematch", gevonden);
-    return () => el.removeEventListener("beforematch", gevonden);
-  }, []);
-  return <div className="to-vouwvak" id={id} ref={vak} data-open={open ? "ja" : undefined}>
-    <div>{children}</div>
-  </div>;
-}
-
-// Eén sectie tegelijk open, en elke sectie heeft een eigen adres.
-//
-// Twee tegelijk mag ook, en dan moet je zelf bijhouden wat er nog openstaat.
-// Bij een naslagwerk als dit werkt het beter als het scherm dat doet: je opent
-// een werkvorm, de vorige klapt dicht, en de lijst blijft even lang als toen je
-// binnenkwam. Nog een keer klikken op dezelfde sluit hem weer.
-//
-// Welke sectie openstaat, staat in de hash van het adres. Daardoor is een
-// sectie te delen, overleeft ze een herlaadbeurt, en kan het zoeken er
-// rechtstreeks naartoe wijzen. De knop met het hekje kopieert dat adres.
-//
-// Bij het openen klapt er ook iets dicht. Zit dat erboven, dan zakt de pagina
-// omhoog en staat de kop die je aanraakte ineens ergens anders. houdOpZijnPlek
-// corrigeert dat: de pagina beweegt, de kop niet.
-//
-// De kop is een knop binnen een h3, zodat de opbouw van de pagina klopt voor
-// wie met een schermlezer of met het toetsenbord werkt.
-function Secties({ deel, tijdlijn, hash }) {
-  const navigeer = useNavigate();
-  const { inleiding, secties } = useMemo(() => splitsInSecties(deel.tekst), [deel.tekst]);
-  const adressen = useMemo(() => sectieAdressen(secties), [secties]);
-  const uitAdres = adressen.indexOf(leesHash(hash));
-  const standaard = eersteSectieOpen(deel) && secties.length ? 0 : -1;
-  const [keuze, setKeuze] = useState(() => (uitAdres >= 0 ? uitAdres : standaard));
-  const [gekopieerd, setGekopieerd] = useState("");
-  const koppen = useRef([]);
-  // Wijst het adres een sectie aan, dan wint dat. Wijst het niets aan -- omdat
-  // de lezer zojuist iets dichtklapte -- dan blijft staan wat er stond.
-  useEffect(() => { if (uitAdres >= 0) setKeuze(uitAdres); }, [uitAdres]);
-  const inSectie = secties.some((sectie) => heeftTijdlijnplek(sectie.tekst));
-
-  function zet(i, dicht) {
-    setKeuze(dicht ? -1 : i);
-    navigeer(maakAdres(deel.id, dicht ? "" : adressen[i]), { replace: true });
-  }
-  function wissel(i) {
-    const dicht = keuze === i;
-    const knop = koppen.current[i];
-    const voor = knop ? knop.getBoundingClientRect().top : null;
-    zet(i, dicht);
-    if (knop && voor !== null) houdOpZijnPlek(() => knop.getBoundingClientRect().top, voor);
-  }
-  async function kopieer(i) {
-    const adres = window.location.origin + maakAdres(deel.id, adressen[i]);
-    try {
-      await navigator.clipboard.writeText(adres);
-      setGekopieerd(adressen[i]);
-      setTimeout(() => setGekopieerd((h) => (h === adressen[i] ? "" : h)), 2000);
-    } catch {
-      // Geen klembord (oudere browser, of geen beveiligde verbinding): dan zet
-      // het adres tenminste in de adresbalk, zodat het te kopiëren blijft.
-      navigeer(maakAdres(deel.id, adressen[i]), { replace: true });
-    }
-  }
-
-  return <>
-    {inleiding && <Tekst tijdlijn={tijdlijn} plaatsBoven={!inSectie}>{inleiding}</Tekst>}
-    {keuze >= 0 && secties.length > 1 && <div className="to-vouwbalk">
-      <button className="tk-tekstknop to-inklap" type="button" onClick={() => zet(keuze, true)}>
-        Inklappen
-      </button>
-    </div>}
-    <div className="to-vouw">
-      {secties.map((sectie, i) => {
-        const id = `${deel.id}-sectie-${i}`;
-        const uit = keuze === i;
-        return <section className="to-vouwdeel" data-open={uit ? "ja" : undefined} id={adressen[i]} key={id}>
-          <h3 className="to-vouwrij">
-            <button
-              className="to-vouwkop"
-              type="button"
-              ref={(el) => { koppen.current[i] = el; }}
-              aria-expanded={uit}
-              aria-controls={id}
-              onClick={() => wissel(i)}
-            >
-              <span className="to-vouwtitel">
-                {sectie.kop}
-                {sectie.bovenkopje && <span className="to-vouwmeta">{sectie.bovenkopje}</span>}
-              </span>
-              <span className="to-pijl" aria-hidden="true" />
-            </button>
-            <button className="to-vouwlink" type="button" onClick={() => kopieer(i)}>
-              <span className="to-verborgen">
-                {gekopieerd === adressen[i] ? `Link naar ${sectie.kop} gekopieerd` : `Link naar ${sectie.kop} kopiëren`}
-              </span>
-              <Ketting gedaan={gekopieerd === adressen[i]} />
-            </button>
-          </h3>
-          <Vouwvak id={id} open={uit} onVinden={() => zet(i, false)}>
-            <Tekst tijdlijn={tijdlijn}>{sectie.tekst}</Tekst>
-          </Vouwvak>
-        </section>;
-      })}
-    </div>
-  </>;
-}
-
-// Zoeken over alle onderdelen tegelijk.
-//
-// Dit is het enige onderdeel van het scherm dat niet één ding laat zien maar
-// alles doorzoekt. Het werkt op wat de browser toch al geladen heeft: er gaat
-// geen zoekopdracht naar een server, en er ontstaat dus ook geen logboek van
-// waar een teamlid in zijn eigen teamomgeving naar zoekt.
-//
-// De beheerinhoud en de bespreeknotities zitten er bewust niet in. Die zijn van
-// de twee begeleiders en horen in geen enkele index.
 const MACTOETS = typeof navigator !== "undefined" && /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent || "");
 
 function Zoeken({ inhoud, magBeheer, ga }) {
@@ -716,11 +516,6 @@ function DocumentToevoegen({ team, uid, documenten, herladen }) {
 
 // De groep waar een onderdeel in zit. Komt uit dezelfde lijst als de navigatie,
 // zodat er nooit een label boven de kop staat dat de zijbalk niet kent.
-function groepVan(groepen, id) {
-  const groep = (groepen || []).find((g) => g.items.some((item) => item.id === id));
-  return groep && !groep.apart ? groep.naam : "";
-}
-
 function Inrichten({ team, uid, leden, herladen }) {
   const [pakket, setPakket] = useState(null);
   const [tweede, setTweede] = useState("");
@@ -754,6 +549,169 @@ function Inrichten({ team, uid, leden, herladen }) {
   </section>;
 }
 
+/* ══════════════════════════════════════════════════ de nieuwe indeling
+
+   Deze pagina was een werkblad met tabbladen: links een lijst van acht
+   onderdelen, rechts één onderdeel tegelijk. Wie binnenkwam las eerst een
+   titel, een bijwerkdatum, een zoekveld en een keuzemenu -- en pas daarna,
+   als hij het goede tabblad raakte, waar het team eigenlijk iets over had
+   afgesproken.
+
+   Nu is het één pagina met vier blokken, in de volgorde waarin je ze nodig
+   hebt: wat geldt, wat eraan komt, waar het vandaan komt, en waar de stukken
+   staan. De oude adressen blijven werken -- een onderdeel is nu een anker in
+   plaats van een tabblad -- zodat gedeelde links en zoektreffers blijven
+   uitkomen waar ze altijd uitkwamen. */
+
+/** De eerste leesbare regel van een onderdeel, als samenvatting in de lijst. */
+function eersteRegelVan(tekst) {
+  const regels = String(tekst || "").replace(/\r\n?/g, "\n").split("\n");
+  for (const regel of regels) {
+    const schoon = regel.trim();
+    if (!schoon || schoon.startsWith("#") || /^\[[a-z]+\]$/.test(schoon)) continue;
+    const plat = schoon.replace(/[*_`]/g, "");
+    return plat.length > 96 ? `${plat.slice(0, 95).trimEnd()}…` : plat;
+  }
+  return "";
+}
+
+/** Eén afspraak. Zonder toelichting is er niets uit te klappen, dus ook geen knop. */
+function Afspraakkaart({ kaart }) {
+  const kop = <>
+    <span className="to-afspraak-nr" aria-hidden="true">{kaart.nummer}</span>
+    <span className="to-afspraak-tekst">
+      <strong className="to-afspraak-titel">{kaart.titel}</strong>
+      {kaart.samenvatting && <span className="to-afspraak-zin">{kaart.samenvatting}</span>}
+      {/* Staat er geen trekker in de tekst, dan zegt het scherm dat er niets
+          is vastgelegd. Het verzint er geen naam bij, en het doet ook niet
+          alsof het team al heeft afgesproken dat er nog iemand moet komen. */}
+      <span className="to-afspraak-trekker">
+        Trekker · {kaart.trekker || "niet vastgelegd"}
+      </span>
+    </span>
+  </>;
+
+  if (!kaart.toelichting) {
+    return <article className="to-afspraak" id={kaart.id}>
+      <div className="to-afspraak-rij">{kop}</div>
+    </article>;
+  }
+
+  return <details className="to-afspraak" id={kaart.id}>
+    <summary className="to-afspraak-rij">
+      {kop}
+      <span className="to-pijl" aria-hidden="true" />
+    </summary>
+    <div className="to-afspraak-meer"><Tekst>{kaart.toelichting}</Tekst></div>
+  </details>;
+}
+
+/* De terugblik voorbereiden.
+ *
+ * Twee zinnen opschrijven vóór het overleg, zodat je niet met een leeg hoofd
+ * aan tafel zit. Dit gaat nergens heen: het staat in deze browser en nergens
+ * anders -- niet bij ons, niet bij je team. Dat moet er ook staan, want een
+ * invoerveld in een teamomgeving ziet eruit alsof je iets inlevert.
+ *
+ * localStorage kan ontbreken of weigeren (privévenster, geblokkeerde opslag).
+ * Dan werkt het veld nog steeds, alleen is het weg na een herlaadbeurt. */
+function Terugblik({ team }) {
+  const sleutel = `tk-terugblik:${team.orgId}/${team.teamId}`;
+  const [open, setOpen] = useState(false);
+  const [tekst, setTekst] = useState("");
+  const [gekopieerd, setGekopieerd] = useState(false);
+
+  useEffect(() => {
+    try { setTekst(window.localStorage.getItem(sleutel) || ""); } catch { setTekst(""); }
+  }, [sleutel]);
+
+  function schrijfTekst(waarde) {
+    setTekst(waarde);
+    setGekopieerd(false);
+    try { window.localStorage.setItem(sleutel, waarde); } catch { /* zonder opslag blijft het bij deze sessie */ }
+  }
+
+  async function kopieer() {
+    try { await navigator.clipboard.writeText(tekst); setGekopieerd(true); }
+    catch { setGekopieerd(false); }
+  }
+
+  if (!open) {
+    return <button type="button" className="tk-knop" onClick={() => setOpen(true)}>
+      Bereid de terugblik voor
+    </button>;
+  }
+
+  return <div className="to-terugblik">
+    <label className="tk-label" htmlFor="to-terugblik-veld">Wat werkt al? Wat vraagt nog aandacht?</label>
+    <p className="tk-fijn" style={{ margin: "0 0 10px" }}>
+      Alleen voor jezelf, en alleen in deze browser. Er wordt niets opgeslagen bij ons en niets
+      gedeeld met je team. Neem het mee naar het overleg of kopieer het hieronder.
+    </p>
+    <textarea
+      id="to-terugblik-veld"
+      className="tk-tekstvak"
+      rows={6}
+      maxLength={2000}
+      value={tekst}
+      onChange={(e) => schrijfTekst(e.target.value)}
+      placeholder="Wat gaat er beter sinds de afspraken? Waar loop je nog tegenaan?"
+    />
+    <div className="tk-knoppen" style={{ marginTop: 10 }}>
+      <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" disabled={!tekst.trim()} onClick={kopieer}>
+        {gekopieerd ? "Gekopieerd" : "Kopieer de tekst"}
+      </button>
+      <button type="button" className="tk-tekstknop" onClick={() => setOpen(false)}>Sluiten</button>
+    </div>
+  </div>;
+}
+
+/** Wat er hierna komt. Afgeleid uit de tijdlijn, of eerlijk leeg. */
+function VolgendeStap({ stap, team }) {
+  return <section className="to-stap" id="volgende-stap" aria-labelledby="to-stap-kop">
+    <p className="to-eyebrow"><span aria-hidden="true">→</span> Onze volgende stap</p>
+    <h2 id="to-stap-kop" className="to-stap-titel">
+      {stap ? (stap.wat || stap.wanneer) : "Samen bepalen waarop we terugkomen"}
+    </h2>
+    <p className="to-stap-wanneer">
+      {stap
+        ? `${stap.wanneer}${stap.stand ? ` · ${stap.stand}` : ""}`
+        : "Er is nog geen volgend evaluatiemoment vastgelegd."}
+    </p>
+    <Terugblik team={team} />
+  </section>
+}
+
+/** Eén onderdeel uit de terugblik: kop, eerste regel, en de tekst erachter. */
+function Achtergrond({ deel, open, wissel, magBewerken, bewerk, children }) {
+  const samenvatting = eersteRegelVan(deel.tekst);
+  return <div className="to-achtergrond" id={deel.id} data-open={open ? "ja" : undefined}>
+    <h3 className="to-achtergrond-kop">
+      <button type="button" className="to-achtergrond-knop" aria-expanded={open} onClick={wissel}>
+        <span className="to-achtergrond-tekst">
+          <span className="to-achtergrond-titel">{deel.titel}</span>
+          {samenvatting && <span className="to-achtergrond-zin">{samenvatting}</span>}
+        </span>
+        <span className="to-kruis" aria-hidden="true" />
+      </button>
+    </h3>
+    {open && <div className="to-achtergrond-meer">
+      {isVerborgen(deel) && <p className="to-verborgenregel">
+        <strong>Niet zichtbaar voor het team.</strong> Alleen jullie zien dit onderdeel.
+      </p>}
+      {deel.tekst && deel.tekst.trim()
+        ? <Tekst tijdlijn={leesTijdlijn(deel)} plaatsBoven={!heeftTijdlijnplek(deel.tekst)}>{deel.tekst}</Tekst>
+        : <Leeg titel="Hier staat nog niets" uitleg="Dit onderdeel is ingericht maar heeft nog geen inhoud." />}
+      {children}
+      {magBewerken && <div className="to-kopknoppen">
+        <button className="to-bewerkknop" type="button" onClick={bewerk}>
+          <span aria-hidden="true">✎</span> Tekst bewerken
+        </button>
+      </div>}
+    </div>}
+  </div>;
+}
+
 function Omgeving({ team, uid, leden, magInrichten }) {
   const { onderdeelId } = useParams();
   const { hash } = useLocation();
@@ -777,23 +735,28 @@ function Omgeving({ team, uid, leden, magInrichten }) {
     return () => { geldig = false; };
   }, [team.orgId, team.teamId, uid, versie]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Welk onderdeel je leest, staat in het adres en niet in de toestand van het
-  // scherm. Daardoor werkt de terugknop, overleeft je plek een herlaadbeurt, en
-  // kun je een collega wijzen op precies het onderdeel dat je bedoelt.
-  // Verborgen onderdelen staan hier niet in voor wie geen beheerder is. Dat is
-  // wat een rechtstreeks ingetikt adres tegenhoudt: het onderdeel bestaat voor
-  // deze lezer niet, dus komt hij op het eerste uit dat er wel is.
-  const ids = omgeving
-    ? [...zichtbareOnderdelen(omgeving.inhoud, omgeving.magBeheer).map((d) => d.id), "documenten", ...(omgeving.magBeheer ? ["beheer"] : [])]
-    : [];
-  const tab = ids.includes(onderdeelId) ? onderdeelId : (ids[0] || "");
+  // Het adres wijst nu een plek op deze pagina aan in plaats van een tabblad.
+  // /app/teamomgeving/overzicht klapt dat onderdeel open en springt ernaartoe;
+  // een gedeelde link en een zoektreffer komen dus nog steeds uit waar ze
+  // altijd uitkwamen, alleen staat de rest van de pagina er nu omheen.
+  //
+  // Een onderdeel dat verborgen is voor deze lezer bestaat voor hem niet: het
+  // adres doet dan niets. Dat is wat een rechtstreeks ingetikt adres tegenhoudt.
+  const [geopend, setGeopend] = useState("");
+  const [bewerkstand, setBewerkstand] = useState(false);
+  const [beheerOpen, setBeheerOpen] = useState(false);
 
-  // Wie zonder onderdeel binnenkomt -- of met een onderdeel dat niet bestaat --
-  // krijgt het eerste, met het adres erbij. Vervangend, zodat de terugknop niet
-  // in een lus blijft hangen.
   useEffect(() => {
-    if (tab && onderdeelId !== tab) navigeer(maakAdres(tab), { replace: true });
-  }, [tab, onderdeelId]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!omgeving || !onderdeelId) return undefined;
+    const bestaat = zichtbareOnderdelen(omgeving.inhoud, omgeving.magBeheer).some((d) => d.id === onderdeelId);
+    if (!bestaat) return undefined;
+    setGeopend(onderdeelId);
+    const beeld = requestAnimationFrame(() => {
+      const el = document.getElementById(onderdeelId);
+      if (el && el.scrollIntoView) el.scrollIntoView({ block: "start", behavior: "auto" });
+    });
+    return () => cancelAnimationFrame(beeld);
+  }, [omgeving, onderdeelId]);
 
   // Naar de aangewezen plek springen. Staat die al in beeld -- bijvoorbeeld
   // omdat je er net zelf op klikte -- dan hoort de pagina niet alsnog te
@@ -810,7 +773,7 @@ function Omgeving({ team, uid, leden, magInrichten }) {
       el.scrollIntoView({ block: "start", behavior: rustig ? "auto" : "smooth" });
     });
     return () => cancelAnimationFrame(beeld);
-  }, [hash, tab]);
+  }, [hash]);
 
   async function download(bestand) {
     setBezig(bestand.id); setMelding("");
@@ -859,139 +822,199 @@ function Omgeving({ team, uid, leden, magInrichten }) {
   if (fout) return <div role="alert"><p>{fout}</p><button className="tk-knop" onClick={() => setVersie((v) => v + 1)}>Opnieuw proberen</button></div>;
   if (!omgeving) return magInrichten ? <Inrichten team={team} uid={uid} leden={leden} herladen={() => setVersie((v) => v + 1)} /> : <p>Voor dit team is nog geen teamomgeving ingericht.</p>;
 
-  const deel = omgeving.inhoud.onderdelen.find((d) => d.id === tab);
   const documenten = omgeving.inhoud.documenten || [];
-  const groepen = maakOnderdelenlijst(omgeving.inhoud, omgeving.magBeheer);
   const bijgewerkt = leesBijgewerkt(omgeving.inhoud);
+  const zichtbaar = zichtbareOnderdelen(omgeving.inhoud, omgeving.magBeheer);
   const aanvullen = omgeving.magBeheer
-    ? "Gebruik hierboven Tekst bewerken om hem te vullen."
+    ? "Zet de bewerkstand aan om hem te vullen."
     : "De twee begeleiders van dit team vullen dit aan.";
+
+  // De afspraken komen uit het onderdeel dat ze met [afspraken] aanwijst. Wat
+  // er in dat onderdeel verder staat -- de geschiedenis, de toets voor nieuw
+  // werk -- blijft gewoon staan, alleen een blok lager.
+  const afsprakendeel = zichtbaar.find((d) => heeftAfsprakenplek(d.tekst)) || null;
+  const { kaarten, rest } = afsprakendeel ? leesAfspraken(afsprakendeel.tekst) : { kaarten: [], rest: "" };
+  const stap = leesVolgendeStap(omgeving.inhoud, omgeving.magBeheer);
+
+  // Een onderdeel hoort onderaan bij de ingangen als het pakket dat zegt met de
+  // groep "Werkvormen". Raden welke tekst een werkvorm is, kan het scherm niet.
+  const isWerkvorm = (d) => typeof d.groep === "string" && /^werkvormen$/i.test(d.groep.trim());
+  const werkvormen = zichtbaar.filter(isWerkvorm);
+  // Het onderdeel met de afspraken houdt zijn oorspronkelijke tekst bij zich:
+  // de bewerker hoort het hele onderdeel te openen, niet de helft die hier
+  // overbleef.
+  const achtergrond = zichtbaar
+    .filter((d) => !isWerkvorm(d))
+    .map((d) => (afsprakendeel && d.id === afsprakendeel.id ? { ...d, tekst: rest, origineel: d.tekst } : d))
+    .filter((d) => d.tekst && d.tekst.trim());
+
+  const UITLEG = "Markdown. ### is een kop, - een opsomming, ** ** vet. Een regel [tijdlijn] zet de lijn op die plek; een regel [afspraken] maakt van de genummerde lijst eronder de afspraakkaarten bovenaan.";
+
+  function bewerkerVoor(deel) {
+    return <Bewerker
+      label={`Tekst van ${deel.titel}`}
+      uitleg={UITLEG}
+      waarde={deel.origineel || deel.tekst || ""}
+      tijdlijn={leesTijdlijn(deel)}
+      inklapbaar={magInklappen(deel)}
+      opslaan={(tekst) => werkTekstenBij(team, uid, { onderdeel: { id: deel.id, tekst } })}
+      klaar={(bewaard) => { setBewerkt(""); if (bewaard) setVersie((v) => v + 1); }}
+    />;
+  }
 
   return <>
     <header className="to-kop">
       <div className="to-koptekst">
-        <h1 className="to-titel">{omgeving.inhoud.titel}</h1>
-        {omgeving.inhoud.intro && <p className="to-context">{omgeving.inhoud.intro}</p>}
-        {bijgewerkt && <p className="to-versheid">Bijgewerkt op {schrijfDatum(bijgewerkt)}</p>}
+        <h1 className="to-titel">Onze teamomgeving</h1>
+        <p className="to-context">Wat we afspreken. Wat we uitproberen. Hoe we verdergaan.</p>
       </div>
-      <Zoeken inhoud={omgeving.inhoud} magBeheer={omgeving.magBeheer} ga={(id, slak) => { setMelding(""); navigeer(maakAdres(id, slak)); }} />
+      <div className="to-kopacties">
+        <Zoeken inhoud={omgeving.inhoud} magBeheer={omgeving.magBeheer} ga={(id, slak) => { setMelding(""); navigeer(maakAdres(id, slak)); }} />
+        {omgeving.magBeheer && <div className="to-beheerknoppen">
+          <button
+            type="button"
+            className="to-bewerkknop"
+            aria-pressed={bewerkstand}
+            onClick={() => setBewerkstand((v) => !v)}
+          >
+            {bewerkstand ? "Bewerkstand uit" : "Bewerkstand"}
+          </button>
+          <button
+            type="button"
+            className="to-bewerkknop"
+            aria-expanded={beheerOpen}
+            onClick={() => setBeheerOpen((v) => !v)}
+          >
+            Beheer
+          </button>
+        </div>}
+      </div>
     </header>
 
-    <div className="to-werkblad">
-      <Onderdelen groepen={groepen} actief={tab} kies={(id) => { setMelding(""); navigeer(maakAdres(id)); }} />
+    {/* De beheerknoppen staan niet meer in de lopende tekst maar in de kop, en
+        ze staan standaard uit. Wat een beheerder hier ziet is dus hetzelfde als
+        wat zijn team ziet -- dat is de controle die anders een apart knopje
+        "bekijk als teamlid" had moeten worden. */}
+    {omgeving.magBeheer && bewerkstand && <p className="to-bewerkmelding" role="status">
+      De bewerkknoppen staan aan. Zet de bewerkstand uit om de pagina te zien zoals je team hem ziet.
+    </p>}
 
-      <div className="to-werk">
-        {deel && <article className="tk-kaart to-tekst">
-          <div className="to-tekstkop">
-            <div>
-              {groepVan(groepen, deel.id) && <p className="to-eyebrow to-groeplabel">{groepVan(groepen, deel.id)}</p>}
-              <h2>{deel.titel}</h2>
-            </div>
-            {omgeving.magBeheer && bewerkt !== deel.id && (
-              <div className="to-kopknoppen">
-                <button
-                  className="to-bewerkknop"
-                  type="button"
-                  disabled={bezig === "zichtbaarheid"}
-                  onClick={() => zetZichtbaarheid(deel)}
-                >
-                  {bezig === "zichtbaarheid"
-                    ? "Bezig…"
-                    : isVerborgen(deel) ? "Tonen aan het team" : "Verbergen voor het team"}
-                </button>
-                <button className="to-bewerkknop" type="button" onClick={() => setBewerkt(deel.id)}>
-                  <span aria-hidden="true">✎</span> Tekst bewerken
-                </button>
-              </div>
-            )}
-          </div>
-          {isVerborgen(deel) && <p className="to-verborgenregel">
-            <strong>Niet zichtbaar voor het team.</strong> Dit onderdeel staat er wel, maar alleen jullie zien het —
-            ook niet via het zoeken of een rechtstreekse link.
-          </p>}
-          {bewerkt === deel.id
-            ? <Bewerker
-              label={`Tekst van ${deel.titel}`}
-              uitleg="Markdown. ## is een kop, ### maakt een inklapbare sectie, - een opsomming, ** ** vet. Een regel [tijdlijn] zet de lijn op die plek."
-              waarde={deel.tekst || ""}
-              tijdlijn={leesTijdlijn(deel)}
-              inklapbaar={magInklappen(deel)}
-              opslaan={(tekst) => werkTekstenBij(team, uid, { onderdeel: { id: deel.id, tekst } })}
-              klaar={(bewaard) => { setBewerkt(""); if (bewaard) setVersie((v) => v + 1); }}
-            />
-            : (!deel.tekst || !deel.tekst.trim()
-              ? <Leeg titel="Hier staat nog niets" uitleg={`Dit onderdeel is ingericht maar heeft nog geen inhoud. ${aanvullen}`} />
-              : magInklappen(deel)
-                ? <Secties deel={deel} tijdlijn={leesTijdlijn(deel)} hash={hash} key={deel.id} />
-                : <Tekst tijdlijn={leesTijdlijn(deel)} plaatsBoven>{deel.tekst}</Tekst>)}
-          {bewerkt !== deel.id && deel.id === "afspraken" && <Link className="tk-knop to-verder" to="/app/team">Gedeelde teamafspraken bekijken en bijwerken</Link>}
-          {bewerkt !== deel.id && deel.id === "experimenten" && <Link className="tk-knop to-verder" to="/app/ik">Mijn experimenten in de app</Link>}
-          {/* De tekst van dit onderdeel is de inleiding; het invullen en het
-              teambeeld staan eronder. Zo blijft de uitleg bewerkbaar zonder
-              dat er een tweede plek ontstaat waar de vragenlijst zou kunnen
-              afwijken van wat erover verteld wordt. */}
-          {bewerkt !== deel.id && deel.id === "teamcheck" && <Teamcheck
-            team={team}
-            uid={uid}
-            naam={(leden.find((l) => l.uid === uid) || {}).naam || ""}
-            magBeheer={omgeving.magBeheer}
-            aantalLeden={leden.length}
-          />}
-        </article>}
-
-        {tab === "documenten" && <section className="tk-kaart to-tekst">
-          <h2>Documenten</h2>
-          {documenten.length
-            ? <ul className="to-docs">{documenten.map((d) => <li className="to-doc" key={d.id}>
-              <span className="to-doc-soort" aria-hidden="true">PDF</span>
-              <span className="to-doc-tekst">
-                <strong>{d.titel}</strong>
-                {d.beschrijving && <span>{d.beschrijving}</span>}
-              </span>
-              <button className="tk-knop tk-knop-rand tk-knop-klein" disabled={!!bezig} onClick={() => download(d)}>
-                {bezig === d.id ? "Controleren…" : "Downloaden"}
-              </button>
-            </li>)}</ul>
-            : <Leeg titel="Nog geen documenten" uitleg={`Hier komen de pdf's van dit team te staan: presentaties, terugkoppelingen en wat er verder is gedeeld. ${aanvullen}`} />}
-          {omgeving.inhoud.documentContext && <div className="to-docuitleg"><Tekst>{omgeving.inhoud.documentContext}</Tekst></div>}
-        </section>}
-
-        {tab === "beheer" && omgeving.magBeheer && <section className="tk-kaart to-tekst">
-          <h2>Beheer</h2>
-          <p className="to-privacy">Alleen zichtbaar voor de twee aangewezen begeleiders. Andere teamleden kunnen deze inhoud ook niet rechtstreeks opvragen.</p>
-          <Tekst>{omgeving.beheer?.tekst}</Tekst>
-          <div className="to-bronexport">
-            <button className="tk-knop tk-knop-rand" onClick={exporteerBron}>Brontekst downloaden</button>
-            <p>De teksten van alle onderdelen zoals ze in het pakket staan, om na te lezen of te verbeteren. Zonder de bespreeknotities en zonder de pdf&apos;s. Dit bestand bevat teaminhoud: bewaar het net zo zorgvuldig als de rest.</p>
-          </div>
-          <DocumentenLijst
-            team={team}
-            uid={uid}
-            documenten={omgeving.inhoud.documenten}
-            herladen={() => setVersie((v) => v + 1)}
-          />
-          <DocumentToevoegen
-            team={team}
-            uid={uid}
-            documenten={omgeving.inhoud.documenten}
-            herladen={() => setVersie((v) => v + 1)}
-          />
-          <KopBewerker
-            inhoud={omgeving.inhoud}
-            opslaan={(wijziging) => werkTekstenBij(team, uid, wijziging)}
-            herladen={() => setVersie((v) => v + 1)}
-          />
-          <Bijwerken team={team} uid={uid} herladen={() => setVersie((v) => v + 1)} />
-          <div className="to-beheer-invoer">
-            <label className="tk-label" htmlFor="bespreeknotities">Bespreeknotities</label>
-            <textarea className="tk-tekstvak" id="bespreeknotities" maxLength={20000} rows={8} value={notities} onChange={(e) => setNotities(e.target.value)} />
-            <button className="tk-knop" disabled={!!bezig} onClick={bewaar}>{bezig === "notities" ? "Opslaan…" : "Notities opslaan"}</button>
-          </div>
-        </section>}
-
-        {melding && <p role="status">{melding}</p>}
+    <section className="to-blok" id="afspraken" aria-labelledby="to-afspraken-kop">
+      <div className="to-blokkop">
+        <h2 id="to-afspraken-kop">Onze afspraken</h2>
+        {bijgewerkt && <span className="to-versheid">Bijgewerkt {schrijfDatum(bijgewerkt)}</span>}
       </div>
-    </div>
+      {kaarten.length > 0
+        ? kaarten.map((k) => <Afspraakkaart key={k.id} kaart={k} />)
+        : <Leeg
+          titel="Nog geen afspraken aangewezen"
+          uitleg={`De afspraken van dit team staan in de tekst hieronder. Zet een regel [afspraken] boven de genummerde lijst, dan komen ze hier als kaarten te staan. ${aanvullen}`}
+        />}
+      <Link className="tk-tekstknop to-blokverder" to="/app/team">Gedeelde teamafspraken bekijken en bijwerken</Link>
+    </section>
+
+    <VolgendeStap stap={stap} team={team} />
+
+    <section className="to-blok" id="terugblik" aria-labelledby="to-terugblik-kop">
+      <h2 id="to-terugblik-kop">Terugblik en achtergrond</h2>
+      <div className="to-achtergronden">
+        {achtergrond.length === 0 && <Leeg titel="Nog geen achtergrond" uitleg={`Hier komt te staan waar de afspraken vandaan komen. ${aanvullen}`} />}
+        {achtergrond.map((deel) => (bewerkt === deel.id
+          ? <div className="to-achtergrond" key={deel.id} id={deel.id}>{bewerkerVoor(deel)}</div>
+          : <Achtergrond
+            key={deel.id}
+            deel={deel}
+            open={geopend === deel.id}
+            wissel={() => { setMelding(""); setGeopend((o) => (o === deel.id ? "" : deel.id)); }}
+            magBewerken={omgeving.magBeheer && bewerkstand}
+            bewerk={() => setBewerkt(deel.id)}
+          >
+            {deel.id === "teamcheck" && <Teamcheck
+              team={team}
+              uid={uid}
+              naam={(leden.find((l) => l.uid === uid) || {}).naam || ""}
+              magBeheer={omgeving.magBeheer}
+              aantalLeden={leden.length}
+            />}
+            {deel.id === "experimenten" && <Link className="tk-knop tk-knop-rand tk-knop-klein" to="/app/ik">Mijn experimenten in de app</Link>}
+            {omgeving.magBeheer && bewerkstand && <button
+              className="to-bewerkknop"
+              type="button"
+              disabled={bezig === "zichtbaarheid"}
+              onClick={() => zetZichtbaarheid(deel)}
+            >
+              {bezig === "zichtbaarheid" ? "Bezig…" : isVerborgen(deel) ? "Tonen aan het team" : "Verbergen voor het team"}
+            </button>}
+          </Achtergrond>))}
+      </div>
+    </section>
+
+    <section className="to-blok" id="documenten" aria-labelledby="to-documenten-kop">
+      <h2 id="to-documenten-kop">Documenten en werkvormen</h2>
+      <div className="to-ingangen">
+        <details className="to-ingang">
+          <summary className="to-ingang-rij">
+            <span className="to-ingang-soort" aria-hidden="true">PDF</span>
+            <span className="to-ingang-titel">Documenten en verslagen</span>
+            <span className="to-pijl" aria-hidden="true" />
+          </summary>
+          <div className="to-ingang-meer">
+            {documenten.length > 0
+              ? <ul className="to-docs">{documenten.map((d) => <li className="to-doc" key={d.id}>
+                <span className="to-doc-tekst">
+                  <strong>{d.titel}</strong>
+                  {d.beschrijving && <span>{d.beschrijving}</span>}
+                </span>
+                <button className="tk-knop tk-knop-rand tk-knop-klein" disabled={!!bezig} onClick={() => download(d)}>
+                  {bezig === d.id ? "Controleren…" : "Downloaden"}
+                </button>
+              </li>)}</ul>
+              : <Leeg titel="Nog geen documenten" uitleg={`Hier komen de pdf's van dit team te staan: presentaties, terugkoppelingen en wat er verder is gedeeld. ${aanvullen}`} />}
+            {omgeving.inhoud.documentContext && <div className="to-docuitleg"><Tekst>{omgeving.inhoud.documentContext}</Tekst></div>}
+          </div>
+        </details>
+
+        {werkvormen.map((deel) => <details className="to-ingang" id={deel.id} key={deel.id}>
+          <summary className="to-ingang-rij">
+            <span className="to-ingang-soort" aria-hidden="true">◇</span>
+            <span className="to-ingang-titel">{deel.titel}</span>
+            <span className="to-pijl" aria-hidden="true" />
+          </summary>
+          <div className="to-ingang-meer"><Tekst tijdlijn={leesTijdlijn(deel)}>{deel.tekst}</Tekst></div>
+        </details>)}
+
+        {/* De collega's zelf staan op een eigen pagina. Sinds de teamomgeving
+            het vierde tabblad is, is dit de weg ernaartoe. */}
+        <Link className="to-ingang to-ingang-link" to="/app/team">
+          <span className="to-ingang-rij">
+            <span className="to-ingang-soort" aria-hidden="true">◎</span>
+            <span className="to-ingang-titel">Collega&apos;s in dit team</span>
+            <span className="to-pijl to-pijl-recht" aria-hidden="true" />
+          </span>
+        </Link>
+      </div>
+    </section>
+
+    {omgeving.magBeheer && beheerOpen && <section className="tk-kaart to-tekst" id="beheer">
+      <h2>Beheer</h2>
+      <p className="to-privacy">Alleen zichtbaar voor de twee aangewezen begeleiders. Andere teamleden kunnen deze inhoud ook niet rechtstreeks opvragen.</p>
+      <Tekst>{omgeving.beheer?.tekst}</Tekst>
+      <div className="to-bronexport">
+        <button className="tk-knop tk-knop-rand" onClick={exporteerBron}>Brontekst downloaden</button>
+        <p>De teksten van alle onderdelen zoals ze in het pakket staan, om na te lezen of te verbeteren. Zonder de bespreeknotities en zonder de pdf&apos;s. Dit bestand bevat teaminhoud: bewaar het net zo zorgvuldig als de rest.</p>
+      </div>
+      <DocumentenLijst team={team} uid={uid} documenten={omgeving.inhoud.documenten} herladen={() => setVersie((v) => v + 1)} />
+      <DocumentToevoegen team={team} uid={uid} documenten={omgeving.inhoud.documenten} herladen={() => setVersie((v) => v + 1)} />
+      <KopBewerker inhoud={omgeving.inhoud} opslaan={(wijziging) => werkTekstenBij(team, uid, wijziging)} herladen={() => setVersie((v) => v + 1)} />
+      <Bijwerken team={team} uid={uid} herladen={() => setVersie((v) => v + 1)} />
+      <div className="to-beheer-invoer">
+        <label className="tk-label" htmlFor="bespreeknotities">Bespreeknotities</label>
+        <textarea className="tk-tekstvak" id="bespreeknotities" maxLength={20000} rows={8} value={notities} onChange={(e) => setNotities(e.target.value)} />
+        <button className="tk-knop" disabled={!!bezig} onClick={bewaar}>{bezig === "notities" ? "Opslaan…" : "Notities opslaan"}</button>
+      </div>
+    </section>}
+
+    {melding && <p role="status">{melding}</p>}
   </>;
 }
 
@@ -999,9 +1022,7 @@ export default function Teamomgeving() {
   const { actiefTeam, gebruiker, teamOverzicht } = useApp();
   return <div className="tk-inhoud to-omgeving">
     <nav className="to-kruimel" aria-label="Kruimelpad">
-      <Link to="/app"><span aria-hidden="true">←</span> Samenwerken</Link>
-      <span aria-hidden="true">/</span>
-      <span aria-current="page">Teamomgeving</span>
+      <Link to="/app"><span aria-hidden="true">←</span> Naar start</Link>
     </nav>
     {actiefTeam && gebruiker
       ? <Omgeving

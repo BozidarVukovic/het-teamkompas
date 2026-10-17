@@ -555,3 +555,122 @@ export async function controleerPdf(bestand) {
   if (hash !== bestand.sha256) throw new Error("De pdf is niet volledig of is gewijzigd. Er is niets geopend.");
   return bytes;
 }
+
+/* ═════════════════════════════════════════ de afspraken als losse kaarten
+
+   Bovenaan de teamomgeving hoort te staan welke afspraken gelden. Ze stonden
+   midden in een onderdeel van bijna vierduizend tekens, tussen de afgeronde
+   acties van de vorige teamdag en een toets voor nieuw werk. Wie de pagina
+   opende las eerst een halve geschiedenis.
+
+   Welke genummerde lijst de afspraken zijn, kan het scherm niet zien. In
+   hetzelfde onderdeel staan er twee -- de afspraken en de vijf vragen van de
+   toets -- en in markdown zien die er precies hetzelfde uit. Gokken zou
+   betekenen dat er vijf afspraken op het scherm komen die niemand heeft
+   gemaakt.
+
+   Daarom wijst de brontekst het aan, net zoals [tijdlijn] de plek van de lijn
+   aanwijst: de genummerde lijst die op [afspraken] volgt, wordt de kaarten.
+   Staat de markering er niet, dan verandert er aan het onderdeel niets. */
+
+const AFSPRAKENPLEK = /^[ \t]*\[afspraken\][ \t]*$/m;
+const LIJSTITEM = /^\s{0,3}(\d{1,2})[.)]\s+(.+?)\s*$/;
+const TREKKERREGEL = /^\s*\**\s*(trekker|actieteam|eigenaar|aanspreekpunt)\s*:\s*(.+?)\s*\**\s*$/i;
+// Waar een genummerde lijst ophoudt: een kop, een nieuwe opsomming, een streep.
+const NA_DE_LIJST = /^\s{0,3}(#{1,6}\s|[-*+]\s|>\s|---|___|\*\*\*|\|)/;
+
+export function heeftAfsprakenplek(tekst) {
+  return typeof tekst === "string" && AFSPRAKENPLEK.test(tekst);
+}
+
+function schoonRegel(regel) {
+  return String(regel || "").replace(/^\**\s*|\s*\**$/g, "").trim();
+}
+
+/**
+ * De afspraken uit een onderdeel, plus wat er van de tekst overblijft.
+ *
+ * Elke kaart krijgt wat er werkelijk staat en niets meer. Is er geen trekker
+ * opgeschreven, dan blijft dat veld leeg -- het scherm zegt dan dat er niets
+ * is vastgelegd, en verzint er geen naam bij. Alles wat onder het lijstitem is
+ * ingesprongen en geen trekkerregel is, wordt de toelichting achter de uitklap.
+ *
+ * @returns {{kaarten: Array, rest: string}}
+ */
+export function leesAfspraken(tekst) {
+  const bron = typeof tekst === "string" ? tekst.replace(/\r\n?/g, "\n") : "";
+  if (!AFSPRAKENPLEK.test(bron)) return { kaarten: [], rest: bron };
+
+  const blokken = bron.split(/\n{2,}/);
+  const plek = blokken.findIndex((b) => AFSPRAKENPLEK.test(b.trim()) && !b.trim().replace(AFSPRAKENPLEK, "").trim());
+  if (plek < 0) return { kaarten: [], rest: bron };
+
+  const kaarten = [];
+  let i = plek + 1;
+  let huidig = null;
+  while (i < blokken.length) {
+    const blok = blokken[i];
+    const item = LIJSTITEM.exec(blok.split("\n")[0] || "");
+    if (item) {
+      // Een lijstitem waarvan de samenvatting op de volgende regel staat in
+      // plaats van in een eigen alinea telt ook mee.
+      const staart = blok.split("\n").slice(1).join("\n").trim();
+      huidig = {
+        id: `afspraak-${item[1]}`,
+        nummer: Number(item[1]),
+        titel: schoonRegel(item[2]),
+        samenvatting: "",
+        trekker: "",
+        toelichting: [],
+      };
+      if (staart) huidig.samenvatting = schoonRegel(staart.replace(/\n\s+/g, " "));
+      kaarten.push(huidig);
+      i += 1;
+      continue;
+    }
+    if (!huidig || !blok.trim() || NA_DE_LIJST.test(blok)) break;
+
+    const plat = blok.trim().replace(/\n\s+/g, " ");
+    const trekker = TREKKERREGEL.exec(plat);
+    if (trekker) huidig.trekker = schoonRegel(trekker[2]);
+    else if (!huidig.samenvatting) huidig.samenvatting = schoonRegel(plat);
+    else huidig.toelichting.push(blok.trim());
+    i += 1;
+  }
+
+  if (kaarten.length === 0) return { kaarten: [], rest: bron };
+
+  const rest = [...blokken.slice(0, plek), ...blokken.slice(i)].join("\n\n").replace(/\n{3,}/g, "\n\n").trim();
+  return {
+    kaarten: kaarten.map((k) => ({ ...k, toelichting: k.toelichting.join("\n\n") })),
+    rest,
+  };
+}
+
+/** Het onderdeel waar de afspraken in staan, of niets. */
+export function onderdeelMetAfspraken(inhoud, magBeheer) {
+  return zichtbareOnderdelen(inhoud, magBeheer).find((deel) => heeftAfsprakenplek(deel.tekst)) || null;
+}
+
+/* ════════════════════════════════════════════════ de eerstvolgende stap
+
+   Wat er hierna gebeurt stond onderin een tijdlijn in een onderdeel dat je
+   eerst moest openklappen. Het is het enige op deze pagina met een datum, dus
+   het hoort bovenaan.
+
+   Afgeleid, niet apart bijgehouden: de eerste halte die niet is afgerond is de
+   volgende stap. Zo kan er geen tweede waarheid ontstaan die van de tijdlijn
+   afwijkt. Staan alle haltes op afgerond, of is er geen tijdlijn, dan is er
+   niets vastgelegd -- en dat zegt het scherm dan ook. */
+
+export function volgendeStapUit(haltes = []) {
+  return (Array.isArray(haltes) ? haltes : []).find((h) => h && !h.gedaan) || null;
+}
+
+export function leesVolgendeStap(inhoud, magBeheer) {
+  for (const deel of zichtbareOnderdelen(inhoud, magBeheer)) {
+    const stap = volgendeStapUit(leesTijdlijn(deel));
+    if (stap) return { ...stap, onderdeelId: deel.id };
+  }
+  return null;
+}

@@ -588,8 +588,14 @@ export default function MijnTeam() {
 
   return (
     <div className="tk-inhoud">
-      <h1 className="tk-kop">{actiefTeam.teamNaam || "Mijn team"}</h1>
-      <p className="tk-onderkop">{onderkop}</p>
+      {/* De teamnaam stond hier als kop. Sinds de teamomgeving een eigen
+          plek heeft, zeggen twee pagina's "HR Business & Beleid" en verschilt
+          alleen wat eronder staat. Deze pagina gaat over de mensen; dat hoort
+          de kop te zeggen. De teamnaam staat een regel lager. */}
+      <h1 className="tk-kop">Collega&apos;s</h1>
+      <p className="tk-onderkop">
+        {actiefTeam.teamNaam ? `${actiefTeam.teamNaam} — ${onderkop}` : onderkop}
+      </p>
 
       <Melding melding={profielMelding} onSluiten={wisProfielMelding} />
       <Melding melding={rolMelding} onSluiten={wisRolMelding} />
