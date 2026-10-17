@@ -161,6 +161,12 @@ export default function Samenwerken() {
   // hoe het altijd al werkte.
   const [gekozenUids, setGekozenUids] = useState([]);
   const [situatieId, setSituatieId] = useState(null);
+  // Wat er in het korte scherm is gekozen, vóór je op de knop drukt. Los van
+  // situatieId: dat is de vraag waar het advies bij hoort en die hoort pas te
+  // veranderen als er een nieuw advies is.
+  const [vraagId, setVraagId] = useState("");
+  // De oude lijst met iedereen, voor wie een overleg of sessie voorbereidt.
+  const [meerdere, setMeerdere] = useState(false);
   const [advies, setAdvies] = useState(null);
   const [sessieId, setSessieId] = useState(null);
   const [beoordeeld, setBeoordeeld] = useState(null);
@@ -214,8 +220,9 @@ export default function Samenwerken() {
     if (gevolgd.current || !gevraagd || anderen.length === 0) return;
     gevolgd.current = true;
     if (anderen.some((l) => l.sleutel === gevraagd)) {
+      // Het korte scherm toont de keuze in het veld zelf; de losse regel met
+      // "Iemand anders" hoort bij de lijstroute.
       setGekozenUids([gevraagd]);
-      setKortePad(true);
     }
   }, [gevraagd, anderen]);
 
@@ -430,21 +437,17 @@ export default function Samenwerken() {
           "Samenwerken met..." met drie puntjes vraagt om een keuze die je net
           hebt gemaakt. */}
       <h1 className="tk-kop">
-        {directNaarVraag ? `Samenwerken met ${voornaam(gekozen.naam, "je collega")}` : "Samenwerken met..."}
+        {advies && gekozen
+          ? `Samenwerken met ${voornaam(gekozen.naam, "je collega")}`
+          : "Met wie wil je samenwerken?"}
       </h1>
       {/* De uitleg gaat over de keuze die je nog moet maken. Heb je iemand
           gekozen, dan legt hij iets uit wat je al gedaan hebt. */}
-      {directNaarVraag ? (
+      {!advies && (
         <p className="tk-onderkop">
-          Kies hieronder wat er speelt. Je krijgt een advies op basis van wat jullie allebei hebben
-          gedeeld.
+          Je krijgt een advies op basis van wat jullie allebei hebben gedeeld.
         </p>
-      ) : !gekozen ? (
-        <p className="tk-onderkop">
-          Kies met wie het speelt en wat er aan de hand is. Je krijgt een advies op basis van wat
-          jullie allebei hebben gedeeld.
-        </p>
-      ) : null}
+      )}
 
       {/* De twee ingangen van deze tool. Staan ook op het hulpscherm, zodat
           je altijd ziet welke je gebruikt en met één tik kunt wisselen. */}
@@ -465,7 +468,7 @@ export default function Samenwerken() {
 
       {/* Eén regel met wie je hebt gekozen, en een uitweg. Niet de hele lijst:
           die vraag is al beantwoord. */}
-      {directNaarVraag && (
+      {directNaarVraag && meerdere && (
         <div className="tk-gekozen">
           <Bol naam={gekozen.naam} foto={gekozen.foto} />
           <span className="tk-gekozen-tekst">
@@ -482,7 +485,73 @@ export default function Samenwerken() {
         </div>
       )}
 
-      {anderen.length > 0 && !advies && !directNaarVraag && (
+      {/* Twee velden en een knop. De vraag "met wie" en de vraag "waarover"
+          passen samen op één scherm; als losse keuzeschermen kostten ze twee
+          keer scrollen voordat er iets gebeurde. */}
+      {anderen.length > 0 && !advies && !meerdere && (
+        <div className="tk-kaart tk-kiezer">
+          <div className="tk-veld">
+            <label className="tk-label" htmlFor="tk-met-wie">Kies je collega</label>
+            <select
+              id="tk-met-wie"
+              className="tk-keuzeveld"
+              value={gekozenUids[0] || ""}
+              onChange={(e) => {
+                setGekozenUids(e.target.value ? [e.target.value] : []);
+                setKortePad(false);
+                opnieuw();
+              }}
+            >
+              <option value="">Kies een collega…</option>
+              {anderen.map((l) => (
+                <option key={l.sleutel} value={l.sleutel}>{l.naam || "Teamgenoot"}</option>
+              ))}
+            </select>
+            {gekozen && regels[anderen.indexOf(gekozen)] && (
+              <p className="tk-fijn" style={{ margin: "6px 0 0" }}>{regels[anderen.indexOf(gekozen)]}</p>
+            )}
+          </div>
+
+          <div className="tk-veld">
+            <label className="tk-label" htmlFor="tk-wat-wil-je">Wat wil je doen?</label>
+            <select
+              id="tk-wat-wil-je"
+              className="tk-keuzeveld"
+              value={vraagId}
+              onChange={(e) => setVraagId(e.target.value)}
+            >
+              <option value="">Kies wat er speelt…</option>
+              {situatiesPerGroep({ voorGroep: false }).map((groep) => (
+                <optgroup key={groep.id} label={groep.label}>
+                  {groep.situaties.map((s) => (
+                    <option key={s.id} value={s.id}>{s.label}</option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </div>
+
+          <button
+            type="button"
+            className="tk-knop"
+            disabled={!gekozen || !vraagId}
+            onClick={() => kiesSituatie(vraagId)}
+          >
+            Help me op weg
+          </button>
+
+          <button
+            type="button"
+            className="tk-tekstknop"
+            style={{ marginTop: 14 }}
+            onClick={() => { setMeerdere(true); setGekozenUids([]); setKortePad(false); opnieuw(); }}
+          >
+            Een overleg met meerdere collega&apos;s voorbereiden
+          </button>
+        </div>
+      )}
+
+      {anderen.length > 0 && !advies && meerdere && (
         <>
           <p className="tk-label">Met wie speelt het?</p>
           <div className="tk-lijst" style={{ marginBottom: 14 }}>
@@ -526,6 +595,15 @@ export default function Samenwerken() {
                     ? `Advies over jou en ${geselecteerd.length} collega's samen: waar jullie voorkeuren uiteenlopen en wat daarbij helpt. Er staat nergens wie wat koos.`
                     : "Vink er nog iemand aan als het over een groep gaat."}
           </p>
+
+          <button
+            type="button"
+            className="tk-tekstknop"
+            style={{ marginBottom: 22 }}
+            onClick={() => { setMeerdere(false); setGekozenUids([]); opnieuw(); }}
+          >
+            Terug naar één collega
+          </button>
         </>
       )}
 
@@ -586,7 +664,7 @@ export default function Samenwerken() {
         </div>
       )}
 
-      {geselecteerd.length > 0 && !advies && (
+      {geselecteerd.length > 0 && !advies && meerdere && (
         <>
           <p className="tk-label">Wat speelt er?</p>
           {situatiesPerGroep({ voorGroep: isGroep }).map((groep) => (

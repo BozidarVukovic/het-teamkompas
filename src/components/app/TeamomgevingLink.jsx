@@ -10,13 +10,12 @@ import { heeftOmgeving } from "../../lib/app/teamomgevingOpslag";
 // scherm waar verder alleen bollen met voornamen staan, is een blauwe streep
 // niet het ding waar je oog naartoe gaat.
 //
-// De hele kaart is nu de knop. De pil rechts was teal-op-teal-waas, met de
-// redenering dat oranje in deze app "hier verandert iets" betekent en dit
-// navigeren is. Die regel hield de app zelf niet: .tk-knop is oranje en staat
-// tien keer op een <Link> die alleen maar naar een andere pagina gaat. Een
-// regel die nergens wordt gevolgd is geen regel, en deze pil las als een
-// labeltje in plaats van als de belangrijkste knop op het scherm. Nu dezelfde
-// oranje als elke andere hoofdknop, met dezelfde donkere tekst erop (6,3:1).
+// De hele kaart is de knop. De pil rechts is een pijl geworden. Die pil was
+// oranje gemaakt toen dit de enige actie op Start was; dat klopte toen. Sinds
+// de twee hoofdroutes erboven staan, staan er drie oranje knoppen op één
+// scherm en wijst oranje nergens meer naar. De ingang blijft een hele kaart --
+// goed te raken en duidelijk klikbaar -- maar hij komt na de twee vragen waar
+// dit scherm voor bestaat.
 function Team({ className }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -51,8 +50,7 @@ export default function TeamomgevingLink() {
         <strong className="tk-toegang-titel">Onze teamomgeving</strong>
         <span className="tk-toegang-uitleg">Afspraken, teamdagen, werkvormen en documenten{team}.</span>
       </span>
-      <span className="tk-toegang-actie" aria-hidden="true">
-        Openen
+      <span className="tk-toegang-pijl" aria-hidden="true">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 8h10M9 4.2 12.8 8 9 11.8" /></svg>
       </span>
     </Link>

@@ -1,20 +1,20 @@
 // Het startscherm.
 //
-// Een startscherm dat alleen doorverwijst naar dezelfde plekken als het menu,
-// voegt niets toe. Dus staat hier wat het menu niet kan geven: je collega's bij
-// naam. Eén tik brengt je bij het advies over die persoon — de tussenstap waar
-// je diegene nog een keer moest aanwijzen, is weg.
+// Hier stond een rij bollen met de voornamen van je collega's: één tik en je
+// was bij het advies. Dat werkte, maar het was de enige route die zichtbaar
+// was. De app heeft er twee -- beginnen bij een collega, of beginnen bij een
+// klus -- en de tweede stond nergens op dit scherm. Wie met een vraag in zijn
+// hoofd binnenkwam, zag alleen gezichten.
 //
-// Zolang je profiel niet af is, staat daarboven de ene stap die dan logisch is.
-// Welke dat is, wordt bepaald in volgendeStap.js — dezelfde logica die onderaan
-// de andere pagina's meeloopt, zodat de app overal hetzelfde zegt.
+// Nu staan de twee vragen vooraan, in hun eigen woorden, elk met de knop die
+// erbij hoort. De bollenlijst is weg: die bracht je naar hetzelfde scherm als
+// de eerste knop, en twee ingangen naar dezelfde plek maken een scherm niet
+// sneller maar voller. Wie een specifieke collega zoekt, vindt die een scherm
+// verder -- en daar staan ze met een regel erbij in plaats van alleen een naam.
 //
-// Hier stonden ook "Hoe ging dat?" en "Wat ik probeer". Allebei weg: dit scherm
-// is het eerste dat iemand ziet, en het moet in één blik duidelijk maken wat er
-// te doen is. Een vraag over een gesprek van vorige week en een experiment dat
-// alleen jij ziet, staan die blik in de weg. Het experiment blijft gewoon op
-// Ik staan; de terugblikvraag staat uit (zie VRAAGT_TERUGBLIK in
-// reflecties.js).
+// Zolang je profiel niet af is, staat de ene stap die dan logisch is direct
+// onder de twee routes. Welke dat is bepaalt volgendeStap.js, dezelfde logica
+// die onderaan de andere pagina's meeloopt.
 
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
@@ -22,25 +22,26 @@ import VolgendeStap from "../../components/app/VolgendeStap";
 import Voortgang from "../../components/app/Voortgang";
 import { bepaalVolgendeStap } from "../../lib/app/volgendeStap";
 import { bepaalVoortgang } from "../../lib/app/voortgang";
-import { collegasVan, collegaInEenZin } from "../../lib/app/collegas";
+import { collegasVan } from "../../lib/app/collegas";
 import { uitgelichteAfspraak } from "../../lib/app/afspraken";
-import { korteNamen, voornaam } from "../../lib/app/naam";
-import Bol from "../../components/app/Bol";
+import { voornaam } from "../../lib/app/naam";
 import TeamomgevingLink from "../../components/app/TeamomgevingLink";
 
-/** Een collega als bol met een naam eronder. Eén tik en je bent bij het advies. */
-function Mens({ naar, naam, foto, teken, label, onder, gestippeld = false }) {
-  const klasse = `tk-bol-mens${gestippeld ? " tk-bol-leeg" : ""}`;
-
+/**
+ * Eén van de twee dagelijkse vragen.
+ *
+ * De vraag staat er in de eerste persoon ("ik wil...") omdat je hem zo ook in
+ * je hoofd stelt. De knop zegt wat er gebeurt als je hem indrukt, niet wat het
+ * onderdeel heet.
+ */
+function Route({ titel, uitleg, knop, naar, uit }) {
+  if (uit) return null;
   return (
-    <Link to={naar} className="tk-mens" title={onder || undefined}>
-      {/* De uitnodigen-bol draagt een plusteken en geen naam; die gaat niet
-          langs Bol, want daar zou "+" een initiaal worden. */}
-      {teken
-        ? <span className={`tk-bol ${klasse}`}>{teken}</span>
-        : <Bol naam={naam} foto={foto} klasse={klasse} />}
-      <span className="tk-mens-naam">{label}</span>
-    </Link>
+    <article className="tk-kaart tk-route">
+      <h3 className="tk-route-kop">{titel}</h3>
+      <p className="tk-route-uitleg">{uitleg}</p>
+      <Link className="tk-knop tk-knop-klein" to={naar}>{knop}</Link>
+    </article>
   );
 }
 
@@ -72,13 +73,13 @@ export default function Start() {
     eigenUid,
   });
 
-  // Wat er onder een bol kan staan, hangt af van de rest van de lijst:
-  // "Jacqueline" volstaat alleen als er maar een Jacqueline is.
-  const collegalabels = korteNamen(collegas.map((c) => c.naam), "Collega");
-
   // Jezelf meetellen klopt alleen als je meedoet. Begeleid je dit team, dan
   // ben je de tiende persoon niet — je staat er buiten.
   const mensen = collegas.length + (ikBegeleid ? 0 : 1);
+
+  // Zonder collega's leiden de twee routes allebei naar een leeg scherm. Dan
+  // is er precies één ding te doen, en dat zegt VolgendeStap al.
+  const alleen = collegas.length === 0;
 
   // Afspraken verdwijnen niet doordat mensen het oneens zijn, maar doordat
   // niemand ze meer ziet. Er staat er daarom elke dag één op de plek waar
@@ -90,9 +91,6 @@ export default function Start() {
   return (
     <div className="tk-inhoud">
       <h1 className="tk-kop">Hallo {voornaam(naam, "daar")}</h1>
-      <p className="tk-onderkop">Waarmee kunnen we je vandaag helpen?</p>
-
-      <TeamomgevingLink />
 
       {uitnodigingscode && (
         <div className="tk-kaart tk-kaart-klaar">
@@ -113,8 +111,30 @@ export default function Start() {
         </div>
       )}
 
+      {!alleen && (
+        <section className="tk-groep">
+          <h2 className="tk-groep-kop">Waarmee wil je verder?</h2>
+          <p className="tk-fijn" style={{ margin: "0 0 14px" }}>Kies wat je nu nodig hebt.</p>
+          <div className="tk-routes">
+            <Route
+              titel="Ik wil samenwerken met een collega"
+              uitleg="Bereid een gesprek voor of ontdek wat jullie samenwerking helpt."
+              knop="Kies een collega"
+              naar="/app/samenwerken"
+            />
+            <Route
+              titel="Ik zoek hulp bij een klus"
+              uitleg="Beschrijf je vraag en verken wie kan meedenken."
+              knop="Beschrijf je klus"
+              naar="/app/hulp"
+            />
+          </div>
+        </section>
+      )}
+
       {/* Is je profiel nog niet af, dan is er precies één ding dat logisch is om
-          nu te doen. Dat staat vóór alles wat je daarna kunt. */}
+          nu te doen. Dat staat direct onder de twee routes — en bij een leeg
+          team bovenaan, want dan zijn die routes er nog niet. */}
       {!voortgang.compleet && (
         <>
           <VolgendeStap variant="groot" />
@@ -127,27 +147,7 @@ export default function Start() {
         </>
       )}
 
-      <section className="tk-groep">
-        <h2 className="tk-groep-kop">Samenwerken met</h2>
-        <div className="tk-mensen">
-          {collegas.map((c, i) => (
-            <Mens
-              key={c.sleutel}
-              naar={`/app/samenwerken?met=${encodeURIComponent(c.sleutel)}`}
-              naam={c.naam}
-              foto={c.foto}
-              label={collegalabels[i]}
-              onder={collegaInEenZin(c)}
-            />
-          ))}
-          <Mens naar="/app/team" teken="+" label="Uitnodigen" gestippeld />
-        </div>
-        <p className="tk-fijn" style={{ margin: "12px 0 0" }}>
-          {collegas.length === 0
-            ? "Zodra een collega meedoet en iets deelt, staat diegene hier."
-            : "Kies een collega en wat er speelt. Je krijgt een gesprekssuggestie en één kleine actie."}
-        </p>
-      </section>
+      <TeamomgevingLink />
 
       {afspraakVandaag && (
         <section className="tk-groep">

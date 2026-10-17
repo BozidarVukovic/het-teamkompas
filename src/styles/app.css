@@ -2089,12 +2089,20 @@ a.tk-optie {
    een zin tik je aan zoals je een link in een zin aantikt — daar geldt de
    regel voor losstaande knoppen niet. */
 .tk-tekstknop {
-  padding: 0;
+  /* Geen vulling maar wel hoogte: het raakvlak hoort 44 pixels te zijn, ook
+     als de tekst er maar de helft van vult. De negatieve zijmarge houdt de
+     tekst op dezelfde lijn als de rest van het blok. */
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tk-raak, 44px);
+  padding: 0 8px;
+  margin-left: -8px;
   background: none;
   border: 0;
   color: var(--tk-teal);
   font: inherit;
   font-weight: 600;
+  text-align: left;
   cursor: pointer;
 }
 
@@ -2469,4 +2477,113 @@ a.tk-optie {
 
 .tk-bronstatus.bevestigd {
   color: var(--tk-teal);
+}
+
+/* ═════════════════════════════ de twee routes op Start
+   Onder elkaar op een telefoon, naast elkaar zodra er ruimte is. De
+   leesvolgorde blijft in beide gevallen dezelfde. */
+.tk-routes {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 720px) {
+  .tk-routes {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.tk-route {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+.tk-route-kop {
+  margin: 0;
+  font-size: var(--tk-t-kop);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--tk-tekst);
+}
+
+.tk-route-uitleg {
+  flex: 1 1 auto;
+  margin: 0 0 4px;
+  font-size: var(--tk-t-basis);
+  line-height: 1.6;
+  color: var(--tk-zacht);
+}
+
+/* ═════════════════════════════ het korte keuzescherm
+   Twee velden en een knop. De velden zijn ruim genoeg voor een vinger en
+   houden hun eigen opmaak, zodat een lijst op iOS niet ineens systeemblauw
+   wordt op een donkere kaart. */
+.tk-kiezer {
+  display: block;
+}
+
+.tk-veld {
+  margin-bottom: 18px;
+}
+
+.tk-keuzeveld {
+  display: block;
+  width: 100%;
+  min-height: var(--tk-raak, 44px);
+  padding: 11px 38px 11px 14px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 12px;
+  background-color: var(--tk-navy);
+  color: var(--tk-tekst);
+  font: inherit;
+  font-size: var(--tk-t-basis);
+  line-height: 1.4;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%239db0c6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  background-size: 15px 15px;
+}
+
+.tk-keuzeveld:focus-visible {
+  outline: 2px solid var(--tk-teal);
+  outline-offset: 2px;
+}
+
+/* Een lijst klapt open in het systeemmenu van het apparaat; daar geldt de
+   donkere achtergrond van de app niet, dus krijgt elke regel zijn eigen kleur. */
+.tk-keuzeveld option {
+  background: var(--tk-vlak);
+  color: var(--tk-tekst);
+}
+
+/* De ingang naar de teamomgeving staat na de twee hoofdroutes en hoort daar
+   niet mee te concurreren: zelfde kaart, rustiger actie, minder hoogte. */
+.tk-toegang {
+  padding: 16px 18px;
+  gap: 13px;
+}
+
+.tk-toegang-titel {
+  font-size: var(--tk-t-basis);
+}
+
+.tk-toegang-pijl {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--tk-teal-dim);
+  color: var(--tk-teal);
+}
+
+.tk-toegang-pijl svg {
+  width: 15px;
+  height: 15px;
 }
