@@ -45,6 +45,32 @@ function Domein({ domein }) {
 }
 
 /** "Nikki, Eva en Aad" — leesbaar, ook bij één of bij zeven. */
+/**
+ * Waar dit advies vandaan komt, in één regel.
+ *
+ * Niet "deze collega heeft niets bevestigd" als vaste tekst onderaan, maar wat
+ * er voor dit advies daadwerkelijk is gebruikt. Iemand kan een toegevoegd
+ * profiel hebben en daarna een paar punten zelf hebben bevestigd; dan is beide
+ * waar en hoort dat er te staan.
+ */
+function Bronstatus({ bronnen }) {
+  if (!bronnen || bronnen.zelfGedeeld + bronnen.afgeleid === 0) return null;
+  const alleenAfgeleid = bronnen.zelfGedeeld === 0;
+  const alleenZelf = bronnen.afgeleid === 0;
+  const tekst = alleenZelf
+    ? "Zelf gedeeld met dit team"
+    : alleenAfgeleid
+      ? "Profiel door beheerder toegevoegd · niet bevestigd"
+      : "Deels zelf gedeeld · deels uit een toegevoegd profiel";
+
+  return (
+    <span className={`tk-bronstatus${alleenZelf ? " bevestigd" : ""}`}>
+      <span aria-hidden="true">{alleenZelf ? "\u2713" : "\u25cb"}</span>
+      {tekst}
+    </span>
+  );
+}
+
 function namenLijst(collegas) {
   const namen = collegas.map((c) => voornaam(c.naam, "een collega"));
   if (namen.length === 0) return "";
@@ -516,6 +542,7 @@ export default function Samenwerken() {
           <span className="tk-gekozen-tekst">
             <strong>{namenLijst(geselecteerd)}</strong>
             <small>{advies.situatie ? advies.situatie.label : "Advies"}</small>
+            {advies.soort !== "groep" && <Bronstatus bronnen={advies.bronnen} />}
           </span>
           <button
             type="button"
@@ -831,11 +858,13 @@ export default function Samenwerken() {
               </div>
             )}
 
-            {advies.soort !== "groep" && gekozen && gekozen.doorBeheerder && (
+            {/* Wie het profiel toevoegde hoort erbij, maar niet meer de
+                conclusie dat de collega niets heeft bevestigd -- dat zegt de
+                slotzin hieronder, en die kijkt naar wat er is gebruikt. */}
+            {advies.soort !== "groep" && gekozen && gekozen.doorBeheerder && (advies.bronnen || {}).afgeleid > 0 && (
               <p className="tk-fijn" style={{ marginTop: 16 }}>
-                Dit profiel is toegevoegd door {gekozen.toegevoegdDoorNaam || "een beheerder"} op
-                basis van een Insights-profiel. {gekozen.naam} heeft het niet zelf ingevuld of
-                bevestigd — houd daar rekening mee.
+                Het Insights-profiel van {gekozen.naam} is toegevoegd door{" "}
+                {gekozen.toegevoegdDoorNaam || "een beheerder"}.
               </p>
             )}
 

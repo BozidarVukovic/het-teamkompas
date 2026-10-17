@@ -121,6 +121,19 @@ export function bepaalWaarden(kenmerken = []) {
 }
 
 /**
+ * Heeft de collega dit kenmerk zelf gedeeld of bevestigd?
+ *
+ * Een waarde uit een Insights-profiel dat een beheerder heeft toegevoegd, is
+ * een aanwijzing. Heeft de collega hem daarna zelf bevestigd, dan is het een
+ * uitspraak. Dat verschil bepaalt of het advies "gaf aan" mag zeggen.
+ */
+export function isZelfGedeeld(waarde) {
+  if (!waarde) return false;
+  if (waarde.bevestigd === "sterk") return true;
+  return waarde.bron === "user_confirmation";
+}
+
+/**
  * Stelt de kandidaat-adviesblokken samen.
  *
  * Een contrast weegt zwaarder dan een behoefte: waar twee mensen van elkaar
@@ -154,6 +167,7 @@ export function verzamelBlokken(mijn, hun, situatieId) {
         hunWaarde,
         positie: positie(kenmerkId),
         gewicht: hun[kenmerkId].gewicht + (mijn[kenmerkId] ? mijn[kenmerkId].gewicht : 0),
+        zelfGedeeld: isZelfGedeeld(hun[kenmerkId]),
         ...contrast,
       });
       return;
@@ -167,6 +181,7 @@ export function verzamelBlokken(mijn, hun, situatieId) {
         hunWaarde,
         positie: positie(kenmerkId),
         gewicht: hun[kenmerkId].gewicht,
+        zelfGedeeld: isZelfGedeeld(hun[kenmerkId]),
         ...behoefte,
       });
     }
@@ -182,6 +197,21 @@ export function verzamelBlokken(mijn, hun, situatieId) {
     a.kenmerkId.localeCompare(b.kenmerkId));
 
   return blokken;
+}
+
+/**
+ * De slotzin die bij dit advies hoort.
+ *
+ * Alles zelf gedeeld, alles afgeleid, of allebei -- drie situaties, drie
+ * zinnen. Zonder blokken valt er niets over bronnen te zeggen; dan blijft de
+ * algemene zin staan.
+ */
+export function transparantieVoor(blokken = []) {
+  if (blokken.length === 0) return ADVIESKADER.transparantie;
+  const afgeleid = blokken.filter((b) => !b.zelfGedeeld).length;
+  if (afgeleid === 0) return ADVIESKADER.transparantie;
+  if (afgeleid === blokken.length) return ADVIESKADER.transparantieAfgeleid;
+  return ADVIESKADER.transparantieGemengd;
 }
 
 /**
@@ -215,12 +245,16 @@ export function steltAdviesSamen({
     (s ? s.id.length : 0) % ADVIESKADER.afsluiters.length
   ];
 
+  // Komt de waarde uit een toegevoegd profiel, dan mag er niet "heeft
+  // aangegeven" staan. Dertien duidingen hebben daarvoor een tweede
+  // formulering; de rest beschrijft gedrag zonder zo'n claim.
   const blokken = gekozen.map((b) => ({
     soort: b.soort,
     kenmerk: kenmerk(b.kenmerkId) ? kenmerk(b.kenmerkId).label : b.kenmerkId,
     kenmerkId: b.kenmerkId,
     hunWaarde: b.hunWaarde,
-    duiding: metNaam(b.duiding, naamAnder),
+    zelfGedeeld: b.zelfGedeeld !== false,
+    duiding: metNaam(b.zelfGedeeld === false && b.duidingAfgeleid ? b.duidingAfgeleid : b.duiding, naamAnder),
     suggestie: metNaam(b.suggestie, naamAnder),
     voorbeeldzin: b.voorbeeldzin,
   }));
@@ -283,7 +317,14 @@ export function steltAdviesSamen({
     blokken,
     opmerkingen,
     afsluiter,
-    transparantie: ADVIESKADER.transparantie,
+    // De slotzin hoort bij wat er daadwerkelijk is gebruikt. Stond er altijd
+    // "zelf gedeeld of bevestigd", ook onder een advies dat volledig uit een
+    // toegevoegd profiel kwam -- en dan sprak het scherm zichzelf tegen.
+    transparantie: transparantieVoor(blokken),
+    bronnen: {
+      zelfGedeeld: blokken.filter((b) => b.zelfGedeeld).length,
+      afgeleid: blokken.filter((b) => !b.zelfGedeeld).length,
+    },
     aantalBeschikbaar: alleBlokken.length,
     gebruikteKenmerken: gekozen.map((b) => b.kenmerkId),
   };

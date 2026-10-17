@@ -15,6 +15,7 @@ export const BEHOEFTEN = {
   tempo: {
     bedachtzaam: {
       duiding: "Je collega heeft aangegeven bij belangrijke besluiten eerst tijd te willen om na te denken.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat je collega bij belangrijke besluiten eerst tijd wil om na te denken.",
       suggestie: "Deel het onderwerp kort vooraf en vraag niet meteen om een definitief antwoord.",
       voorbeeldzin: "Ik wil hier graag met je over nadenken. Zullen we het morgen bespreken, dan heb je even tijd om erover na te denken?",
     },
@@ -25,6 +26,7 @@ export const BEHOEFTEN = {
     },
     gemiddeld: {
       duiding: "Je collega heeft aangegeven dat het per onderwerp verschilt hoe snel een besluit kan vallen.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat het per onderwerp verschilt hoe snel een besluit kan vallen.",
       suggestie: "Vraag aan het begin of dit een onderwerp is om nu te beslissen of om even te laten bezinken.",
       voorbeeldzin: "Is dit iets waar we nu uit kunnen komen, of wil je er even over nadenken?",
     },
@@ -32,6 +34,7 @@ export const BEHOEFTEN = {
   context: {
     veel: {
       duiding: "Je collega heeft aangegeven eerst het grotere geheel te willen begrijpen.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat je collega eerst het grotere geheel wil begrijpen.",
       suggestie: "Begin bij het waarom en de samenhang, en ga daarna pas naar wat je concreet vraagt.",
       voorbeeldzin: "Ik schets eerst even waar dit vandaan komt, dan snap je beter waarom ik het vraag.",
     },
@@ -42,6 +45,7 @@ export const BEHOEFTEN = {
     },
     kort: {
       duiding: "Je collega heeft aangegeven aan een korte aanleiding meestal genoeg te hebben.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat je collega aan een korte aanleiding meestal genoeg heeft.",
       suggestie: "Houd de inleiding kort en kom snel bij je vraag.",
       voorbeeldzin: "In het kort: dit speelt er, en dit wil ik je vragen.",
     },
@@ -71,6 +75,7 @@ export const BEHOEFTEN = {
     },
     wisselend: {
       duiding: "Je collega heeft aangegeven dat het per onderwerp verschilt of hardop denken helpt of juist niet.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat het per onderwerp verschilt of hardop denken helpt of juist niet.",
       suggestie: "Vraag welke van de twee dit is voordat je begint, in plaats van het te raden.",
       voorbeeldzin: "Zullen we dit samen doordenken, of wil je er liever eerst zelf naar kijken?",
     },
@@ -117,21 +122,25 @@ export const BEHOEFTEN = {
   spanning: {
     stiller: {
       duiding: "Je collega heeft aangegeven stiller te worden wanneer de spanning oploopt.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat je collega stiller wordt wanneer de spanning oploopt.",
       suggestie: "Vat samen wat je hebt gehoord en vraag expliciet wat hij of zij denkt. Stilte is hier geen instemming.",
       voorbeeldzin: "Ik merk dat je stil bent geworden. Wat gaat er door je heen?",
     },
     sneller: {
       duiding: "Je collega heeft aangegeven directer te worden wanneer de spanning oploopt.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat je collega directer wordt wanneer de spanning oploopt.",
       suggestie: "Lees dat niet als boosheid. Vertraag zelf en benoem wat je ziet gebeuren.",
       voorbeeldzin: "Ik merk dat het gesprek versnelt. Zullen we even een stap terug doen?",
     },
     terugtrekken: {
       duiding: "Je collega heeft aangegeven bij spanning even ruimte nodig te hebben.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat je collega bij spanning even ruimte nodig heeft.",
       suggestie: "Bied een pauze aan in plaats van door te praten, en maak meteen een afspraak wanneer je verdergaat.",
       voorbeeldzin: "Zullen we hier even mee stoppen en er morgen op terugkomen?",
     },
     uitleg: {
       duiding: "Je collega heeft aangegeven bij spanning meer te gaan uitleggen dan nodig is.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat je collega bij spanning meer gaat uitleggen dan nodig is.",
       suggestie: "Laat merken dat je het begrepen hebt; dan hoeft de uitleg niet door te gaan.",
       voorbeeldzin: "Ik denk dat ik snap wat je bedoelt. Klopt het dat het je vooral hierom gaat?",
     },
@@ -178,21 +187,25 @@ export const BEHOEFTEN = {
   misverstand: {
     kortaf: {
       duiding: "Je collega heeft aangegeven soms kortaf over te komen terwijl hij of zij met de inhoud bezig is.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat je collega soms kortaf overkomt terwijl hij of zij met de inhoud bezig is.",
       suggestie: "Vat het niet persoonlijk op en vraag door wanneer je twijfelt.",
       voorbeeldzin: "Ik merk dat je kort reageert. Zit er iets, of ben je gewoon in de inhoud?",
     },
     twijfel: {
       duiding: "Je collega heeft aangegeven dat veel vragen stellen bij hem of haar geen twijfel aan jou betekent.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat je collega veel vragen stelt. Dat hoeft geen twijfel aan jou te betekenen.",
       suggestie: "Lees de vragen als betrokkenheid en geef ruimte om ze te stellen.",
       voorbeeldzin: "Vraag gerust door, ik leg het graag uit.",
     },
     stilte: {
       duiding: "Je collega heeft aangegeven dat stilte bij hem of haar nadenken betekent, geen desinteresse.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat je collega stil wordt om na te denken. Dat hoeft geen desinteresse te zijn.",
       suggestie: "Vul de stilte niet in. Vraag na een moment wat er speelt.",
       voorbeeldzin: "Ik laat het even stil. Zeg het maar wanneer je zover bent.",
     },
     enthousiasme: {
       duiding: "Je collega heeft aangegeven dat enthousiasme bij hem of haar niet altijd een toezegging is.",
+      duidingAfgeleid: "Het toegevoegde profiel suggereert dat je collega enthousiast reageert. Dat is niet altijd een toezegging.",
       suggestie: "Vraag expliciet of iets is afgesproken voordat je ervan uitgaat.",
       voorbeeldzin: "Even scherp: doe jij dit, of denken we er nog over na?",
     },
@@ -489,8 +502,15 @@ export const CONTRASTEN = {
 
 /** Vaste teksten rond het advies. */
 export const ADVIESKADER = {
+  // Twee zinnen, want er zijn twee situaties en ze spreken elkaar tegen zodra
+  // je er één van maakt. Welke eronder komt te staan hangt af van waar de
+  // gebruikte kenmerken vandaan kwamen; zie bronstatus.js.
   transparantie:
     "Dit advies is gebaseerd op informatie die jij en je collega zelf hebben gedeeld of bevestigd. Het is bedoeld als hulpmiddel voor samenwerking en is geen beoordeling van jullie persoonlijkheid of relatie.",
+  transparantieAfgeleid:
+    "Dit advies is deels gebaseerd op een Insights-profiel dat door een beheerder is toegevoegd en dat je collega niet zelf heeft bevestigd. Een profiel geeft aanwijzingen voor werkvoorkeuren, geen zekerheid. Vraag het na in plaats van ervan uit te gaan.",
+  transparantieGemengd:
+    "Dit advies gebruikt wat jullie zelf hebben gedeeld én aanwijzingen uit een toegevoegd profiel dat je collega niet zelf heeft bevestigd. Bij elk punt staat waar het vandaan komt.",
   afsluiters: [
     "Vraag vooral of dit voor de ander herkenbaar is.",
     "Gebruik dit als startpunt voor het gesprek, niet als waarheid over de ander.",

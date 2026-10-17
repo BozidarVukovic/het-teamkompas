@@ -2454,3 +2454,19 @@ a.tk-optie {
   box-shadow: none;
   border: 1px solid var(--tk-lijn);
 }
+
+/* Waar een advies op rust, als klein label bij de naam. Geen kleur alleen: er
+   staat een teken voor en de tekst zegt het ook, zodat het zonder kleur werkt. */
+.tk-bronstatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+  font-size: var(--tk-t-fijn);
+  line-height: 1.4;
+  color: var(--tk-zacht);
+}
+
+.tk-bronstatus.bevestigd {
+  color: var(--tk-teal);
+}
