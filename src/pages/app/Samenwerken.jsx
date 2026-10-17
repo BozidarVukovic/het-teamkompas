@@ -10,7 +10,7 @@ import { useApp } from "../../lib/app/AppContext";
 import { KAN_VASTHOUDEN, LOOPTIJD_DAGEN } from "../../lib/app/experimenten";
 import { beoordeelAdviessessie, logAdviessessie } from "../../lib/app/opslag";
 import { vraagAdvies, vraagDuoadvies, vraagGroepsadvies } from "../../lib/app/advies/adviesService";
-import { situatiesPerGroep } from "../../data/app/situaties";
+import { situatiesPerGroep, titelVan } from "../../data/app/situaties";
 import { collegasVan, onderscheidendeZinnen } from "../../lib/app/collegas";
 import { MINIMUM_GROEP } from "../../lib/app/advies/groepsregels";
 import { MEERDERE_COLLEGAS } from "../../lib/app/functies";
@@ -165,6 +165,10 @@ export default function Samenwerken() {
   // situatieId: dat is de vraag waar het advies bij hoort en die hoort pas te
   // veranderen als er een nieuw advies is.
   const [vraagId, setVraagId] = useState("");
+  // De openingszin die je zelf aanpast. null betekent: je hebt hem nog niet
+  // overgenomen. Er gaat niets de deur uit; je kopieert hem zelf.
+  const [eigenZin, setEigenZin] = useState(null);
+  const [zinGekopieerd, setZinGekopieerd] = useState(false);
   // De oude lijst met iedereen, voor wie een overleg of sessie voorbereidt.
   const [meerdere, setMeerdere] = useState(false);
   const [advies, setAdvies] = useState(null);
@@ -399,7 +403,19 @@ export default function Samenwerken() {
     maakAdvies(id);
   };
 
+  const kopieerZin = async () => {
+    try {
+      await navigator.clipboard.writeText(eigenZin || "");
+      setZinGekopieerd(true);
+    } catch {
+      // Zonder klembordrechten blijft de tekst staan om te selecteren.
+      setZinGekopieerd(false);
+    }
+  };
+
   const opnieuw = () => {
+    setEigenZin(null);
+    setZinGekopieerd(false);
     setSituatieId(null);
     setAdvies(null);
     setSessieId(null);
@@ -437,9 +453,11 @@ export default function Samenwerken() {
           "Samenwerken met..." met drie puntjes vraagt om een keuze die je net
           hebt gemaakt. */}
       <h1 className="tk-kop">
-        {advies && gekozen
-          ? `Samenwerken met ${voornaam(gekozen.naam, "je collega")}`
-          : "Met wie wil je samenwerken?"}
+        {advies && gekozen && advies.soort !== "groep" && advies.soort !== "duo"
+          ? titelVan(advies.situatie, voornaam(gekozen.naam, "je collega"))
+          : advies
+            ? "Samenwerken"
+            : "Met wie wil je samenwerken?"}
       </h1>
       {/* De uitleg gaat over de keuze die je nog moet maken. Heb je iemand
           gekozen, dan legt hij iets uit wat je al gedaan hebt. */}
@@ -692,15 +710,9 @@ export default function Samenwerken() {
         <>
           <div className="tk-advies">
             {advies.soort === "duo" ? <DuoInhoud advies={advies} /> : (<>
-            <div className="tk-stap">{advies.situatie ? advies.situatie.label : "Advies"}</div>
-            <h2 style={{ margin: "0 0 10px", fontSize: "var(--tk-t-sectie)" }}>
-              Jullie samenwerking
-            </h2>
-            {advies.samenvatting.map((zin) => (
-              <p key={zin} style={{ color: "var(--tk-zacht)", margin: "0 0 8px", lineHeight: 1.7 }}>
-                {zin}
-              </p>
-            ))}
+            {/* De kern in één zin. De andere samenvattende zinnen gaan naar
+                de verdieping: ze zeggen waar het over gaat, niet wat je doet. */}
+            {advies.kernboodschap && <p className="tk-kern">{advies.kernboodschap}</p>}
 
             {advies.opmerkingen.map((o) => (
               <div className="tk-melding" key={o} style={{ marginTop: 12 }}>
@@ -708,27 +720,109 @@ export default function Samenwerken() {
               </div>
             ))}
 
-            {advies.helpt.length > 0 && (
+            {/* Een zin om mee te beginnen. Je kunt hem overnemen en aanpassen;
+                er wordt niets verstuurd, want de app kan niemand bereiken. */}
+            {advies.openingszin && (
               <div className="tk-advies-blok">
-                <h3>Wat waarschijnlijk helpt</h3>
-                <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
+                <h3>Zo kun je beginnen</h3>
+                {eigenZin === null ? (
+                  <>
+                    <p className="tk-citaat" style={{ margin: "0 0 12px" }}>{advies.openingszin}</p>
+                    <button
+                      type="button"
+                      className="tk-knop tk-knop-rand tk-knop-klein"
+                      onClick={() => setEigenZin(advies.openingszin)}
+                    >
+                      Maak dit mijn openingszin
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <label className="tk-label" htmlFor="tk-eigenzin">Jouw versie</label>
+                    <textarea
+                      id="tk-eigenzin"
+                      className="tk-tekstvak"
+                      rows={3}
+                      maxLength={600}
+                      value={eigenZin}
+                      onChange={(e) => { setEigenZin(e.target.value); setZinGekopieerd(false); }}
+                    />
+                    <div className="tk-knoppen" style={{ marginTop: 10 }}>
+                      <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={kopieerZin}>
+                        {zinGekopieerd ? "Gekopieerd" : "Kopieer de tekst"}
+                      </button>
+                    </div>
+                    <p className="tk-fijn" style={{ margin: "10px 0 0" }}>
+                      Er wordt niets verstuurd. Je gebruikt de tekst zelf.
+                    </p>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* Eén voorbereiding, niet een lijstje. */}
+            {advies.actie && (
+              <div className="tk-advies-blok">
+                <h3>Bereid dit voor</h3>
+                <p style={{ margin: 0, lineHeight: 1.7 }}>{advies.actie}</p>
+              </div>
+            )}
+
+            {/* Eén aandachtspunt. De andere staan in de verdieping. */}
+            {advies.aandachtspunt && (
+              <div className="tk-advies-blok">
+                <h3>Waar je op kunt letten</h3>
+                <p style={{ margin: 0, lineHeight: 1.7 }}>{advies.aandachtspunt}</p>
+              </div>
+            )}
+
+            {/* Wat hierboven niet paste. Dicht, want het eerste scherm hoort
+                te zeggen wat je doet -- niet alles wat er over te zeggen is. */}
+            {advies.soort !== "groep" && advies.helpt.length > 0 && (
+              <details className="tk-verdieping">
+                <summary>Wat kan helpen bij jullie verschil in aanpak?</summary>
+                <ul style={{ margin: "10px 0 0", paddingLeft: 20, lineHeight: 1.75 }}>
                   {advies.helpt.map((h) => (
                     <li key={h} style={{ marginBottom: 6 }}>{h}</li>
                   ))}
                 </ul>
-              </div>
+                {(advies.letOp || []).slice(1).map((l) => (
+                  <p key={l} style={{ margin: "12px 0 0", lineHeight: 1.7 }}>{l}</p>
+                ))}
+                {(advies.samenvatting || []).slice(1).map((zin) => (
+                  <p key={zin} className="tk-fijn" style={{ margin: "12px 0 0" }}>{zin}</p>
+                ))}
+              </details>
             )}
 
-            {/* Bij één collega gaat dit over het contrast tussen jullie twee. */}
-            {advies.soort !== "groep" && (advies.letOp || []).length > 0 && (
-              <div className="tk-advies-blok">
-                <h3>Waar je op kunt letten</h3>
-                <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.75 }}>
-                  {advies.letOp.map((l) => (
-                    <li key={l} style={{ marginBottom: 6 }}>{l}</li>
+            {advies.soort !== "groep" && advies.vraag && (
+              <details className="tk-verdieping">
+                <summary>Een vraag om mee door te vragen</summary>
+                <p className="tk-citaat" style={{ margin: "10px 0 0" }}>&ldquo;{advies.vraag}&rdquo;</p>
+              </details>
+            )}
+
+            {advies.soort !== "groep" && (
+              <details className="tk-verdieping">
+                <summary>Waarop is dit advies gebaseerd?</summary>
+                <ul style={{ margin: "10px 0 0", paddingLeft: 20, lineHeight: 1.75 }}>
+                  {(advies.blokken || []).map((b) => (
+                    <li key={b.kenmerkId} style={{ marginBottom: 6 }}>
+                      <strong>{b.kenmerk}</strong>
+                      {" — "}
+                      {b.zelfGedeeld
+                        ? "zelf gedeeld met dit team"
+                        : "afgeleid uit een toegevoegd profiel, niet bevestigd"}
+                    </li>
                   ))}
                 </ul>
-              </div>
+                {(advies.blokken || []).length === 0 && (
+                  <p style={{ margin: "10px 0 0", lineHeight: 1.7 }}>
+                    Er is nog niets gedeeld waar dit advies op kan rusten.
+                  </p>
+                )}
+                <p className="tk-fijn" style={{ margin: "12px 0 0" }}>{advies.transparantie}</p>
+              </details>
             )}
 
             {/* Bij een groep: per punt wat er gebeurt, en welke voorkeuren er
@@ -898,14 +992,14 @@ export default function Samenwerken() {
               </div>
             )}
 
-            {advies.vraag && (
+            {advies.soort === "groep" && advies.vraag && (
               <div className="tk-advies-blok">
                 <h3>Probeer deze vraag</h3>
                 <p className="tk-citaat" style={{ margin: 0 }}>“{advies.vraag}”</p>
               </div>
             )}
 
-            {advies.actie && (
+            {advies.soort === "groep" && advies.actie && (
               <div className="tk-advies-blok">
                 <h3>Kleine actie</h3>
                 <p style={{ margin: 0, lineHeight: 1.7 }}>{advies.actie}</p>
@@ -948,7 +1042,11 @@ export default function Samenwerken() {
 
             </>)}
 
-            <p className="tk-fijn" style={{ marginTop: 16 }}>{advies.transparantie}</p>
+            {/* Bij een advies over één collega staat de slotzin in "waarop is
+                dit gebaseerd?" -- daar hoort hij, naast de bronnen zelf. */}
+            {advies.soort !== "persoon" && (
+              <p className="tk-fijn" style={{ marginTop: 16 }}>{advies.transparantie}</p>
+            )}
           </div>
 
           <div className="tk-kaart">

@@ -320,6 +320,12 @@ export function steltAdviesSamen({
     // De slotzin hoort bij wat er daadwerkelijk is gebruikt. Stond er altijd
     // "zelf gedeeld of bevestigd", ook onder een advies dat volledig uit een
     // toegevoegd profiel kwam -- en dan sprak het scherm zichzelf tegen.
+    // Drie stukken apart, want het scherm toont ze als eerste en de rest
+    // eronder. Ze komen uit dezelfde blokken als voorheen; er is geen tekst
+    // bij gekomen.
+    kernboodschap: samenvatting[0] || null,
+    openingszin: (blokken[0] && blokken[0].voorbeeldzin) || null,
+    aandachtspunt: letOp[0] || null,
     transparantie: transparantieVoor(blokken),
     bronnen: {
       zelfGedeeld: blokken.filter((b) => b.zelfGedeeld).length,

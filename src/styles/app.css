@@ -2467,7 +2467,9 @@ a.tk-optie {
    staat een teken voor en de tekst zegt het ook, zodat het zonder kleur werkt. */
 .tk-bronstatus {
   display: inline-flex;
-  align-items: center;
+  /* Het teken hoort bij de eerste regel. Met center zakt het naar het midden
+     van een tekst die over twee regels loopt, en dan staat het nergens bij. */
+  align-items: flex-start;
   gap: 6px;
   margin-top: 5px;
   font-size: var(--tk-t-fijn);
@@ -2586,4 +2588,60 @@ a.tk-optie {
 .tk-toegang-pijl svg {
   width: 15px;
   height: 15px;
+}
+
+/* ═════ het resultaat van een adviesvraag
+   De kern staat bovenaan en mag groter zijn dan de rest: het is het enige dat
+   je gelezen moet hebben voordat je verder kunt. */
+.tk-kern {
+  margin: 0 0 4px;
+  font-size: var(--tk-t-lead);
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--tk-tekst);
+}
+
+/* Verdieping: dicht, maar zichtbaar dat er iets achter zit. */
+.tk-verdieping {
+  border-top: 1px solid var(--tk-lijn);
+  padding: 16px 0 0;
+  margin-top: 18px;
+}
+
+.tk-verdieping > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tk-raak, 44px);
+  color: var(--tk-teal);
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.tk-verdieping > summary::-webkit-details-marker {
+  display: none;
+}
+
+.tk-verdieping > summary::before {
+  content: "+";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.tk-verdieping[open] > summary::before {
+  content: "\2212";
+}
+
+.tk-verdieping > summary:focus-visible {
+  outline: 2px solid var(--tk-teal);
+  outline-offset: 3px;
 }

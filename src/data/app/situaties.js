@@ -27,6 +27,7 @@ export const SITUATIES = [
   /* ------------------------------------------------------------ bespreken */
   {
     id: "bespreekbaar-maken",
+    titel: "Iets bespreekbaar maken met {naam}",
     voorGroep: true,
     groepsopening:
       "Iets bespreekbaar maken in een groep begint bij het moment en de vorm, niet bij het argument.",
@@ -40,6 +41,7 @@ export const SITUATIES = [
   },
   {
     id: "iets-moeilijks",
+    titel: "Een lastig gesprek met {naam} voorbereiden",
     voorGroep: true,
     groepsopening:
       "Bij een moeilijk onderwerp helpt het om te weten wat de mensen om tafel nodig hebben om te kunnen luisteren.",
@@ -53,6 +55,7 @@ export const SITUATIES = [
   },
   {
     id: "feedback-geven",
+    titel: "Feedback geven aan {naam}",
     voorGroep: false,
     groep: "bespreken",
     label: "Ik wil feedback geven",
@@ -64,6 +67,7 @@ export const SITUATIES = [
   },
   {
     id: "feedback-ontvangen",
+    titel: "Feedback vragen aan {naam}",
     voorGroep: true,
     groepsopening:
       "Feedback vragen aan meerdere mensen levert meer op als je duidelijk maakt waar je het over wilt hebben.",
@@ -77,6 +81,7 @@ export const SITUATIES = [
   },
   {
     id: "iets-nodig",
+    titel: "Iets vragen aan {naam}",
     voorGroep: true,
     groepsopening:
       "Wat je vraagt komt beter aan wanneer het aansluit bij hoe deze mensen werken.",
@@ -92,6 +97,7 @@ export const SITUATIES = [
   /* ------------------------------------------------------------- spanning */
   {
     id: "irritatie",
+    titel: "Irritatie bespreken met {naam}",
     voorGroep: true,
     groepsopening:
       "Irritatie in een groep komt vaak voort uit een verschil in stijl dat niet is besproken.",
@@ -105,6 +111,7 @@ export const SITUATIES = [
   },
   {
     id: "elkaar-niet-begrijpen",
+    titel: "Elkaar beter begrijpen, jij en {naam}",
     voorGroep: true,
     groepsopening:
       "Langs elkaar heen praten gaat zelden over de inhoud en meestal over wat ieder vanzelfsprekend vindt.",
@@ -118,6 +125,7 @@ export const SITUATIES = [
   },
   {
     id: "verschil-van-mening",
+    titel: "Een verschil van mening met {naam}",
     voorGroep: true,
     groepsopening:
       "Een verschil van mening in een groep loopt vaker vast op tempo dan op inhoud.",
@@ -131,6 +139,7 @@ export const SITUATIES = [
   },
   {
     id: "weerstand",
+    titel: "Weerstand bespreken met {naam}",
     voorGroep: true,
     groepsopening:
       "Weerstand is meestal geen onwil, maar een bezwaar dat nog niet is gehoord — en in een groep blijft dat makkelijker onuitgesproken.",
@@ -144,6 +153,7 @@ export const SITUATIES = [
   },
   {
     id: "grens-aangeven",
+    titel: "Een grens aangeven bij {naam}",
     voorGroep: true,
     groepsopening:
       "Een grens landt beter als hij gaat over wat jij nodig hebt, niet over wat de groep fout doet.",
@@ -157,6 +167,7 @@ export const SITUATIES = [
   },
   {
     id: "conflict-voorkomen",
+    titel: "Een conflict voorkomen met {naam}",
     voorGroep: true,
     groepsopening:
       "Een conflict voorkomen lukt zelden door het onderwerp te vermijden; wel door het moment te kiezen.",
@@ -172,6 +183,7 @@ export const SITUATIES = [
   /* -------------------------------------------------------------- vooruit */
   {
     id: "besluit-nemen",
+    titel: "Samen met {naam} een besluit nemen",
     voorGroep: true,
     groepsopening:
       "Een besluit houdt stand wanneer voor iedereen duidelijk is wat er nodig was om erachter te staan.",
@@ -185,6 +197,7 @@ export const SITUATIES = [
   },
   {
     id: "overtuigen",
+    titel: "{naam} meekrijgen",
     voorGroep: true,
     groepsopening:
       "Mensen gaan zelden mee op argumenten alleen; wel als hun bezwaar eerst serieus is genomen.",
@@ -199,6 +212,7 @@ export const SITUATIES = [
   },
   {
     id: "herhaling",
+    titel: "Uit de herhaling komen met {naam}",
     voorGroep: true,
     groepsopening:
       "Wat blijft terugkomen is meestal niet onbesproken, maar onbesloten.",
@@ -212,6 +226,7 @@ export const SITUATIES = [
   },
   {
     id: "benaderen",
+    titel: "Hoe je {naam} het beste benadert",
     voorGroep: false,
     groep: "vooruit",
     label: "Ik wil weten hoe ik deze persoon kan benaderen",
@@ -223,6 +238,7 @@ export const SITUATIES = [
   },
   {
     id: "aanvullen",
+    titel: "Elkaar aanvullen, jij en {naam}",
     voorGroep: true,
     groepsopening:
       "Elkaar aanvullen werkt het best wanneer je benoemt waar je verschilt.",
@@ -236,6 +252,17 @@ export const SITUATIES = [
     actie: "Spreek voor één taak af wie wat oppakt, op basis van wat jullie het liefst doen.",
   },
 ];
+
+/**
+ * De kop boven het advies: wat je gaat doen, en met wie.
+ *
+ * "Jullie samenwerking" stond boven elk advies, bij elke vraag en elke
+ * collega. Een kop die overal past, zegt nergens iets.
+ */
+export function titelVan(s, naam = "je collega") {
+  if (!s || !s.titel) return "Samenwerken";
+  return s.titel.replace("{naam}", naam);
+}
 
 export function situatie(id) {
   return SITUATIES.find((s) => s.id === id) || null;
