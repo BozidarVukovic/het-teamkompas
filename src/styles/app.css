@@ -354,7 +354,10 @@
    nergens meer naar. Negenhonderd is ook de breedte waar het werkblad twee
    kolommen krijgt: vanaf daar is er ruimte, eronder niet. Op een telefoon
    staat waar je bent trouwens toch al in de onderbalk. */
-@media (max-width: 900px) {
+/* Bijgesteld naar 720: de teamkiezer en de uitlogknop zijn samen één bol
+   geworden, dus er is weer ruimte. Onder 720 verdwijnt het bovenmenu en neemt
+   de onderbalk het over -- daar staat waar je bent toch al. */
+@media (max-width: 720px) {
   .tk-balktitel {
     display: none;
   }
@@ -2308,6 +2311,11 @@ a.tk-optie {
 }
 
 .tk-hulpsoort {
+  display: inline-flex;
+  align-items: center;
+  /* Gemeten op 390 pixels: deze knoppen waren 35 hoog. Onder de 44 tik je
+     ernaast in plaats van erop. */
+  min-height: var(--tk-raak, 44px);
   border: 1px solid var(--tk-lijn);
   border-radius: 999px;
   background: var(--tk-navy);
@@ -2315,6 +2323,7 @@ a.tk-optie {
   padding: 9px 15px;
   font: inherit;
   font-size: var(--tk-t-fijn);
+  text-align: left;
   cursor: pointer;
 }
 
@@ -2644,4 +2653,214 @@ a.tk-optie {
 .tk-verdieping > summary:focus-visible {
   outline: 2px solid var(--tk-teal);
   outline-offset: 3px;
+}
+
+/* ═════ een suggestiekaart bij "Wie helpt mij verder?"
+   Op de kaart staat wat je nodig hebt om te kiezen: wie het is, waarvóór
+   diegene in beeld komt, waar dat op rust, één onderbouwing, en de knop. De
+   rest staat in de uitklap eronder. */
+.tk-suggestie {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.tk-suggestie-rij {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.tk-suggestie-rij .tk-bol {
+  flex: 0 0 auto;
+}
+
+.tk-suggestie-tekst {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.tk-suggestie-naam {
+  font-size: var(--tk-t-lead);
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--tk-tekst);
+}
+
+/* Waarvóór iemand in beeld komt. Geen score en geen oordeel: het is de
+   benaming van het soort hulp waar iets over gedeeld is. */
+.tk-suggestie-bijdrage {
+  font-size: var(--tk-t-klein);
+  font-weight: 600;
+  color: var(--tk-teal);
+}
+
+.tk-suggestie-reden {
+  margin: 0;
+  font-size: var(--tk-t-basis);
+  line-height: 1.7;
+  color: var(--tk-tekst);
+}
+
+/* De uitklap hangt onderaan de kaart en loopt van rand tot rand. */
+.tk-suggestie > .tk-verdieping {
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* ═════ het accountmenu in de balk */
+.tk-account {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.tk-accountknop {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tk-raak);
+  padding: 3px 10px 3px 3px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--tk-tekst);
+  font-family: inherit;
+  font-size: var(--tk-t-klein);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--tk-vlot) var(--tk-soepel);
+}
+
+.tk-accountknop:hover,
+.tk-accountknop[aria-expanded="true"] {
+  background: var(--tk-navy-3);
+  border-color: var(--tk-lijn);
+}
+
+.tk-accountknop:focus-visible {
+  outline: 2px solid var(--tk-teal);
+  outline-offset: 2px;
+}
+
+.tk-accountpijl {
+  flex: 0 0 auto;
+  color: var(--tk-zacht);
+  transition: transform var(--tk-vlot) var(--tk-soepel);
+}
+
+.tk-accountknop[aria-expanded="true"] .tk-accountpijl {
+  transform: rotate(180deg);
+}
+
+/* Onder 520 past er naast de bol geen naam meer bij zonder dat de paginatitel
+   eronder moet lijden. De bol blijft; het menu zegt daarna wie je bent. */
+@media (max-width: 520px) {
+  .tk-accountnaam {
+    display: none;
+  }
+}
+
+.tk-accountmenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+  width: 262px;
+  max-width: calc(100vw - 32px);
+  padding: 14px 16px 8px;
+  background: var(--tk-vlak);
+  border: 1px solid var(--tk-lijn);
+  border-radius: 14px;
+  box-shadow: var(--tk-lift-hoog);
+  animation: tk-accountmenu-in var(--tk-vlot) var(--tk-soepel) both;
+}
+
+@keyframes tk-accountmenu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tk-accountmenu {
+    animation: none;
+  }
+}
+
+.tk-accountkop {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--tk-lijn);
+  /* Een e-mailadres is langer dan dit menu breed is. */
+  overflow-wrap: anywhere;
+}
+
+.tk-accountkop > strong {
+  font-size: var(--tk-t-basis);
+  font-weight: 650;
+  color: var(--tk-tekst);
+}
+
+.tk-accountveld {
+  display: block;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--tk-lijn);
+}
+
+.tk-accountveld .tk-label {
+  margin-bottom: 6px;
+}
+
+/* In de balk mocht een teamnaam afgekapt worden omdat de uitlogknop ernaast
+   voorging. Hier is de ruimte van het veld zelf. */
+.tk-accountveld .tk-teamkiezer {
+  width: 100%;
+  max-width: none;
+}
+
+.tk-accountteam {
+  margin: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--tk-lijn);
+  font-size: var(--tk-t-klein);
+  color: var(--tk-zacht);
+}
+
+.tk-accountlink {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: var(--tk-raak);
+  padding: 0 10px;
+  margin: 2px -10px;
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  color: var(--tk-tekst);
+  font-family: inherit;
+  font-size: var(--tk-t-basis);
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tk-accountlink:hover {
+  background: var(--tk-navy-3);
+}
+
+.tk-accountlink:focus-visible {
+  outline: 2px solid var(--tk-teal);
+  outline-offset: -2px;
 }

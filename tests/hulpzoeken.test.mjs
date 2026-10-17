@@ -307,3 +307,36 @@ test("dezelfde hulpvraag geeft altijd hetzelfde antwoord", () => {
   const twee = vraagOm("Ik krijg mijn plan niet af.", ["afronden", "structuur"]);
   assert.deepEqual(een, twee);
 });
+
+/* ------------------------------ het label dat op de kaart komt te staan */
+
+test("elke suggestie draagt korte benamingen mee, geen zinnen", () => {
+  const a = vraagOm("Ik moet het onboardingprogramma opnieuw opzetten en zoek inhoudelijke hulp.", ["meedenken", "structuur"]);
+  assert.ok(a.suggesties.length > 0, "er hoort iets te staan om te controleren");
+
+  const labels = HULPSOORTEN.map((h) => h.label);
+  a.suggesties.forEach((s) => {
+    assert.ok(Array.isArray(s.bijdrageLabels), `${s.sleutel}: geen bijdrageLabels`);
+    assert.ok(s.bijdrageLabels.length <= 2, `${s.sleutel}: hoogstens twee`);
+    s.bijdrageLabels.forEach((l) => {
+      assert.ok(labels.includes(l), `${s.sleutel}: "${l}" is geen benaming uit de catalogus`);
+    });
+  });
+});
+
+test("het label hoort bij een hulpsoort waarover iets over deze collega is gedeeld", () => {
+  // Niet bij de hulpsoort die je aanvinkte: dat zou bij iedereen hetzelfde
+  // zijn. Het hoort bij het bewijs dat er over deze collega ligt.
+  const a = vraagOm("Ik wil dat iemand hier kritisch naar kijkt.", ["toetsen"]);
+  const aad = a.suggesties.find((s) => s.sleutel === "aad");
+  assert.ok(aad, "Aad schreef zelf dat hij kritisch kijkt");
+  assert.deepEqual(aad.bijdrageLabels, ["Kritisch toetsen"]);
+});
+
+test("een benaming is geen zin: geen punt, geen te-vorm", () => {
+  HULPSOORTEN.forEach((h) => {
+    assert.doesNotMatch(h.label, /\.$/, `${h.id}: een punt maakt er een zin van`);
+    assert.doesNotMatch(h.label, /(^|\s)(te|om)\s/, `${h.id}: "${h.label}" leest als een zin`);
+    assert.ok(h.label.length <= 26, `${h.id}: "${h.label}" is te lang voor naast een naam`);
+  });
+});

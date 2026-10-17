@@ -348,6 +348,10 @@ export function zoekHulp({ vraag = "", gekozenHulpsoorten = [], mijnKenmerken = 
       kortom: kortomVoor(bewijs),
       voorbehoud: zichtbaar.some((b) => b.bron === "profiel") ? VOORBEHOUD_PROFIEL : null,
       bijdrage: soorten.map((id) => (hulpsoort(id) || {}).bijdrage).filter(Boolean).slice(0, 2),
+      // Hetzelfde, maar als korte benaming: dat is wat er op de kaart naast de
+      // naam past. "Om mee te denken over de inhoud" is een zin; "Inhoudelijk
+      // meedenken" is een label.
+      bijdrageLabels: soorten.map((id) => (hulpsoort(id) || {}).label).filter(Boolean).slice(0, 2),
       startTips: startTips({ collega, mijnKenmerken }),
       tegenspraak: tegenspraakBij({ collega, hulpsoortIds, bewijs }),
     };

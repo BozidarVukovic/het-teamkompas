@@ -21,6 +21,7 @@ import Teambeeld from "./Teambeeld";
 import MijnGegevens from "./MijnGegevens";
 import Ik from "./Ik";
 import Navigatie from "../../components/app/Navigatie";
+import Accountmenu from "../../components/app/Accountmenu";
 import Balktitel from "../../components/app/Balktitel";
 import KompasDot from "../../components/shared/KompasDot";
 import { welkombestemming } from "../../lib/app/welkom";
@@ -40,8 +41,6 @@ function Laden({ tekst = "Even laden..." }) {
 
 
 function Schil({ children }) {
-  const { lidmaatschappen, actiefTeam, kiesTeam, logUit } = useApp();
-
   return (
     <div className="tk-app">
       <header className="tk-balk">
@@ -51,25 +50,7 @@ function Schil({ children }) {
         </a>
         <Balktitel />
         <div className="tk-balk-rechts">
-          {lidmaatschappen.length > 1 && (
-            <label className="tk-teamwissel">
-              <span>Je werkt in</span>
-              <select
-                className="tk-teamkiezer"
-                value={actiefTeam ? `${actiefTeam.orgId}/${actiefTeam.teamId}` : ""}
-                onChange={(e) => kiesTeam(e.target.value)}
-              >
-                {lidmaatschappen.map((l) => (
-                  <option key={`${l.orgId}/${l.teamId}`} value={`${l.orgId}/${l.teamId}`}>
-                    {l.teamNaam || "Team"}
-                  </option>
-                ))}
-              </select>
-            </label>
-          )}
-          <button type="button" className="tk-knop tk-knop-rand tk-knop-klein" onClick={logUit}>
-            Uitloggen
-          </button>
+          <Accountmenu />
         </div>
       </header>
 
