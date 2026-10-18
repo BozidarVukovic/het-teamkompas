@@ -517,6 +517,253 @@ service cloud.firestore {
           // voorstel ook zelf weer intrekken.
           allow delete: if ikBen(uid) || isTeambeheerder(orgId, teamId);
         }
+
+        /* ═══════════════════════════════════════════ kwartaaldoelen en keuzes
+
+           Wat iemand opschrijft over wat hij dit kwartaal wil bereiken, wat dat
+           aan uren vraagt, en wat het team daarover besluit.
+
+           Twee beloftes die hier worden afgedwongen en niet alleen op het
+           scherm staan:
+
+           Een concept is van jou alleen. Niet "wordt niet getoond" maar
+           "kan niet worden opgehaald". Firestore beoordeelt een lijst per
+           document en weigert de hele zoekopdracht zodra er één document bij
+           zit dat niet mag. De app vraagt daarom altijd op gedeeld == true of
+           op de eigen uid; een kale zoekopdracht loopt stuk zodra er een
+           concept van een ander tussen zit, en dat is de bedoeling.
+
+           En niemand verzet werk van een ander zonder diens akkoord. Een
+           besluit mag de planning van iemand anders alleen aanpassen als die
+           persoon zelf een akkoord heeft achtergelaten bij het verzoek. Dat is
+           een bestaanscontrole op een document dat alleen hij kan schrijven --
+           geen vinkje in de interface. */
+
+        function kwartaalSleutel(v) {
+          return v is string && v.matches('^[0-9]{4}-K[1-4]$');
+        }
+
+        function kwartaalWeek(v) {
+          return v is string && v.matches('^[0-9]{4}-W[0-9]{2}$');
+        }
+
+        function kwartaalStatus(v) {
+          return v in ['concept', 'ter-afstemming', 'afgesproken', 'gepauzeerd', 'afgerond', 'gestopt'];
+        }
+
+        // Onbekend mag, nul mag, onzin niet. Zestig uur per week is al ruim
+        // boven een voltijdsweek; wat daarboven staat is een typefout.
+        function kwartaalUren(v) {
+          return v == null || (v is number && v >= 0 && v <= 60);
+        }
+
+        // Er bestaat geen urenveld op een doel en geen voortgangspercentage.
+        // Hier staat dat met zoveel woorden, zodat een latere versie van de app
+        // ze er niet alsnog stilletjes in kan schrijven.
+        function kwartaalGeenScores(d) {
+          return !('urenPerWeek' in d) && !('voortgang' in d) && !('score' in d) && !('rang' in d);
+        }
+
+        function kwartaalDoel(d) {
+          return d.keys().hasAll(['versie', 'kwartaal', 'titel', 'succes', 'eigenaarUid', 'status', 'gedeeld'])
+            && d.keys().hasOnly([
+              'versie', 'kwartaal', 'titel', 'succes', 'eigenaarUid', 'status', 'gedeeld',
+              'teamdoel', 'gewenstVan', 'gewenstTot', 'stand', 'hulpvraag', 'knelpunt',
+              'toelichting', 'doorUid', 'gemaaktOp', 'gewijzigdOp'
+            ])
+            && kwartaalSleutel(d.kwartaal)
+            && d.titel is string && d.titel.size() > 0 && d.titel.size() <= 160
+            && d.succes is string && d.succes.size() > 0 && d.succes.size() <= 400
+            && d.eigenaarUid is string && d.eigenaarUid.size() > 0
+            && kwartaalStatus(d.status)
+            && d.gedeeld is bool
+            // Afgeleid en niet los in te vullen: zonder deze regel kan er een
+            // concept bestaan dat op gedeeld staat, en dat is het lek zelf.
+            && d.gedeeld == (d.status != 'concept')
+            && kwartaalGeenScores(d);
+        }
+
+        function kwartaalBijdrage(d) {
+          return d.keys().hasAll(['versie', 'doelId', 'uid', 'status', 'gedeeld', 'van', 'tot', 'kwartaal'])
+            && d.keys().hasOnly([
+              'versie', 'doelId', 'uid', 'status', 'gedeeld', 'van', 'tot', 'kwartaal',
+              'urenPerWeek', 'expertise', 'hulpvraag', 'gemaaktOp', 'gewijzigdOp',
+              'viaVerzoekId'
+            ])
+            && d.doelId is string && d.doelId.size() > 0
+            && d.uid is string && d.uid.size() > 0
+            && kwartaalSleutel(d.kwartaal)
+            && kwartaalStatus(d.status)
+            && d.gedeeld is bool && d.gedeeld == (d.status != 'concept')
+            && kwartaalWeek(d.van) && kwartaalWeek(d.tot)
+            && kwartaalUren(d.urenPerWeek);
+        }
+
+        // Heeft de eigenaar van deze bijdrage akkoord gegeven op dit verzoek?
+        // Het akkoord is een document dat alleen hij zelf kan schrijven, dus
+        // dit is een echte controle en geen vinkje dat de app zet.
+        function kwartaalAkkoord(verzoekId, uid) {
+          return exists(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/kwartaalverzoeken/$(verzoekId)/akkoord/$(uid));
+        }
+
+        match /kwartaaldoelen/{doelId} {
+          // Gedeeld is voor het hele team; een concept alleen voor de eigenaar.
+          allow get, list: if isTeamlid(orgId, teamId)
+            && (resource.data.gedeeld == true || ikBen(resource.data.eigenaarUid));
+
+          allow create: if isTeamlid(orgId, teamId)
+            && ikBen(request.resource.data.eigenaarUid)
+            && kwartaalDoel(request.resource.data);
+
+          // Een doel blijft van zijn eigenaar. Een beheerder kan de tekst van
+          // iemand anders niet veranderen -- wat daar staat is van hem.
+          allow update: if isTeamlid(orgId, teamId)
+            && ikBen(resource.data.eigenaarUid)
+            && request.resource.data.eigenaarUid == resource.data.eigenaarUid
+            && kwartaalDoel(request.resource.data);
+
+          // Weggooien kan alleen zolang niemand het ooit heeft gezien. Wat is
+          // gedeeld geweest wordt gestopt, niet gewist: wat er is afgesproken
+          // en waarom het niet doorging, is precies wat je later terugleest.
+          allow delete: if isTeamlid(orgId, teamId)
+            && ikBen(resource.data.eigenaarUid)
+            && resource.data.gedeeld == false;
+
+          match /geschiedenis/{regelId} {
+            // Alleen van een doel dat gedeeld is; de geschiedenis van een
+            // concept zou anders vertellen wat er in dat concept stond.
+            allow read: if isTeamlid(orgId, teamId)
+              && get(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/kwartaaldoelen/$(doelId)).data.gedeeld == true;
+            allow create: if isTeamlid(orgId, teamId)
+              && ikBen(request.resource.data.doorUid)
+              && request.resource.data.wat is string
+              && request.resource.data.wat.size() <= 80;
+            // Een geschiedenis die je kunt bijwerken is geen geschiedenis.
+            allow update, delete: if false;
+          }
+        }
+
+        match /kwartaalbijdragen/{bijdrageId} {
+          allow get, list: if isTeamlid(orgId, teamId)
+            && (resource.data.gedeeld == true || ikBen(resource.data.uid));
+
+          allow create: if isTeamlid(orgId, teamId)
+            && ikBen(request.resource.data.uid)
+            && kwartaalBijdrage(request.resource.data);
+
+          // Je eigen bijdrage werk je zelf bij. Daarnaast mag een beheerder een
+          // besluit toepassen -- maar alleen op de planningsvelden, en alleen
+          // als de eigenaar akkoord heeft gegeven op het verzoek waar dat
+          // besluit bij hoort. De uren en de tekst blijven van de eigenaar.
+          allow update: if isTeamlid(orgId, teamId)
+            && kwartaalBijdrage(request.resource.data)
+            && (
+              (ikBen(resource.data.uid) && request.resource.data.uid == resource.data.uid)
+              || (
+                isTeambeheerder(orgId, teamId)
+                // Het besluit zet erbij om welk verzoek het gaat, zodat deze
+                // regel het akkoord kan opzoeken in plaats van het te geloven.
+                && request.resource.data.viaVerzoekId is string
+                && request.resource.data.viaVerzoekId.size() > 0
+                && request.resource.data.doelId == resource.data.doelId
+                && request.resource.data.urenPerWeek == resource.data.urenPerWeek
+                && request.resource.data.kwartaal == resource.data.kwartaal
+                && kwartaalAkkoord(request.resource.data.viaVerzoekId, resource.data.uid)
+                // Werk verhuizen naar een ander vraagt ook diens akkoord. Een
+                // collega is geen oplossing die je kunt inplannen.
+                && (
+                  request.resource.data.uid == resource.data.uid
+                  || kwartaalAkkoord(request.resource.data.viaVerzoekId, request.resource.data.uid)
+                )
+              )
+            );
+
+          allow delete: if isTeamlid(orgId, teamId) && ikBen(resource.data.uid);
+        }
+
+        match /kwartaalruimte/{uid} {
+          // Leesbaar voor het team: zonder deze cijfers is er geen teambeeld.
+          // Het zijn uren per week en nooit een reden waarom iemand er minder
+          // heeft -- dat veld bestaat niet.
+          allow get, list: if isTeamlid(orgId, teamId);
+
+          // En alleen jijzelf schrijft erin. Ook een beheerder niet: iemand
+          // anders bepalen hoeveel ruimte jij hebt is precies het gesprek dat
+          // deze tool juist moet openen.
+          allow create, update: if isTeamlid(orgId, teamId)
+            && ikBen(uid)
+            && request.resource.data.uid == uid
+            && kwartaalSleutel(request.resource.data.kwartaal)
+            && request.resource.data.regels is list
+            && request.resource.data.regels.size() <= 20
+            && request.resource.data.keys().hasOnly(['versie', 'uid', 'kwartaal', 'regels', 'bijgewerktOp']);
+          allow delete: if isTeamlid(orgId, teamId) && ikBen(uid);
+        }
+
+        match /kwartaalafhankelijkheden/{afhankelijkheidId} {
+          allow get, list: if isTeamlid(orgId, teamId);
+          allow create: if isTeamlid(orgId, teamId)
+            && ikBen(request.resource.data.doorUid)
+            && kwartaalSleutel(request.resource.data.kwartaal)
+            && request.resource.data.doelId is string && request.resource.data.doelId.size() > 0
+            && request.resource.data.wachtOp is string && request.resource.data.wachtOp.size() > 0
+            && request.resource.data.doelId != request.resource.data.wachtOp
+            && request.resource.data.bevestigd is bool;
+          // Bevestigen mag iedereen in het team: het is een vaststelling over
+          // het werk, niet over een persoon.
+          allow update: if isTeamlid(orgId, teamId)
+            && request.resource.data.doelId == resource.data.doelId
+            && request.resource.data.wachtOp == resource.data.wachtOp
+            && request.resource.data.bevestigd is bool;
+          allow delete: if isTeamlid(orgId, teamId);
+        }
+
+        match /kwartaalverzoeken/{verzoekId} {
+          allow get, list: if isTeamlid(orgId, teamId);
+          allow create: if isTeamlid(orgId, teamId)
+            && ikBen(request.resource.data.doorUid)
+            && kwartaalSleutel(request.resource.data.kwartaal)
+            && request.resource.data.titel is string
+            && request.resource.data.titel.size() > 0 && request.resource.data.titel.size() <= 160
+            && request.resource.data.waarom is string && request.resource.data.waarom.size() <= 1000
+            && kwartaalWeek(request.resource.data.van) && kwartaalWeek(request.resource.data.tot)
+            && request.resource.data.bijdragen is list
+            && request.resource.data.bijdragen.size() <= 12;
+          allow update: if isTeamlid(orgId, teamId) && ikBen(resource.data.doorUid);
+          allow delete: if isTeamlid(orgId, teamId) && ikBen(resource.data.doorUid);
+
+          // Het akkoord van één persoon op dit verzoek. Alleen hijzelf kan het
+          // zetten en alleen hijzelf kan het intrekken -- dat is wat het de
+          // moeite waard maakt om op te controleren.
+          match /akkoord/{uid} {
+            allow get, list: if isTeamlid(orgId, teamId);
+            allow create, update: if isTeamlid(orgId, teamId)
+              && ikBen(uid)
+              && request.resource.data.uid == uid
+              && request.resource.data.keys().hasOnly(['uid', 'toelichting', 'opMoment']);
+            allow delete: if isTeamlid(orgId, teamId) && ikBen(uid);
+          }
+        }
+
+        match /kwartaalbesluiten/{besluitId} {
+          allow get, list: if isTeamlid(orgId, teamId);
+          // Vastleggen doet degene die het besluit neemt, met zijn eigen naam
+          // eronder. De app wijst niemand aan als bevoegd; het team bepaalt
+          // wie beslist, en hier staat alleen dat het niet anoniem kan.
+          allow create: if isTeamlid(orgId, teamId)
+            && ikBen(request.resource.data.doorUid)
+            && request.resource.data.beslisserUid is string
+            && request.resource.data.beslisserUid.size() > 0
+            && request.resource.data.mandaat == true
+            && request.resource.data.afweging is string
+            && request.resource.data.afweging.size() > 0
+            && request.resource.data.wijzigingen is list
+            && request.resource.data.wijzigingen.size() > 0
+            && request.resource.data.wijzigingen.size() <= 60;
+          // Een genomen besluit blijft staan zoals het is genomen.
+          allow update, delete: if false;
+        }
+
       }
     }
 
