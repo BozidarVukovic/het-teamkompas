@@ -326,6 +326,17 @@ export default function Ik() {
       )}
 
       <section className="tk-groep">
+        <h2 className="tk-groep-kop">Mijn werk</h2>
+        <div className="tk-groep-lijst">
+          <Regel
+            naar="/app/doelen"
+            titel="Mijn kwartaaldoelen"
+            uitleg="Wat je dit kwartaal wilt bereiken, en hoeveel ruimte je ervoor hebt."
+          />
+        </div>
+      </section>
+
+      <section className="tk-groep">
         <h2 className="tk-groep-kop">Over mij</h2>
         <div className="tk-groep-lijst">
           <Regel

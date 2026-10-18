@@ -34,7 +34,7 @@ export const ONDERDELEN = [
     id: "ik",
     pad: "/app/ik",
     label: "Ik",
-    paden: ["/app/ik", "/app/profiel", "/app/handleiding", "/app/gegevens"],
+    paden: ["/app/ik", "/app/profiel", "/app/handleiding", "/app/gegevens", "/app/doelen"],
   },
 ];
 

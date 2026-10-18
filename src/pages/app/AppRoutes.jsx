@@ -16,6 +16,7 @@ import HulpZoeken from "./HulpZoeken";
 import MijnProfiel from "./MijnProfiel";
 import MijnHandleiding from "./MijnHandleiding";
 import MijnTeam from "./MijnTeam";
+import MijnDoelen from "./MijnDoelen";
 import Teamomgeving from "./Teamomgeving";
 import Teambeeld from "./Teambeeld";
 import MijnGegevens from "./MijnGegevens";
@@ -123,6 +124,7 @@ function Poort() {
         <Route path="hulp" element={<HulpZoeken />} />
         <Route path="profiel" element={<MijnProfiel />} />
         <Route path="handleiding" element={<MijnHandleiding />} />
+        <Route path="doelen" element={<MijnDoelen />} />
         <Route path="team" element={<MijnTeam />} />
         <Route path="teamomgeving" element={<Teamomgeving />} />
         <Route path="teamomgeving/:onderdeelId" element={<Teamomgeving />} />

@@ -25,7 +25,7 @@
 // team hebben gedeeld. Er wordt hier niets extra's opgehaald.
 
 import { useId, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
 import { collegasVan } from "../../lib/app/collegas";
 import { HULPSOORTEN } from "../../data/app/hulpsoorten";
@@ -61,7 +61,10 @@ export default function HulpZoeken() {
   const { leden, gedeeld, profielleden, laden } = teamOverzicht;
   const basis = useId();
 
-  const [vraag, setVraag] = useState("");
+  const [zoekparameters] = useSearchParams();
+  // Een hulpvraag die van een kwartaaldoel meekomt, staat meteen in het veld.
+  // Alleen als eerste waarde: wie hem daarna aanpast, houdt zijn eigen tekst.
+  const [vraag, setVraag] = useState(() => (zoekparameters.get("vraag") || "").slice(0, 600));
   const [gekozenSoorten, setGekozenSoorten] = useState([]);
   const [uitkomst, setUitkomst] = useState(null);
   const [bezig, setBezig] = useState(false);
