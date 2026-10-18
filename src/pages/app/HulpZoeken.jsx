@@ -1,6 +1,6 @@
 // "Wie helpt mij verder?" — de tweede ingang van de samenwerkingstool.
 //
-// Eén invoerscherm en één resultatenscherm. Je beschrijft je klus, vinkt
+// Eén invoerscherm en één resultatenscherm. Je beschrijft je taak, vinkt
 // eventueel aan waar je hulp bij kunt gebruiken, en krijgt hoogstens drie
 // collega's uit je eigen team met een onderbouwing die je kunt nalezen.
 //
@@ -234,7 +234,7 @@ export default function HulpZoeken() {
             <div className="tk-kaart">
               <h2>Nog geen onderbouwd voorstel</h2>
               <p>
-                Probeer je klus concreter te beschrijven, of geef je hulpvraag meer richting. Helpt
+                Probeer je taak concreter te beschrijven, of geef je hulpvraag meer richting. Helpt
                 dat niet, dan is er over je collega&apos;s nog te weinig gedeeld om hier iets
                 zinnigs over te zeggen.
               </p>

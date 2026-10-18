@@ -983,12 +983,12 @@ function Omgeving({ team, uid, leden, magInrichten }) {
           <div className="to-ingang-meer"><Tekst tijdlijn={leesTijdlijn(deel)}>{deel.tekst}</Tekst></div>
         </details>)}
 
-        {/* De collega's zelf staan op een eigen pagina. Sinds de teamomgeving
-            het vierde tabblad is, is dit de weg ernaartoe. */}
+        {/* De mensen zelf staan op een eigen pagina. Sinds de teamomgeving het
+            vierde tabblad is, is dit de weg ernaartoe. */}
         <Link className="to-ingang to-ingang-link" to="/app/team">
           <span className="to-ingang-rij">
             <span className="to-ingang-soort" aria-hidden="true">◎</span>
-            <span className="to-ingang-titel">Collega&apos;s in dit team</span>
+            <span className="to-ingang-titel">Mijn team</span>
             <span className="to-pijl to-pijl-recht" aria-hidden="true" />
           </span>
         </Link>

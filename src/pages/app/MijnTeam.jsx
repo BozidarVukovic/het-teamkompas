@@ -588,11 +588,13 @@ export default function MijnTeam() {
 
   return (
     <div className="tk-inhoud">
-      {/* De teamnaam stond hier als kop. Sinds de teamomgeving een eigen
-          plek heeft, zeggen twee pagina's "HR Business & Beleid" en verschilt
-          alleen wat eronder staat. Deze pagina gaat over de mensen; dat hoort
-          de kop te zeggen. De teamnaam staat een regel lager. */}
-      <h1 className="tk-kop">Collega&apos;s</h1>
+      {/* De teamnaam stond hier als kop. Sinds de teamomgeving een eigen plek
+          heeft, zeggen twee pagina's "HR Business & Beleid" en verschilt alleen
+          wat eronder staat. Deze pagina gaat over de mensen, en heet overal in
+          de app "Mijn team" -- op Start, in de teamomgeving en hier. Twee namen
+          voor dezelfde plek is erger dan een naam die niet ideaal is. De
+          teamnaam staat een regel lager. */}
+      <h1 className="tk-kop">Mijn team</h1>
       <p className="tk-onderkop">
         {actiefTeam.teamNaam ? `${actiefTeam.teamNaam} — ${onderkop}` : onderkop}
       </p>

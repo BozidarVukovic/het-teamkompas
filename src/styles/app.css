@@ -601,13 +601,14 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 38px;
+  min-height: var(--tk-raak, 44px);
   padding: 8px 16px;
+  border: 1px solid var(--tk-teal-rand);
   border-radius: 999px;
-  background: var(--tk-oranje);
-  color: var(--tk-oranje-tekst);
+  background: transparent;
+  color: var(--tk-teal);
   font-size: var(--tk-t-klein);
-  font-weight: 800;
+  font-weight: 700;
   transition: background var(--tk-vlot) var(--tk-soepel);
 }
 
@@ -623,7 +624,7 @@
   }
 
   .tk-toegang:hover .tk-toegang-actie {
-    filter: brightness(1.07);
+    background: var(--tk-teal-dim);
   }
 }
 

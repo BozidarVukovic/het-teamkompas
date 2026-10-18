@@ -3,7 +3,7 @@
 // Hier stond een rij bollen met de voornamen van je collega's: één tik en je
 // was bij het advies. Dat werkte, maar het was de enige route die zichtbaar
 // was. De app heeft er twee -- beginnen bij een collega, of beginnen bij een
-// klus -- en de tweede stond nergens op dit scherm. Wie met een vraag in zijn
+// taak -- en de tweede stond nergens op dit scherm. Wie met een vraag in zijn
 // hoofd binnenkwam, zag alleen gezichten.
 //
 // Nu staan de twee vragen vooraan, in hun eigen woorden, elk met de knop die
@@ -123,9 +123,9 @@ export default function Start() {
               naar="/app/samenwerken"
             />
             <Route
-              titel="Ik zoek hulp bij een klus"
+              titel="Ik zoek hulp bij een taak"
               uitleg="Beschrijf je vraag en verken wie kan meedenken."
-              knop="Beschrijf je klus"
+              knop="Beschrijf je taak"
               naar="/app/hulp"
             />
           </div>
