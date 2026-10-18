@@ -264,6 +264,62 @@ test("kwartaaldoelen: concepten, eigendom en akkoord", { skip: !draait }, async 
       await assertFails(getDocs(bijdragen(db("ada"))));
     });
 
+    /* ────────────────────────────────────────────────── afhankelijkheden */
+
+    await t.test("een afhankelijkheid hoort bij het team en draagt je naam", async () => {
+      const goed = {
+        kwartaal: "2027-K1",
+        doelId: "doel-gedeeld",
+        wachtOp: "doel-ander",
+        mijlpaal: "eerste versie",
+        bevestigd: false,
+        doorUid: "ada",
+      };
+      await assertFails(
+        setDoc(doc(db("ada"), `${pad}/kwartaalafhankelijkheden/a1`), { ...goed, doorUid: "bram" })
+      );
+      await assertSucceeds(setDoc(doc(db("ada"), `${pad}/kwartaalafhankelijkheden/a1`), goed));
+      await assertSucceeds(getDoc(doc(db("bram"), `${pad}/kwartaalafhankelijkheden/a1`)));
+      await assertFails(getDoc(doc(db("buiten"), `${pad}/kwartaalafhankelijkheden/a1`)));
+    });
+
+    await t.test("een doel kan niet op zichzelf wachten", async () => {
+      await assertFails(
+        setDoc(doc(db("ada"), `${pad}/kwartaalafhankelijkheden/a2`), {
+          kwartaal: "2027-K1",
+          doelId: "doel-gedeeld",
+          wachtOp: "doel-gedeeld",
+          bevestigd: false,
+          doorUid: "ada",
+        })
+      );
+    });
+
+    await t.test("bevestigen mag iedereen, de relatie herschrijven niet", async () => {
+      // Een afhankelijkheid bevestigen is een vaststelling over het werk, niet
+      // over een persoon -- daar hoeft niemand eigenaar van te zijn. Maar wát
+      // er op wát wacht veranderen is iets anders dan bevestigen.
+      await assertSucceeds(
+        updateDoc(doc(db("bram"), `${pad}/kwartaalafhankelijkheden/a1`), {
+          kwartaal: "2027-K1",
+          doelId: "doel-gedeeld",
+          wachtOp: "doel-ander",
+          mijlpaal: "eerste versie",
+          bevestigd: true,
+          doorUid: "ada",
+        })
+      );
+      await assertFails(
+        updateDoc(doc(db("bram"), `${pad}/kwartaalafhankelijkheden/a1`), {
+          kwartaal: "2027-K1",
+          doelId: "doel-gedeeld",
+          wachtOp: "iets-anders",
+          bevestigd: true,
+          doorUid: "ada",
+        })
+      );
+    });
+
     /* ──────────────────────────────────────────────────────────── besluiten */
 
     await t.test("een besluit kan niet anoniem en niet zonder afweging", async () => {

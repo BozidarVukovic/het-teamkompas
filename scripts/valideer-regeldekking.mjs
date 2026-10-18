@@ -14,11 +14,26 @@
 import fs from "node:fs";
 
 const REGELS = "firestore.rules";
-const TESTS = [
-  "tests/securityRules.test.mjs",
-  "tests/teamomgevingRules.test.mjs",
-  "tests/teamcheckRules.test.mjs",
-];
+
+// De testbestanden komen uit het commando dat ze draait, en niet uit een lijst
+// hier. Die lijst stond met de hand bijgehouden, en toen er een suite bijkwam
+// bleef hij staan: de bewaker zag een test die er wel was niet staan, en liet
+// de build struikelen op dekking die er gewoon was. Nu kan de lijst niet meer
+// afwijken van wat er werkelijk draait.
+function testbestanden() {
+  const pakket = JSON.parse(fs.readFileSync("package.json", "utf8"));
+  const opdracht = (pakket.scripts && pakket.scripts["test:regels"]) || "";
+  const gevonden = [...opdracht.matchAll(/tests\/[A-Za-z0-9_-]+\.test\.mjs/g)].map((m) => m[0]);
+  const uniek = [...new Set(gevonden)].filter((p) => fs.existsSync(p));
+  if (uniek.length === 0) {
+    console.error('Geen testbestanden gevonden in het script "test:regels" in package.json.');
+    console.error("Zonder die lijst controleert deze bewaker niets, en dat is erger dan falen.");
+    process.exit(1);
+  }
+  return uniek;
+}
+
+const TESTS = testbestanden();
 
 // Alleen het app-gedeelte. De backoffice-collecties erboven horen bij de
 // publieke site en hebben hun eigen geschiedenis; die er nu bij trekken zou de
