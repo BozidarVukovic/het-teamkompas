@@ -1,5 +1,34 @@
 [
   {
+    "slug": "mensen-zijn-meer-dan-hun-bijdrage",
+    "title": "Immanuel Kant, mensen zijn meer dan hun bijdrage",
+    "excerpt": "Je weet precies wie je kunt vragen, en dus vraag je het opnieuw. Wanneer waardering voor iemands bereidheid verandert in een verwachting.",
+    "publishDate": "2026-10-25",
+    "modifiedDate": "2026-10-25",
+    "image": "/blog/images/meer-dan-je-bijdrage.jpg",
+    "imageAlt": "Illustratie bij het artikel over de mens achter de bijdrage",
+    "category": "Leiderschap",
+    "tags": [
+      "leiderschap",
+      "teamcultuur",
+      "eigenaarschap"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/teamenergie",
+      "/kennis/teamcultuur",
+      "/psychologische-veiligheid"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/individuele-coaching"
+    ],
+    "lead": "Er ontbreekt iemand in het rooster. Een project loopt achter. Een termijn komt dichterbij. Je weet wie je kunt vragen: die ene medewerker die altijd meedenkt, verantwoordelijkheid neemt en meestal wel een oplossing vindt.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 687
+  },
+  {
     "slug": "als-ieder-goed-idee-meteen-een-deadline-krijgt",
     "title": "Als ieder goed idee meteen een deadline krijgt",
     "excerpt": "Een nieuwe leidinggevende ziet kansen en zet er data bij. Afzonderlijk klopt elk initiatief, en het team ervaart alleen de optelsom.",
