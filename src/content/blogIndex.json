@@ -1,5 +1,34 @@
 [
   {
+    "slug": "voor-wie-werkt-jouw-leiderschap",
+    "title": "Voor wie werkt jouw leiderschap?",
+    "excerpt": "Jouw overzicht nam toe, hun ruimte om goed werk te doen nam af. Over het verschil tussen werk dat beter uitvoerbaar wordt en werk dat beter te volgen is.",
+    "publishDate": "2026-11-03",
+    "modifiedDate": "2026-11-03",
+    "image": "/blog/images/voor-wie-werkt-jouw-leiderschap.jpg",
+    "imageAlt": "Illustratie bij het artikel over leiderschap dat ruimte geeft of juist wegneemt",
+    "category": "Leiderschap",
+    "tags": [
+      "leiderschap",
+      "eigenaarschap",
+      "teamenergie"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/teamenergie",
+      "/kennis/eigenaarschap-in-teams",
+      "/psychologische-veiligheid"
+    ],
+    "relatedServices": [
+      "/individuele-coaching",
+      "/teamcoaching"
+    ],
+    "lead": "De vergadering is afgelopen. Je hebt overzicht, de acties zijn verdeeld en iedereen weet wanneer je een terugkoppeling verwacht. Met een gerust gevoel ga je naar je volgende afspraak.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 590
+  },
+  {
     "slug": "wie-bepaalt-hoe-jouw-werk-er-straks-uitziet",
     "title": "Wie bepaalt hoe jouw werk er straks uitziet?",
     "excerpt": "Een AI-toepassing wordt ingevoerd met een demonstratie en een training. Tussen die twee momenten blijft één vraag liggen: wie koos hoe het werk voortaan gaat.",
