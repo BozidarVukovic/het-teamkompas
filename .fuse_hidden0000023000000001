@@ -1,0 +1,42 @@
+[debug] [2026-09-15T16:59:21.211Z] ----------------------------------------------------------------------
+[debug] [2026-09-15T16:59:21.212Z] Command:       /usr/bin/node /sessions/rcw-01v8brqdo89eqfsjx3cftm39/.npm/_npx/872b751b2f16d338/node_modules/.bin/firebase emulators:exec --only firestore --project teamkompas-regeltest node --test tests/securityRules.test.mjs tests/teamomgevingRules.test.mjs
+[debug] [2026-09-15T16:59:21.212Z] CLI Version:   13.35.1
+[debug] [2026-09-15T16:59:21.212Z] Platform:      linux
+[debug] [2026-09-15T16:59:21.212Z] Node Version:  v22.23.2
+[debug] [2026-09-15T16:59:21.212Z] Time:          Tue Sep 15 2026 16:59:21 GMT+0000 (Coordinated Universal Time)
+[debug] [2026-09-15T16:59:21.212Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-09-15T16:59:21.214Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2026-09-15T16:59:21.287Z] Object "/firestore" in "firebase.json" has unknown property: {"additionalProperty":"location"}
+[debug] [2026-09-15T16:59:21.287Z] Field "/firestore" in "firebase.json" is possibly invalid: must be array
+[debug] [2026-09-15T16:59:21.287Z] Field "/firestore" in "firebase.json" is possibly invalid: must match a schema in anyOf
+[debug] [2026-09-15T16:59:21.298Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] Failed to authenticate, have you run firebase login?
+[warn] ⚠  emulators: You are not currently authenticated so some features may not work correctly. Please run firebase login to authenticate the CLI. 
+[debug] [2026-09-15T16:59:21.314Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 403
+[debug] [2026-09-15T16:59:21.314Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json "Connection blocked by network allowlist"
+[warn] ⚠  Unable to fetch the CLI MOTD and remote config. This is not a fatal error, but may indicate an issue with your network connection. 
+[debug] [2026-09-15T16:59:21.314Z] Failed to fetch MOTD FirebaseError: Unable to parse JSON: SyntaxError: Unexpected token 'C', "Connection"... is not valid JSON
+[debug] [2026-09-15T16:59:21.334Z] openjdk version "11.0.32" 2026-07-21
+OpenJDK Runtime Environment (build 11.0.32+9-post-1ubuntu1-22.04-Ubuntu)
+[debug] [2026-09-15T16:59:21.334Z] 
+OpenJDK 64-Bit Server VM (build 11.0.32+9-post-1ubuntu1-22.04-Ubuntu, mixed mode)
+
+[debug] [2026-09-15T16:59:21.347Z] Parsed Java major version: 11
+[info] i  emulators: Starting emulators: firestore {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: firestore"}}
+[debug] [2026-09-15T16:59:21.348Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-09-15T16:59:21.348Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-09-15T16:59:21.348Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2026-09-15T16:59:21.348Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2026-09-15T16:59:21.350Z] [hub] writing locator at /sessions/rcw-01v8brqdo89eqfsjx3cftm39/tmp/hub-teamkompas-regeltest.json
+[info] i  firestore: downloading cloud-firestore-emulator-v1.19.8.jar... {"metadata":{"emulator":{"name":"firestore"},"message":"downloading cloud-firestore-emulator-v1.19.8.jar..."}}
+[debug] [2026-09-15T16:59:21.352Z] >>> [apiv2][query] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar 
+[debug] [2026-09-15T16:59:21.354Z] <<< [apiv2][status] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar 403
+[debug] [2026-09-15T16:59:21.354Z] <<< [apiv2][body] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar [stream]
+[debug] [2026-09-15T16:59:21.355Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: connect ECONNREFUSED 127.0.0.1:40001. If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  firestore: Stopping Firestore Emulator {"metadata":{"emulator":{"name":"firestore"},"message":"Stopping Firestore Emulator"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2026-09-15T16:59:21.356Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: connect ECONNREFUSED 127.0.0.1:40001. If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[error] 
+[error] Error: download failed, status 403: Connection blocked by network allowlist
