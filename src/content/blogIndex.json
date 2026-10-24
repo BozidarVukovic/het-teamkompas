@@ -1,5 +1,34 @@
 [
   {
+    "slug": "voorkom-de-tweede-pijl",
+    "title": "De Boeddha, voorkom de tweede pijl",
+    "excerpt": "Een fout vraagt om herstel. De schade ontstaat vaak daarna, wanneer één gebeurtenis een oordeel wordt over een persoon of een heel team.",
+    "publishDate": "2026-11-20",
+    "modifiedDate": "2026-11-20",
+    "image": "/blog/images/voorkom-de-tweede-pijl.jpg",
+    "imageAlt": "Illustratie bij het artikel over reageren op fouten en tegenslag",
+    "category": "Leiderschap",
+    "tags": [
+      "leiderschap",
+      "psychologische veiligheid",
+      "gedrag"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/psychologische-veiligheid",
+      "/kennis/teamcultuur",
+      "/brein-en-samenwerking"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/individuele-coaching"
+    ],
+    "lead": "Een collega maakt een fout. Je ontdekt die vlak voor een belangrijk overleg. Er moet iets worden hersteld en misschien moet iemand worden geïnformeerd. Dat is vervelend genoeg.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 609
+  },
+  {
     "slug": "als-je-verklaring-het-zicht-belemmert",
     "title": "Dōgen, wanneer je verklaring het zicht op je team belemmert",
     "excerpt": "Dit team neemt te weinig eigenaarschap. Een zin die makkelijk valt, en die bepaalt welke antwoorden je daarna nog kunt horen.",
