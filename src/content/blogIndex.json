@@ -1,5 +1,34 @@
 [
   {
+    "slug": "de-onpartijdige-toeschouwer",
+    "title": "Adam Smith, de onpartijdige toeschouwer",
+    "excerpt": "Welke feiten zou je aan een buitenstaander vertellen, en welke laat je nu weg? Over besluiten die logisch voelen zolang je er zelf middenin zit.",
+    "publishDate": "2026-11-22",
+    "modifiedDate": "2026-11-22",
+    "image": "/blog/images/de-onpartijdige-toeschouwer.jpg",
+    "imageAlt": "Illustratie bij het artikel over besluiten bekijken door de ogen van een buitenstaander",
+    "category": "Leiderschap",
+    "tags": [
+      "leiderschap",
+      "teamcultuur",
+      "gedrag"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/teamcultuur",
+      "/kennis/eigenaarschap-in-teams",
+      "/psychologische-veiligheid"
+    ],
+    "relatedServices": [
+      "/individuele-coaching",
+      "/teamcoaching"
+    ],
+    "lead": "Een besluit kan logisch voelen zolang je er zelf middenin zit. Je kent de voorgeschiedenis, hebt de druk ervaren en weet wat je wilt bereiken. Juist daardoor zie je gemakkelijk over het hoofd wat een ander in dezelfde feiten zou zien.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 601
+  },
+  {
     "slug": "een-medewerker-is-meer-dan-een-functie",
     "title": "Martin Buber, een medewerker is meer dan een functie",
     "excerpt": "Dat past bij jouw profiel sluit een gesprek af. Over omschrijvingen die overzicht geven en ongemerkt het hele beeld van iemand gaan bepalen.",
