@@ -1,5 +1,33 @@
 [
   {
+    "slug": "samenwerken-zonder-gezamenlijke-baas",
+    "title": "Samenwerken zonder gezamenlijke baas",
+    "excerpt": "Hoe afhankelijker organisaties van elkaar worden, hoe minder ze elkaar kunnen aansturen. Wat er dan voor in de plaats moet komen.",
+    "publishDate": "2026-11-06",
+    "modifiedDate": "2026-11-06",
+    "image": "/blog/images/samenwerken-zonder-gezamenlijke-baas.jpg",
+    "imageAlt": "Illustratie bij het artikel over samenwerken tussen organisaties",
+    "category": "Samenwerking",
+    "tags": [
+      "samenwerking",
+      "leiderschap",
+      "verandering"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/teamcultuur",
+      "/kennis/verandermanagement"
+    ],
+    "relatedServices": [
+      "/teamdag",
+      "/teamcoaching"
+    ],
+    "lead": "Binnen een organisatie is samenwerken al ingewikkeld. Daar is uiteindelijk wel ergens een gezamenlijke structuur: een directie, een budget, een strategie, of iemand die een knoop kan doorhakken. Tussen organisaties werkt dat anders.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 609
+  },
+  {
     "slug": "echte-inspraak-vraagt-invloed",
     "title": "Jürgen Habermas, echte inspraak vraagt invloed",
     "excerpt": "Ruimte voor vragen aan het einde van een presentatie waarin alles al vastligt. Waarom een uitnodiging om mee te denken verwachtingen schept.",
