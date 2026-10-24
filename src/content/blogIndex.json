@@ -1,5 +1,34 @@
 [
   {
+    "slug": "kijk-naar-het-detail-en-het-geheel",
+    "title": "Miyamoto Musashi, kijk naar het detail en het geheel",
+    "excerpt": "Alleen de medewerker aanspreken verandert het patroon niet. Alleen over het proces praten doet geen recht aan de afspraak. Over afwisselend in- en uitzoomen.",
+    "publishDate": "2026-11-23",
+    "modifiedDate": "2026-11-23",
+    "image": "/blog/images/kijk-naar-het-detail-en-het-geheel.jpg",
+    "imageAlt": "Illustratie bij het artikel over inzoomen op een incident en uitzoomen naar het patroon",
+    "category": "Leiderschap",
+    "tags": [
+      "leiderschap",
+      "teamcultuur",
+      "samenwerking"
+    ],
+    "featured": false,
+    "relatedKnowledgePages": [
+      "/kennis/teamcultuur",
+      "/kennis/eigenaarschap-in-teams",
+      "/kleine-experimenten"
+    ],
+    "relatedServices": [
+      "/teamcoaching",
+      "/teamscan"
+    ],
+    "lead": "Een afspraak wordt niet nagekomen. Een overdracht loopt mis. Een medewerker reageert scherp in een overleg. Je wil weten wat er precies gebeurde en wie erbij betrokken waren. Terecht, en blijft je aandacht bij dat ene voorval, dan mis je waarom het steeds opnieuw gebeurt.",
+    "author": "Mijn Teamkompas",
+    "readtime": "",
+    "woorden": 534
+  },
+  {
     "slug": "de-onpartijdige-toeschouwer",
     "title": "Adam Smith, de onpartijdige toeschouwer",
     "excerpt": "Welke feiten zou je aan een buitenstaander vertellen, en welke laat je nu weg? Over besluiten die logisch voelen zolang je er zelf middenin zit.",
