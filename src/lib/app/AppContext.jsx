@@ -14,6 +14,7 @@ import {
 } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { wachtOpAanmelding } from "./wachttijd";
+import { haalInstellingen, zetOnderdeel } from "./onderdelenOpslag";
 import { auth } from "../firebase";
 import { kenmerkenUitInsights } from "./insights";
 import {
@@ -106,6 +107,13 @@ export function AppProvider({ children }) {
   const [experimenten, setExperimenten] = useState([]);
   const [sessies, setSessies] = useState([]);
   const [reflecties, setReflecties] = useState([]);
+  // Welke onderdelen dit team aan heeft staan. Null betekent "nog niet
+  // geladen" en is iets anders dan een leeg object -- dat laatste betekent
+  // "geladen, en er staat niets aan". Het verschil telt: zonder dat zou een
+  // scherm tijdens het laden al concluderen dat iets uitstaat en je wegsturen.
+  const [onderdeelInstellingen, setOnderdeelInstellingen] = useState(null);
+  const [onderdelenKlaar, setOnderdelenKlaar] = useState(false);
+
   const [teamOverzicht, setTeamOverzicht] = useState({
     team: null,
     leden: [],
@@ -371,6 +379,38 @@ function terugkeeradres() {
     if (!gebruiker) return;
     laadTeamOverzicht(actiefTeam);
   }, [gebruiker, actiefTeam, laadTeamOverzicht]);
+
+  // De instellingen staan los van het teamoverzicht: ze zijn er ook voor wie
+  // de ledenlijst niet mag opvragen, en een mislukte ledenlijst hoort niet te
+  // betekenen dat de app niet meer weet wat ze mag tonen.
+  //
+  // Mislukt het ophalen, dan blijft alles uit. Dat is de veilige kant: liever
+  // een onderdeel dat even niet verschijnt dan een onderdeel dat verschijnt
+  // bij een team dat er niet om heeft gevraagd.
+  useEffect(() => {
+    let geldig = true;
+    setOnderdelenKlaar(false);
+    if (!gebruiker || !actiefTeam) {
+      setOnderdeelInstellingen(null);
+      setOnderdelenKlaar(Boolean(gebruiker));
+      return () => { geldig = false; };
+    }
+    haalInstellingen(actiefTeam)
+      .then((d) => { if (geldig) setOnderdeelInstellingen(d || {}); })
+      .catch(() => { if (geldig) setOnderdeelInstellingen({}); })
+      .finally(() => { if (geldig) setOnderdelenKlaar(true); });
+    return () => { geldig = false; };
+  }, [gebruiker, actiefTeam]);
+
+  const zetOnderdeelAan = useCallback(
+    async (id, aan) => {
+      if (!actiefTeam || !gebruiker) throw new Error("Selecteer eerst een team.");
+      const nieuw = await zetOnderdeel(actiefTeam, gebruiker.uid, id, aan);
+      setOnderdeelInstellingen(nieuw);
+      return nieuw;
+    },
+    [actiefTeam, gebruiker]
+  );
 
   // Zelf een team opzetten is voor wie teams begeleidt. Staat dit op false, dan
   // laat de app die keuze niet zien; de regels weigeren hem hoe dan ook.
@@ -841,6 +881,9 @@ function terugkeeradres() {
       uitnodigingscode,
       vergeetUitnodiging,
       teamOverzicht,
+      onderdeelInstellingen,
+      onderdelenKlaar,
+      zetOnderdeelAan,
       ikBegeleid,
       begeleideTeams,
       zetRol,
@@ -883,7 +926,8 @@ function terugkeeradres() {
     }),
     [
       gebruiker, authKlaar, gegevensKlaar, gebruikerDoc, naam, functie, foto, lidmaatschappen, actiefTeam,
-      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht, ikBegeleid, begeleideTeams, zetRol, bewaarAfspraak, verwijderAfspraak, experimenten, startExperiment, blikTerug, sessies, reflecties, bewaarReflectie, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
+      kenmerken, handleiding, profiel, uitnodigingscode, vergeetUitnodiging, teamOverzicht,
+      onderdeelInstellingen, onderdelenKlaar, zetOnderdeelAan, ikBegeleid, begeleideTeams, zetRol, bewaarAfspraak, verwijderAfspraak, experimenten, startExperiment, blikTerug, sessies, reflecties, bewaarReflectie, laadTeamOverzicht, voorstellen, tekstvoorstellen, wijsTekstvoorstelAf, neemInsightsOver, neemVoorstelOver,
       wijsVoorstelAf, kiesTeam, stuurInloglink, isInloglink, voltooiInloggen,
       logUit, zetNaam, bewaarKenmerk, bewaarMeerKenmerken, bewaarSectie, bewaarInsights,
       wisInsights, zetKleurenDelen, maakTeam, doeMee, verlaatTeam, verwijderTeam, vernieuwCode, magTeams, verwijderAlles, laadGegevens,

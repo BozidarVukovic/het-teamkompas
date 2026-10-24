@@ -602,6 +602,23 @@ export default function MijnTeam() {
       <Melding melding={profielMelding} onSluiten={wisProfielMelding} />
       <Melding melding={rolMelding} onSluiten={wisRolMelding} />
 
+      {/* Wat dit team te zien krijgt. Staat boven de mensen omdat het over het
+          team als geheel gaat; alleen een beheerder komt er. */}
+      {ikBenBeheerder && (
+        <section className="tk-groep">
+          <h2 className="tk-groep-kop">Beheer</h2>
+          <div className="tk-groep-lijst">
+            <Link to="/app/beheer" className="tk-optie">
+              <span className="tk-optie-tekst">
+                <strong>Onderdelen voor dit team</strong>
+                <small>Zet onderdelen van de app aan of uit voor je team.</small>
+              </span>
+              <span className="tk-optie-pijl" aria-hidden="true">›</span>
+            </Link>
+          </div>
+        </section>
+      )}
+
       {/* ---------------------------------------------------------- de mensen */}
       <section className="tk-groep">
         <h2 className="tk-groep-kop">Wie doen er mee</h2>

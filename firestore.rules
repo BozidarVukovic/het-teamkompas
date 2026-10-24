@@ -606,6 +606,35 @@ service cloud.firestore {
           return exists(/databases/$(database)/documents/organisaties/$(orgId)/teams/$(teamId)/kwartaalverzoeken/$(verzoekId)/akkoord/$(uid));
         }
 
+        /* ═══════════════════════════════════ onderdelen aan en uit
+
+           Welke onderdelen dit team te zien krijgt. Leesbaar voor iedereen in
+           het team -- de app moet weten wat ze mag tonen -- en alleen te
+           schrijven door een beheerder of begeleider.
+
+           Alleen bekende sleutels, en alleen booleans. Een onbekend veld hier
+           toestaan zou betekenen dat een latere versie van de app stilletjes
+           iets anders kan aanzetten dan wat er op het beheerscherm staat. */
+        function onderdeelInstellingen(d) {
+          return d.keys().hasOnly(['versie', 'kwartaaldoelen', 'bijgewerktOp', 'doorUid'])
+            && d.versie is int
+            && d.kwartaaldoelen is bool
+            && d.doorUid is string
+            && d.doorUid == request.auth.uid;
+        }
+
+        match /instellingen/{sleutel} {
+          allow get, list: if isTeamlid(orgId, teamId);
+          // Eén document, met een vaste naam. Een tweede naast "onderdelen"
+          // zou een tweede waarheid zijn over wat er aanstaat.
+          allow create, update: if isTeambeheerder(orgId, teamId)
+            && sleutel == 'onderdelen'
+            && onderdeelInstellingen(request.resource.data);
+          // Weggooien zou alles in één klap uitzetten zonder dat iemand ziet
+          // wie dat deed. Uitzetten gaat met de schakelaar.
+          allow delete: if false;
+        }
+
         match /kwartaaldoelen/{doelId} {
           // Gedeeld is voor het hele team; een concept alleen voor de eigenaar.
           allow get, list: if isTeamlid(orgId, teamId)

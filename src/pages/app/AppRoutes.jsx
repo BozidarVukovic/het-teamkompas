@@ -17,6 +17,8 @@ import MijnProfiel from "./MijnProfiel";
 import MijnHandleiding from "./MijnHandleiding";
 import MijnTeam from "./MijnTeam";
 import MijnDoelen from "./MijnDoelen";
+import Beheer from "./Beheer";
+import { isAan } from "../../lib/app/onderdelen";
 import Teamomgeving from "./Teamomgeving";
 import Teambeeld from "./Teambeeld";
 import MijnGegevens from "./MijnGegevens";
@@ -40,6 +42,18 @@ function Laden({ tekst = "Even laden..." }) {
   );
 }
 
+
+// Een onderdeel dat uitstaat is niet alleen onzichtbaar in het menu: het adres
+// doet ook niets. Zonder dit opent een bewaarde link het scherm alsnog, en dan
+// is "uitgezet" alleen een belofte aan wie niet doorklikt.
+//
+// Tijdens het laden wordt er niets geconcludeerd. Meteen wegsturen zou
+// betekenen dat een beheerder die het net aanzette er toch uit vliegt.
+function AlsOnderdeelAan({ id, children }) {
+  const { onderdelenKlaar, onderdeelInstellingen } = useApp();
+  if (!onderdelenKlaar) return <Laden />;
+  return isAan(onderdeelInstellingen, id) ? children : <Navigate to="/app/ik" replace />;
+}
 
 function Schil({ children }) {
   return (
@@ -124,7 +138,8 @@ function Poort() {
         <Route path="hulp" element={<HulpZoeken />} />
         <Route path="profiel" element={<MijnProfiel />} />
         <Route path="handleiding" element={<MijnHandleiding />} />
-        <Route path="doelen" element={<MijnDoelen />} />
+        <Route path="doelen" element={<AlsOnderdeelAan id="kwartaaldoelen"><MijnDoelen /></AlsOnderdeelAan>} />
+        <Route path="beheer" element={<Beheer />} />
         <Route path="team" element={<MijnTeam />} />
         <Route path="teamomgeving" element={<Teamomgeving />} />
         <Route path="teamomgeving/:onderdeelId" element={<Teamomgeving />} />

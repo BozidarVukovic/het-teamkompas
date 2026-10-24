@@ -1,0 +1,182 @@
+/* ═══════════════════════════════════ onderdelen aan- en uitzetten
+
+   Eén kaart per onderdeel, met de schakelaar rechts. Op een telefoon zakt de
+   schakelaar onder de tekst: naast een tweeregelige uitleg blijft er op 320
+   pixels te weinig over om de woorden heel te houden. */
+
+.bh-kruimel {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  margin-bottom: 14px;
+  font-size: var(--tk-t-klein);
+  font-weight: 600;
+}
+
+.bh-kruimel a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tk-raak, 44px);
+  padding: 0 8px;
+  margin-left: -8px;
+  color: var(--tk-zacht);
+  text-decoration: none;
+}
+
+.bh-kruimel a:focus-visible {
+  outline: 2px solid var(--tk-teal);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.bh-uitleg {
+  margin: 0 0 var(--tk-tussen);
+  line-height: 1.75;
+  color: var(--tk-zacht);
+}
+
+.bh-onderdeel {
+  margin-bottom: 14px;
+}
+
+.bh-rij {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+}
+
+.bh-tekst {
+  display: flex;
+  flex: 1 1 260px;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.bh-naam {
+  font-size: var(--tk-t-lead);
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--tk-tekst);
+}
+
+.bh-kort {
+  font-size: var(--tk-t-klein);
+  line-height: 1.6;
+  color: var(--tk-zacht);
+}
+
+.bh-gevolg {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--tk-navy-3);
+  font-size: var(--tk-t-klein);
+  line-height: 1.65;
+  color: var(--tk-zacht);
+}
+
+/* ── de schakelaar ────────────────────────────────────────────────────────
+   Het schuifje gaat naar rechts als het aanstaat, en de kleur verandert mee.
+   Daarnaast staat de stand in woorden: betekenis mag niet alleen van een
+   positie of een kleur afhangen. */
+
+.tk-schakelaar {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+  min-height: var(--tk-raak, 44px);
+  padding: 0 4px;
+  background: none;
+  border: 0;
+  color: var(--tk-zacht);
+  font: inherit;
+  font-size: var(--tk-t-klein);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.tk-schakelaar:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.tk-schakelaar:focus-visible {
+  outline: 2px solid var(--tk-teal);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+.tk-schakelaar-spoor {
+  position: relative;
+  flex: 0 0 auto;
+  width: 52px;
+  height: 30px;
+  border: 1px solid var(--tk-lijn);
+  border-radius: 999px;
+  background: var(--tk-navy-3);
+  transition: background var(--tk-vlot) var(--tk-soepel),
+    border-color var(--tk-vlot) var(--tk-soepel);
+}
+
+.tk-schakelaar-knop {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--tk-zacht);
+  transform: translateY(-50%);
+  transition: transform var(--tk-rustig) var(--tk-soepel),
+    background var(--tk-vlot) var(--tk-soepel);
+}
+
+.tk-schakelaar[aria-checked="true"] .tk-schakelaar-spoor {
+  background: var(--tk-teal-dim);
+  border-color: var(--tk-teal);
+}
+
+.tk-schakelaar[aria-checked="true"] .tk-schakelaar-knop {
+  background: var(--tk-teal);
+  transform: translate(22px, -50%);
+}
+
+.tk-schakelaar[aria-checked="true"] .tk-schakelaar-tekst {
+  color: var(--tk-teal);
+}
+
+@media (hover: hover) {
+  .tk-schakelaar:not(:disabled):hover .tk-schakelaar-spoor {
+    border-color: var(--tk-teal-rand);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tk-schakelaar-spoor,
+  .tk-schakelaar-knop {
+    transition: none;
+  }
+}
+
+/* Onder 420 pixels zakt de schakelaar onder de tekst in plaats van ernaast. */
+@media (max-width: 420px) {
+  .bh-rij {
+    flex-direction: column;
+  }
+
+  /* In een kolom groeit een flexkind met basis 260 door tot het de hele
+     hoogte vult, en dan staat de schakelaar ineens honderden pixels onder
+     zijn eigen tekst. Gemeten op 390: een gat van bijna 400 pixels. */
+  .bh-tekst {
+    flex: 0 0 auto;
+  }
+
+  .tk-schakelaar {
+    padding-left: 0;
+  }
+}

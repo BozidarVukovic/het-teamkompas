@@ -11,6 +11,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/app/AppContext";
+import { isAan } from "../../lib/app/onderdelen";
 import useActie from "../../components/app/useActie";
 import Melding from "../../components/app/Melding";
 import Voortgang from "../../components/app/Voortgang";
@@ -290,6 +291,7 @@ export default function Ik() {
   const {
     naam, functie, gebruiker, kenmerken, actiefTeam, handleiding, ikBegeleid,
     experimenten, blikTerug, sessies, reflecties, bewaarReflectie,
+    onderdeelInstellingen,
   } = useApp();
   // Staat het vasthouden uit, dan is er niets te tonen en valt het blok
   // hieronder vanzelf weg. Zie KAN_VASTHOUDEN in experimenten.js.
@@ -325,16 +327,21 @@ export default function Ik() {
         <Voortgang variant="groot" />
       )}
 
-      <section className="tk-groep">
-        <h2 className="tk-groep-kop">Mijn werk</h2>
-        <div className="tk-groep-lijst">
-          <Regel
-            naar="/app/doelen"
-            titel="Mijn kwartaaldoelen"
-            uitleg="Wat je dit kwartaal wilt bereiken, en hoeveel ruimte je ervoor hebt."
-          />
-        </div>
-      </section>
+      {/* Staat het onderdeel uit voor dit team, dan is er hier niets te zien.
+          Niet grijs en niet met een slotje: wat er niet is, hoort ook niet als
+          een gemis te voelen. */}
+      {isAan(onderdeelInstellingen, "kwartaaldoelen") && (
+        <section className="tk-groep">
+          <h2 className="tk-groep-kop">Mijn werk</h2>
+          <div className="tk-groep-lijst">
+            <Regel
+              naar="/app/doelen"
+              titel="Mijn kwartaaldoelen"
+              uitleg="Wat je dit kwartaal wilt bereiken, en hoeveel ruimte je ervoor hebt."
+            />
+          </div>
+        </section>
+      )}
 
       <section className="tk-groep">
         <h2 className="tk-groep-kop">Over mij</h2>
