@@ -12,37 +12,41 @@ export const serviceLinks = [
 export const knowledgeNavigation = {
   // Centrale hub: de kenniskaart bundelt alle kennisthema's op één pagina.
   overview: { label: "Bekijk alle kennis", href: "/kennis/kenniskaart-teamontwikkeling" },
-  // De kenniswijzer helpt bezoekers via vijf vragen naar passende content.
-  wijzer: { label: "Kenniswijzer: vind wat past", href: "/kennisbank" },
-  // Interactief hulpmiddel om een lastig gesprek voor te bereiden.
-  gesprek: { label: "Gespreksvoorbereider", href: "/gespreksvoorbereider" },
-  // Interactieve opzet voor een teamdag, samengesteld uit vaste beslisregels.
-  teamdag: { label: "Teamdag-generator", href: "/teamdag-generator" },
-  featured: [
-    { label: "Teamcultuur", href: "/kennis/teamcultuur" },
-    { label: "Psychologische veiligheid", href: "/psychologische-veiligheid" },
-    { label: "Eigenaarschap", href: "/kennis/eigenaarschap-in-teams" },
-    { label: "Verandermanagement", href: "/kennis/verandermanagement" },
+  // Interactieve hulpmiddelen: iets dóen, geen thema om te lezen. Daarom een
+  // eigen kolom en niet onder een themakop.
+  tools: [
+    // De kenniswijzer helpt bezoekers via vijf vragen naar passende content.
+    { label: "Kenniswijzer: vind wat past", href: "/kennisbank" },
+    // Om een lastig gesprek voor te bereiden.
+    { label: "Gespreksvoorbereider", href: "/gespreksvoorbereider" },
+    // Opzet voor een teamdag, samengesteld uit vaste beslisregels.
+    { label: "Teamdag-generator", href: "/teamdag-generator" },
   ],
+  // Eén indeling voor alle thema's. Elk thema staat op precies één plek;
+  // verwante pagina's (psychologische en sociale veiligheid) staan naast elkaar.
   groups: [
     {
-      label: "Samenwerking en cultuur",
+      label: "Veiligheid en samenwerking",
       links: [
+        { label: "Psychologische veiligheid", href: "/psychologische-veiligheid" },
         { label: "Sociale veiligheid", href: "/sociale-veiligheid" },
+        { label: "Teamcultuur", href: "/kennis/teamcultuur" },
         { label: "Boven- en onderstroom", href: "/boven-en-onderstroom" },
         { label: "Brein en samenwerking", href: "/brein-en-samenwerking" },
       ],
     },
     {
-      label: "Energie en motivatie",
+      label: "Energie en eigenaarschap",
       links: [
         { label: "Teamenergie", href: "/kennis/teamenergie" },
         { label: "Bevlogenheid in het werk", href: "/kennis/bevlogenheid-in-het-werk" },
+        { label: "Eigenaarschap", href: "/kennis/eigenaarschap-in-teams" },
       ],
     },
     {
       label: "Veranderen en verbeteren",
       links: [
+        { label: "Verandermanagement", href: "/kennis/verandermanagement" },
         { label: "High performing team", href: "/high-performing-team" },
         { label: "Growth mindset in teams", href: "/kennis/growth-mindset-in-teams" },
         { label: "Kleine experimenten", href: "/kleine-experimenten" },
@@ -54,8 +58,6 @@ export const knowledgeNavigation = {
 
 export const allKnowledgeLinks = [
   knowledgeNavigation.overview,
-  knowledgeNavigation.wijzer,
-  knowledgeNavigation.gesprek,
-  ...knowledgeNavigation.featured,
+  ...knowledgeNavigation.tools,
   ...knowledgeNavigation.groups.flatMap((group) => group.links),
 ];
