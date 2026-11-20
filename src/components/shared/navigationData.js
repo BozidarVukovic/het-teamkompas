@@ -5,6 +5,7 @@ export const serviceLinks = [
   { label: "Teamcoaching", href: "/teamcoaching" },
   { label: "Individuele coaching", href: "/individuele-coaching" },
   { label: "Teamdag", href: "/teamdag" },
+  { label: "Samenwerken met AI", href: "/samenwerken-met-ai" },
   { label: "Sprekers", href: "/sprekers" },
 ];
 

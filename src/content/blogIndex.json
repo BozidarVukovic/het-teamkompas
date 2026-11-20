@@ -650,6 +650,7 @@
       "/kennis/teamcultuur"
     ],
     "relatedServices": [
+      "/samenwerken-met-ai",
       "/teamcoaching",
       "/teamdag"
     ],
@@ -1986,6 +1987,7 @@
       "/kennis/teamcultuur"
     ],
     "relatedServices": [
+      "/samenwerken-met-ai",
       "/teamcoaching",
       "/teamscan"
     ],
@@ -2436,13 +2438,14 @@
       "/kennis/verandermanagement"
     ],
     "relatedServices": [
+      "/samenwerken-met-ai",
       "/teamscan",
       "/teamcoaching"
     ],
     "lead": "De software werkt. Ze vat samen, vergelijkt documenten, beantwoordt vragen en doet voorstellen. Het vastlopen begint zodra iemand moet uitleggen hoe het werk hier eigenlijk verloopt.",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 1317
+    "woorden": 1343
   },
   {
     "slug": "samenwerking-verslechtert-onder-druk",
@@ -3483,13 +3486,14 @@
       "/kennis/verandermanagement"
     ],
     "relatedServices": [
+      "/samenwerken-met-ai",
       "/teamcoaching",
       "/teamdag"
     ],
     "lead": "Tijdens een overleg vertelt een collega enthousiast dat hij met AI in twintig minuten een eerste analyse heeft gemaakt waar hij normaal een halve dag mee bezig zou zijn. Iemand vraagt nieuwsgierig hoe hij dat aanpakte. Een ander blijft stil.",
     "author": "Mijn Teamkompas",
     "readtime": "",
-    "woorden": 1395
+    "woorden": 1408
   },
   {
     "slug": "thuiswerken-of-op-kantoor",

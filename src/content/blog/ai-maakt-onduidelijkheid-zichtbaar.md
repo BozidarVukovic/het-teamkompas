@@ -9,7 +9,7 @@ category: Verandering
 tags: verandering, eigenaarschap, samenwerking
 imageAlt: Illustratie bij het artikel over AI die organisatorische onduidelijkheid blootlegt
 relatedKnowledgePages: /kennis/eigenaarschap-in-teams,/psychologische-veiligheid,/kennis/verandermanagement
-relatedServices: /teamscan,/teamcoaching
+relatedServices: /samenwerken-met-ai,/teamscan,/teamcoaching
 ---
 
 Wie is verantwoordelijk? Waar staat de juiste informatie? Welke versie van dat document geldt nog? Wie neemt uiteindelijk het besluit? Waarom doet de ene afdeling het anders dan de andere? En wat gebeurt er wanneer twee richtlijnen elkaar tegenspreken?
@@ -118,3 +118,5 @@ Kies één terugkerend proces waar veel vragen over komen of veel afstemming voo
 Leg de antwoorden naast elkaar. Lopen ze ver uiteen, dan zegt dat weinig over de oplettendheid van je collega's. Dan is het proces simpelweg niet duidelijk genoeg ingericht.
 
 AI maakt een organisatie niet slimmer. Ze maakt zichtbaar waar de duidelijkheid ontbreekt. Daar kan organisatieontwikkeling beginnen.
+
+Hoe we teams helpen om rond één werkproces afspraken te maken over wie beslist en wie overneemt, lees je bij [samenwerken als AI het werk verandert](/samenwerken-met-ai).

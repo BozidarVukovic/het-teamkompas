@@ -9,7 +9,7 @@ category: Verandering
 tags: verandering, leiderschap, eigenaarschap
 imageAlt: Illustratie bij het artikel over AI en de veranderende rol van de leidinggevende
 relatedKnowledgePages: /kennis/verandermanagement,/kennis/eigenaarschap-in-teams,/kennis/teamcultuur
-relatedServices: /teamcoaching,/teamscan
+relatedServices: /samenwerken-met-ai,/teamcoaching,/teamscan
 ---
 
 De vraag waar je AI kunt inzetten is daarmee minder interessant geworden. De vraag die ertoe doet luidt: hoe organiseer je een bedrijf wanneer AI een vast onderdeel wordt van hoe het werk gebeurt?

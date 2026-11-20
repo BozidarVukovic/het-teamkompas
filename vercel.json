@@ -148,6 +148,10 @@
       "destination": "/high-performing-team/index.html"
     },
     {
+      "source": "/samenwerken-met-ai",
+      "destination": "/samenwerken-met-ai/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

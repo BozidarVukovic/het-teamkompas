@@ -8,7 +8,7 @@ author: Mijn Teamkompas
 category: Verandering
 tags: verandering, eigenaarschap, leiderschap
 imageAlt: Illustratie bij het artikel over invloed op het ontwerp van toekomstig werk
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /samenwerken-met-ai,/teamcoaching,/teamdag
 relatedKnowledgePages: /kennis/verandermanagement,/kennis/eigenaarschap-in-teams,/kennis/teamcultuur
 ---
 

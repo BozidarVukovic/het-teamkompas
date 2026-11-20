@@ -9,7 +9,7 @@ category: Verandering
 tags: verandering, gedrag, leren
 imageAlt: Illustratie bij het artikel hoe ai ons werk verandert
 relatedKnowledgePages: /kennis/verandermanagement
-relatedServices: /teamcoaching,/teamdag
+relatedServices: /samenwerken-met-ai,/teamcoaching,/teamdag
 ---
 
 Na afloop zegt diegene bij de koffieautomaat: als dit zo doorgaat, hebben ze mij straks misschien niet meer nodig.
@@ -78,4 +78,4 @@ Want de toekomst van werk wordt niet alleen bepaald door wat intelligente machin
 
 - - -
 
-Wil je onderzoeken wat AI met de samenwerking en energie in jouw team doet? Mijn Teamkompas maakt de onderstroom onder verandering zichtbaar. [Plan een vrijblijvend kennismakingsgesprek](/verkennen) of start met een [teamscan](/teamscan).
+Wil je onderzoeken wat AI met de samenwerking en energie in jouw team doet? Mijn Teamkompas maakt de onderstroom onder verandering zichtbaar. Lees ook hoe we teams helpen met [samenwerken als AI het werk verandert](/samenwerken-met-ai). [Plan een vrijblijvend kennismakingsgesprek](/verkennen) of start met een [teamscan](/teamscan).

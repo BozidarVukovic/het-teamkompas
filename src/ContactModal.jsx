@@ -8,6 +8,7 @@ import {
   CONTACT_TO_EMAIL,
 } from "./email";
 import { getCurrentPageInfo } from "./contactMetadata";
+import { trackEvent } from "./lib/analytics";
 
 const emptyForm = {
   naam: "",
@@ -19,7 +20,13 @@ const emptyForm = {
   bericht: "",
 };
 
-export default function ContactModal({ isOpen, onClose, bron = "Website", interesse = "Verkennend gesprek" }) {
+/**
+ * `extraVraag` (optioneel): één extra open vraag voor een specifieke pagina,
+ * bijvoorbeeld { veld: "werkproces", label: "Welk werkproces verandert bij
+ * jullie?", placeholder: "..." }. Het antwoord komt als eigen veld in de
+ * aanvraag en in de e-mail, en nooit in analytics.
+ */
+export default function ContactModal({ isOpen, onClose, bron = "Website", interesse = "Verkennend gesprek", extraVraag = null }) {
   const [form, setForm] = useState(emptyForm);
   const [status, setStatus] = useState("idle");
 
@@ -50,6 +57,7 @@ export default function ContactModal({ isOpen, onClose, bron = "Website", intere
         interesse,
         bron: bronLabel,
         pagina,
+        ...(extraVraag ? { [extraVraag.veld]: (form[extraVraag.veld] || "").trim() } : {}),
         aangemaakt_op: serverTimestamp(),
       });
 
@@ -71,13 +79,18 @@ export default function ContactModal({ isOpen, onClose, bron = "Website", intere
             bron: bronLabel,
             pagina,
             subject: `Nieuwe aanvraag – ${interesse}`,
-            bericht: `Interesse: ${interesse}\nBron: ${bronLabel}\nPagina: ${pagina}\n\n${form.bericht}`,
+            bericht: `Interesse: ${interesse}\nBron: ${bronLabel}\nPagina: ${pagina}\n`
+              + (extraVraag ? `${extraVraag.label} ${form[extraVraag.veld] || "-"}\n` : "")
+              + `\n${form.bericht}`,
             to_email: CONTACT_TO_EMAIL,
           },
         }),
       });
 
       if (!res.ok) console.warn("EmailJS gaf geen 200-response");
+      // Een afgeronde aanvraag, apart van een knopklik. Alleen het onderwerp
+      // en de bron gaan mee; namen, e-mailadres en vrije tekst nooit.
+      trackEvent("contact_aanvraag_verzonden", { interesse, bron: bronLabel });
       setStatus("sent");
     } catch (error) {
       console.error("Fout bij versturen:", error);
@@ -117,6 +130,12 @@ export default function ContactModal({ isOpen, onClose, bron = "Website", intere
                 {["Kennismaking", "Teamscan verkennen", "Advies over trajectopbouw", "Workshop of teamdag"].map((opt) => <option key={opt} value={opt} style={{ color: "#0D1B2A" }}>{opt}</option>)}
               </select>
             </div>
+            {extraVraag && (
+              <div style={{ marginBottom: 14 }}>
+                <label htmlFor={`contact-${extraVraag.veld}`} style={{ display: "block", fontSize: 11, color: "#8fa3bb", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>{extraVraag.label} <span style={{ textTransform: "none", letterSpacing: 0, fontWeight: 400 }}>(optioneel)</span></label>
+                <input id={`contact-${extraVraag.veld}`} type="text" placeholder={extraVraag.placeholder || ""} value={form[extraVraag.veld] || ""} onChange={(e) => setForm((f) => ({ ...f, [extraVraag.veld]: e.target.value }))} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px 14px", color: "#ffffff", fontSize: 14, outline: "none", fontFamily: "'Roboto', sans-serif", boxSizing: "border-box" }} />
+              </div>
+            )}
             <div style={{ marginBottom: 20 }}>
               <div style={{ fontSize: 11, color: "#8fa3bb", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1px", fontWeight: 700 }}>Wat speelt er nu?</div>
               <textarea placeholder="Beschrijf kort wat er in het team speelt of welke vraag jullie willen verkennen." value={form.bericht} onChange={(e) => setForm((f) => ({ ...f, bericht: e.target.value }))} rows={4} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px 14px", color: "#ffffff", fontSize: 14, outline: "none", boxSizing: "border-box", resize: "vertical" }} />

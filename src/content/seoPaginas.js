@@ -84,6 +84,14 @@ export const SEO_PAGINAS = {
     url: "https://www.mijnteamkompas.nl/kennis/eigenaarschap-in-teams",
     image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
   },
+  // Aanbodpagina, november 2026. Titel zoals gevraagd in de opdracht.
+  samenwerkenMetAi: {
+    title: "Samenwerken met AI op de werkvloer | Mijn Teamkompas",
+    description:
+      "Verandert AI of automatisering jullie werkproces? Wij helpen teams afspreken wie beslist, overneemt en terugkoppelt, en die werkafspraken in de praktijk testen.",
+    url: "https://www.mijnteamkompas.nl/samenwerken-met-ai",
+    image: "https://www.mijnteamkompas.nl/blog/images/ai-en-organisatieproces.jpg",
+  },
   highPerformingTeam: {
     title: "High performing team: kenmerken en aanpak | Mijn Teamkompas",
     description:

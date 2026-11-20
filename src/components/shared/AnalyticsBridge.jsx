@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { onthoudPad } from "../../lib/herkomst";
 
 /**
  * Verbindt de interne events van de site met Google Analytics 4.
@@ -31,6 +33,11 @@ function stuur(naam, data = {}) {
 }
 
 export default function AnalyticsBridge() {
+  // Het vorige pad binnen de site, voor de herkomst van een paginabezoek
+  // (zie lib/herkomst.js). Alleen het pad, nooit de querystring.
+  const { pathname } = useLocation();
+  useEffect(() => { onthoudPad(pathname); }, [pathname]);
+
   useEffect(() => {
     function onEvent(e) {
       const { name, ...rest } = e.detail || {};

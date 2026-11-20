@@ -53,6 +53,7 @@ const InsightsDiscoveryProfiel = lazy(() => laadPagina(() => import("./pages/pub
 const KenniskaartTeamontwikkeling = lazy(() => laadPagina(() => import("./pages/public/KenniskaartTeamontwikkeling")));
 const BevlogenheidInHetWerk = lazy(() => laadPagina(() => import("./pages/public/BevlogenheidInHetWerk")));
 const Teamenergie = lazy(() => laadPagina(() => import("./pages/public/Teamenergie")));
+const SamenwerkenMetAi = lazy(() => laadPagina(() => import("./pages/public/SamenwerkenMetAi")));
 const HighPerformingTeam = lazy(() => laadPagina(() => import("./pages/public/HighPerformingTeam")));
 const GrowthMindsetInTeams = lazy(() => laadPagina(() => import("./pages/public/GrowthMindsetInTeams")));
 const Teamcultuur = lazy(() => laadPagina(() => import("./pages/public/Teamcultuur")));
@@ -66,7 +67,7 @@ const Kennisbank = lazy(() => laadPagina(() => import("./pages/public/Kennisbank
 const KennisbankItem = lazy(() => laadPagina(() => import("./pages/public/KennisbankItem")));
 const Gespreksvoorbereider = lazy(() => laadPagina(() => import("./pages/public/Gespreksvoorbereider")));
 const TeamdagGenerator = lazy(() => laadPagina(() => import("./pages/public/TeamdagGenerator")));
-import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
+import { AI_INTERESSE, CONTACT_INTEREST_FILTERS, aiAanvraagOverzicht, getCurrentPageInfo, getInterestConfig } from "./contactMetadata";
 import BlogTeaser from "./components/shared/BlogTeaser";
 import KansenCarrousel from "./components/shared/KansenCarrousel";
 import RelatedArticles from "./components/shared/RelatedArticles";
@@ -1556,7 +1557,7 @@ function PublicSite({ onLoginClick }) {
               <div style={{ maxWidth: 820, marginBottom: 28 }}>
                 <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>In één oogopslag: teamscan, workshops en coaching.</h2>
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>
-                  Vier manieren om met een team aan de slag te gaan. Wat past, hangt af van wat er speelt.
+                  Vier manieren om met een team aan de slag te gaan, en een aanpak voor werk dat door AI verandert. Wat past, hangt af van wat er speelt.
                 </p>
               </div>
             </Fade>
@@ -1572,6 +1573,25 @@ function PublicSite({ onLoginClick }) {
                 </Fade>
               ))}
             </div>
+            {/* November 2026: een kaart voor het aanbod Samenwerken met AI. Een
+                test of deze vraag ons vindt; daarom een eigen meetpunt
+                (home_ai_kaart_click). Over de volle breedte onder de vier
+                kaarten, zodat het raster van vier intact blijft. */}
+            <Fade delay={0.1}>
+              <a
+                href="/samenwerken-met-ai"
+                onClick={(e) => { e.preventDefault(); trackEvent("home_ai_kaart_click"); navigate("/samenwerken-met-ai"); }}
+                style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1fr) auto", gap: isMobile ? 14 : 32, alignItems: "center", marginTop: 18, border: `1px solid ${PUB.lijn}`, borderLeft: `5px solid ${PUB.teal}`, borderRadius: 18, padding: isMobile ? 22 : "26px 30px", background: PUB.licht, textDecoration: "none" }}
+              >
+                <div>
+                  <div style={{ fontSize: 20, fontWeight: 900, color: PUB.donker, marginBottom: 8 }}>Samenwerken als AI het werk verandert</div>
+                  <div style={{ fontSize: 14.5, lineHeight: 1.75, color: PUB.sub, maxWidth: "78ch" }}>
+                    AI neemt taken over. Wie pakt het werk op als de uitkomst onduidelijk is? Wie beslist bij een uitzondering? Wij helpen teams om daar duidelijke afspraken over te maken, ze in het dagelijkse werk te testen en te zien wat ze opleveren.
+                  </div>
+                </div>
+                <span style={{ color: PUB.teal, fontSize: 14, fontWeight: 900, whiteSpace: "nowrap" }}>Ontdek hoe we je team helpen →</span>
+              </a>
+            </Fade>
           </div>
         </section>
 
@@ -2924,6 +2944,8 @@ function PageContactaanvragen() {
             gewensteStap: data.gewensteStap || data.gewenste_stap || data.gewensteVervolgactie || "Nog te bepalen",
             datum,
             status: data.status || "Nieuw",
+            werkproces: data.werkproces || "",
+            passend: typeof data.passend === "boolean" ? data.passend : null,
           };
         });
         setAanvragen(rows);
@@ -2948,6 +2970,22 @@ function PageContactaanvragen() {
       setUpdating(null);
     }
   };
+
+  // Een passende aanvraag via de AI-pagina beoordeelt een mens; zie
+  // aiAanvraagOverzicht in contactMetadata.js.
+  const zetPassend = async (id, waarde) => {
+    setUpdating(id);
+    try {
+      await updateDoc(doc(db, "contactaanvragen", id), { passend: waarde });
+      setAanvragen(prev => prev.map(a => a.id === id ? { ...a, passend: waarde } : a));
+      if (selected?.id === id) setSelected(prev => ({ ...prev, passend: waarde }));
+    } catch (err) {
+      console.error("Beoordeling opslaan mislukt:", err);
+    } finally {
+      setUpdating(null);
+    }
+  };
+  const aiOverzicht = aiAanvraagOverzicht(aanvragen);
 
   const statusColor = (s) =>
     s === "Nieuw" ? ADM.teal : s === "In behandeling" ? ADM.orange : s === "Verwerkt" ? ADM.green : ADM.muted;
@@ -2979,6 +3017,11 @@ function PageContactaanvragen() {
           {aanvragen.filter(a => a.status === "In behandeling").length} in behandeling ·{" "}
           {aanvragen.length} totaal
         </div>
+        {aiOverzicht.ai > 0 && (
+          <div style={{ fontSize: 13, color: ADM.muted, marginTop: -6, marginBottom: 14 }}>
+            Samenwerken met AI: {aiOverzicht.ai} aanvragen · {aiOverzicht.passend} passend · {aiOverzicht.nietPassend} niet passend · {aiOverzicht.teBeoordelen} nog te beoordelen
+          </div>
+        )}
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
           {CONTACT_INTEREST_FILTERS.map((filter) => (
             <button key={filter.value} type="button" onClick={() => setInterestFilter(filter.value)}
@@ -3008,7 +3051,7 @@ function PageContactaanvragen() {
                   <div style={{ fontWeight: 600, color: ADM.white, fontSize: 15 }}>{a.naam}</div>
                   <div style={{ fontSize: 12, color: ADM.muted, marginTop: 2 }}>{a.org} · {a.datum}</div>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 10, marginTop: 12 }}>
-                    {[["Interesse", a.interesse], ["Bron", a.bron], ["Pagina", a.pagina], ["Vervolgstap", a.gewensteStap]].map(([label, value]) => (
+                    {[["Interesse", a.interesse], ["Bron", a.bron], ["Pagina", a.pagina], ["Vervolgstap", a.gewensteStap], ...(a.werkproces ? [["Werkproces", a.werkproces]] : [])].map(([label, value]) => (
                       <div key={label}>
                         <div style={{ fontSize: 10, color: ADM.muted, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 3 }}>{label}</div>
                         <div style={{ fontSize: 12, color: ADM.white }}>{value || "-"}</div>
@@ -3052,6 +3095,30 @@ function PageContactaanvragen() {
               <div style={{ fontSize: 14, color: ADM.white }}>{v}</div>
             </div>
           ))}
+          {selected.werkproces && (
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ fontSize: 10, color: ADM.muted, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 4 }}>Welk werkproces verandert</div>
+              <div style={{ fontSize: 14, color: ADM.white }}>{selected.werkproces}</div>
+            </div>
+          )}
+          {selected.interesse === AI_INTERESSE && (
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 10, color: ADM.muted, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6 }}>Passende aanvraag?</div>
+              <div style={{ fontSize: 12, color: ADM.muted, lineHeight: 1.6, marginBottom: 8 }}>Noemt een concreet veranderend werkproces en zoekt hulp bij taakverdeling, besluitvorming of samenwerking.</div>
+              <div style={{ display: "flex", gap: 8 }}>
+                {[[true, "Ja"], [false, "Nee"]].map(([waarde, label]) => (
+                  <button key={label} type="button" disabled={updating === selected.id}
+                    onClick={e => { e.stopPropagation(); zetPassend(selected.id, waarde); }}
+                    style={{ flex: 1, borderRadius: 8, padding: "9px", fontWeight: 700, fontSize: 13, cursor: "pointer",
+                      border: `1px solid ${selected.passend === waarde ? ADM.teal : ADM.border}`,
+                      background: selected.passend === waarde ? "rgba(0,168,150,0.18)" : "rgba(255,255,255,0.03)",
+                      color: selected.passend === waarde ? ADM.teal : ADM.white }}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           <div style={{ marginBottom: 20 }}>
             <div style={{ fontSize: 10, color: ADM.muted, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6 }}>Bericht</div>
             <div style={{ fontSize: 13, color: ADM.text, lineHeight: 1.7, background: "rgba(255,255,255,0.04)", padding: "12px 14px", borderRadius: 8 }}>
@@ -12879,6 +12946,7 @@ export default function App() {
         <Route path="/kleine-experimenten" element={<><KleineExperimentenPage /><InsightsKnowledgeCta /></>} />
         <Route path="/kennis/kenniskaart-teamontwikkeling" element={<KenniskaartTeamontwikkeling />} />
         <Route path="/kennis/teamenergie" element={<><Teamenergie /><RelatedArticles paths={["/kennis/teamenergie"]} /></>} />
+        <Route path="/samenwerken-met-ai" element={<><SamenwerkenMetAi /><RelatedArticles title="Verdiep je in dit onderwerp" paths={["/samenwerken-met-ai"]} /></>} />
         <Route path="/high-performing-team" element={<><HighPerformingTeam /><RelatedArticles paths={["/teamontwikkeling", "/psychologische-veiligheid"]} /></>} />
         <Route path="/kennis/growth-mindset-in-teams" element={<><GrowthMindsetInTeams /><RelatedArticles paths={["/kennis/growth-mindset-in-teams", "/kleine-experimenten"]} /></>} />
         <Route path="/kennis/bevlogenheid-in-het-werk" element={<><BevlogenheidInHetWerk /><RelatedArticles paths={["/kennis/bevlogenheid-in-het-werk"]} /></>} />

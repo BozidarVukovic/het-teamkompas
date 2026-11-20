@@ -25,6 +25,7 @@ export const DIENST_ANKERS = {
   "/teamontwikkeling": "Meer over teamontwikkeling",
   "/insights-discovery-profiel": "Meer over het Insights Discovery-profiel",
   "/verkennen": "Plan een verkennend gesprek",
+  "/samenwerken-met-ai": "Zo helpen we teams samenwerken met AI",
 };
 
 function ShareButtons({ title }) {

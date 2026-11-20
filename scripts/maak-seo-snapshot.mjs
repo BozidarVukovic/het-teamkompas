@@ -42,6 +42,7 @@ export const KENNISPAGINAS = [
   ["kennis/impact-van-een-teamdag", "src/pages/public/ImpactVanEenTeamdag.jsx"],
   ["kennis/kenniskaart-teamontwikkeling", "src/pages/public/KenniskaartTeamontwikkeling.jsx"],
   ["high-performing-team", "src/pages/public/HighPerformingTeam.jsx"],
+  ["samenwerken-met-ai", "src/pages/public/SamenwerkenMetAi.jsx"],
 ];
 
 // Draait in de browser via page.evaluate, vandaar document.
