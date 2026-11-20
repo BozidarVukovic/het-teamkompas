@@ -53,6 +53,7 @@ const InsightsDiscoveryProfiel = lazy(() => laadPagina(() => import("./pages/pub
 const KenniskaartTeamontwikkeling = lazy(() => laadPagina(() => import("./pages/public/KenniskaartTeamontwikkeling")));
 const BevlogenheidInHetWerk = lazy(() => laadPagina(() => import("./pages/public/BevlogenheidInHetWerk")));
 const Teamenergie = lazy(() => laadPagina(() => import("./pages/public/Teamenergie")));
+const HighPerformingTeam = lazy(() => laadPagina(() => import("./pages/public/HighPerformingTeam")));
 const GrowthMindsetInTeams = lazy(() => laadPagina(() => import("./pages/public/GrowthMindsetInTeams")));
 const Teamcultuur = lazy(() => laadPagina(() => import("./pages/public/Teamcultuur")));
 const Sprekers = lazy(() => laadPagina(() => import("./pages/public/Sprekers")));
@@ -1519,6 +1520,13 @@ function PublicSite({ onLoginClick }) {
                   style={{ color: PUB.teal, fontWeight: 700, fontSize: 14, textDecoration: "none", padding: "13px 0" }}
                 >
                   Wat is een growth mindset in teams? →
+                </a>
+                <a
+                  href="/high-performing-team"
+                  onClick={(e) => { e.preventDefault(); navigate("/high-performing-team"); }}
+                  style={{ color: PUB.teal, fontWeight: 700, fontSize: 14, textDecoration: "none", padding: "13px 0" }}
+                >
+                  Kenmerken van een high performing team →
                 </a>
               </div>
             </Fade>
@@ -10202,7 +10210,7 @@ function PsychologischeVeiligheidPage() {
   const domeinen = [
     { naam: "Veiligheid en leiderschap", kleur: PUB.groen, uitleg: "Het kerndomein. We meten of mensen zich durven uit te spreken, fouten bespreekbaar kunnen maken en elkaar kunnen aanspreken. Psychologische veiligheid is hier direct zichtbaar." },
     { naam: "Energie en motivatie", kleur: PUB.teal, uitleg: "Onveiligheid kost energie. Wanneer mensen voortdurend op hun woorden letten of zich moeten indekken, neemt belasting toe en motivatie af." },
-    { naam: "Verandering en betekenis", kleur: PUB.blauw, uitleg: "Verandering vraagt vertrouwen. Psychologisch veilige teams stellen eerder vragen, benoemen twijfels en dragen bij aan verandering die klopt." },
+    { naam: "Beleving van verandering", kleur: PUB.blauw, uitleg: "Verandering vraagt vertrouwen. Psychologisch veilige teams stellen eerder vragen, benoemen twijfels en dragen bij aan verandering die klopt." },
     { naam: "Verbeteren en leren", kleur: "#7C3AED", uitleg: "Leren vereist het durven bespreken van fouten. In veilige teams wordt geëxperimenteerd, worden lessen gedeeld en worden verbeteringen vastgehouden." },
   ];
 
@@ -10707,7 +10715,7 @@ function SocialeVeiligheidPage() {
   const domeinen = [
     { naam: "Veiligheid en leiderschap", kleur: PUB.groen, uitleg: "Het kerndomein. Sociale veiligheid begint bij leiderschap dat grenzen bewaakt en zelf het goede voorbeeld geeft in hoe mensen met elkaar omgaan." },
     { naam: "Energie en motivatie", kleur: PUB.teal, uitleg: "Sociale onveiligheid vreet energie. Wie zich moet wapenen tegen opmerkingen of uitsluiting, heeft weinig ruimte over voor het werk zelf." },
-    { naam: "Verandering en betekenis", kleur: PUB.blauw, uitleg: "Verandering vraagt vertrouwen in elkaar. In een team waar mensen zich onveilig voelen, wordt elke verandering eerst als bedreiging gewogen." },
+    { naam: "Beleving van verandering", kleur: PUB.blauw, uitleg: "Verandering vraagt vertrouwen in elkaar. In een team waar mensen zich onveilig voelen, wordt elke verandering eerst als bedreiging gewogen." },
     { naam: "Verbeteren en leren", kleur: "#7C3AED", uitleg: "Leren vraagt dat mensen zich durven laten zien. In een sociaal onveilig team houdt iedereen zijn hoofd omlaag, en stopt de ontwikkeling." },
   ];
 
@@ -10725,14 +10733,11 @@ function SocialeVeiligheidPage() {
   return (
     <>
       <Helmet>
-        <title>Sociale veiligheid in teams verbeteren | Mijn Teamkompas</title>
-        <meta
-          name="description"
-          content="Sociale veiligheid in teams verbeteren. Mijn Teamkompas maakt ongewenst gedrag en uitsluiting bespreekbaar en helpt teams bouwen aan veilige omgangsvormen."
-        />
+        <title>{SEO_PAGINAS.socialeVeiligheid.title}</title>
+        <meta name="description" content={SEO_PAGINAS.socialeVeiligheid.description} />
         <link rel="canonical" href="https://www.mijnteamkompas.nl/sociale-veiligheid" />
-        <meta property="og:title" content="Sociale veiligheid in teams verbeteren | Mijn Teamkompas" />
-        <meta property="og:description" content="Mijn Teamkompas helpt teams sociale veiligheid te versterken: van meten naar een veilig gesprek, van signalen naar concrete afspraken over omgangsvormen." />
+        <meta property="og:title" content={SEO_PAGINAS.socialeVeiligheid.title} />
+        <meta property="og:description" content={SEO_PAGINAS.socialeVeiligheid.description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/sociale-veiligheid" />
         <script type="application/ld+json">{`
@@ -10847,7 +10852,7 @@ function SocialeVeiligheidPage() {
             <div>
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Wat is het?</div>
               <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>
-                Sociale veiligheid is de ondergrens van samenwerking.
+                Wat is sociale veiligheid? De ondergrens van samenwerking.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 18 }}>
                 Sociale veiligheid betekent dat mensen op hun werk gevrijwaard zijn van ongewenst gedrag: pesten, intimidatie, agressie, discriminatie en uitsluiting. Het gaat om de vraag of je je veilig voelt bij hoe collega's en leidinggevenden met je omgaan.
@@ -10885,7 +10890,7 @@ function SocialeVeiligheidPage() {
             <div>
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Wanneer het ontbreekt</div>
               <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>
-                Sociale onveiligheid verstopt zich in gewoontes.
+                Voorbeelden van sociale onveiligheid op het werk
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 16 }}>
                 Grensoverschrijdend gedrag begint zelden groot. Het begint met een grap waar niemand iets van zegt, een collega die net niet wordt uitgenodigd, een opmerking die wordt weggelachen. Omdat elk moment op zichzelf klein lijkt, went het team eraan.
@@ -10911,7 +10916,7 @@ function SocialeVeiligheidPage() {
             <div style={{ maxWidth: 820, marginBottom: 36 }}>
               <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Ondergrens en bovengrens</div>
               <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>
-                Waarom sociale en psychologische veiligheid twee verschillende gesprekken zijn.
+                Het verschil tussen sociale en psychologische veiligheid
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>
                 Wie de twee begrippen door elkaar haalt, voert al snel het verkeerde gesprek. Een team dat last heeft van pesten of uitsluiting is niet geholpen met een sessie over je uitspreken. En een team waar niemand zich uitspreekt, heeft niet per se een probleem met ongewenst gedrag. Daarom beginnen we altijd met de vraag: over welke laag gaat het hier?
@@ -10925,6 +10930,13 @@ function SocialeVeiligheidPage() {
                 </div>
               ))}
             </div>
+            {/* November 2026: deze pagina beantwoordt wat sociale veiligheid
+                is; het artikel gaat over wat een leidinggevende op de afdeling
+                doet. Zo concurreren ze niet meer om dezelfde zoekvraag. */}
+            <p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, margin: "26px 0 0", maxWidth: 820 }}>
+              Wat dit vraagt van jou als leidinggevende, lees je in het artikel{" "}
+              <a href="/blog/sociale-veiligheid-is-de-basis-van-een-afdeling" style={{ color: PUB.teal, fontWeight: 700 }}>sociale veiligheid op je afdeling: wat je als leidinggevende doet</a>.
+            </p>
           </div>
         </section>
 
@@ -12866,6 +12878,7 @@ export default function App() {
         <Route path="/kleine-experimenten" element={<><KleineExperimentenPage /><InsightsKnowledgeCta /></>} />
         <Route path="/kennis/kenniskaart-teamontwikkeling" element={<KenniskaartTeamontwikkeling />} />
         <Route path="/kennis/teamenergie" element={<><Teamenergie /><RelatedArticles paths={["/kennis/teamenergie"]} /></>} />
+        <Route path="/high-performing-team" element={<><HighPerformingTeam /><RelatedArticles paths={["/teamontwikkeling", "/psychologische-veiligheid"]} /></>} />
         <Route path="/kennis/growth-mindset-in-teams" element={<><GrowthMindsetInTeams /><RelatedArticles paths={["/kennis/growth-mindset-in-teams", "/kleine-experimenten"]} /></>} />
         <Route path="/kennis/bevlogenheid-in-het-werk" element={<><BevlogenheidInHetWerk /><RelatedArticles paths={["/kennis/bevlogenheid-in-het-werk"]} /></>} />
         <Route path="/individuele-coaching" element={<><IndividueleCoaching /><RelatedArticles title="Verdiep je in dit onderwerp" paths={["/teamcoaching"]} /></>} />

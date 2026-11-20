@@ -67,12 +67,29 @@ export const SEO_PAGINAS = {
     url: "https://www.mijnteamkompas.nl/onze-aanpak",
     image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
   },
+  // Zoekvragen: "sociale veiligheid", "definitie", "wat is", "voorbeelden",
+  // "betekenis", "op het werk". Het artikel over de afdeling gaat over de
+  // leidinggevende, zodat de twee niet om dezelfde vraag concurreren.
+  socialeVeiligheid: {
+    title: "Sociale veiligheid: betekenis, voorbeelden en aanpak | Mijn Teamkompas",
+    description:
+      "Wat is sociale veiligheid op het werk? De betekenis, voorbeelden van ongewenst gedrag, het verschil met psychologische veiligheid en wat een team kan doen.",
+    url: "https://www.mijnteamkompas.nl/sociale-veiligheid",
+    image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
+  },
   eigenaarschap: {
     title: "Eigenaarschap: wat het is en hoe je het vergroot | Mijn Teamkompas",
     description:
       "Wat is eigenaarschap, hoe zie je het op de werkvloer en hoe vergroot je het bij medewerkers? Met voorbeelden, valkuilen en stappen voor leidinggevenden.",
     url: "https://www.mijnteamkompas.nl/kennis/eigenaarschap-in-teams",
     image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
+  },
+  highPerformingTeam: {
+    title: "High performing team: kenmerken en aanpak | Mijn Teamkompas",
+    description:
+      "Wat is een high performing team? Zes kenmerken, de fases van Tuckman, waarom veel teams het niet worden en wat het vraagt van de leidinggevende.",
+    url: "https://www.mijnteamkompas.nl/high-performing-team",
+    image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
   },
   growthMindset: {
     title: "Growth mindset in teams: van idee naar gewoonte | Mijn Teamkompas",

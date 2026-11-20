@@ -1,7 +1,8 @@
 ---
 title: Waarom sociale veiligheid de basis is van een goed functionerende afdeling
+seoTitle: Sociale veiligheid op je afdeling: wat je als leidinggevende doet
 date: 2026-10-04
-description: De bezetting klopt en de processen staan beschreven, en toch zegt niemand iets. Wat sociale veiligheid is, hoe ze verschilt van psychologische veiligheid en waar ze zichtbaar wordt.
+description: Sociale veiligheid ontstaat in kleine momenten op de afdeling. Over macht, de reactie op een signaal en het voorbeeld van de leidinggevende.
 image: /blog/images/sociale-veiligheid-afdeling.jpg
 lead: Op papier kan een afdeling uitstekend georganiseerd zijn. De bezetting klopt, verantwoordelijkheden zijn verdeeld, werkprocessen staan beschreven en iedereen weet wat er die dag moet gebeuren. En toch kan er iets fundamenteels ontbreken.
 author: Mijn Teamkompas
@@ -16,27 +17,13 @@ Een medewerker die een fout ziet en niets zegt omdat er een ervaren collega bij 
 
 Het werk gaat ondertussen gewoon door. De afdeling is alleen niet sociaal veilig.
 
-## Wat sociale veiligheid is
+## Wat sociale veiligheid op een afdeling vraagt
 
-Sociale veiligheid betekent dat mensen erop kunnen vertrouwen dat ze met respect worden behandeld en dat ze zich kunnen uitspreken zonder vernedering, uitsluiting, intimidatie of andere nadelige gevolgen te hoeven vrezen.
-
-Dat reikt verder dan de afwezigheid van grensoverschrijdend gedrag. Het gaat om een omgeving waarin mensen ervaren dat ze erbij horen, hun grenzen mogen aangeven, fouten en zorgen kunnen bespreken, en erop kunnen vertrouwen dat ongewenst gedrag serieus wordt genomen. Meer daarover staat op de pagina over [sociale veiligheid](/sociale-veiligheid).
+Sociale veiligheid betekent dat mensen erop kunnen vertrouwen dat ze met respect worden behandeld en zich kunnen uitspreken zonder vernedering, uitsluiting, intimidatie of andere nadelige gevolgen te vrezen. Wat het precies inhoudt, met voorbeelden en het verschil met psychologische veiligheid, staat op de pagina over [sociale veiligheid](/sociale-veiligheid). Dit artikel gaat over wat het op een afdeling vraagt, en vooral van de leidinggevende.
 
 Macht speelt daarin een hoofdrol. Op elke afdeling bestaan verschillen in positie, ervaring, deskundigheid, status en invloed. Een leidinggevende heeft formele macht. Ervaren medewerkers, dominante collega's of bepaalde beroepsgroepen hebben informele invloed.
 
 Dat die verschillen bestaan, zegt weinig. Wat mensen ermee doen, zegt alles. Hoe dat tussen beroepsgroepen uitpakt, staat in het artikel over [status en samenwerking](/blog/status-boven-samenwerking).
-
-## Het verschil met psychologische veiligheid
-
-De twee begrippen worden vaak door elkaar gebruikt. Ze liggen dicht bij elkaar en ze dekken niet hetzelfde.
-
-Psychologische veiligheid gaat over de ruimte die mensen ervaren om een risico te nemen in het contact: een vraag stellen, twijfel uitspreken, een fout toegeven, tegenspreken. Daarover gaat de pagina over [psychologische veiligheid](/psychologische-veiligheid).
-
-Sociale veiligheid is breder. Ze omvat ook de bescherming tegen pesten, discriminatie, seksuele intimidatie, agressie, uitsluiting en machtsmisbruik.
-
-Het verschil is eenvoudig te zien. In een psychologisch veilig team durft iemand te zeggen dat hij een werkwijze niet begrijpt. In een sociaal veilige omgeving kan diezelfde persoon er bovendien op vertrouwen dat hij daar niet om wordt uitgelachen, buitengesloten of benadeeld.
-
-De twee versterken elkaar.
 
 ## Het raakt het werk direct
 

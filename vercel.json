@@ -144,6 +144,10 @@
       "destination": "/kennis/kenniskaart-teamontwikkeling/index.html"
     },
     {
+      "source": "/high-performing-team",
+      "destination": "/high-performing-team/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

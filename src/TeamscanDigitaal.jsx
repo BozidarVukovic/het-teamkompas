@@ -405,7 +405,7 @@ export default function TeamscanDigitaal() {
   const domeinen = [
     ["Veiligheid en leiderschap", C.groen, "Kunnen mensen zich uitspreken, fouten bespreken en elkaar aanspreken op een manier die vertrouwen bouwt?"],
     ["Energie en motivatie", C.teal, "Waar geeft het werk energie en waar ontstaan juist belasting, frustratie of terugtrekgedrag?"],
-    ["Verandering en betekenis", C.blauw, "Begrijpen mensen waarom iets verandert, wat dit van hen vraagt en waar zij invloed op hebben?"],
+    ["Beleving van verandering", C.blauw, "Begrijpen mensen waarom iets verandert, wat dit van hen vraagt en waar zij invloed op hebben?"],
     ["Verbeteren en leren", "#7C3AED", "Hoe leert het team van ervaringen en hoe worden verbeteringen ook echt vastgehouden?"],
   ];
 

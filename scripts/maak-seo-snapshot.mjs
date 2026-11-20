@@ -41,6 +41,7 @@ export const KENNISPAGINAS = [
   ["kennis/verandermanagement", "src/pages/public/Verandermanagement.jsx"],
   ["kennis/impact-van-een-teamdag", "src/pages/public/ImpactVanEenTeamdag.jsx"],
   ["kennis/kenniskaart-teamontwikkeling", "src/pages/public/KenniskaartTeamontwikkeling.jsx"],
+  ["high-performing-team", "src/pages/public/HighPerformingTeam.jsx"],
 ];
 
 // Draait in de browser via page.evaluate, vandaar document.
