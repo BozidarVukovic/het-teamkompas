@@ -1,6 +1,6 @@
 # Mijn Teamkompas
 
-> Mijn Teamkompas (V.O.F. Mijn Teamkompas, ook bekend als Het Teamkompas) begeleidt teams en leidinggevenden in Nederland bij samenwerking, psychologische veiligheid, eigenaarschap, verandering en leiderschap. We helpen teams beter samenwerken en het vermogen ontwikkelen om samen te blijven leren en verbeteren.
+> Mijn Teamkompas (V.O.F. Mijn Teamkompas, ook bekend als Het Teamkompas) is gevestigd in Rotterdam en begeleidt teams en leidinggevenden in heel Nederland bij samenwerking, psychologische veiligheid, eigenaarschap, verandering en leiderschap. We helpen teams beter samenwerken en het vermogen ontwikkelen om samen te blijven leren en verbeteren.
 
 ## Werkwijze
 
@@ -37,6 +37,7 @@ Leidinggevenden, HR-professionals en teams in Nederlandse organisaties.
 
 ## Contact
 
+- Vestigingsplaats: Rotterdam
 - E-mail: info@mijnteamkompas.nl
 - Kennismaking aanvragen: https://www.mijnteamkompas.nl/verkennen
 - KvK: 42181487

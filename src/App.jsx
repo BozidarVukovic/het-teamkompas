@@ -1710,6 +1710,7 @@ function PublicSite({ onLoginClick }) {
               <div>
                 <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ fontSize: 22, fontWeight: 800, color: PUB.wit, marginBottom: 4, cursor: "pointer" }}>Mijn Teamkompas</div>
                 <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)" }}>Organisatie · groei · richting</div>
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.62)", marginTop: 4 }}>Gevestigd in Rotterdam · actief in heel Nederland</div>
               </div>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", cursor: "pointer" }} onClick={() => window.open("/privacyverklaring_mijnteamkompas.pdf", "_blank")}>Privacyverklaring</span>
