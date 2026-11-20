@@ -1,5 +1,6 @@
 ---
 title: Martin Buber, een medewerker is meer dan een functie
+seoTitle: Als een profiel of functie het beeld van een collega bepaalt
 date: 2026-11-21
 description: Dat past bij jouw profiel sluit een gesprek af. Over omschrijvingen die overzicht geven en ongemerkt het hele beeld van iemand gaan bepalen.
 image: /blog/images/een-medewerker-is-meer-dan-een-functie.jpg

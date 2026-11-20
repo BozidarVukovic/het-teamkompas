@@ -1,5 +1,6 @@
 ---
 title: John Rawls, eerlijke regels ontwerp je alsof je niet weet waar je zelf terechtkomt
+seoTitle: Eerlijke teamregels maken: een praktische leiderschapstest
 date: 2026-09-28
 description: Dezelfde regel pakt voor verschillende mensen verschillend uit. Een gedachte-experiment dat van rechtvaardigheid een praktische leiderschapstest maakt.
 image: /blog/images/eerlijke-regels.jpg

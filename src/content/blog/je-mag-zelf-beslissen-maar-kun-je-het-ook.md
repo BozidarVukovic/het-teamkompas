@@ -1,5 +1,6 @@
 ---
 title: Simone de Beauvoir, je mag zelf beslissen, maar kun je het ook?
+seoTitle: Je team krijgt alle ruimte en er gebeurt weinig
 date: 2026-10-02
 description: Een team krijgt alle ruimte en er gebeurt weinig. Waarom toestemming pas het begin is, en wat het iemand kost om in deze omgeving initiatief te nemen.
 image: /blog/images/vrijheid-en-ruimte.jpg

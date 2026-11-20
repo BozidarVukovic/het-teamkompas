@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { artikelPaginaTitel } from "../../lib/seoTitel";
 import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import KompasDot from "../../components/shared/KompasDot";
@@ -132,7 +133,7 @@ export default function BlogPost() {
     <div style={{ minHeight: "100vh", background: "#f9f7f4" }}>
       {/* SEO */}
       <Helmet>
-        <title>{`${post.title} | Mijn Teamkompas`}</title>
+        <title>{artikelPaginaTitel(post)}</title>
         <meta name="description" content={post.excerpt} />
         {/* Een gepland artikel mag nog niet in Google verschijnen. */}
         {isGepland && <meta name="robots" content="noindex, follow" />}

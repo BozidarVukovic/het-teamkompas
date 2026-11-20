@@ -14,6 +14,7 @@ import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import ContactModal from "../../ContactModal";
 import { useIsMobile } from "../../components/shared/hooks";
+import { LerendTeamBijdrage } from "../../components/teamontwikkeling/LerendTeam";
 import { useKennismaking } from "../../lib/kennismaking";
 import { PUB } from "../../styles/tokens";
 import { donkerVlak, binnen, kop, bovenregel, oranjeKnop, omlijndeKnop } from "./Sprekers";
@@ -228,6 +229,8 @@ export default function IndividueleCoaching() {
             </p>
           </div>
         </section>
+
+        <LerendTeamBijdrage isMobile={isMobile} donker tekst={"Een team leert makkelijker als de leidinggevende het voorbeeld geeft. Coaching helpt je richting te geven, zelf om feedback te vragen, leren bespreekbaar te maken en ruimte te bieden binnen heldere kaders. Ook als het druk is en de verleiding groot is om alles zelf op te lossen."} />
 
         <section style={{ padding: "clamp(56px, 8vw, 96px) 0", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
           <div style={{ ...binnen, maxWidth: 860 }}>

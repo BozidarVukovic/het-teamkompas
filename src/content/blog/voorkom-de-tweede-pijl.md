@@ -1,5 +1,6 @@
 ---
 title: De Boeddha, voorkom de tweede pijl
+seoTitle: Na een fout: voorkom een oordeel over het hele team
 date: 2026-11-20
 description: Een fout vraagt om herstel. De schade ontstaat vaak daarna, wanneer één gebeurtenis een oordeel wordt over een persoon of een heel team.
 image: /blog/images/voorkom-de-tweede-pijl.jpg

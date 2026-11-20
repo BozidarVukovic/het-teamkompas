@@ -1,5 +1,6 @@
 ---
 title: Seneca, wacht niet tot alles af is
+seoTitle: Wachten tot het rustiger wordt: uitstel als leidinggevende
 date: 2026-11-12
 description: Zodra het rustiger wordt, maak ik tijd voor wat echt belangrijk is. Maar wanneer is het rustig genoeg, en welk ongemak zit er werkelijk achter het uitstel?
 image: /blog/images/wacht-niet-tot-alles-af-is.jpg

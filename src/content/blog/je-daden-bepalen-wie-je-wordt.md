@@ -1,5 +1,6 @@
 ---
 title: Sartre, je daden bepalen wie je wordt
+seoTitle: Het moeilijke gesprek blijven uitstellen als leidinggevende
 date: 2026-09-19
 description: Je kunt jezelf betrokken noemen en het moeilijke gesprek blijven uitstellen. Waarom leiderschap geen bezit is, maar iets wat in losse momenten ontstaat.
 image: /blog/images/sartre-daden.jpg

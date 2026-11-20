@@ -1,5 +1,6 @@
 ---
 title: Confucius en de afstand tussen een functietitel en de praktijk
+seoTitle: Onduidelijke rollen in je team: van functietitel naar praktijk
 date: 2026-10-30
 description: Iedereen heeft een naam voor zijn rol, en niemand weet wat die rol mogelijk maakt. Waarom de vraag naar verantwoordelijkheid begint bij wat we eraan hebben gegeven.
 image: /blog/images/rolnaam-en-praktijk.jpg

@@ -1,5 +1,6 @@
 ---
 title: Machiavelli, bouw de dijken vóór de storm
+seoTitle: Je team voorbereiden op drukte, zolang het nog rustig is
 date: 2026-10-16
 description: Een drukke periode laat zien wat rust verborgen hield. Waar een team kwetsbaar is zodra de druk oploopt, en wat je kunt bouwen zolang het meevalt.
 image: /blog/images/dijken-voor-de-storm.jpg

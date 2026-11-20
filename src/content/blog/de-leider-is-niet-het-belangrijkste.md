@@ -1,5 +1,6 @@
 ---
 title: Mencius, de leider is het minst belangrijk
+seoTitle: Mensgericht leidinggeven: het verschil blijkt als het iets kost
 date: 2026-11-10
 description: Vrijwel iedere leidinggevende zegt dat het om de mensen gaat. Het verschil blijkt pas wanneer dat antwoord iets kost.
 image: /blog/images/de-leider-is-niet-het-belangrijkste.jpg

@@ -1,5 +1,6 @@
 ---
 title: Sartre, verschuil je niet achter je rol
+seoTitle: Zo ben ik nu eenmaal: als een rol het gesprek afsluit
 date: 2026-10-12
 description: "Zo ben ik nu eenmaal. Het beleid laat geen ruimte." Waarom zulke zinnen iets verklaren en tegelijk een gesprek kunnen afsluiten.
 image: /blog/images/voorbij-het-professionele-masker.jpg

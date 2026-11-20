@@ -10,22 +10,23 @@
  */
 
 export const heroContent = {
-  eyebrow: "Voor teams en leiders die echt beweging willen",
+  eyebrow: "Teamontwikkeling voor leidinggevenden en HR",
 
   // Let op: deze kop staat ook in het statische SEO-blok in index.html.
   // Wijzig ze samen, anders leest Google iets anders dan de bezoeker ziet.
-  // Kort en op de uitkomst. De vorige kop (bewaard als variant1 onderaan) legde
-  // eerst uit waarom samenwerking ertoe doet en kwam pas in de tweede zin bij
-  // wat wij doen -- dat is te veel leeswerk voor een openingsscherm. Deze noemt
-  // meteen de uitkomst en hoe klein de eerste stap is, en sluit daarmee aan op
-  // de gratis scan eronder.
-  title: "Zie in tien minuten wat jullie samenwerking tegenhoudt.",
+  //
+  // November 2026. De vorige kop ("Zie in tien minuten wat jullie
+  // samenwerking tegenhoudt") sprak vooral een teamlid aan dat iets wil
+  // invullen. Wie zoekt en beslist is meestal de leidinggevende of HR, en die
+  // zoekt op het resultaat: een team dat goed presteert. Deze kop noemt dat
+  // resultaat en meteen wat het onderscheidt: een team dat zelf blijft leren.
+  // De tien minuten zijn niet weg; die staan nu bij de knop, waar ze horen.
+  title: "Bouw aan een high performing team dat zelf blijft leren.",
 
-  // Twee regels, geen drie. De kop zegt wat je krijgt; hier staat alleen nog
-  // waarmee en wat het oplevert. Een algemene opening ("iedereen doet zijn
-  // best") kost een halve alinea voordat er iets staat dat alleen van ons is.
+  // De pijn van de beslisser eerst (alles zelf moeten trekken), dan wat wij
+  // doen. Geen belofte van een uitkomst, wel een richting.
   subtitle:
-    "Het Teamkompas meet jullie samenwerking op vier domeinen en geeft één concrete stap voor volgende week.",
+    "Een team dat goed presteert, ziet zelf wat er speelt, voert het gesprek en stuurt bij. Wij helpen je team daar stap voor stap naartoe, zodat jij als leidinggevende niet alles hoeft te blijven trekken.",
 
   // De gratis teamscan is de laagdrempeligste eerste stap en staat daarom
   // vooraan in het oranje. De kennismaking blijft duidelijk zichtbaar als
@@ -40,7 +41,7 @@ export const heroContent = {
   // Drie vinkjes in plaats van drie kaarten. Ze zeggen hetzelfde als de
   // vorige regel en het blok eronder samen -- hoe lang het duurt, wat je
   // krijgt, en dat je nergens aan vastzit -- maar in één regel.
-  bewijs: ["8 tot 10 minuten", "Direct inzicht", "Volledig vrijblijvend"],
+  bewijs: ["In 10 minuten zie je wat jullie samenwerking tegenhoudt", "Direct inzicht", "Vrijblijvend"],
 
   // De oude regel. Stond onder de knoppen naast een blok met drie kaarten;
   // samen was dat te veel voor een openingsscherm. Bewaard om terug te zetten.
@@ -82,6 +83,12 @@ export const heroContent = {
  *              we stap voor stap aan betere samenwerking, eigenaarschap en teamenergie."
  */
 export const heroVariants = {
+  // De kop van september tot november 2026.
+  variant0: {
+    title: "Zie in tien minuten wat jullie samenwerking tegenhoudt.",
+    subtitle:
+      "Het Teamkompas meet jullie samenwerking op vier domeinen en geeft één concrete stap voor volgende week.",
+  },
   // De kop die tot september 2026 op de homepage stond.
   variant1: {
     title:

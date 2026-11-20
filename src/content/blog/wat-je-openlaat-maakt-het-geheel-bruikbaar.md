@@ -1,5 +1,6 @@
 ---
 title: Laozi, wat je openlaat maakt het geheel bruikbaar
+seoTitle: Een overleg voorbereiden waarin de echte vraag ruimte krijgt
 date: 2026-11-18
 description: Een overleg kan tot op de minuut zijn voorbereid terwijl de belangrijkste vraag nooit wordt gesteld. Over de ruimte die je bewust niet invult.
 image: /blog/images/wat-je-openlaat-maakt-het-geheel-bruikbaar.jpg

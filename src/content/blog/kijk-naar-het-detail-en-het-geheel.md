@@ -1,5 +1,6 @@
 ---
 title: Miyamoto Musashi, kijk naar het detail en het geheel
+seoTitle: Een medewerker aanspreken of het patroon aanpakken?
 date: 2026-11-23
 description: Alleen de medewerker aanspreken verandert het patroon niet. Alleen over het proces praten doet geen recht aan de afspraak. Over afwisselend in- en uitzoomen.
 image: /blog/images/kijk-naar-het-detail-en-het-geheel.jpg

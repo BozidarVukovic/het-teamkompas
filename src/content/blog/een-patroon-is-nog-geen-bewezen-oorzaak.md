@@ -1,5 +1,6 @@
 ---
 title: David Hume, een patroon is nog geen bewezen oorzaak
+seoTitle: Cijfers en gedrag: een patroon is nog geen oorzaak
 date: 2026-09-26
 description: Tussen daarna en daardoor zit een groot verschil. Waarom een overtuigend verhaal over cijfers en gedrag het onderzoek vaak stopzet in plaats van start.
 image: /blog/images/oorzaak-en-gevolg.jpg

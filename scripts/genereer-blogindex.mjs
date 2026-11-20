@@ -58,6 +58,8 @@ const artikelen = fs
     return {
       slug,
       title: data.title || "Artikel",
+      // Titel voor Google; zie src/lib/seoTitel.js.
+      seoTitle: data.seoTitle || "",
       excerpt: data.description || data.lead || "",
       publishDate: data.date || "",
       modifiedDate: data.modified || data.date || "",

@@ -1,5 +1,6 @@
 ---
 title: Dōgen, wanneer je verklaring het zicht op je team belemmert
+seoTitle: Weinig eigenaarschap in je team? Toets eerst je verklaring
 date: 2026-11-19
 description: Dit team neemt te weinig eigenaarschap. Een zin die makkelijk valt, en die bepaalt welke antwoorden je daarna nog kunt horen.
 image: /blog/images/als-je-verklaring-het-zicht-belemmert.jpg

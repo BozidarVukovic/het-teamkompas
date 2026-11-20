@@ -1,5 +1,6 @@
 ---
 title: Immanuel Kant, toets je keuze alsof iedereen haar zou volgen
+seoTitle: Toezeggingen doen om een lastig gesprek af te ronden
 date: 2026-10-15
 description: Een toezegging doen om een lastig gesprek af te ronden. Een toets die zichtbaar maakt waar je een uitzondering voor jezelf maakt.
 image: /blog/images/spoor-van-gedeelde-keuzes.jpg

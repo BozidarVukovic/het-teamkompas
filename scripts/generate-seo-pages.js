@@ -13,6 +13,8 @@ const blogDir = path.join(__dirname, "../src/content/blog");
 const baseHtml = fs.readFileSync(path.join(distDir, "index.html"), "utf-8");
 
 import { INTERNE_ITEMS } from "../src/data/kennisbank/items.js";
+import { SEO_PAGINAS } from "../src/content/seoPaginas.js";
+import { artikelPaginaTitel } from "../src/lib/seoTitel.js";
 
 const SITE = "https://www.mijnteamkompas.nl";
 
@@ -251,17 +253,37 @@ const pages = [
     image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
     content: `
       <main>
-        <h1>Teamontwikkeling — samenwerking structureel verbeteren</h1>
-        <p>Teamontwikkeling bij Mijn Teamkompas is meer dan een eenmalige interventie. We begeleiden teams en leidinggevenden bij duurzame verandering in samenwerking, eigenaarschap, psychologische veiligheid en motivatie.</p>
-        <h2>De vier pijlers van teamontwikkeling</h2>
+        <h1>Teamontwikkeling die begint bij wat er echt speelt</h1>
+        <p>Wij helpen teams beter samenwerken én het vermogen ontwikkelen om samen te blijven leren en verbeteren. We beginnen bij wat er nu schuurt en werken toe naar gewoontes waarmee het team de volgende vraag zelf beter aanpakt.</p>
+        <h2>Wanneer teamontwikkeling nodig is</h2>
         <ul>
-          <li><strong>Psychologische veiligheid.</strong> Teams groeien wanneer mensen zich vrij voelen om eerlijk te zijn.</li>
-          <li><strong>Eigenaarschap en motivatie.</strong> We helpen teams de verbinding te herstellen tussen werk, zingeving en initiatief.</li>
-          <li><strong>Verandering begrijpen.</strong> Mensen bewegen wanneer ze begrijpen waarom iets nodig is.</li>
-          <li><strong>Leren en verbeteren.</strong> Verbeteringen beklijven alleen als ze landen in dagelijks gedrag.</li>
+          <li>Dezelfde discussie komt in elk overleg terug, zonder besluit.</li>
+          <li>Feedback wordt uitgesteld tot een irritatie groot is geworden.</li>
+          <li>Verbeterafspraken worden gemaakt, maar niemand komt erop terug.</li>
+          <li>Rollen en verwachtingen zijn onduidelijk.</li>
+          <li>Eigenaarschap blijft hangen bij een kleine groep, of bij de leidinggevende.</li>
         </ul>
+        <h2>Wat we verstaan onder een team dat blijft leren</h2>
+        <p>Een team dat blijft leren, herkent steeds beter zelf wat er speelt, kan daarover het gesprek voeren en stuurt de samenwerking bij. Daaronder ligt een gedeelde overtuiging dat mensen en teams hun vaardigheden en samenwerking kunnen ontwikkelen door feedback, oefening, passende ondersteuning en leren van ervaringen: een growth mindset binnen een team. Dat vraagt iets van teamleden, van de leidinggevende en van de werkomstandigheden.</p>
+        <h2>Wat elk onderdeel bijdraagt</h2>
+        <ul>
+          <li><a href="/teamscan">Teamscan</a>: hoe ervaren teamleden de voorwaarden voor samenwerking en leren?</li>
+          <li><a href="/insights-discovery-profiel">Insights Discovery</a>: welk gedrag vraagt een situatie en wat wil je oefenen?</li>
+          <li><a href="/teamdag">Teamdag</a>: een gezamenlijk ontwikkeldoel, concrete afspraken en kleine experimenten.</li>
+          <li><a href="/teamcoaching">Teamcoaching</a>: reflecteren op echte gebeurtenissen tijdens het oefenen.</li>
+          <li><a href="/individuele-coaching">Coaching voor leidinggevenden</a>: richting geven, feedback vragen, ruimte bieden binnen kaders.</li>
+        </ul>
+        <h2>Samen leren en verbeteren: een traject van zes maanden</h2>
+        <ol>
+          <li>Maand 1, luisteren en onderzoeken: een startbeeld en één gezamenlijk ontwikkeldoel.</li>
+          <li>Maand 2, begrijpen en kiezen: concrete gedragsafspraken en experimenten.</li>
+          <li>Maand 3 en 4, oefenen in het dagelijks werk: korte reflecties en gerichte coaching.</li>
+          <li>Maand 5, verdiepen en bijsturen: terugkerende patronen en de rol van leiderschap.</li>
+          <li>Maand 6, evalueren en voortzetten: een leerwerkwijze die het team zelf voortzet.</li>
+        </ol>
+        <p>Inhoud en intensiteit stemmen we af op de situatie van het team.</p>
         <p>Plan een vrijblijvend kennismakingsgesprek via <a href="mailto:info@mijnteamkompas.nl">info@mijnteamkompas.nl</a>.</p>
-        <nav><a href="/">Home</a> <a href="/teamscan">Teamscan</a> <a href="/teamcoaching">Teamcoaching</a> <a href="/teamdag">Teamdag</a></nav>
+        <nav><a href="/">Home</a> <a href="/kennis/growth-mindset-in-teams">Growth mindset in teams</a> <a href="/teamscan">Teamscan</a> <a href="/teamcoaching">Teamcoaching</a> <a href="/teamdag">Teamdag</a></nav>
       </main>`,
   },
   {
@@ -332,6 +354,41 @@ const pages = [
         <p>Het gesprek is gratis en verplicht je tot niets.</p>
         <p>Plan direct via <a href="mailto:info@mijnteamkompas.nl">info@mijnteamkompas.nl</a>.</p>
         <nav><a href="/">Home</a> <a href="/teamscan">Teamscan</a> <a href="/teamcoaching">Teamcoaching</a> <a href="/teamdag">Teamdag</a></nav>
+      </main>`,
+  },
+  {
+    // Titel en omschrijving worden hieronder uit SEO_PAGINAS.growthMindset gezet.
+    route: "kennis/growth-mindset-in-teams",
+    title: "",
+    description: "",
+    url: "https://www.mijnteamkompas.nl/kennis/growth-mindset-in-teams",
+    image: "https://www.mijnteamkompas.nl/blog/images/experimenteren.jpg",
+    type: "article",
+    content: `
+      <main>
+        <h1>Growth mindset in teams: van idee naar gewoonte</h1>
+        <p>Een growth mindset binnen een team is de gedeelde overtuiging dat mensen en teams hun vaardigheden en samenwerking kunnen ontwikkelen door feedback, oefening, passende ondersteuning en leren van ervaringen.</p>
+        <h2>Drie onderdelen die samen bepalen of een team leert</h2>
+        <ul>
+          <li><strong>Overtuigingen.</strong> Gelooft het team dat mensen en samenwerking zich kunnen ontwikkelen?</li>
+          <li><strong>Gedrag.</strong> Vragen stellen, om feedback vragen, iets nieuws proberen en samen terugkijken.</li>
+          <li><strong>Werkomstandigheden.</strong> Tijd om terug te kijken, ruimte om iets uit te proberen en duidelijke verwachtingen.</li>
+        </ul>
+        <h2>Hoe je het terugziet in het dagelijks werk</h2>
+        <p>Collega's vragen om hulp en feedback, mensen zeggen dat ze iets nog niet weten of kunnen, na een tegenslag past het team zijn aanpak aan, verbeteringen worden klein uitgeprobeerd en geëvalueerd, en de leidinggevende vraagt zelf om feedback.</p>
+        <h2>Leren is niet alleen een kwestie van houding</h2>
+        <p>Werkdruk, onderbezetting, onduidelijke rollen of trage besluitvorming los je niet op met een andere houding. Daar zijn de organisatie en de leidinggevende aan zet.</p>
+        <h2>Wat een growth mindset niet is</h2>
+        <p>Geen etiket voor mensen, geen positief denken, geen vrijbrief voor fouten waar veiligheid kritisch is, en niet iets wat één training regelt.</p>
+        <h2>Hoe een team morgen kan starten</h2>
+        <ol>
+          <li>Kies één terugkerend moment, zoals het wekelijkse overleg.</li>
+          <li>Spreek één gedraging af.</li>
+          <li>Leg vast wanneer je samen terugkijkt.</li>
+          <li>Laat de leidinggevende beginnen.</li>
+        </ol>
+        <p>Bron voor de onderzoeksparagraaf: <a href="https://pubmed.ncbi.nlm.nih.gov/31502926/">Canning e.a., Cultures of Genius at Work (2020)</a>.</p>
+        <nav><a href="/teamontwikkeling">Teamontwikkeling</a> <a href="/kleine-experimenten">Kleine experimenten</a> <a href="/psychologische-veiligheid">Psychologische veiligheid</a> <a href="/teamdag">Teamdag</a> <a href="/gratis-teamscan">Gratis teamscan</a></nav>
       </main>`,
   },
   {
@@ -438,6 +495,25 @@ function markdownNaarHtml(markdown) {
 const vandaag = new Date();
 vandaag.setHours(23, 59, 59, 999);
 
+
+// Titel en omschrijving van de kernpagina's komen uit src/content/seoPaginas.js,
+// dezelfde bron als SeoHead en de Helmet op de pagina zelf. Zo kan de statische
+// HTML niet meer iets anders zeggen dan wat de bezoeker na het laden ziet.
+const SEO_SLEUTEL_PER_ROUTE = {
+  teamcoaching: "teamcoaching",
+  teamdag: "teamdag",
+  teamontwikkeling: "teamontwikkeling",
+  "onze-aanpak": "onzeAanpak",
+  "kennis/growth-mindset-in-teams": "growthMindset",
+};
+for (const pagina of pages) {
+  const bron = SEO_PAGINAS[SEO_SLEUTEL_PER_ROUTE[pagina.route]];
+  if (bron) {
+    pagina.title = bron.title;
+    pagina.description = bron.description;
+  }
+}
+
 const blogPaginas = fs
   .readdirSync(blogDir)
   .filter((naam) => naam.endsWith(".md"))
@@ -453,7 +529,7 @@ const blogPaginas = fs
     const afbeelding = data.image ? `${SITE}${data.image}` : DEFAULT_IMAGE;
     return {
       route: `blog/${slug}`,
-      title: `${titel} | Mijn Teamkompas`,
+      title: artikelPaginaTitel({ title: titel, seoTitle: data.seoTitle }),
       description: beschrijving,
       url: `${SITE}/blog/${slug}`,
       image: afbeelding,

@@ -1,5 +1,6 @@
 ---
 title: Han Feizi, vertrouwen groeit wanneer de meetlat zichtbaar is
+seoTitle: Vertrouwen in je team: maak je criteria zichtbaar
 date: 2026-11-16
 description: Zolang criteria alleen in het hoofd van de leidinggevende bestaan, raden medewerkers wat telt. Over besluiten die anderen kunnen volgen en toetsen.
 image: /blog/images/vertrouwen-groeit-wanneer-de-meetlat-zichtbaar-is.jpg

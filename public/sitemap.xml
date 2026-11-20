@@ -115,6 +115,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.mijnteamkompas.nl/kennis/growth-mindset-in-teams</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://www.mijnteamkompas.nl/kennis/teamenergie</loc>
     <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>

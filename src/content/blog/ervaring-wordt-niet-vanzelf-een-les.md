@@ -1,5 +1,6 @@
 ---
 title: John Dewey, ervaring wordt niet vanzelf een les
+seoTitle: Waarom je team steeds dezelfde fouten herhaalt
 date: 2026-10-26
 description: Het project is gehaald, met overuren en wrijving. Een paar maanden later gebeurt hetzelfde. Waarom meer ervaring soms tot minder verandering leidt.
 image: /blog/images/ervaring-wordt-niet-vanzelf-een-les.jpg

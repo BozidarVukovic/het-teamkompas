@@ -92,6 +92,10 @@
       "destination": "/teamdag-generator/index.html"
     },
     {
+      "source": "/kennis/growth-mindset-in-teams",
+      "destination": "/kennis/growth-mindset-in-teams/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

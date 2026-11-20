@@ -42,6 +42,7 @@ export const knowledgeNavigation = {
     {
       label: "Veranderen en verbeteren",
       links: [
+        { label: "Growth mindset in teams", href: "/kennis/growth-mindset-in-teams" },
         { label: "Kleine experimenten", href: "/kleine-experimenten" },
         { label: "Borging na een teamdag", href: "/kennis/impact-van-een-teamdag" },
       ],

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import ContactModal from "./ContactModal";
+import { SEO_PAGINAS } from "./content/seoPaginas";
 import { useKennismaking } from "./lib/kennismaking";
 import KompasDot from "./components/shared/KompasDot";
 
@@ -110,11 +111,11 @@ export default function OnzeAanpakPage() {
   return (
     <HelmetProvider>
       <Helmet>
-        <title>Onze aanpak | teamcoaching, teamdag en Insights Discovery | Mijn Teamkompas</title>
-        <meta name="description" content="Ontdek hoe Mijn Teamkompas teams helpt met teamscan, teamcoaching, teamdag en Insights Discovery-profielen als gedragslens voor betere samenwerking." />
+        <title>{SEO_PAGINAS.onzeAanpak.title}</title>
+        <meta name="description" content={SEO_PAGINAS.onzeAanpak.description} />
         <link rel="canonical" href="https://www.mijnteamkompas.nl/onze-aanpak" />
-        <meta property="og:title" content="Onze aanpak | teamcoaching, teamdag en Insights Discovery" />
-        <meta property="og:description" content="Mijn Teamkompas combineert teamscan, veranderkundige duiding en Insights Discovery-profielen om samenwerking concreet te verbeteren." />
+        <meta property="og:title" content={SEO_PAGINAS.onzeAanpak.title} />
+        <meta property="og:description" content={SEO_PAGINAS.onzeAanpak.description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/onze-aanpak" />
       </Helmet>

@@ -1,5 +1,6 @@
 ---
 title: Sun Tzu, een goede strategie heeft geen vaste vorm
+seoTitle: Houvast geven terwijl je aanpak moet meebewegen
 date: 2026-10-09
 description: Water vormt zijn loop naar het terrein. Waarom een aanpak die eerder werkte zich niet zonder meer laat herhalen, en hoe je houvast geeft terwijl de route verandert.
 image: /blog/images/de-stroom-vindt-zijn-weg.jpg

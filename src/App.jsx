@@ -10,6 +10,7 @@ import { laadPagina } from "./lib/paginaLaden";
 import { isBeheerpad, scanUitAdres } from "./lib/opstart";
 const OnzeAanpak = lazy(() => laadPagina(() => import("./OnzeAanpak")));
 import heroContent from "./content/heroContent";
+import { SEO_PAGINAS } from "./content/seoPaginas";
 import { trackEvent } from "./lib/analytics";
 const Verkennen = lazy(() => laadPagina(() => import("./Verkennen")));
 const TeamscanDigitaal = lazy(() => laadPagina(() => import("./TeamscanDigitaal")));
@@ -52,6 +53,7 @@ const InsightsDiscoveryProfiel = lazy(() => laadPagina(() => import("./pages/pub
 const KenniskaartTeamontwikkeling = lazy(() => laadPagina(() => import("./pages/public/KenniskaartTeamontwikkeling")));
 const BevlogenheidInHetWerk = lazy(() => laadPagina(() => import("./pages/public/BevlogenheidInHetWerk")));
 const Teamenergie = lazy(() => laadPagina(() => import("./pages/public/Teamenergie")));
+const GrowthMindsetInTeams = lazy(() => laadPagina(() => import("./pages/public/GrowthMindsetInTeams")));
 const Teamcultuur = lazy(() => laadPagina(() => import("./pages/public/Teamcultuur")));
 const Sprekers = lazy(() => laadPagina(() => import("./pages/public/Sprekers")));
 const SprekerEdmondLam = lazy(() => laadPagina(() => import("./pages/public/SprekerEdmondLam")));
@@ -67,6 +69,7 @@ import { CONTACT_INTEREST_FILTERS, getCurrentPageInfo, getInterestConfig } from 
 import BlogTeaser from "./components/shared/BlogTeaser";
 import KansenCarrousel from "./components/shared/KansenCarrousel";
 import RelatedArticles from "./components/shared/RelatedArticles";
+import { LerendTeamBijdrage, LerendTeamSectie, OefenVoorbeelden, BijdragePerOnderdeel, TrajectSamenLeren, VoortgangVolgen } from "./components/teamontwikkeling/LerendTeam";
 import NieuwsbriefFormulier from "./components/shared/NieuwsbriefFormulier";
 import CookieBanner from "./components/shared/CookieBanner";
 import ReflectiekaartFormulier from "./ReflectiekaartFormulier";
@@ -956,48 +959,23 @@ function StickyLeadCta({ onClick, isMobile = false }) {
 
 function SeoHead({ page = "home" }) {
   const pages = {
-    home: {
-      title: "Mijn Teamkompas | teamscan, workshops en coaching",
-      description: "Loopt samenwerking of verandering binnen je team vast? Mijn Teamkompas maakt zichtbaar wat er speelt en helpt teams met concrete stappen naar ander gedrag.",
-      url: "https://www.mijnteamkompas.nl/",
-      image: "https://www.mijnteamkompas.nl/teamkompas-workshop-hero.jpg",
-    },
-    onzeAanpak: {
-      title: "Onze aanpak | van teamscan naar teamontwikkeling",
-      description: "Ontdek hoe Mijn Teamkompas teams begeleidt van eerste vraag naar teamscan, analyse, dialoog, teamdag en borging in het dagelijks werk.",
-      url: "https://www.mijnteamkompas.nl/onze-aanpak",
-      image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
-    },
+    home: SEO_PAGINAS.home,
+    onzeAanpak: SEO_PAGINAS.onzeAanpak,
     teamscan: {
       title: "Online Teamscan: inzicht in jullie team | Mijn Teamkompas",
       description: "De online Teamscan maakt zichtbaar hoe teamleden de samenwerking ervaren. Bekijk wat de scan meet, hoe hij werkt en het voorbeeldrapport.",
       url: "https://www.mijnteamkompas.nl/teamscan",
       image: "https://www.mijnteamkompas.nl/teamkompas-voorbeeldrapport-overzicht.jpg",
     },
-    teamontwikkeling: {
-      title: "Teamontwikkeling Nederland | samenwerking verbeteren",
-      description: "Teamontwikkeling voor organisaties in Nederland. Verbeter samenwerking, psychologische veiligheid en eigenaarschap met teamscan, teamcoaching en praktische borging.",
-      url: "https://www.mijnteamkompas.nl/teamontwikkeling",
-      image: "https://www.mijnteamkompas.nl/blog/images/ogsm.jpg",
-    },
+    teamontwikkeling: SEO_PAGINAS.teamontwikkeling,
     verkennen: {
       title: "Verkennend gesprek | bespreek je teamvraag met Mijn Teamkompas",
       description: "Plan een vrijblijvend verkennend gesprek over teamontwikkeling, teamscan, samenwerking, psychologische veiligheid of leiderschapsbegeleiding.",
       url: "https://www.mijnteamkompas.nl/verkennen",
       image: "https://www.mijnteamkompas.nl/teamkompas-intakegesprek.jpg",
     },
-    teamcoaching: {
-      title: "Teamcoaching | begeleiding bij samenwerking en leiderschap",
-      description: "Teamcoaching van Mijn Teamkompas: praktische begeleiding bij samenwerking, communicatie, psychologische veiligheid en eigenaarschap binnen het team.",
-      url: "https://www.mijnteamkompas.nl/teamcoaching",
-      image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
-    },
-    teamdag: {
-      title: "Teamdag organiseren | dialoog en concrete afspraken",
-      description: "Een teamdag van Mijn Teamkompas: gestructureerde dialoog op basis van de teamscan, met heldere uitkomsten, gedeelde afspraken en concrete vervolgstappen.",
-      url: "https://www.mijnteamkompas.nl/teamdag",
-      image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
-    },
+    teamcoaching: SEO_PAGINAS.teamcoaching,
+    teamdag: SEO_PAGINAS.teamdag,
     klantenportaal: {
       title: "Klantenportaal | Mijn Teamkompas",
       description: "Toegang tot scanlinks, voorbereiding, documenten en contactinformatie voor klanten en deelnemers van Mijn Teamkompas.",
@@ -1340,9 +1318,9 @@ function PublicSite({ onLoginClick }) {
     "Als samenwerking veel energie kost.",
     "Als gesprekken niet gevoerd worden.",
     "Als verandering blijft hangen in plannen.",
-    "Als leiders meer eigenaarschap willen in het team.",
+    "Als jij als leidinggevende alles moet blijven trekken.",
     "Als spanning, onduidelijkheid of weerstand onder de oppervlakte blijft.",
-    "Als teams beter willen leren omgaan met gedrag, verschil en verantwoordelijkheid.",
+    "Als afspraken na een overleg of teamdag niet worden opgevolgd.",
   ];
 
 
@@ -1506,6 +1484,66 @@ function PublicSite({ onLoginClick }) {
                 <span style={{ border: `1px solid ${PUB.lijn}`, color: PUB.donker, padding: "14px 22px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", background: PUB.wit }} onClick={() => navigate("/onze-aanpak")}>Bekijk onze aanpak</span>
               </div>
             </Fade>
+          </div>
+        </section>
+
+
+        {/* ── Een team dat blijft leren ─────────────────────────────────
+            November 2026. Waar de begeleiding naartoe werkt: niet alleen deze
+            samenwerkingsvraag oplossen, maar het vermogen om de volgende zelf
+            aan te pakken. Staat direct na de werkwijze, omdat het daar logisch
+            uit volgt: na meten, begrijpen en bewegen komt de vraag wat er
+            blijft als wij weer weg zijn.
+
+            Drie gedragingen en niet meer. Het zijn voorbeelden die een
+            leidinggevende in zijn eigen team kan herkennen, geen lijst van
+            kenmerken. De knop is een omlijning: oranje blijft de ene actie op
+            het scherm. */}
+        <section id="team-dat-blijft-leren" style={{ background: PUB.licht, padding: isMobile ? "52px 20px" : "78px 60px", borderBottom: `1px solid ${PUB.lijn}` }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1fr) minmax(0, 1fr)", gap: isMobile ? 28 : 56, alignItems: "start" }}>
+            <Fade>
+              <div style={{ fontSize: 15, fontWeight: 700, color: PUB.teal, marginBottom: 12 }}>Waar we naartoe werken</div>
+              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, margin: "0 0 16px" }}>Samenwerken aan een team dat blijft leren</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: "0 0 16px", maxWidth: "62ch" }}>
+                Sterke samenwerking vraagt om de bereidheid om te blijven leren: van elkaar, van feedback en van wat in de praktijk anders loopt dan verwacht. Mijn Teamkompas helpt teams en leidinggevenden de veiligheid, duidelijkheid en gewoontes te ontwikkelen die daarvoor nodig zijn.
+              </p>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: "0 0 26px", maxWidth: "62ch" }}>
+                Zo werken we aan een growth mindset die zichtbaar wordt in het dagelijks werk. Dat vraagt iets van teamleden, van de leidinggevende en van de omstandigheden waarin het team werkt.
+              </p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
+                <a
+                  href="/teamontwikkeling#team-dat-blijft-leren"
+                  onClick={(e) => { e.preventDefault(); trackEvent("home_lerend_team_click"); navigate("/teamontwikkeling#team-dat-blijft-leren"); }}
+                  style={{ display: "inline-block", border: `1px solid ${PUB.donker}`, color: PUB.donker, padding: "13px 20px", borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: "none", background: PUB.wit }}
+                >
+                  Lees hoe we teams ontwikkelen
+                </a>
+                <a
+                  href="/kennis/growth-mindset-in-teams"
+                  onClick={(e) => { e.preventDefault(); navigate("/kennis/growth-mindset-in-teams"); }}
+                  style={{ color: PUB.teal, fontWeight: 700, fontSize: 14, textDecoration: "none", padding: "13px 0" }}
+                >
+                  Wat is een growth mindset in teams? →
+                </a>
+              </div>
+            </Fade>
+            <div style={{ display: "grid", gap: 14 }}>
+              {[
+                ["Feedback wordt gevraagd, niet alleen gegeven", "Collega's en de leidinggevende vragen zelf om feedback, en kunnen zeggen wat ze nog niet weten of kunnen."],
+                ["Na een tegenvaller kijkt het team terug", "Niet om een schuldige te vinden, maar om te zien wat het de volgende keer anders doet."],
+                ["Verbeteringen worden klein uitgeprobeerd", "Eén afspraak, een paar weken oefenen en samen evalueren. Zo blijft een verbetering ook staan als het druk wordt."],
+              ].map(([titel, tekst], i) => (
+                <Fade key={titel} delay={i * 0.06}>
+                  <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: isMobile ? "18px 18px" : "20px 22px", display: "grid", gridTemplateColumns: "34px 1fr", gap: 14, alignItems: "start" }}>
+                    <div aria-hidden="true" style={{ width: 34, height: 34, borderRadius: "50%", background: PUB.tealGlow, color: PUB.teal, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800 }}>{i + 1}</div>
+                    <div>
+                      <h3 style={{ fontSize: 17, fontWeight: 800, color: PUB.donker, margin: "4px 0 6px", lineHeight: 1.35 }}>{titel}</h3>
+                      <p style={{ fontSize: 14.5, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
+                    </div>
+                  </div>
+                </Fade>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -9523,13 +9561,6 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
   // naar /verkennen. Zie src/lib/kennismaking.js.
   useKennismaking(openModal);
   const closeModal = () => setModalOpen(false);
-  const registreerTeamontwikkelingEvent = async (event) => {
-    try {
-      await addDoc(collection(db, "teamscanEvents"), { event, pagina: "teamontwikkeling", url: window.location.href, timestamp: serverTimestamp() });
-    } catch (error) {
-      console.warn("Funnel-event niet opgeslagen", error);
-    }
-  };
 
   const ctaStyle = {
     background: PUB.oranje,
@@ -9546,18 +9577,20 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
   };
 
   const signalen = [
-    "Overleggen blijven netjes, maar echte zorgen worden niet uitgesproken.",
-    "Teamleden werken hard, maar samenwerking kost meer energie dan nodig is.",
-    "Eigenaarschap blijft hangen bij een kleine groep mensen.",
+    "Dezelfde discussie komt in elk overleg terug, zonder besluit.",
+    "Feedback wordt uitgesteld tot een irritatie groot is geworden.",
+    "Verbeterafspraken worden gemaakt, maar niemand komt erop terug.",
+    "Rollen en verwachtingen zijn onduidelijk of worden verschillend uitgelegd.",
+    "Eigenaarschap blijft hangen bij een kleine groep, of bij de leidinggevende.",
     "Veranderingen zijn logisch op papier, maar komen beperkt in beweging.",
-    "Een teamdag wordt gepland, maar de onderliggende ontwikkelvraag is nog niet scherp.",
-    "Leidinggevenden zoeken taal om gedrag, spanning en samenwerking bespreekbaar te maken.",
   ];
 
+  // Namen en volgorde gelijk aan de teamscan (TeamscanDigitaal.jsx) en het
+  // rapport. Hier stond "Verandering en betekenis"; dat is hetzelfde domein.
   const domeinen = [
     ["Veiligheid en leiderschap", "Durven mensen zich uit te spreken en geeft leiderschap genoeg richting, steun en begrenzing?"],
+    ["Beleving van verandering", "Hoe komt verandering binnen en waar ontstaat verlies van grip, duidelijkheid of vertrouwen?"],
     ["Energie en motivatie", "Waar krijgt het team energie van en waar lopen motivatie, aandacht en initiatief weg?"],
-    ["Verandering en betekenis", "Hoe komt verandering binnen en waar ontstaat verlies van grip, duidelijkheid of vertrouwen?"],
     ["Verbeteren en leren", "Worden verbeterideeën zichtbaar, besproken en vertaald naar nieuw gedrag in het dagelijks werk?"],
   ];
 
@@ -9565,21 +9598,6 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
     ["1", "Zichtbaar maken", "Met een teamscan, intake of verkennend gesprek brengen we in kaart wat het team ervaart."],
     ["2", "Betekenis geven", "We vertalen scores, patronen en signalen naar een gedeeld beeld van wat er echt speelt."],
     ["3", "In beweging brengen", "Via teamcoaching, een teamdag of leiderschapsbegeleiding maken we de stap naar concreet gedrag."],
-  ];
-
-  const situaties = [
-    "een teamdag voorbereiden met meer diepgang dan losse werkvormen",
-    "samenwerking verbeteren in een bestaand of nieuw samengesteld team",
-    "psychologische veiligheid bespreekbaar maken zonder schuld of oordeel",
-    "eigenaarschap, motivatie en initiatief versterken",
-    "een leidinggevende helpen om teamontwikkeling beter te begeleiden",
-    "spanning tussen teams, functies of afdelingen constructief onderzoeken",
-  ];
-
-  const verdiepingen = [
-    ["Teamcoaching", "Begeleiding voor teams die communicatie, feedback, eigenaarschap en onderlinge samenwerking willen versterken.", "/teamcoaching"],
-    ["Teamdag", "Een gerichte teamdag op basis van analyse, dialoog en afspraken die terugkomen in het dagelijks werk.", "/teamdag"],
-    ["Boven- en onderstroom", "Maak zichtbaar wat formeel besproken wordt en wat in gedrag, spanning of aannames onder de oppervlakte blijft.", "/boven-en-onderstroom"],
   ];
 
   const faqs = [
@@ -9594,6 +9612,14 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
     [
       "Is teamontwikkeling hetzelfde als een teamdag?",
       "Nee. Een teamdag kan onderdeel zijn van teamontwikkeling, maar we koppelen die aan analyse, dialoog en borging in dagelijks gedrag.",
+    ],
+    [
+      "Wat bedoelen jullie met een growth mindset?",
+      "De gedeelde overtuiging dat mensen en teams hun vaardigheden en samenwerking kunnen ontwikkelen door feedback, oefening, passende ondersteuning en leren van ervaringen. Het is een richting om in te groeien, geen etiket voor mensen.",
+    ],
+    [
+      "Hoe lang duurt teamontwikkeling?",
+      "Dat hangt af van de vraag. Soms is een teamdag met opvolging genoeg. Voor teams die een vaste manier van samen leren willen opbouwen, is er het traject Samen leren en verbeteren van zes maanden. Inhoud en intensiteit stemmen we af op de situatie van het team.",
     ],
   ];
 
@@ -9615,7 +9641,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
               Teamontwikkeling die begint bij wat er echt speelt.
             </h1>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.74)", maxWidth: 660, marginBottom: 16 }}>
-              Samenwerking verbeteren vraagt meer dan een losse teamdag. Mijn Teamkompas helpt teams zichtbaar maken waar veiligheid, energie, verandering en leren elkaar versterken of juist blokkeren.
+              Wij helpen teams beter samenwerken én het vermogen ontwikkelen om samen te blijven leren en verbeteren. We beginnen bij wat er nu schuurt en werken toe naar gewoontes waarmee het team de volgende vraag zelf beter aanpakt.
             </p>
             {/* Oranje staat in deze site voor de ene handeling op het scherm.
                 Hier stond die kleur op "Bekijk de teamscan voor teams" -- dat
@@ -9638,7 +9664,7 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
                 is en dat hoort geen kleine lettertjes te zijn. Nu 15 pixels en
                 78 procent (10,9:1). */}
             <p style={{ marginTop: 20, marginBottom: 0, color: "rgba(255,255,255,0.76)", fontSize: 15, lineHeight: 1.7, maxWidth: 600 }}>
-              Voor teams die willen werken aan vertrouwen, eigenaarschap, communicatie en duurzame verandering.
+              Voor leidinggevenden, HR en teams die willen werken aan vertrouwen, eigenaarschap, feedback en verbeteringen die blijven staan.
             </p>
 
           </div>
@@ -9674,6 +9700,9 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           </div>
         </section>
 
+        <LerendTeamSectie isMobile={isMobile} />
+        <OefenVoorbeelden isMobile={isMobile} />
+
         <section style={{ background: PUB.wit, padding: isMobile ? "54px 20px" : "82px 60px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 40, alignItems: "center" }}>
             <Fade>
@@ -9699,6 +9728,8 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
             </Fade>
           </div>
         </section>
+
+        <BijdragePerOnderdeel isMobile={isMobile} />
 
         <section style={{ background: PUB.donker, padding: isMobile ? "54px 20px" : "82px 60px", position: "relative", overflow: "hidden" }}>
           <Strepen />
@@ -9729,77 +9760,11 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
           </div>
         </section>
 
-        <section style={{ background: PUB.licht, padding: isMobile ? "54px 20px" : "82px 60px" }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 42, alignItems: "center" }}>
-            <Fade>
-              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Wanneer past dit?</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 16 }}>Voor teams die niet harder, maar gerichter willen samenwerken.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, marginBottom: 24 }}>
-                Deze aanpak past bij teams die willen groeien, maar ook bij teams waar samenwerking schuurt. Het doel is niet om een team te beoordelen, maar om taal, richting en beweging te creëren.
-              </p>
-              <div style={{ display: "grid", gap: 10 }}>
-                {situaties.map((tekst) => (
-                  <div key={tekst} style={{ display: "flex", gap: 12, alignItems: "flex-start", background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 12, padding: "13px 15px" }}>
-                    <div style={{ width: 9, height: 9, borderRadius: "50%", background: PUB.teal, marginTop: 7, flexShrink: 0 }} />
-                    <div style={{ fontSize: 14, lineHeight: 1.65, color: PUB.donker }}>{tekst}</div>
-                  </div>
-                ))}
-              </div>
-            </Fade>
-            <Fade delay={0.08}>
-              <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 22, padding: isMobile ? 22 : 30, boxShadow: "none" }}>
-                <img src="/blog/images/ogsm.jpg" alt="Kompas met doel, strategie, actie en meting, met een team eromheen" style={{ width: "100%", height: isMobile ? 220 : 300, objectFit: "cover", borderRadius: 16, marginBottom: 22 }} />
-                <h3 style={{ fontSize: isMobile ? 24 : 30, lineHeight: 1.18, color: PUB.donker, marginBottom: 12 }}>Van losse signalen naar een gedeelde ontwikkelagenda.</h3>
-                <p style={{ fontSize: 15, lineHeight: 1.75, color: PUB.sub, marginBottom: 22 }}>
-                  De teamscan helpt om de juiste teamvraag scherp te maken. Daarna kan een teamdag, coachingsgesprek of begeleid traject veel gerichter worden ingericht.
-                </p>
-                <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 12 }}>
-                  <span style={{ ...ctaStyle, flex: 1 }} onClick={() => navigate("/teamscan")}>Bekijk de teamscan voor teams</span>
-                  <span style={{ ...ctaStyle, background: PUB.donker, color: PUB.wit, boxShadow: "none", flex: 1 }} onClick={openModal}>Plan een verdiepend gesprek</span>
-                </div>
-              </div>
-            </Fade>
-          </div>
-        </section>
+        <TrajectSamenLeren isMobile={isMobile} onGesprek={openModal} />
+        <VoortgangVolgen isMobile={isMobile} />
 
-        <section style={{ background: PUB.wit, padding: isMobile ? "54px 20px" : "78px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Ondersteunende instrumenten</div>
-            <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 24 }}>Teamontwikkeling krijgt meer diepte met passende hulpmiddelen.</h2>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
-              {[["Teamscan", "Maakt zichtbaar waar samenwerking, veiligheid, energie en leren aandacht vragen.", "/teamscan", "Bekijk de teamscan voor teams"], ["Teamdag", "Zet inzicht om in een begeleid gesprek, oefeningen en concrete teamafspraken.", "/teamdag", "Bekijk teamdagen"], ["Insights Discovery-profielen", "Voor professionals en teams die meer inzicht willen in communicatie, samenwerking, voorkeuren en gedrag onder druk.", "/insights-discovery-profiel", "Lees meer over Insights Discovery"]].map(([titel, tekst, href, label]) => (
-                <a key={titel} href={href} onClick={() => titel === "Insights Discovery-profielen" && registreerTeamontwikkelingEvent("teamontwikkeling_insights_click")} style={{ display: "block", height: "100%", background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, textDecoration: "none", boxShadow: "none" }}>
-                  <h3 style={{ fontSize: 22, lineHeight: 1.2, color: PUB.donker, margin: "0 0 10px" }}>{titel}</h3>
-                  <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
-                  <span style={{ display: "inline-block", marginTop: 16, fontSize: 13, fontWeight: 800, color: PUB.teal }}>{label} →</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        <section style={{ background: PUB.wit, padding: isMobile ? "54px 20px" : "78px 60px", borderTop: `1px solid ${PUB.lijn}` }}>
-          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-            <Fade>
-              <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Verdieping</div>
-              <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 14, maxWidth: 820 }}>Teamontwikkeling raakt aan coaching, teamdagen en de onderstroom.</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, maxWidth: 820, marginBottom: 30 }}>
-                Soms begint de vraag bij een teamdag, soms bij coaching en soms bij de spanning tussen wat gezegd wordt en wat mensen ervaren. Deze verdiepingen helpen om de juiste vervolgstap te kiezen.
-              </p>
-            </Fade>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
-              {verdiepingen.map(([titel, tekst, href], i) => (
-                <Fade key={titel} delay={i * 0.05}>
-                  <a href={href} style={{ display: "block", height: "100%", background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 18, padding: 24, textDecoration: "none", boxShadow: "none" }}>
-                    <h3 style={{ fontSize: 22, lineHeight: 1.2, color: PUB.donker, margin: "0 0 10px" }}>{titel}</h3>
-                    <p style={{ fontSize: 14, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>{tekst}</p>
-                    <span style={{ display: "inline-block", marginTop: 16, fontSize: 13, fontWeight: 800, color: PUB.teal }}>Lees verder →</span>
-                  </a>
-                </Fade>
-              ))}
-            </div>
-          </div>
-        </section>
+
 
         <section style={{ background: PUB.licht, padding: isMobile ? "54px 20px" : "78px 60px" }}>
           <div style={{ maxWidth: 980, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : ".8fr 1.2fr", gap: 34, alignItems: "start" }}>
@@ -9917,17 +9882,11 @@ function TeamcoachingPage() {
   return (
     <>
       <Helmet>
-        <title>Teamcoaching | coaching van teams en samenwerking verbeteren | Mijn Teamkompas</title>
-        <meta
-          name="description"
-          content="Teamcoaching voor teams die samenwerking, communicatie, eigenaarschap en psychologische veiligheid willen verbeteren. Met teamscan en eventueel Insights Discovery."
-        />
+        <title>{SEO_PAGINAS.teamcoaching.title}</title>
+        <meta name="description" content={SEO_PAGINAS.teamcoaching.description} />
         <link rel="canonical" href="https://www.mijnteamkompas.nl/teamcoaching" />
-        <meta property="og:title" content="Teamcoaching voor betere samenwerking | Mijn Teamkompas" />
-        <meta
-          property="og:description"
-          content="Mijn Teamkompas begeleidt teams met teamcoaching, teamscan en Insights Discovery om gedrag, samenwerking en eigenaarschap concreet te verbeteren."
-        />
+        <meta property="og:title" content={SEO_PAGINAS.teamcoaching.title} />
+        <meta property="og:description" content={SEO_PAGINAS.teamcoaching.description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/teamcoaching" />
       </Helmet>
@@ -10099,6 +10058,8 @@ function TeamcoachingPage() {
             </div>
           </div>
         </section>
+
+        <LerendTeamBijdrage isMobile={isMobile} tekst={"Bij teamcoaching oefent het team in het echte werk en kijkt het samen terug op wat er gebeurde: een overleg dat vastliep, een gesprek dat werd uitgesteld, een patroon dat terugkomt. Zo wordt reflecteren een gewoonte die het team ook zonder coach kan voortzetten."} />
 
         <section style={{ padding: isMobile ? "52px 22px" : "86px 60px", background: PUB.donker, color: PUB.wit, textAlign: "center" }}>
           <div style={{ maxWidth: 820, margin: "0 auto" }}>
@@ -12625,17 +12586,17 @@ function TeamdagPage() {
   return (
     <>
       <Helmet>
-        <title>Teamdag organiseren die echt iets verandert | Mijn Teamkompas</title>
-        <meta name="description" content="Een teamdag organiseren die verder gaat dan een leuke dag? Ontdek een aanpak voor betere samenwerking, echte gesprekken en blijvende beweging." />
+        <title>{SEO_PAGINAS.teamdag.title}</title>
+        <meta name="description" content={SEO_PAGINAS.teamdag.description} />
         <link rel="canonical" href="https://www.mijnteamkompas.nl/teamdag" />
-        <meta property="og:title" content="Teamdag organiseren die echt iets verandert | Mijn Teamkompas" />
-        <meta property="og:description" content="Een teamdag die meer oplevert dan een leuke dag: betere samenwerking, echte gesprekken, concrete afspraken en borging na afloop." />
+        <meta property="og:title" content={SEO_PAGINAS.teamdag.title} />
+        <meta property="og:description" content={SEO_PAGINAS.teamdag.description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/teamdag" />
         <meta property="og:image" content="https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Teamdag organiseren die echt iets verandert | Mijn Teamkompas" />
-        <meta name="twitter:description" content="Ontdek hoe je een teamdag organiseert met betere samenwerking, echte gesprekken en blijvende beweging." />
+        <meta name="twitter:title" content={SEO_PAGINAS.teamdag.title} />
+        <meta name="twitter:description" content={SEO_PAGINAS.teamdag.description} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@graph": [
@@ -12709,6 +12670,8 @@ function TeamdagPage() {
         <section style={sectionStyle(PUB.licht)}>
           <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 38 }}><div><h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>Waarom begeleiding door Mijn Teamkompas?</h2><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>We werken niet met een standaardprogramma. De begeleiding combineert analyse, gesprek en toepasbare werkvormen, met aandacht voor de inhoud én de onderlinge dynamiek. Er is ruimte voor wat zichtbaar speelt en voor wat mensen minder makkelijk uitspreken.</p><p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub }}>De nadruk ligt op beweging na de teamdag: kleine experimenten, duidelijke afspraken en een vervolg dat past bij jullie ritme.</p></div><div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 22, padding: 28, boxShadow: "0 18px 46px rgba(13,27,42,.08)" }}><h3 style={{ marginTop: 0 }}>Praktische informatie</h3><p style={{ lineHeight: 1.75, color: PUB.sub }}>Geschikt voor teams die samenwerking, veiligheid, eigenaarschap of communicatie willen versterken. Een teamdag kan meestal op jullie eigen locatie of op een externe locatie plaatsvinden, als halve of hele dag. De voorbereiding bestaat uit een intake en waar passend aanvullende gesprekken of een teamscan. Het programma is maatwerk; prijs is op aanvraag.</p><p style={{ lineHeight: 1.75, color: PUB.sub, marginBottom: 0 }}>Twijfel je of een teamdag, teamscan of teamcoaching past? In een vrijblijvende kennismaking verkennen we dat samen.</p></div></div>
         </section>
+
+        <LerendTeamBijdrage isMobile={isMobile} tekst={"Een goede teamdag eindigt niet met een lijst inzichten, maar met een gezamenlijk ontwikkeldoel, een paar concrete afspraken en één of twee kleine experimenten. Na een paar weken kijkt het team samen terug: wat werkte, wat houden we vast en wat passen we aan?"} />
 
         <section style={sectionStyle()}>
           <div style={{ maxWidth: 980, margin: "0 auto" }}><div style={{ marginBottom: 28 }}><div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em", color: PUB.teal, marginBottom: 12 }}>Veelgestelde vragen</div><h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: 0 }}>FAQ over een teamdag organiseren</h2></div><div style={{ display: "grid", gap: 14 }}>{faqs.map(([vraag, antwoord]) => <details key={vraag} style={{ background: PUB.licht, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: "18px 20px" }}><summary style={{ cursor: "pointer", fontWeight: 900, fontSize: 17 }}>{vraag}</summary><p style={{ color: PUB.sub, lineHeight: 1.75, marginBottom: 0 }}>{antwoord}</p></details>)}</div></div>
@@ -12904,6 +12867,7 @@ export default function App() {
         <Route path="/kleine-experimenten" element={<><KleineExperimentenPage /><InsightsKnowledgeCta /></>} />
         <Route path="/kennis/kenniskaart-teamontwikkeling" element={<KenniskaartTeamontwikkeling />} />
         <Route path="/kennis/teamenergie" element={<><Teamenergie /><RelatedArticles paths={["/kennis/teamenergie"]} /></>} />
+        <Route path="/kennis/growth-mindset-in-teams" element={<><GrowthMindsetInTeams /><RelatedArticles paths={["/kennis/growth-mindset-in-teams", "/kleine-experimenten"]} /></>} />
         <Route path="/kennis/bevlogenheid-in-het-werk" element={<><BevlogenheidInHetWerk /><RelatedArticles paths={["/kennis/bevlogenheid-in-het-werk"]} /></>} />
         <Route path="/individuele-coaching" element={<><IndividueleCoaching /><RelatedArticles title="Verdiep je in dit onderwerp" paths={["/teamcoaching"]} /></>} />
         <Route path="/sprekers" element={<Sprekers />} />

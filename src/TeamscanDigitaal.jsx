@@ -5,6 +5,7 @@ import { collection, addDoc, serverTimestamp, updateDoc } from "firebase/firesto
 import { db } from "./firebase";
 import { sendTeamscanConfirmationEmail } from "./email";
 import { getCurrentPageInfo } from "./contactMetadata";
+import { LerendTeamBijdrage } from "./components/teamontwikkeling/LerendTeam";
 
 const C = {
   donker: "#0D1B2A",
@@ -820,6 +821,8 @@ export default function TeamscanDigitaal() {
             </div>
           </div>
         </section>
+
+        <LerendTeamBijdrage isMobile={isMobile} tekst={"De teamscan laat zien hoe teamleden de voorwaarden voor samenwerking en leren ervaren: veiligheid, duidelijkheid, energie en de ruimte om te verbeteren. De uitkomsten zijn geen eindoordeel. Ze zijn het begin van een gesprek, met één haalbare volgende stap die het team zelf kiest."} />
 
         {/* FAQ */}
         <section style={{ padding: isMobile ? "48px 22px" : "76px 60px", background: C.wit }}>

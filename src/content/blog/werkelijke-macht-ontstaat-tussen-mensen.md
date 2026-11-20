@@ -1,5 +1,6 @@
 ---
 title: Hannah Arendt, macht ontstaat tussen mensen
+seoTitle: Besluiten die steeds druk nodig hebben: controle of draagvlak?
 date: 2026-11-14
 description: Hoeveel gezamenlijke overtuiging zit er achter een besluit dat voortdurend druk nodig heeft? Over controle die de afhankelijkheid vergroot.
 image: /blog/images/werkelijke-macht-ontstaat-tussen-mensen.jpg

@@ -1,5 +1,6 @@
 ---
 title: Mozi, betrokkenheid stopt niet bij je eigen team
+seoTitle: Eigenaarschap voorbij je eigen team: wie merkt de gevolgen?
 date: 2026-09-29
 description: Een rooster dat de eigen werkdruk verlaagt en verderop een piek veroorzaakt. Waarom de vraag wie de gevolgen nog meer merkt bij eigenaarschap hoort.
 image: /blog/images/mozi-onpartijdige-zorg.jpg

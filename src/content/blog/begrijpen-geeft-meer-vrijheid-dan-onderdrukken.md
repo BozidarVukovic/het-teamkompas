@@ -1,5 +1,6 @@
 ---
 title: Spinoza, begrijpen geeft meer vrijheid dan onderdrukken
+seoTitle: Frustratie als leidinggevende: uiten, wegdrukken of begrijpen?
 date: 2026-11-09
 description: Een leider die elke frustratie uit, veroorzaakt onrust. Wie haar structureel wegdrukt, beslist vanuit een emotie die nooit is onderzocht. Over de derde mogelijkheid.
 image: /blog/images/begrijpen-geeft-meer-vrijheid-dan-onderdrukken.jpg

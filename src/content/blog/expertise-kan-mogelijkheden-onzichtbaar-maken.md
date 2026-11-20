@@ -1,5 +1,6 @@
 ---
 title: Shunryu Suzuki, expertise kan mogelijkheden onzichtbaar maken
+seoTitle: Wanneer ervaring in een team blinde vlekken oplevert
 date: 2026-10-01
 description: Ervaring laat je snel patronen herkennen en laat je soms missen wat deze situatie anders maakt. Over het moment waarop deskundigheid verandert in zekerheid.
 image: /blog/images/beginnersgeest.jpg

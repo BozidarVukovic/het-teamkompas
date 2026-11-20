@@ -1,5 +1,6 @@
 ---
 title: Karl Marx, eigenaarschap vraagt om invloed
+seoTitle: Meer eigenaarschap vragen zonder invloed te geven
 date: 2026-10-13
 description: Meer eigenaarschap gevraagd, terwijl werkwijze en prioriteiten vastliggen. Wat er gebeurt wanneer mensen zichzelf niet meer herkennen in hun werk.
 image: /blog/images/eigenaarschap-en-invloed.jpg

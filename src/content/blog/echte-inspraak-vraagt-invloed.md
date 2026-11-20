@@ -1,5 +1,6 @@
 ---
 title: Jürgen Habermas, echte inspraak vraagt invloed
+seoTitle: Inspraak zonder invloed kost vertrouwen
 date: 2026-11-05
 description: Ruimte voor vragen aan het einde van een presentatie waarin alles al vastligt. Waarom een uitnodiging om mee te denken verwachtingen schept.
 image: /blog/images/echte-inspraak-vraagt-invloed.jpg

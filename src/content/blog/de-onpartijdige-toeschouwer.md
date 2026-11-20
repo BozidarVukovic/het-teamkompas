@@ -1,5 +1,6 @@
 ---
 title: Adam Smith, de onpartijdige toeschouwer
+seoTitle: Besluiten toetsen door de ogen van een buitenstaander
 date: 2026-11-22
 description: Welke feiten zou je aan een buitenstaander vertellen, en welke laat je nu weg? Over besluiten die logisch voelen zolang je er zelf middenin zit.
 image: /blog/images/de-onpartijdige-toeschouwer.jpg

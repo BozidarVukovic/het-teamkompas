@@ -1,5 +1,6 @@
 ---
 title: Michel Foucault, wat je meet vormt hoe mensen werken
+seoTitle: KPI's en dashboards: wat je meet, stuurt gedrag
 date: 2026-11-01
 description: Haar productie was lager, want ze hielp een nieuwe collega. Het dashboard liet alleen het eerste zien. Over wat een meting onbedoeld aanmoedigt.
 image: /blog/images/wat-je-meet-vormt-het-werk.jpg

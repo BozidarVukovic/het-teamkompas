@@ -1,5 +1,6 @@
 ---
 title: Immanuel Kant, mensen zijn meer dan hun bijdrage
+seoTitle: Als je steeds dezelfde collega om hulp vraagt
 date: 2026-10-25
 description: Je weet precies wie je kunt vragen, en dus vraag je het opnieuw. Wanneer waardering voor iemands bereidheid verandert in een verwachting.
 image: /blog/images/meer-dan-je-bijdrage.jpg

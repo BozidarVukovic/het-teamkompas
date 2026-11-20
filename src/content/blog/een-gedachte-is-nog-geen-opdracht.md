@@ -1,5 +1,6 @@
 ---
 title: Patañjali, een gedachte is nog geen opdracht
+seoTitle: Irritatie over een mail: reageren of eerst een vraag stellen?
 date: 2026-11-07
 description: Je leest de mail half, voelt irritatie en je antwoord vormt zich al. Over het korte moment waarin een interpretatie nog een vraag kan worden.
 image: /blog/images/een-gedachte-is-nog-geen-opdracht.jpg

@@ -1,5 +1,6 @@
 ---
 title: Chris Argyris, evalueren is nog geen leren
+seoTitle: Evalueren zonder te verbeteren: wanneer leert een team echt?
 date: 2026-11-11
 description: Een team kan uitstekend worden in reflecteren zonder beter te worden. Over het verschil tussen een inzicht en een verandering in gedrag.
 image: /blog/images/evalueren-is-nog-geen-leren.jpg
