@@ -43,6 +43,8 @@ export const KENNISPAGINAS = [
   ["kennis/kenniskaart-teamontwikkeling", "src/pages/public/KenniskaartTeamontwikkeling.jsx"],
 ];
 
+// Draait in de browser via page.evaluate, vandaar document.
+/* global document */
 function haalInhoud() {
   const root = document.querySelector("#root").cloneNode(true);
   root.querySelectorAll("header, footer, nav[aria-label='Hoofdmenu'], script, style, svg, img, button, form, iframe, [role='dialog'], #seo-fallback").forEach((n) => n.remove());
