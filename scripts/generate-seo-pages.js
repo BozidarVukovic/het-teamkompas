@@ -500,6 +500,7 @@ vandaag.setHours(23, 59, 59, 999);
 // dezelfde bron als SeoHead en de Helmet op de pagina zelf. Zo kan de statische
 // HTML niet meer iets anders zeggen dan wat de bezoeker na het laden ziet.
 const SEO_SLEUTEL_PER_ROUTE = {
+  teamscan: "teamscan",
   teamcoaching: "teamcoaching",
   teamdag: "teamdag",
   teamontwikkeling: "teamontwikkeling",

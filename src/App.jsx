@@ -961,12 +961,7 @@ function SeoHead({ page = "home" }) {
   const pages = {
     home: SEO_PAGINAS.home,
     onzeAanpak: SEO_PAGINAS.onzeAanpak,
-    teamscan: {
-      title: "Online Teamscan: inzicht in jullie team | Mijn Teamkompas",
-      description: "De online Teamscan maakt zichtbaar hoe teamleden de samenwerking ervaren. Bekijk wat de scan meet, hoe hij werkt en het voorbeeldrapport.",
-      url: "https://www.mijnteamkompas.nl/teamscan",
-      image: "https://www.mijnteamkompas.nl/teamkompas-voorbeeldrapport-overzicht.jpg",
-    },
+    teamscan: SEO_PAGINAS.teamscan,
     teamontwikkeling: SEO_PAGINAS.teamontwikkeling,
     verkennen: {
       title: "Verkennend gesprek | bespreek je teamvraag met Mijn Teamkompas",
@@ -10307,10 +10302,13 @@ function PsychologischeVeiligheidPage() {
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
           <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
             <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 14 }}>
-              Psychologische veiligheid in teams
+              Kennis · veiligheid en leiderschap
             </div>
+            {/* November 2026: de zoekterm staat nu in de kop. Search Console gaf
+                670 vertoningen voor deze pagina op positie 79; "psychologische
+                veiligheid" stond alleen in de bovenregel. */}
             <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
-              Van stilte naar een echte aanspreekcultuur.
+              Psychologische veiligheid in teams: van stilte naar een aanspreekcultuur
             </h1>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 680, marginBottom: 14 }}>
               Veel teams begrijpen het belang van psychologische veiligheid. Toch blijven dezelfde patronen bestaan: mensen houden zich in, fouten worden vermeden en het echte gesprek wordt nooit gevoerd.
@@ -10820,10 +10818,11 @@ function SocialeVeiligheidPage() {
         <section style={{ background: PUB.donker, minHeight: isMobile ? "auto" : "68vh", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.1fr .9fr", alignItems: "center", overflow: "hidden", paddingTop: 64 }}>
           <div style={{ padding: isMobile ? "54px 22px 34px" : "72px 58px 72px 72px", position: "relative", zIndex: 2 }}>
             <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.005em", color: PUB.tealOpDonker, marginBottom: 14 }}>
-              Sociale veiligheid in teams
+              Kennis · veiligheid en leiderschap
             </div>
+            {/* November 2026: zoekterm in de kop, zie psychologische veiligheid. */}
             <h1 style={{ fontSize: isMobile ? 34 : 52, fontWeight: 800, lineHeight: 1.05, color: PUB.wit, margin: "0 0 20px", letterSpacing: "-0.03em" }}>
-              De basis waarop elk team moet kunnen rekenen.
+              Sociale veiligheid in teams: de basis waarop iedereen moet kunnen rekenen
             </h1>
             <p style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.75, color: "rgba(255,255,255,0.76)", maxWidth: 680, marginBottom: 14 }}>
               Pesten, uitsluiting, kleinerende grapjes of intimidatie: sociale onveiligheid is zelden zichtbaar in de vergadering, maar altijd voelbaar in het team. Mensen wapenen zich, vermijden elkaar en houden hun hoofd omlaag.

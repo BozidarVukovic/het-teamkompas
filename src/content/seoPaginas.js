@@ -36,6 +36,16 @@ export const SEO_PAGINAS = {
     url: "https://www.mijnteamkompas.nl/teamontwikkeling",
     image: "https://www.mijnteamkompas.nl/blog/images/ogsm.jpg",
   },
+  // Search Console november 2026: "online teamscan" positie 14,5, "gratis
+  // teamscan" positie 10, "teamscan kopen" en "teamscan tool" daarachter.
+  // Dat zijn de zoekopdrachten met koopintentie; de titel noemt ze.
+  teamscan: {
+    title: "Online teamscan: zo ervaart je team de samenwerking | Mijn Teamkompas",
+    description:
+      "Online teamscan voor teams: iedereen vult in, jullie krijgen een teambeeld op vier domeinen als basis voor het gesprek. Eerst proberen? Doe de gratis scan.",
+    url: "https://www.mijnteamkompas.nl/teamscan",
+    image: "https://www.mijnteamkompas.nl/teamkompas-voorbeeldrapport-overzicht.jpg",
+  },
   teamcoaching: {
     title: "Teamcoaching voor samenwerking en feedback | Mijn Teamkompas",
     description:

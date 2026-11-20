@@ -6,6 +6,7 @@ import { db } from "./firebase";
 import { sendTeamscanConfirmationEmail } from "./email";
 import { getCurrentPageInfo } from "./contactMetadata";
 import { LerendTeamBijdrage } from "./components/teamontwikkeling/LerendTeam";
+import { SEO_PAGINAS } from "./content/seoPaginas";
 
 const C = {
   donker: "#0D1B2A",
@@ -454,21 +455,18 @@ export default function TeamscanDigitaal() {
   return (
     <HelmetProvider>
       <Helmet>
-        <title>Online Teamscan: inzicht in jullie team | Mijn Teamkompas</title>
-        <meta
-          name="description"
-          content="De online Teamscan maakt zichtbaar hoe teamleden de samenwerking ervaren. Bekijk wat de scan meet, hoe hij werkt en het voorbeeldrapport."
-        />
+        <title>{SEO_PAGINAS.teamscan.title}</title>
+        <meta name="description" content={SEO_PAGINAS.teamscan.description} />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://www.mijnteamkompas.nl/teamscan" />
-        <meta property="og:title" content="Online Teamscan: inzicht in jullie team | Mijn Teamkompas" />
-        <meta property="og:description" content="Een online teamscan maakt zichtbaar waar samenwerking sterk is, waar spanning ontstaat en welke vervolgstappen logisch zijn." />
+        <meta property="og:title" content={SEO_PAGINAS.teamscan.title} />
+        <meta property="og:description" content={SEO_PAGINAS.teamscan.description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.mijnteamkompas.nl/teamscan" />
         <meta property="og:image" content="https://www.mijnteamkompas.nl/teamkompas-voorbeeldrapport-overzicht.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Online Teamscan: inzicht in jullie team | Mijn Teamkompas" />
-        <meta name="twitter:description" content="Bekijk wat de online Teamscan meet, hoe hij werkt en wat er in het rapport staat." />
+        <meta name="twitter:title" content={SEO_PAGINAS.teamscan.title} />
+        <meta name="twitter:description" content={SEO_PAGINAS.teamscan.description} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@graph": [
