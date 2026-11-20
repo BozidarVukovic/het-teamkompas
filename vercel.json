@@ -96,6 +96,54 @@
       "destination": "/kennis/growth-mindset-in-teams/index.html"
     },
     {
+      "source": "/psychologische-veiligheid",
+      "destination": "/psychologische-veiligheid/index.html"
+    },
+    {
+      "source": "/sociale-veiligheid",
+      "destination": "/sociale-veiligheid/index.html"
+    },
+    {
+      "source": "/boven-en-onderstroom",
+      "destination": "/boven-en-onderstroom/index.html"
+    },
+    {
+      "source": "/brein-en-samenwerking",
+      "destination": "/brein-en-samenwerking/index.html"
+    },
+    {
+      "source": "/kleine-experimenten",
+      "destination": "/kleine-experimenten/index.html"
+    },
+    {
+      "source": "/kennis/eigenaarschap-in-teams",
+      "destination": "/kennis/eigenaarschap-in-teams/index.html"
+    },
+    {
+      "source": "/kennis/teamcultuur",
+      "destination": "/kennis/teamcultuur/index.html"
+    },
+    {
+      "source": "/kennis/teamenergie",
+      "destination": "/kennis/teamenergie/index.html"
+    },
+    {
+      "source": "/kennis/bevlogenheid-in-het-werk",
+      "destination": "/kennis/bevlogenheid-in-het-werk/index.html"
+    },
+    {
+      "source": "/kennis/verandermanagement",
+      "destination": "/kennis/verandermanagement/index.html"
+    },
+    {
+      "source": "/kennis/impact-van-een-teamdag",
+      "destination": "/kennis/impact-van-een-teamdag/index.html"
+    },
+    {
+      "source": "/kennis/kenniskaart-teamontwikkeling",
+      "destination": "/kennis/kenniskaart-teamontwikkeling/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

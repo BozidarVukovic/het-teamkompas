@@ -514,6 +514,25 @@ for (const pagina of pages) {
   }
 }
 
+
+// Kennispagina's: inhoud uit een momentopname van de echte pagina
+// (scripts/maak-seo-snapshot.mjs). Zonder dit kregen ze de HTML van de
+// homepage mee, inclusief de titel en omschrijving van de homepage.
+const kennisMomentopname = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "seo-kennispaginas.json"), "utf-8")
+);
+for (const [route, pagina] of Object.entries(kennisMomentopname)) {
+  pages.push({
+    route,
+    title: pagina.title,
+    description: pagina.description,
+    url: `${SITE}/${route}`,
+    image: pagina.image || DEFAULT_IMAGE,
+    type: "article",
+    content: pagina.content,
+  });
+}
+
 const blogPaginas = fs
   .readdirSync(blogDir)
   .filter((naam) => naam.endsWith(".md"))

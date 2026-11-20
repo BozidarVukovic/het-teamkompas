@@ -57,6 +57,13 @@ export const SEO_PAGINAS = {
     url: "https://www.mijnteamkompas.nl/onze-aanpak",
     image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
   },
+  eigenaarschap: {
+    title: "Eigenaarschap: wat het is en hoe je het vergroot | Mijn Teamkompas",
+    description:
+      "Wat is eigenaarschap, hoe zie je het op de werkvloer en hoe vergroot je het bij medewerkers? Met voorbeelden, valkuilen en stappen voor leidinggevenden.",
+    url: "https://www.mijnteamkompas.nl/kennis/eigenaarschap-in-teams",
+    image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
+  },
   growthMindset: {
     title: "Growth mindset in teams: van idee naar gewoonte | Mijn Teamkompas",
     description:

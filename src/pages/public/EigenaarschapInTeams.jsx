@@ -1,12 +1,17 @@
 import { Helmet } from "react-helmet-async";
 import { ButtonLink, Card, Eyebrow, PageShell, Section } from "../../components/design-system";
 import KompasDot from "../../components/shared/KompasDot";
+import { SEO_PAGINAS } from "../../content/seoPaginas";
+
+const SEO = SEO_PAGINAS.eigenaarschap;
 
 const ROUTE = "/kennis/eigenaarschap-in-teams";
 const IMAGE = "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg";
 
 const toc = [
   ["Wat is eigenaarschap?", "wat-is-eigenaarschap"],
+  ["Voorbeelden", "voorbeelden"],
+  ["Zelf eigenaarschap tonen", "zelf-eigenaarschap-tonen"],
   ["Geen karaktereigenschap", "geen-karaktereigenschap"],
   ["Psychologische veiligheid", "psychologische-veiligheid"],
   ["Autonomie en basisbehoeften", "autonomie"],
@@ -39,6 +44,29 @@ const isNiet = [
   "structureel extra werk verrichten",
   "problemen van de organisatie persoonlijk compenseren",
   "altijd beschikbaar zijn",
+];
+
+// November 2026. Search Console liet zien dat mensen op deze pagina uitkomen
+// met vragen als "eigenaarschap voorbeelden", "eigenaarschap tonen" en
+// "eigenaarschap nemen". De pagina ging vooral over de leidinggevende; deze
+// twee lijsten beantwoorden de vraag van de medewerker en de vraag naar
+// herkenbare voorbeelden.
+const voorbeelden = [
+  ["Een probleem melden voordat het groot wordt", "Een planner ziet dat een levering uitloopt en meldt dat dezelfde dag, met een voorstel, in plaats van af te wachten of iemand anders het ziet."],
+  ["Terugkomen op een afspraak", "In het overleg zegt iemand: we spraken vorige maand af om de overdracht anders te doen, het lukt nog niet, laten we kijken waarom."],
+  ["Op tijd om hulp vragen", "Een medewerker geeft aan dat een deadline niet haalbaar is en wat er nodig is, in plaats van het stil alleen op te vangen."],
+  ["Een collega aanspreken", "Een teamlid benoemt rustig dat een afspraak niet werd nagekomen en vraagt wat er speelde, zonder het via de leidinggevende te spelen."],
+  ["Een verbetering voorstellen", "Het team stelt voor een terugkerend knelpunt een maand anders aan te pakken en spreekt af wanneer het evalueert."],
+  ["Een besluit nemen binnen de eigen ruimte", "Iemand lost een klantvraag zelf op omdat dat binnen de afspraken valt, en informeert achteraf in plaats van vooraf toestemming te vragen."],
+];
+
+const zelfTonen = [
+  "Vraag na wat het gewenste resultaat is, niet alleen wat je taak is.",
+  "Zeg wat je ziet, ook als het buiten je eigen takenlijst valt.",
+  "Kom met een voorstel, ook als het nog niet af is.",
+  "Spreek af wat je doet en wanneer je terugkoppelt, en doe dat ook.",
+  "Vraag op tijd om hulp en benoem wat je nodig hebt.",
+  "Vraag welke beslissingen je zelf mag nemen als dat niet duidelijk is.",
 ];
 
 const behoeften = [
@@ -94,6 +122,8 @@ const morgen = [
 ];
 
 const faqs = [
+  ["Wat zijn voorbeelden van eigenaarschap?", "Een probleem melden voordat het groot wordt, terugkomen op een afspraak die niet werkt, op tijd om hulp vragen, een collega aanspreken, een verbetering voorstellen en een besluit nemen binnen de eigen ruimte. Het gaat steeds om gedrag waarmee iemand zich verantwoordelijk toont voor het gezamenlijke resultaat."],
+  ["Hoe toon je zelf eigenaarschap op je werk?", "Vraag na wat het gewenste resultaat is, zeg wat je ziet, kom met een voorstel, spreek af wat je doet en wanneer je terugkoppelt, en vraag op tijd om hulp. Vraag ook welke beslissingen je zelf mag nemen. Eigenaarschap tonen lukt makkelijker als die ruimte duidelijk is."],
   ["Wat is eigenaarschap in een team?", "Eigenaarschap is het gedrag waarmee mensen verantwoordelijkheid voelen en nemen voor het gezamenlijke resultaat: initiatief nemen, afspraken nakomen, problemen niet doorschuiven, verbeteringen voorstellen, hulp vragen en leren van fouten. Het gaat om meer dan de eigen taak, en het is gezond wanneer iemand ook grenzen aangeeft en op tijd om hulp vraagt."],
   ["Waarom nemen medewerkers niet vanzelf verantwoordelijkheid?", "Meestal ligt dat niet aan motivatie of karakter, maar aan de omgeving. Mensen nemen eerder verantwoordelijkheid wanneer het doel duidelijk is, ze invloed en autonomie ervaren, zich veilig voelen om fouten te bespreken, verantwoordelijkheden helder zijn en initiatief wordt gewaardeerd. Ontbreekt dat, dan is afwachten vaak een logische reactie."],
   ["Hoe kun je eigenaarschap in een team vergroten?", "Begin bij de context: maak beslissingsruimte expliciet, stel vragen voordat je oplossingen geeft, zorg voor duidelijke kaders en voldoende hulpbronnen, en waardeer initiatief ook als het niet meteen slaagt. Laat het team zelf kleine experimenten kiezen en reflecteer regelmatig op wat helpt en wat afremt."],
@@ -143,18 +173,18 @@ export default function EigenaarschapInTeams() {
   return (
     <PageShell>
       <Helmet>
-        <title>Eigenaarschap in teams vergroten | Mijn Teamkompas</title>
-        <meta name="description" content="Waarom nemen medewerkers niet vanzelf verantwoordelijkheid? Ontdek hoe psychologische veiligheid, autonomie, leiderschap en werkcontext eigenaarschap in teams beïnvloeden." />
+        <title>{SEO.title}</title>
+        <meta name="description" content={SEO.description} />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={`https://www.mijnteamkompas.nl${ROUTE}`} />
-        <meta property="og:title" content="Eigenaarschap in teams: waarom mensen niet vanzelf verantwoordelijkheid nemen" />
-        <meta property="og:description" content="Eigenaarschap is meestal geen karaktereigenschap, maar gedrag dat ontstaat binnen een bepaalde omgeving. Over veiligheid, autonomie, leiderschap en werkcontext." />
+        <meta property="og:title" content={SEO.title} />
+        <meta property="og:description" content={SEO.description} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={`https://www.mijnteamkompas.nl${ROUTE}`} />
         <meta property="og:image" content={IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Eigenaarschap in teams vergroten | Mijn Teamkompas" />
-        <meta name="twitter:description" content="Waarom nemen medewerkers niet vanzelf verantwoordelijkheid? Over veiligheid, autonomie, leiderschap en werkcontext." />
+        <meta name="twitter:title" content={SEO.title} />
+        <meta name="twitter:description" content={SEO.description} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
@@ -199,6 +229,7 @@ export default function EigenaarschapInTeams() {
       <Section id="wat-is-eigenaarschap">
         <div className="tk-section-heading"><Eyebrow>Definitie</Eyebrow><h2 className="tk-heading-lg">Wat is eigenaarschap?</h2></div>
         <div className="tk-rich-text" style={{ maxWidth: 820 }}>
+          <p><strong>Eigenaarschap betekent dat je je verantwoordelijk voelt voor het resultaat, niet alleen voor je eigen taak, en daar ook naar handelt.</strong></p>
           <p>Eigenaarschap wordt zichtbaar in gedrag: initiatief nemen, verantwoordelijkheid voelen voor het resultaat, afspraken nakomen, problemen niet doorschuiven, verbeteringen voorstellen, collega's aanspreken en durven beslissen. Het betekent ook verder kijken dan de eigen taak, en juist hulp vragen en van fouten leren wanneer dat nodig is.</p>
         </div>
         <div className="tk-jdr-two" style={{ marginTop: 22 }}>
@@ -215,6 +246,21 @@ export default function EigenaarschapInTeams() {
       </Section>
 
       {/* Geen karaktereigenschap */}
+      <Section id="voorbeelden" className="tk-jdr-band">
+        <div className="tk-section-heading"><Eyebrow>Voorbeelden</Eyebrow><h2 className="tk-heading-lg">Voorbeelden van eigenaarschap op de werkvloer</h2><p className="tk-lead">Eigenaarschap zit zelden in grote gebaren. Het zit in kleine momenten waarop iemand iets oppakt in plaats van afwacht.</p></div>
+        <div className="tk-grid tk-grid-3">{voorbeelden.map(([titel, tekst]) => <Card key={titel} accent="var(--tk-color-green)"><h3>{titel}</h3><p>{tekst}</p></Card>)}</div>
+      </Section>
+
+      <Section id="zelf-eigenaarschap-tonen">
+        <div className="tk-knowledge-two-column">
+          <div><Eyebrow>Voor medewerkers</Eyebrow><h2 className="tk-heading-lg">Hoe toon je zelf eigenaarschap?</h2></div>
+          <div className="tk-rich-text">
+            <ul>{zelfTonen.map((t) => <li key={t}>{t}</li>)}</ul>
+            <p>Dit werkt het best als duidelijk is welke ruimte je hebt en als initiatief ook wordt gewaardeerd wanneer het niet meteen slaagt. Daar ligt een taak voor de leidinggevende en de organisatie, zoals je hieronder leest.</p>
+          </div>
+        </div>
+      </Section>
+
       <Section id="geen-karaktereigenschap" className="tk-jdr-band">
         <div className="tk-section-heading"><Eyebrow>Gedrag, geen karakter</Eyebrow><h2 className="tk-heading-lg">Waarom eigenaarschap geen karaktereigenschap is</h2></div>
         <div className="tk-rich-text" style={{ maxWidth: 820 }}>
