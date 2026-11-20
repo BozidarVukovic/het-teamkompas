@@ -10307,12 +10307,13 @@ function PsychologischeVeiligheidPage() {
               {
                 "@type": "Service",
                 "name": "Psychologische veiligheid in teams verbeteren",
-                "description": "Mijn Teamkompas meet psychologische veiligheid via een teamscan, begeleidt het gesprek en verankert nieuw gedrag. Praktisch, mensgericht en duurzaam.",
+                "description": "Mijn Teamkompas meet met een teamscan hoe veilig teamleden zich voelen en vertaalt dat in begeleide gesprekken naar concrete gedragsafspraken, die het team daarna in het eigen werk oefent.",
                 "provider": {
-                  "@type": "LocalBusiness",
+                  "@type": "ProfessionalService",
                   "name": "Mijn Teamkompas",
                   "url": "https://www.mijnteamkompas.nl",
                   "email": "info@mijnteamkompas.nl",
+                  "address": { "@type": "PostalAddress", "addressLocality": "Rotterdam", "addressCountry": "NL" },
                   "areaServed": "NL"
                 },
                 "serviceType": "Teamcoaching, teamscan, psychologische veiligheid",
@@ -10405,6 +10406,60 @@ function PsychologischeVeiligheidPage() {
           <div style={{ minHeight: isMobile ? 260 : "68vh", position: "relative" }}>
             <img src="/blog/images/psychologische-veiligheid.jpg" alt="Team dat bij een flip-over bespreekt wat hen drijft" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "brightness(1.10) contrast(0.95) saturate(1.05)" }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.92) 0%, rgba(13,27,42,0.46) 9%, rgba(13,27,42,0.14) 26%, rgba(13,27,42,0.04) 60%, rgba(13,27,42,0) 100%)" }} />
+          </div>
+        </section>
+
+        {/* Aanbod, november 2026. Op de vraag "welk bureau helpt teams met
+            psychologische veiligheid" noemde een AI-assistent bureaus waarvan
+            het aanbod in één zin te zeggen is. Deze pagina legde vooral uit wat
+            psychologische veiligheid is; dit blok zegt wat wij doen, voor wie,
+            hoe het verloopt en wat het oplevert. De vetgedrukte zin is bewust
+            zo geschreven dat hij los te citeren is. Geen prijs, geen vast
+            aantal sessies: dat is maatwerk. */}
+        <section id="aanbod" style={{ padding: isMobile ? "52px 22px" : "82px 60px", background: PUB.licht, scrollMarginTop: 80 }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+            <Fade>
+              <div style={{ maxWidth: 860 }}>
+                <div style={{ fontSize: 15, fontWeight: 700, color: PUB.teal, marginBottom: 12 }}>Ons aanbod</div>
+                <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, margin: "0 0 16px" }}>Psychologische veiligheid in je team vergroten: zo begeleiden we het</h2>
+                <p style={{ fontSize: 17, lineHeight: 1.75, color: PUB.donker, margin: "0 0 28px" }}>
+                  <strong>Mijn Teamkompas meet met een teamscan hoe veilig teamleden zich voelen en vertaalt dat in begeleide gesprekken naar concrete gedragsafspraken, die het team daarna in het eigen werk oefent.</strong>
+                </p>
+              </div>
+            </Fade>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16 }}>
+              <Fade style={{ height: "100%" }}>
+                <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 22, height: "100%", boxSizing: "border-box" }}>
+                  <h3 style={{ fontSize: 18, fontWeight: 800, margin: "0 0 10px" }}>Voor wie</h3>
+                  <p style={{ fontSize: 15, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>Teams waar mensen zich inhouden, fouten laat worden besproken of feedback uitblijft. En leidinggevenden die willen weten wat hun eigen rol daarin is.</p>
+                </div>
+              </Fade>
+              <Fade delay={0.05} style={{ height: "100%" }}>
+                <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 22, height: "100%", boxSizing: "border-box" }}>
+                  <h3 style={{ fontSize: 18, fontWeight: 800, margin: "0 0 10px" }}>Hoe het verloopt</h3>
+                  <ol style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 8, fontSize: 15, lineHeight: 1.6, color: PUB.sub }}>
+                    <li>Kennismaking en intake met de leidinggevende</li>
+                    <li>Teamscan: zonder naam ingevuld, teruggekoppeld op teamniveau</li>
+                    <li>Begeleid teamgesprek of teamdag over de uitkomsten</li>
+                    <li>Oefenen in het eigen werk, met een terugblik na 30, 60 en 90 dagen</li>
+                  </ol>
+                </div>
+              </Fade>
+              <Fade delay={0.1} style={{ height: "100%" }}>
+                <div style={{ background: PUB.wit, border: `1px solid ${PUB.lijn}`, borderRadius: 16, padding: 22, height: "100%", boxSizing: "border-box" }}>
+                  <h3 style={{ fontSize: 18, fontWeight: 800, margin: "0 0 10px" }}>Wat het oplevert</h3>
+                  <p style={{ fontSize: 15, lineHeight: 1.7, color: PUB.sub, margin: 0 }}>Een gedeeld beeld van hoe veilig het team zich voelt, inclusief het verschil tussen leidinggevende en team. Twee of drie concrete gedragsafspraken. En een vast moment om samen terug te kijken.</p>
+                </div>
+              </Fade>
+            </div>
+            <Fade delay={0.12}>
+              <div style={{ marginTop: 26, display: "flex", flexDirection: isMobile ? "column" : "row", gap: 18, alignItems: isMobile ? "stretch" : "center" }}>
+                <button type="button" onClick={openModal} style={ctaStyle}>Bespreek jullie situatie</button>
+                <p style={{ fontSize: 14.5, lineHeight: 1.65, color: PUB.sub, margin: 0, maxWidth: 640 }}>
+                  Vorm en duur stemmen we af op het team: van één teamdag met opvolging tot het traject <a href="/teamontwikkeling#samen-leren-en-verbeteren" style={{ color: PUB.teal, fontWeight: 700 }}>Samen leren en verbeteren</a> van zes maanden. Vanuit Rotterdam, in heel Nederland.
+                </p>
+              </div>
+            </Fade>
           </div>
         </section>
 
