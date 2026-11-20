@@ -295,13 +295,13 @@ const pages = [
     image: "https://www.mijnteamkompas.nl/teamkompas-samen-richting.jpg",
     content: `
       <main>
-        <h1>Onze aanpak — van teamscan naar duurzame teamontwikkeling</h1>
-        <p>Mijn Teamkompas werkt in drie stappen: waarnemen, duiden en bewegen. We starten altijd met luisteren — naar de leidinggevende, het team en de context.</p>
-        <h2>Stap 1 — Waarnemen</h2>
-        <p>We luisteren, kijken en halen zorgvuldig op wat er speelt via een intakegesprek en de teamscan.</p>
-        <h2>Stap 2 — Duiden</h2>
-        <p>We verbinden signalen tot een helder beeld. Patronen worden zichtbaar en begrijpelijk.</p>
-        <h2>Stap 3 — Bewegen</h2>
+        <h1>Onze aanpak: van teamscan naar duurzame teamontwikkeling</h1>
+        <p>Mijn Teamkompas werkt in drie stappen: luisteren, meten en bewegen. Daarna borgen we wat werkt in het dagelijks werk.</p>
+        <h2>Stap 1: luisteren</h2>
+        <p>We halen zorgvuldig op wat er speelt, in gesprekken met de leidinggevende en het team, ook wat niet hardop wordt gezegd.</p>
+        <h2>Stap 2: meten</h2>
+        <p>Met de teamscan maken we patronen zichtbaar en geven we er samen betekenis aan.</p>
+        <h2>Stap 3: bewegen</h2>
         <p>We vertalen het beeld naar een workshop, teamdag of gerichte interventie die direct uitvoerbaar is.</p>
         <p>Plan een vrijblijvend kennismakingsgesprek via <a href="mailto:info@mijnteamkompas.nl">info@mijnteamkompas.nl</a>.</p>
         <nav><a href="/">Home</a> <a href="/teamscan">Teamscan</a> <a href="/teamcoaching">Teamcoaching</a> <a href="/verkennen">Verkennend gesprek</a></nav>

@@ -1451,7 +1451,7 @@ function PublicSite({ onLoginClick }) {
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             <Fade>
               <div style={{ maxWidth: 760, marginBottom: 28 }}>
-                <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>Eerst meten, dan begrijpen, daarna bewegen.</h2>
+                <h2 style={{ fontSize: isMobile ? 30 : 42, fontWeight: 800, lineHeight: 1.12, color: PUB.donker, marginBottom: 14 }}>Eerst luisteren, dan meten, daarna bewegen.</h2>
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: PUB.sub, margin: 0 }}>
                   De methode komt pas na de vraag. We starten bij wat het team ervaart, geven samen betekenis aan de patronen en vertalen dit naar gedrag, afspraken en vervolgstappen.
                 </p>
@@ -1459,8 +1459,8 @@ function PublicSite({ onLoginClick }) {
             </Fade>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 18 }}>
               {[
-                ["Meten", "Met de teamscan, intake of voorbereidende gesprekken maken we zichtbaar wat het team ervaart en waar samenwerking schuurt.", "/blog/images/afstemmen.jpg", "Team kijkt samen naar uitkomsten op een scherm"],
-                ["Begrijpen", "We geven samen betekenis aan patronen, verschillen en onderstroom, zodat het gesprek concreet en veilig wordt.", "/blog/images/goedevragen.jpg", "Twee collega's in gesprek, waarbij de een aandachtig luistert naar de ander"],
+                ["Luisteren", "In een intake en voorbereidende gesprekken halen we op wat mensen ervaren, ook wat niet hardop wordt gezegd.", "/blog/images/goedevragen.jpg", "Twee collega's in gesprek, waarbij de een aandachtig luistert naar de ander"],
+                ["Meten", "Met de teamscan maken we patronen en verschillen zichtbaar en geven we er samen betekenis aan, zodat het gesprek concreet en veilig wordt.", "/blog/images/afstemmen.jpg", "Team kijkt samen naar uitkomsten op een scherm"],
                 ["Bewegen", "In workshops, teamdagen en coaching vertalen we inzicht naar ander gedrag, duidelijke afspraken en eigenaarschap.", "/blog/images/experimenteren.jpg", "Begeleider bij een flip-over met de cyclus van proberen, kijken en leren"]
               ].map(([titel, tekst, image, alt], i) => (
                 <Fade key={titel} delay={i * 0.06} style={{ height: "100%" }}>
@@ -1488,7 +1488,7 @@ function PublicSite({ onLoginClick }) {
             November 2026. Waar de begeleiding naartoe werkt: niet alleen deze
             samenwerkingsvraag oplossen, maar het vermogen om de volgende zelf
             aan te pakken. Staat direct na de werkwijze, omdat het daar logisch
-            uit volgt: na meten, begrijpen en bewegen komt de vraag wat er
+            uit volgt: na luisteren, meten en bewegen komt de vraag wat er
             blijft als wij weer weg zijn.
 
             Drie gedragingen en niet meer. Het zijn voorbeelden die een
@@ -9598,9 +9598,10 @@ function TeamontwikkelingSeoLandingspagina({ onLoginClick = () => {} }) {
   ];
 
   const aanpak = [
-    ["1", "Zichtbaar maken", "Met een teamscan, intake of verkennend gesprek brengen we in kaart wat het team ervaart."],
-    ["2", "Betekenis geven", "We vertalen scores, patronen en signalen naar een gedeeld beeld van wat er echt speelt."],
-    ["3", "In beweging brengen", "Via teamcoaching, een teamdag of leiderschapsbegeleiding maken we de stap naar concreet gedrag."],
+    // Zelfde drietal als op de homepage: luisteren, meten, bewegen.
+    ["1", "Luisteren", "In een verkennend gesprek of intake halen we op wat het team ervaart, ook wat niet hardop wordt gezegd."],
+    ["2", "Meten", "Met de teamscan maken we patronen zichtbaar en vertalen we ze samen naar een gedeeld beeld van wat er echt speelt."],
+    ["3", "Bewegen", "Via een teamdag, teamcoaching of leiderschapsbegeleiding maken we de stap naar concreet gedrag."],
   ];
 
   const faqs = [

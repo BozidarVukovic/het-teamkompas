@@ -64,7 +64,7 @@ export const heroContent = {
   // De werkwijze, als uitnodiging om verder te scrollen.
   approach: [
     ["Luisteren", "We halen boven tafel wat mensen ervaren, maar niet altijd uitspreken."],
-    ["Meten", "We maken patronen, verschillen en ontwikkelpunten zichtbaar."],
+    ["Meten", "We maken patronen en verschillen zichtbaar en geven er samen betekenis aan."],
     ["Bewegen", "We vertalen inzicht naar kleine gedragsstappen die in het werk toepasbaar zijn."],
   ],
 };

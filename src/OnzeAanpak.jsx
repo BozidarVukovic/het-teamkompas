@@ -82,13 +82,16 @@ export default function OnzeAanpakPage() {
   const domeinen = [
     ["Veiligheid & leiderschap", PUB.groen, "We kijken of mensen zich vrij voelen om eerlijk te zijn, vragen te stellen en initiatief te nemen. Zonder veiligheid ontstaat weinig echte beweging."],
     ["Energie & motivatie", PUB.oranje, "We onderzoeken waar het werk energie geeft en waar het team structureel leegloopt. Kleine dagelijkse frustraties zijn vaak groter dan ze lijken."],
-    ["Verandering & betekenis", PUB.teal, "We kijken hoe verandering wordt ervaren. Begrijpen mensen waarom iets nodig is, voelt het haalbaar en sluit het aan bij wat vertrouwd is?"],
+    ["Beleving van verandering", PUB.teal, "We kijken hoe verandering wordt ervaren. Begrijpen mensen waarom iets nodig is, voelt het haalbaar en sluit het aan bij wat vertrouwd is?"],
     ["Verbeteren & leren", PUB.paars, "We kijken of verbeterideeën zichtbaar worden, besproken worden en landen in dagelijks gedrag. Leren wordt pas waardevol als het praktisch wordt."],
   ];
 
   const stappen = [
-    ["1", "Waarnemen", "We starten met luisteren, kijken en zorgvuldig ophalen wat er speelt."],
-    ["2", "Duiden", "We verbinden signalen uit de teamscan, gesprekken en context tot een helder beeld."],
+    // Luisteren, meten, bewegen: hetzelfde drietal als op de rest van de
+    // site. Borgen staat erachter als vierde stap, omdat dat hier de pagina is
+    // die het hele traject uitlegt.
+    ["1", "Luisteren", "We starten met luisteren, kijken en zorgvuldig ophalen wat er speelt, ook wat niet hardop wordt gezegd."],
+    ["2", "Meten", "We verbinden signalen uit de teamscan, gesprekken en context tot een helder beeld en geven er samen betekenis aan."],
     ["3", "Bewegen", "We vertalen het beeld naar een workshop, teamdag of gerichte interventie."],
     ["4", "Borgen", "We zorgen dat inzichten niet verdwijnen, maar terugkomen in werkafspraken en gedrag."],
   ];
