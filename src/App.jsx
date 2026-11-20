@@ -10012,12 +10012,16 @@ function TeamcoachingPage() {
                 Meer helderheid met iets minder contrast tilt de schaduwen op
                 zonder de lichte plekken uit te blazen -- dat is wat "egaler en
                 warmer belicht" in de praktijk betekent zonder nieuwe foto. */}
+            {/* November 2026: eigen foto. Hier stond dezelfde foto als op
+                /individuele-coaching (een gesprek met twee mensen); teamcoaching
+                gaat over het hele team. Deze foto is zelf al licht, dus de
+                helderheidscorrectie van de vorige foto is eraf. */}
             <img
-              src="/teamkompas-intakegesprek.jpg"
-              alt="Teamcoaching gesprek over samenwerking, communicatie en leiderschap"
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "brightness(1.12) contrast(0.94) saturate(1.06)" }}
+              src="/blog/images/werkdruk-team-overleg.jpg"
+              alt="Team in gesprek aan tafel tijdens een overleg over de samenwerking"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", objectPosition: "65% center" }}
             />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,27,42,0.92) 0%, rgba(13,27,42,0.46) 9%, rgba(13,27,42,0.14) 26%, rgba(13,27,42,0.04) 60%, rgba(13,27,42,0) 100%)" }} />
+            <div style={{ position: "absolute", inset: 0, background: isMobile ? "linear-gradient(to bottom, rgba(13,27,42,0.45) 0%, rgba(13,27,42,0) 30%)" : "linear-gradient(to right, rgba(13,27,42,0.92) 0%, rgba(13,27,42,0.46) 9%, rgba(13,27,42,0.14) 26%, rgba(13,27,42,0.04) 60%, rgba(13,27,42,0) 100%)" }} />
           </div>
         </section>
 
