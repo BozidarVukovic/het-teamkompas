@@ -79,9 +79,7 @@ function KnowledgeMenu({ onNavigate }) {
           {group.links.map((item) => <NavLink key={item.href} item={item} onNavigate={go} />)}
         </div>)}
       </div>
-      {/* Eén link naar het geheel. "Alle artikelen en blogs" stond hier ook, maar
-          ging naar /inspiratie -- dat staat al als eigen item in de hoofdnavigatie. */}
-      <NavLink item={{ label: "Bekijk alle kennis →", href: knowledgeNavigation.overview.href }} onNavigate={go} className="knowledge-menu__all" />
+      <NavLink item={{ label: "Naar alle artikelen en blogs →", href: "/inspiratie" }} onNavigate={go} className="knowledge-menu__all" />
     </section>}
   </div>;
 }
@@ -104,7 +102,7 @@ function MobileKnowledge({ onNavigate }) {
           {groupOpen && <div id={groupId}>{group.links.map((item) => <NavLink key={item.href} item={item} onNavigate={onNavigate} />)}</div>}
         </div>;
       })}
-      <NavLink item={{ label: "Bekijk alle kennis →", href: knowledgeNavigation.overview.href }} onNavigate={onNavigate} className="mobile-nav__all" />
+      <NavLink item={{ label: "Naar alle artikelen en blogs →", href: "/inspiratie" }} onNavigate={onNavigate} className="mobile-nav__all" />
     </div>}
   </div>;
 }
